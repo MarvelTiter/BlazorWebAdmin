@@ -1,0 +1,17 @@
+﻿@page "/counter"
+@inject StoreData.CounterStore store
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @store.Count</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+
+    private void IncrementCount()
+    {
+        store.Count++;
+    }
+}

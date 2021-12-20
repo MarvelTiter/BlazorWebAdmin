@@ -1,0 +1,84 @@
+﻿@using BlazorWebAdmin.StoreData
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@*@inject ProtectedSessionStorage ProtectedSessionStore*@
+@inject RouterStore store
+@inject NavigationManager nav
+<div class="tags_box">
+	@*菜单折叠按钮*@
+	<NavLink class="nav" href="/" Match="NavLinkMatch.All">主页</NavLink>
+	@*面包屑导航*@
+	@foreach (var item in store.AllLink)
+	{
+		<a class="nav">
+			<span>@item.Link</span>
+			@if (item.IsActive)
+			{
+				<span @onclick="e => CloseTag(item)">x</span>
+			}
+		</a>
+	}
+	@*功能区域: 全屏，头像等等*@
+</div>
+
+@code {
+	//public List<RouterState> AllLink { get; set; } = new List<RouterState>();
+	//protected override async Task OnAfterRenderAsync(bool firstRender)
+	//{
+	//	await base.OnAfterRenderAsync(firstRender);
+	//	var all = await ProtectedSessionStore.GetAsync<List<RouterState>>("store");
+	//	AllLink = all.Success ? all.Value : new List<RouterState>();
+	//}
+	protected override async Task OnInitializedAsync()
+	{
+		store.RouteChangedEvent += StateHasChanged;
+		await base.OnInitializedAsync();
+	}
+
+	private async Task CloseTag(RouterState state)
+	{
+		nav.NavigateTo("/");
+		await store.Remove(state.Link);
+	}
+}
+
+<style>
+	.tags_box {
+		border-top: 1px solid #d8dce5;
+		border-bottom: 1px solid #d8dce5;
+		box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+		padding: 3px 0 3px 10px;
+	}
+
+	.nav {
+		display: inline-block;
+		margin: 0 3px;
+		cursor: pointer;
+		height: 26px;
+		line-height: 26px;
+		border: 1px solid #d8dce5;
+		color: #495060;
+		background: #fff;
+		padding: 0 8px;
+		font-size: 12px;
+		text-decoration: none;
+		transition: all 0.2s ease;
+	}
+
+		.nav.active {
+			background-color: #42b983;
+			color: #fff;
+			border-color: #42b983;
+		}
+
+			.nav.active::before {
+				content: '';
+				background: #fff;
+				display: inline-block;
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				position: relative;
+				margin-right: 2px;
+			}
+</style>
+
