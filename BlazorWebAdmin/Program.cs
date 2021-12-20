@@ -1,3 +1,4 @@
+using BlazorWebAdmin.Common;
 using BlazorWebAdmin.Data;
 using BlazorWebAdmin.StoreData;
 using Microsoft.AspNetCore.Components;
@@ -12,6 +13,11 @@ services.AddServerSideBlazor();
 services.AddSingleton<WeatherForecastService>();
 services.AddScoped<CounterStore>();
 services.AddScoped<RouterStore>();
+services.AddScoped<EventDispatcher>();
+
+//
+services.AddAntDesign();
+
 
 var app = builder.Build();
 

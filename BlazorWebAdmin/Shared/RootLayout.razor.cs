@@ -37,7 +37,9 @@ namespace BlazorWebAdmin.Shared
             {
                 for (int i = 1; i < url.Length; i++)
                 {
+                    //await RouterStore.SetActive(url[1]);
                     await RouterStore.TryAdd(url[1]);
+
                 }
             }
         }

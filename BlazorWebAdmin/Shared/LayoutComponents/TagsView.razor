@@ -1,43 +1,87 @@
-﻿@using BlazorWebAdmin.StoreData
+﻿@using BlazorWebAdmin.Common
+@using BlazorWebAdmin.StoreData
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @*@inject ProtectedSessionStorage ProtectedSessionStore*@
+@inject BlazorWebAdmin.Common.EventDispatcher dispatcher
 @inject RouterStore store
 @inject NavigationManager nav
 <div class="tags_box">
-	@*菜单折叠按钮*@
+	<span>
+		<SvgIcon IconName="@IconName" OnClick="ToggleMenu"></SvgIcon>
+	</span>
 	<NavLink class="nav" href="/" Match="NavLinkMatch.All">主页</NavLink>
-	@*面包屑导航*@
 	@foreach (var item in store.AllLink)
 	{
-		<a class="nav">
-			<span>@item.Link</span>
+		<NavLink class="nav" href="@item.Link" Match="NavLinkMatch.All">
+			<span @oncontextmenu="e => OpenContextMenu(e, item)" @oncontextmenu:preventDefault>@item.Link</span>
 			@if (item.IsActive)
 			{
-				<span @onclick="e => CloseTag(item)">x</span>
+				<span style="margin-left:5px;" @onclick="e => CloseTag(item)" @onclick:stopPropagation @onclick:preventDefault>x</span>
 			}
-		</a>
+		</NavLink>
 	}
-	@*功能区域: 全屏，头像等等*@
+
+	<ul class="@ContextmenuClass.Class" style="left:@contextmenuLeft;top:@contextmenuTop">
+		<li @onclick="e => CloseOther()">除此之外全部关闭</li>
+		<li @onclick="e => CloseAll()">关闭全部选项卡</li>
+		<li @onclick="e => CloseMenu()">关闭</li>
+	</ul>
 </div>
 
 @code {
-	//public List<RouterState> AllLink { get; set; } = new List<RouterState>();
-	//protected override async Task OnAfterRenderAsync(bool firstRender)
-	//{
-	//	await base.OnAfterRenderAsync(firstRender);
-	//	var all = await ProtectedSessionStore.GetAsync<List<RouterState>>("store");
-	//	AllLink = all.Success ? all.Value : new List<RouterState>();
-	//}
+
+	private bool collapse = false;
+	private string IconName => collapse ? "expand_menu" : "collapse_menu";
+	public async Task ToggleMenu()
+	{
+		collapse = !collapse;
+		await dispatcher.Invoke("MenuCollapse");
+		StateHasChanged();
+	}
+
+	private ClassHelper ContextmenuClass = new ClassHelper().AddClass("context");
 	protected override async Task OnInitializedAsync()
 	{
-		store.RouteChangedEvent += StateHasChanged;
+		store.DataChangedEvent += StateHasChanged;
+		ContextmenuClass.AddClass("open", () => showContextmenu);
 		await base.OnInitializedAsync();
 	}
 
-	private async Task CloseTag(RouterState state)
+	private async Task CloseTag(RouterInfo state)
 	{
-		nav.NavigateTo("/");
 		await store.Remove(state.Link);
+		nav.NavigateTo("/");
+	}
+	private bool showContextmenu = false;
+	private string contextmenuLeft = "";
+	private string contextmenuTop = "";
+	private string current = "";
+	private void OpenContextMenu(MouseEventArgs e, RouterInfo current)
+	{
+		this.current = current.Link;
+		contextmenuLeft = $"{e.ClientX + 10}px";
+		contextmenuTop = $"{e.ClientY + 10}px";
+		this.showContextmenu = true;
+	}
+
+	private async Task CloseOther()
+	{
+		if (current == null) return;
+		await store.Reset();
+		nav.NavigateTo("/" + current);
+		CloseMenu();
+	}
+
+	private async Task CloseAll()
+	{
+		await store.Reset();
+		nav.NavigateTo("/");
+		CloseMenu();
+	}
+
+	private void CloseMenu()
+	{
+		showContextmenu = false;
 	}
 }
 
@@ -80,5 +124,33 @@
 				position: relative;
 				margin-right: 2px;
 			}
+
+	.context {
+		padding: 10px;
+		border: 1px solid #d8dce5;
+		background-color: #fff;
+		border-radius: 10px;
+		position: absolute;
+		display: none;
+		box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+	}
+
+		.context li {
+			height: 26px;
+			line-height: 26px;
+			font-size: 14px;
+			padding: 0 8px;
+			color: #495060;
+			cursor: pointer;
+			list-style: none;
+		}
+
+			.context li:hover {
+				color: #C0C0C0;
+			}
+
+		.context.open {
+			display: block;
+		}
 </style>
 

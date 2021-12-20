@@ -1,0 +1,42 @@
+﻿@*<i>
+	@IconMarkuString
+</i>*@
+<img class="svg-icon" src="@IconName" @onclick="e => handleClick()" @onclick:stopPropagation @onclick:preventDefault/>
+
+@*<svg class='svg-icon' aria-hidden='true'><use :xlink:href='@IconName'></use></svg>*@
+
+@code {
+	private string _IconName = "";
+	[Parameter]
+	public string IconName
+	{
+		get
+		{
+			return $"icons/{_IconName}.svg";
+		}
+		set
+		{
+			_IconName = value;
+		}
+	}
+	// 没用
+	MarkupString IconMarkuString => new MarkupString($"<svg class='svg-icon' aria-hidden='true'><use :xlink:href='{IconName}'></use></svg>");
+
+	[Parameter]
+	public EventCallback OnClick{ get; set; }
+
+	private async Task handleClick()
+	{
+		await OnClick.InvokeAsync();
+	}
+}
+<style>
+	.svg-icon {
+		width: 1em;
+		height: 1em;
+		vertical-align: -0.15em;
+		fill: currentColor;
+		overflow: hidden;
+		cursor:pointer;
+	}
+</style>

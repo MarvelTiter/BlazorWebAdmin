@@ -1,6 +1,34 @@
-﻿<div style="width:200px;background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);">
-	<NavMenu></NavMenu>
+﻿@inject BlazorWebAdmin.Common.EventDispatcher dispatcher
+<div style="width: @Width;height:100vh;">
+	<Menu Theme="@MenuTheme.Dark" Mode="@MenuMode.Inline" InlineCollapsed=collaspe Style="height:100%">
+		<MenuItem RouterLink="/" RouterMatch="NavLinkMatch.All" Icon="home">
+			主页
+		</MenuItem>
+		<MenuItem RouterLink="counter" RouterMatch="NavLinkMatch.All" Icon="setting">
+			Counter
+		</MenuItem>
+		<MenuItem RouterLink="fetchdata" RouterMatch="NavLinkMatch.All" Icon="user">
+			Fetch data
+		</MenuItem>
+	</Menu>
 </div>
 
 @code {
+
+	protected override Task OnInitializedAsync()
+	{
+		dispatcher.Register("MenuCollapse", ToggleMenuCollapse);
+		return base.OnInitializedAsync();
+	}
+
+	private string Width => collaspe ? "80px" : "200px";
+	private bool collaspe = false;
+
+	private Task ToggleMenuCollapse()
+	{
+		collaspe = !collaspe;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+
 }
