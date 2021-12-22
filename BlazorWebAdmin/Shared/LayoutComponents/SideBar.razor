@@ -1,15 +1,19 @@
-﻿@inject BlazorWebAdmin.Common.EventDispatcher dispatcher
-<div style="width: @Width;height:100vh;">
-	<Menu Theme="@MenuTheme.Dark" Mode="@MenuMode.Inline" InlineCollapsed=collaspe Style="height:100%">
+﻿@inject EventDispatcher dispatcher
+@inject UserStore store
+@inject RouterStore routeStore
+<div class="side_bar" style="display: flex;flex-direction: column;width: @Width;height:100vh;">
+	<Menu Theme="@MenuTheme.Dark" Mode="@MenuMode.Inline" InlineCollapsed=collapse Style="flex: 1;" OnMenuItemClicked="OnMenuItemClick">
+		<Profile></Profile>
 		<MenuItem RouterLink="/" RouterMatch="NavLinkMatch.All" Icon="home">
 			主页
 		</MenuItem>
-		<MenuItem RouterLink="counter" RouterMatch="NavLinkMatch.All" Icon="setting">
-			Counter
-		</MenuItem>
-		<MenuItem RouterLink="fetchdata" RouterMatch="NavLinkMatch.All" Icon="user">
+		@foreach (var item in store.Permissions)
+		{
+			<SideBarItem Route=item></SideBarItem>
+		}
+		@*<MenuItem RouterLink="fetchdata" RouterMatch="NavLinkMatch.All" Icon="user">
 			Fetch data
-		</MenuItem>
+			</MenuItem>*@
 	</Menu>
 </div>
 
@@ -17,18 +21,33 @@
 
 	protected override Task OnInitializedAsync()
 	{
-		dispatcher.Register("MenuCollapse", ToggleMenuCollapse);
+		dispatcher.Register<SideBar>("MenuCollapse", ToggleMenuCollapse);
 		return base.OnInitializedAsync();
 	}
 
-	private string Width => collaspe ? "80px" : "200px";
-	private bool collaspe = false;
+	private string Width => collapse ? "80px" : "200px";
+	private bool collapse = false;
 
-	private Task ToggleMenuCollapse()
+	private Task ToggleMenuCollapse(object e)
 	{
-		collaspe = !collaspe;
+		collapse = (bool)e;
 		StateHasChanged();
 		return Task.CompletedTask;
 	}
 
+	private async Task OnMenuItemClick(MenuItem item)
+	{
+		await routeStore.TryAdd(item.RouterLink, item.Title);
+	}
+
 }
+<style>
+	.side_bar {
+		transition: background .3s,width .3s cubic-bezier(.2,0,0,1) 0s;
+		transition-property: background, width;
+		transition-duration: 0.3s, 0.3s;
+		transition-timing-function: ease, cubic-bezier(0.2, 0, 0, 1);
+		transition-delay: 0s, 0s;
+	}
+</style>
+

@@ -1,0 +1,35 @@
+﻿.wrapper {
+    background-color: #001529;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 8px;
+}
+
+    .wrapper .inner_box {
+        margin-top: 10px;
+        padding: 0 10px 10px 10px;
+        border-bottom: 1px solid white;
+    }
+
+    .wrapper .avatar {
+        display: inline-block;
+        box-sizing: border-box;
+        height: 40px;
+        width: 40px;
+        background-color: #ccc;
+        border-radius: 20px;
+        border: 1px solid #d8dce5;
+    }
+
+    .wrapper .name {
+        color: #d8dce5;
+        margin-left: 10px;
+        opacity: 1;
+        transition: all 0.3s ease;
+    }
+
+        .wrapper .name.hide {
+            margin-left: 0px;
+            opacity: 0;
+        }

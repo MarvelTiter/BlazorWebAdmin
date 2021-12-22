@@ -1,0 +1,29 @@
+﻿@using BlazorWebAdmin.Store
+@inject EventDispatcher dispatcher
+@inject UserStore store
+
+<div class="wrapper">
+	<div class="inner_box">
+		<img class="avatar" src="/assets/Cortana.png" />
+		<span class="@NameClass.Class">@displayName</span>
+	</div>
+</div>
+
+@code {
+	ClassHelper NameClass = new ClassHelper();
+	private bool collapse = false;
+	private string displayName => collapse ? "" : store.UserName;
+	protected override Task OnInitializedAsync()
+	{
+		NameClass.AddClass("name");
+		NameClass.AddClass("hide", () => collapse);
+		dispatcher.Register<Profile>("AvatarCollapse", ToggleavatarCollapse);
+		return base.OnInitializedAsync();
+	}
+	private Task ToggleavatarCollapse(object e)
+	{
+		collapse = (bool)e;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+}

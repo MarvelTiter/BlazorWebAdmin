@@ -1,19 +1,14 @@
 ﻿@page "/counter"
-@inject StoreData.CounterStore store
-<PageTitle>Counter</PageTitle>
-
-<h1>Counter</h1>
-
-<p role="status">Current count: @store.Count</p>
-<p role="status">Current count: @incrementCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
+@inject CounterStore store
+<h3>Counter</h3>
+<h4>私有变量: @count</h4>
+<h4>Store变量: @store.Count</h4>
+<Button Type="@ButtonType.Primary" OnClick="Add">计数</Button>
 @code {
-    private int incrementCount = 0;
-    private void IncrementCount()
-    {
-        store.Count++;
-        incrementCount++;
-    }
+	private int count;
+	private void Add()
+	{
+		count++;
+		store.Count++;
+	}
 }

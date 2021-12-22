@@ -1,8 +1,8 @@
 using BlazorWebAdmin.Common;
-using BlazorWebAdmin.Data;
-using BlazorWebAdmin.StoreData;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using BlazorWebAdmin.IRepositories;
+using BlazorWebAdmin.IServices;
+using BlazorWebAdmin.Services;
+using BlazorWebAdmin.Store;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,11 +10,14 @@ var services = builder.Services;
 // Add services to the container.
 services.AddRazorPages();
 services.AddServerSideBlazor();
-services.AddSingleton<WeatherForecastService>();
-services.AddScoped<CounterStore>();
+
 services.AddScoped<RouterStore>();
+services.AddScoped<CounterStore>();
+services.AddScoped<UserStore>();
 services.AddScoped<EventDispatcher>();
 
+services.AddScoped<IUserService, UserService>();
+services.AddScoped<IUserRepository, UserRepository>();
 //
 services.AddAntDesign();
 

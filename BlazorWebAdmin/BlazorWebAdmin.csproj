@@ -20,6 +20,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorWebAdmin.Common\BlazorWebAdmin.Common.csproj" />
+    <ProjectReference Include="..\BlazorWebAdmin.Core\BlazorWebAdmin.Core.csproj" />
+    <ProjectReference Include="..\BlazorWebAdmin.IRepositories\BlazorWebAdmin.IRepositories.csproj" />
+    <ProjectReference Include="..\BlazorWebAdmin.IServices\BlazorWebAdmin.IServices.csproj" />
+    <ProjectReference Include="..\BlazorWebAdmin.Models\BlazorWebAdmin.Models.csproj" />
+    <ProjectReference Include="..\BlazorWebAdmin.Repositories\BlazorWebAdmin.Repositories.csproj" />
+    <ProjectReference Include="..\BlazorWebAdmin.Services\BlazorWebAdmin.Services.csproj" />
+    <ProjectReference Include="..\BlazorWebAdmin.Store\BlazorWebAdmin.Store.csproj" />
   </ItemGroup>
 
 </Project>

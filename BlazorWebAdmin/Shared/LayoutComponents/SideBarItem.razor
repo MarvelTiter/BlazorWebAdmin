@@ -1,0 +1,32 @@
+﻿@using System.Linq
+@if (!Route.HasChildren || onlyOneChildren)
+{
+	<MenuItem RouterLink="@Route.RouteLink" RouterMatch="NavLinkMatch.All" Icon="@Route.IconName" Title=@Route.RouteName>
+		
+	</MenuItem>
+}
+else
+{
+	<SubMenu>
+		<TitleTemplate>
+			<span class="subtitle_template">
+				<Icon Type="@Route.IconName" Theme="outline"></Icon>
+				<span>@Route.RouteName</span>
+			</span>
+		</TitleTemplate>
+		<ChildContent>
+			@foreach (var item in Route.Children)
+			{
+				<SideBarItem Route=item></SideBarItem>
+			}
+		</ChildContent>
+	</SubMenu>
+}
+
+
+@code {
+	[Parameter]
+	public RouterMeta Route { get; set; }
+
+	private bool onlyOneChildren => Route.Children.Count() == 1;
+}

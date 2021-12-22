@@ -1,0 +1,34 @@
+﻿@page "/login"
+@layout LoginLayout
+
+
+<PageTitle>登录</PageTitle>
+
+<div class="login-container">
+	@*style="background-image: url('assets/login_bg.png')"*@
+	<div class="title-container">
+		<div class="title-position">
+			@*style="background-image: url('assets/logo.png')"*@
+			<h3 class="title">BlazorWebAdmin</h3>
+		</div>
+	</div>
+	<div class="login-form">
+		<Form Model="model">
+			<FormItem>
+				<Input @bind-Value="@context.UserName" placeholder="Username" name="username" type="text" tabindex="1" AutoComplete="true">
+				<Prefix>
+					<Icon Type="user" Theme="outline" />
+				</Prefix>
+				</Input>
+			</FormItem>
+			<FormItem>
+				<InputPassword @bind-Value="@context.Password" placeholder="Password" tabindex="2" AutoComplete="true">
+					<Prefix>
+						<Icon Type="lock" Theme="outline" />
+					</Prefix>
+				</InputPassword>
+			</FormItem>
+		</Form>
+		<Button Loading="Loading" Type="@ButtonType.Primary" OnClick="HandleLogin">登录</Button>
+	</div>
+</div>
