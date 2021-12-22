@@ -1,6 +1,7 @@
 using BlazorWebAdmin.Common;
 using BlazorWebAdmin.IRepositories;
 using BlazorWebAdmin.IServices;
+using BlazorWebAdmin.Repositories;
 using BlazorWebAdmin.Services;
 using BlazorWebAdmin.Store;
 

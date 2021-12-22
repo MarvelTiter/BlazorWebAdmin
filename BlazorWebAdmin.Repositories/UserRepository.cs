@@ -1,7 +1,8 @@
-﻿using BlazorWebAdmin.Models.Entities;
+﻿using BlazorWebAdmin.IRepositories;
+using BlazorWebAdmin.Models.Entities;
 using BlazorWebAdmin.Models.Request;
 
-namespace BlazorWebAdmin.IRepositories
+namespace BlazorWebAdmin.Repositories
 {
     public class UserRepository : IUserRepository
     {
