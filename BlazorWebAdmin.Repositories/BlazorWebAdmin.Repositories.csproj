@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MT.LightORM" Version="1.1.6" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BlazorWebAdmin.IRepositories\BlazorWebAdmin.IRepositories.csproj" />
     <ProjectReference Include="..\BlazorWebAdmin.Models\BlazorWebAdmin.Models.csproj" />
   </ItemGroup>

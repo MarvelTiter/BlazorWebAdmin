@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MT.LightORM" Version="1.1.6" />
+  </ItemGroup>
+
 </Project>
