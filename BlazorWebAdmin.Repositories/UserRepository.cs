@@ -5,34 +5,34 @@ using BlazorWebAdmin.Models.Request;
 namespace BlazorWebAdmin.Repositories
 {
     public class UserRepository : IUserRepository
-    {
-        public bool Delete(User item)
+    {      
+        public Task<User> InsertAsync(User item)
         {
             throw new NotImplementedException();
         }
 
-        public User Insert(User item)
+        public Task<bool> UpdateAsync(User item)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<User> GetList(UserReq req)
+        public Task<bool> DeleteAsync(User item)
         {
             throw new NotImplementedException();
         }
 
-        public bool Update(User item)
+        public Task<User> GetSingleAsync(UserReq req)
         {
-            throw new NotImplementedException();
-        }
-
-        public User GetSingle(UserReq req)
-        {
-            return new User
+            return Task.FromResult(new User
             {
                 UserId = "Admin",
                 UserName = "管理员",
-            };
+            });
+        }
+
+        public Task<IEnumerable<User>> GetListAsync(UserReq req)
+        {
+            throw new NotImplementedException();
         }
     }
 }

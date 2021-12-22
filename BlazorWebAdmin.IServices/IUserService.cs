@@ -11,8 +11,8 @@ namespace BlazorWebAdmin.IServices
 {
     public interface IUserService
     {
-        User Login(LoginFormModel loginForm);
-        IEnumerable<string> GetUserRoles(string userId);
-        IEnumerable<RouterMeta> GetUserPermission(string userId);
+        Task<User> LoginAsync(LoginFormModel loginForm);
+        Task<IEnumerable<string>> GetUserRolesAsync(string userId);
+        Task<IEnumerable<RouterMeta>> GetUserPermissionAsync(string userId);
     }
 }

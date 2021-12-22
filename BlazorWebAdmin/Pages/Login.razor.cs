@@ -24,7 +24,7 @@ namespace BlazorWebAdmin.Pages
         private async Task HandleLogin()
         {
             Loading = true;
-            var user = UserSrv.Login(model);
+            var user = await UserSrv.LoginAsync(model);
             if (user == null)
             {
                 await MessageSrv.Error("用户名或者密码错误!");
@@ -33,7 +33,7 @@ namespace BlazorWebAdmin.Pages
             }
             Store.UserId = user.UserId;
             Store.UserName = user.UserName;
-            Store.Permissions = UserSrv.GetUserPermission("");            
+            Store.Permissions = await UserSrv.GetUserPermissionAsync("");
             Navigator.NavigateTo("/");
         }
     }

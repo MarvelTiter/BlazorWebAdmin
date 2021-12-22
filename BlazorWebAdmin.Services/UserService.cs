@@ -20,45 +20,47 @@ namespace BlazorWebAdmin.Services
             this.userRepository = userRepository;
         }
 
-        public IEnumerable<RouterMeta> GetUserPermission(string userId)
+        public Task<IEnumerable<RouterMeta>> GetUserPermissionAsync(string userId)
         {
-            var meta = new RouterMeta
+            IEnumerable<RouterMeta> result = new List<RouterMeta>
             {
-                RouteName = "设置",
-                IconName = "setting",
-                Children = new List<RouterMeta>
-                    {
-                        new RouterMeta
+                new RouterMeta
+                {
+                    RouteName = "设置",
+                    IconName = "setting",
+                    Children = new List<RouterMeta>
                         {
-                            RouteName = "计数器",
-                            IconName = "setting",
-                            RouteLink = "counter",
-                        },
-                        new RouterMeta
-                        {
-                            RouteName = "表格",
-                            IconName = "setting",
-                            RouteLink = "table",
+                            new RouterMeta
+                            {
+                                RouteName = "计数器",
+                                IconName = "setting",
+                                RouteLink = "counter",
+                            },
+                            new RouterMeta
+                            {
+                                RouteName = "表格",
+                                IconName = "setting",
+                                RouteLink = "table",
+                            }
                         }
-                    }
+                }
             };
-            List<RouterMeta> result = new List<RouterMeta>();
-            result.Add(meta);
-            return result; 
+            return Task.FromResult(result);
         }
 
-        public IEnumerable<string> GetUserRoles(string userId)
+        public Task<IEnumerable<string>> GetUserRolesAsync(string userId)
         {
             throw new NotImplementedException();
         }
 
-        public User Login(LoginFormModel loginForm)
+        public async Task<User> LoginAsync(LoginFormModel loginForm)
         {
+            User u = default;
             if (loginForm.UserName == "admin" && loginForm.Password == "admin")
             {
-                return userRepository.GetSingle(null);
+                u = await userRepository.GetSingleAsync(null);
             }
-            return null; 
+            return u;
         }
     }
 }
