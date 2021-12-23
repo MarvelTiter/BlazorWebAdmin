@@ -10,16 +10,21 @@ namespace BlazorWebAdmin.Repositories
     public class LightDb
     {
         public static readonly string ConnectString = "";
-
-        public DbContext Db => CreateDbContext();
-
-        private DbContext CreateDbContext()
+        private DbContext _dbContext;
+        public LightDb()
         {
-            throw new NotImplementedException();
+            DbContext.Init(DbBaseType.Oracle);
+            CreateDbContext();
+        }
+        public DbContext Db => _dbContext;
+
+        private void CreateDbContext()
+        {
+            //throw new NotImplementedException();
         }
         ~LightDb()
         {
-            Db.Dispose();
+            Db?.Dispose();
         }
     }
 }
