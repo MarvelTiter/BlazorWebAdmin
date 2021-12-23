@@ -6,7 +6,7 @@ namespace BlazorWebAdmin.Repositories
 {
     public class RepositoryBase<T> : LightDb, IRepositoryBase<T>
     {
-        public virtual Task<int> DeleteAsync(T item, Expression<Func<T, bool>> whereExpression)
+        public virtual Task<int> DeleteAsync(Expression<Func<T, bool>> whereExpression)
         {
             Db.DbSet.Delete<T>()
                 .Where(whereExpression);

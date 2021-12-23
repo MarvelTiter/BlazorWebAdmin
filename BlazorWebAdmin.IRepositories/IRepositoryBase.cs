@@ -12,7 +12,7 @@ namespace BlazorWebAdmin.IRepositories
         Task<T> InsertAsync(T item);
         Task<int> UpdateAsync(T item, Expression<Func<T, bool>> whereExpression);
         Task<int> UpdateAsync(Expression<Func<object>> updateExpression, Expression<Func<T, bool>> whereExpression);
-        Task<int> DeleteAsync(T item, Expression<Func<T, bool>> whereExpression);
+        Task<int> DeleteAsync(Expression<Func<T, bool>> whereExpression);
         Task<T> GetSingleAsync(Expression<Func<T, bool>> whereExpression);
         Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> whereExpression);
     }
