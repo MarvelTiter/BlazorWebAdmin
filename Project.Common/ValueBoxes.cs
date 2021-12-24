@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorWebAdmin.Common
+namespace Project.Common
 {
     public static class ValueBoxes
     {

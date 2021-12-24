@@ -15,13 +15,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorWebAdmin.Common\BlazorWebAdmin.Common.csproj" />
-    <ProjectReference Include="..\BlazorWebAdmin.Core\BlazorWebAdmin.Core.csproj" />
-    <ProjectReference Include="..\BlazorWebAdmin.IRepositories\BlazorWebAdmin.IRepositories.csproj" />
-    <ProjectReference Include="..\BlazorWebAdmin.IServices\BlazorWebAdmin.IServices.csproj" />
-    <ProjectReference Include="..\BlazorWebAdmin.Models\BlazorWebAdmin.Models.csproj" />
-    <ProjectReference Include="..\BlazorWebAdmin.Repositories\BlazorWebAdmin.Repositories.csproj" />
-    <ProjectReference Include="..\BlazorWebAdmin.Services\BlazorWebAdmin.Services.csproj" />
+    <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
+    <ProjectReference Include="..\Project.Core\Project.Core.csproj" />
+    <ProjectReference Include="..\Project.IRepositories\Project.IRepositories.csproj" />
+    <ProjectReference Include="..\Project.IServices\Project.IServices.csproj" />
+    <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
+    <ProjectReference Include="..\Project.Repositories\Project.Repositories.csproj" />
+    <ProjectReference Include="..\Project.Services\Project.Services.csproj" />
     <ProjectReference Include="..\BlazorWebAdmin.Store\BlazorWebAdmin.Store.csproj" />
   </ItemGroup>
 

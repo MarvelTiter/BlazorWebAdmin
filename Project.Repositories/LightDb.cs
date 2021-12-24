@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorWebAdmin.Repositories
+namespace Project.Repositories
 {
     public class LightDb
     {

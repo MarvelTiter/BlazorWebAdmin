@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorWebAdmin.Models.Dto
+namespace Project.Models.Dto
 {
     public class UserDto
     {

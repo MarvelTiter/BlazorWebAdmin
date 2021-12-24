@@ -1,4 +1,4 @@
-﻿namespace BlazorWebAdmin.Models.Entities
+﻿namespace Project.Models.Entities
 {
     public class User
     {

@@ -1,9 +1,8 @@
 ﻿using AntDesign;
-using BlazorWebAdmin.IServices;
-using BlazorWebAdmin.Models;
-using BlazorWebAdmin.Models.Forms;
 using BlazorWebAdmin.Store;
 using Microsoft.AspNetCore.Components;
+using Project.IServices;
+using Project.Models.Forms;
 
 namespace BlazorWebAdmin.Pages
 {

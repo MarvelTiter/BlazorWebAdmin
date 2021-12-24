@@ -1,4 +1,4 @@
-﻿namespace BlazorWebAdmin.Common
+﻿namespace Project.Common
 {
     public class ClassHelper
     {
@@ -15,7 +15,7 @@
                     {
                         classes.Add(item.Key);
                     }
-                }                
+                }
                 return string.Join(" ", classes.ToArray());
             }
         }

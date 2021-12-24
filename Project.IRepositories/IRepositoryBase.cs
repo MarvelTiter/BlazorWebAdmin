@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace BlazorWebAdmin.IRepositories
+namespace Project.IRepositories
 {
     public interface IRepositoryBase<T>
     {

@@ -1,8 +1,8 @@
-﻿using BlazorWebAdmin.IRepositories;
-using MDbContext;
+﻿using MDbContext;
+using Project.IRepositories;
 using System.Linq.Expressions;
 
-namespace BlazorWebAdmin.Repositories
+namespace Project.Repositories
 {
     public class RepositoryBase<T> : LightDb, IRepositoryBase<T>
     {

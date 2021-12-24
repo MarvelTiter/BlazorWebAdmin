@@ -1,4 +1,4 @@
-﻿namespace BlazorWebAdmin.Models
+﻿namespace Project.Models
 {
     public class RouterMeta
     {

@@ -5,26 +5,26 @@ VisualStudioVersion = 17.0.32002.185
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebAdmin", "BlazorWebAdmin\BlazorWebAdmin.csproj", "{C77B9A7F-DD2B-4B1F-BA7B-CBCD92E285D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebAdmin.Common", "BlazorWebAdmin.Common\BlazorWebAdmin.Common.csproj", "{BB4D5AB6-3CEB-424F-B874-8616115B2BD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Common", "Project.Common\Project.Common.csproj", "{BB4D5AB6-3CEB-424F-B874-8616115B2BD1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EFE16EE0-ABD6-4659-85D2-5CD3B1D05F09}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAdmin.Core", "BlazorWebAdmin.Core\BlazorWebAdmin.Core.csproj", "{2573B67E-7813-4E21-A99F-21F328A8D630}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Core", "Project.Core\Project.Core.csproj", "{2573B67E-7813-4E21-A99F-21F328A8D630}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAdmin.Repositories", "BlazorWebAdmin.Repositories\BlazorWebAdmin.Repositories.csproj", "{D30F2918-59DE-4BD6-94E6-E24C6C6DC270}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Repositories", "Project.Repositories\Project.Repositories.csproj", "{D30F2918-59DE-4BD6-94E6-E24C6C6DC270}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAdmin.Models", "BlazorWebAdmin.Models\BlazorWebAdmin.Models.csproj", "{C7C9F742-8987-47FF-A546-D056B09A201D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Models", "Project.Models\Project.Models.csproj", "{C7C9F742-8987-47FF-A546-D056B09A201D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAdmin.Store", "BlazorWebAdmin.Store\BlazorWebAdmin.Store.csproj", "{779C3CCA-6B0A-4AD4-936E-4BD00CF01B77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWebAdmin.Store", "BlazorWebAdmin.Store\BlazorWebAdmin.Store.csproj", "{779C3CCA-6B0A-4AD4-936E-4BD00CF01B77}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAdmin.Services", "BlazorWebAdmin.Services\BlazorWebAdmin.Services.csproj", "{0664D1E4-5F1B-4460-8031-ECDF2F169C39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Services", "Project.Services\Project.Services.csproj", "{0664D1E4-5F1B-4460-8031-ECDF2F169C39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAdmin.IRepositories", "BlazorWebAdmin.IRepositories\BlazorWebAdmin.IRepositories.csproj", "{2AECB2F6-9598-4EEE-8846-51356906B69C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.IRepositories", "Project.IRepositories\Project.IRepositories.csproj", "{2AECB2F6-9598-4EEE-8846-51356906B69C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAdmin.IServices", "BlazorWebAdmin.IServices\BlazorWebAdmin.IServices.csproj", "{B20973F8-2DCD-4034-9B36-1936AC5B372E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.IServices", "Project.IServices\Project.IServices.csproj", "{B20973F8-2DCD-4034-9B36-1936AC5B372E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

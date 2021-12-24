@@ -1,4 +1,4 @@
-﻿using BlazorWebAdmin.Models;
+﻿using Project.Models;
 
 namespace BlazorWebAdmin.Store
 {

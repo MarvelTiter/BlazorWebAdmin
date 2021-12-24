@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Project.IRepositories\Project.IRepositories.csproj" />
+    <ProjectReference Include="..\Project.IServices\Project.IServices.csproj" />
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
   </ItemGroup>
 

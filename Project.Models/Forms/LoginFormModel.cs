@@ -1,4 +1,4 @@
-﻿namespace BlazorWebAdmin.Models.Forms
+﻿namespace Project.Models.Forms
 {
     public class LoginFormModel
     {

@@ -1,13 +1,13 @@
-﻿using BlazorWebAdmin.Models;
-using BlazorWebAdmin.Models.Entities;
-using BlazorWebAdmin.Models.Forms;
+﻿using Project.Models;
+using Project.Models.Entities;
+using Project.Models.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorWebAdmin.IServices
+namespace Project.IServices
 {
     public interface IUserService
     {

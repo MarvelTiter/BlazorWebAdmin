@@ -1,7 +1,7 @@
-﻿using BlazorWebAdmin.Common;
-using BlazorWebAdmin.Models;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Project.Common;
+using Project.Models;
 
 namespace BlazorWebAdmin.Shared.LayoutComponents
 {

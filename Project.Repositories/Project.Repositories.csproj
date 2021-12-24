@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorWebAdmin.IRepositories\BlazorWebAdmin.IRepositories.csproj" />
-    <ProjectReference Include="..\BlazorWebAdmin.Models\BlazorWebAdmin.Models.csproj" />
+    <ProjectReference Include="..\Project.IRepositories\Project.IRepositories.csproj" />
+    <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
   </ItemGroup>
 
 </Project>
