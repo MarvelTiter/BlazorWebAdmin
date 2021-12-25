@@ -14,3 +14,7 @@ export function renderChart(id, option) {
     chart.setOption(opt)
     chart.hideLoading()
 }
+
+export function initChart() {
+
+}
