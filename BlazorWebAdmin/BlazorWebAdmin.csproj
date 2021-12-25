@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Blazor.ECharts\Blazor.ECharts.csproj" />
     <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
     <ProjectReference Include="..\Project.Core\Project.Core.csproj" />
     <ProjectReference Include="..\Project.IRepositories\Project.IRepositories.csproj" />

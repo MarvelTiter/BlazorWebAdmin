@@ -1,0 +1,46 @@
+﻿@using Blazor.ECharts.Options
+@using S = Blazor.ECharts.Options.Series
+<h3>Bar</h3>
+<div class="chart-container">
+	<EBar Option="option" Class="chart-fill"></EBar>
+</div>
+@code {
+	EChartOption<S.Bar> option;
+	protected override void OnInitialized()
+	{
+		option = new()
+			{
+				Title = new()
+				{
+					Text = "测试"
+				},
+				XAxis = new()
+				{
+					Type = "category",
+					Data = new()
+					{
+						"Mon",
+						"Tue",
+						"Wed",
+						"Thu",
+						"Fri",
+						"Sat",
+						"Sun"
+					}
+				},
+				YAxis = new()
+				{
+					Type = "value"
+				},
+				Series = new()
+				{
+					new S.Bar
+					{
+						Name = "数量",
+						Data = new[] { 120, 200, 150, 80, 70, 110, 130 },
+					}
+				}
+			};
+		base.OnInitialized();
+	}
+}
