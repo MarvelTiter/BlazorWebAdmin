@@ -43,5 +43,10 @@ namespace Project.Repositories
             Db.DbSet.Update(updateExpression).Where(whereExpression);
             return Db.ExecuteAsync();
         }
+        public Task<M> Request<M>(Func<DbContext, Task<M>> func)
+        {
+            return func.Invoke(Db);
+        }
+
     }
 }
