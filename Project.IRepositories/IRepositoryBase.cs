@@ -14,7 +14,7 @@ namespace Project.IRepositories
         Task<int> UpdateAsync(Expression<Func<object>> updateExpression, Expression<Func<T, bool>> whereExpression);
         Task<int> DeleteAsync(Expression<Func<T, bool>> whereExpression);
         Task<T> GetSingleAsync(Expression<Func<T, bool>> whereExpression);
-        Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> whereExpression);
+        Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> whereExpression, int from = 0, int to = 0);
         Task<M> Request<M>(Func<MDbContext.DbContext, Task<M>> func);
     }
 }

@@ -13,9 +13,16 @@ namespace Project.Repositories
             return Db.ExecuteAsync();
         }
 
-        public virtual Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> whereExpression)
+        public virtual Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> whereExpression, int from = 0, int to = 0)
         {
-            Db.DbSet.Select<T>().Where(whereExpression);
+            if (from > 0 || to > 0)
+            {
+                Db.DbSet.Select<T>().Where(whereExpression).Paging(from, to);
+            }
+            else
+            {
+                Db.DbSet.Select<T>().Where(whereExpression);
+            }
             return Db.QueryAsync<T>();
         }
 

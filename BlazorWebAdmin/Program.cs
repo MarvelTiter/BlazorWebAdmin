@@ -18,6 +18,7 @@ services.AddScoped<CounterStore>();
 services.AddScoped<UserStore>();
 services.AddScoped<EventDispatcher>();
 
+services.AddScoped<IAllAccess,AllAccess>();
 services.AddScoped<IUserService, UserService>();
 services.AddScoped<IUserRepository, UserRepository>();
 //
