@@ -5,7 +5,7 @@ using Project.Models;
 
 namespace BlazorWebAdmin.Shared.LayoutComponents
 {
-    public partial class TagsView
+    public partial class TagsView : IDisposable
     {
         private bool collapse = false;
         private bool showContextmenu = false;
@@ -80,6 +80,11 @@ namespace BlazorWebAdmin.Shared.LayoutComponents
                 showContextmenu = false;
             RootLayout.BodyClickEvent -= RootLayout_BodyClickEvent;
             return Task.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+            store.DataChangedEvent -= StateHasChanged;
         }
     }
 }
