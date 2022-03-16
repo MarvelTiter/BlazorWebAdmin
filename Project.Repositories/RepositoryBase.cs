@@ -57,9 +57,14 @@ namespace Project.Repositories
             return func.Invoke(Db);
         }
 
-        public ExpressionSqlCore<T> Expression()
+        public ExpressionSqlCore<T> Select()
         {
             return Db.DbSet.Select<T>();
+        }
+
+        public ExpressionSqlCore<T> Count()
+        {
+            return Db.DbSet.Count<T>();
         }
 
         public Task<IEnumerable<M>> Query<M>()

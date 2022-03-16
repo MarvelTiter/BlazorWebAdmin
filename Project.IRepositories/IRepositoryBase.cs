@@ -17,7 +17,8 @@ namespace Project.IRepositories
         Task<T> GetSingleAsync(Expression<Func<T, bool>> whereExpression);
         Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> whereExpression, int from = 0, int to = 0);
         Task<M> Request<M>(Func<MDbContext.DbContext, Task<M>> func);
-        ExpressionSqlCore<T> Expression();
+        ExpressionSqlCore<T> Select();
+        ExpressionSqlCore<T> Count();
         Task<IEnumerable<M>> Query<M>();
         Task<M> Single<M>();
         Task<DataTable> Table();
