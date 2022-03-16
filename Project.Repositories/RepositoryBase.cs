@@ -1,6 +1,7 @@
 ﻿using DExpSql;
 using MDbContext;
 using Project.IRepositories;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace Project.Repositories
@@ -56,9 +57,22 @@ namespace Project.Repositories
             return func.Invoke(Db);
         }
 
-        public ExpressionSqlCore<T> Query()
+        public ExpressionSqlCore<T> Expression()
         {
             return Db.DbSet.Select<T>();
+        }
+
+        public Task<IEnumerable<M>> Query<M>()
+        {
+            return Db.QueryAsync<M>();
+        } 
+        public Task<M> Single<M>()
+        {
+            return Db.SingleAsync<M>();
+        }
+        public Task<DataTable> Table()
+        {
+            return Db.QueryDataTableAsync();
         }
     }
 }
