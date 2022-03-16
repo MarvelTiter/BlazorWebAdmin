@@ -1,4 +1,5 @@
-﻿using MDbContext;
+﻿using DExpSql;
+using MDbContext;
 using Project.IRepositories;
 using System.Linq.Expressions;
 
@@ -55,5 +56,9 @@ namespace Project.Repositories
             return func.Invoke(Db);
         }
 
+        public ExpressionSqlCore<T> Query()
+        {
+            return Db.DbSet.Select<T>();
+        }
     }
 }
