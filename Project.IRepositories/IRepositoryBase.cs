@@ -20,7 +20,9 @@ namespace Project.IRepositories
         ExpressionSqlCore<T> Select();
         ExpressionSqlCore<T> Count();
         Task<IEnumerable<M>> Query<M>();
-        Task<M> Single<M>();
+        Task<IEnumerable<M>> Query<M>(string sql, object param);
+        Task<DataTable> Query(string sql, object param);
+        Task<M> Single<M>(); 
         Task<DataTable> Table();
     }
 }

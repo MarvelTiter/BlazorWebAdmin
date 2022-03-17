@@ -52,32 +52,41 @@ namespace Project.Repositories
             Db.DbSet.Update(updateExpression).Where(whereExpression);
             return Db.ExecuteAsync();
         }
-        public Task<M> Request<M>(Func<DbContext, Task<M>> func)
-        {
-            return func.Invoke(Db);
-        }
 
-        public ExpressionSqlCore<T> Select()
+        public virtual ExpressionSqlCore<T> Select()
         {
             return Db.DbSet.Select<T>();
         }
 
-        public ExpressionSqlCore<T> Count()
+        public virtual ExpressionSqlCore<T> Count()
         {
             return Db.DbSet.Count<T>();
         }
 
-        public Task<IEnumerable<M>> Query<M>()
-        {
-            return Db.QueryAsync<M>();
-        } 
-        public Task<M> Single<M>()
+        public virtual Task<M> Single<M>()
         {
             return Db.SingleAsync<M>();
         }
-        public Task<DataTable> Table()
+        public virtual Task<DataTable> Table()
         {
             return Db.QueryDataTableAsync();
+        }
+        public virtual Task<IEnumerable<M>> Query<M>()
+        {
+            return Db.QueryAsync<M>();
+        } 
+        public Task<IEnumerable<M>> Query<M>(string sql, object param)
+        {
+            return Db.QueryAsync<M>(sql, param);
+        }
+
+        public Task<DataTable> Query(string sql, object param)
+        {
+            return Db.QueryDataTableAsync(sql, param);
+        }
+        public Task<M> Request<M>(Func<DbContext, Task<M>> func)
+        {
+            return func.Invoke(Db);
         }
     }
 }

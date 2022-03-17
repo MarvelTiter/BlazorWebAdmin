@@ -1,4 +1,6 @@
-﻿using Project.IRepositories;
+﻿using DExpSql;
+using Project.IRepositories;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace Project.Repositories
@@ -26,6 +28,29 @@ namespace Project.Repositories
             throw new Exception("AllAccess请调用Request");
         }
         public override Task<int> UpdateAsync(object item, Expression<Func<object, bool>> whereExpression)
+        {
+            throw new Exception("AllAccess请调用Request");
+        }
+        public override Task<IEnumerable<M>> Query<M>()
+        {
+            throw new Exception("AllAccess请调用Request");
+        }
+        public override ExpressionSqlCore<object> Select()
+        {
+            throw new Exception("AllAccess请调用Request");
+        }
+
+        public override Task<M> Single<M>()
+        {
+            throw new Exception("AllAccess请调用Request");
+        }
+
+        public override Task<DataTable> Table()
+        {
+            throw new Exception("AllAccess请调用Request");
+        }
+
+        public override ExpressionSqlCore<object> Count()
         {
             throw new Exception("AllAccess请调用Request");
         }
