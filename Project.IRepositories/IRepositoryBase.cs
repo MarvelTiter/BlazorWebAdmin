@@ -21,8 +21,9 @@ namespace Project.IRepositories
         ExpressionSqlCore<T> Count();
         Task<IEnumerable<M>> Query<M>();
         Task<IEnumerable<M>> Query<M>(string sql, object param);
-        Task<DataTable> Query(string sql, object param);
         Task<M> Single<M>(); 
+        Task<M> Single<M>(string sql, object param);
         Task<DataTable> Table();
+        Task<DataTable> Table(string sql, object param);
     }
 }

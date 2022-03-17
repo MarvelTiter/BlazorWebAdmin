@@ -63,26 +63,30 @@ namespace Project.Repositories
             return Db.DbSet.Count<T>();
         }
 
-        public virtual Task<M> Single<M>()
+        public virtual Task<IEnumerable<M>> Query<M>()
         {
-            return Db.SingleAsync<M>();
+            return Db.QueryAsync<M>();
+        }
+        public Task<IEnumerable<M>> Query<M>(string sql, object param)
+        {
+            return Db.QueryAsync<M>(sql, param);
         }
         public virtual Task<DataTable> Table()
         {
             return Db.QueryDataTableAsync();
         }
-        public virtual Task<IEnumerable<M>> Query<M>()
-        {
-            return Db.QueryAsync<M>();
-        } 
-        public Task<IEnumerable<M>> Query<M>(string sql, object param)
-        {
-            return Db.QueryAsync<M>(sql, param);
-        }
 
-        public Task<DataTable> Query(string sql, object param)
+        public Task<DataTable> Table(string sql, object param)
         {
             return Db.QueryDataTableAsync(sql, param);
+        }
+        public virtual Task<M> Single<M>()
+        {
+            return Db.SingleAsync<M>();
+        }
+        public Task<M> Single<M>(string sql, object param)
+        {
+            return Db.SingleAsync<M>(sql, param);
         }
         public Task<M> Request<M>(Func<DbContext, Task<M>> func)
         {
