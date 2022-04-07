@@ -1,5 +1,4 @@
 ﻿@inject EventDispatcher dispatcher
-@inject UserStore store
 @inject RouterStore routeStore
 <div class="side_bar" style="display: flex;flex-direction: column;width: @Width;height:100vh;">
 	<Menu Theme="@MenuTheme.Dark" Mode="@MenuMode.Inline" InlineCollapsed=collapse Style="flex: 1;" OnMenuItemClicked="OnMenuItemClick">
@@ -7,7 +6,7 @@
 		<MenuItem RouterLink="/" RouterMatch="NavLinkMatch.All" Icon="home">
 			主页
 		</MenuItem>
-		@foreach (var item in store.Permissions)
+		@foreach (var item in routeStore.Routers)
 		{
 			<SideBarItem Route=item></SideBarItem>
 		}

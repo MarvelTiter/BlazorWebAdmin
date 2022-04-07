@@ -6,7 +6,10 @@ namespace BlazorWebAdmin.Store
     {
         public List<RouterMeta> TopLink { get; set; } = new List<RouterMeta>();
 
+        public List<RouterMeta> Routers { get; set; } = new List<RouterMeta>();
+
         public int Count { get; set; }
+
         public Task SetActive(string link)
         {
             TopLink.ForEach(a => a.IsActive = a.RouteLink == link);
@@ -44,6 +47,34 @@ namespace BlazorWebAdmin.Store
         public Task Reset()
         {
             TopLink.Clear();
+            return Task.CompletedTask;
+        }
+
+        public Task InitRoutersAsync()
+        {
+            Routers = new List<RouterMeta>
+            {
+                new RouterMeta
+                {
+                    RouteName = "设置",
+                    IconName = "setting",
+                    Children = new List<RouterMeta>
+                        {
+                            new RouterMeta
+                            {
+                                RouteName = "计数器",
+                                IconName = "setting",
+                                RouteLink = "counter",
+                            },
+                            new RouterMeta
+                            {
+                                RouteName = "表格",
+                                IconName = "setting",
+                                RouteLink = "table",
+                            }
+                        }
+                }
+            };
             return Task.CompletedTask;
         }
     }

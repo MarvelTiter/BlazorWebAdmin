@@ -7,7 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Project.IServices\Project.IServices.csproj" />
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Components">
+      <HintPath>..\..\..\LocalPackagesSource\microsoft.aspnetcore.components\6.0.1\lib\net6.0\Microsoft.AspNetCore.Components.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

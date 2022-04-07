@@ -11,29 +11,25 @@ namespace BlazorWebAdmin.Pages
         private LoginFormModel model = new LoginFormModel();
         [Inject]
         public NavigationManager Navigator { get; set; }
-
-        [Inject]
-        public IUserService UserSrv { get; set; }
         [Inject]
         public MessageService MessageSrv { get; set; }
         [Inject]
-        public UserStore Store { get; set; }
+        public UserStore UserStore { get; set; }
+        [Inject]
+        public RouterStore RouterStore { get; set; }
         public bool Loading { get; set; } = false;
 
         private async Task HandleLogin()
         {
             Loading = true;
-            var user = await UserSrv.LoginAsync(model);
-            if (user == null)
+            var user = await UserStore.LoginAsync(model);
+            if (user)
             {
-                await MessageSrv.Error("用户名或者密码错误!");
-                Loading = false;
-                return;
+                await RouterStore.InitRoutersAsync();
+                Navigator.NavigateTo("/");
             }
-            Store.UserId = user.UserId;
-            Store.UserName = user.UserName;
-            Store.Permissions = await UserSrv.GetUserPermissionAsync("");
-            Navigator.NavigateTo("/");
+            Loading = false;
+            return;
         }
     }
 }
