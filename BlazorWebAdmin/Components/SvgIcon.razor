@@ -1,13 +1,15 @@
-﻿@using System.Text.RegularExpressions
-<svg>
+﻿<i @onclick="handleClick">
 	@IconMarkuString
-</svg>
+</i>
 @code {
 	private string _IconName = "";
 	[Parameter]
 	public string IconName { get; set; }
 
 	MarkupString IconMarkuString;
+
+	[Parameter]
+	public string ClassName { get; set; } = "svg-icon";
 
 	[Parameter]
 	public EventCallback OnClick { get; set; }
@@ -26,10 +28,11 @@
 	async Task loadSvgData()
 	{
 		var svgContent = await File.ReadAllTextAsync($"wwwroot/icons/{IconName}.svg");
+		var insertIndex = svgContent.IndexOf("<svg") + 4;
 		//TODO svg文件处理
-		var m = Regex.Match(svgContent, "\\<path\\>.+\\<\\/path\\>");
-		if (m.Success)
-			IconMarkuString = new MarkupString(m.Value);
+		svgContent = svgContent.Insert(insertIndex, $" class='{ClassName}'");
+
+		IconMarkuString = new MarkupString(svgContent);
 	}
 
 }
