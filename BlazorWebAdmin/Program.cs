@@ -1,3 +1,4 @@
+using BlazorWebAdmin;
 using BlazorWebAdmin.Store;
 using Project.Common;
 using Project.IRepositories;
@@ -13,17 +14,16 @@ services.AddRazorPages();
 services.AddServerSideBlazor();
 services.AddECharts();
 
+services.AutoInjects();
+
 services.AddScoped<RouterStore>();
 services.AddScoped<CounterStore>();
 services.AddScoped<UserStore>();
 services.AddScoped<EventDispatcher>();
 
-services.AddScoped<IAllAccess,AllAccess>();
-services.AddScoped<IUserService, UserService>();
-services.AddScoped<IUserRepository, UserRepository>();
 //
 services.AddAntDesign();
-
+//
 
 var app = builder.Build();
 

@@ -1,8 +1,11 @@
 ﻿using System.Data;
 using System.Linq.Expressions;
 using DExpSql;
+using Project.Common.Attributes;
+
 namespace Project.IRepositories
 {
+    [IgnoreAutoInject]
     public interface IRepositoryBase<T>
     {
         //T Insert(T item);

@@ -1,11 +1,13 @@
 ﻿using DExpSql;
 using MDbContext;
+using Project.Common.Attributes;
 using Project.IRepositories;
 using System.Data;
 using System.Linq.Expressions;
 
 namespace Project.Repositories
 {
+    [IgnoreAutoInject]
     public class RepositoryBase<T> : LightDb, IRepositoryBase<T>
     {
         public virtual Task<int> DeleteAsync(Expression<Func<T, bool>> whereExpression)

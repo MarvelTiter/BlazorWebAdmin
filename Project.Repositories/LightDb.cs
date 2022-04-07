@@ -1,4 +1,5 @@
 ﻿using MDbContext;
+using Project.Common.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Project.Repositories
 {
+    [IgnoreAutoInject]
     public class LightDb
     {
         public static readonly string ConnectString = "";
