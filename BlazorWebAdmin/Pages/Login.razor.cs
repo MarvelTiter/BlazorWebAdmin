@@ -22,13 +22,17 @@ namespace BlazorWebAdmin.Pages
         private async Task HandleLogin()
         {
             Loading = true;
-            var user = await UserStore.LoginAsync(model);
-            if (user)
+            var message = await UserStore.LoginAsync(model);
+            Loading = false;
+            if (message is null)
             {
                 await RouterStore.InitRoutersAsync();
                 Navigator.NavigateTo("/");
             }
-            Loading = false;
+            else
+            {
+                await MessageSrv.Error(message);
+            }
             return;
         }
     }

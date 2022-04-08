@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Project.IServices
 {
     public interface ILoginService
     {
-        Task<bool> LoginAsync(string username, string password, out string token);
+        Task<QueryResult<string>> LoginAsync(string username, string password);
         Task<bool> LogoutAsync();
     }
 }

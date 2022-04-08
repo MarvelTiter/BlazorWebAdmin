@@ -1,4 +1,5 @@
 ﻿using Project.IServices;
+using Project.Models;
 using Project.Models.Forms;
 
 namespace BlazorWebAdmin.Store
@@ -16,12 +17,16 @@ namespace BlazorWebAdmin.Store
         public string UserId { get; set; }
 
 
-        public async Task<bool> LoginAsync(LoginFormModel loginForm)
+        public async Task<string> LoginAsync(LoginFormModel loginForm)
         {
-            var flag = await loginService.LoginAsync(loginForm.UserName, loginForm.Password, out var token);
-            Token = token;
-            UserId = loginForm.UserName;
-            return flag;
+            var flag = await loginService.LoginAsync(loginForm.UserName, loginForm.Password);
+            if (flag.Success)
+            {
+                Token = flag.Payload;
+                UserId = loginForm.UserName;
+                return null;
+            }
+            return flag.Message;
         }
     }
 }

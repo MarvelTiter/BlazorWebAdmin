@@ -1,4 +1,5 @@
 ﻿using Project.IServices;
+using Project.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,9 @@ namespace Project.Services
 {
     public class LoginService : ILoginService
     {
-        public Task<bool> LoginAsync(string username, string password, out string token)
+        public Task<QueryResult<string>> LoginAsync(string username, string password)
         {
-            token = string.Empty;
-            return Task.FromResult(true);
+            return Task.FromResult(new QueryResult<string>() { Success = true, Message = "Done" });
         }
 
         public Task<bool> LogoutAsync()
