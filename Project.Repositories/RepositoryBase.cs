@@ -30,6 +30,12 @@ namespace Project.Repositories
             return Db.QueryAsync<T>();
         }
 
+        public Task<int> GetCountAsync(Expression<Func<T, bool>> whereExpression)
+        {
+            Db.DbSet.Count<T>().Where(whereExpression);
+            return Db.SingleAsync<int>();
+        }
+
         public virtual Task<T> GetSingleAsync(Expression<Func<T, bool>> whereExpression)
         {
             Db.DbSet.Select<T>().Where(whereExpression);
@@ -94,5 +100,7 @@ namespace Project.Repositories
         {
             return func.Invoke(Db);
         }
+
+        
     }
 }

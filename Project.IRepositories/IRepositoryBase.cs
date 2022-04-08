@@ -19,6 +19,7 @@ namespace Project.IRepositories
         Task<int> DeleteAsync(Expression<Func<T, bool>> whereExpression);
         Task<T> GetSingleAsync(Expression<Func<T, bool>> whereExpression);
         Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> whereExpression, int from = 0, int to = 0);
+        Task<int> GetCountAsync(Expression<Func<T, bool>> whereExpression);
         Task<M> Request<M>(Func<MDbContext.DbContext, Task<M>> func);
         ExpressionSqlCore<T> Select();
         ExpressionSqlCore<T> Count();
