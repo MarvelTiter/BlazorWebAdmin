@@ -16,6 +16,7 @@ services.AddECharts();
 
 services.AutoInjects();
 
+services.AddScoped<StateContainer>();
 services.AddScoped<RouterStore>();
 services.AddScoped<CounterStore>();
 services.AddScoped<UserStore>();
