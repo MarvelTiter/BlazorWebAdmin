@@ -10,11 +10,11 @@
             baseStore.TryAdd(fullName, v);
         }
 
-        public T Get<T>(string key)
+        public object Get<T>(string key)
         {
             if(baseStore.TryGetValue(key, out var v))
             {
-                return (T)v;
+                return v;
             }
             return default;
         }
