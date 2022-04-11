@@ -1,15 +1,22 @@
 ﻿@page "/counter"
 @inject CounterStore store
+@inject MessageService MessageSrv;
 <h3>Counter</h3>
 <h4>私有变量: @count</h4>
 <h4>Store变量: @store.Count</h4>
 
 <Button Type="@ButtonType.Primary" OnClick="Add">计数</Button>
+
+
+<CustomSelect Style="width:168px;" Options=store.Items @bind-Value="selected"></CustomSelect>
+
 @code {
 	private int count;
+	private string selected;
 	private void Add()
 	{
 		count++;
 		store.Count++;
+		MessageSrv.Success(selected);
 	}
 }

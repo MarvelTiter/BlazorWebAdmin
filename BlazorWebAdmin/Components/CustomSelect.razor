@@ -1,0 +1,23 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@typeparam TItem
+<Select Class=@Class Style=@Style DataSource=Options @bind-Value=selected ValueName="Value" LabelName="Label" OnSelectedItemChanged=HandleSelectedChanged>
+</Select>
+
+@code {
+	private TItem selected;
+	[Parameter]
+	public string Class { get; set; }
+	[Parameter]
+	public string Style { get; set; }
+	[Parameter]
+	public SelectItem<TItem> Options { get; set; }
+	[Parameter]
+	public TItem Value { get; set; }
+	[Parameter]
+	public EventCallback<TItem> ValueChanged { get; set; }
+
+	private async void HandleSelectedChanged(Options<TItem> item)
+	{
+		await ValueChanged.InvokeAsync(item.Value);
+	}
+}
