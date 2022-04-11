@@ -4,13 +4,13 @@
     {
         private Dictionary<string, object> baseStore;
 
-        public void Commit<T>(string key, object v) where T : Type
+        public void Commit<T>(string key, object v)
         {
             var fullName = $"{typeof(T).FullName}_{key}";
             baseStore.TryAdd(fullName, v);
         }
 
-        public T Get<T>(string key) where T:Type
+        public T Get<T>(string key)
         {
             if(baseStore.TryGetValue(key, out var v))
             {
