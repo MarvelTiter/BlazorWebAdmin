@@ -18,6 +18,25 @@ namespace Project.Models
             }
             return options;
         }
+        public static SelectItem<T> Convert<T>(this IEnumerable<T> self, Func<T, string> func)
+        {
+            SelectItem<T> options = new SelectItem<T>();
+            foreach (T item in self)
+            {
+                options.Add(func(item), item);
+            }
+            return options;
+        }
+
+        public static SelectItem<string> ConvertStringOptions<T>(this IEnumerable<T> self, Action<SelectItem<string>, T> action)
+        {
+            SelectItem<string> options = new SelectItem<string>();
+            foreach (T item in self)
+            {
+                action(options, item);
+            }
+            return options;
+        }
     }
 
     public class SelectItem<T> : IEnumerable<Options<T>>
