@@ -1,5 +1,6 @@
 ﻿using Project.Common.Attributes;
 using Project.IRepositories;
+using Project.Repositories;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -12,13 +13,24 @@ namespace BlazorWebAdmin
 
             var all = LoadAllAssembly();
             var allTypes = LoadTypeFromAssembly(all.ToArray())
-                .Where(t => t.Namespace.StartsWith("Project"));
+                .Where(t => t.FullName.StartsWith("Project"));
 
             //class的程序集
             var implementTypes = allTypes.Where(x => x.IsClass).ToArray();
             //接口的程序集
             var interfaceTypes = allTypes.Where(x => x.IsInterface).ToArray();
 
+            InjectServices(self, implementTypes, interfaceTypes);
+
+            var entities = GetDbEntities(all.First(asm=>asm.FullName.Contains("Project.Models"))).ToArray();
+
+            InjectGeneralRepository(self, entities, typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+
+            return self;
+        }
+
+        private static void InjectServices(IServiceCollection services, Type[] implementTypes, Type[] interfaceTypes)
+        {
             foreach (var implementType in implementTypes)
             {
                 if (implementType.IsAbstract)
@@ -38,37 +50,55 @@ namespace BlazorWebAdmin
                     //判断用什么方式注入
                     if (dIType == DIType.Scope)
                     {
-                        self.AddScoped(interfaceType, implementType);
+                        services.AddScoped(interfaceType, implementType);
                     }
                     else if (dIType == DIType.Singleton)
                     {
-                        self.AddSingleton(interfaceType, implementType);
+                        services.AddSingleton(interfaceType, implementType);
                     }
                     else
                     {
-                        self.AddTransient(interfaceType, implementType);
+                        services.AddTransient(interfaceType, implementType);
                     }
                 }
                 else //class没有接口，直接注入class
                 {
                     if (dIType == DIType.Scope)
                     {
-                        self.AddScoped(implementType);
+                        services.AddScoped(implementType);
                     }
                     else if (dIType == DIType.Singleton)
                     {
-                        self.AddSingleton(implementType);
+                        services.AddSingleton(implementType);
                     }
                     else
                     {
-                        self.AddTransient(implementType);
+                        services.AddTransient(implementType);
                     }
                 }
             }
-
-            return self;
         }
 
+        private static void InjectGeneralRepository(IServiceCollection services, Type[] entities, Type baseInterface, Type baseImpl)
+        {
+            foreach (var item in entities)
+            {
+                var i = baseInterface.MakeGenericType(item);
+                var p  = baseImpl.MakeGenericType(item);
+                services.AddScoped(i, p);
+            }
+        }
+
+        private static IEnumerable<Type> GetDbEntities(Assembly assembly)
+        {
+            foreach (var item in assembly.GetTypes())
+            {
+                if (item.FullName.Contains("Entities"))
+                {
+                    yield return item; 
+                }
+            }
+        }
 
         private static IEnumerable<Type> LoadTypeFromAssembly(params Assembly[] assembly)
         {
@@ -86,21 +116,7 @@ namespace BlazorWebAdmin
                         yield return type;
                     }
                 }
-
             }
-
-            //AppDomain.CurrentDomain.GetAssemblies().SelectMany(asm =>
-            //{
-            //    var full = asm.GetCustomAttributesData().Any(cd => cd.AttributeType == typeof(AutoInjectAttribute));
-            //    if (full)
-            //    {
-            //        return asm.GetTypes().Where(t => t.GetCustomAttribute<IgnoreAutoInjectAttribute>(false) == null);
-            //    }
-            //    else
-            //    {
-            //        return asm.GetTypes().Where(t => t.GetCustomAttribute<AutoInjectAttribute>() != null);
-            //    }
-            //});
         }
 
         private static IEnumerable<Assembly> LoadAllAssembly()
