@@ -1,11 +1,11 @@
 ﻿@page "/counter"
 @inject CounterStore store
-@inject MessageService MessageSrv;
+@inject ISnackbar Snackbar;
 <h3>Counter</h3>
 <h4>私有变量: @count</h4>
 <h4>Store变量: @store.Count</h4>
 
-<Button Type="@ButtonType.Primary" OnClick="Add">计数</Button>
+<MudButton Color=@Color.Primary OnClick="Add">计数</MudButton>
 
 
 <CustomSelect Style="width:168px;" Options=store.Items @bind-Value="selected"></CustomSelect>
@@ -17,6 +17,6 @@
 	{
 		count++;
 		store.Count++;
-		MessageSrv.Success(selected);
+		Snackbar.Add(selected, Severity.Success);
 	}
 }

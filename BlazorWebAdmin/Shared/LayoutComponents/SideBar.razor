@@ -1,11 +1,12 @@
 ﻿@inject EventDispatcher dispatcher
 @inject RouterStore routeStore
 <div class="side_bar" style="display: flex;flex-direction: column;width: @Width;height:100vh;">
-	<Menu Theme="@MenuTheme.Dark" Mode="@MenuMode.Inline" InlineCollapsed=collapse Style="flex: 1;" OnMenuItemClicked="OnMenuItemClick">
+	<MudNavMenu Style="flex: 1;">
 		<Profile></Profile>
-		<MenuItem RouterLink="/" RouterMatch="NavLinkMatch.All" Icon="home">
+		<MudDivider Class="my-2"/>
+		<MudNavLink  Href="/" Icon="home">
 			主页
-		</MenuItem>
+		</MudNavLink >
 		@foreach (var item in routeStore.Routers)
 		{
 			<SideBarItem Route=item></SideBarItem>
@@ -13,7 +14,7 @@
 		@*<MenuItem RouterLink="fetchdata" RouterMatch="NavLinkMatch.All" Icon="user">
 			Fetch data
 			</MenuItem>*@
-	</Menu>
+	</MudNavMenu>
 </div>
 
 @code {
@@ -33,12 +34,6 @@
 		StateHasChanged();
 		return Task.CompletedTask;
 	}
-
-	private async Task OnMenuItemClick(MenuItem item)
-	{
-		await routeStore.TryAdd(item.RouterLink, item.Title);
-	}
-
 }
 <style>
 	.side_bar {

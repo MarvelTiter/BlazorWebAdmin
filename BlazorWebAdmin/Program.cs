@@ -1,5 +1,6 @@
 using BlazorWebAdmin;
 using BlazorWebAdmin.Store;
+using MudBlazor.Services;
 using Project.Common;
 using Project.IRepositories;
 using Project.IServices;
@@ -23,8 +24,7 @@ services.AddScoped<UserStore>();
 services.AddScoped<EventDispatcher>();
 
 //
-services.AddAntDesign();
-//
+services.AddMudServices();
 
 var app = builder.Build();
 

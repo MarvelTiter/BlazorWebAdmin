@@ -13,22 +13,10 @@
 		</div>
 	</div>
 	<div class="login-form">
-		<Form Model="model">
-			<FormItem>
-				<Input @bind-Value="@context.UserName" placeholder="Username" name="username" type="text" tabindex="1" AutoComplete="true">
-				<Prefix>
-					<Icon Type="user" Theme="outline" />
-				</Prefix>
-				</Input>
-			</FormItem>
-			<FormItem>
-				<InputPassword @bind-Value="@context.Password" placeholder="Password" tabindex="2" AutoComplete="true">
-					<Prefix>
-						<Icon Type="lock" Theme="outline" />
-					</Prefix>
-				</InputPassword>
-			</FormItem>
-		</Form>
-		<Button Loading="Loading" Type="@ButtonType.Primary" OnClick="HandleLogin">登录</Button>
+		<MudForm  Model="model">
+			<MudTextField @bind-Value=model.UserName T="string" Label="用户名" Required="true" RequiredError="用户名不能为空！"/>
+			<MudTextField @bind-Value=model.Password T="string" Label="密码" Required="true" RequiredError="密码不能为空！" InputType=@InputType.Password/>			
+		</MudForm>
+		<MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto" OnClick="HandleLogin">登录</MudButton>
 	</div>
 </div>

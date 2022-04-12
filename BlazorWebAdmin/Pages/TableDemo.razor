@@ -2,11 +2,20 @@
 @using Project.Models.Entities
 <h3>Table</h3>
 
-<Table TItem=User DataSource="Users">
-	<Column @bind-Field="context.UserId"></Column>
-	<Column @bind-Field=context.UserName></Column>
-	<Column @bind-Field=context.Age></Column>
-</Table>
+<MudTable Items="Users">
+	<HeaderContent>
+        <MudTh>用户名</MudTh>
+        <MudTh>年龄</MudTh>
+        <MudTh>账号</MudTh>
+        <MudTh>密码</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.UserName</MudTd>
+        <MudTd DataLabel="Sign">@context.Age</MudTd>
+        <MudTd DataLabel="Name">@context.UserId</MudTd>
+        <MudTd DataLabel="Position">@context.Password</MudTd>
+    </RowTemplate>
+</MudTable>
 @code {
 	private List<User> Users = null;
 	protected override Task OnInitializedAsync()

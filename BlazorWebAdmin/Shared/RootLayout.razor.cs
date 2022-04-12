@@ -1,10 +1,7 @@
-﻿using AntDesign;
-using BlazorWebAdmin.Shared.LayoutComponents;
-using BlazorWebAdmin.Store;
+﻿using BlazorWebAdmin.Store;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
+using MudBlazor;
 using Project.Common;
 
 namespace BlazorWebAdmin.Shared
@@ -20,7 +17,7 @@ namespace BlazorWebAdmin.Shared
         [Inject]
         public UserStore UserStore { get; set; }
         [Inject]
-        public MessageService MsgSrv { get; set; }
+        public ISnackbar Snackbar { get; set; }
         [Inject]
         public EventDispatcher Dispatcher { get; set; }
 
@@ -37,7 +34,8 @@ namespace BlazorWebAdmin.Shared
                 if (string.IsNullOrEmpty(UserStore?.UserId))
                 {
                     NavigationManager.NavigateTo("/login");
-                    await MsgSrv.Error("登录过期！请重新登录！");
+                    Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+                    Snackbar.Add("登录过期！请重新登录！", Severity.Warning);
                 }
             }
         }
@@ -49,7 +47,8 @@ namespace BlazorWebAdmin.Shared
             if (string.IsNullOrEmpty(UserStore?.UserId))
             {
                 NavigationManager.NavigateTo("/login");
-                await MsgSrv.Error("登录过期！请重新登录！");
+                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+                Snackbar.Add("登录过期！请重新登录！", Severity.Warning);
             }
             var url = e.Location.Replace("http://", "").Replace("https://", "").Split('/');
             if (url.Length == 2)

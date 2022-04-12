@@ -1,6 +1,6 @@
-﻿using AntDesign;
-using BlazorWebAdmin.Store;
+﻿using BlazorWebAdmin.Store;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Project.IServices;
 using Project.Models.Forms;
 
@@ -11,8 +11,9 @@ namespace BlazorWebAdmin.Pages
         private LoginFormModel model = new LoginFormModel();
         [Inject]
         public NavigationManager Navigator { get; set; }
+
         [Inject]
-        public MessageService MessageSrv { get; set; }
+        public ISnackbar Snackbar { get; set; }
         [Inject]
         public UserStore UserStore { get; set; }
         [Inject]
@@ -31,7 +32,8 @@ namespace BlazorWebAdmin.Pages
             }
             else
             {
-                await MessageSrv.Error(message);
+                Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+                Snackbar.Add(message,Severity.Error);
             }
             return;
         }

@@ -1,26 +1,20 @@
 ﻿@using System.Linq
 @if (!Route.HasChildren || onlyOneChildren)
 {
-	<MenuItem RouterLink="@Route.RouteLink" RouterMatch="NavLinkMatch.All" Icon="@Route.IconName" Title=@Route.RouteName>
-		
-	</MenuItem>
+	<MudNavLink  Href="@Route.RouteLink" Icon="@Route.IconName">
+		@Route.RouteName
+	</MudNavLink >
 }
 else
 {
-	<SubMenu>
-		<TitleTemplate>
-			<span class="subtitle_template">
-				<Icon Type="@Route.IconName" Theme="outline"></Icon>
-				<span>@Route.RouteName</span>
-			</span>
-		</TitleTemplate>
+	<MudNavGroup Title=@Route.RouteName Icon=@Route.IconName>		
 		<ChildContent>
 			@foreach (var item in Route.Children)
 			{
 				<SideBarItem Route=item></SideBarItem>
 			}
 		</ChildContent>
-	</SubMenu>
+	</MudNavGroup>
 }
 
 
