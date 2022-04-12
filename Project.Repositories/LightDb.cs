@@ -12,17 +12,16 @@ namespace Project.Repositories
     public class LightDb
     {
         public static readonly string ConnectString = "";
-        private DbContext _dbContext;
         public LightDb()
         {
             DbContext.Init(DbBaseType.Oracle);
             CreateDbContext();
         }
-        public DbContext Db => _dbContext;
+        public DbContext Db => CreateDbContext();
 
-        private void CreateDbContext()
+        private DbContext CreateDbContext()
         {
-            //throw new NotImplementedException();
+            throw new NotImplementedException();
         }
         ~LightDb()
         {

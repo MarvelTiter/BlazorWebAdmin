@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Project.Repositories
 {
-    public class Reporitory : IRepository
+    public class Reporitory : LightDb, IRepository
     {
         private readonly IServiceProvider provider;
 
@@ -19,13 +19,13 @@ namespace Project.Repositories
         }
         public ExpressionSql Query()
         {
-            throw new NotImplementedException();
+            return Db.DbSet;
         }
 
         public IRepositoryBase<T> Table<T>()
         {
             var type = typeof(IRepositoryBase<>).MakeGenericType(typeof(T));
-            var repo= provider.GetService(type) as IRepositoryBase<T>;
+            var repo = provider.GetService(type) as IRepositoryBase<T>;
             return repo;
         }
     }
