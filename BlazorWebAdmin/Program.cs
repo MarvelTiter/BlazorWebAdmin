@@ -1,10 +1,6 @@
 using BlazorWebAdmin;
 using BlazorWebAdmin.Store;
 using Project.Common;
-using Project.IRepositories;
-using Project.IServices;
-using Project.Repositories;
-using Project.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

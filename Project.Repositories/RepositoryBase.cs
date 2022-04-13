@@ -1,7 +1,7 @@
 ﻿using DExpSql;
 using MDbContext;
 using Project.Common.Attributes;
-using Project.IRepositories;
+using Project.Repositories.interfaces;
 using System.Data;
 using System.Linq.Expressions;
 

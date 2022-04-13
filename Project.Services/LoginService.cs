@@ -1,10 +1,5 @@
-﻿using Project.IServices;
-using Project.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Project.Models;
+using Project.Services.interfaces;
 
 namespace Project.Services
 {

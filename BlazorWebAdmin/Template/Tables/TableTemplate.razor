@@ -1,0 +1,47 @@
+﻿@typeparam TData
+<Button Type="@ButtonType.Primary" OnClick="HandleChange">加载</Button>
+
+<Table DataSource=datas
+	   Loading=loading
+	   @bind-PageIndex=pageIndex
+	   @bind-PageSize=pageSize
+	   OnPageIndexChange=HandleChange>
+	@{
+		if (TableOptions.EnableSelection)
+		{
+			<Selection Width="50" />
+		}
+		if (TableOptions.IsDataTableSource)
+		{
+			foreach (var col in TableOptions.Columns)
+			{
+				<Column TData="object" Title="@col.Label" DataIndex=@($"['{col.PropertyOrFieldName}']")></Column>
+			}
+		}
+		else
+		{
+			foreach (var col in TableOptions.Columns)
+			{
+				var type = col.DataType.ToLower();
+				switch (type)
+				{
+					case "string":
+						<Column TData="String" Title="@col.Label" DataIndex="@col.PropertyOrFieldName"></Column>
+						break;
+					case "int32":
+						<Column TData="Int32?" Title="@col.Label" DataIndex="@col.PropertyOrFieldName"></Column>
+						break;
+					case "int16":
+						<Column TData="Int16?" Title="@col.Label" DataIndex="@col.PropertyOrFieldName"></Column>
+						break;
+					case "bool":
+						<Column TData="Boolean?" Title="@col.Label" DataIndex="@col.PropertyOrFieldName"></Column>
+						break;
+					case "datetime":
+						<Column TData="DateTime?" Title="@col.Label" DataIndex="@col.PropertyOrFieldName"></Column>
+						break;
+				}
+			}
+		}
+	}
+</Table>

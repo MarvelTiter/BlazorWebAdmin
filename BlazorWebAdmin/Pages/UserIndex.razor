@@ -1,0 +1,33 @@
+﻿@using BlazorWebAdmin.Template.Tables
+@using Project.Models.Entities
+@page "/user/index"
+
+<TableTemplate TableOptions=tableOptions></TableTemplate>
+
+@code {
+	TableOptions<User> tableOptions;
+
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		tableOptions = new TableOptions<User>();
+		tableOptions.Columns = typeof(User).GenerateColumns();
+		tableOptions.DataLoader = Load;
+	}
+
+	async Task<IEnumerable<User>> Load(int pageIndex, int pageSize)
+	{
+		List<User> users = new List<User>();
+		var length = new Random().Next(5, 15);
+		for (var i = 0; i < length; i++)
+		{
+			var u = new User();
+			u.Age = i + 10;
+			u.UserName = $"Hello -> {i}";
+			users.Add(u);
+			await Task.Delay(200);
+		}
+		Console.WriteLine($"pageIndex:{pageIndex} ; pageSize:{pageSize}");
+		return users;
+	}
+}

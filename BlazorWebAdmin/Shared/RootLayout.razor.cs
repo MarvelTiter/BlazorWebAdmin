@@ -42,7 +42,7 @@ namespace BlazorWebAdmin.Shared
             }
         }
         const string LOCATION_MAP = "[http://|https://](.+)(?=/)(.+)";
-        private async void NavigationManager_LocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+        private async void NavigationManager_LocationChanged(object? sender, LocationChangedEventArgs e)
         {
             if (NavigationManager.Uri.Contains("/login"))
                 return;
@@ -51,9 +51,7 @@ namespace BlazorWebAdmin.Shared
                 NavigationManager.NavigateTo("/login");
                 await MsgSrv.Error("登录过期！请重新登录！");
             }
-            var url = e.Location.Replace("http://", "").Replace("https://", "").Split('/');
-            if (url.Length == 2)
-                await RouterStore.SetActive(url[1]);
+            await RouterStore.SetActive(e.Location);
         }
 
         public void HandleRootClick(MouseEventArgs e)

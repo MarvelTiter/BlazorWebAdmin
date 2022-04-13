@@ -11,15 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.10.2" />
+    <PackageReference Include="AntDesign" Version="0.10.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Blazor.ECharts\Blazor.ECharts.csproj" />
     <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
     <ProjectReference Include="..\Project.Core\Project.Core.csproj" />
-    <ProjectReference Include="..\Project.IRepositories\Project.IRepositories.csproj" />
-    <ProjectReference Include="..\Project.IServices\Project.IServices.csproj" />
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
     <ProjectReference Include="..\Project.Repositories\Project.Repositories.csproj" />
     <ProjectReference Include="..\Project.Services\Project.Services.csproj" />

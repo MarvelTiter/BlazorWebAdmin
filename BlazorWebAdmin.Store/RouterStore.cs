@@ -12,7 +12,7 @@ namespace BlazorWebAdmin.Store
 
         public Task SetActive(string link)
         {
-            TopLink.ForEach(a => a.IsActive = a.RouteLink == link);
+            TopLink.ForEach(a => a.IsActive = link.EndsWith(a.RouteLink));
             NotifyChanged();
             return Task.CompletedTask;
         }
@@ -25,7 +25,7 @@ namespace BlazorWebAdmin.Store
                 NotifyChanged();
                 return;
             }
-            if (!TopLink.Any(x => x.RouteLink == link))
+            if (!TopLink.Any(x => link.EndsWith(x.RouteLink)))
             {
                 TopLink.Add(new RouterMeta
                 {
@@ -64,13 +64,19 @@ namespace BlazorWebAdmin.Store
                             {
                                 RouteName = "计数器",
                                 IconName = "setting",
-                                RouteLink = "counter",
+                                RouteLink = "counter/index",
                             },
                             new RouterMeta
                             {
                                 RouteName = "表格",
                                 IconName = "setting",
                                 RouteLink = "table",
+                            },
+                            new RouterMeta
+                            {
+                                RouteName = "用户",
+                                IconName = "setting",
+                                RouteLink = "user/index",
                             }
                         }
                 }

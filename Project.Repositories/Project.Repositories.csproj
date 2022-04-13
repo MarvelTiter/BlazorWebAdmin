@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
-    <ProjectReference Include="..\Project.IRepositories\Project.IRepositories.csproj" />
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
   </ItemGroup>
 

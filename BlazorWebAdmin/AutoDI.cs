@@ -1,7 +1,6 @@
 ﻿using Project.Common.Attributes;
-using Project.IRepositories;
 using Project.Repositories;
-using System.Diagnostics;
+using Project.Repositories.interfaces;
 using System.Reflection;
 
 namespace BlazorWebAdmin
@@ -13,7 +12,7 @@ namespace BlazorWebAdmin
 
             var all = LoadAllAssembly();
             var allTypes = LoadTypeFromAssembly(all.ToArray())
-                .Where(t => t.FullName.StartsWith("Project"));
+                .Where(t => t.FullName!.StartsWith("Project"));
 
             //class的程序集
             var implementTypes = allTypes.Where(x => x.IsClass).ToArray();
@@ -22,7 +21,7 @@ namespace BlazorWebAdmin
 
             InjectServices(self, implementTypes, interfaceTypes);
 
-            var entities = GetDbEntities(all.First(asm=>asm.FullName.Contains("Project.Models"))).ToArray();
+            var entities = GetDbEntities(all.First(asm => asm.FullName!.Contains("Project.Models"))).ToArray();
 
             InjectGeneralRepository(self, entities, typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
@@ -84,7 +83,7 @@ namespace BlazorWebAdmin
             foreach (var item in entities)
             {
                 var i = baseInterface.MakeGenericType(item);
-                var p  = baseImpl.MakeGenericType(item);
+                var p = baseImpl.MakeGenericType(item);
                 services.AddScoped(i, p);
             }
         }
@@ -95,7 +94,7 @@ namespace BlazorWebAdmin
             {
                 if (item.FullName.Contains("Entities"))
                 {
-                    yield return item; 
+                    yield return item;
                 }
             }
         }
