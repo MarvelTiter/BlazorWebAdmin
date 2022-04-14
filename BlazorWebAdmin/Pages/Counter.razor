@@ -37,7 +37,7 @@
 		MessageSrv.Success(selected);
 	}
 
-	async Task<IEnumerable<DataRow>> Load(int pageIndex, int pageSize)
+	async Task<QueryResult<PagingResult<DataRow>>> Load(int pageIndex, int pageSize)
 	{
 		DataTable dt = new DataTable();
 		dt.Columns.Add("A");
@@ -56,6 +56,6 @@
 			await Task.Delay(200);
 		}
 		Console.WriteLine($"pageIndex:{pageIndex} ; pageSize:{pageSize}");
-		return dt.AsEnumerable();
+		return QueryResult<DataRow>.PagingResult(dt.AsEnumerable(), dt.Rows.Count);
 	}
 }

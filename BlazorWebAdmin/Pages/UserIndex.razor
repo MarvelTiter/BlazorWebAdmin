@@ -15,7 +15,7 @@
 		tableOptions.DataLoader = Load;
 	}
 
-	async Task<IEnumerable<User>> Load(int pageIndex, int pageSize)
+	async Task<QueryResult<PagingResult<User>>> Load(int pageIndex, int pageSize)
 	{
 		List<User> users = new List<User>();
 		var length = new Random().Next(5, 15);
@@ -28,6 +28,6 @@
 			await Task.Delay(200);
 		}
 		Console.WriteLine($"pageIndex:{pageIndex} ; pageSize:{pageSize}");
-		return users;
+		return QueryResult<User>.PagingResult(users,users.Count);
 	}
 }
