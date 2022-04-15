@@ -1,21 +1,22 @@
 ﻿@using BlazorWebAdmin.Template.Tables.Setting
 @typeparam TData
+@typeparam TQuery
 <Space>
 	<SpaceItem>
-		@QueryArea
+		@QueryArea(TableOptions.Query)
 	</SpaceItem>
 	<SpaceItem>
 		<Button Type="@ButtonType.Primary" OnClick="HandleChange">查询</Button>
 	</SpaceItem>
 </Space>
 <Card Class="layout-card mt-10">
-	<Table DataSource=datas
+	<Table DataSource=TableOptions.Datas
 		   Loading=loading
 		   Bordered
 		   Size="@TableSize.Small"
-		   Total=total
-		   @bind-PageIndex=pageIndex
-		   @bind-PageSize=pageSize
+		   Total=TableOptions.Total
+		   @bind-PageIndex=TableOptions.Query.PageIndex
+		   @bind-PageSize=TableOptions.Query.PageSize
 		   OnPageIndexChange=HandleChange>
 		@{
 			// 选择列

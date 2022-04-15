@@ -1,6 +1,7 @@
 ﻿@page "/counter/index"
 @using BlazorWebAdmin.Template.Tables
 @using System.Data
+@using Project.Models.Request
 @inject CounterStore store
 @inject MessageService MessageSrv;
 <h3>Counter</h3>
@@ -12,17 +13,17 @@
 <CustomSelect Style="width:168px;" Options=store.Items @bind-Value="selected"></CustomSelect>
 
 
-<TableTemplate TableOptions=tableOptions></TableTemplate>
+<TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
 
 @code {
 	private int count;
 	private string selected;
-	TableOptions<DataRow> tableOptions;
+	TableOptions<DataRow, GeneralReq> tableOptions;
 
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
-		tableOptions = new TableOptions<DataRow>();
+		tableOptions = new TableOptions<DataRow, GeneralReq>();
 		tableOptions.AddColumn("列1", "A")
 					.AddColumn("列2", "B")
 					.AddColumn("列3", "C")
@@ -37,7 +38,7 @@
 		MessageSrv.Success(selected);
 	}
 
-	async Task<QueryResult<PagingResult<DataRow>>> Load(int pageIndex, int pageSize)
+	async Task<QueryResult<PagingResult<DataRow>>> Load(GeneralReq req)
 	{
 		DataTable dt = new DataTable();
 		dt.Columns.Add("A");
@@ -55,7 +56,7 @@
 			dt.Rows.Add(row);
 			await Task.Delay(200);
 		}
-		Console.WriteLine($"pageIndex:{pageIndex} ; pageSize:{pageSize}");
+		Console.WriteLine($"pageIndex:{req.PageIndex} ; pageSize:{req.PageSize}");
 		return QueryResult<DataRow>.PagingResult(dt.AsEnumerable(), dt.Rows.Count);
 	}
 }

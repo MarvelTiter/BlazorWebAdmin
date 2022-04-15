@@ -1,6 +1,13 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 @typeparam TItem
-<Select Class=@Class Style=@Style DataSource=Options @bind-Value=selected ValueName="Value" LabelName="Label" OnSelectedItemChanged=HandleSelectedChanged>
+<Select Class=@Class
+		Style=@Style
+		DataSource=Options
+		@bind-Value=selected
+		ValueName="Value"
+		LabelName="Label"
+		DropdownMatchSelectWidth=@false
+		OnSelectedItemChanged=HandleSelectedChanged>
 </Select>
 
 @code {

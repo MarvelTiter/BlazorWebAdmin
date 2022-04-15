@@ -6,43 +6,67 @@ using System.Data;
 
 namespace BlazorWebAdmin.Template.Tables
 {
-    public partial class TableTemplate<TData>
+    public partial class TableTemplate<TData, TQuery> where TQuery : IRequest, new()
     {
         [Parameter]
-        public TableOptions<TData> TableOptions { get; set; }
+        public TableOptions<TData, TQuery> TableOptions { get; set; }
         [Parameter]
-        public RenderFragment QueryArea { get; set; }
-        IEnumerable<TData> datas;
+        public RenderFragment<TQuery> QueryArea { get; set; }
+        
         bool loading;
-        int pageIndex = 1;
-        int pageSize = 10;
-        int total = 0;
-                
+
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();            
+            if (TableOptions.LoadDataOnLoaded)
+            {
+                await HandleChange();
+            }
+        }
+
         public async Task HandleChange()
         {
             loading = true;
-            var result = await TableOptions.DataLoader(pageIndex, pageSize);
-            datas = result.Payload.Data;
-            total = result.Payload.TotalRecord;
+            var result = await TableOptions.DataLoader(TableOptions.Query);
+            TableOptions.Datas = result.Payload.Data;
+            TableOptions.Total = result.Payload.TotalRecord;
+            if (!TableOptions.Page)
+            {
+                TableOptions.Query.PageSize = TableOptions.Total;
+            }
+            else
+            {
+                TableOptions.Query.PageSize = 10;
+            }
             loading = false;
         }
     }
 
-    public class TableOptions<TData>
+    public class TableOptions<TData, TQuery> where TQuery : IRequest, new()
     {
         public List<ColumnDefinition> Columns { get; set; }
         public List<ButtonDefinition<TData>> Buttons { get; set; }
+        public bool Page { get; set; } = true;
+        public TQuery Query { get; set; }
         public bool EnableSelection { get; set; } = true;
+        public bool LoadDataOnLoaded { get; set; } = false;
+		public int Total { get; set; }
+		public IEnumerable<TData> Datas { get; set; }
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow);
-        public Func<int, int, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
+        public Func<TQuery, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
+        public bool Initialized => Columns != null && Columns.Count > 0;
         public TableOptions()
         {
-            Columns = new List<ColumnDefinition>();
             Buttons = new List<ButtonDefinition<TData>>();
+            Query = new TQuery();
         }
 
-        public TableOptions<TData> AddColumn(string label, string prop, ColumnDefinition? col = null)
+        public TableOptions<TData, TQuery> AddColumn(string label, string prop, ColumnDefinition? col = null)
         {
+            if (Columns == null)
+            {
+                Columns = new List<ColumnDefinition>();
+            }
             if (col == null)
             {
                 col = new ColumnDefinition(label, prop);
@@ -51,7 +75,7 @@ namespace BlazorWebAdmin.Template.Tables
             return this;
         }
 
-        public TableOptions<TData> AddButton(ButtonDefinition<TData> btn)
+        public TableOptions<TData, TQuery> AddButton(ButtonDefinition<TData> btn)
         {
             Buttons.Add(btn);
             return this;
