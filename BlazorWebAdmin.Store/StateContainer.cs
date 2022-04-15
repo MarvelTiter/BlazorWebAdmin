@@ -8,10 +8,10 @@ namespace BlazorWebAdmin.Store
 {
     public class StateContainer
     {
-        private Dictionary<string, object> _state = new();
-        public T Get<O, T>(string key) where T : class, new()
+        private readonly Dictionary<string, object> _state = new();
+        public T Get<OwnerType, T>(string key = "key") where T : class, new()
         {
-            var fullKey = $"{typeof(O).FullName}_{key}";
+            var fullKey = $"{typeof(OwnerType).FullName}_{typeof(T).FullName}_{key}";
             if (!_state.TryGetValue(fullKey, out var value))            
             {
                 value = new T();
