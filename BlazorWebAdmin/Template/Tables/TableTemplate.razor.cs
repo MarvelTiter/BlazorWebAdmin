@@ -12,33 +12,33 @@ namespace BlazorWebAdmin.Template.Tables
         public TableOptions<TData, TQuery> TableOptions { get; set; }
         [Parameter]
         public RenderFragment<TQuery> QueryArea { get; set; }
-        
+
         bool loading;
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();            
+            await base.OnInitializedAsync();
             if (TableOptions.LoadDataOnLoaded)
             {
-                await HandleChange();
+                await Search();
             }
         }
 
-        public async Task HandleChange()
+        public async Task Search()
         {
             loading = true;
             var result = await TableOptions.DataLoader(TableOptions.Query);
             TableOptions.Datas = result.Payload.Data;
             TableOptions.Total = result.Payload.TotalRecord;
-            if (!TableOptions.Page)
-            {
-                TableOptions.Query.PageSize = TableOptions.Total;
-            }
-            else
-            {
-                TableOptions.Query.PageSize = 10;
-            }
             loading = false;
+        }
+
+        public async Task HandleChange()
+        {
+           if (TableOptions.Page)
+            {
+                await Search();
+            }
         }
     }
 
@@ -50,8 +50,8 @@ namespace BlazorWebAdmin.Template.Tables
         public TQuery Query { get; set; }
         public bool EnableSelection { get; set; } = true;
         public bool LoadDataOnLoaded { get; set; } = false;
-		public int Total { get; set; }
-		public IEnumerable<TData> Datas { get; set; }
+        public int Total { get; set; }
+        public IEnumerable<TData> Datas { get; set; }
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow);
         public Func<TQuery, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
         public bool Initialized => Columns != null && Columns.Count > 0;
