@@ -6,6 +6,7 @@
         public int Index { get; set; }
         public string PropertyOrFieldName { get; set; }
         public string DataType { get; set; } = "string";
+        public string? Fixed { get; set; }
         public ColumnDefinition(string label, string name)
         {
             Label = label;

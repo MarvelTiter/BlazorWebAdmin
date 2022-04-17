@@ -10,25 +10,26 @@
 	</SpaceItem>
 </Space>
 <Card Class="layout-card mt-10">
-	<Table DataSource=TableOptions.Datas
-		   Loading=loading
+	<Table DataSource=@TableOptions.Datas
+		   Loading=@loading
 		   Bordered
+		   ScrollX=@TableOptions.ScrollX
 		   Size="@TableSize.Small"
-		   Total=TableOptions.Total
-		   @bind-PageIndex=TableOptions.Query.PageIndex
-		   @bind-PageSize=TableOptions.Query.PageSize
+		   Total=@TableOptions.Total
+		   @bind-PageIndex=@TableOptions.Query.PageIndex
+		   @bind-PageSize=@TableOptions.Query.PageSize
 		   OnPageIndexChange=HandleChange>
 		@{
 			// 选择列
 			if (TableOptions.EnableSelection)
 			{
-				<Selection Width="50" />
+				<Selection Fixed="left" Width="50" />
 			}
 			if (TableOptions.IsDataTableSource)
 			{
 				foreach (var col in TableOptions.Columns)
 				{
-					<Column TData="object" Title="@col.Label" DataIndex=@($"['{col.PropertyOrFieldName}']")></Column>
+					<Column TData="object" Title="@col.Label" Fixed=@col.Fixed DataIndex=@($"['{col.PropertyOrFieldName}']")></Column>
 				}
 			}
 			else
@@ -39,19 +40,19 @@
 					switch (type)
 					{
 						case "string":
-							<Column TData="String" Title="@col.Label" DataIndex="@col.PropertyOrFieldName"></Column>
+							<Column TData="String" Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
 							break;
 						case "int32":
-							<Column TData="Int32?" Title="@col.Label" DataIndex="@col.PropertyOrFieldName"></Column>
+							<Column TData="Int32?" Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
 							break;
 						case "int16":
-							<Column TData="Int16?" Title="@col.Label" DataIndex="@col.PropertyOrFieldName"></Column>
+							<Column TData="Int16?" Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
 							break;
 						case "bool":
-							<Column TData="Boolean?" Title="@col.Label" DataIndex="@col.PropertyOrFieldName"></Column>
+							<Column TData="Boolean?" Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
 							break;
 						case "datetime":
-							<Column TData="DateTime?" Title="@col.Label" DataIndex="@col.PropertyOrFieldName"></Column>
+							<Column TData="DateTime?" Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
 							break;
 					}
 				}

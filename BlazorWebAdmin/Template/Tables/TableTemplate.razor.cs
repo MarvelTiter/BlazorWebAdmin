@@ -46,6 +46,7 @@ namespace BlazorWebAdmin.Template.Tables
     {
         public List<ColumnDefinition> Columns { get; set; }
         public List<ButtonDefinition<TData>> Buttons { get; set; }
+        public string ScrollX { get; set; }
         public bool Page { get; set; } = true;
         public TQuery Query { get; set; }
         public bool EnableSelection { get; set; } = true;

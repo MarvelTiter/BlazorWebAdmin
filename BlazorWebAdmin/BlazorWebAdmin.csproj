@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="Template\Tables\TableTemplate.razor" />
   </ItemGroup>
 
   <ItemGroup>
