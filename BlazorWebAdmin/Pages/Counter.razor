@@ -14,6 +14,10 @@
 
 
 <TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
+<TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
+<TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
+<TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
+<TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
 
 @code {
 	private int count;
@@ -24,6 +28,7 @@
 	{
 		base.OnInitialized();
 		tableOptions = new TableOptions<DataRow, GeneralReq>();
+		tableOptions.ScrollX = "2000";
 		tableOptions.AddColumn("列1", "A")
 					.AddColumn("列2", "B")
 					.AddColumn("列3", "C")

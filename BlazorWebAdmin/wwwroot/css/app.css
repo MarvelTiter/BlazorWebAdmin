@@ -1,4 +1,9 @@
-﻿/* 设置滚动条的样式 */
+﻿* {
+    margin: 0;
+    padding: 0;
+}
+
+/* 设置滚动条的样式 */
 ::-webkit-scrollbar {
     width: 6px;
 }

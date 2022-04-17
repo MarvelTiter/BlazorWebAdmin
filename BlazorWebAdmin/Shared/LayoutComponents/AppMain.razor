@@ -1,6 +1,12 @@
-﻿<div style="padding:10px;overflow:auto;flex:1;">
+﻿<div id="main_content" style="padding:10px;overflow:auto;flex:1;">
 	@ChildContent
+	@*<BackTop></BackTop>*@
+	@*<BackTop TargetSelector=@("#main_content")></BackTop>*@
 </div>
+@*<BackTop TargetSelector="main_content"></BackTop>*@
+@*<BackTop TargetSelector=".main_content"></BackTop>*@
+@*<BackTop></BackTop>*@
+@*<BackTop TargetSelector=@("#main_content")></BackTop>*@
 
 @code {
 	[Parameter]

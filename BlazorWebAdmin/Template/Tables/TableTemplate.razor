@@ -2,9 +2,12 @@
 @typeparam TData
 @typeparam TQuery
 <Space>
-	<SpaceItem>
-		@QueryArea(TableOptions.Query)
-	</SpaceItem>
+	@if (QueryArea != null)
+	{
+		<SpaceItem>
+			@QueryArea(TableOptions.Query)
+		</SpaceItem>
+	}
 	<SpaceItem>
 		<Button Type="@ButtonType.Primary" OnClick="Search">查询</Button>
 	</SpaceItem>
