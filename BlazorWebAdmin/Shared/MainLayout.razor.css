@@ -2,12 +2,18 @@
     position: relative;
     display: flex;
     height: 100vh;
+    max-width: 100vw;
+}
+
+aside {
+
 }
 
 main {
     flex: 1;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .sidebar {
