@@ -1,4 +1,5 @@
-﻿using BlazorWebAdmin.Template.Tables.Setting;
+﻿using AntDesign.TableModels;
+using BlazorWebAdmin.Template.Tables.Setting;
 using Microsoft.AspNetCore.Components;
 using Project.Models;
 using Project.Models.Request;
@@ -56,6 +57,7 @@ namespace BlazorWebAdmin.Template.Tables
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow);
         public Func<TQuery, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
         public bool Initialized => Columns != null && Columns.Count > 0;
+        public Func<RowData, Dictionary<string, object>> OnRow { get; set; }
         public TableOptions()
         {
             Buttons = new List<ButtonDefinition<TData>>();
@@ -80,6 +82,16 @@ namespace BlazorWebAdmin.Template.Tables
         {
             Buttons.Add(btn);
             return this;
+        }
+
+        public ColumnDefinition this[string columnName]
+        {
+            get
+            {
+                var col = Columns.First(c=>c.PropertyOrFieldName == columnName);
+                if (col == null) throw new InvalidOperationException();
+                return col;
+            }
         }
     }
 }

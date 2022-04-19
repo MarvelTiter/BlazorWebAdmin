@@ -2,9 +2,12 @@
 @typeparam TData
 @typeparam TQuery
 <Space>
-	<SpaceItem>
-		@QueryArea(TableOptions.Query)
-	</SpaceItem>
+	@if (QueryArea != null)
+	{
+		<SpaceItem>
+			@QueryArea(TableOptions.Query)
+		</SpaceItem>
+	}
 	<SpaceItem>
 		<Button Type="@ButtonType.Primary" OnClick="Search">查询</Button>
 	</SpaceItem>
@@ -13,6 +16,7 @@
 	<Table DataSource=@TableOptions.Datas
 		   Loading=@loading
 		   Bordered
+		   OnRow=TableOptions.OnRow
 		   ScrollX=@TableOptions.ScrollX
 		   Size="@TableSize.Small"
 		   Total=@TableOptions.Total
@@ -29,7 +33,7 @@
 			{
 				foreach (var col in TableOptions.Columns)
 				{
-					<Column TData="object" Title="@col.Label" Fixed=@col.Fixed DataIndex=@($"['{col.PropertyOrFieldName}']")></Column>
+					<Column TData="object" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex=@($"['{col.PropertyOrFieldName}']")></Column>
 				}
 			}
 			else
@@ -40,19 +44,19 @@
 					switch (type)
 					{
 						case "string":
-							<Column TData="String" Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+							<Column TData="String" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
 							break;
 						case "int32":
-							<Column TData="Int32?" Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+							<Column TData="Int32?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
 							break;
 						case "int16":
-							<Column TData="Int16?" Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+							<Column TData="Int16?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
 							break;
 						case "bool":
-							<Column TData="Boolean?" Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+							<Column TData="Boolean?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
 							break;
 						case "datetime":
-							<Column TData="DateTime?" Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+							<Column TData="DateTime?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
 							break;
 					}
 				}

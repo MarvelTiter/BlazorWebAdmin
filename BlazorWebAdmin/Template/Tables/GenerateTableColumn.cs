@@ -23,7 +23,8 @@ namespace BlazorWebAdmin.Template.Tables
                 {
                     Index = head.Sort,
                     DataType = col.PropertyType.Name,
-                    Fixed = head.Fixed
+                    Fixed = head.Fixed,
+                    Width = head.Width,
                 });
             }
             columns.Sort((a, b) => a.Index - b.Index);

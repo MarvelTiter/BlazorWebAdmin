@@ -1,4 +1,6 @@
-﻿namespace BlazorWebAdmin.Template.Tables.Setting
+﻿using AntDesign.TableModels;
+
+namespace BlazorWebAdmin.Template.Tables.Setting
 {
     public class ColumnDefinition
     {
@@ -7,6 +9,9 @@
         public string PropertyOrFieldName { get; set; }
         public string DataType { get; set; } = "string";
         public string? Fixed { get; set; }
+        public string? Width { get; set; }
+        public Func<CellData, Dictionary<string,object>> OnCell { get; set; }
+        public Func<RowData, Dictionary<string,object>> OnRow { get; set; }
         public ColumnDefinition(string label, string name)
         {
             Label = label;
