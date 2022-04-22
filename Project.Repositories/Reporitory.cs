@@ -1,4 +1,5 @@
 ﻿using DExpSql;
+using MDbContext;
 using Project.Repositories.interfaces;
 
 namespace Project.Repositories
@@ -21,6 +22,10 @@ namespace Project.Repositories
             var type = typeof(IRepositoryBase<>).MakeGenericType(typeof(T));
             var repo = provider.GetService(type) as IRepositoryBase<T>;
             return repo;
+        }
+        public DbContext Context()
+        {
+            return Db;
         }
     }
 }

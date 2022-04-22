@@ -1,4 +1,5 @@
 ﻿using DExpSql;
+using MDbContext;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace Project.Repositories.interfaces
     {
         IRepositoryBase<T> Table<T>();
         ExpressionSql Query();
+        DbContext Context();
     }
 }
