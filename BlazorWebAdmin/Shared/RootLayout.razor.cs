@@ -42,8 +42,7 @@ namespace BlazorWebAdmin.Shared
             }
         }
         const string LOCATION_MAP = "[http://|https://](.+)(?=/)(.+)";
-        private bool disposedValue;
-
+        public event Action<LocationChangedEventArgs> OnNavigated;
         private async void NavigationManager_LocationChanged(object? sender, LocationChangedEventArgs e)
         {
             if (NavigationManager.Uri.Contains("/login"))
@@ -54,13 +53,15 @@ namespace BlazorWebAdmin.Shared
                 await MsgSrv.Error("登录过期！请重新登录！");
             }
             await RouterStore.SetActive(e.Location);
-        }
+            OnNavigated?.Invoke(e);
+        }        
 
         public void HandleRootClick(MouseEventArgs e)
         {
             BodyClickEvent?.Invoke(e);
         }
 
+        private bool disposedValue;
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

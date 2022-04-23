@@ -2,6 +2,8 @@
 {
     public class ClassHelper
     {
+        public static ClassHelper Default => new ClassHelper();
+
         private Dictionary<string, Func<bool>> cssClassMap = new Dictionary<string, Func<bool>>();
 
         public string Class

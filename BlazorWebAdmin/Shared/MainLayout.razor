@@ -4,17 +4,16 @@
 <PageTitle>BlazorWebAdmin</PageTitle>
 
 <div class="page">
-	@*<div class="sidebar">
-		<NavMenu />
-		</div>*@
-	<aside>
-		<SideBar></SideBar>
-	</aside>
-	<main>
-		<TagsView></TagsView>
-		<AppMain>
-			@Body
-		</AppMain>
-	</main>
-	@*<BackTop TargetSelector=@("#main_content")></BackTop>*@
+    @*<div class="sidebar">
+        <NavMenu />
+        </div>*@
+    <aside>
+        <SideBar></SideBar>
+    </aside>
+    <main>
+        <TagsView></TagsView>
+        <AppMain ChildContent="Body">
+        </AppMain>
+    </main>
+    @*<BackTop TargetSelector=@("#main_content")></BackTop>*@
 </div>

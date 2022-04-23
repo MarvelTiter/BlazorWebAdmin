@@ -6,12 +6,11 @@
 	<span>
 		<SvgIcon IconName="@IconName" OnClick="ToggleMenu"></SvgIcon>
 	</span>
-	<NavLink class="nav" href="/" Match="NavLinkMatch.All">主页</NavLink>
 	@foreach (var item in store.TopLink)
 	{
 		<NavLink class="nav" href="@item.RouteLink" Match="NavLinkMatch.All">
 			<span @oncontextmenu="e => OpenContextMenu(e, item)" @oncontextmenu:preventDefault>@item.RouteName</span>
-			@if (item.IsActive)
+			@if (item.IsActive && item.Closable)
 			{
 				<span style="padding-left:5px;" @onclick="e => CloseTag(item)" @onclick:stopPropagation @onclick:preventDefault>
                     X

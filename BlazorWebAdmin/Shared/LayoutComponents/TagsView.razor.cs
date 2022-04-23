@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazorWebAdmin.Store;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Project.Common;
-using Project.Models;
 
 namespace BlazorWebAdmin.Shared.LayoutComponents
 {
@@ -34,7 +34,7 @@ namespace BlazorWebAdmin.Shared.LayoutComponents
         private async Task CloseTag(RouterMeta state)
         {
             await store.Remove(state.RouteLink);
-            nav.NavigateTo("/");
+            nav.NavigateTo(store.Current.RouteLink);
         }
 
         private void OpenContextMenu(MouseEventArgs e, RouterMeta current)
@@ -54,9 +54,10 @@ namespace BlazorWebAdmin.Shared.LayoutComponents
         private async Task CloseOther()
         {
             if (current == null) return;
-            await store.Reset();
-            await store.TryAdd(current.RouteLink, current.RouteName);
-            nav.NavigateTo("/" + current.RouteLink);
+            //await store.Reset();
+            //await store.TryAdd(current.RouteLink, current.RouteName);
+            //nav.NavigateTo("/" + current.RouteLink);
+            await store.RemoveOther(current.RouteLink);
             await CloseMenu();
         }
 

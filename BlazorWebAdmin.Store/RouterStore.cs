@@ -1,18 +1,52 @@
-﻿using Project.Models;
+﻿using Microsoft.AspNetCore.Components;
+using Project.Common;
+using Project.Models;
 
 namespace BlazorWebAdmin.Store
 {
+    public class RouterMeta
+    {
+        public bool IsActive { get; set; }
+        public string RouteLink { get; set; }
+        public string IconName { get; set; }
+        public string RouteName { get; set; }
+        public bool HasChildren => Children != null && Children.Any();
+        public string Redirect { get; set; } = "NoRedirect";
+        public IEnumerable<RouterMeta> Children { get; set; }
+    }
+
+    public class TagRoute : RouterMeta
+    {
+        public bool Closable { get; set; } = true;
+        public CacheItem? Content { get; set; }
+        public string ItemClass => ClassHelper.Default
+            .AddClass("main_content")
+            .AddClass("active", () => IsActive).Class;
+
+        public void SetActive(bool active)
+        {
+            IsActive = active;
+            if (active && Content != null) Content.ActiveTime = DateTime.Now;
+        }
+    }
+
     public class RouterStore : StoreBase
     {
-        public List<RouterMeta> TopLink { get; set; } = new List<RouterMeta>();
+        public RouterStore()
+        {
+            Reset();
+        }
+        public List<TagRoute> TopLink { get; set; } = new List<TagRoute>();
 
         public List<RouterMeta> Routers { get; set; } = new List<RouterMeta>();
 
         public int Count { get; set; }
 
+        public TagRoute Current => TopLink.FirstOrDefault(r => r.IsActive);
+
         public Task SetActive(string link)
         {
-            TopLink.ForEach(a => a.IsActive = link.EndsWith(a.RouteLink));
+            TopLink.ForEach(a => a.SetActive(a.IsActive = link.EndsWith(a.RouteLink)));
             NotifyChanged();
             return Task.CompletedTask;
         }
@@ -27,7 +61,7 @@ namespace BlazorWebAdmin.Store
             }
             if (!TopLink.Any(x => link.EndsWith(x.RouteLink)))
             {
-                TopLink.Add(new RouterMeta
+                TopLink.Add(new TagRoute
                 {
                     RouteLink = link,
                     RouteName = name,
@@ -36,10 +70,25 @@ namespace BlazorWebAdmin.Store
             await SetActive(link);
         }
 
-        public Task Remove(string link)
+        public async Task Remove(string link)
         {
             var index = TopLink.FindIndex(rs => rs.RouteLink == link);
             TopLink.RemoveAt(index);
+            if (index > 0)
+            {
+                await SetActive(TopLink[index-1].RouteLink);
+            }
+            NotifyChanged();
+        }
+
+        public Task RemoveOther(string link)
+        {
+            var removes = TopLink.Where(r => r.RouteLink != link).ToArray();
+            foreach (var item in removes)
+            {
+                if (item.Closable)
+                    TopLink.Remove(item);
+            }
             NotifyChanged();
             return Task.CompletedTask;
         }
@@ -47,6 +96,12 @@ namespace BlazorWebAdmin.Store
         public Task Reset()
         {
             TopLink.Clear();
+            TopLink.Add(new TagRoute
+            {
+                RouteLink = "/",
+                RouteName = "主页",
+                Closable = false,
+            });
             return Task.CompletedTask;
         }
 

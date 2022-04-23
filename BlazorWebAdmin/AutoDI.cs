@@ -9,7 +9,6 @@ namespace BlazorWebAdmin
     {
         public static IServiceCollection AutoInjects(this IServiceCollection self)
         {
-
             var all = LoadAllAssembly();
             var allTypes = LoadTypeFromAssembly(all.ToArray())
                 .Where(t => t.FullName!.StartsWith("Project"));
@@ -122,11 +121,12 @@ namespace BlazorWebAdmin
         {
             var folder = AppDomain.CurrentDomain.BaseDirectory;
             var files = Directory.GetFiles(folder);
+            //var asms = AppDomain.CurrentDomain.GetAssemblies().Where(asm => asm.FullName!.StartsWith("BlazorWebAdmin")|| asm.FullName!.StartsWith("Project"));
             foreach (var file in files)
             {
                 var filename = Path.GetFileName(file).Replace("\\", "/");
                 var fileext = Path.GetExtension(file);
-                if (filename.StartsWith("Project") && fileext == ".dll")
+                if ((filename.StartsWith("BlazorWebAdmin") || filename.StartsWith("Project")) && fileext == ".dll")
                 {
                     var asm = Assembly.LoadFrom(file);
                     if (asm != null)

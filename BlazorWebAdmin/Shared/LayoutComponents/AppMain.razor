@@ -1,14 +1,62 @@
-﻿<div id="main_content" style="padding:10px;overflow:auto;flex:1;">
-	@ChildContent
-	@*<BackTop></BackTop>*@
-	@*<BackTop TargetSelector=@("#main_content")></BackTop>*@
-</div>
-@*<BackTop TargetSelector="main_content"></BackTop>*@
-@*<BackTop TargetSelector=".main_content"></BackTop>*@
-@*<BackTop></BackTop>*@
-@*<BackTop TargetSelector=@("#main_content")></BackTop>*@
+﻿@inject RouterStore store
+
+@foreach (var item in store.TopLink)
+{
+    if (item.Content == null) continue;
+    <div id=@item.RouteLink class=@item.ItemClass>
+        @RenderCacheItemContent(item.Content.Body);
+    </div>
+}
 
 @code {
-	[Parameter]
-	public RenderFragment? ChildContent { get; set; }
+    private List<CacheItem> _items = new List<CacheItem>();
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    [CascadingParameter]
+    public RootLayout? Parent { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Parent!.OnNavigated += OnNavigated;
+    }
+
+    void OnNavigated(LocationChangedEventArgs e)
+    {
+        var uri = e.Location;
+        var item = store.Current;
+        if (item != null)
+        {
+            if (item.Content == null)
+            {
+                item.Content = new CacheItem()
+                {
+                    StartTime = DateTime.Now,
+                    ActiveTime = DateTime.Now,
+                    Body = ChildContent,
+                };
+            }
+        }
+        StateHasChanged();
+    }
+
+    private RenderFragment? RenderCacheItemContent(RenderFragment? content) => builder =>
+    {
+        var index = 0;
+        builder.OpenComponent<ErrorCatcher>(index++);
+        builder.AddAttribute(index++, nameof(ErrorCatcher.ChildContent), content);
+        builder.CloseComponent();
+    };
 }
+
+<style>
+    .main_content {
+        display: none;
+        padding: 10px;
+        overflow: auto;
+        flex: 1;
+    }
+
+        .main_content.active {
+            display: block;
+        }
+</style>
