@@ -36,8 +36,8 @@ namespace BlazorWebAdmin.Shared
                     return;
                 if (string.IsNullOrEmpty(UserStore?.UserId))
                 {
-                    NavigationManager.NavigateTo("/login");
                     await MsgSrv.Error("登录过期！请重新登录！");
+                    NavigationManager.NavigateTo("/login");
                 }
             }
         }
