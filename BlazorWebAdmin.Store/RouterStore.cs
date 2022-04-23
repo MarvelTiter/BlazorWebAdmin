@@ -74,9 +74,14 @@ namespace BlazorWebAdmin.Store
         {
             var index = TopLink.FindIndex(rs => rs.RouteLink == link);
             TopLink.RemoveAt(index);
-            if (index > 0)
+            if (index < TopLink.Count)
             {
-                await SetActive(TopLink[index-1].RouteLink);
+                // 跳到后一个标签
+                await SetActive(TopLink[index].RouteLink);
+            }
+            else
+            {
+                await SetActive(TopLink[index - 1].RouteLink);
             }
             NotifyChanged();
         }
