@@ -43,8 +43,9 @@ namespace BlazorWebAdmin.Shared
             if (info.Success)
             {
                 await UserStore.ReLogin(info.Value!);
-                await RouterStore.TryAdd(NavigationManager.Uri);
-                NavigationManager.NavigateTo(NavigationManager.Uri);
+                var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+                await RouterStore.TryAdd(url);
+                NavigationManager.NavigateTo(url);
                 StateHasChanged();
             }
             else
@@ -67,7 +68,7 @@ namespace BlazorWebAdmin.Shared
                 NavigationManager.NavigateTo("/login");
                 await MsgSrv.Error("登录过期！请重新登录！");
             }
-            await RouterStore.SetActive(e.Location);
+            await RouterStore.SetActive(NavigationManager.ToBaseRelativePath(e.Location));
             OnNavigated?.Invoke(e);
         }
 
