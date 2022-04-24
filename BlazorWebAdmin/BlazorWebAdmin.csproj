@@ -23,7 +23,6 @@
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
     <ProjectReference Include="..\Project.Repositories\Project.Repositories.csproj" />
     <ProjectReference Include="..\Project.Services\Project.Services.csproj" />
-    <ProjectReference Include="..\BlazorWebAdmin.Store\BlazorWebAdmin.Store.csproj" />
   </ItemGroup>
 
 </Project>

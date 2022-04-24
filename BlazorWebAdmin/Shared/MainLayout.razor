@@ -12,6 +12,16 @@
     </aside>
     <main>
         <TagsView></TagsView>
+        @*<AuthorizeView>
+                <Authorized>
+                    <h1>Hello, @context.User.Identity!.Name!</h1>
+                    <p>You can only see this content if you're authorized.</p>
+                </Authorized>
+                <NotAuthorized>
+                    <h1>Authentication Failure!</h1>
+                    <p>You're not signed in.</p>
+                </NotAuthorized>
+            </AuthorizeView>*@
         <AppMain ChildContent="Body">
         </AppMain>
     </main>

@@ -9,7 +9,7 @@ namespace Project.Services.interfaces
 {
     public interface ILoginService
     {
-        Task<QueryResult<string>> LoginAsync(string username, string password);
+        Task<QueryResult<UserInfo>> LoginAsync(string username, string password);
         Task<bool> LogoutAsync();
     }
 }

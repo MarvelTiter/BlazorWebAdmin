@@ -21,18 +21,8 @@ namespace BlazorWebAdmin.Pages
         private async Task HandleLogin()
         {
             Loading = true;
-            var message = await UserStore.LoginAsync(model);
+            await UserStore.LoginAsync(model);
             Loading = false;
-            if (message is null)
-            {
-                await RouterStore.InitRoutersAsync();
-                Navigator.NavigateTo("/");
-            }
-            else
-            {
-                await MessageSrv.Error(message);
-            }
-            return;
         }
     }
 }

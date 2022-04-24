@@ -1,52 +1,83 @@
 ﻿@inject EventDispatcher dispatcher
 @inject RouterStore routeStore
+@implements IDisposable
 <div class="side_bar" style="display: flex;flex-direction: column;width: @Width;height:100vh;">
-	<Menu Theme="@MenuTheme.Dark" Mode="@MenuMode.Inline" InlineCollapsed=collapse Style="flex: 1;" OnMenuItemClicked="OnMenuItemClick">
-		<Profile></Profile>
-		<MenuItem RouterLink="/" RouterMatch="NavLinkMatch.All" Icon="home">
-			主页
-		</MenuItem>
-		@foreach (var item in routeStore.Routers)
-		{
-			<SideBarItem Route=item></SideBarItem>
-		}
-		@*<MenuItem RouterLink="fetchdata" RouterMatch="NavLinkMatch.All" Icon="user">
-			Fetch data
-			</MenuItem>*@
-	</Menu>
+    <Menu Theme="@MenuTheme.Dark" Mode="@MenuMode.Inline" InlineCollapsed=collapse Style="flex: 1;" OnMenuItemClicked="OnMenuItemClick">
+        <Profile></Profile>
+        <MenuItem RouterLink="/" RouterMatch="NavLinkMatch.All" Icon="home">
+            主页
+        </MenuItem>
+        @foreach (var item in routeStore.Routers)
+        {
+            <SideBarItem Route=item></SideBarItem>
+        }
+        @*<MenuItem RouterLink="fetchdata" RouterMatch="NavLinkMatch.All" Icon="user">
+            Fetch data
+            </MenuItem>*@
+    </Menu>
 </div>
 
 @code {
 
-	protected override Task OnInitializedAsync()
-	{
-		dispatcher.Register<SideBar>("MenuCollapse", ToggleMenuCollapse);
-		return base.OnInitializedAsync();
-	}
+    protected override Task OnInitializedAsync()
+    {
+        dispatcher.Register<SideBar>("MenuCollapse", ToggleMenuCollapse);
+        routeStore.DataChangedEvent += StateHasChanged;
+        return base.OnInitializedAsync();
+    }
 
-	private string Width => collapse ? "80px" : "200px";
-	private bool collapse = false;
+    private string Width => collapse ? "80px" : "200px";
+    private bool collapse = false;
 
-	private Task ToggleMenuCollapse(object e)
-	{
-		collapse = (bool)e;
-		StateHasChanged();
-		return Task.CompletedTask;
-	}
+    private Task ToggleMenuCollapse(object e)
+    {
+        collapse = (bool)e;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 
-	private async Task OnMenuItemClick(MenuItem item)
-	{
-		await routeStore.TryAdd(item.RouterLink, item.Title);
-	}
+    private async Task OnMenuItemClick(MenuItem item)
+    {
+        await routeStore.TryAdd(item.RouterLink);
+    }
+    private bool disposedValue;
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                // TODO: 释放托管状态(托管对象)
+                routeStore.DataChangedEvent -= StateHasChanged;
+            }
 
+            // TODO: 释放未托管的资源(未托管的对象)并重写终结器
+            // TODO: 将大型字段设置为 null
+            disposedValue = true;
+        }
+    }
+
+    // // TODO: 仅当“Dispose(bool disposing)”拥有用于释放未托管资源的代码时才替代终结器
+    // ~RootLayout()
+    // {
+    //     // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
+    //     Dispose(disposing: false);
+    // }
+
+    public void Dispose()
+    {
+        // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 }
 <style>
-	.side_bar {
-		transition: background .3s,width .3s cubic-bezier(.2,0,0,1) 0s;
-		transition-property: background, width;
-		transition-duration: 0.3s, 0.3s;
-		transition-timing-function: ease, cubic-bezier(0.2, 0, 0, 1);
-		transition-delay: 0s, 0s;
-	}
+    .side_bar {
+        transition: background .3s,width .3s cubic-bezier(.2,0,0,1) 0s;
+        transition-property: background, width;
+        transition-duration: 0.3s, 0.3s;
+        transition-timing-function: ease, cubic-bezier(0.2, 0, 0, 1);
+        transition-delay: 0s, 0s;
+    }
 </style>
 

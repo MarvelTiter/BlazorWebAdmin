@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Project.Services;
+using Project.Services.interfaces;
 using System.Security.Claims;
 
 namespace BlazorWebAdmin.Auth
@@ -7,21 +9,20 @@ namespace BlazorWebAdmin.Auth
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly ProtectedSessionStorage sessionStorage;
+        private readonly ILoginService loginService;
 
-        public CustomAuthenticationStateProvider(ProtectedSessionStorage sessionStorage)
+        public CustomAuthenticationStateProvider(ProtectedSessionStorage sessionStorage, ILoginService loginService)
         {
             this.sessionStorage = sessionStorage;
+            this.loginService = loginService;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var id = await sessionStorage.GetAsync<string>("UID");
+            var info = await sessionStorage.GetAsync<UserInfo>("UID");
             ClaimsIdentity identity;
-            if (id.Success)
+            if (info.Success)
             {
-                identity = new ClaimsIdentity(new[]
-                {
-                new Claim(ClaimTypes.Name, id.Value!)
-                });
+                identity = Build(info.Value!);
             }
             else
             {
@@ -30,6 +31,29 @@ namespace BlazorWebAdmin.Auth
 
             var user = new ClaimsPrincipal(identity);
             return new AuthenticationState(user);
+        }
+
+        public async Task IdentifyUser(UserInfo info)
+        {
+            await sessionStorage.SetAsync("UID", info);
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        }
+
+        public async Task ClearState()
+        {
+            await sessionStorage.SetAsync("UID", null!);
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        }
+
+        private ClaimsIdentity Build(UserInfo info)
+        {
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.Name, info.UserName));
+            foreach (var r in info.Roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, r));
+            }
+            return new ClaimsIdentity(claims);
         }
     }
 }

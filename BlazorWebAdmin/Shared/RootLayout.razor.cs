@@ -2,19 +2,19 @@
 using BlazorWebAdmin.Shared.LayoutComponents;
 using BlazorWebAdmin.Store;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Project.Common;
+using Project.Services;
 
 namespace BlazorWebAdmin.Shared
 {
-    public partial class RootLayout:IDisposable
+    public partial class RootLayout : IDisposable
     {
         [Inject]
         public NavigationManager NavigationManager { get; set; }
-        //[Inject]
-        //public ProtectedSessionStorage ProtectedSessionStore { get; set; }
         [Inject]
         public RouterStore RouterStore { get; set; }
         [Inject]
@@ -23,7 +23,8 @@ namespace BlazorWebAdmin.Shared
         public MessageService MsgSrv { get; set; }
         [Inject]
         public EventDispatcher Dispatcher { get; set; }
-
+        [Inject]
+        public ProtectedSessionStorage SessionStorage { get; set; }
         public event Action<MouseEventArgs> BodyClickEvent;
 
         protected override async Task OnInitializedAsync()
@@ -32,15 +33,29 @@ namespace BlazorWebAdmin.Shared
             if (NavigationManager != null)
             {
                 NavigationManager.LocationChanged += NavigationManager_LocationChanged;
-                if (NavigationManager.Uri.Contains("/login"))
-                    return;
-                if (string.IsNullOrEmpty(UserStore?.UserId))
-                {
-                    await MsgSrv.Error("登录过期！请重新登录！");
-                    NavigationManager.NavigateTo("/login");
-                }
             }
         }
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (!firstRender) return;
+            var info = await SessionStorage.GetAsync<UserInfo>("UID");
+            if (info.Success)
+            {
+                await UserStore.ReLogin(info.Value!);
+                await RouterStore.TryAdd(NavigationManager.Uri);
+                NavigationManager.NavigateTo(NavigationManager.Uri);
+                StateHasChanged();
+            }
+            else
+            {
+                if (NavigationManager.Uri.Contains("/login"))
+                    return;
+                NavigationManager.NavigateTo("/login");
+                await MsgSrv.Error("登录过期！请重新登录！");
+            }
+        }
+
         const string LOCATION_MAP = "[http://|https://](.+)(?=/)(.+)";
         public event Action<LocationChangedEventArgs> OnNavigated;
         private async void NavigationManager_LocationChanged(object? sender, LocationChangedEventArgs e)
@@ -54,7 +69,7 @@ namespace BlazorWebAdmin.Shared
             }
             await RouterStore.SetActive(e.Location);
             OnNavigated?.Invoke(e);
-        }        
+        }
 
         public void HandleRootClick(MouseEventArgs e)
         {
