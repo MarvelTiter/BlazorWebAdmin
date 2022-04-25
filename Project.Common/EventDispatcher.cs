@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,9 +17,9 @@ namespace Project.Common
     }
     public class EventDispatcher
     {
-        Dictionary<Type, Dictionary<string, Func<object, Task>>> allActions = new Dictionary<Type, Dictionary<string, Func<object, Task>>>();
-        Dictionary<string, Func<object, Task>> actions = new Dictionary<string, Func<object, Task>>();
-
+        ConcurrentDictionary<Type, Dictionary<string, Func<object, Task>>> allActions = new ConcurrentDictionary<Type, Dictionary<string, Func<object, Task>>>();
+        ConcurrentDictionary<string, Func<object, Task>> actions = new ConcurrentDictionary<string, Func<object, Task>>();
+        
         public void Register<T>(string key, Func<object, Task> action)
         {
             Register(typeof(T), key, action);
@@ -29,7 +30,7 @@ namespace Project.Common
             if (!allActions.TryGetValue(type, out var typeDic))
             {
                 typeDic = new Dictionary<string, Func<object, Task>>();
-                allActions.Add(type, typeDic);
+                allActions.TryAdd(type, typeDic);
             }
             if (!typeDic.ContainsKey(key))
             {

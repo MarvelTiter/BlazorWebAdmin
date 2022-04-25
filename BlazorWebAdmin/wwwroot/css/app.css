@@ -26,3 +26,16 @@
 .ant-card {
     margin-bottom: 10px;
 }
+
+.svg-icon {
+    width: 1.5em;
+    height: 1.5em;
+    fill: currentColor;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.nav-icon {
+    width: 1em;
+    height: 1em;
+}

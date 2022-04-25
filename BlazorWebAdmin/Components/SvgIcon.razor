@@ -1,15 +1,15 @@
-﻿<i @onclick="handleClick">
+﻿<span @onclick="handleClick">
 	@IconMarkuString
-</i>
+</span>
 @code {
 	private string _IconName = "";
 	[Parameter]
-	public string IconName { get; set; }
+	public string? IconName { get; set; }
 
 	MarkupString IconMarkuString;
 
 	[Parameter]
-	public string ClassName { get; set; } = "svg-icon";
+	public string? ClassName { get; set; }
 
 	[Parameter]
 	public EventCallback OnClick { get; set; }
@@ -27,21 +27,12 @@
 
 	async Task loadSvgData()
 	{
+		if (string.IsNullOrEmpty(IconName)) return;
 		var svgContent = await File.ReadAllTextAsync($"wwwroot/icons/{IconName}.svg");
 		var insertIndex = svgContent.IndexOf("<svg") + 4;
 		//TODO svg文件处理
-		svgContent = svgContent.Insert(insertIndex, $" class='{ClassName}'");
+		svgContent = svgContent.Insert(insertIndex, $" class='svg-icon {ClassName}'");
 
 		IconMarkuString = new MarkupString(svgContent);
 	}
-
 }
-<style>
-	.svg-icon {
-		width: 1.5em;
-		height: 1.5em;
-		fill: currentColor;
-		overflow: hidden;
-		cursor: pointer;
-	}
-</style>
