@@ -53,6 +53,8 @@ namespace BlazorWebAdmin.Store
         }
         private RouterMeta FindRecursive(IEnumerable<RouterMeta> groups, string link)
         {
+            if (!groups.Any()) return null;
+
             foreach (var item in groups)
             {
                 if (!string.IsNullOrEmpty(item.RouteLink) && link == (item.RouteLink))
@@ -61,7 +63,11 @@ namespace BlazorWebAdmin.Store
                 }
                 if (item.HasChildren)
                 {
-                    return FindRecursive(item.Children, link);
+                    var result = FindRecursive(item.Children, link);
+                    if (result != null)
+                        return result;
+                    else
+                        continue;
                 }
             }
             return null;
