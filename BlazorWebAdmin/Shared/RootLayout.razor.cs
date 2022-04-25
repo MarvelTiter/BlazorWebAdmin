@@ -70,6 +70,7 @@ namespace BlazorWebAdmin.Shared
             }
             await RouterStore.SetActive(NavigationManager.ToBaseRelativePath(e.Location));
             OnNavigated?.Invoke(e);
+            StateHasChanged();
         }
 
         public void HandleRootClick(MouseEventArgs e)
