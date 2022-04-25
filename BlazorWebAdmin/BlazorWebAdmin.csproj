@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\新文件夹\**" />
+    <Content Remove="wwwroot\新文件夹\**" />
+    <EmbeddedResource Remove="wwwroot\新文件夹\**" />
+    <None Remove="wwwroot\新文件夹\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
     <None Include="Template\Tables\TableTemplate.razor" />
   </ItemGroup>

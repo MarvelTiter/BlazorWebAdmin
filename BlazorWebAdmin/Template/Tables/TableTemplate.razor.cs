@@ -1,8 +1,11 @@
-﻿using AntDesign.Core.Helpers.MemberPath;
+﻿using AntDesign;
+using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.TableModels;
 using BlazorWebAdmin.Store;
 using BlazorWebAdmin.Template.Tables.Setting;
+using BlazorWebAdmin.Utils;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using MiniExcelLibs;
 using Project.Models;
 using Project.Models.Request;
@@ -18,6 +21,10 @@ namespace BlazorWebAdmin.Template.Tables
         public RenderFragment<TQuery> QueryArea { get; set; }
         [Inject]
         public RouterStore RouterStore { get; set; }
+        [Inject]
+        public MessageService MessageSrv { get; set; }
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
         bool loading;
 
         protected override async Task OnInitializedAsync()
@@ -47,11 +54,20 @@ namespace BlazorWebAdmin.Template.Tables
                 var query = await TableOptions.ExportDataLoader(TableOptions.Query);
                 data = query.Payload;
             }
-            var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile");
-            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
-            var path = Path.Combine(folder, $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}.xlsx");
-            var excelData = GeneralExcelData(TableOptions.Columns, data);
-            await MiniExcel.SaveAsAsync(path, excelData);
+            if (data.Count() > 0)
+            {
+                var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile");
+                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                var path = Path.Combine(folder, $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}.xlsx");
+                var excelData = GeneralExcelData(TableOptions.Columns, data);
+                await MiniExcel.SaveAsAsync(path, excelData);
+                _ = MessageSrv.Success("导出成功！请下载文件！");
+                await JSRuntime.PushAsync(path);
+            }
+            else
+            {
+                _ = MessageSrv.Error("导出数据为空！");
+            }
             loading = false;
         }
 
@@ -71,7 +87,7 @@ namespace BlazorWebAdmin.Template.Tables
                 var row = new Dictionary<string, object>();
                 foreach (var col in columns)
                 {
-                    var key = isDataRow ? $"['{col.PropertyOrFieldName}']": col.PropertyOrFieldName;
+                    var key = isDataRow ? $"['{col.PropertyOrFieldName}']" : col.PropertyOrFieldName;
                     var val = PathHelper.GetDelegate(key, typeof(TData)).Invoke(item);
                     row[col.Label] = val;
                 }
