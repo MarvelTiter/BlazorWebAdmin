@@ -1,26 +1,30 @@
 ﻿@page "/table"
 @using Project.Models.Entities
+@using Project.Models.Request
+@using BlazorWebAdmin.Template.Tables
 <h3>Table</h3>
 
-<Table TItem=User DataSource="Users">
-	<Column @bind-Field="context.UserId"></Column>
-	<Column @bind-Field=context.UserName></Column>
-	<Column @bind-Field=context.Age></Column>
-</Table>
+<BlazorWebAdmin.Template.Tables.TableTemplate TableOptions="options" TData=User TQuery="GeneralReq">
+	
+</BlazorWebAdmin.Template.Tables.TableTemplate>
 @code {
-	private List<User> Users = null;
-	protected override Task OnInitializedAsync()
-	{
-		Users = new List<User>();
-		for (var i = 0; i < 10; i++)
-		{
-			Users.Add(new User
-				{
-					UserId = $"用户ID{i + 1}",
-					UserName = $"用户姓名{i + 1}",
-					Age = i + 10
-				});
-		}
-		return base.OnInitializedAsync();
-	}
+    TableOptions<User, GeneralReq> options = new TableOptions<User, GeneralReq>();
+    private List<User> Users = null;
+    protected override Task OnInitializedAsync()
+    {
+        options.Columns = typeof(User).GenerateColumns();
+        options.Page = false; 
+        Users = new List<User>();
+        for (var i = 0; i < 10; i++)
+        {
+            Users.Add(new User
+            {
+                UserId = $"用户ID{i + 1}",
+                UserName = $"用户姓名{i + 1}",
+                Age = i + 10
+            });
+        }
+        options.Datas = Users;
+        return base.OnInitializedAsync();
+    }
 }

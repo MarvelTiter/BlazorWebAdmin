@@ -2,111 +2,118 @@
 @typeparam TData
 @typeparam TQuery
 <Space>
-	@if (QueryArea != null)
-	{
-		<SpaceItem>
-			@QueryArea(TableOptions.Query)
-		</SpaceItem>
-	}
-	<SpaceItem>
-		<Button Type="@ButtonType.Primary" OnClick="Search">查询</Button>
-	</SpaceItem>
+    @if (QueryArea != null)
+    {
+        <SpaceItem>
+            @QueryArea(TableOptions.Query)
+        </SpaceItem>
+    }
+    <SpaceItem>
+        @if (TableOptions.DataLoader != null)
+        {
+            <Button Type="@ButtonType.Primary" OnClick="Search">查询</Button>
+        }
+        @if (TableOptions.ExportDataLoader != null || !TableOptions.Page)
+        {
+            <Button Type="@ButtonType.Primary" OnClick="Export">导出</Button>
+        }
+    </SpaceItem>
 </Space>
 <Card Class="layout-card mt-10">
-	<Table DataSource=@TableOptions.Datas
-		   Loading=@loading
-		   Bordered
-		   OnRow=TableOptions.OnRow
-		   ScrollX=@TableOptions.ScrollX
-		   Size="@TableSize.Small"
-		   Total=@TableOptions.Total
-		   @bind-PageIndex=@TableOptions.Query.PageIndex
-		   @bind-PageSize=@TableOptions.Query.PageSize
-		   OnPageIndexChange=HandleChange>
-		@{
-			// 选择列
-			if (TableOptions.EnableSelection)
-			{
-				<Selection Fixed="left" Width="50" />
-			}
-			if (TableOptions.IsDataTableSource)
-			{
-				foreach (var col in TableOptions.Columns)
-				{
-					<Column TData="object" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex=@($"['{col.PropertyOrFieldName}']")></Column>
-				}
-			}
-			else
-			{
-				foreach (var col in TableOptions.Columns)
-				{
-					var type = col.DataType.ToLower();
-					switch (type)
-					{
-						case "string":
-							<Column TData="String" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
-							break;
-						case "int32":
-							<Column TData="Int32?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
-							break;
-						case "int16":
-							<Column TData="Int16?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
-							break;
-						case "bool":
-							<Column TData="Boolean?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
-							break;
-						case "datetime":
-							<Column TData="DateTime?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
-							break;
-					}
-				}
-			}
-			// 按钮列
-			if (TableOptions.Buttons.Count > 0)
-			{
-				<ActionColumn Title="操作" Fixed="right" Width=100>
-					@if (TableOptions.Buttons.Count < 3)
-					{
-						<Space Size=@("small")>
-							@foreach (var btn in TableOptions.Buttons)
-							{
-								<SpaceItem>
-									@CreateButton(btn, context)
-								</SpaceItem>
-							}
-						</Space>
-					}
-					else
-					{
-						<Dropdown>
-							<Overlay>
-								<Menu>
-									@foreach (var btn in TableOptions.Buttons)
-									{
-										<MenuItem>
-											@CreateButton(btn, context)
-										</MenuItem>
-									}
-								</Menu>
-							</Overlay>
-							<ChildContent>
-								<a @onclick:preventDefault>
-									更多 <Icon Type="down" />
-								</a>
-							</ChildContent>
-						</Dropdown>
-					}
-				</ActionColumn>
-			}
-		}
-	</Table>
+    <Table DataSource=@TableOptions.Datas
+           Loading=@loading
+           Bordered
+           OnRow=TableOptions.OnRow
+           ScrollX=@TableOptions.ScrollX
+           Size="@TableSize.Small"
+           Total=@TableOptions.Total
+           @bind-PageIndex=@TableOptions.Query.PageIndex
+           @bind-PageSize=@TableOptions.Query.PageSize
+           OnPageIndexChange=HandleChange>
+        @{
+            // 选择列
+            if (TableOptions.EnableSelection)
+            {
+                <Selection Fixed="left" Width="50" />
+            }
+            if (TableOptions.IsDataTableSource)
+            {
+                foreach (var col in TableOptions.Columns)
+                {
+                    <Column TData="object" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex=@($"['{col.PropertyOrFieldName}']")></Column>
+                }
+            }
+            else
+            {
+                foreach (var col in TableOptions.Columns)
+                {
+                    var type = col.DataType.ToLower();
+                    switch (type)
+                    {
+                        case "string":
+                            <Column TData="String" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+                            break;
+                        case "int32":
+                            <Column TData="Int32?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+                            break;
+                        case "int16":
+                            <Column TData="Int16?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+                            break;
+                        case "bool":
+                            <Column TData="Boolean?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+                            break;
+                        case "datetime":
+                            <Column TData="DateTime?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+                            break;
+                    }
+                }
+            }
+            // 按钮列
+            if (TableOptions.Buttons.Count > 0)
+            {
+                <ActionColumn Title="操作" Fixed="right" Width=100>
+                    @if (TableOptions.Buttons.Count < 3)
+                    {
+                        <Space Size=@("small")>
+                            @foreach (var btn in TableOptions.Buttons)
+                            {
+                                <SpaceItem>
+                                    @CreateButton(btn, context)
+                                </SpaceItem>
+                            }
+                        </Space>
+                    }
+                    else
+                    {
+                        <Dropdown>
+                            <Overlay>
+                                <Menu>
+                                    @foreach (var btn in TableOptions.Buttons)
+                                    {
+                                        <MenuItem>
+                                            @CreateButton(btn, context)
+                                        </MenuItem>
+                                    }
+                                </Menu>
+                            </Overlay>
+                            <ChildContent>
+                                <a @onclick:preventDefault>
+                                    更多 <Icon Type="down" />
+                                </a>
+                            </ChildContent>
+                        </Dropdown>
+                    }
+                </ActionColumn>
+            }
+        }
+    </Table>
 </Card>
 @code {
-	public RenderFragment CreateButton(ButtonDefinition<TData> definition, TData context)
-	{
-		return
-	@<Button Type=@definition.ButtonType Size=@ButtonSize.Small Danger=@definition.NeedConfirm Icon=@definition.Icon OnClick=@(() => @definition.Callback(context))>
-		@definition.Label
-	</Button>;
-	}
+    public RenderFragment CreateButton(ButtonDefinition<TData> definition, TData context)
+    {
+        return
+    @<Button Type=@definition.ButtonType Size=@ButtonSize.Small Danger=@definition.NeedConfirm Icon=@definition.Icon OnClick=@(() => @definition.Callback(context))>
+        @definition.Label
+    </Button>;
+}
 }

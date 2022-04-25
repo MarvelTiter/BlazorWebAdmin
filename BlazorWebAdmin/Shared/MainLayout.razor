@@ -1,7 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @layout RootLayout
 @using BlazorWebAdmin.Shared.LayoutComponents
-<PageTitle>BlazorWebAdmin</PageTitle>
+@inject RouterStore store
+
+<PageTitle>@($"管理系统 - {store.Current?.RouteName ?? "主页"}")</PageTitle>
 
 <div class="page">
     @*<div class="sidebar">

@@ -1,6 +1,9 @@
-﻿using AntDesign.TableModels;
+﻿using AntDesign.Core.Helpers.MemberPath;
+using AntDesign.TableModels;
+using BlazorWebAdmin.Store;
 using BlazorWebAdmin.Template.Tables.Setting;
 using Microsoft.AspNetCore.Components;
+using MiniExcelLibs;
 using Project.Models;
 using Project.Models.Request;
 using System.Data;
@@ -13,7 +16,8 @@ namespace BlazorWebAdmin.Template.Tables
         public TableOptions<TData, TQuery> TableOptions { get; set; }
         [Parameter]
         public RenderFragment<TQuery> QueryArea { get; set; }
-
+        [Inject]
+        public RouterStore RouterStore { get; set; }
         bool loading;
 
         protected override async Task OnInitializedAsync()
@@ -34,14 +38,48 @@ namespace BlazorWebAdmin.Template.Tables
             loading = false;
         }
 
+        public async Task Export()
+        {
+            loading = true;
+            var data = TableOptions.Datas;
+            if (TableOptions.Page)
+            {
+                var query = await TableOptions.ExportDataLoader(TableOptions.Query);
+                data = query.Payload;
+            }
+            var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile");
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+            var path = Path.Combine(folder, $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}.xlsx");
+            var excelData = GeneralExcelData(TableOptions.Columns, data);
+            await MiniExcel.SaveAsAsync(path, excelData);
+            loading = false;
+        }
+
         public async Task HandleChange()
         {
-           if (TableOptions.Page)
+            if (TableOptions.Page)
             {
                 await Search();
             }
         }
+        private static IEnumerable<Dictionary<string, object>> GeneralExcelData(List<ColumnDefinition> columns, IEnumerable<TData> data)
+        {
+            var dataType = typeof(TData);
+            var isDataRow = dataType == typeof(DataRow);
+            foreach (var item in data)
+            {
+                var row = new Dictionary<string, object>();
+                foreach (var col in columns)
+                {
+                    var key = isDataRow ? $"['{col.PropertyOrFieldName}']": col.PropertyOrFieldName;
+                    var val = PathHelper.GetDelegate(key, typeof(TData)).Invoke(item);
+                    row[col.Label] = val;
+                }
+                yield return row;
+            }
+        }
     }
+
 
     public class TableOptions<TData, TQuery> where TQuery : IRequest, new()
     {
@@ -56,6 +94,7 @@ namespace BlazorWebAdmin.Template.Tables
         public IEnumerable<TData> Datas { get; set; }
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow);
         public Func<TQuery, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
+        public Func<TQuery, Task<QueryResult<IEnumerable<TData>>>> ExportDataLoader { get; set; }
         public bool Initialized => Columns != null && Columns.Count > 0;
         public Func<RowData, Dictionary<string, object>> OnRow { get; set; }
         public TableOptions()
@@ -88,7 +127,7 @@ namespace BlazorWebAdmin.Template.Tables
         {
             get
             {
-                var col = Columns.First(c=>c.PropertyOrFieldName == columnName);
+                var col = Columns.First(c => c.PropertyOrFieldName == columnName);
                 if (col == null) throw new InvalidOperationException();
                 return col;
             }
