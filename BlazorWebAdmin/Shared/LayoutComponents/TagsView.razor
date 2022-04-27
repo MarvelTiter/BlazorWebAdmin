@@ -4,7 +4,7 @@
 @inject NavigationManager nav
 <div class="tags_box">
 	<span>
-		<SvgIcon IconName="@IconName" OnClick="ToggleMenu"></SvgIcon>
+		<SvgIcon ClassName="menu-collapse-icon" IconName="@IconName" OnClick="ToggleMenu"></SvgIcon>
 	</span>
 	@foreach (var item in store.TopLink)
 	{
@@ -13,8 +13,8 @@
 			@if (item.IsActive && item.Closable)
 			{
 				<span style="padding-left:5px;" @onclick="e => CloseTag(item)" @onclick:stopPropagation @onclick:preventDefault>
-                    X
-                </span>
+					X
+				</span>
 			}
 		</NavLink>
 	}
@@ -28,71 +28,79 @@
 
 <style>
 	.tags_box {
-        display: flex;
+		display: flex;
+		align-items: center;
 		align-content: center;
-    border-top: 1px solid #d8dce5;
-    border-bottom: 1px solid #d8dce5;
-    box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
-    padding: 3px 0 3px 10px;
-}
+		border-top: 1px solid #d8dce5;
+		border-bottom: 1px solid #d8dce5;
+		box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+		padding: 3px 0 3px 10px;
+	}
 
-.nav {
-    display: inline-block;
-    margin: 0 3px;
-    cursor: pointer;
-    height: 26px;
-    line-height: 26px;
-    border: 1px solid #d8dce5;
-    color: #495060;
-    background: #fff;
-    padding: 0 8px;
-    font-size: 12px;
-    text-decoration: none;
-    transition: all 0.2s ease;
-}
+		.tags_box .menu-collapse-icon {
+			width: 2.5em;
+			height: 2.5em;
+		}
 
-    .nav.active {
-        background-color: #1464ff;
-        color: #fff;
-        border-color: #1464ff;
-    }
-        .nav.active::before {
-            content: '';
-            background: #fff;
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            position: relative;
-            margin-right: 2px;
-        }
+	.nav {
+		display: inline-block;
+		margin: 0 3px;
+		cursor: pointer;
+		height: 36px;
+		line-height: 36px;
+		border: 1px solid #d8dce5;
+		color: #495060;
+		background: #fff;
+		padding: 0 14px;
+		font-size: 14px;
+		text-decoration: none;
+		transition: all 0.2s ease;
+		white-space: nowrap;
+	}
 
-.context {
-    padding: 10px;
-    border: 1px solid #d8dce5;
-    background-color: #fff;
-    border-radius: 10px;
-    position: absolute;
-    display: none;
-    box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
-}
+		.nav.active {
+			background-color: #1464ff;
+			color: #fff;
+			border-color: #1464ff;
+		}
 
-    .context li {
-        height: 26px;
-        line-height: 26px;
-        font-size: 14px;
-        padding: 0 8px;
-        color: #495060;
-        cursor: pointer;
-        list-style: none;
-    }
+			.nav.active::before {
+				content: '';
+				background: #fff;
+				display: inline-block;
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				position: relative;
+				margin-right: 2px;
+			}
 
-        .context li:hover {
-            color: #C0C0C0;
-        }
+	.context {
+		padding: 10px;
+		border: 1px solid #d8dce5;
+		background-color: #fff;
+		border-radius: 10px;
+		position: absolute;
+		display: none;
+		box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+	}
 
-    .context.open {
-        display: block;
-    }
+		.context li {
+			height: 26px;
+			line-height: 26px;
+			font-size: 14px;
+			padding: 0 8px;
+			color: #495060;
+			cursor: pointer;
+			list-style: none;
+		}
+
+			.context li:hover {
+				color: #C0C0C0;
+			}
+
+		.context.open {
+			display: block;
+		}
 
 </style>

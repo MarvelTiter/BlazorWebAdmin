@@ -11,7 +11,7 @@ aside {
     -ms-user-select: none; /*IE10*/
     -khtml-user-select: none; /*ÔçÆÚä¯ÀÀÆ÷*/
     user-select: none;
-    overflow:auto;
+    overflow: overlay;
 }
 
 main {
