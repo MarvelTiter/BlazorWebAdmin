@@ -5,7 +5,7 @@ using Project.Services.interfaces;
 using System.Security.Claims;
 
 namespace BlazorWebAdmin.Auth
-{
+{   
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly ProtectedSessionStorage sessionStorage;
@@ -45,15 +45,17 @@ namespace BlazorWebAdmin.Auth
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
 
-        private ClaimsIdentity Build(UserInfo info)
+        private static ClaimsIdentity Build(UserInfo info)
         {
-            var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, info.UserName));
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, info.UserName)
+            };
             foreach (var r in info.Roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, r));
             }
-            return new ClaimsIdentity(claims);
-        }
+            return new ClaimsIdentity(claims, "authentication");
+        }        
     }
 }
