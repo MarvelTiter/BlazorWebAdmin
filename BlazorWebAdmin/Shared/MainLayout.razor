@@ -4,28 +4,29 @@
 @inject RouterStore store
 
 <PageTitle>@($"管理系统 - {store.Current?.RouteName ?? "主页"}")</PageTitle>
-
-<div class="page">
-    @*<div class="sidebar">
-        <NavMenu />
-        </div>*@
-    <aside>
-        <SideBar></SideBar>
-    </aside>
-    <main>
-        <TagsView></TagsView>
-        @*<AuthorizeView>
-                <Authorized>
-                    <h1>Hello, @context.User.Identity!.Name!</h1>
-                    <p>You can only see this content if you're authorized.</p>
-                </Authorized>
-                <NotAuthorized>
-                    <h1>Authentication Failure!</h1>
-                    <p>You're not signed in.</p>
-                </NotAuthorized>
-            </AuthorizeView>*@
-        <AppMain ChildContent="Body">
-        </AppMain>
-    </main>
-    @*<BackTop TargetSelector=@("#main_content")></BackTop>*@
-</div>
+<RedirectToLogin>
+    <div class="page">
+        @*<div class="sidebar">
+            <NavMenu />
+            </div>*@
+        <aside>
+            <SideBar></SideBar>
+        </aside>
+        <main>
+            <TagsView></TagsView>
+            @*<AuthorizeView>
+                    <Authorized>
+                        <h1>Hello, @context.User.Identity!.Name!</h1>
+                        <p>You can only see this content if you're authorized.</p>
+                    </Authorized>
+                    <NotAuthorized>
+                        <h1>Authentication Failure!</h1>
+                        <p>You're not signed in.</p>
+                    </NotAuthorized>
+                </AuthorizeView>*@
+            <AppMain ChildContent="Body">
+            </AppMain>
+        </main>
+        @*<BackTop TargetSelector=@("#main_content")></BackTop>*@
+    </div>
+</RedirectToLogin>
