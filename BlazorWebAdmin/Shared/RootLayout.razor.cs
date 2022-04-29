@@ -35,10 +35,6 @@ namespace BlazorWebAdmin.Shared
                 NavigationManager.LocationChanged += NavigationManager_LocationChanged;
             }
         }
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);            
-        }
 
         const string LOCATION_MAP = "[http://|https://](.+)(?=/)(.+)";
         public event Action<LocationChangedEventArgs> OnNavigated;

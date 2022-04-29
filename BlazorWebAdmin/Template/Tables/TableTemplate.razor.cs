@@ -54,7 +54,7 @@ namespace BlazorWebAdmin.Template.Tables
                 var query = await TableOptions.ExportDataLoader(TableOptions.Query);
                 data = query.Payload;
             }
-            if (data.Count() > 0)
+            if (data.Any())
             {
                 var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile");
                 if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
@@ -107,7 +107,7 @@ namespace BlazorWebAdmin.Template.Tables
         public bool EnableSelection { get; set; } = true;
         public bool LoadDataOnLoaded { get; set; } = false;
         public int Total { get; set; }
-        public IEnumerable<TData> Datas { get; set; }
+        public IEnumerable<TData> Datas { get; set; } = Enumerable.Empty<TData>();
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow);
         public Func<TQuery, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
         public Func<TQuery, Task<QueryResult<IEnumerable<TData>>>> ExportDataLoader { get; set; }

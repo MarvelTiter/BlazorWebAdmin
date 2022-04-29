@@ -1,10 +1,10 @@
 ﻿@inherits LayoutComponentBase
-@layout RootLayout
+@layout AuthorizedLayout
 @using BlazorWebAdmin.Shared.LayoutComponents
 @inject RouterStore store
 
 <PageTitle>@($"管理系统 - {store.Current?.RouteName ?? "主页"}")</PageTitle>
-<RedirectToLogin>
+@*<ReadyToDisplay>*@
     <div class="page">
         @*<div class="sidebar">
             <NavMenu />
@@ -13,20 +13,10 @@
             <SideBar></SideBar>
         </aside>
         <main>
-            <TagsView></TagsView>
-            @*<AuthorizeView>
-                    <Authorized>
-                        <h1>Hello, @context.User.Identity!.Name!</h1>
-                        <p>You can only see this content if you're authorized.</p>
-                    </Authorized>
-                    <NotAuthorized>
-                        <h1>Authentication Failure!</h1>
-                        <p>You're not signed in.</p>
-                    </NotAuthorized>
-                </AuthorizeView>*@
+            <TagsView></TagsView>           
             <AppMain ChildContent="Body">
             </AppMain>
         </main>
         @*<BackTop TargetSelector=@("#main_content")></BackTop>*@
     </div>
-</RedirectToLogin>
+@*</ReadyToDisplay>*@

@@ -1,0 +1,37 @@
+﻿@inherits RootLayout
+<CascadingValue Value="this">
+    <AuthorizeView>
+        <Authorized>
+            @Body
+        </Authorized>
+        <NotAuthorized>
+            <RedirectToLogin></RedirectToLogin>
+        </NotAuthorized>
+    </AuthorizeView>
+</CascadingValue>
+
+@code{
+    @code {
+        [CascadingParameter]
+        private Task<AuthenticationState>? authenticationStateTask { get; set; }
+        [Parameter]
+        public RenderFragment? ChildContent { get; set; }
+
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();
+            if (authenticationStateTask != null)
+            {
+                var state = await authenticationStateTask;
+                if (state.User.Identity!.IsAuthenticated)
+                {
+                    var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+                    var roles = state.User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value);
+                    await UserStore.Init(state.User.Identity!.Name!, roles);
+                    NavigationManager.NavigateTo(url);
+                    await RouterStore.TryAdd(url);
+                }
+            }
+        }
+    }
+}

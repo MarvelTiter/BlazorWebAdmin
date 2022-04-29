@@ -10,6 +10,7 @@ namespace Project.Services.interfaces
     public interface ILoginService
     {
         Task<QueryResult<UserInfo>> LoginAsync(string username, string password);
+        Task<bool> CheckUser(UserInfo info);
         Task<bool> LogoutAsync();
     }
 }

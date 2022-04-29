@@ -2,32 +2,38 @@
 @using Project.Models.Entities
 @using Project.Models.Request
 @page "/user/index"
+@inject IJSRuntime JsRuntime
 
 <TableTemplate TableOptions=tableOptions TData=User TQuery=GeneralReq></TableTemplate>
-
+<Button OnClick="OpenNewTab">new tab</Button>
 @code {
-	TableOptions<User, GeneralReq> tableOptions;
+    TableOptions<User, GeneralReq> tableOptions;
 
-	protected override void OnInitialized()
-	{
-		base.OnInitialized();
-		tableOptions = new TableOptions<User, GeneralReq>();
-		tableOptions.Columns = typeof(User).GenerateColumns();
-		tableOptions.DataLoader = Load;
-	}
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        tableOptions = new TableOptions<User, GeneralReq>();
+        tableOptions.Columns = typeof(User).GenerateColumns();
+        tableOptions.DataLoader = Load;
+    }
 
-	async Task<QueryResult<PagingResult<User>>> Load(GeneralReq req)
-	{
-		List<User> users = new List<User>();
-		var length = new Random().Next(5, 15);
-		for (var i = 0; i < length; i++)
-		{
-			var u = new User();
-			u.Age = i + 10;
-			u.UserName = $"Hello -> {i}";
-			users.Add(u);
-			await Task.Delay(200);
-		}
-		return QueryResult<User>.PagingResult(users,users.Count);
-	}
+    async Task<QueryResult<PagingResult<User>>> Load(GeneralReq req)
+    {
+        List<User> users = new List<User>();
+        var length = new Random().Next(5, 15);
+        for (var i = 0; i < length; i++)
+        {
+            var u = new User();
+            u.Age = i + 10;
+            u.UserName = $"Hello -> {i}";
+            users.Add(u);
+            await Task.Delay(200);
+        }
+        return QueryResult<User>.PagingResult(users, users.Count);
+    }
+    Task OpenNewTab()
+    {
+        JsRuntime.InvokeVoidAsync("open", "/counter/index");
+        return Task.CompletedTask;
+    }
 }

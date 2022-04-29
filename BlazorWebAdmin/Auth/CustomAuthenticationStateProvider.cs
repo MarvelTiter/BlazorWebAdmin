@@ -20,7 +20,7 @@ namespace BlazorWebAdmin.Auth
         {
             var info = await sessionStorage.GetAsync<UserInfo>("UID");
             ClaimsIdentity identity;
-            if (info.Success)
+            if (info.Success && info.Value != null && await loginService.CheckUser(info.Value!))
             {
                 identity = Build(info.Value!);
             }
@@ -49,7 +49,7 @@ namespace BlazorWebAdmin.Auth
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, info.UserName)
+                new Claim(ClaimTypes.Name, info.UserId)
             };
             foreach (var r in info.Roles)
             {

@@ -4,27 +4,47 @@
 @inject UserStore store
 
 <div class="wrapper">
-	<div class="inner_box">
-		<img class="avatar" src="/assets/Cortana.png" />
-		<span class="@NameClass.Class">@displayName</span>
-	</div>
+    <div class="inner_box">
+        <AuthorizeView>
+            <Authorized>
+                <Dropdown Trigger=@(new Trigger[]{Trigger.Click})>
+                    <Overlay>
+                        <Menu>
+                            <MenuItem>
+                                <Button Type="@ButtonType.Text" OnClick="HandleLogout">注销</Button>
+                            </MenuItem>
+                        </Menu>
+                    </Overlay>
+                    <ChildContent>
+                        <img class="avatar" src="/assets/Cortana.png" />
+                    </ChildContent>
+                </Dropdown>
+                <span class="@NameClass.Class">@displayName</span>
+            </Authorized>
+        </AuthorizeView>
+    </div>
 </div>
 
 @code {
-	ClassHelper NameClass = new ClassHelper();
-	private bool collapse = false;
-	private string displayName => collapse ? "" : store.UserId;
-	protected override Task OnInitializedAsync()
-	{
-		NameClass.AddClass("name");
-		NameClass.AddClass("hide", () => collapse);
-		dispatcher.Register<Profile>("AvatarCollapse", ToggleavatarCollapse);
-		return base.OnInitializedAsync();
-	}
-	private Task ToggleavatarCollapse(object e)
-	{
-		collapse = (bool)e;
-		StateHasChanged();
-		return Task.CompletedTask;
-	}
+    ClassHelper NameClass = new ClassHelper();
+    private bool collapse = false;
+    private string displayName => collapse ? "" : store.UserDisplayName;
+    protected override Task OnInitializedAsync()
+    {
+        NameClass.AddClass("name");
+        NameClass.AddClass("hide", () => collapse);
+        dispatcher.Register<Profile>("AvatarCollapse", ToggleavatarCollapse);
+        return base.OnInitializedAsync();
+    }
+    private Task ToggleavatarCollapse(object e)
+    {
+        collapse = (bool)e;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    Task HandleLogout()
+    {
+        return store.LogoutAsync();
+    }
 }
