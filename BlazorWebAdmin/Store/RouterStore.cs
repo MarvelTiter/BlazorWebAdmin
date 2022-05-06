@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Common;
 using Project.Models;
+using Project.Services;
 
 namespace BlazorWebAdmin.Store
 {
@@ -133,7 +134,7 @@ namespace BlazorWebAdmin.Store
             return Task.CompletedTask;
         }
 
-        public Task InitRoutersAsync()
+        public Task InitRoutersAsync(UserInfo userInfo)
         {
             Routers = new List<RouterMeta>
             {
@@ -162,6 +163,12 @@ namespace BlazorWebAdmin.Store
                                 RouteLink = "user/index",
                             }
                         }
+                },
+                new RouterMeta()
+                {
+                    RouteName = "权限配置",
+                    IconName = "setting",
+                    RouteLink = "pagesetting"
                 }
             };
             return Task.CompletedTask;

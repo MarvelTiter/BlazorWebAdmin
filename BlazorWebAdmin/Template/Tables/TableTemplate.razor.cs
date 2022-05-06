@@ -73,6 +73,7 @@ namespace BlazorWebAdmin.Template.Tables
 
         public async Task HandleChange()
         {
+            Console.WriteLine("HandleChange");
             if (TableOptions.Page)
             {
                 await Search();

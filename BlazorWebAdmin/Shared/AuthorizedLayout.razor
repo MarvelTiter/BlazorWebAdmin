@@ -1,4 +1,5 @@
 ﻿@inherits RootLayout
+@using Project.Services
 <CascadingValue Value="this">
     <AuthorizeView>
         <Authorized>
@@ -27,7 +28,10 @@
                 {
                     var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
                     var roles = state.User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value);
-                    await UserStore.Init(state.User.Identity!.Name!, roles);
+                    var ui = new UserInfo();
+                    ui.UserId = state.User.Identity!.Name!;
+                    ui.Roles = roles;
+                    await UserStore.Init(ui);
                     NavigationManager.NavigateTo(url);
                     await RouterStore.TryAdd(url);
                 }

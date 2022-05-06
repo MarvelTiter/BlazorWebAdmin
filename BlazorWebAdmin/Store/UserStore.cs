@@ -24,9 +24,9 @@ namespace BlazorWebAdmin.Store
             this.navigationManager = navigationManager;
             this.messageService = messageService;
         }
-
-        public IEnumerable<string> Roles { get; set; } = Enumerable.Empty<string>();
-        public string UserId { get; set; }
+        public UserInfo? UserInfo { get; set; }
+        public IEnumerable<string> Roles => UserInfo?.Roles;
+        public string UserId => UserInfo?.UserId;
         public string UserDisplayName => GetUserName();
 
         private string GetUserName()
@@ -34,11 +34,10 @@ namespace BlazorWebAdmin.Store
             return "管理员";
         }
 
-        public async Task Init(string name, IEnumerable<string> roles)
+        public async Task Init(UserInfo userInfo)
         {
-            UserId = name;
-            Roles = roles.ToList();
-            await routerStore.InitRoutersAsync();
+            UserInfo = userInfo;
+            await routerStore.InitRoutersAsync(userInfo);
         }
 
         public async Task LoginAsync(LoginFormModel loginForm)
@@ -46,10 +45,9 @@ namespace BlazorWebAdmin.Store
             var flag = await loginService.LoginAsync(loginForm.UserName, loginForm.Password);
             if (flag.Success)
             {
-                UserId = flag.Payload.UserId;
-                Roles = flag.Payload.Roles;
+                UserInfo = flag.Payload;
                 await auth.IdentifyUser(flag.Payload);
-                await routerStore.InitRoutersAsync();
+                await routerStore.InitRoutersAsync(flag.Payload);
                 navigationManager.NavigateTo("/");
             }
             else
@@ -61,8 +59,7 @@ namespace BlazorWebAdmin.Store
         public async Task LogoutAsync()
         {
             await auth.ClearState();
-            Roles = Enumerable.Empty<string>();
-            UserId = "";
+            UserInfo = null;
         }
     }
 }

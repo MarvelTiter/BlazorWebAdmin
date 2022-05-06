@@ -15,7 +15,7 @@
         options.Columns = typeof(User).GenerateColumns();
         options.Page = false; 
         Users = new List<User>();
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 100; i++)
         {
             Users.Add(new User
             {
@@ -25,6 +25,7 @@
             });
         }
         options.Datas = Users;
+        options.Total = 100;
         return base.OnInitializedAsync();
     }
 }
