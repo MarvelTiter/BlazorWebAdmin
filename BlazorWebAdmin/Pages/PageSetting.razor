@@ -1,7 +1,93 @@
 ﻿@page "/pagesetting"
-
-
-
+@using AntDesign.TableModels
+@using BlazorWebAdmin.Template.Tables
+<TwoSidePage OpenTrigger=@(() => CurrentRole != null)>
+	<FirstSide>
+		<TableTemplate TableOptions=roleOptions TData=Role TQuery=GeneralReq>
+		</TableTemplate>
+	</FirstSide>
+	<SecondSide>
+		<Space>
+			<SpaceItem>
+				<Descriptions Title="角色权限配置">
+					<DescriptionsItem Title="角色名称">@CurrentRole?.RoleName</DescriptionsItem>
+				</Descriptions>
+			</SpaceItem>
+			<SpaceItem>
+				<Button Icon="close" OnClick="CloseSide"></Button>
+			</SpaceItem>
+		</Space>
+		<Spin Spinning=powerLoading>
+			<Tree DataSource="allpowers"
+				  Selectable
+				  Checkable
+				  Multiple
+				  TitleExpression="x => x.DataItem.PowerName"
+				  KeyExpression="x => x.DataItem.PowerId"
+				  ChildrenExpression="x => x.DataItem.Children"
+				  IsLeafExpression="x => x.TreeLevel > 2"
+				  TItem="Power"></Tree>
+		</Spin>
+	</SecondSide>
+	<ClosedView>
+		<h1>权限列表</h1>
+	</ClosedView>
+</TwoSidePage>
 @code {
-
+	TableOptions<Role, GeneralReq> roleOptions = new TableOptions<Role, GeneralReq>();
+	bool powerLoading = false;
+	Role? CurrentRole;
+	IEnumerable<Power> allpowers;
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		roleOptions.DataLoader = req =>
+		{
+			var roles = new List<Role>
+																												{
+				new Role()
+				{
+					RoleId = "R001",
+					RoleName = "管理员"
+				},
+				new()
+				{
+					RoleId = "R002",
+					RoleName = "普通用户"
+				}
+																												};
+			var result = QueryResult<Role>.PagingResult(roles, 2);
+			return Task.FromResult(result);
+		};
+		roleOptions.AddHandle = async () =>
+		{
+			var confirm = new ConfirmService();
+			await confirm.Show("Test", "Hello");
+			return true;
+		};
+		roleOptions.OnRowClick = HandleRowClick;
+		allpowers = new List<Power>
+		{
+			new()
+			{
+				PowerId = "P001",
+				PowerName = "用户管理",
+			}
+		};
+	}
+	async Task HandleRowClick(RowData<Role> rowData)
+	{
+		powerLoading = true;
+		CurrentRole = (rowData.Data);
+		StateHasChanged();
+		// load role powers
+		await Task.Delay(1000);
+		powerLoading = false;
+		StateHasChanged();
+	}
+	void CloseSide()
+	{
+		powerLoading = false;
+		CurrentRole = null;
+	}
 }

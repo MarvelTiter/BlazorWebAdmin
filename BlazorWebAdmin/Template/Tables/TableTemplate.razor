@@ -1,31 +1,46 @@
 ﻿@using BlazorWebAdmin.Template.Tables.Setting
 @typeparam TData
 @typeparam TQuery
-<Space>
-	@if (QueryArea != null)
-	{
-		<SpaceItem>
-			@QueryArea(TableOptions.Query)
-		</SpaceItem>
-	}
-	<SpaceItem>
-		@if (TableOptions.DataLoader != null)
+<div class="queryarea">
+	<div class="condition">
+		<Space>
+			@if (QueryArea != null)
+			{
+				<SpaceItem>
+					@QueryArea(TableOptions.Query)
+				</SpaceItem>
+			}
+			<SpaceItem>
+				@if (TableOptions.DataLoader != null)
+				{
+					<Button Type="@ButtonType.Primary" OnClick="Search">查询</Button>
+				}
+			</SpaceItem>
+			<SpaceItem>
+				@if (TableOptions.ExportDataLoader != null || !TableOptions.Page)
+				{
+					<Button Type="@ButtonType.Primary" OnClick="Export">导出</Button>
+				}
+			</SpaceItem>
+		</Space>
+	</div>
+	<div class="rightbutton">
+		@if (TableOptions.AddHandle != null)
 		{
-			<Button Type="@ButtonType.Primary" OnClick="Search">查询</Button>
+			<Button Type="@ButtonType.Primary" OnClick=@TableOptions.AddHandle>新增</Button>
 		}
-		@if (TableOptions.ExportDataLoader != null || !TableOptions.Page)
-		{
-			<Button Type="@ButtonType.Primary" OnClick="Export">导出</Button>
-		}
-	</SpaceItem>
-</Space>
+	</div>
+</div>
 <Card Class="layout-card mt-10">
 	<Table DataSource=@TableOptions.Datas
 		   Loading=@loading
+		   TItem=TData
 		   Bordered
-		   OnRow=TableOptions.OnRow
+		   OnRow=@TableOptions.OnRow
 		   ScrollX=@TableOptions.ScrollX
 		   Size="@TableSize.Small"
+		   SelectedRows=@TableOptions.Selected
+		   OnRowClick=OnRowClickHandle
 		   @bind-PageIndex=@TableOptions.Query.PageIndex
 		   @bind-PageSize=@TableOptions.Query.PageSize
 		   OnPageIndexChange=HandleChange

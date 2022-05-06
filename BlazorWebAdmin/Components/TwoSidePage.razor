@@ -1,0 +1,53 @@
+﻿@using System.Diagnostics.CodeAnalysis
+<div class="two-side-page-wrapper" style="flex-direction:@Direction">
+	<div class="page-content first">
+		@FirstSide
+	</div>
+	<div class="page-content second" style="flex:@(OpenTrigger()?"1":"0");">
+		@if (OpenTrigger())
+		{
+			@SecondSide
+		}
+		else
+		{
+			if (ClosedView != null)
+			{
+				@ClosedView
+			}
+		}
+	</div>
+</div>
+
+@code {
+	private bool openSide = false;
+	[Parameter]
+	[NotNull]
+	public RenderFragment FirstSide { get; set; }
+	[Parameter]
+	[NotNull]
+	public RenderFragment SecondSide { get; set; }
+	[Parameter]
+	public RenderFragment ClosedView { get; set; }
+	[Parameter]
+	[NotNull]
+	public Func<bool> OpenTrigger { get; set; }
+	[Parameter]
+	public string Direction { get; set; } = Row;
+
+	public const string Row = "row";
+	public const string RowReverse = "row-reverse";
+	public const string Column = "column";
+	public const string ColumnReverse = "column-reverse";
+}
+
+<style>
+	.two-side-page-wrapper {
+		display: flex;
+	}
+
+	.page-content {
+		flex: 1;
+		padding: 5px;
+		transition: all 0.3s ease;
+	}
+</style>

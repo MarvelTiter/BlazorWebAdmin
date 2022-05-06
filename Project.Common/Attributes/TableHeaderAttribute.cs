@@ -9,7 +9,7 @@ namespace Project.Common.Attributes
     [AttributeUsage(AttributeTargets.Property)]
     public class TableHeaderAttribute : Attribute
     {
-        public TableHeaderAttribute(string label, int sort, string? fix = null, string width = null)
+        public TableHeaderAttribute(string label, int sort = 0, string? fix = null, string? width = null)
         {
             Label = label;
             Sort = sort;

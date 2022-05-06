@@ -79,6 +79,16 @@ namespace BlazorWebAdmin.Template.Tables
                 await Search();
             }
         }
+
+        public Task OnRowClickHandle(RowData<TData> row)
+        {
+            if (TableOptions.OnRowClick != null)
+            {
+                return TableOptions.OnRowClick(row);
+            }
+            return Task.CompletedTask;
+        }
+
         private static IEnumerable<Dictionary<string, object>> GeneralExcelData(List<ColumnDefinition> columns, IEnumerable<TData> data)
         {
             var dataType = typeof(TData);
@@ -105,19 +115,26 @@ namespace BlazorWebAdmin.Template.Tables
         public string ScrollX { get; set; }
         public bool Page { get; set; } = true;
         public TQuery Query { get; set; }
-        public bool EnableSelection { get; set; } = true;
+        public bool EnableSelection { get; set; } = false;
         public bool LoadDataOnLoaded { get; set; } = false;
         public int Total { get; set; }
         public IEnumerable<TData> Datas { get; set; } = Enumerable.Empty<TData>();
+        public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow);
         public Func<TQuery, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
         public Func<TQuery, Task<QueryResult<IEnumerable<TData>>>> ExportDataLoader { get; set; }
+        public Func<Task<bool>> AddHandle { get; set; }
+        public Func<RowData<TData>, Task> OnRowClick { get; set; }
         public bool Initialized => Columns != null && Columns.Count > 0;
-        public Func<RowData, Dictionary<string, object>> OnRow { get; set; }
+        public Func<RowData<TData>, Dictionary<string, object>> OnRow { get; set; }
         public TableOptions()
         {
             Buttons = new List<ButtonDefinition<TData>>();
             Query = new TQuery();
+            if (!IsDataTableSource)
+            {
+                Columns = typeof(TData).GenerateColumns();
+            }
         }
 
         public TableOptions<TData, TQuery> AddColumn(string label, string prop, ColumnDefinition? col = null)
