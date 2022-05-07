@@ -6,16 +6,13 @@
         <Profile></Profile>
         <MenuItem RouterLink="/" RouterMatch="NavLinkMatch.All" Title="主页">
             <IconTemplate>
-                <SvgIcon IconName="home"></SvgIcon>
+                <SvgIcon ClassName="nav-icon" IconName="home"></SvgIcon>
             </IconTemplate>
         </MenuItem>
         @foreach (var item in routeStore.Routers)
         {
             <SideBarItem Route=item></SideBarItem>
         }
-        @*<MenuItem RouterLink="fetchdata" RouterMatch="NavLinkMatch.All" Icon="user">
-            Fetch data
-            </MenuItem>*@
     </Menu>
 </div>
 

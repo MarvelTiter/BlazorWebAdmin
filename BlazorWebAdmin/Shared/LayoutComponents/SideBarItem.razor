@@ -3,7 +3,7 @@
 {
 	<MenuItem RouterLink="@Route.RouteLink" RouterMatch="NavLinkMatch.All" Title=@Route.RouteName>
 		<IconTemplate>
-			<SvgIcon IconName="@Route.IconName"></SvgIcon>
+			<SvgIcon ClassName="nav-icon" IconName="@Route.IconName"></SvgIcon>
 		</IconTemplate>
 	</MenuItem>
 }
@@ -14,7 +14,7 @@ else
 			<span class="subtitle_template">
 				<Icon>
 					<Component>
-						<SvgIcon IconName="@Route.IconName"></SvgIcon>
+						<SvgIcon ClassName="nav-icon" IconName="@Route.IconName"></SvgIcon>
 					</Component>
 				</Icon>
 				<span>@Route.RouteName</span>

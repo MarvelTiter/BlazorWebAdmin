@@ -1,4 +1,4 @@
-﻿@page "/pagesetting"
+﻿@page "/rolepermission"
 @using AntDesign.TableModels
 @using BlazorWebAdmin.Template.Tables
 <TwoSidePage OpenTrigger=@(() => CurrentRole != null)>
@@ -19,32 +19,48 @@
 		</Space>
 		<Spin Spinning=powerLoading>
 			<Tree DataSource="allpowers"
-				  Selectable
 				  Checkable
 				  Multiple
-				  TitleExpression="x => x.DataItem.PowerName"
-				  KeyExpression="x => x.DataItem.PowerId"
+				  ShowLine
+				  @ref="treeInstance"
+				  @bind-CheckedKeys=selectedKeys
+				  TitleExpression="x => x.DataItem.Node.PowerName"
+				  KeyExpression="x => x.DataItem.Node.PowerId"
 				  ChildrenExpression="x => x.DataItem.Children"
-				  IsLeafExpression="x => x.TreeLevel > 2"
-				  TItem="Power"></Tree>
+				  TItem="PowerTreeNode">
+				<SwitcherIconTemplate>
+					<Icon Type="down" />
+				</SwitcherIconTemplate>
+			</Tree>
 		</Spin>
+		<Space>
+			<SpaceItem>
+				<Button Type="primary" OnClick=SaveRolePower>确定</Button>
+			</SpaceItem>
+		</Space>
 	</SecondSide>
 	<ClosedView>
 		<h1>权限列表</h1>
 	</ClosedView>
 </TwoSidePage>
 @code {
+	record PowerTreeNode(Power Node)
+	{
+		public IList<PowerTreeNode> Children { get; set; }
+	}
 	TableOptions<Role, GeneralReq> roleOptions = new TableOptions<Role, GeneralReq>();
 	bool powerLoading = false;
 	Role? CurrentRole;
-	IEnumerable<Power> allpowers;
+	Tree<PowerTreeNode> treeInstance;
+	IEnumerable<PowerTreeNode> allpowers;
+	string[]? selectedKeys = Array.Empty<string>();
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
 		roleOptions.DataLoader = req =>
 		{
 			var roles = new List<Role>
-																												{
+									{
 				new Role()
 				{
 					RoleId = "R001",
@@ -55,7 +71,7 @@
 					RoleId = "R002",
 					RoleName = "普通用户"
 				}
-																												};
+									};
 			var result = QueryResult<Role>.PagingResult(roles, 2);
 			return Task.FromResult(result);
 		};
@@ -66,15 +82,36 @@
 			return true;
 		};
 		roleOptions.OnRowClick = HandleRowClick;
-		allpowers = new List<Power>
+		var n1 = new PowerTreeNode(new Power() { PowerId = "P001", PowerName = "用户管理" });
+		n1.Children = new List<PowerTreeNode>
+				{
+					new(new Power() { PowerId = "P002", PowerName = "测试1" }),
+					new(new Power() { PowerId = "P003", PowerName = "测试2" }),
+				};
+		var n2 = new PowerTreeNode(new Power() { PowerId = "P004", PowerName = "用户管理2" });
+		n2.Children = new List<PowerTreeNode>
+				{
+					new(new Power() { PowerId = "P005", PowerName = "测试3" }),
+					new(new Power() { PowerId = "P006", PowerName = "测试4" }),
+				};
+		allpowers = new List<PowerTreeNode>
 		{
-			new()
-			{
-				PowerId = "P001",
-				PowerName = "用户管理",
-			}
+			n1,
+			n2,
 		};
 	}
+
+	Task SaveRolePower()
+	{
+		if (selectedKeys is null) return Task.CompletedTask;
+
+		foreach (var item in selectedKeys)
+		{
+			Console.WriteLine(item);
+		}
+		return Task.CompletedTask;
+	}
+
 	async Task HandleRowClick(RowData<Role> rowData)
 	{
 		powerLoading = true;

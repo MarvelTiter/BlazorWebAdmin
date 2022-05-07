@@ -14,6 +14,5 @@ namespace Project.Models.Entities
 		public string PowerType { get; set; }
 		public string Icon { get; set; }
 		public string Path { get; set; }
-		public IList<Power> Children { get; set; }
 	}
 }

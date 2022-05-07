@@ -168,7 +168,13 @@ namespace BlazorWebAdmin.Store
                 {
                     RouteName = "权限配置",
                     IconName = "setting",
-                    RouteLink = "pagesetting"
+                    RouteLink = "rolepermission"
+                },
+                new RouterMeta()
+                {
+                    RouteName = "权限设置",
+                    IconName = "setting",
+                    RouteLink = "permission"
                 }
             };
             return Task.CompletedTask;
