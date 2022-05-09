@@ -1,0 +1,98 @@
+﻿@using BlazorWebAdmin.Template.Tables.Setting
+@using System.ComponentModel.DataAnnotations
+@inject MessageService MessageSrv
+<div style="display:flex">
+	<Select DataSource="Columns"
+			Placeholder="请选择查询内容"
+			DropdownMatchSelectWidth=false
+			Style="min-width:150px;"
+			TItem=ColumnDefinition
+			TItemValue=string
+			ValueName=@("PropertyOrFieldName")
+			LabelName=@("Label")
+			OnSelectedItemChanged="UpdateField">
+	</Select>
+	<EnumSelect TEnum="CompareType" OnSelectedItemChanged="UpdateEnum" DropdownMatchSelectWidth=false Style="width:100px"></EnumSelect>
+	<Input @bind-Value=innerValue TValue=string OnChange="UpdateValue"></Input>
+</div>
+@code {
+	string innerValue;
+	ColumnDefinition? selectedField;
+	CompareType type;
+	[Parameter]
+	public List<ColumnDefinition> Columns { get; set; }
+	[Parameter]
+	public ConditionInfo Info { get; set; }
+	[Parameter]
+	public EventCallback<ConditionInfo> InfoChanged { get; set; }
+
+	async void UpdateField(ColumnDefinition item)
+	{
+		selectedField = item;
+		await NotifyChanged();
+	}
+
+	async void UpdateEnum(CompareType type)
+	{
+		this.type = type;
+		await NotifyChanged();
+	}
+
+	async Task UpdateValue(string val)
+	{
+		await NotifyChanged();
+	}
+
+	async Task NotifyChanged()
+	{
+		if (selectedField is null)
+		{
+			return;
+		}
+		if (!CheckComparable())
+		{
+			await MessageSrv.Error($"[{GetDisplay(type)}]不能应用于字段[{selectedField.Label}]");
+			return;
+		}
+		var condition = new ConditionInfo(selectedField.PropertyOrFieldName, type, innerValue, selectedField.DataType);
+		await InfoChanged.InvokeAsync(condition);
+	}
+
+	string GetDisplay(CompareType t)
+	{
+		var member = typeof(CompareType).GetMember(Enum.GetName<CompareType>(t)!)[0];
+		var attr = Attribute.GetCustomAttribute(member, typeof(DisplayAttribute));
+		if (attr is DisplayAttribute display)
+		{
+			return display.Name;
+		}
+		return "";
+	}
+
+	bool CheckComparable()
+	{
+		return type switch
+		{
+			CompareType.GreaterThan => IsNumberOrDateTime(),
+			CompareType.GreaterThanOrEqual => IsNumberOrDateTime(),
+			CompareType.LessThan => IsNumberOrDateTime(),
+			CompareType.LessThanOrEqual => IsNumberOrDateTime(),
+			_ => true
+		};
+	}
+	bool IsNumberOrDateTime()
+	{
+		return selectedField!.DataType == typeof(Int16)
+		|| selectedField!.DataType == typeof(Int32)
+		|| selectedField!.DataType == typeof(Int64)
+		|| selectedField!.DataType == typeof(Single)
+		|| selectedField!.DataType == typeof(Double)
+		|| selectedField!.DataType == typeof(DateTime)
+		|| selectedField!.DataType == typeof(Int16?)
+		|| selectedField!.DataType == typeof(Int32?)
+		|| selectedField!.DataType == typeof(Int64?)
+		|| selectedField!.DataType == typeof(Single?)
+		|| selectedField!.DataType == typeof(Double?)
+		|| selectedField!.DataType == typeof(DateTime?);
+	}
+}

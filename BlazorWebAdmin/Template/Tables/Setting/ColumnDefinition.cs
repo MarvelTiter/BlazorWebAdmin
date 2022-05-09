@@ -7,7 +7,7 @@ namespace BlazorWebAdmin.Template.Tables.Setting
         public string Label { get; set; }
         public int Index { get; set; }
         public string PropertyOrFieldName { get; set; }
-        public string DataType { get; set; } = "string";
+        public Type DataType { get; set; } = typeof(string);
         public string? Fixed { get; set; }
         public string? Width { get; set; }
         public Func<CellData, Dictionary<string,object>> OnCell { get; set; }

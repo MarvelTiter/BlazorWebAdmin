@@ -22,7 +22,7 @@ namespace BlazorWebAdmin.Template.Tables
                 columns.Add(new(head!.Label, col.Name)
                 {
                     Index = head.Sort,
-                    DataType = col.PropertyType.Name,
+                    DataType = col.PropertyType,
                     Fixed = head.Fixed,
                     Width = head.Width,
                 });

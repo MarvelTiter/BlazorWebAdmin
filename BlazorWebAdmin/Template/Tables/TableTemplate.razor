@@ -10,18 +10,24 @@
 					@QueryArea(TableOptions.Query)
 				</SpaceItem>
 			}
-			<SpaceItem>
-				@if (TableOptions.DataLoader != null)
-				{
+			else if (QueryArea == null && !TableOptions.IsDataTableSource)
+			{
+				<SpaceItem>
+					<ConditionBuilder Columns=@TableOptions.Columns></ConditionBuilder>
+				</SpaceItem>
+			}
+			@if (TableOptions.DataLoader != null)
+			{
+				<SpaceItem>
 					<Button Type="@ButtonType.Primary" OnClick="Search">查询</Button>
-				}
-			</SpaceItem>
-			<SpaceItem>
-				@if (TableOptions.ExportDataLoader != null || !TableOptions.Page)
-				{
+				</SpaceItem>
+			}
+			@if (TableOptions.ExportDataLoader != null || !TableOptions.Page)
+			{
+				<SpaceItem>
 					<Button Type="@ButtonType.Primary" OnClick="Export">导出</Button>
-				}
-			</SpaceItem>
+				</SpaceItem>
+			}
 		</Space>
 	</div>
 	<div class="rightbutton">
@@ -63,7 +69,7 @@
 				{
 					foreach (var col in TableOptions.Columns)
 					{
-						var type = col.DataType.ToLower();
+						var type = col.DataType.Name.ToLower();
 						switch (type)
 						{
 							case "string":
