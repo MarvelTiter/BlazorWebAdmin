@@ -14,7 +14,7 @@ namespace BlazorWebAdmin.Template.Tables.Setting
                 CompareType.Contains => null,
                 _ => (ExpressionType)Enum.Parse(typeof(ExpressionType), Enum.GetName<CompareType>(info.Type)!)
             };
-            Expression exp = null;
+            Expression? exp = null;
             if (expType.HasValue)
             {
                 exp = Expression.MakeBinary(expType.Value, propExp, Expression.Constant(info.Value, info.ValueType));
@@ -26,11 +26,26 @@ namespace BlazorWebAdmin.Template.Tables.Setting
             return exp;
         }
 
-        public static Expression<Func<T, bool>> CombineExpression<T>(T param, Queue<ConditionInfo> infos, Queue<ExpressionType> types)
+        public static Expression<Func<T, bool>> CombineExpression<T>(Queue<ConditionInfo> infos, Queue<ExpressionType> types)
         {
             var pExp = Expression.Parameter(typeof(T), "p");
-            var first = infos.Dequeue();
-            Expression expression = BuildExpression<T>(pExp, first);
+            Expression expression = null;
+            while (infos.TryDequeue(out var info))
+            {
+                if (info.Legal)
+                {
+                    expression = BuildExpression<T>(pExp, info);
+                    break;
+                }
+                else
+                {
+                    types.Dequeue();
+                }
+            }
+            if (expression == null)
+            {
+                throw new InvalidDataException();
+            }
             while (infos.Count > 0)
             {
                 var next = infos.Dequeue();
@@ -39,6 +54,14 @@ namespace BlazorWebAdmin.Template.Tables.Setting
                 expression = Expression.MakeBinary(type, expression, nextExp);
             }
             return Expression.Lambda<Func<T, bool>>(expression, pExp);
+        }
+
+        public static Expression<Func<T, bool>> CombineExpression<T>(ConditionInfo info)
+        {
+            var infos = new Queue<ConditionInfo>();
+            infos.Enqueue(info);
+            var types = new Queue<ExpressionType>();
+            return CombineExpression<T>(infos, types);
         }
     }
 }

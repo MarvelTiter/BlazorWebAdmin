@@ -13,7 +13,7 @@
 			else if (QueryArea == null && !TableOptions.IsDataTableSource)
 			{
 				<SpaceItem>
-					<ConditionBuilder Columns=@TableOptions.Columns></ConditionBuilder>
+					<ConditionBuilder Columns=@TableOptions.Columns @bind-Info="conditionInfo"></ConditionBuilder>
 				</SpaceItem>
 			}
 			@if (TableOptions.DataLoader != null)
@@ -21,6 +21,12 @@
 				<SpaceItem>
 					<Button Type="@ButtonType.Primary" OnClick="Search">查询</Button>
 				</SpaceItem>
+				@if (QueryArea == null && !TableOptions.IsDataTableSource)
+				{
+					<SpaceItem>
+						<Button Type="@ButtonType.Primary">高级查询</Button>
+					</SpaceItem>
+				}
 			}
 			@if (TableOptions.ExportDataLoader != null || !TableOptions.Page)
 			{
@@ -142,6 +148,7 @@
 		</PaginationTemplate>
 	</Table>
 </Card>
+
 @code {
 	public RenderFragment CreateButton(ButtonDefinition<TData> definition, TData context)
 	{

@@ -10,6 +10,7 @@ using MiniExcelLibs;
 using Project.Models;
 using Project.Models.Request;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace BlazorWebAdmin.Template.Tables
 {
@@ -26,7 +27,7 @@ namespace BlazorWebAdmin.Template.Tables
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
         bool loading;
-
+        private ConditionInfo conditionInfo;
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -112,6 +113,7 @@ namespace BlazorWebAdmin.Template.Tables
     {
         public List<ColumnDefinition> Columns { get; set; }
         public List<ButtonDefinition<TData>> Buttons { get; set; }
+        //public Expression<Func<TData, bool>> Expression { get; set; }
         public string ScrollX { get; set; }
         public bool Page { get; set; } = true;
         public TQuery Query { get; set; }

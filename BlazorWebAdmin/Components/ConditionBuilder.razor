@@ -49,12 +49,12 @@
 		{
 			return;
 		}
-		if (!CheckComparable())
+		var isLegal = CheckComparable();
+		if (!isLegal)
 		{
-			await MessageSrv.Error($"[{GetDisplay(type)}]不能应用于字段[{selectedField.Label}]");
-			return;
+			_ = MessageSrv.Error($"[{GetDisplay(type)}]不能应用于字段[{selectedField.Label}]");
 		}
-		var condition = new ConditionInfo(selectedField.PropertyOrFieldName, type, innerValue, selectedField.DataType);
+		var condition = new ConditionInfo(selectedField.PropertyOrFieldName, type, innerValue, selectedField.DataType, isLegal);
 		await InfoChanged.InvokeAsync(condition);
 	}
 
