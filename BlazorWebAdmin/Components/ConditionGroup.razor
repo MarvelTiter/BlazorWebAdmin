@@ -2,7 +2,9 @@
 @using System.Linq.Expressions
 @using MT.KitTools.StringExtension
 @typeparam TData
-<Button Type=@ButtonType.Primary OnClick="AddCondition">增加条件</Button>
+<div style="text-align:right;margin-bottom:10px;">
+	<Button Type=@ButtonType.Primary OnClick="AddCondition">增加条件</Button>
+</div>
 @for (var i = 0; i < Conditions.Count; i++)
 {
 	int index = i;
@@ -10,18 +12,24 @@
 	@if (ExpressionTypes.Count > index)
 	{
 		<Switch Checked="ExpressionTypes[index] == ExpressionType.And" CheckedChildren="并且" UnCheckedChildren="或者" OnChange=@(check => {
-			if (check)
-			{
-				ExpressionTypes[index] = ExpressionType.And;
-			}
-			else
-			{
-				ExpressionTypes[index] = ExpressionType.Or ;
-			}
+		if (check)
+		{
+		ExpressionTypes[index] = ExpressionType.And;
+		}
+		else
+		{
+		ExpressionTypes[index] = ExpressionType.Or ;
+		}
 		}) />
 	}
 }
-<Button Type=@ButtonType.Primary OnClick="ConfirmCondition">确定</Button>
+<div style="text-align:right;margin-top:10px;">
+	<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToSearch">查询</Button>
+	@if (ShowExportButton)
+	{
+		<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToExport">导出</Button>
+	}
+</div>
 @code {
 	[Parameter]
 	public List<ColumnDefinition> Columns { get; set; }
@@ -29,6 +37,12 @@
 	public Expression<Func<TData, bool>> Expression { get; set; }
 	[Parameter]
 	public EventCallback<Expression<Func<TData, bool>>> ExpressionChanged { get; set; }
+	[Parameter]
+	public bool ShowExportButton { get; set; }
+	[Parameter]
+	public EventCallback OnConfirmToSearch { get; set; }
+	[Parameter]
+	public EventCallback OnConfirmToExport { get; set; }
 	private List<ConditionInfo> Conditions = new List<ConditionInfo>();
 	private List<ExpressionType> ExpressionTypes = new List<ExpressionType>();
 	protected override void OnInitialized()
@@ -41,11 +55,18 @@
 		Conditions.Add(new ConditionInfo("", CompareType.Equal, "", typeof(string), false));
 		ExpressionTypes.Add(ExpressionType.And);
 	}
-	async void ConfirmCondition()
+	public async Task ConfirmConditionToSearch()
 	{
 		var exp = BuildCondition.CombineExpression<TData>(new Queue<ConditionInfo>(Conditions), new Queue<ExpressionType>(ExpressionTypes));
-		Console.WriteLine(exp.ToString());
 		await ExpressionChanged.InvokeAsync(exp);
+		_ = OnConfirmToSearch.InvokeAsync();
+	}
+
+	public async Task ConfirmConditionToExport()
+	{
+		var exp = BuildCondition.CombineExpression<TData>(new Queue<ConditionInfo>(Conditions), new Queue<ExpressionType>(ExpressionTypes));
+		await ExpressionChanged.InvokeAsync(exp);
+		_ = OnConfirmToExport.InvokeAsync();
 	}
 
 }

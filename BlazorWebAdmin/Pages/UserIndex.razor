@@ -24,7 +24,7 @@
 		};
 	}
 
-	async Task<QueryResult<PagingResult<User>>> Load(GeneralReq req)
+	async Task<QueryResult<PagingResult<User>>> Load(QueryParameter<User, GeneralReq> req)
 	{
 		List<User> users = new List<User>();
 		var length = new Random().Next(5, 15);
@@ -34,8 +34,9 @@
 			u.Age = i + 10;
 			u.UserName = $"Hello -> {i}";
 			users.Add(u);
-			await Task.Delay(200);
+			await Task.Delay(100);
 		}
+		Console.WriteLine(req.Expression);
 		return QueryResult<User>.PagingResult(users, users.Count);
 	}
 	Task OpenNewTab()

@@ -10,7 +10,7 @@
 					@QueryArea(TableOptions.Query)
 				</SpaceItem>
 			}
-			else if (QueryArea == null && !TableOptions.IsDataTableSource)
+			else if (EnableGenerateQuery)
 			{
 				<SpaceItem>
 					<ConditionBuilder Columns=@TableOptions.Columns @bind-Info="conditionInfo"></ConditionBuilder>
@@ -21,10 +21,10 @@
 				<SpaceItem>
 					<Button Type="@ButtonType.Primary" OnClick="Search">查询</Button>
 				</SpaceItem>
-				@if (QueryArea == null && !TableOptions.IsDataTableSource)
+				@if (EnableGenerateQuery)
 				{
 					<SpaceItem>
-						<Button Type="@ButtonType.Primary" OnClick="AdvanceSearch">高级查询</Button>
+						<Button Type="@ButtonType.Primary" OnClick=@(()=>AdvanceModalVisible = true)>高级查询</Button>
 					</SpaceItem>
 				}
 			}
@@ -148,9 +148,18 @@
 		</PaginationTemplate>
 	</Table>
 </Card>
-<Modal DestroyOnClose Visible="AdvanceModalVisible">
-	<ConditionGroup Columns=@TableOptions.Columns TData=TData></ConditionGroup>
-</Modal>
+@if (EnableGenerateQuery)
+{
+	<Modal Visible="AdvanceModalVisible" OnCancel=@(()=>AdvanceModalVisible = false) Title="高级查询" Footer=null>
+		<ConditionGroup Columns=@TableOptions.Columns
+					TData=TData
+					@bind-Expression="ConditionExpression"
+					ShowExportButton=@(TableOptions.ExportDataLoader != null || !TableOptions.Page)
+					OnConfirmToSearch=AdvanceSearch
+					OnConfirmToExport=AdvanceExport>
+		</ConditionGroup>
+	</Modal>
+}
 @code {
 	public RenderFragment CreateButton(ButtonDefinition<TData> definition, TData context)
 	{

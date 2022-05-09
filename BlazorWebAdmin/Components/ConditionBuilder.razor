@@ -62,6 +62,10 @@
 		else
 		{
 			legal = stringValue.IsEnable();
+			if (legal && IsNumberOrDateTime())
+			{
+				legal = stringValue.IsNumeric<int>(out _);
+			}
 			return stringValue;
 		}
 	}

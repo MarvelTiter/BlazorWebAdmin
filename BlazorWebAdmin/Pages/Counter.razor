@@ -21,53 +21,53 @@
 <TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
 
 @code {
-    private int count;
-    private string selected;
-    TableOptions<DataRow, GeneralReq> tableOptions;
+	private int count;
+	private string selected;
+	TableOptions<DataRow, GeneralReq> tableOptions;
 
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        tableOptions = new TableOptions<DataRow, GeneralReq>();
-        tableOptions.ScrollX = "2000";
-        tableOptions.AddColumn("列1", "A")
-                    .AddColumn("列2", "B")
-                    .AddColumn("列3", "C")
-                    .AddColumn("列4", "D");
-        tableOptions.DataLoader = Load;
-    }
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		tableOptions = new TableOptions<DataRow, GeneralReq>();
+		tableOptions.ScrollX = "2000";
+		tableOptions.AddColumn("列1", "A")
+					.AddColumn("列2", "B")
+					.AddColumn("列3", "C")
+					.AddColumn("列4", "D");
+		tableOptions.DataLoader = Load;
+	}
 
-    private void Add()
-    {
-        count++;
-        store.Count++;
-        MessageSrv.Success(selected);
-    }
+	private void Add()
+	{
+		count++;
+		store.Count++;
+		MessageSrv.Success(selected);
+	}
 
-    void ThrowException()
-    {
-        throw new Exception("Test");
-    }
+	void ThrowException()
+	{
+		throw new Exception("Test");
+	}
 
-    async Task<QueryResult<PagingResult<DataRow>>> Load(GeneralReq req)
-    {
-        DataTable dt = new DataTable();
-        dt.Columns.Add("A");
-        dt.Columns.Add("B");
-        dt.Columns.Add("C");
-        dt.Columns.Add("D");
-        var length = new Random().Next(5, 15);
-        for (var i = 0; i < length; i++)
-        {
-            var row = dt.NewRow();
-            row["A"] = $"A => {i}";
-            row["B"] = $"B => {i}";
-            row["C"] = $"C => {i}";
-            row["D"] = $"D => {i}";
-            dt.Rows.Add(row);
-            await Task.Delay(200);
-        }
-        Console.WriteLine($"pageIndex:{req.PageIndex} ; pageSize:{req.PageSize}");
-        return QueryResult<DataRow>.PagingResult(dt.AsEnumerable(), dt.Rows.Count);
-    }
+	async Task<QueryResult<PagingResult<DataRow>>> Load(QueryParameter<DataRow, GeneralReq> req)
+	{
+		DataTable dt = new DataTable();
+		dt.Columns.Add("A");
+		dt.Columns.Add("B");
+		dt.Columns.Add("C");
+		dt.Columns.Add("D");
+		var length = new Random().Next(5, 15);
+		for (var i = 0; i < length; i++)
+		{
+			var row = dt.NewRow();
+			row["A"] = $"A => {i}";
+			row["B"] = $"B => {i}";
+			row["C"] = $"C => {i}";
+			row["D"] = $"D => {i}";
+			dt.Rows.Add(row);
+			await Task.Delay(200);
+		}
+		Console.WriteLine($"pageIndex:{req.Query.PageIndex} ; pageSize:{req.Query.PageSize}");
+		return QueryResult<DataRow>.PagingResult(dt.AsEnumerable(), dt.Rows.Count);
+	}
 }

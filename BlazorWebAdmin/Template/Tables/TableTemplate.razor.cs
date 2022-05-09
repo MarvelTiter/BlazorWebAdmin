@@ -26,8 +26,12 @@ namespace BlazorWebAdmin.Template.Tables
         public MessageService MessageSrv { get; set; }
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
+
+        public bool EnableGenerateQuery => QueryArea == null && !TableOptions.IsDataTableSource;
+
         bool loading;
         private ConditionInfo conditionInfo;
+        private Expression<Func<TData, bool>>? ConditionExpression;
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -39,16 +43,35 @@ namespace BlazorWebAdmin.Template.Tables
         private bool AdvanceModalVisible = false;
         public async Task Search()
         {
+            if (conditionInfo != null)
+                ConditionExpression = BuildCondition.CombineExpression<TData>(conditionInfo);
+            var query = TableOptions.CreateQuery(ConditionExpression);
+            await DoQuery(query);
+        }
+
+
+
+        public async Task AdvanceSearch()
+        {
+            AdvanceModalVisible = false;
+            var query = TableOptions.CreateQuery(ConditionExpression);
+            await DoQuery(query);
+            ConditionExpression = null;
+        }
+        private async Task DoQuery(QueryParameter<TData, TQuery> query)
+        {
             loading = true;
-            var result = await TableOptions.DataLoader(TableOptions.Query);
+            var result = await TableOptions.DataLoader(query);
             TableOptions.Datas = result.Payload.Data;
             TableOptions.Total = result.Payload.TotalRecord;
             loading = false;
         }
 
-        public void AdvanceSearch()
-        {
-            AdvanceModalVisible = true;
+        public async void AdvanceExport()
+		{
+            AdvanceModalVisible = false;
+            await Export();
+            ConditionExpression = null;
         }
 
         public async Task Export()
@@ -57,8 +80,9 @@ namespace BlazorWebAdmin.Template.Tables
             var data = TableOptions.Datas;
             if (TableOptions.Page)
             {
-                var query = await TableOptions.ExportDataLoader(TableOptions.Query);
-                data = query.Payload;
+                var query = TableOptions.CreateQuery(ConditionExpression);
+                var result = await TableOptions.ExportDataLoader(query);
+                data = result.Payload;
             }
             if (data.Any())
             {
@@ -68,7 +92,7 @@ namespace BlazorWebAdmin.Template.Tables
                 var excelData = GeneralExcelData(TableOptions.Columns, data);
                 await MiniExcel.SaveAsAsync(path, excelData);
                 _ = MessageSrv.Success("导出成功！请下载文件！");
-                await JSRuntime.PushAsync(path);
+                _ = JSRuntime.PushAsync(path);
             }
             else
             {
@@ -113,9 +137,15 @@ namespace BlazorWebAdmin.Template.Tables
         }
     }
 
+    public struct QueryParameter<TData, TQuery> where TQuery : IRequest, new()
+    {
+        public TQuery Query { get; set; }
+        public Expression<Func<TData, bool>>? Expression { get; set; }
+    }
 
     public class TableOptions<TData, TQuery> where TQuery : IRequest, new()
     {
+
         public List<ColumnDefinition> Columns { get; set; }
         public List<ButtonDefinition<TData>> Buttons { get; set; }
         //public Expression<Func<TData, bool>> Expression { get; set; }
@@ -128,8 +158,8 @@ namespace BlazorWebAdmin.Template.Tables
         public IEnumerable<TData> Datas { get; set; } = Enumerable.Empty<TData>();
         public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow) || typeof(TData) == typeof(IDictionary<string, object>);
-        public Func<TQuery, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
-        public Func<TQuery, Task<QueryResult<IEnumerable<TData>>>> ExportDataLoader { get; set; }
+        public Func<QueryParameter<TData, TQuery>, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
+        public Func<QueryParameter<TData, TQuery>, Task<QueryResult<IEnumerable<TData>>>> ExportDataLoader { get; set; }
         public Func<Task<bool>> AddHandle { get; set; }
         public Func<RowData<TData>, Task> OnRowClick { get; set; }
         public bool Initialized => Columns != null && Columns.Count > 0;
@@ -162,6 +192,15 @@ namespace BlazorWebAdmin.Template.Tables
         {
             Buttons.Add(btn);
             return this;
+        }
+
+        public QueryParameter<TData, TQuery> CreateQuery(Expression<Func<TData, bool>>? exp)
+        {
+            return new QueryParameter<TData, TQuery>()
+            {
+                Query = Query,
+                Expression = exp
+            };
         }
 
         public ColumnDefinition this[string columnName]

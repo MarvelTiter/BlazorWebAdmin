@@ -58,7 +58,7 @@ namespace BlazorWebAdmin.Template.Tables.Setting
             }
             if (expression == null)
             {
-                throw new InvalidDataException();
+                return Expression.Lambda<Func<T, bool>>(Expression.MakeBinary(ExpressionType.Equal, Expression.Constant(1), Expression.Constant(1)),pExp);
             }
             while (infos.Count > 0)
             {
