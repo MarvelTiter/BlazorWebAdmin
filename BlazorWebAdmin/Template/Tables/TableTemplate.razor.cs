@@ -36,7 +36,7 @@ namespace BlazorWebAdmin.Template.Tables
                 await Search();
             }
         }
-
+        private bool AdvanceModalVisible = false;
         public async Task Search()
         {
             loading = true;
@@ -44,6 +44,11 @@ namespace BlazorWebAdmin.Template.Tables
             TableOptions.Datas = result.Payload.Data;
             TableOptions.Total = result.Payload.TotalRecord;
             loading = false;
+        }
+
+        public void AdvanceSearch()
+        {
+            AdvanceModalVisible = true;
         }
 
         public async Task Export()

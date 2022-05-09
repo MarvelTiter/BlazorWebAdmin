@@ -24,7 +24,7 @@
 				@if (QueryArea == null && !TableOptions.IsDataTableSource)
 				{
 					<SpaceItem>
-						<Button Type="@ButtonType.Primary">高级查询</Button>
+						<Button Type="@ButtonType.Primary" OnClick="AdvanceSearch">高级查询</Button>
 					</SpaceItem>
 				}
 			}
@@ -148,7 +148,9 @@
 		</PaginationTemplate>
 	</Table>
 </Card>
-
+<Modal DestroyOnClose Visible="AdvanceModalVisible">
+	<ConditionGroup Columns=@TableOptions.Columns TData=TData></ConditionGroup>
+</Modal>
 @code {
 	public RenderFragment CreateButton(ButtonDefinition<TData> definition, TData context)
 	{

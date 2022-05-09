@@ -30,7 +30,6 @@
 		if (string.IsNullOrEmpty(IconName)) return;
 		var svgContent = await SvgIconDataCache.GetIconDataByName(IconName);
 		var insertIndex = svgContent.IndexOf("<svg") + 4;
-		//TODO svg文件处理
 		svgContent = svgContent.Insert(insertIndex, $" class='svg-icon {ClassName}'");
 		IconMarkuString = new MarkupString(svgContent);
 	}

@@ -1,22 +1,43 @@
 ﻿@using BlazorWebAdmin.Template.Tables.Setting
 @using System.ComponentModel.DataAnnotations
+@using MT.KitTools.StringExtension
 @inject MessageService MessageSrv
-<div style="display:flex">
+<Row>
+	<Col Span=10>
 	<Select DataSource="Columns"
 			Placeholder="请选择查询内容"
 			DropdownMatchSelectWidth=false
-			Style="min-width:150px;"
+			Style="min-width:150px;width: 100%;"
 			TItem=ColumnDefinition
 			TItemValue=string
 			ValueName=@("PropertyOrFieldName")
 			LabelName=@("Label")
 			OnSelectedItemChanged="UpdateField">
 	</Select>
-	<EnumSelect TEnum="CompareType" OnSelectedItemChanged="UpdateEnum" DropdownMatchSelectWidth=false Style="width:100px"></EnumSelect>
-	<Input @bind-Value=innerValue TValue=string OnChange="UpdateValue"></Input>
-</div>
+	</Col>
+	<Col Span=4>
+	<EnumSelect TEnum="CompareType" OnSelectedItemChanged="UpdateEnum" DropdownMatchSelectWidth=false></EnumSelect>
+	</Col>
+	<Col Span=10>
+		@if (selectedField?.DataType == typeof(DateTime))
+		{
+		<DatePicker @bind-Value=dateValue Style="width:100%;"></DatePicker>
+		}
+		else if (selectedField?.EnumValues != null)
+		{
+			//TODO EnumValues
+		}
+		else
+		{
+		<Input @bind-Value=stringValue TValue=string OnChange="UpdateValue"></Input>
+		}
+	</Col>
+</Row>
+
+
 @code {
-	string innerValue;
+	string stringValue;
+	DateTime dateValue = DateTime.Now;
 	ColumnDefinition? selectedField;
 	CompareType type;
 	[Parameter]
@@ -25,6 +46,25 @@
 	public ConditionInfo Info { get; set; }
 	[Parameter]
 	public EventCallback<ConditionInfo> InfoChanged { get; set; }
+
+	object GetInnerValue(out bool legal)
+	{
+		if (selectedField?.DataType == typeof(DateTime))
+		{
+			legal = dateValue != default;
+			return dateValue;
+		}
+		else if (selectedField?.EnumValues != null)
+		{
+			//TODO EnumValues
+			throw new Exception();
+		}
+		else
+		{
+			legal = stringValue.IsEnable();
+			return stringValue;
+		}
+	}
 
 	async void UpdateField(ColumnDefinition item)
 	{
@@ -54,7 +94,7 @@
 		{
 			_ = MessageSrv.Error($"[{GetDisplay(type)}]不能应用于字段[{selectedField.Label}]");
 		}
-		var condition = new ConditionInfo(selectedField.PropertyOrFieldName, type, innerValue, selectedField.DataType, isLegal);
+		var condition = new ConditionInfo(selectedField.PropertyOrFieldName, type, GetInnerValue(out bool validValue), selectedField.DataType, isLegal && validValue);
 		await InfoChanged.InvokeAsync(condition);
 	}
 
