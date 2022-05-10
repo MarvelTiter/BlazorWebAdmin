@@ -14,7 +14,7 @@ using System.Linq.Expressions;
 
 namespace BlazorWebAdmin.Template.Tables
 {
-    public partial class TableTemplate<TData, TQuery> where TQuery : IRequest<TData>, new()
+    public partial class TableTemplate<TData, TQuery> where TQuery : IRequest, new()
     {
         [Parameter]
         public TableOptions<TData, TQuery> TableOptions { get; set; }
@@ -66,7 +66,7 @@ namespace BlazorWebAdmin.Template.Tables
         }
 
         public async void AdvanceExport()
-		{
+        {
             AdvanceModalVisible = false;
             await Export();
             ConditionExpression = null;
@@ -78,6 +78,7 @@ namespace BlazorWebAdmin.Template.Tables
             var data = TableOptions.Datas;
             if (TableOptions.Page)
             {
+                TableOptions.Query.Expression = ConditionExpression;
                 var result = await TableOptions.ExportDataLoader(TableOptions.Query);
                 data = result.Payload;
             }
@@ -133,9 +134,9 @@ namespace BlazorWebAdmin.Template.Tables
             }
         }
     }
-      
 
-    public class TableOptions<TData, TQuery> where TQuery : IRequest<TData>, new()
+
+    public class TableOptions<TData, TQuery> where TQuery : IRequest,  new()
     {
 
         public List<ColumnDefinition> Columns { get; set; }
@@ -185,7 +186,7 @@ namespace BlazorWebAdmin.Template.Tables
             Buttons.Add(btn);
             return this;
         }
-              
+
 
         public ColumnDefinition this[string columnName]
         {
