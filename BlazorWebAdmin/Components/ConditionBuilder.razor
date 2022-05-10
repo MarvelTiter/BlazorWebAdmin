@@ -2,16 +2,16 @@
 @using System.ComponentModel.DataAnnotations
 @using MT.KitTools.StringExtension
 @inject MessageService MessageSrv
-<Row>
+<Row Style=@($"min-width:350px;{Style}")>
 	<Col Span=10>
 	<Select DataSource="Columns"
 			Placeholder="请选择查询内容"
 			DropdownMatchSelectWidth=false
-			Style="min-width:150px;width: 100%;"
+			Style="width: 100%;"
 			TItem=ColumnDefinition
 			TItemValue=string
-			ValueName=@("PropertyOrFieldName")
-			LabelName=@("Label")
+			ValueName=@(nameof(ColumnDefinition.PropertyOrFieldName))
+			LabelName=@(nameof(ColumnDefinition.Label))
 			OnSelectedItemChanged="UpdateField">
 	</Select>
 	</Col>
@@ -21,15 +21,15 @@
 	<Col Span=10>
 		@if (selectedField?.DataType == typeof(DateTime))
 		{
-		<DatePicker @bind-Value=dateValue Style="width:100%;"></DatePicker>
+		<DatePicker @bind-Value=dateValue Style="width:100%;" OnChange=@(async () => await NotifyChanged())></DatePicker>
 		}
-		else if (selectedField?.EnumValues != null)
+		else if (selectedField?.EnumValues != null && selectedField.IsEnum)
 		{
-			//TODO EnumValues
+		<DictionarySelect Options=selectedField.EnumValues @bind-Value=stringValue OnChange=@(async () => await NotifyChanged()) Style="width:100%;"></DictionarySelect>
 		}
 		else
 		{
-		<Input @bind-Value=stringValue TValue=string OnChange="UpdateValue"></Input>
+		<Input @bind-Value=stringValue TValue=string  OnChange=@(async () => await NotifyChanged())></Input>
 		}
 	</Col>
 </Row>
@@ -46,6 +46,8 @@
 	public ConditionInfo Info { get; set; }
 	[Parameter]
 	public EventCallback<ConditionInfo> InfoChanged { get; set; }
+	[Parameter]
+	public string Style { get; set; }
 
 	object GetInnerValue(out bool legal)
 	{
@@ -54,10 +56,11 @@
 			legal = dateValue != default;
 			return dateValue;
 		}
-		else if (selectedField?.EnumValues != null)
+		else if (selectedField?.EnumValues != null && selectedField.IsEnum)
 		{
 			//TODO EnumValues
-			throw new Exception();
+			legal = stringValue.IsEnable();
+			return stringValue;
 		}
 		else
 		{
@@ -79,11 +82,6 @@
 	async void UpdateEnum(CompareType type)
 	{
 		this.type = type;
-		await NotifyChanged();
-	}
-
-	async Task UpdateValue(string val)
-	{
 		await NotifyChanged();
 	}
 

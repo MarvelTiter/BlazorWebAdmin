@@ -10,14 +10,14 @@
 					@QueryArea(TableOptions.Query)
 				</SpaceItem>
 			}
-			else if (EnableGenerateQuery)
-			{
-				<SpaceItem>
-					<ConditionBuilder Columns=@TableOptions.Columns @bind-Info="conditionInfo"></ConditionBuilder>
-				</SpaceItem>
-			}
 			@if (TableOptions.DataLoader != null)
 			{
+				@if (EnableGenerateQuery)
+				{
+					<SpaceItem>
+						<ConditionBuilder Columns=@TableOptions.Columns @bind-Info="conditionInfo"></ConditionBuilder>
+					</SpaceItem>
+				}
 				<SpaceItem>
 					<Button Type="@ButtonType.Primary" OnClick="Search">查询</Button>
 				</SpaceItem>

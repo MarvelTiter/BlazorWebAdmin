@@ -10,18 +10,18 @@ namespace Project.Repositories
     [IgnoreAutoInject]
     public class RepositoryBase<T> : LightDb, IRepositoryBase<T>
     {
-        public virtual Task<int> DeleteAsync(Expression<Func<T, bool>> whereExpression)
+        public virtual Task<int> DeleteAsync(Expression<Func<T, bool>>? whereExpression)
         {
             Db.DbSet.Delete<T>()
                 .Where(whereExpression);
             return Db.ExecuteAsync();
         }
 
-        public virtual Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>> whereExpression, int from = 0, int to = 0)
+        public virtual Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>>? whereExpression, int index = 0, int size = 0)
         {
-            if (from > 0 || to > 0)
+            if (index * size > 0)
             {
-                Db.DbSet.Select<T>().Where(whereExpression).Paging(from, to);
+                Db.DbSet.Select<T>().Where(whereExpression).Paging(index, size);
             }
             else
             {
@@ -30,13 +30,13 @@ namespace Project.Repositories
             return Db.QueryAsync<T>();
         }
 
-        public Task<int> GetCountAsync(Expression<Func<T, bool>> whereExpression)
+        public Task<int> GetCountAsync(Expression<Func<T, bool>>? whereExpression)
         {
             Db.DbSet.Count<T>().Where(whereExpression);
             return Db.SingleAsync<int>();
         }
 
-        public virtual Task<T> GetSingleAsync(Expression<Func<T, bool>> whereExpression)
+        public virtual Task<T> GetSingleAsync(Expression<Func<T, bool>>? whereExpression)
         {
             Db.DbSet.Select<T>().Where(whereExpression);
             return Db.SingleAsync<T>();
@@ -49,13 +49,13 @@ namespace Project.Repositories
             return flag > 0 ? item : default;
         }
 
-        public virtual Task<int> UpdateAsync(T item, Expression<Func<T, bool>> whereExpression)
+        public virtual Task<int> UpdateAsync(T item, Expression<Func<T, bool>>? whereExpression)
         {
             Db.DbSet.Update(item).Where(whereExpression);
             return Db.ExecuteAsync();
         }
 
-        public virtual Task<int> UpdateAsync(Expression<Func<object>> updateExpression, Expression<Func<T, bool>> whereExpression)
+        public virtual Task<int> UpdateAsync(Expression<Func<object>> updateExpression, Expression<Func<T, bool>>? whereExpression)
         {
             Db.DbSet.Update(updateExpression).Where(whereExpression);
             return Db.ExecuteAsync();

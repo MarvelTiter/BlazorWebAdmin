@@ -149,13 +149,7 @@ namespace BlazorWebAdmin.Store
                                 RouteName = "计数器",
                                 IconName = "setting",
                                 RouteLink = "counter/index",
-                            },
-                            new RouterMeta
-                            {
-                                RouteName = "表格",
-                                IconName = "setting",
-                                RouteLink = "table",
-                            },
+                            },                            
                             new RouterMeta
                             {
                                 RouteName = "用户",

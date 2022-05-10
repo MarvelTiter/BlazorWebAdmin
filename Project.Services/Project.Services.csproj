@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
+    <ProjectReference Include="..\Project.Repositories\Project.Repositories.csproj" />
   </ItemGroup>
 
 </Project>

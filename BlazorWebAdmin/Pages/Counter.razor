@@ -14,21 +14,15 @@
 <CustomSelect Style="width:168px;" Options=store.Items @bind-Value="selected"></CustomSelect>
 
 
-<TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
-<TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
-<TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
-<TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
-<TableTemplate TableOptions=tableOptions TData=DataRow TQuery=GeneralReq></TableTemplate>
-
 @code {
 	private int count;
 	private string selected;
-	TableOptions<DataRow, GeneralReq> tableOptions;
+	TableOptions<DataRow, GeneralReq<DataRow>> tableOptions;
 
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
-		tableOptions = new TableOptions<DataRow, GeneralReq>();
+		tableOptions = new TableOptions<DataRow, GeneralReq<DataRow>>();
 		tableOptions.ScrollX = "2000";
 		tableOptions.AddColumn("列1", "A")
 					.AddColumn("列2", "B")
@@ -49,7 +43,7 @@
 		throw new Exception("Test");
 	}
 
-	async Task<QueryResult<PagingResult<DataRow>>> Load(QueryParameter<DataRow, GeneralReq> req)
+	async Task<QueryResult<PagingResult<DataRow>>> Load(GeneralReq<DataRow> req)
 	{
 		DataTable dt = new DataTable();
 		dt.Columns.Add("A");
@@ -67,7 +61,7 @@
 			dt.Rows.Add(row);
 			await Task.Delay(200);
 		}
-		Console.WriteLine($"pageIndex:{req.Query.PageIndex} ; pageSize:{req.Query.PageSize}");
+		Console.WriteLine($"pageIndex:{req.PageIndex} ; pageSize:{req.PageSize}");
 		return QueryResult<DataRow>.PagingResult(dt.AsEnumerable(), dt.Rows.Count);
 	}
 }

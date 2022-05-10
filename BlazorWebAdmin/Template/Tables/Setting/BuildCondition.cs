@@ -24,7 +24,16 @@ namespace BlazorWebAdmin.Template.Tables.Setting
             Expression? exp = null;
             if (expType.HasValue)
             {
-                exp = Expression.MakeBinary(expType.Value, propExp, Expression.Constant(Convert.ChangeType(info.Value, info.ValueType), info.ValueType));
+                object v;
+                if (info.ValueType.IsEnum)
+                {
+                    v = Enum.Parse(info.ValueType, info.Value.ToString()!);
+				}
+				else
+				{
+                    v = Convert.ChangeType(info.Value, info.ValueType);
+                }
+                exp = Expression.MakeBinary(expType.Value, propExp, Expression.Constant(v, info.ValueType));
             }
             else
             {
@@ -58,7 +67,7 @@ namespace BlazorWebAdmin.Template.Tables.Setting
             }
             if (expression == null)
             {
-                return Expression.Lambda<Func<T, bool>>(Expression.MakeBinary(ExpressionType.Equal, Expression.Constant(1), Expression.Constant(1)),pExp);
+                return Expression.Lambda<Func<T, bool>>(Expression.MakeBinary(ExpressionType.Equal, Expression.Constant(1), Expression.Constant(1)), pExp);
             }
             while (infos.Count > 0)
             {

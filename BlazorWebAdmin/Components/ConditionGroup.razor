@@ -8,7 +8,7 @@
 @for (var i = 0; i < Conditions.Count; i++)
 {
 	int index = i;
-	<ConditionBuilder Columns=Columns InfoChanged=@(newInfo => Conditions[index] = newInfo)></ConditionBuilder>
+	<ConditionBuilder Columns=Columns InfoChanged=@(newInfo => Conditions[index] = newInfo) Style="width:100%;"></ConditionBuilder>
 	@if (ExpressionTypes.Count > index)
 	{
 		<Switch Checked="ExpressionTypes[index] == ExpressionType.And" CheckedChildren="并且" UnCheckedChildren="或者" OnChange=@(check => {

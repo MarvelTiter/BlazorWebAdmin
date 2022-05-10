@@ -1,0 +1,34 @@
+﻿@using System.Diagnostics.CodeAnalysis
+<Select Class=@Class
+		Style=@Style
+		@bind-Value=selected
+		DataSource=@Options.Convert()
+		ValueName=@("Value")
+		LabelName=@("Label")
+		DropdownMatchSelectWidth=@false
+		OnSelectedItemChanged=HandleSelectedChanged>
+</Select>
+ 
+@code {
+	string selected;
+	[Parameter]
+	public string Class { get; set; }
+	[Parameter]
+	public string Style { get; set; }
+	[Parameter]
+	public Dictionary<string, string> Options { get; set; }
+	[Parameter]
+	public string Value { get; set; }
+	[Parameter]
+	public EventCallback<string> ValueChanged { get; set; }
+	[Parameter]
+	public EventCallback OnChange { get; set; }
+
+	private async void HandleSelectedChanged(Options<string> item)
+	{
+		await ValueChanged.InvokeAsync(item.Value);
+		if (OnChange.HasDelegate)
+			await OnChange.InvokeAsync();
+	}
+}
+

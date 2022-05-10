@@ -4,17 +4,17 @@
 @page "/user/index"
 @inject IJSRuntime JsRuntime
 
-<TableTemplate TableOptions=tableOptions TData=User TQuery=GeneralReq>
+<TableTemplate TableOptions=tableOptions TData=User TQuery=@(GeneralReq<User>)>
 	
 </TableTemplate>
 <Button OnClick="OpenNewTab">new tab</Button>
 @code {
-	TableOptions<User, GeneralReq> tableOptions;
+	TableOptions<User, GeneralReq<User>> tableOptions;
 
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
-		tableOptions = new TableOptions<User, GeneralReq>();
+		tableOptions = new TableOptions<User, GeneralReq<User>>();
 		tableOptions.DataLoader = Load;
 		tableOptions.AddHandle = async () =>
 		{
@@ -24,7 +24,7 @@
 		};
 	}
 
-	async Task<QueryResult<PagingResult<User>>> Load(QueryParameter<User, GeneralReq> req)
+	async Task<QueryResult<PagingResult<User>>> Load(GeneralReq<User> req)
 	{
 		List<User> users = new List<User>();
 		var length = new Random().Next(5, 15);

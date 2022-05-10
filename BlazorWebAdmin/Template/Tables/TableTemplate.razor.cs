@@ -14,7 +14,7 @@ using System.Linq.Expressions;
 
 namespace BlazorWebAdmin.Template.Tables
 {
-    public partial class TableTemplate<TData, TQuery> where TQuery : IRequest, new()
+    public partial class TableTemplate<TData, TQuery> where TQuery : IRequest<TData>, new()
     {
         [Parameter]
         public TableOptions<TData, TQuery> TableOptions { get; set; }
@@ -45,23 +45,21 @@ namespace BlazorWebAdmin.Template.Tables
         {
             if (conditionInfo != null)
                 ConditionExpression = BuildCondition.CombineExpression<TData>(conditionInfo);
-            var query = TableOptions.CreateQuery(ConditionExpression);
-            await DoQuery(query);
+            await DoQuery();
+            ConditionExpression = null;
         }
-
-
 
         public async Task AdvanceSearch()
         {
             AdvanceModalVisible = false;
-            var query = TableOptions.CreateQuery(ConditionExpression);
-            await DoQuery(query);
+            await DoQuery();
             ConditionExpression = null;
         }
-        private async Task DoQuery(QueryParameter<TData, TQuery> query)
+        private async Task DoQuery()
         {
             loading = true;
-            var result = await TableOptions.DataLoader(query);
+            TableOptions.Query.Expression = ConditionExpression;
+            var result = await TableOptions.DataLoader(TableOptions.Query);
             TableOptions.Datas = result.Payload.Data;
             TableOptions.Total = result.Payload.TotalRecord;
             loading = false;
@@ -80,8 +78,7 @@ namespace BlazorWebAdmin.Template.Tables
             var data = TableOptions.Datas;
             if (TableOptions.Page)
             {
-                var query = TableOptions.CreateQuery(ConditionExpression);
-                var result = await TableOptions.ExportDataLoader(query);
+                var result = await TableOptions.ExportDataLoader(TableOptions.Query);
                 data = result.Payload;
             }
             if (data.Any())
@@ -136,14 +133,9 @@ namespace BlazorWebAdmin.Template.Tables
             }
         }
     }
+      
 
-    public struct QueryParameter<TData, TQuery> where TQuery : IRequest, new()
-    {
-        public TQuery Query { get; set; }
-        public Expression<Func<TData, bool>>? Expression { get; set; }
-    }
-
-    public class TableOptions<TData, TQuery> where TQuery : IRequest, new()
+    public class TableOptions<TData, TQuery> where TQuery : IRequest<TData>, new()
     {
 
         public List<ColumnDefinition> Columns { get; set; }
@@ -158,8 +150,8 @@ namespace BlazorWebAdmin.Template.Tables
         public IEnumerable<TData> Datas { get; set; } = Enumerable.Empty<TData>();
         public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow) || typeof(TData) == typeof(IDictionary<string, object>);
-        public Func<QueryParameter<TData, TQuery>, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
-        public Func<QueryParameter<TData, TQuery>, Task<QueryResult<IEnumerable<TData>>>> ExportDataLoader { get; set; }
+        public Func<TQuery, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
+        public Func<TQuery, Task<QueryResult<IEnumerable<TData>>>> ExportDataLoader { get; set; }
         public Func<Task<bool>> AddHandle { get; set; }
         public Func<RowData<TData>, Task> OnRowClick { get; set; }
         public bool Initialized => Columns != null && Columns.Count > 0;
@@ -193,15 +185,7 @@ namespace BlazorWebAdmin.Template.Tables
             Buttons.Add(btn);
             return this;
         }
-
-        public QueryParameter<TData, TQuery> CreateQuery(Expression<Func<TData, bool>>? exp)
-        {
-            return new QueryParameter<TData, TQuery>()
-            {
-                Query = Query,
-                Expression = exp
-            };
-        }
+              
 
         public ColumnDefinition this[string columnName]
         {

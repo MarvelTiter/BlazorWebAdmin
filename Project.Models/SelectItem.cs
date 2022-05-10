@@ -9,12 +9,12 @@ namespace Project.Models
 {
     public static class SelectItemHelper
     {
-        public static SelectItem<T> Convert<T>(this Dictionary<string,T> self, T value)
+        public static SelectItem<string> Convert(this Dictionary<string,string> self)
         {
-            SelectItem<T> options = new SelectItem<T>();
+            SelectItem<string> options = new SelectItem<string>();
             foreach (var item in self)
             {
-                options.Add(item.Key, item.Value);
+                options.Add(item.Value, item.Key);
             }
             return options;
         }
@@ -42,9 +42,9 @@ namespace Project.Models
     public class SelectItem<T> : IEnumerable<Options<T>>
     {
         List<Options<T>> items = new List<Options<T>>();
-        public SelectItem<T> Add(string key, T value)
+        public SelectItem<T> Add(string label, T value)
         {
-            items.Add(new Options<T>(key, value));
+            items.Add(new Options<T>(label, value));
             return this;
         }
 

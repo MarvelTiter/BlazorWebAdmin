@@ -3,7 +3,7 @@
 @using BlazorWebAdmin.Template.Tables
 <TwoSidePage OpenTrigger=@(() => CurrentRole != null)>
 	<FirstSide>
-		<TableTemplate TableOptions=roleOptions TData=Role TQuery=GeneralReq>
+		<TableTemplate TableOptions=roleOptions TData=Role TQuery=@(GeneralReq<Role>)>
 		</TableTemplate>
 	</FirstSide>
 	<SecondSide>
@@ -48,7 +48,7 @@
 	{
 		public IList<PowerTreeNode> Children { get; set; }
 	}
-	TableOptions<Role, GeneralReq> roleOptions = new TableOptions<Role, GeneralReq>();
+	TableOptions<Role, GeneralReq<Role>> roleOptions = new TableOptions<Role, GeneralReq<Role>>();
 	bool powerLoading = false;
 	Role? CurrentRole;
 	Tree<PowerTreeNode> treeInstance;
