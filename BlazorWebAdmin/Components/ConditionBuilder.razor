@@ -10,6 +10,7 @@
 			Style="width: 100%;"
 			TItem=ColumnDefinition
 			TItemValue=string
+			DefaultValue=@(Columns[0].PropertyOrFieldName)
 			ValueName=@(nameof(ColumnDefinition.PropertyOrFieldName))
 			LabelName=@(nameof(ColumnDefinition.Label))
 			OnSelectedItemChanged="UpdateField">
