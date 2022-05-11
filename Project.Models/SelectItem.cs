@@ -9,6 +9,15 @@ namespace Project.Models
 {
     public static class SelectItemHelper
     {
+        public static Dictionary<string, string> ParseEnumValues<T>(this SelectItem<T> self)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            foreach (var item in self)
+            {
+                result.Add(item.Value.ToString()!, item.Label);
+            }
+            return result;
+        }
         public static SelectItem<string> Convert(this Dictionary<string,string> self)
         {
             SelectItem<string> options = new SelectItem<string>();

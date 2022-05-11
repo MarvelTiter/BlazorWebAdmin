@@ -1,4 +1,5 @@
 ﻿@using BlazorWebAdmin.Template.Tables.Setting
+@using AntDesign.Core.Helpers.MemberPath
 @typeparam TData
 @typeparam TQuery
 <div class="queryarea">
@@ -53,7 +54,6 @@
 		   Size="@TableSize.Small"
 		   SelectedRows=@TableOptions.Selected
 		   OnRowClick=OnRowClickHandle
-		   @bind-PageIndex=@TableOptions.Query.PageIndex
 		   @bind-PageSize=@TableOptions.Query.PageSize
 		   OnPageIndexChange=HandleChange
 		   OnPageSizeChange=HandleChange>
@@ -68,7 +68,20 @@
 				{
 					foreach (var col in TableOptions.Columns)
 					{
-						<Column TData="object" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex=@($"['{col.PropertyOrFieldName}']")></Column>
+						<Column TData="object" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
+							@if (col.IsEnum || col.EnumValues != null)
+							{
+								var v = PathHelper.GetDelegate($"['{col.PropertyOrFieldName}']", typeof(TData)).Invoke(context);
+								if (v != null)
+								{
+									<span>@col.EnumValues[v.ToString()!]</span>
+								}
+							}
+							else
+							{
+								<span>@PathHelper.GetDelegate($"['{col.PropertyOrFieldName}']", typeof(TData)).Invoke(context)</span>
+							}
+						</Column>
 					}
 				}
 				else
@@ -79,16 +92,24 @@
 						switch (type)
 						{
 							case "string":
-								<Column TData="String" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+								<Column TData="String" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
+									@ColumnContent(col).Invoke(context)
+								</Column>
 								break;
 							case "int32":
-								<Column TData="Int32?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+								<Column TData="Int32?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
+									@ColumnContent(col).Invoke(context)									
+								</Column>
 								break;
 							case "int16":
-								<Column TData="Int16?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+								<Column TData="Int16?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
+									@ColumnContent(col).Invoke(context)									
+								</Column>
 								break;
 							case "bool":
-								<Column TData="Boolean?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+								<Column TData="Boolean?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
+									@ColumnContent(col).Invoke(context)									
+								</Column>
 								break;
 							case "datetime":
 								<Column TData="DateTime?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
@@ -167,21 +188,45 @@
 	@<Button Type=@definition.ButtonType Size=@ButtonSize.Small Danger=@definition.NeedConfirm Icon=@definition.Icon OnClick=@(() => @definition.Callback(context))>
 		@definition.Label
 	</Button>
-	;
+																																																																																;
 	}
 
 	RenderFragment<PaginationTotalContext> totalFragment => (context) =>
-	{
-		return
+															{
+	return
 	@<span>总记录数：@context.Total</span>
-	;
-	};
+									;
+														};
 
-	public void PagingStatusChanged(PaginationEventArgs e)
+	RenderFragment<TData> ColumnContent(ColumnDefinition col)
+	{
+		return context =>
+		{
+			@if (col.IsEnum || col.EnumValues != null)
+			{
+				var v = PathHelper.GetDelegate(col.PropertyOrFieldName, typeof(TData)).Invoke(context);
+				if (v != null)
+				{
+					if (col.EnumValues.ContainsKey($"{v}"))
+					{
+						return
+		@<span>@col.EnumValues[$"{v}"]</span>
+	;
+					}
+				}
+			}
+			return
+		@<span>@PathHelper.GetDelegate(col.PropertyOrFieldName, typeof(TData)).Invoke(context)</span>
+		;
+		};
+	}
+
+	public async Task PagingStatusChanged(PaginationEventArgs e)
 	{
 		if (e.Page != TableOptions.Query.PageIndex)
 			TableOptions.Query.PageIndex = e.Page;
 		if (e.PageSize != TableOptions.Query.PageSize)
 			TableOptions.Query.PageSize = e.PageSize;
+		await Search();
 	}
 }
