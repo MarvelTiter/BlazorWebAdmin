@@ -8,20 +8,7 @@
 @for (var i = 0; i < Conditions.Count; i++)
 {
 	int index = i;
-	<ConditionBuilder Columns=Columns InfoChanged=@(newInfo => Conditions[index] = newInfo) Style="width:100%;"></ConditionBuilder>
-	@if (ExpressionTypes.Count > index)
-	{
-		<Switch Checked="ExpressionTypes[index] == ExpressionType.And" CheckedChildren="并且" UnCheckedChildren="或者" OnChange=@(check => {
-		if (check)
-		{
-		ExpressionTypes[index] = ExpressionType.And;
-		}
-		else
-		{
-		ExpressionTypes[index] = ExpressionType.Or ;
-		}
-		}) />
-	}
+	<ConditionBuilder Index=index Columns=Columns InfoChanged=@(newInfo => Conditions[index] = newInfo) Style="width:100%;"></ConditionBuilder>
 }
 <div style="text-align:right;margin-top:10px;">
 	<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToSearch">查询</Button>
@@ -44,7 +31,6 @@
 	[Parameter]
 	public EventCallback OnConfirmToExport { get; set; }
 	private List<ConditionInfo> Conditions = new List<ConditionInfo>();
-	private List<ExpressionType> ExpressionTypes = new List<ExpressionType>();
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
@@ -52,19 +38,19 @@
 	}
 	void AddCondition()
 	{
-		Conditions.Add(new ConditionInfo("", CompareType.Equal, "", typeof(string), false));
-		ExpressionTypes.Add(ExpressionType.And);
+		var condition = new ConditionInfo("", CompareType.Equal, "", typeof(string), false);
+		Conditions.Add(condition);
 	}
 	public async Task ConfirmConditionToSearch()
 	{
-		var exp = BuildCondition.CombineExpression<TData>(new Queue<ConditionInfo>(Conditions), new Queue<ExpressionType>(ExpressionTypes));
+		var exp = BuildCondition.CombineExpression<TData>(new Queue<ConditionInfo>(Conditions));
 		await ExpressionChanged.InvokeAsync(exp);
 		_ = OnConfirmToSearch.InvokeAsync();
 	}
 
 	public async Task ConfirmConditionToExport()
 	{
-		var exp = BuildCondition.CombineExpression<TData>(new Queue<ConditionInfo>(Conditions), new Queue<ExpressionType>(ExpressionTypes));
+		var exp = BuildCondition.CombineExpression<TData>(new Queue<ConditionInfo>(Conditions));
 		await ExpressionChanged.InvokeAsync(exp);
 		_ = OnConfirmToExport.InvokeAsync();
 	}

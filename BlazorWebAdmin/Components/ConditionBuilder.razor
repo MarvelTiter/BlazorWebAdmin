@@ -1,7 +1,14 @@
 ﻿@using BlazorWebAdmin.Template.Tables.Setting
 @using System.ComponentModel.DataAnnotations
 @using MT.KitTools.StringExtension
+@using System.Linq.Expressions
 @inject MessageService MessageSrv
+<Row>
+	@if (Index > 0)
+	{
+		<Switch Checked="LinkType == ExpressionType.AndAlso" CheckedChildren="并且" UnCheckedChildren="或者" OnChange=UpdateLinkType />
+	}
+</Row>
 <Row Style=@($"min-width:350px;{Style}")>
 	<Col Span=10>
 	<Select DataSource="Columns"
@@ -10,7 +17,7 @@
 			Style="width: 100%;"
 			TItem=ColumnDefinition
 			TItemValue=string
-			DefaultValue=@(Columns[0].PropertyOrFieldName)
+			DefaultValue=@(selectedField?.PropertyOrFieldName)
 			ValueName=@(nameof(ColumnDefinition.PropertyOrFieldName))
 			LabelName=@(nameof(ColumnDefinition.Label))
 			OnSelectedItemChanged="UpdateField">
@@ -30,7 +37,7 @@
 		}
 		else
 		{
-		<Input @bind-Value=stringValue TValue=string  OnChange=@(async () => await NotifyChanged())></Input>
+		<Input @bind-Value=stringValue TValue=string OnChange=@(async () => await NotifyChanged())></Input>
 		}
 	</Col>
 </Row>
@@ -41,6 +48,7 @@
 	DateTime dateValue = DateTime.Now;
 	ColumnDefinition? selectedField;
 	CompareType type;
+	ExpressionType LinkType = ExpressionType.AndAlso;
 	[Parameter]
 	public List<ColumnDefinition> Columns { get; set; }
 	[Parameter]
@@ -49,6 +57,8 @@
 	public EventCallback<ConditionInfo> InfoChanged { get; set; }
 	[Parameter]
 	public string Style { get; set; }
+	[Parameter]
+	public int Index { get; set; }
 
 	object GetInnerValue(out bool legal)
 	{
@@ -86,6 +96,12 @@
 		await NotifyChanged();
 	}
 
+	async void UpdateLinkType(bool check)
+	{
+		LinkType = check ? ExpressionType.AndAlso : ExpressionType.OrElse;
+		await NotifyChanged();
+	}
+
 	async Task NotifyChanged()
 	{
 		if (selectedField is null)
@@ -98,6 +114,7 @@
 			_ = MessageSrv.Error($"[{GetDisplay(type)}]不能应用于字段[{selectedField.Label}]");
 		}
 		var condition = new ConditionInfo(selectedField.PropertyOrFieldName, type, GetInnerValue(out bool validValue), selectedField.DataType, isLegal && validValue);
+		condition.LinkType = Index > 0 ? LinkType : null;
 		await InfoChanged.InvokeAsync(condition);
 	}
 

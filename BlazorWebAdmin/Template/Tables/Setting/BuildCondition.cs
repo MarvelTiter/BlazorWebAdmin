@@ -53,35 +53,32 @@ namespace BlazorWebAdmin.Template.Tables.Setting
         /// <param name="types">所有条件关系(And/Or)</param>
         /// <returns></returns>
         /// <exception cref="InvalidDataException"></exception>
-        public static Expression<Func<T, bool>> CombineExpression<T>(Queue<ConditionInfo> infos, Queue<ExpressionType> types)
+        public static Expression<Func<T, bool>> CombineExpression<T>(Queue<ConditionInfo> infos)
         {
             var pExp = Expression.Parameter(typeof(T), "p");
             Expression expression = null;
-            while (infos.TryDequeue(out var info))
+
+            while (infos.Count > 0)
             {
-                if (info.Legal)
-                {
-                    expression = BuildExpression<T>(pExp, info);
-                    break;
-                }
-                else
-                {
-                    types.TryDequeue(out _);
-                }
+                var next = infos.Dequeue();
+                if (!next.Legal) continue;
+                var nextExp = BuildExpression<T>(pExp, next);
+                expression = Connect(next, expression, nextExp);
             }
             if (expression == null)
             {
                 return Expression.Lambda<Func<T, bool>>(Expression.MakeBinary(ExpressionType.Equal, Expression.Constant(1), Expression.Constant(1)), pExp);
             }
-            while (infos.Count > 0)
-            {
-                var next = infos.Dequeue();
-                var nextExp = BuildExpression<T>(pExp, next);
-                var type = types.Dequeue();
-                if (next.Legal)
-                    expression = Expression.MakeBinary(type, expression, nextExp);
-            }
             return Expression.Lambda<Func<T, bool>>(expression, pExp);
+        }
+
+        private static Expression Connect(ConditionInfo next, Expression? expression, Expression nextExp)
+        {
+            if (expression == null)
+            {
+                return nextExp;
+            }
+            return Expression.MakeBinary(next.LinkType!.Value, expression, nextExp);
         }
 
         public static Expression<Func<T, bool>> CombineExpression<T>(ConditionInfo info)
@@ -89,7 +86,7 @@ namespace BlazorWebAdmin.Template.Tables.Setting
             var infos = new Queue<ConditionInfo>();
             infos.Enqueue(info);
             var types = new Queue<ExpressionType>();
-            return CombineExpression<T>(infos, types);
+            return CombineExpression<T>(infos);
         }
     }
 }
