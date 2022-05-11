@@ -24,16 +24,20 @@ namespace BlazorWebAdmin.Template.Tables.Setting
             Expression? exp = null;
             if (expType.HasValue)
             {
+                Expression right;
                 object v;
                 if (info.ValueType.IsEnum)
                 {
                     v = Enum.Parse(info.ValueType, info.Value.ToString()!);
-				}
-				else
-				{
-                    v = Convert.ChangeType(info.Value, info.ValueType);
+                    var enumInt = Expression.Constant((int)v, typeof(int));
+                    right = Expression.Convert(enumInt, info.ValueType);
                 }
-                exp = Expression.MakeBinary(expType.Value, propExp, Expression.Constant(v, info.ValueType));
+                else
+                {
+                    v = Convert.ChangeType(info.Value, info.ValueType);
+                    right = Expression.Constant(v, info.ValueType);
+                }
+                exp = Expression.MakeBinary(expType.Value, propExp, right);
             }
             else
             {

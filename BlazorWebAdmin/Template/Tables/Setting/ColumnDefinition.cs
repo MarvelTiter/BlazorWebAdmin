@@ -10,7 +10,6 @@ namespace BlazorWebAdmin.Template.Tables.Setting
         public string? Fixed { get; set; }
         public string? Width { get; set; }
         public Func<CellData, Dictionary<string, object>> OnCell { get; set; }
-        public Func<RowData, Dictionary<string, object>> OnRow { get; set; }
         public Dictionary<string, string> EnumValues { get; set; }
 
     }
