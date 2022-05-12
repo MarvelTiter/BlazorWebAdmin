@@ -90,7 +90,7 @@
 					{
 						@if (col.IsEnum)
 						{
-							<Column TData="Enum?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
+							<Column TData="Enum" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
 								@ColumnContent(col).Invoke(context)
 							</Column>
 							continue;

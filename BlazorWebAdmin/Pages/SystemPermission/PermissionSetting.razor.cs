@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Project.Models;
 using Project.Models.Permissions;
 using Project.Models.Request;
+using Project.Services.interfaces;
 
 namespace BlazorWebAdmin.Pages.SystemPermission
 {
@@ -16,10 +17,13 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         public ModalService ModalSrv { get; set; }
         [Inject]
         public DrawerService DrawerSrv { get; set; }
+        [Inject]
+        public IPemissionService PermissionSrv { get; set; }
         TableOptions<Power, GeneralReq<Power>> tableOptions = new();
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            tableOptions.LoadDataOnLoaded = true;
             tableOptions.DataLoader = Search;
             tableOptions.AddHandle = AddPower;
             tableOptions.AddButton(ButtonDefinition<Power>.Edit(EditPower));
@@ -27,8 +31,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         }
         Task<QueryResult<PagingResult<Power>>> Search(GeneralReq<Power> req)
         {
-            Console.WriteLine(req.Expression);
-            return Task.FromResult(QueryResult<Power>.PagingResult(Enumerable.Empty<Power>(), 0));
+            return PermissionSrv.GetPowerListAsync(req);
         }
         async Task<bool> AddPower()
         {
@@ -39,7 +42,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         async Task EditPower(Power power)
         {
             var p = await ModalSrv.OpenDialog<PowerForm, Power>("编辑权限", power);
-            //TODO save power
+            await PermissionSrv.UpdatePower(p);            
         }
 
         Task DeletePower(Power power)

@@ -20,6 +20,7 @@ namespace Project.Models.Permissions
     [TableName("POWERS")]
     public class Power
     {
+        [PrimaryKey]
         [TableHeader("权限ID")]
         [ColumnName("POWER_ID")]
         public string PowerId { get; set; }

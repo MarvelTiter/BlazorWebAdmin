@@ -1,4 +1,5 @@
 ﻿using MDbContext;
+using Microsoft.Data.Sqlite;
 using Project.Common.Attributes;
 using System;
 using System.Collections.Generic;
@@ -11,17 +12,27 @@ namespace Project.Repositories
     [IgnoreAutoInject]
     public class LightDb
     {
-        public static readonly string ConnectString = "";
-        public LightDb()
+        public static readonly string ConnectString = $"DataSource={DbPath}";
+        private static string DbPath => Path.GetFullPath("../Demo.db");
+        DbContext _db;
+        
+        public DbContext Db
         {
-            DbContext.Init(DbBaseType.Oracle);
-            CreateDbContext();
+            get
+            {
+                if (_db == null)
+                {
+                    _db = CreateDbContext();
+                }
+                return _db;
+            }
         }
-        public DbContext Db => CreateDbContext();
 
         private DbContext CreateDbContext()
-        {
-            throw new NotImplementedException();
+        {            
+            DbContext.Init(DbBaseType.Sqlite);
+            SqliteConnection conn = new SqliteConnection(ConnectString);
+            return new DbContext(conn);
         }
         ~LightDb()
         {
