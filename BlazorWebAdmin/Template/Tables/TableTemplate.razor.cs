@@ -31,7 +31,7 @@ namespace BlazorWebAdmin.Template.Tables
 
         bool loading;
         private ConditionInfo conditionInfo;
-        private Expression<Func<TData, bool>>? ConditionExpression;
+        private Expression<Func<TData, bool>>? ConditionExpression = e => true;
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -46,14 +46,12 @@ namespace BlazorWebAdmin.Template.Tables
             if (conditionInfo != null)
                 ConditionExpression = BuildCondition.CombineExpression<TData>(conditionInfo);
             await DoQuery();
-            ConditionExpression = null;
         }
 
         public async Task AdvanceSearch()
         {
             AdvanceModalVisible = false;
             await DoQuery();
-            ConditionExpression = null;
         }
         private async Task DoQuery()
         {
@@ -69,7 +67,6 @@ namespace BlazorWebAdmin.Template.Tables
         {
             AdvanceModalVisible = false;
             await Export();
-            ConditionExpression = null;
         }
 
         public async Task Export()
@@ -136,7 +133,7 @@ namespace BlazorWebAdmin.Template.Tables
     }
 
 
-    public class TableOptions<TData, TQuery> where TQuery : IRequest,  new()
+    public class TableOptions<TData, TQuery> where TQuery : IRequest, new()
     {
 
         public List<ColumnDefinition> Columns { get; set; }
