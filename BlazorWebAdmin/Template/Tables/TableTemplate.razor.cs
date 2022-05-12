@@ -114,6 +114,11 @@ namespace BlazorWebAdmin.Template.Tables
             return Task.CompletedTask;
         }
 
+        public Task RefreshData()
+        {
+            return Search();
+        }
+
         private static IEnumerable<Dictionary<string, object>> GeneralExcelData(List<ColumnDefinition> columns, IEnumerable<TData> data)
         {
             var dataType = typeof(TData);

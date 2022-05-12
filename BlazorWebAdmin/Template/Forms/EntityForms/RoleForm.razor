@@ -1,0 +1,11 @@
+﻿@using Project.Models.Permissions
+@inherits EntityFormTemplate<Role>
+
+<Form Model="Value" LabelAlign=@AntLabelAlignType.Right LabelColSpan="8" WrapperColSpan="16">
+	<FormItem Label="角色ID">
+		<Input @bind-Value=context.RoleId Disabled=edit></Input>
+	</FormItem>
+	<FormItem Label="角色名称">
+		<Input @bind-Value=context.RoleName></Input>
+	</FormItem>
+</Form>

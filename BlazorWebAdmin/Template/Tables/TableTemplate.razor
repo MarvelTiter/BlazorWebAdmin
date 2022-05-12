@@ -25,7 +25,7 @@
 				@if (EnableGenerateQuery)
 				{
 					<SpaceItem>
-						<Button Type="@ButtonType.Primary" OnClick=@(()=>AdvanceModalVisible = true)>高级查询</Button>
+						<Button OnClick=@(()=>AdvanceModalVisible = true)>高级查询</Button>
 					</SpaceItem>
 				}
 			}
@@ -105,17 +105,17 @@
 								break;
 							case "int32":
 								<Column TData="Int32?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
-									@ColumnContent(col).Invoke(context)									
+									@ColumnContent(col).Invoke(context)
 								</Column>
 								break;
 							case "int16":
 								<Column TData="Int16?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
-									@ColumnContent(col).Invoke(context)									
+									@ColumnContent(col).Invoke(context)
 								</Column>
 								break;
 							case "bool":
 								<Column TData="Boolean?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
-									@ColumnContent(col).Invoke(context)									
+									@ColumnContent(col).Invoke(context)
 								</Column>
 								break;
 							case "datetime":
@@ -192,18 +192,23 @@
 	public RenderFragment CreateButton(ButtonDefinition<TData> definition, TData context)
 	{
 		return
-	@<Button Type=@definition.ButtonType Size=@ButtonSize.Small Danger=@definition.NeedConfirm Icon=@definition.Icon OnClick=@(() => @definition.Callback(context))>
+	@<Button Type=@definition.ButtonType
+			 Size=@ButtonSize.Small
+			 Danger=@definition.NeedConfirm
+			 Icon=@definition.Icon
+			 OnClickStopPropagation			 
+			 OnClick=@(() => @definition.Callback(context))>
 		@definition.Label
 	</Button>
-																																																																																;
+																																																																																													;
 	}
 
 	RenderFragment<PaginationTotalContext> totalFragment => (context) =>
-															{
+																{
 	return
 	@<span>总记录数：@context.Total</span>
 									;
-														};
+															};
 
 	RenderFragment<TData> ColumnContent(ColumnDefinition col)
 	{
