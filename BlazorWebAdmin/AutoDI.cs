@@ -91,7 +91,7 @@ namespace BlazorWebAdmin
         {
             foreach (var item in assembly.GetTypes())
             {
-                if (item.FullName.Contains("Entities"))
+                if (item.FullName!.Contains("Entities") || item.FullName!.Contains("Permissions"))
                 {
                     yield return item;
                 }
