@@ -11,6 +11,7 @@ namespace Project.Models.Permissions
     [TableName("ROLE")]
     public class Role
     {
+        [PrimaryKey]
         [TableHeader("角色编号")]
         [ColumnName("ROLE_ID")]
         public string RoleId { get; set; }

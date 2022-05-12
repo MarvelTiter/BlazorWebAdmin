@@ -23,9 +23,8 @@
 				  Checkable
 				  Multiple
 				  ShowLine
-				  @ref="treeInstance"
+				  Selectable=false
 				  @bind-CheckedKeys=selectedKeys
-				  CheckStrictly=false
 				  TitleExpression="x => x.DataItem.Node.PowerName"
 				  KeyExpression="x => x.DataItem.Node.PowerId"
 				  ChildrenExpression="x => x.DataItem.Children"

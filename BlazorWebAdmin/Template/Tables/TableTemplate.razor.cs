@@ -153,6 +153,7 @@ namespace BlazorWebAdmin.Template.Tables
         public IEnumerable<TData> Datas { get; set; } = Enumerable.Empty<TData>();
         public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow) || typeof(TData) == typeof(IDictionary<string, object>);
+        public bool AutoRefreshData { get; set; } = true;
         public Func<TQuery, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
         public Func<TQuery, Task<QueryResult<IEnumerable<TData>>>> ExportDataLoader { get; set; }
         public Func<Task<bool>> AddHandle { get; set; }

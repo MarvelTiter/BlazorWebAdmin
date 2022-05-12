@@ -21,10 +21,9 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         TableOptions<Role, GeneralReq<Role>> roleOptions = new();
         bool powerLoading = false;
         Role? CurrentRole;
-        Tree<PowerTreeNode> treeInstance;
         IEnumerable<PowerTreeNode> powerTreeData;
         IEnumerable<Power> allPower;
-        string[]? selectedKeys = Array.Empty<string>();
+        string[]? selectedKeys;
 
         [Inject]
         public ModalService ModalSrv { get; set; }
@@ -33,6 +32,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            roleOptions.LoadDataOnLoaded = true;
             roleOptions.DataLoader = GetRolesAsync;
             roleOptions.AddHandle = AddRoleAsync;
             roleOptions.AddButton(ButtonDefinition<Role>.Edit(EditRole));
@@ -61,11 +61,12 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         Task GeneratePowerTreeDataAsync()
         {
             List<PowerTreeNode> powerTreeNodes = new();
-            var rootNodes = allPower.Where(p => p.ParentId == "ROOT");
+            var rootNodes = allPower.Where(p => p.PowerId == "ROOT");
             foreach (var item in rootNodes)
             {
                 var n = new PowerTreeNode(item);
                 n.Children = FindChildren(allPower, item);
+                powerTreeNodes.Add(n);
             }
             powerTreeData = powerTreeNodes;
             return Task.CompletedTask;
@@ -73,13 +74,14 @@ namespace BlazorWebAdmin.Pages.SystemPermission
             List<PowerTreeNode> FindChildren(IEnumerable<Power> all, Power parent)
             {
                 var children = all.Where(p => p.ParentId == parent.PowerId);
-                List<PowerTreeNode> powerTreeNodes = new();
+                List<PowerTreeNode> childNodes = new();
                 foreach (var child in children)
                 {
-                    var n = new PowerTreeNode(child);
-                    n.Children = FindChildren(all, child);
+                    var n1 = new PowerTreeNode(child);
+                    n1.Children = FindChildren(all, child);
+                    childNodes.Add(n1);
                 }
-                return powerTreeNodes;
+                return childNodes;
             }
         }
         #endregion
@@ -91,13 +93,13 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         async Task<bool> AddRoleAsync()
         {
             var role = await ModalSrv.OpenDialog<RoleForm, Role>("新增角色");
+            await PermissionSrv.InsertRoleAsync(role);
             return true;
         }
         async Task EditRole(Role role)
         {
             var newRole = await ModalSrv.OpenDialog<RoleForm, Role>("编辑角色", role);
-            //TODO save change
-            Console.WriteLine(newRole.RoleName);
+            await PermissionSrv.UpdateRoleAsync(newRole);
         }
         async Task SaveRolePower()
         {

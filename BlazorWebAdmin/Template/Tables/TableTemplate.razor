@@ -40,7 +40,7 @@
 	<div class="rightbutton">
 		@if (TableOptions.AddHandle != null)
 		{
-			<Button Type="@ButtonType.Primary" OnClick=@TableOptions.AddHandle>新增</Button>
+			<Button Type="@ButtonType.Primary" OnClick=HandleAdd>新增</Button>
 		}
 	</div>
 </div>
@@ -196,19 +196,37 @@
 			 Size=@ButtonSize.Small
 			 Danger=@definition.NeedConfirm
 			 Icon=@definition.Icon
-			 OnClickStopPropagation			 
-			 OnClick=@(() => @definition.Callback(context))>
+			 	OnClickStopPropagation
+			 OnClick=@(()=>InvokeButtonAction(definition.Callback, context))>
 		@definition.Label
 	</Button>
-																																																																																													;
+	;
+	}
+
+	public async Task InvokeButtonAction(Func<TData, Task> func, TData data)
+	{
+		await func.Invoke(data);
+		if (TableOptions.AutoRefreshData)
+		{
+			await RefreshData();
+		}
+	}
+
+	public async Task HandleAdd()
+	{
+		await TableOptions.AddHandle();
+		if (TableOptions.AutoRefreshData)
+		{
+			await RefreshData();
+		}
 	}
 
 	RenderFragment<PaginationTotalContext> totalFragment => (context) =>
 																{
-	return
+																	return
 	@<span>总记录数：@context.Total</span>
-									;
-															};
+								;
+																};
 
 	RenderFragment<TData> ColumnContent(ColumnDefinition col)
 	{
@@ -222,13 +240,13 @@
 					if (col.EnumValues.ContainsKey($"{v}"))
 					{
 						return
-		@<span>@col.EnumValues[$"{v}"]</span>
+	@<span>@col.EnumValues[$"{v}"]</span>
 	;
 					}
 				}
 			}
 			return
-		@<span>@PathHelper.GetDelegate(col.PropertyOrFieldName, typeof(TData)).Invoke(context)</span>
+	@<span>@PathHelper.GetDelegate(col.PropertyOrFieldName, typeof(TData)).Invoke(context)</span>
 		;
 		};
 	}

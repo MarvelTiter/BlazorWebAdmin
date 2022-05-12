@@ -35,14 +35,14 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         }
         async Task<bool> AddPower()
         {
-            var power = await DrawerSrv.OpenDrawer<PowerForm, Power>("新增权限");
-            //TODO save power
+            var power = await ModalSrv.OpenDialog<PowerForm, Power>("新增权限");
+            await PermissionSrv.InsertPowerAsync(power);
             return true;
         }
         async Task EditPower(Power power)
         {
             var p = await ModalSrv.OpenDialog<PowerForm, Power>("编辑权限", power);
-            await PermissionSrv.UpdatePower(p);            
+            await PermissionSrv.UpdatePowerAsync(p); 
         }
 
         Task DeletePower(Power power)

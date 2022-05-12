@@ -94,10 +94,24 @@ namespace Project.Services
             return db.ExecuteTransAsync();
         }
 
-        public Task<int> UpdatePower(Power power)
+        public Task<int> UpdatePowerAsync(Power power)
         {
             return repository.Table<Power>().UpdateAsync(power, p => p.PowerId == power.PowerId);
         }
 
+        public Task<Power> InsertPowerAsync(Power power)
+        {
+            return repository.Table<Power>().InsertAsync(power);
+        }
+
+        public Task<int> UpdateRoleAsync(Role role)
+        {
+            return repository.Table<Role>().UpdateAsync(role, r => r.RoleId == role.RoleId);
+        }
+
+        public Task<Role> InsertRoleAsync(Role role)
+        {
+            return repository.Table<Role>().InsertAsync(role);
+        }
     }
 }

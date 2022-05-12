@@ -20,6 +20,9 @@ namespace Project.Services.interfaces
 		Task<QueryResult<IEnumerable<Power>>> GetPowerListByRoleIdAsync(string roleId);
 		Task<bool> SaveUserRole(string usrId, params string[] roles);
 		Task<bool> SaveRolePower(string roleId, params string[] powers);
-		Task<int> UpdatePower(Power power);
+		Task<int> UpdatePowerAsync(Power power);
+		Task<Power> InsertPowerAsync(Power power);
+		Task<int> UpdateRoleAsync(Role role);
+		Task<Role> InsertRoleAsync(Role role);
 	}
 }
