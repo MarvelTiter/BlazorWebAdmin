@@ -3,10 +3,14 @@
 	<div class="page-content first">
 		@FirstSide
 	</div>
-	<div class="page-content second" style="flex:@(OpenTrigger()?"1":"0");">
-		@if (OpenTrigger())
+	<div class="page-content second" style="flex:@(CanExpand?"1":"0");">
+		@if (CanExpand)
 		{
 			@SecondSide
+			<div style="position:absolute;top:20px;right:20px;">
+				<Button Icon="close" OnClick="CloseSide"></Button>
+			</div>
+
 		}
 		else
 		{
@@ -29,15 +33,27 @@
 	[Parameter]
 	public RenderFragment ClosedView { get; set; }
 	[Parameter]
-	[NotNull]
 	public Func<bool> OpenTrigger { get; set; }
 	[Parameter]
 	public string Direction { get; set; } = Row;
+	[Parameter]
+	public bool Expand { get; set; }
+	[Parameter]
+	public EventCallback<bool> ExpandChanged { get; set; }
+
+	public bool CanExpand => (OpenTrigger?.Invoke() ?? true) && Expand;
 
 	public const string Row = "row";
 	public const string RowReverse = "row-reverse";
 	public const string Column = "column";
 	public const string ColumnReverse = "column-reverse";
+
+	async Task CloseSide()
+	{
+		Expand = false;
+		if (ExpandChanged.HasDelegate)
+			await ExpandChanged.InvokeAsync(Expand);
+	}
 }
 
 <style>
@@ -52,5 +68,6 @@
 
 		.page-content.second {
 			margin-left: 10px;
+			position: relative;
 		}
 </style>

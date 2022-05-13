@@ -24,11 +24,13 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         IEnumerable<PowerTreeNode> powerTreeData;
         IEnumerable<Power> allPower;
         string[]? selectedKeys;
-
+        bool sideExpand;
         [Inject]
         public ModalService ModalSrv { get; set; }
         [Inject]
         public IPemissionService PermissionSrv { get; set; }
+        [Inject]
+        public MessageService MessageSrv { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -104,22 +106,16 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         async Task SaveRolePower()
         {
             if (selectedKeys is null) return;
-            //var totalKeys = new List<string>(selectedKeys);
-            //foreach (var item in selectedKeys)
-            //{
-            //    var parent = allPower.FirstOrDefault(p => p.PowerId == item)?.ParentId;
-            //    if (parent != null && !totalKeys.Contains(parent))
-            //    {
-            //        totalKeys.Add(parent);
-            //    }
-            //}
-            await PermissionSrv.SaveRolePower(CurrentRole!.RoleId, selectedKeys.ToArray());
+            var flag = await PermissionSrv.SaveRolePower(CurrentRole!.RoleId, selectedKeys.ToArray());
+            if (flag) _ = MessageSrv.Success("保存成功");
+            else _ = MessageSrv.Error("保存数据异常！");
         }
 
         async Task HandleRowClick(RowData<Role> rowData)
         {
             powerLoading = true;
             CurrentRole = rowData.Data;
+            sideExpand = true;
             StateHasChanged();
 
             var result = await PermissionSrv.GetPowerListByRoleIdAsync(CurrentRole.RoleId);
@@ -127,11 +123,6 @@ namespace BlazorWebAdmin.Pages.SystemPermission
             selectedKeys = keys.ToArray();
             powerLoading = false;
             StateHasChanged();
-        }
-        void CloseSide()
-        {
-            powerLoading = false;
-            CurrentRole = null;
         }
     }
 }

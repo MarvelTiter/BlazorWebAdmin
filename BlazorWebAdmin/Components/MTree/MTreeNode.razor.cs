@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Project.Common;
 
 namespace BlazorWebAdmin.Components.MTree
 {
@@ -78,6 +79,18 @@ namespace BlazorWebAdmin.Components.MTree
             NotifyParent();
             StateHasChanged();
             await Root.UpdateCheckedValues();
+        }
+        bool expand = false;
+        ClassHelper NarrowClass => ClassHelper.Default
+            .AddClass("node-narrow")
+            .AddClass("collapse", () => expand)
+            .AddClass("disable", () => !HasChild);
+        ClassHelper ChildrenContentClass => ClassHelper.Default.AddClass("childrens").AddClass("collapse", () => expand);
+        Task ToggleExpand()
+        {
+            if (!HasChild) return Task.CompletedTask;
+            expand = !expand;
+            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -2,8 +2,47 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    padding: 1px;
 }
 
-    .power-tree-node .node-title {
-        margin-left: 10px;
+    .power-tree-node .node-narrow {
+        width: 16px;
+        height: 16px;
+        position: relative;
+    }
+
+
+        .power-tree-node .node-narrow::after {
+            content: ' ';
+            border: 2px solid #d9d9d9;
+            border-top: 0;
+            border-left: 0;
+            width: 8px;
+            height: 8px;
+            position: absolute;
+            transition: all 0.3s;
+            transform: rotate(45deg);
+            top: 2px;
+        }
+
+        .power-tree-node .node-narrow.collapse::after {
+            transform: rotate(-45deg);
+            top: 4px;
+        }
+
+.node-narrow.disable {
+    opacity: 0;
+    cursor: default;
+}
+
+.power-tree-node .node-title {
+    margin-left: 10px;
+}
+
+.childrens {
+    display: block;
+}
+
+    .childrens.collapse {
+        display: none;
     }

@@ -1,9 +1,12 @@
 ﻿@typeparam TNode
-<div class="power-tree-node" style="margin-left:@(Deepth * Root.Indent)px" @onclick="OnNodeClickAsync" @onclick:preventDefault @onclick:stopPropagation>
-	<CheckBoxState State=@CheckState></CheckBoxState>
-	<span class="node-title">@Root.TitleExpression(NodeValue)</span>
+<div class="power-tree-node" style="margin-left:@(Deepth * Root.Indent)px">
+	<span class=@NarrowClass.Class @onclick="ToggleExpand"></span>
+	<div class="power-tree-node" @onclick="OnNodeClickAsync" @onclick:preventDefault @onclick:stopPropagation>
+		<CheckBoxState State=@CheckState></CheckBoxState>
+		<span class="node-title">@Root.TitleExpression(NodeValue)</span>
+	</div>
 </div>
-<div>
+<div class=@ChildrenContentClass.Class>
 	@foreach (var child in Children)
 	{//TODO 树节点子项折叠功能
 		<CascadingValue Value="this" TValue="MTreeNode<TNode>">

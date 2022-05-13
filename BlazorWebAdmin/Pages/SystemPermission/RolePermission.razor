@@ -2,7 +2,7 @@
 @using AntDesign.TableModels
 @using BlazorWebAdmin.Template.Tables
 @using Project.Models.Permissions
-<TwoSidePage OpenTrigger=@(() => CurrentRole != null)>
+<TwoSidePage OpenTrigger=@(() => CurrentRole != null) Expand=@sideExpand>
 	<FirstSide>
 		<TableTemplate TableOptions=roleOptions TData=Role TQuery=@(GeneralReq<Role>)>
 		</TableTemplate>
@@ -13,9 +13,6 @@
 				<Descriptions Title="角色权限配置">
 					<DescriptionsItem Title="角色名称">@CurrentRole?.RoleName</DescriptionsItem>
 				</Descriptions>
-			</SpaceItem>
-			<SpaceItem>
-				<Button Icon="close" OnClick="CloseSide"></Button>
 			</SpaceItem>
 		</Space>
 		<Spin Spinning=powerLoading>
@@ -28,6 +25,7 @@
 												   TNode="PowerTreeNode">
 			</BlazorWebAdmin.Components.MTree.MTree>
 		</Spin>
+		<br/>
 		<Space>
 			<SpaceItem>
 				<Button Type="primary" OnClick=SaveRolePower>确定</Button>
