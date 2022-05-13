@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Project.Services.interfaces
 {
-    public interface IPemissionService
+    public interface IPermissionService
 	{
 		Task<QueryResult<PagingResult<Power>>> GetPowerListAsync(GeneralReq<Power> req);
 		Task<IEnumerable<Power>> GetPowerListAsync();

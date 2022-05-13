@@ -18,7 +18,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         [Inject]
         public DrawerService DrawerSrv { get; set; }
         [Inject]
-        public IPemissionService PermissionSrv { get; set; }
+        public IPermissionService PermissionSrv { get; set; }
         TableOptions<Power, GeneralReq<Power>> tableOptions = new();
         protected override void OnInitialized()
         {

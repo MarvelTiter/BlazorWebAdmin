@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Project.Services
 {
-    public class PemissionService : IPemissionService
+    public class PemissionService : IPermissionService
     {
         private readonly IRepository repository;
 

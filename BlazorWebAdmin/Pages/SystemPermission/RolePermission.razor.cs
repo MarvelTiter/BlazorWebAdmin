@@ -28,7 +28,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         [Inject]
         public ModalService ModalSrv { get; set; }
         [Inject]
-        public IPemissionService PermissionSrv { get; set; }
+        public IPermissionService PermissionSrv { get; set; }
         [Inject]
         public MessageService MessageSrv { get; set; }
         protected override void OnInitialized()

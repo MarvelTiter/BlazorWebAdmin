@@ -3,6 +3,7 @@
 <Select Class=@Class
 		Style=@Style
 		DataSource=Options
+		EnableSearch=@Searchable
 		@bind-Value=selected
 		ValueName="Value"
 		LabelName="Label"
@@ -22,6 +23,8 @@
 	public TItem Value { get; set; }
 	[Parameter]
 	public EventCallback<TItem> ValueChanged { get; set; }
+	[Parameter]
+	public bool Searchable { get; set; }
 
 	private async void HandleSelectedChanged(Options<TItem> item)
 	{
