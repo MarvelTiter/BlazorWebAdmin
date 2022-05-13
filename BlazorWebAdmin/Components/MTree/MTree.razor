@@ -1,0 +1,9 @@
+﻿@typeparam TNode
+<div>
+	@foreach (var item in DataSource)
+	{
+		<CascadingValue Value="this">
+			<MTreeNode NodeValue="item" Deepth="0"></MTreeNode>
+		</CascadingValue>
+	}
+</div>

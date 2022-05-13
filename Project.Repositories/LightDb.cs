@@ -28,7 +28,7 @@ namespace Project.Repositories
             }
         }
 
-        private DbContext CreateDbContext()
+        protected DbContext CreateDbContext()
         {            
             DbContext.Init(DbBaseType.Sqlite);
             SqliteConnection conn = new SqliteConnection(ConnectString);

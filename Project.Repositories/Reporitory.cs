@@ -14,7 +14,7 @@ namespace Project.Repositories
         }
         public ExpressionSql Query()
         {
-            return Db.DbSet;
+            return CreateDbContext().DbSet;
         }
 
         public IRepositoryBase<T> Table<T>()
@@ -25,7 +25,7 @@ namespace Project.Repositories
         }
         public DbContext Context()
         {
-            return Db;
+            return CreateDbContext();
         }
     }
 }

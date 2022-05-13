@@ -1,0 +1,9 @@
+﻿.power-tree-node {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+    .power-tree-node .node-title {
+        margin-left: 10px;
+    }

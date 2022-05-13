@@ -104,16 +104,16 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         async Task SaveRolePower()
         {
             if (selectedKeys is null) return;
-            var totalKeys = new List<string>(selectedKeys);
-            foreach (var item in selectedKeys)
-            {
-                var parent = allPower.FirstOrDefault(p => p.PowerId == item)?.ParentId;
-                if (parent != null && !totalKeys.Contains(parent))
-                {
-                    totalKeys.Add(parent);
-                }
-            }
-            await PermissionSrv.SaveRolePower(CurrentRole!.RoleId, totalKeys.ToArray());
+            //var totalKeys = new List<string>(selectedKeys);
+            //foreach (var item in selectedKeys)
+            //{
+            //    var parent = allPower.FirstOrDefault(p => p.PowerId == item)?.ParentId;
+            //    if (parent != null && !totalKeys.Contains(parent))
+            //    {
+            //        totalKeys.Add(parent);
+            //    }
+            //}
+            await PermissionSrv.SaveRolePower(CurrentRole!.RoleId, selectedKeys.ToArray());
         }
 
         async Task HandleRowClick(RowData<Role> rowData)
