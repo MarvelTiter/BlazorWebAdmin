@@ -26,9 +26,9 @@ namespace BlazorWebAdmin.Components
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            builder.AddContent(0, ChildContent);
             if (CurrentException == null)
             {
-                builder.AddContent(0, ChildContent);
                 return;
             }
 
@@ -63,15 +63,22 @@ namespace BlazorWebAdmin.Components
 
         [Inject]
         public MessageService MsgSrv { get; set; }
-
+        [Inject]
+        public NotificationService NotificationSrv { get; set; }
         /// <summary>
         /// OnErrorAsync 方法
         /// </summary>
         /// <param name="exception"></param>
-        protected override async Task OnErrorAsync(Exception exception)
+        protected override Task OnErrorAsync(Exception exception)
         {
-            await MsgSrv.Error(exception.Message);
-            await ErrorBoundaryLogger.LogErrorAsync(exception);
+            _ = NotificationSrv.Error(new NotificationConfig()
+            {
+                Message = "程序异常",
+                Description = exception.Message,
+                Placement = NotificationPlacement.BottomRight,
+            });
+            _ = ErrorBoundaryLogger.LogErrorAsync(exception);
+            return Task.CompletedTask;
         }
     }
 }
