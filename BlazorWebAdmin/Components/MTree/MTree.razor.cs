@@ -46,7 +46,8 @@ namespace BlazorWebAdmin.Components.MTree
         {
             var all = nodes.Count(n => n.Parent != null && n.Parent.Key == node.Key);
             var checkedCount = nodes.Count(n => n.Parent != null && n.Parent.Key == node.Key && n.Checked);
-            return checkedCount > 0 && checkedCount < all;
+            var anyIndeter = nodes.Any(n => n.Parent != null && n.Parent.Key == node.Key && n.Indeterminate);
+            return (checkedCount > 0 && checkedCount < all) || anyIndeter;
         }
 
         public bool CheckCheckedAll(MTreeNode<TNode> node)
