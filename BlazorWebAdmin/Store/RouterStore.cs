@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Common;
 using Project.Models;
+using Project.Models.Permissions;
 using Project.Services;
+using Project.Services.interfaces;
 
 namespace BlazorWebAdmin.Store
 {
@@ -33,9 +35,12 @@ namespace BlazorWebAdmin.Store
 
     public class RouterStore : StoreBase
     {
-        public RouterStore()
+        private readonly IPermissionService permissionService;
+
+        public RouterStore(IPermissionService permissionService)
         {
             Reset();
+            this.permissionService = permissionService;
         }
         public List<TagRoute> TopLink { get; set; } = new List<TagRoute>();
 
@@ -134,44 +139,72 @@ namespace BlazorWebAdmin.Store
             return Task.CompletedTask;
         }
 
-        public Task InitRoutersAsync(UserInfo userInfo)
+        public async Task InitRoutersAsync(UserInfo userInfo)
         {
-            Routers = new List<RouterMeta>
+            var result = await permissionService.GetPowerListByUserIdAsync(userInfo.UserId);
+            var powers = result.Payload;
+            var roots = powers.Where(p => p.ParentId == "ROOT");
+            Routers = new List<RouterMeta>();
+            foreach (var item in roots)
             {
-                new RouterMeta
+                var n = new RouterMeta();
+                n.RouteName = item.PowerName;
+                n.RouteLink = item.Path;
+                n.IconName = item.Icon;
+                n.Children = FindChildren(powers, item);
+                Routers.Add(n);
+            }
+
+            List<RouterMeta> FindChildren(IEnumerable<Power> all, Power parent)
+            {
+                var children = all.Where(p => p.ParentId == parent.PowerId);
+                List<RouterMeta> childNodes = new();
+                foreach (var child in children)
                 {
-                    RouteName = "设置",
-                    IconName = "setting",
-                    Children = new List<RouterMeta>
-                        {
-                            new RouterMeta
-                            {
-                                RouteName = "计数器",
-                                IconName = "setting",
-                                RouteLink = "counter/index",
-                            },                            
-                            new RouterMeta
-                            {
-                                RouteName = "用户",
-                                IconName = "setting",
-                                RouteLink = "user/index",
-                            }
-                        }
-                },
-                new RouterMeta()
-                {
-                    RouteName = "权限配置",
-                    IconName = "setting",
-                    RouteLink = "rolepermission"
-                },
-                new RouterMeta()
-                {
-                    RouteName = "权限设置",
-                    IconName = "setting",
-                    RouteLink = "permission"
+                    var n1 = new RouterMeta();
+                    n1.RouteName = child.PowerName;
+                    n1.RouteLink = child.Path;
+                    n1.IconName = child.Icon;
+                    n1.Children = FindChildren(all, child);
+                    childNodes.Add(n1);
                 }
-            };
-            return Task.CompletedTask;
+                return childNodes;
+            }
+            //Routers = new List<RouterMeta>
+            //{
+            //    new RouterMeta
+            //    {
+            //        RouteName = "设置",
+            //        IconName = "setting",
+            //        Children = new List<RouterMeta>
+            //            {
+            //                new RouterMeta
+            //                {
+            //                    RouteName = "计数器",
+            //                    IconName = "setting",
+            //                    RouteLink = "counter/index",
+            //                },
+            //                new RouterMeta
+            //                {
+            //                    RouteName = "用户",
+            //                    IconName = "setting",
+            //                    RouteLink = "user/index",
+            //                }
+            //            }
+            //    },
+            //    new RouterMeta()
+            //    {
+            //        RouteName = "权限配置",
+            //        IconName = "setting",
+            //        RouteLink = "rolepermission"
+            //    },
+            //    new RouterMeta()
+            //    {
+            //        RouteName = "权限设置",
+            //        IconName = "setting",
+            //        RouteLink = "permission"
+            //    }
+            //};
         }
     }
 }

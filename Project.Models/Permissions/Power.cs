@@ -39,5 +39,8 @@ namespace Project.Models.Permissions
         [TableHeader("路径")]
         [ColumnName("PATH")]
         public string Path { get; set; }
+        [TableHeader("排序")]
+        [ColumnName("SORT")]
+        public int Sort { get; set; }
     }
 }

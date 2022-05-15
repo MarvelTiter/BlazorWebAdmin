@@ -53,6 +53,7 @@ namespace Project.Services
                                 .InnerJoin<Power>((r, p) => p.PowerId == r.PowerId)
                                 .InnerJoin<UserRole>((u, r) => u.RoleId == r.RoleId)
                                 .Where<UserRole>(u => u.UserId == usrId)
+                                .OrderByAsc<Power>(p => p.Sort)
                                 .ToListAsync<Power>();
             return QueryResult<IEnumerable<Power>>.SuccessResult(powers);
         }
