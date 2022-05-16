@@ -1,0 +1,13 @@
+﻿@inherits EntityFormTemplate<User>
+
+<Form Model=Value>
+	<FormItem Label="用户ID">
+		<Input @bind-Value=context.UserId Disabled=edit></Input>
+	</FormItem>
+	<FormItem Label="用户姓名">
+		<Input @bind-Value=context.UserName></Input>
+	</FormItem>
+	<FormItem Label="用户密码">
+		<InputPassword @bind-Value=context.Password></InputPassword>
+	</FormItem>
+</Form>

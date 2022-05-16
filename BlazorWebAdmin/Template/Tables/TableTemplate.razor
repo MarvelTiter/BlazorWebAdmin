@@ -128,7 +128,7 @@
 				if (TableOptions.Buttons.Count > 0)
 				{
 					<ActionColumn Title="操作" Fixed="right" Width=100>
-						@if (TableOptions.Buttons.Count < 3)
+						@if (TableOptions.Buttons.Count <= 3)
 						{
 							<Space Size=@("small")>
 								@foreach (var btn in TableOptions.Buttons)

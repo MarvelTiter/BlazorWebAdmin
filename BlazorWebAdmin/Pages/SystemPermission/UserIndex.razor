@@ -1,0 +1,9 @@
+﻿@using BlazorWebAdmin.Template.Tables
+@using Project.Models.Entities
+@using Project.Models.Request
+@page "/user/index"
+
+<TableTemplate TableOptions=tableOptions TData=User TQuery=@(GeneralReq<User>)>
+	
+</TableTemplate>
+
