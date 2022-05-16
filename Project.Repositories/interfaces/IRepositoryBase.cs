@@ -18,7 +18,7 @@ namespace Project.Repositories.interfaces
         Task<int> UpdateAsync(Expression<Func<object>> updateExpression, Expression<Func<T, bool>>? whereExpression);
         Task<int> DeleteAsync(Expression<Func<T, bool>>? whereExpression);
         Task<T> GetSingleAsync(Expression<Func<T, bool>>? whereExpression);
-        Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>>? whereExpression, int index = 0, int size = 0);
+        Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>>? whereExpression, int index = 0, int size = 0, Expression<Func<T,object>>? orderByExpression = null, bool asc = true);
         Task<int> GetCountAsync(Expression<Func<T, bool>>? whereExpression);
         Task<M> Request<M>(Func<MDbContext.DbContext, Task<M>> func);
         ExpressionSqlCore<T> Select();

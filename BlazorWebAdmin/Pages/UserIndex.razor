@@ -7,7 +7,7 @@
 <TableTemplate TableOptions=tableOptions TData=User TQuery=@(GeneralReq<User>)>
 	
 </TableTemplate>
-<Button OnClick="OpenNewTab">new tab</Button>
+
 @code {
 	TableOptions<User, GeneralReq<User>> tableOptions;
 
@@ -31,7 +31,6 @@
 		for (var i = 0; i < length; i++)
 		{
 			var u = new User();
-			u.Age = i + 10;
 			u.UserName = $"Hello -> {i}";
 			users.Add(u);
 			await Task.Delay(100);

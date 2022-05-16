@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
+    <None Include="Template\Forms\ActionForm\AssignUserRoles.razor" />
     <None Include="Template\Tables\TableTemplate.razor" />
   </ItemGroup>
 

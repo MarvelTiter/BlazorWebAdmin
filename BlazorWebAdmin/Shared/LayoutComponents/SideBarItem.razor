@@ -1,9 +1,9 @@
 ﻿@using System.Linq
 @if (!Route.HasChildren || onlyOneChildren)
 {
-	<MenuItem RouterLink="@Route.RouteLink" RouterMatch="NavLinkMatch.All" Title=@Route.RouteName>
+	<MenuItem RouterLink="@Current.RouteLink" RouterMatch="NavLinkMatch.All" Title=@Current.RouteName>
 		<IconTemplate>
-			<SvgIcon ClassName="nav-icon" IconName="@Route.IconName"></SvgIcon>
+			<SvgIcon ClassName="nav-icon" IconName="@Current.IconName"></SvgIcon>
 		</IconTemplate>
 	</MenuItem>
 }
@@ -33,6 +33,8 @@ else
 @code {
 	[Parameter]
 	public RouterMeta Route { get; set; }
+
+	public RouterMeta Current => onlyOneChildren ? Route.Children.First() : Route;
 
 	private bool onlyOneChildren => Route.Children.Count() == 1;
 }

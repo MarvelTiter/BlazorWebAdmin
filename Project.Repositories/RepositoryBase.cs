@@ -17,17 +17,28 @@ namespace Project.Repositories
             return Db.ExecuteAsync();
         }
 
-        public virtual Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>>? whereExpression, int index = 0, int size = 0)
+        public virtual Task<IEnumerable<T>> GetListAsync(Expression<Func<T, bool>>? whereExpression, int index = 0, int size = 0, Expression<Func<T, object>>? orderByExpression = null, bool asc = true)
         {
+            var context = Db;
+            var sql = context.DbSet.Select<T>();
+            if (whereExpression is null) whereExpression = e => true;
+            sql = sql.Where(whereExpression);
+            if (orderByExpression != null)
+            {
+                if (asc)
+                {
+                    sql = sql.OrderByAsc(orderByExpression);
+                }
+                else
+                {
+                    sql = sql.OrderByDesc(orderByExpression);
+                }
+            }
             if (index * size > 0)
             {
-                Db.DbSet.Select<T>().Where(whereExpression).Paging(index, size);
+                sql = sql.Paging(index, size);
             }
-            else
-            {
-                Db.DbSet.Select<T>().Where(whereExpression);
-            }
-            return Db.QueryAsync<T>();
+            return context.QueryAsync<T>();
         }
 
         public Task<int> GetCountAsync(Expression<Func<T, bool>>? whereExpression)
@@ -101,6 +112,6 @@ namespace Project.Repositories
             return func.Invoke(Db);
         }
 
-        
+
     }
 }
