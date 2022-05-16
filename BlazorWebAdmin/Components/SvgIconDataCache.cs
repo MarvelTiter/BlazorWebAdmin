@@ -18,8 +18,16 @@ namespace BlazorWebAdmin.Components
 
         private static async Task<string> ReadIconData(string name)
         {
-            var svgContent = await File.ReadAllTextAsync($"wwwroot/icons/{name}.svg");
-            return svgContent;
+            var iconFile = $"wwwroot/icons/{name}.svg";
+            if (File.Exists(iconFile))
+            {
+                var svgContent = await File.ReadAllTextAsync(iconFile);
+                return svgContent;
+            }
+            else
+            {
+                return "";
+            }
         }
     }
 }

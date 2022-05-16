@@ -29,8 +29,15 @@
 	{
 		if (string.IsNullOrEmpty(IconName)) return;
 		var svgContent = await SvgIconDataCache.GetIconDataByName(IconName);
-		var insertIndex = svgContent.IndexOf("<svg") + 4;
-		svgContent = svgContent.Insert(insertIndex, $" class='svg-icon {ClassName}'");
-		IconMarkuString = new MarkupString(svgContent);
+		if (string.IsNullOrEmpty(svgContent))
+		{
+			IconMarkuString = new MarkupString($"<span class='iconfont {ClassName} icon-{IconName}'></span>");
+		}
+		else
+		{
+			var insertIndex = svgContent.IndexOf("<svg") + 4;
+			svgContent = svgContent.Insert(insertIndex, $" class='svg-icon {ClassName}'");
+			IconMarkuString = new MarkupString(svgContent);
+		}
 	}
 }
