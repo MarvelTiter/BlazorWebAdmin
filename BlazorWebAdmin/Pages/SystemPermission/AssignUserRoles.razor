@@ -1,0 +1,74 @@
+﻿@using Project.Models.Permissions
+@using Project.Services.interfaces
+@inject IPermissionService PermissionSrv
+@inject MessageService MessageSrv
+<Descriptions>
+	<DescriptionsItem Title="用户">@Current?.UserName</DescriptionsItem>
+</Descriptions>
+<div style="margin:10px 0;">
+	@for (var i = 0; i < roleDefs.Count; i++)
+	{
+		var item = roleDefs[i];
+		<div class="role-item @(item.Check?"check":"")">
+			<label>
+				<Checkbox @bind-Value=item.Check></Checkbox>
+				<span>@($"{item.Role.RoleId} - {item.Role.RoleName}")</span>
+			</label>
+		</div>
+	}
+</div>
+<Button Type="@ButtonType.Primary" OnClick="SaveUserRole">保存用户角色</Button>
+@code {
+	class RoleDef
+	{
+		public RoleDef(Role Role, bool Check)
+		{
+			this.Role = Role;
+			this.Check = Check;
+		}
+
+		public Role Role { get; set; }
+		public bool Check { get; set; }
+	}
+	[Parameter]
+	public User Current { get; set; }
+	List<RoleDef> roleDefs = new List<RoleDef>();
+	IEnumerable<Role> roles = Enumerable.Empty<Role>();
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		roles = await PermissionSrv.GetRoleListAsync();
+	}
+	protected override async Task OnParametersSetAsync()
+	{
+		await base.OnParametersSetAsync();
+		var userRoles = await PermissionSrv.GetUserRolesAsync(Current.UserId);
+		roleDefs = roles.Select(r => new RoleDef(r, userRoles.Any(ur => ur.RoleId == r.RoleId))).ToList();
+	}
+	async Task SaveUserRole()
+	{
+		var selectedRoles = roleDefs.Where(rd => rd.Check).Select(rd => rd.Role.RoleId).ToArray();
+		var flag = await PermissionSrv.SaveUserRole(Current.UserId, selectedRoles);
+		if (flag)
+		{
+			_ = MessageSrv.Success("保存成功");
+		}
+		else
+		{
+			_ = MessageSrv.Error("写入失败");
+		}
+	}
+}
+
+<style>
+	.role-item {
+		padding: 5px 10px;
+		box-sizing: border-box;
+		border: solid 1px #d9d9d9;
+		margin: 10px 0;
+	}
+
+		.role-item.check {
+			border-color: #1890ff;
+		}
+</style>

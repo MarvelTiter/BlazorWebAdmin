@@ -18,6 +18,7 @@ namespace Project.Services.interfaces
 		Task<IEnumerable<Role>> GetRoleListAsync();
 		Task<QueryResult<IEnumerable<Power>>> GetPowerListByUserIdAsync(string usrId);
 		Task<QueryResult<IEnumerable<Power>>> GetPowerListByRoleIdAsync(string roleId);
+		Task<IEnumerable<Role>> GetUserRolesAsync(string usrId);
 		Task<bool> SaveUserRole(string usrId, params string[] roles);
 		Task<bool> SaveRolePower(string roleId, params string[] powers);
 		Task<int> UpdatePowerAsync(Power power);

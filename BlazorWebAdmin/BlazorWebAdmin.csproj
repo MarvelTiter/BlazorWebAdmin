@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
-    <None Include="Template\Forms\ActionForm\AssignUserRoles.razor" />
     <None Include="Template\Tables\TableTemplate.razor" />
   </ItemGroup>
 
@@ -33,6 +32,10 @@
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
     <ProjectReference Include="..\Project.Repositories\Project.Repositories.csproj" />
     <ProjectReference Include="..\Project.Services\Project.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Template\Forms\ActionForm\" />
   </ItemGroup>
 
 </Project>

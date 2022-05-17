@@ -183,7 +183,14 @@ namespace BlazorWebAdmin.Template.Tables
             Columns.Add(col);
             return this;
         }
-
+        public TableOptions<TData, TQuery> AddButton(string label, Func<TData, Task> handle, string icon = "")
+        {
+            var btn = new ButtonDefinition<TData>();
+            btn.Label = label;
+            btn.Icon = icon;
+            btn.Callback = handle;
+            return AddButton(btn);
+        }
         public TableOptions<TData, TQuery> AddButton(ButtonDefinition<TData> btn)
         {
             Buttons.Add(btn);

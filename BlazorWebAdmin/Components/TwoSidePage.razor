@@ -1,6 +1,6 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 <div class="two-side-page-wrapper" style="flex-direction:@Direction">
-	<div class="page-content first">
+	<div class="page-content first" style="flex:@MainFlex;">
 		@FirstSide
 	</div>
 	<div class="page-content second" style="flex:@(CanExpand?"1":"0");">
@@ -27,6 +27,8 @@
 	[Parameter]
 	[NotNull]
 	public RenderFragment FirstSide { get; set; }
+	[Parameter]
+	public int MainFlex { get; set; } = 1;
 	[Parameter]
 	[NotNull]
 	public RenderFragment SecondSide { get; set; }
@@ -62,7 +64,6 @@
 	}
 
 	.page-content {
-		flex: 1;
 		transition: all 0.3s ease;
 	}
 

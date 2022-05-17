@@ -67,6 +67,14 @@ namespace Project.Services
             return QueryResult<IEnumerable<Power>>.SuccessResult(powers);
         }
 
+        public Task<IEnumerable<Role>> GetUserRolesAsync(string usrId)
+        {
+            return repository.Query().Select<Role>()
+                .InnerJoin<UserRole>((r, ur) => r.RoleId == ur.RoleId)
+                .Where<UserRole>(ur => ur.UserId == usrId)
+                .ToListAsync<Role>();
+        }
+
         public Task<bool> SaveUserRole(string usrId, params string[] roles)
         {
             var db = repository.Context();

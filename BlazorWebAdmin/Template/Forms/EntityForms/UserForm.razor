@@ -1,6 +1,6 @@
 ﻿@inherits EntityFormTemplate<User>
 
-<Form Model=Value>
+<Form Model=Value LabelAlign=@AntLabelAlignType.Right LabelColSpan="8" WrapperColSpan="16">
 	<FormItem Label="用户ID">
 		<Input @bind-Value=context.UserId Disabled=edit></Input>
 	</FormItem>
