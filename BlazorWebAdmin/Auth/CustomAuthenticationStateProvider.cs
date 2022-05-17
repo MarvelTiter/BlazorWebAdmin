@@ -49,7 +49,8 @@ namespace BlazorWebAdmin.Auth
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, info.UserId)
+                new Claim(ClaimTypes.Name, info.UserId),
+                new Claim(ClaimTypes.GivenName, info.UserName),
             };
             foreach (var r in info.Roles)
             {

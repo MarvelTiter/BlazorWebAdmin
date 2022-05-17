@@ -1,41 +1,46 @@
 ﻿@inherits RootLayout
 @using Project.Services
+@inject UserStore store
 <CascadingValue Value="this">
-    <AuthorizeView>
-        <Authorized>
-            @Body
-        </Authorized>
-        <NotAuthorized>
-            <RedirectToLogin></RedirectToLogin>
-        </NotAuthorized>
-    </AuthorizeView>
+	<AuthorizeView>
+		<Authorized>
+			@Body
+		</Authorized>
+		<NotAuthorized>
+			<RedirectToLogin></RedirectToLogin>
+		</NotAuthorized>
+	</AuthorizeView>
 </CascadingValue>
 
-@code{
-    @code {
-        [CascadingParameter]
-        private Task<AuthenticationState>? authenticationStateTask { get; set; }
-        [Parameter]
-        public RenderFragment? ChildContent { get; set; }
+@code {
+	@code {
+		[CascadingParameter]
+		private Task<AuthenticationState>? authenticationStateTask { get; set; }
+		[Parameter]
+		public RenderFragment? ChildContent { get; set; }
 
-        protected override async Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-            if (authenticationStateTask != null)
-            {
-                var state = await authenticationStateTask;
-                if (state.User.Identity!.IsAuthenticated)
-                {
-                    var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-                    var roles = state.User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value);
-                    var ui = new UserInfo();
-                    ui.UserId = state.User.Identity!.Name!;
-                    ui.Roles = roles;
-                    await UserStore.Init(ui);
-                    NavigationManager.NavigateTo(url);
-                    await RouterStore.TryAdd(url);
-                }
-            }
-        }
-    }
+		protected override async Task OnInitializedAsync()
+		{
+			await base.OnInitializedAsync();
+			if (authenticationStateTask != null)
+			{
+				var state = await authenticationStateTask;
+				if (state.User.Identity!.IsAuthenticated)
+				{
+					if (store.UserInfo == null)
+					{
+						var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+						var roles = state.User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value);
+						var ui = new UserInfo();
+						ui.UserId = state.User.Identity!.Name!;
+						ui.UserName = state.User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.GivenName).Value;
+						ui.Roles = roles;
+						await UserStore.Init(ui);
+						NavigationManager.NavigateTo(url);
+						await RouterStore.TryAdd(url);
+					}
+				}
+			}
+		}
+	}
 }
