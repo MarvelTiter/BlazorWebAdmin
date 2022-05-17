@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.5" />
-    <PackageReference Include="MT.LightORM" Version="1.1.6.9" />
+    <PackageReference Include="MT.LightORM" Version="1.1.7" />
   </ItemGroup>
 
   <ItemGroup>
