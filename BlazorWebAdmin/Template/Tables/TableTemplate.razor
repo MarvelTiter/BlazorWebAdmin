@@ -1,4 +1,5 @@
-﻿@using BlazorWebAdmin.Template.Tables.Setting
+﻿@using AntDesign.TableModels
+@using BlazorWebAdmin.Template.Tables.Setting
 @using AntDesign.Core.Helpers.MemberPath
 @typeparam TData
 @typeparam TQuery
@@ -68,20 +69,20 @@
 				{
 					foreach (var col in TableOptions.Columns)
 					{
-						<Column TData="object" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
-							@if (col.IsEnum || col.EnumValues != null)
-							{
-								var v = PathHelper.GetDelegate($"['{col.PropertyOrFieldName}']", typeof(TData)).Invoke(context);
-								if (v != null)
-								{
-									<span>@col.EnumValues[v.ToString()!]</span>
-								}
-							}
-							else
-							{
-								<span>@PathHelper.GetDelegate($"['{col.PropertyOrFieldName}']", typeof(TData)).Invoke(context)</span>
-							}
+						<Column TData="object" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex=@($"['{col.PropertyOrFieldName}']") CellRender="ColumnRender<object>(col)">
 						</Column>
+							//@if (col.IsEnum || col.EnumValues != null)
+							//{
+							//	var v = PathHelper.GetDelegate($"['{col.PropertyOrFieldName}']", typeof(TData)).Invoke(context);
+							//	if (v != null)
+							//	{
+							//		<span>@col.EnumValues[v.ToString()!]</span>
+							//	}
+							//}
+							//else
+							//{
+							//	<span>@PathHelper.GetDelegate($"['{col.PropertyOrFieldName}']", typeof(TData)).Invoke(context)</span>
+							//}
 					}
 				}
 				else
@@ -90,8 +91,7 @@
 					{
 						@if (col.IsEnum)
 						{
-							<Column TData="Enum" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
-								@ColumnContent(col).Invoke(context)
+							<Column TData="Enum" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Enum>(col)">
 							</Column>
 							continue;
 						}
@@ -99,23 +99,19 @@
 						switch (type)
 						{
 							case "string":
-								<Column TData="String" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
-									@ColumnContent(col).Invoke(context)
+								<Column TData="String" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<string>(col)">
 								</Column>
 								break;
 							case "int32":
-								<Column TData="Int32?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
-									@ColumnContent(col).Invoke(context)
+								<Column TData="Int32?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Int32?>(col)">
 								</Column>
 								break;
 							case "int16":
-								<Column TData="Int16?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
-									@ColumnContent(col).Invoke(context)
+								<Column TData="Int16?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Int16?>(col)">
 								</Column>
 								break;
 							case "bool":
-								<Column TData="Boolean?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed>
-									@ColumnContent(col).Invoke(context)
+								<Column TData="Boolean?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Boolean?>(col)">
 								</Column>
 								break;
 							case "datetime":
@@ -222,33 +218,57 @@
 	}
 
 	RenderFragment<PaginationTotalContext> totalFragment => (context) =>
-																{
-																	return
+										{
+											return
 	@<span>总记录数：@context.Total</span>
-								;
-																};
+		;
+										};
 
-	RenderFragment<TData> ColumnContent(ColumnDefinition col)
+	//RenderFragment<TData> ColumnContent(ColumnDefinition col)
+	//{
+	//	return context =>
+	//	{
+	//		@if (col.IsEnum || col.EnumValues != null)
+	//		{
+	//			var v = PathHelper.GetDelegate(col.PropertyOrFieldName, typeof(TData)).Invoke(context);
+	//			if (v != null)
+	//			{
+	//				if (col.EnumValues.ContainsKey($"{v}"))
+	//				{
+	//					return
+	//	@<span>@col.EnumValues[$"{v}"]</span>
+	//;
+	//				}
+	//			}
+	//		}
+	//		return
+	//	@<span>@PathHelper.GetDelegate(col.PropertyOrFieldName, typeof(TData)).Invoke(context)</span>
+	//					;
+	//	};
+	//}
+
+	RenderFragment<CellData<T>> ColumnRender<T>(ColumnDefinition col)
 	{
 		return context =>
+	{
+		var formattedValue = "";
+		if (col.IsEnum || col.EnumValues != null)
 		{
-			@if (col.IsEnum || col.EnumValues != null)
+				//var v = PathHelper.GetDelegate(col.PropertyOrFieldName, typeof(TData)).Invoke(context.FieldValue);
+			var v = context.FieldValue;
+			if (v != null)
 			{
-				var v = PathHelper.GetDelegate(col.PropertyOrFieldName, typeof(TData)).Invoke(context);
-				if (v != null)
+				if (col.EnumValues.ContainsKey($"{v}"))
 				{
-					if (col.EnumValues.ContainsKey($"{v}"))
-					{
-						return
-	@<span>@col.EnumValues[$"{v}"]</span>
-	;
-					}
+					formattedValue = col.EnumValues[$"{v}"];
 				}
 			}
-			return
-	@<span>@PathHelper.GetDelegate(col.PropertyOrFieldName, typeof(TData)).Invoke(context)</span>
-		;
-		};
+			context.FormattedValue = formattedValue;
+		}
+		return
+	@<span>@context.FormattedValue</span>
+	;
+	};
 	}
 
 	public async Task PagingStatusChanged(PaginationEventArgs e)

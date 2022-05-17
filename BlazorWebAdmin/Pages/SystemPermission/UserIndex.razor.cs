@@ -31,6 +31,11 @@ namespace BlazorWebAdmin.Pages.SystemPermission
             tableOptions.DataLoader = Search;
             tableOptions.AddHandle = AddUser;
             tableOptions.OnRowClick = AssignRole;
+            tableOptions[nameof(User.Password)].OnCell = cell =>
+            {
+                cell.FormattedValue = "********";
+                return null;
+            };
         }
 
         Task<QueryResult<PagingResult<User>>> Search(GeneralReq<User> req)
