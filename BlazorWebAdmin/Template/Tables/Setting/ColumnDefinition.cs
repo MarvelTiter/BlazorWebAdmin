@@ -6,7 +6,7 @@ namespace BlazorWebAdmin.Template.Tables.Setting
     {
         public int Index { get; set; }
         public Type DataType { get; set; } = typeof(string);
-        public bool IsEnum => DataType.IsEnum || EnumValues != null;
+        public bool IsEnum => DataType.IsEnum;
         public string? Fixed { get; set; }
         public string? Width { get; set; }
         public Func<CellData, Dictionary<string, object>> OnCell { get; set; }
