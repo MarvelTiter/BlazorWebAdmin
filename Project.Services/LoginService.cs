@@ -6,6 +6,7 @@ namespace Project.Services
     public class UserInfo
     {
         public string UserId { get; set; }
+        public string UserName { get; set; }
         public object? Payload { get; set; }
         public IEnumerable<string> Roles { get; set; }
         public DateTime CreatedTime { get; set; }

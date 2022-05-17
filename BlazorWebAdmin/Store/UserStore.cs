@@ -31,7 +31,7 @@ namespace BlazorWebAdmin.Store
 
         private string GetUserName()
         {
-            return "管理员";
+            return UserInfo?.UserName ?? "Unknow";
         }
 
         public async Task Init(UserInfo userInfo)
