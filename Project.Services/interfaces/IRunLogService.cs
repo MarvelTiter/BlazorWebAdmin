@@ -1,4 +1,6 @@
-﻿using Project.Models.Entities;
+﻿using Project.Models;
+using Project.Models.Entities;
+using Project.Models.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +11,7 @@ namespace Project.Services.interfaces
 {
     public interface IRunLogService
     {
+        Task<IQueryCollectionResult<RunLog>> GetRunLogsAsync(GeneralReq<RunLog> runLog);
         Task Log(RunLog log);
     }
 }

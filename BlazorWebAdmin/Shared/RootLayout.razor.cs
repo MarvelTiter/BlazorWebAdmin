@@ -1,4 +1,5 @@
 ﻿using AntDesign;
+using BlazorWebAdmin.Aop;
 using BlazorWebAdmin.Shared.LayoutComponents;
 using BlazorWebAdmin.Store;
 using Microsoft.AspNetCore.Components;
@@ -24,6 +25,7 @@ namespace BlazorWebAdmin.Shared
         [Inject]
         public EventDispatcher Dispatcher { get; set; }
         [Inject]
+        public StoreTest storeTest { get; set; }
         public ProtectedSessionStorage SessionStorage { get; set; }
         public event Action<MouseEventArgs> BodyClickEvent;
 

@@ -34,7 +34,8 @@ namespace BlazorWebAdmin.Template.Tables.Setting
                 }
                 else
                 {
-                    v = Convert.ChangeType(info.Value, info.ValueType);
+                    var type = Nullable.GetUnderlyingType(info.ValueType) ?? info.ValueType;
+                    v = Convert.ChangeType(info.Value, type);
                     right = Expression.Constant(v, info.ValueType);
                 }
                 exp = Expression.MakeBinary(expType.Value, propExp, right);

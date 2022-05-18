@@ -18,16 +18,16 @@ services.AddECharts();
 //
 services.AddAntDesign();
 //Ìæ»»Ä¬ÈÏµÄÈÝÆ÷
-services.AddScoped<LogAop>();
+builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
 services.ConfigureDynamicProxy(config =>
 {
     config.Interceptors.Add(new CustomFactory());
     config.NonAspectPredicates.Add(m => m.CustomAttributes.All(a => a.AttributeType != typeof(LogInfoAttribute)));
 });
-builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
 
+services.AddScoped<LogAop>();
 services.AutoInjects();
-
+services.AddScoped<StoreTest>();
 services.AddScoped<StateContainer>();
 services.AddScoped<RouterStore>();
 services.AddScoped<CounterStore>();
