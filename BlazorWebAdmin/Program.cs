@@ -15,14 +15,6 @@ services.AddRazorPages();
 services.AddServerSideBlazor();
 services.AddECharts();
 
-services.AutoInjects();
-
-services.AddScoped<StateContainer>();
-services.AddScoped<RouterStore>();
-services.AddScoped<CounterStore>();
-services.AddScoped<UserStore>();
-services.AddScoped<EventDispatcher>();
-services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 //
 services.AddAntDesign();
 //Ìæ»»Ä¬ÈÏµÄÈÝÆ÷
@@ -33,6 +25,16 @@ services.ConfigureDynamicProxy(config =>
     config.NonAspectPredicates.Add(m => m.CustomAttributes.All(a => a.AttributeType != typeof(LogInfoAttribute)));
 });
 builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
+
+services.AutoInjects();
+
+services.AddScoped<StateContainer>();
+services.AddScoped<RouterStore>();
+services.AddScoped<CounterStore>();
+services.AddScoped<UserStore>();
+services.AddScoped<EventDispatcher>();
+services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

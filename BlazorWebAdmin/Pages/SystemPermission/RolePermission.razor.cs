@@ -108,7 +108,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         {
             if (selectedKeys is null) return;
             var flag = await PermissionSrv.SaveRolePower(CurrentRole!.RoleId, selectedKeys.ToArray());
-            if (flag) _ = MessageSrv.Success("保存成功");
+            if (flag.Success) _ = MessageSrv.Success("保存成功");
             else _ = MessageSrv.Error("保存数据异常！");
         }
 

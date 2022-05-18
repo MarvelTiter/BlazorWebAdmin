@@ -34,6 +34,7 @@ namespace BlazorWebAdmin.Shared
             {
                 NavigationManager.LocationChanged += NavigationManager_LocationChanged;
             }
+			Console.WriteLine($"Root store {UserStore.GetHashCode()}");
         }
 
         const string LOCATION_MAP = "[http://|https://](.+)(?=/)(.+)";

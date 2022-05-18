@@ -60,6 +60,14 @@ namespace Project.Models
             };
         }
 
+        public static IQueryResult<T> Return<T>(bool success)
+		{
+            if (success)
+                return Success<T>();
+            else
+                return Fail<T>();
+		}
+
         public static IQueryResult<T> SetPayload<T>(this IQueryResult<T> self, T payload)
         {
             self.Payload = payload!;

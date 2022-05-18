@@ -51,7 +51,7 @@
 	{
 		var selectedRoles = roleDefs.Where(rd => rd.Check).Select(rd => rd.Role.RoleId).ToArray();
 		var flag = await PermissionSrv.SaveUserRole(Current.UserId, selectedRoles);
-		if (flag)
+		if (flag.Payload)
 		{
 			_ = MessageSrv.Success("保存成功");
 		}

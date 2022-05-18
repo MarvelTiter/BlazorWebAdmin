@@ -1,5 +1,6 @@
 ﻿using AspectCore.DynamicProxy;
 using BlazorWebAdmin.Store;
+using Microsoft.AspNetCore.Components.Authorization;
 using Project.Common.Attributes;
 using Project.Models.Entities;
 using Project.Services.interfaces;
@@ -9,26 +10,25 @@ namespace BlazorWebAdmin.Aop
     public class LogAop : AbstractInterceptor
     {
         private readonly IRunLogService logService;
-        private readonly ILogger logger;
-        private readonly UserStore store;
+		private readonly UserStore store;
 
-        public LogAop(IRunLogService logService, ILogger<LogAop> logger, UserStore store)
+		public LogAop(IRunLogService logService, UserStore store)
         {
             this.logService = logService;
-            this.logger = logger;
-            this.store = store;
-        }
+			this.store = store;
+			Console.WriteLine($"LogAop store {store.GetHashCode()}");
+		}
         public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
             await next(context);
             var infoAttr = context.ServiceMethod.GetCustomAttribute<LogInfoAttribute>();
             if (infoAttr == null) return;
             var result = context.ReturnValue as dynamic;
-            var msg = $"{result?.Result.Success} {result?.Result.Message} {infoAttr?.Module} {infoAttr?.Action}";
-            logger.LogInformation(msg);
+            //var msg = $"{result?.Result.Success} {result?.Result.Message} {infoAttr?.Module} {infoAttr?.Action}";
+            var userId = GetUserId(context) ?? "获取失败";
             var l = new RunLog()
             {
-                UserId = GetUserId(context.Parameters) ?? "获取失败",
+                UserId = userId,
                 ActionModule = infoAttr!.Module ?? "",
                 ActionName = infoAttr!.Action ?? "",
                 ActionResult = result?.Result.Success ? "成功" : "失败",
@@ -37,11 +37,11 @@ namespace BlazorWebAdmin.Aop
             await logService.Log(l);
         }
 
-        string? GetUserId(object[] parameters)
+        string? GetUserId(AspectContext context)
         {
-            if (store.UserId == null)
+            if (context.ServiceMethod.Name == "LoginAsync")
             {
-                return parameters.FirstOrDefault()?.ToString();
+                return context.Parameters.FirstOrDefault()?.ToString();
             }
             return store.UserId;
         }

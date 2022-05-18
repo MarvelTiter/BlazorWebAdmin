@@ -3,7 +3,8 @@
 @using System.Data
 @using Project.Models.Request
 @inject CounterStore store
-@inject MessageService MessageSrv;
+@inject MessageService MessageSrv
+@inject UserStore userStore
 <h3>Counter</h3>
 <h4>私有变量: @count</h4>
 <h4>Store变量: @store.Count</h4>
@@ -39,6 +40,6 @@
 
 	void ThrowException()
 	{
-		throw new Exception("Test");
+		userStore.UserInfo = new Project.Services.UserInfo() { UserId = "hh123", UserName = "？？？" };
 	}	
 }
