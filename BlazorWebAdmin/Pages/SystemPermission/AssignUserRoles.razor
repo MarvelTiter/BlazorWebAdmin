@@ -37,13 +37,15 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
-		roles = await PermissionSrv.GetRoleListAsync();
+		var result = await PermissionSrv.GetRoleListAsync();
+		roles = result.Payload;
 	}
 	protected override async Task OnParametersSetAsync()
 	{
 		await base.OnParametersSetAsync();
 		var userRoles = await PermissionSrv.GetUserRolesAsync(Current.UserId);
-		roleDefs = roles.Select(r => new RoleDef(r, userRoles.Any(ur => ur.RoleId == r.RoleId))).ToList();
+		if (userRoles?.TotalRecord > 0)
+			roleDefs = roles.Select(r => new RoleDef(r, userRoles.Payload.Any(ur => ur.RoleId == r.RoleId))).ToList();
 	}
 	async Task SaveUserRole()
 	{

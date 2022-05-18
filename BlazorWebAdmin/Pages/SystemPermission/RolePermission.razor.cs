@@ -54,7 +54,8 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         /// <returns></returns>
         async Task GetAllPowersAsync()
         {
-            allPower = await PermissionSrv.GetPowerListAsync();
+            var result = await PermissionSrv.GetPowerListAsync();
+            allPower = result.Payload;
         }
         /// <summary>
         /// 构建权限树
@@ -88,7 +89,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         }
         #endregion
 
-        Task<QueryResult<PagingResult<Role>>> GetRolesAsync(GeneralReq<Role> req)
+        Task<IQueryCollectionResult<Role>> GetRolesAsync(GeneralReq<Role> req)
         {
             return PermissionSrv.GetRoleListAsync(req);
         }

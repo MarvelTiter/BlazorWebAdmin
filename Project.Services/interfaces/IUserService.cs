@@ -11,7 +11,7 @@ namespace Project.Services.interfaces
 {
     public interface IUserService
     {
-        Task<QueryResult<PagingResult<User>>> GetUserListAsync(GeneralReq<User> req);
+        Task<IQueryCollectionResult<User>> GetUserListAsync(GeneralReq<User> req);
         Task<User> InsertUserAsync(User user);
         Task<int> UpdateUserAsync(User user);
     }

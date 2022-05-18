@@ -23,31 +23,33 @@ namespace Project.Services
             this.repository = repository;
         }
 
-        public async Task<QueryResult<PagingResult<Power>>> GetPowerListAsync(GeneralReq<Power> req)
+        public async Task<IQueryCollectionResult<Power>> GetPowerListAsync(GeneralReq<Power> req)
         {
             var count = await repository.Table<Power>().GetCountAsync(req.Expression);
             var list = await repository.Table<Power>().GetListAsync(req.Expression, req.PageIndex, req.PageSize);
-            return QueryResult<Power>.PagingResult(list, count);
+            return QueryResult.Success<Power>().CollectionResult(list, count);
         }
 
-        public Task<IEnumerable<Power>> GetPowerListAsync()
+        public async Task<IQueryCollectionResult<Power>> GetPowerListAsync()
         {
-            return repository.Table<Power>().GetListAsync(e => true);
+            var list = await repository.Table<Power>().GetListAsync(e => true);
+            return QueryResult.Success<Power>().CollectionResult(list);
         }
 
-        public async Task<QueryResult<PagingResult<Role>>> GetRoleListAsync(GeneralReq<Role> req)
+        public async Task<IQueryCollectionResult<Role>> GetRoleListAsync(GeneralReq<Role> req)
         {
             var count = await repository.Table<Role>().GetCountAsync(req.Expression);
             var list = await repository.Table<Role>().GetListAsync(req.Expression, req.PageIndex, req.PageSize);
-            return QueryResult<Role>.PagingResult(list, count);
+            return QueryResult.Success<Role>().CollectionResult(list, count);
         }
 
-        public Task<IEnumerable<Role>> GetRoleListAsync()
+        public async Task<IQueryCollectionResult<Role>> GetRoleListAsync()
         {
-            return repository.Table<Role>().GetListAsync(e => true);
+            var list =await repository.Table<Role>().GetListAsync(e => true);
+            return QueryResult.Success<Role>().CollectionResult(list);
         }
 
-        public async Task<QueryResult<IEnumerable<Power>>> GetPowerListByUserIdAsync(string usrId)
+        public async Task<IQueryCollectionResult<Power>> GetPowerListByUserIdAsync(string usrId)
         {
             var powers = await repository.Query().Select<RolePower, Power>(distinct: true)
                                 .InnerJoin<Power>((r, p) => p.PowerId == r.PowerId)
@@ -55,24 +57,25 @@ namespace Project.Services
                                 .Where<UserRole>(u => u.UserId == usrId)
                                 .OrderByAsc<Power>(p => p.Sort)
                                 .ToListAsync<Power>();
-            return QueryResult<IEnumerable<Power>>.SuccessResult(powers);
+            return QueryResult.Success<Power>().CollectionResult(powers);
         }
 
-        public async Task<QueryResult<IEnumerable<Power>>> GetPowerListByRoleIdAsync(string roleId)
+        public async Task<IQueryCollectionResult<Power>> GetPowerListByRoleIdAsync(string roleId)
         {
             var powers = await repository.Query().Select<RolePower, Power>()
                                  .InnerJoin<Power>((r, p) => p.PowerId == r.PowerId)
                                  .Where(r => r.RoleId == roleId)
                                  .ToListAsync<Power>();
-            return QueryResult<IEnumerable<Power>>.SuccessResult(powers);
+            return QueryResult.Success<Power>().CollectionResult(powers);
         }
 
-        public Task<IEnumerable<Role>> GetUserRolesAsync(string usrId)
+        public async Task<IQueryCollectionResult<Role>> GetUserRolesAsync(string usrId)
         {
-            return repository.Query().Select<Role>()
+            var roles =await repository.Query().Select<Role>()
                 .InnerJoin<UserRole>((r, ur) => r.RoleId == ur.RoleId)
                 .Where<UserRole>(ur => ur.UserId == usrId)
                 .ToListAsync<Role>();
+            return QueryResult.Success<Role>().CollectionResult(roles);
         }
 
         public Task<bool> SaveUserRole(string usrId, params string[] roles)

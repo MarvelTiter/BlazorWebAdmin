@@ -25,10 +25,10 @@ namespace Project.Services
             return Task.FromResult(true);
         }
 
-        public Task<QueryResult<UserInfo>> LoginAsync(string username, string password)
+        public async Task<IQueryResult<UserInfo>> LoginAsync(string username, string password)
         {
             var roles = new List<string> { "admin", "superadmin", "vistor" };
-            return Task.FromResult(new QueryResult<UserInfo>() { Success = true, Message = "Done", Payload = new UserInfo { UserId = username, Roles = roles, UserName = "测试" } });
+            return await Task.FromResult(new QueryResult<UserInfo>() { Success = true, Message = "Done", Payload = new UserInfo { UserId = username, Roles = roles, UserName = "测试" } });
         }
 
         public Task<bool> LogoutAsync()

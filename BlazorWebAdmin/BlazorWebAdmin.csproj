@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="AntDesign" Version="0.10.6" />
+    <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="MiniExcel" Version="1.26.2" />
     <PackageReference Include="MT.KitTools" Version="1.0.4-alpha" />
     <PackageReference Include="MT.LightORM" Version="1.1.7" />

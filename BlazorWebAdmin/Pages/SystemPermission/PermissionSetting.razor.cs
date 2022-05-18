@@ -29,7 +29,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
             tableOptions.AddButton(ButtonDefinition<Power>.Edit(EditPower));
             tableOptions.AddButton(ButtonDefinition<Power>.Delete(DeletePower));
         }
-        Task<QueryResult<PagingResult<Power>>> Search(GeneralReq<Power> req)
+        Task<IQueryCollectionResult<Power>> Search(GeneralReq<Power> req)
         {
             return PermissionSrv.GetPowerListAsync(req);
         }

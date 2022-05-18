@@ -28,7 +28,6 @@
 					.AddColumn("列2", "B")
 					.AddColumn("列3", "C")
 					.AddColumn("列4", "D");
-		tableOptions.DataLoader = Load;
 	}
 
 	private void Add()
@@ -41,27 +40,5 @@
 	void ThrowException()
 	{
 		throw new Exception("Test");
-	}
-
-	async Task<QueryResult<PagingResult<DataRow>>> Load(GeneralReq<DataRow> req)
-	{
-		DataTable dt = new DataTable();
-		dt.Columns.Add("A");
-		dt.Columns.Add("B");
-		dt.Columns.Add("C");
-		dt.Columns.Add("D");
-		var length = new Random().Next(5, 15);
-		for (var i = 0; i < length; i++)
-		{
-			var row = dt.NewRow();
-			row["A"] = $"A => {i}";
-			row["B"] = $"B => {i}";
-			row["C"] = $"C => {i}";
-			row["D"] = $"D => {i}";
-			dt.Rows.Add(row);
-			await Task.Delay(200);
-		}
-		Console.WriteLine($"pageIndex:{req.PageIndex} ; pageSize:{req.PageSize}");
-		return QueryResult<DataRow>.PagingResult(dt.AsEnumerable(), dt.Rows.Count);
-	}
+	}	
 }

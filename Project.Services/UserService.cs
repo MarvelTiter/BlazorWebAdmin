@@ -20,11 +20,11 @@ namespace Project.Services
             this.repository = repository;
         }
 
-        public async Task<QueryResult<PagingResult<User>>> GetUserListAsync(GeneralReq<User> req)
+        public async Task<IQueryCollectionResult<User>> GetUserListAsync(GeneralReq<User> req)
         {
             var count = await repository.Table<User>().GetCountAsync(req.Expression);
             var list = await repository.Table<User>().GetListAsync(req.Expression, req.PageIndex, req.PageSize);
-            return QueryResult<User>.PagingResult(list, count);
+            return QueryResult.Success<User>().CollectionResult(list, count);
         }
 
         public async Task<User> InsertUserAsync(User user)

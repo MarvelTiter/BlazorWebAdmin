@@ -12,13 +12,13 @@ namespace Project.Services.interfaces
 {
     public interface IPermissionService
 	{
-		Task<QueryResult<PagingResult<Power>>> GetPowerListAsync(GeneralReq<Power> req);
-		Task<IEnumerable<Power>> GetPowerListAsync();
-		Task<QueryResult<PagingResult<Role>>> GetRoleListAsync(GeneralReq<Role> req);
-		Task<IEnumerable<Role>> GetRoleListAsync();
-		Task<QueryResult<IEnumerable<Power>>> GetPowerListByUserIdAsync(string usrId);
-		Task<QueryResult<IEnumerable<Power>>> GetPowerListByRoleIdAsync(string roleId);
-		Task<IEnumerable<Role>> GetUserRolesAsync(string usrId);
+		Task<IQueryCollectionResult<Power>> GetPowerListAsync(GeneralReq<Power> req);
+		Task<IQueryCollectionResult<Power>> GetPowerListAsync();
+		Task<IQueryCollectionResult<Role>> GetRoleListAsync(GeneralReq<Role> req);
+		Task<IQueryCollectionResult<Role>> GetRoleListAsync();
+		Task<IQueryCollectionResult<Power>> GetPowerListByUserIdAsync(string usrId);
+		Task<IQueryCollectionResult<Power>> GetPowerListByRoleIdAsync(string roleId);
+		Task<IQueryCollectionResult<Role>> GetUserRolesAsync(string usrId);
 		Task<bool> SaveUserRole(string usrId, params string[] roles);
 		Task<bool> SaveRolePower(string roleId, params string[] powers);
 		Task<int> UpdatePowerAsync(Power power);

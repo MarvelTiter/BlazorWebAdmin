@@ -26,7 +26,7 @@ namespace BlazorWebAdmin.Store
         }
         public UserInfo? UserInfo { get; set; }
         public IEnumerable<string> Roles => UserInfo?.Roles;
-        public string UserId => UserInfo?.UserId;
+        public string? UserId => UserInfo?.UserId;
         public string UserDisplayName => GetUserName();
 
         private string GetUserName()

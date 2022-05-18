@@ -38,7 +38,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
             };
         }
 
-        Task<QueryResult<PagingResult<User>>> Search(GeneralReq<User> req)
+        Task<IQueryCollectionResult<User>> Search(GeneralReq<User> req)
         {
             return UserSrv.GetUserListAsync(req);
         }

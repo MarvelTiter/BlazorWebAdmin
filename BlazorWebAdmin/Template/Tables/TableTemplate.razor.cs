@@ -58,8 +58,8 @@ namespace BlazorWebAdmin.Template.Tables
             loading = true;
             TableOptions.Query.Expression = ConditionExpression;
             var result = await TableOptions.DataLoader(TableOptions.Query);
-            TableOptions.Datas = result.Payload.Data;
-            TableOptions.Total = result.Payload.TotalRecord;
+            TableOptions.Datas = result.Payload;
+            TableOptions.Total = result.TotalRecord;
             loading = false;
         }
 
@@ -154,8 +154,8 @@ namespace BlazorWebAdmin.Template.Tables
         public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow) || typeof(TData) == typeof(IDictionary<string, object>);
         public bool AutoRefreshData { get; set; } = true;
-        public Func<TQuery, Task<QueryResult<PagingResult<TData>>>> DataLoader { get; set; }
-        public Func<TQuery, Task<QueryResult<IEnumerable<TData>>>> ExportDataLoader { get; set; }
+        public Func<TQuery, Task<IQueryCollectionResult<TData>>> DataLoader { get; set; }
+        public Func<TQuery, Task<IQueryCollectionResult<TData>>> ExportDataLoader { get; set; }
         public Func<Task<bool>> AddHandle { get; set; }
         public Func<RowData<TData>, Task> OnRowClick { get; set; }
         public bool Initialized => Columns != null && Columns.Count > 0;
