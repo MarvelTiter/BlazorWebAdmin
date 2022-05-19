@@ -59,6 +59,22 @@ namespace Project.Models
                 Message = msg,
             };
         }
+        public static IQueryResult<object> Success(string msg = "操作成功")
+        {
+            return new QueryResult<object>()
+            {
+                Success = true,
+                Message = msg,
+            };
+        }
+        public static IQueryResult<object> Fail(string msg = "操作失败")
+        {
+            return new QueryResult<object>()
+            {
+                Success = false,
+                Message = msg,
+            };
+        }
 
         public static IQueryResult<T> Return<T>(bool success)
 		{
