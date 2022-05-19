@@ -19,11 +19,11 @@ services.AddECharts();
 services.AddAntDesign();
 //Ìæ»»Ä¬ÈÏµÄÈÝÆ÷
 builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
-services.ConfigureDynamicProxy(config =>
-{
-    config.Interceptors.Add(new CustomFactory());
-    config.NonAspectPredicates.Add(m => m.CustomAttributes.All(a => a.AttributeType != typeof(LogInfoAttribute)));
-});
+//services.ConfigureDynamicProxy(config =>
+//{
+//    config.Interceptors.Add(new CustomFactory());
+//    config.NonAspectPredicates.Add(m => m.CustomAttributes.All(a => a.AttributeType != typeof(LogInfoAttribute)));
+//});
 
 services.AddScoped<LogAop>();
 services.AutoInjects();
