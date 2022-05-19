@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Project.Services
 {
-    public class UserService : IUserService
+    public partial class UserService : IUserService
     {
         private readonly IRepository repository;
 

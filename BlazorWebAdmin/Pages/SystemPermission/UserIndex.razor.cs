@@ -59,9 +59,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         }
         public async Task EditUser(User user)
         {
-            var options = new ModalOptions();
-            options.Title = "用户信息";
-            var n = await ModalSrv.OpenDialog<UserForm, User>(options, user);
+            var n = await DrawerSrv.OpenDrawer<UserForm, User>("用户信息", user);
         }
 
         public Task DeleteUser(User user)

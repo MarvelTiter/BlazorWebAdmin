@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Project.Services.interfaces
 {
-    public interface IUserService
+    public partial interface IUserService
     {
         Task<IQueryCollectionResult<User>> GetUserListAsync(GeneralReq<User> req);
         Task<User> InsertUserAsync(User user);
