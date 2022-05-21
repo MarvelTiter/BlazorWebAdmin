@@ -9,8 +9,6 @@ namespace BlazorWebAdmin.Template.Forms
     {
         protected TEntity Value;
         protected bool edit;
-        [Parameter]
-        public List<ColumnDefinition> Columns { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -30,12 +28,6 @@ namespace BlazorWebAdmin.Template.Forms
         {
             await (FeedbackRef as IOkCancelRef<TEntity>)!.OkAsync(Value);
             await base.OnFeedbackOkAsync(args);
-        }
-
-        async void OnDrawerClose()
-        {
-            DrawerRef<TEntity>? drawerRef = FeedbackRef as DrawerRef<TEntity>;
-            await drawerRef!.CloseAsync(Value);
         }
     }
 }
