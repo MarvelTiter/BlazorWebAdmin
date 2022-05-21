@@ -34,7 +34,7 @@ services.AddScoped<CounterStore>();
 services.AddScoped<UserStore>();
 services.AddScoped<EventDispatcher>();
 services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-
+services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
