@@ -3,6 +3,7 @@ using Project.Models;
 
 namespace Project.Services.interfaces
 {
+    [Aspectable]
     public interface ILoginService
     {
         [LogInfo(Action = "用户登录", Module = "登录模块")]

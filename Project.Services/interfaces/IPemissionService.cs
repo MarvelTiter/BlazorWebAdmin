@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Project.Services.interfaces
 {
+    [Aspectable]
     public interface IPermissionService
     {
         Task<IQueryCollectionResult<Power>> GetPowerListAsync(GeneralReq<Power> req);

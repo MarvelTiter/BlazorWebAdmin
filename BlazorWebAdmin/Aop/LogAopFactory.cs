@@ -2,7 +2,7 @@
 using AspectCore.DynamicProxy;
 namespace BlazorWebAdmin.Aop
 {   
-    public class CustomFactory : InterceptorFactory
+    public class LogAopFactory : InterceptorFactory
     {
         public override IInterceptor CreateInstance(IServiceProvider serviceProvider)
         {

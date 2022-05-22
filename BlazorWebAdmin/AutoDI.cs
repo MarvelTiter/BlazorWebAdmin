@@ -37,6 +37,7 @@ namespace BlazorWebAdmin
                 }
                 var interfaceType = interfaceTypes.FirstOrDefault(x => x.IsAssignableFrom(implementType));
                 var injectType = implementType.GetCustomAttribute<AutoInjectAttribute>();
+                if (implementType.GetCustomAttribute<AspectableAttribute>() != null) continue;
                 DIType dIType = DIType.Scope;
                 if (injectType != null)
                 {

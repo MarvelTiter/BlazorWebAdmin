@@ -1,4 +1,5 @@
 using AspectCore.Extensions.DependencyInjection;
+using Autofac.Extensions.DependencyInjection;
 using BlazorWebAdmin;
 using BlazorWebAdmin.Aop;
 using BlazorWebAdmin.Auth;
@@ -18,14 +19,14 @@ services.AddECharts();
 //
 services.AddAntDesign();
 //Ìæ»»Ä¬ÈÏµÄÈÝÆ÷
-builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
+//builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 //services.ConfigureDynamicProxy(config =>
 //{
-//    config.Interceptors.Add(new CustomFactory());
+//    config.Interceptors.Add(new LogAopFactory());
 //    config.NonAspectPredicates.Add(m => m.CustomAttributes.All(a => a.AttributeType != typeof(LogInfoAttribute)));
 //});
 
-services.AddScoped<LogAop>();
+//services.AddScoped<LogAop>();
 services.AutoInjects();
 services.AddScoped<StoreTest>();
 services.AddScoped<StateContainer>();

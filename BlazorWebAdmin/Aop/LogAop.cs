@@ -12,16 +12,21 @@ namespace BlazorWebAdmin.Aop
     {
         private readonly IRunLogService logService;
         private readonly UserStore store;
+        private readonly IHttpContextAccessor contextAccessor;
 
-        public LogAop(IRunLogService logService, UserStore store)
+        public LogAop(IRunLogService logService, UserStore store, IHttpContextAccessor contextAccessor)
         {
             this.logService = logService;
             this.store = store;
+            this.contextAccessor = contextAccessor;
             Console.WriteLine($"LogAop store {store.GetHashCode()}");
         }
         public override async Task Invoke(AspectContext context, AspectDelegate next)
         {
-            await context.Invoke(next);
+            await next(context);
+            await context.Complete();
+            Console.WriteLine($"LogAop contextAccessor {contextAccessor.HttpContext?.User.Identity?.Name}");
+            return;
             bool isAsync = context.IsAsync();
             var infoAttr = context.ServiceMethod.GetCustomAttribute<LogInfoAttribute>();
             if (infoAttr == null) return;
