@@ -2,11 +2,10 @@
 using Project.Services.interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components;
-using AntDesign;
-using BlazorWebAdmin.Auth;
 using Project.Services;
+using Project.ApplicationStore.Auth;
 
-namespace BlazorWebAdmin.Store
+namespace Project.ApplicationStore.Store
 {
     public class UserStore : StoreBase
     {
@@ -14,15 +13,13 @@ namespace BlazorWebAdmin.Store
         private readonly CustomAuthenticationStateProvider auth;
         private readonly RouterStore routerStore;
         private readonly NavigationManager navigationManager;
-        private readonly MessageService messageService;
 
-        public UserStore(ILoginService loginService, AuthenticationStateProvider authenticationStateProvider, RouterStore routerStore, NavigationManager navigationManager, MessageService messageService)
+        public UserStore(ILoginService loginService, AuthenticationStateProvider authenticationStateProvider, RouterStore routerStore, NavigationManager navigationManager)
         {
             this.loginService = loginService;
-            this.auth = (CustomAuthenticationStateProvider)authenticationStateProvider;
+            auth = (CustomAuthenticationStateProvider)authenticationStateProvider;
             this.routerStore = routerStore;
             this.navigationManager = navigationManager;
-            this.messageService = messageService;
         }
         public UserInfo? UserInfo { get; set; }
         public IEnumerable<string> Roles => UserInfo?.Roles;
@@ -40,7 +37,7 @@ namespace BlazorWebAdmin.Store
             await routerStore.InitRoutersAsync(userInfo);
         }
 
-        public async Task LoginAsync(LoginFormModel loginForm)
+        public async Task<string> LoginAsync(LoginFormModel loginForm)
         {
             var flag = await loginService.LoginAsync(loginForm.UserName, loginForm.Password);
             if (flag.Success)
@@ -49,10 +46,11 @@ namespace BlazorWebAdmin.Store
                 await auth.IdentifyUser(flag.Payload);
                 await routerStore.InitRoutersAsync(flag.Payload);
                 navigationManager.NavigateTo("/");
+                return "登录成功";
             }
             else
             {
-                await messageService.Error(flag.Message);
+                return flag.Message;
             }
         }
 

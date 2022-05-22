@@ -1,4 +1,4 @@
-﻿using Project.Common.Attributes;
+﻿using LogAopCodeGenerator;
 using Project.Models;
 using Project.Models.Permissions;
 using Project.Models.Request;

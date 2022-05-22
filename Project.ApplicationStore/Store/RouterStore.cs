@@ -5,7 +5,7 @@ using Project.Models.Permissions;
 using Project.Services;
 using Project.Services.interfaces;
 
-namespace BlazorWebAdmin.Store
+namespace Project.ApplicationStore.Store
 {
     public class RouterMeta
     {
@@ -53,7 +53,7 @@ namespace BlazorWebAdmin.Store
         public Task SetActive(string link)
         {
             if (link == "") link = "/";
-            TopLink.ForEach(a => a.SetActive(a.IsActive = link == (a.RouteLink)));
+            TopLink.ForEach(a => a.SetActive(a.IsActive = link == a.RouteLink));
             NotifyChanged();
             return Task.CompletedTask;
         }
@@ -63,7 +63,7 @@ namespace BlazorWebAdmin.Store
 
             foreach (var item in groups)
             {
-                if (!string.IsNullOrEmpty(item.RouteLink) && link == (item.RouteLink))
+                if (!string.IsNullOrEmpty(item.RouteLink) && link == item.RouteLink)
                 {
                     return item;
                 }
@@ -88,7 +88,7 @@ namespace BlazorWebAdmin.Store
             //}
             if (link == "") link = "/";
             var route = FindRecursive(Routers, link);
-            if (!TopLink.Any(x => link == (x.RouteLink)) && route != null)
+            if (!TopLink.Any(x => link == x.RouteLink) && route != null)
             {
                 TopLink.Add(new TagRoute
                 {

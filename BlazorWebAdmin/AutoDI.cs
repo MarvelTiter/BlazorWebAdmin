@@ -1,4 +1,5 @@
-﻿using Project.Common.Attributes;
+﻿using LogAopCodeGenerator;
+using Project.Common.Attributes;
 using Project.Repositories;
 using Project.Repositories.interfaces;
 using System.Reflection;

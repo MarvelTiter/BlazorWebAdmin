@@ -41,8 +41,8 @@ namespace LogAopCodeGenerator
             if (!(context.SyntaxReceiver is SyntaxReceiver receiver))
                 return;
 
-            var logInfoAttr = context.Compilation.GetTypeByMetadataName("Project.Common.Attributes.LogInfoAttribute");
-            var aspectableAttr = context.Compilation.GetTypeByMetadataName("Project.Common.Attributes.AspectableAttribute");
+            var logInfoAttr = context.Compilation.GetTypeByMetadataName("LogAopCodeGenerator.LogInfoAttribute");
+            var aspectableAttr = context.Compilation.GetTypeByMetadataName("LogAopCodeGenerator.AspectableAttribute");
 
             foreach (var node in receiver.SyntaxNodes)
             {

@@ -1,6 +1,9 @@
 ﻿@inherits RootLayout
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using Project.Services
 @inject UserStore store
+@inject ProtectedSessionStorage SessionStorage
+
 <CascadingValue Value="this">
 	<AuthorizeView>
 		<Authorized>

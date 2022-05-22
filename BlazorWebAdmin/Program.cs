@@ -1,10 +1,8 @@
-using AspectCore.Extensions.DependencyInjection;
-using Autofac.Extensions.DependencyInjection;
 using BlazorWebAdmin;
-using BlazorWebAdmin.Aop;
-using BlazorWebAdmin.Auth;
-using BlazorWebAdmin.Store;
 using Microsoft.AspNetCore.Components.Authorization;
+using Project.ApplicationStore;
+using Project.ApplicationStore.Auth;
+using Project.ApplicationStore.Store;
 using Project.Common;
 using Project.Common.Attributes;
 
@@ -18,17 +16,9 @@ services.AddECharts();
 
 //
 services.AddAntDesign();
-//Ìæ»»Ä¬ÈÏµÄÈÝÆ÷
-//builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-//services.ConfigureDynamicProxy(config =>
-//{
-//    config.Interceptors.Add(new LogAopFactory());
-//    config.NonAspectPredicates.Add(m => m.CustomAttributes.All(a => a.AttributeType != typeof(LogInfoAttribute)));
-//});
 
-//services.AddScoped<LogAop>();
+services.AddSessionStorageServices();
 services.AutoInjects();
-services.AddScoped<StoreTest>();
 services.AddScoped<StateContainer>();
 services.AddScoped<RouterStore>();
 services.AddScoped<CounterStore>();

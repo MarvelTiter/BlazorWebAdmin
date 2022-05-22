@@ -1,28 +1,33 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.JSInterop;
 using Project.Services;
 using Project.Services.interfaces;
 using System.Security.Claims;
 
-namespace BlazorWebAdmin.Auth
-{   
+namespace Project.ApplicationStore.Auth
+{
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private readonly ProtectedSessionStorage sessionStorage;
+        private readonly ISessionStorageService storageService;
         private readonly ILoginService loginService;
-
-        public CustomAuthenticationStateProvider(ProtectedSessionStorage sessionStorage, ILoginService loginService)
+        
+        public CustomAuthenticationStateProvider(ISessionStorageService storageService, ILoginService loginService)
         {
-            this.sessionStorage = sessionStorage;
+            this.storageService = storageService;
             this.loginService = loginService;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var info = await sessionStorage.GetAsync<UserInfo>("UID");
+            string? json = await storageService.GetItemAsync("UID");
+            return await UpdateState(Deserialize(json));
+        }
+
+        async Task<AuthenticationState> UpdateState(UserInfo? info = null)
+        {
             ClaimsIdentity identity;
-            if (info.Success && info.Value != null && await loginService.CheckUser(info.Value!))
+            if (info != null && await loginService.CheckUser(info!))
             {
-                identity = Build(info.Value!);
+                identity = Build(info!);
             }
             else
             {
@@ -35,14 +40,14 @@ namespace BlazorWebAdmin.Auth
 
         public async Task IdentifyUser(UserInfo info)
         {
-            await sessionStorage.SetAsync("UID", info);
-            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            await storageService.SetItemAsync("UID", System.Text.Json.JsonSerializer.Serialize(info));
+            NotifyAuthenticationStateChanged(UpdateState(info));
         }
 
         public async Task ClearState()
         {
-            await sessionStorage.SetAsync("UID", null!);
-            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            await storageService.SetItemAsync("UID", null);
+            NotifyAuthenticationStateChanged(UpdateState());
         }
 
         private static ClaimsIdentity Build(UserInfo info)
@@ -57,6 +62,12 @@ namespace BlazorWebAdmin.Auth
                 claims.Add(new Claim(ClaimTypes.Role, r));
             }
             return new ClaimsIdentity(claims, "authentication");
-        }        
+        }
+
+        private UserInfo Deserialize(string json)
+        {
+            if (string.IsNullOrEmpty(json)) return null;
+            return System.Text.Json.JsonSerializer.Deserialize<UserInfo>(json);
+        }
     }
 }

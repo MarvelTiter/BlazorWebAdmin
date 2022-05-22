@@ -1,6 +1,7 @@
-﻿using BlazorWebAdmin.Store;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Project.ApplicationStore;
+using Project.ApplicationStore.Store;
 using Project.Common;
 
 namespace BlazorWebAdmin.Shared.LayoutComponents

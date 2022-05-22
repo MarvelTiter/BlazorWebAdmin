@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorWebAdmin.Store
+namespace Project.ApplicationStore.Store
 {
     public class AppStore : StoreBase
     {

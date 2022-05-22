@@ -1,12 +1,11 @@
 ﻿using AntDesign;
-using BlazorWebAdmin.Aop;
 using BlazorWebAdmin.Shared.LayoutComponents;
-using BlazorWebAdmin.Store;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
+using Project.ApplicationStore.Store;
 using Project.Common;
 using Project.Services;
 
@@ -24,9 +23,6 @@ namespace BlazorWebAdmin.Shared
         public MessageService MsgSrv { get; set; }
         [Inject]
         public EventDispatcher Dispatcher { get; set; }
-        [Inject]
-        public StoreTest storeTest { get; set; }
-        public ProtectedSessionStorage SessionStorage { get; set; }
         public event Action<MouseEventArgs> BodyClickEvent;
 
         protected override async Task OnInitializedAsync()
@@ -36,7 +32,6 @@ namespace BlazorWebAdmin.Shared
             {
                 NavigationManager.LocationChanged += NavigationManager_LocationChanged;
             }
-			Console.WriteLine($"Root store {UserStore.GetHashCode()}");
         }
 
         const string LOCATION_MAP = "[http://|https://](.+)(?=/)(.+)";

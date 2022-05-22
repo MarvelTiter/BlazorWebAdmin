@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorWebAdmin.Store
+namespace Project.ApplicationStore.Store
 {
     public class StateContainer
     {
@@ -12,7 +12,7 @@ namespace BlazorWebAdmin.Store
         public T Get<OwnerType, T>(string key = "key") where T : class, new()
         {
             var fullKey = $"{typeof(OwnerType).FullName}_{typeof(T).FullName}_{key}";
-            if (!_state.TryGetValue(fullKey, out var value))            
+            if (!_state.TryGetValue(fullKey, out var value))
             {
                 value = new T();
                 _state.Add(fullKey, value);
