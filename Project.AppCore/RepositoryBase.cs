@@ -1,11 +1,11 @@
 ﻿using DExpSql;
 using MDbContext;
+using Project.AppCore.Repositories;
 using Project.Common.Attributes;
-using Project.Repositories.interfaces;
 using System.Data;
 using System.Linq.Expressions;
 
-namespace Project.Repositories
+namespace Project.AppCore
 {
     [IgnoreAutoInject]
     public class RepositoryBase<T> : LightDb, IRepositoryBase<T>

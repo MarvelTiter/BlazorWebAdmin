@@ -1,4 +1,4 @@
-﻿namespace Project.ApplicationStore.Store
+﻿namespace Project.AppCore.Store
 {
     public abstract class StoreBase
     {

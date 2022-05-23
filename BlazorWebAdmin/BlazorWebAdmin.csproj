@@ -29,11 +29,9 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Blazor.ECharts\Blazor.ECharts.csproj" />
 		<ProjectReference Include="..\LogAopCodeGenerator\LogAopCodeGenerator.csproj" />
-		<ProjectReference Include="..\Project.ApplicationStore\Project.ApplicationStore.csproj" />
+		<ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />
 		<ProjectReference Include="..\Project.Common\Project.Common.csproj" />
-		<ProjectReference Include="..\Project.Core\Project.Core.csproj" />
 		<ProjectReference Include="..\Project.Models\Project.Models.csproj" />
-		<ProjectReference Include="..\Project.Repositories\Project.Repositories.csproj" />
 		<ProjectReference Include="..\Project.Services\Project.Services.csproj" />
 	</ItemGroup>
 

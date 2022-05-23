@@ -1,9 +1,9 @@
 ﻿using BlazorWebAdmin.Template.Tables;
 using Microsoft.AspNetCore.Components;
+using Project.AppCore.Services;
 using Project.Models;
 using Project.Models.Entities;
 using Project.Models.Request;
-using Project.Services.interfaces;
 
 namespace BlazorWebAdmin.Pages.SystemPermission
 {

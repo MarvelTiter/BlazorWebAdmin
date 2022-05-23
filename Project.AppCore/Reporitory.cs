@@ -1,8 +1,8 @@
 ﻿using DExpSql;
 using MDbContext;
-using Project.Repositories.interfaces;
+using Project.AppCore.Repositories;
 
-namespace Project.Repositories
+namespace Project.AppCore
 {
     public class Reporitory : LightDb, IRepository
     {

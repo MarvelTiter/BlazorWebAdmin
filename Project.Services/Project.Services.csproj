@@ -8,12 +8,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LogAopCodeGenerator\LogAopCodeGenerator.csproj" />
+    <ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />
     <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
-    <ProjectReference Include="..\Project.Repositories\Project.Repositories.csproj" />
   </ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\LogAopCodeGenerator\LogAopCodeGenerator.csproj" OutputItemType="Analyzer"
-				   ReferenceOutputAssembly="false"/>
+		<ProjectReference Include="..\LogAopCodeGenerator\LogAopCodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 </Project>

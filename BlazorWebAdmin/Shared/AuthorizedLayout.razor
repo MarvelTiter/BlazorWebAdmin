@@ -1,9 +1,9 @@
 ﻿@inherits RootLayout
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
-@using Project.Services
+@using Project.AppCore.Auth
+@using Project.Models.Permissions
 @inject UserStore store
-@inject ProtectedSessionStorage SessionStorage
-
+@inject RouterStore Router
+@inject AuthenticationStateProvider Auth
 <CascadingValue Value="this">
 	<AuthorizeView>
 		<Authorized>
@@ -38,7 +38,9 @@
 						ui.UserId = state.User.Identity!.Name!;
 						ui.UserName = state.User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.GivenName).Value;
 						ui.Roles = roles;
-						await UserStore.Init(ui);
+						UserStore.SetUser(ui);
+						await ((CustomAuthenticationStateProvider)Auth).IdentifyUser(ui);
+						await Router.InitRoutersAsync(ui);
 						NavigationManager.NavigateTo(url);
 						await RouterStore.TryAdd(url);
 					}

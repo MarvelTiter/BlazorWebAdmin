@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.Common.Attributes;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +16,12 @@ namespace Project.Common
             return new BooleanArgs { IsTrue = b };
         }
     }
+    [AutoInject]
     public class EventDispatcher
     {
         ConcurrentDictionary<Type, Dictionary<string, Func<object, Task>>> allActions = new ConcurrentDictionary<Type, Dictionary<string, Func<object, Task>>>();
         ConcurrentDictionary<string, Func<object, Task>> actions = new ConcurrentDictionary<string, Func<object, Task>>();
-        
+
         public void Register<T>(string key, Func<object, Task> action)
         {
             Register(typeof(T), key, action);

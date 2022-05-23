@@ -1,13 +1,8 @@
-﻿using Project.Models;
+﻿using Project.AppCore.Repositories;
+using Project.AppCore.Services;
+using Project.Models;
 using Project.Models.Entities;
 using Project.Models.Request;
-using Project.Repositories.interfaces;
-using Project.Services.interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Services
 {

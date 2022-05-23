@@ -4,10 +4,10 @@ using BlazorWebAdmin.Template.Tables;
 using BlazorWebAdmin.Template.Tables.Setting;
 using BlazorWebAdmin.Utils;
 using Microsoft.AspNetCore.Components;
+using Project.AppCore.Services;
 using Project.Models;
 using Project.Models.Permissions;
 using Project.Models.Request;
-using Project.Services.interfaces;
 
 namespace BlazorWebAdmin.Pages.SystemPermission
 {

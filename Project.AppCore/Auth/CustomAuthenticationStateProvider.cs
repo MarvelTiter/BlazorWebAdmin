@@ -1,16 +1,18 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
-using Project.Services;
-using Project.Services.interfaces;
+using Project.AppCore.Services;
+using Project.Common.Attributes;
+using Project.Models.Permissions;
 using System.Security.Claims;
 
-namespace Project.ApplicationStore.Auth
+namespace Project.AppCore.Auth
 {
+    [IgnoreAutoInject]
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly ISessionStorageService storageService;
         private readonly ILoginService loginService;
-        
+
         public CustomAuthenticationStateProvider(ISessionStorageService storageService, ILoginService loginService)
         {
             this.storageService = storageService;

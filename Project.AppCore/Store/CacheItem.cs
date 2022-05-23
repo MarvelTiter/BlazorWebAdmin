@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace Project.ApplicationStore.Store
+namespace Project.AppCore.Store
 {
     public class CacheItem
     {

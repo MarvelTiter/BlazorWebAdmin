@@ -1,10 +1,8 @@
 using BlazorWebAdmin;
 using Microsoft.AspNetCore.Components.Authorization;
-using Project.ApplicationStore;
-using Project.ApplicationStore.Auth;
-using Project.ApplicationStore.Store;
+using Project.AppCore.Auth;
+using Project.AppCore.Store;
 using Project.Common;
-using Project.Common.Attributes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,11 +17,11 @@ services.AddAntDesign();
 
 services.AddSessionStorageServices();
 services.AutoInjects();
-services.AddScoped<StateContainer>();
-services.AddScoped<RouterStore>();
-services.AddScoped<CounterStore>();
-services.AddScoped<UserStore>();
-services.AddScoped<EventDispatcher>();
+//services.AddScoped<StateContainer>();
+//services.AddScoped<RouterStore>();
+//services.AddScoped<CounterStore>();
+//services.AddScoped<UserStore>();
+//services.AddScoped<EventDispatcher>();
 services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 services.AddHttpContextAccessor();
 var app = builder.Build();

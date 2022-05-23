@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Repositories
+namespace Project.AppCore
 {
     [IgnoreAutoInject]
     public class LightDb
@@ -15,7 +15,7 @@ namespace Project.Repositories
         public static readonly string ConnectString = $"DataSource={DbPath}";
         private static string DbPath => Path.GetFullPath("../Demo.db");
         DbContext _db;
-        
+
         public DbContext Db
         {
             get
@@ -29,7 +29,7 @@ namespace Project.Repositories
         }
 
         protected DbContext CreateDbContext()
-        {            
+        {
             DbContext.Init(DbBaseType.Sqlite);
             SqliteConnection conn = new SqliteConnection(ConnectString);
             return new DbContext(conn);

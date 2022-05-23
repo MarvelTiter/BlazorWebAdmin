@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Project.AppCore.Services;
 using Project.Common;
-using Project.Models;
 using Project.Models.Permissions;
-using Project.Services;
-using Project.Services.interfaces;
 
-namespace Project.ApplicationStore.Store
+namespace Project.AppCore.Store
 {
     public class RouterMeta
     {

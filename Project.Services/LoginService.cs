@@ -1,23 +1,9 @@
-﻿using Project.Models;
-using Project.Services.interfaces;
+﻿using Project.AppCore.Services;
+using Project.Models;
+using Project.Models.Permissions;
 
 namespace Project.Services
 {
-    public class UserInfo
-    {
-        public string UserId { get; set; }
-        public string UserName { get; set; }
-        public object? Payload { get; set; }
-        public IEnumerable<string> Roles { get; set; }
-        public DateTime CreatedTime { get; set; }
-        public UserInfo()
-        {
-            UserId = string.Empty;
-            Payload = null;
-            Roles = Enumerable.Empty<string>();
-            CreatedTime = DateTime.Now;
-        }
-    }
     public class LoginService : ILoginService
     {
         public Task<bool> CheckUser(UserInfo info)
@@ -32,7 +18,7 @@ namespace Project.Services
         }
 
         public Task<bool> LogoutAsync()
-        {
+        {            
             throw new NotImplementedException();
         }
     }

@@ -1,6 +1,7 @@
 ﻿@page "/counter/index"
 @using BlazorWebAdmin.Template.Tables
 @using System.Data
+@using Project.Models.Permissions
 @using Project.Models.Request
 @inject CounterStore store
 @inject MessageService MessageSrv
@@ -40,6 +41,6 @@
 
 	void ThrowException()
 	{
-		userStore.UserInfo = new Project.Services.UserInfo() { UserId = "hh123", UserName = "？？？" };
+		userStore.UserInfo = new UserInfo() { UserId = "hh123", UserName = "？？？" };
 	}	
 }

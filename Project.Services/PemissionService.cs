@@ -1,16 +1,10 @@
 ﻿using MDbContext;
 using MDbContext.Context.Extension;
+using Project.AppCore.Repositories;
+using Project.AppCore.Services;
 using Project.Models;
 using Project.Models.Permissions;
 using Project.Models.Request;
-using Project.Repositories.interfaces;
-using Project.Services.interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Services
 {

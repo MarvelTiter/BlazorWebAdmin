@@ -15,12 +15,13 @@ namespace LogAopCodeGenerator
     {
         internal class SyntaxReceiver : ISyntaxReceiver
         {
-            internal List<ClassDeclarationSyntax> SyntaxNodes { get; } = new List<ClassDeclarationSyntax>();
+            internal List<ClassDeclarationSyntax> ClassSyntaxNodes { get; } = new List<ClassDeclarationSyntax>();
+            //internal List<InterfaceDeclarationSyntax> InterfaceSyntaxNodes { get; } = new List<InterfaceDeclarationSyntax>();
             public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
             {
-                if (syntaxNode is ClassDeclarationSyntax classDeclarationSyntax)
+                if (syntaxNode is ClassDeclarationSyntax @class)
                 {
-                    SyntaxNodes.Add(classDeclarationSyntax);
+                    ClassSyntaxNodes.Add(@class);
                 }
             }
 
@@ -44,80 +45,119 @@ namespace LogAopCodeGenerator
             var logInfoAttr = context.Compilation.GetTypeByMetadataName("LogAopCodeGenerator.LogInfoAttribute");
             var aspectableAttr = context.Compilation.GetTypeByMetadataName("LogAopCodeGenerator.AspectableAttribute");
 
-            foreach (var node in receiver.SyntaxNodes)
+            foreach (var node in receiver.ClassSyntaxNodes)
             {
-                AopImplClass(context, context.Compilation, node, logInfoAttr, aspectableAttr);
+                AopImplClass(context, receiver, node, logInfoAttr, aspectableAttr);
             }
         }
 
-        private void AopImplClass(GeneratorExecutionContext context, Compilation compilation, ClassDeclarationSyntax classDeclaration, INamedTypeSymbol logInfo, INamedTypeSymbol aspectable)
+        private void AopImplClass(GeneratorExecutionContext context, SyntaxReceiver receiver, ClassDeclarationSyntax classDeclaration, INamedTypeSymbol logInfo, INamedTypeSymbol aspectable)
         {
-            //获得类的类型符号,如果无法获得，就跳出
+            // 获得类的类型描述符号,如果无法获得，就跳出
+            var compilation = context.Compilation;
             if (compilation.GetSemanticModel(classDeclaration.SyntaxTree).GetDeclaredSymbol(classDeclaration) is not INamedTypeSymbol classSymbol) return;
-            var interfaces = classSymbol.AllInterfaces;
-            //类的特性
+
+            // 所有特性
             ImmutableArray<AttributeData> allAttributes = classSymbol.GetAttributes()
                 .Concat(classSymbol.AllInterfaces.SelectMany(i => i.GetAttributes()))
                 .ToImmutableArray();
 
             if (allAttributes.Any(x => x.AttributeClass.Equals(aspectable, SymbolEqualityComparer.Default)))
             {
-                BuildProxyClass(context, compilation, classDeclaration, classSymbol, interfaces, logInfo, allAttributes);
+                BuildProxyClass(context, receiver, classDeclaration, classSymbol, logInfo, aspectable, allAttributes);
             }
         }
-
-        private void BuildProxyClass(GeneratorExecutionContext context, Compilation compilation, ClassDeclarationSyntax classDeclaration, INamedTypeSymbol implType, ImmutableArray<INamedTypeSymbol> interfeceTypes, INamedTypeSymbol logInfo, ImmutableArray<AttributeData> attributes)
+        /// <summary>
+        /// 创建Class
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="compilation"></param>
+        /// <param name="classDeclaration"></param>
+        /// <param name="implType"></param>
+        /// <param name="logInfo"></param>
+        /// <param name="attributes"></param>
+        private void BuildProxyClass(GeneratorExecutionContext context, SyntaxReceiver reciver, ClassDeclarationSyntax classDeclaration, INamedTypeSymbol implType, INamedTypeSymbol logInfo, INamedTypeSymbol aspectable, ImmutableArray<AttributeData> attributes)
         {
             List<IMethodSymbol> allMethods = implType.GetMembers().Where(x => x.Kind == SymbolKind.Method)
                           .Cast<IMethodSymbol>()
                           .ToList();
-            var np = classDeclaration.Parent as NamespaceDeclarationSyntax;
-            var top = np.Parent as CompilationUnitSyntax;
-            
-            string proxyClassTemplate = $@"
-{string.Join("",top?.Usings.Select(u=>u.ToFullString()))}
-namespace {np?.Name}
+            var usings = classDeclaration.BuildAllUsings();
+            var npLabel = implType.ContainingNamespace.ToDisplayString();
+            var interfaceNames = classDeclaration.GetInterfaceNames();
+            var aopAttr = attributes.FirstOrDefault(a => a.AttributeClass.Equals(aspectable, SymbolEqualityComparer.Default));
+            string ctors = BuildConstructor(implType, aopAttr, out var aopInstanceName);
+            string body = BuildMethodProxy(context.Compilation, classDeclaration, aopInstanceName);
+            string proxyClassTemplate = BuildClassTemplate(usings, npLabel, implType.Name, interfaceNames, ctors, body);
+            context.AddSource($"{implType.Name}Proxy.cs", proxyClassTemplate);
+        }
+
+        private string BuildClassTemplate(string[] usings, string np, string className, string[] interfacesString, params string[] bodys)
+        {
+            return $@"
+{string.Join("", usings)}
+using LogAopCodeGenerator;
+namespace {np}
 {{
-    public class {implType.Name}Proxy: {string.Join(",", interfeceTypes.Select(i => i.ToDisplayString()))}
+    public class {className}Proxy: {string.Join(",", interfacesString)}
     {{            
-        {BuildConstructor(implType.Constructors.FirstOrDefault())}        
-        {BuildMethodProxy(compilation, classDeclaration, allMethods)}        
+         {string.Join("", bodys)}     
     }}
 }}
 ";
-            context.AddSource($"{implType.Name}Proxy.cs", proxyClassTemplate);
         }
-        private string BuildConstructor(IMethodSymbol ctor)
+
+        /// <summary>
+        /// 构建构造函数
+        /// </summary>
+        /// <param name="ctor"></param>
+        /// <returns></returns>
+        private string BuildConstructor(INamedTypeSymbol implType, AttributeData aopAttr, out string aopField)
         {
-            if (ctor == null) return @"
-        // 没有构造函数
-";
+            var ctor = implType.Constructors.FirstOrDefault();
             StringBuilder builder = new StringBuilder();
             List<string> assigns = new List<string>();
-            // 赋值与本地字段声明
-            foreach (var p in ctor.Parameters)
+            var handleType = aopAttr.NamedArguments.FirstOrDefault(x => x.Key == nameof(AspectableAttribute.AspectHandleType)).Value.Value as ITypeSymbol;
+            aopField = handleType.Name.ToLower();
+
+            var fields = new List<MemberDefinition>();
+            var aop = new MemberDefinition();
+            aop.Name = aopField;
+            aop.TypeName = handleType.ToDisplayString();
+            fields.Add(aop);
+
+            foreach (var p in ctor?.Parameters)
             {
-                builder.Append($@"
-        private {p.Type.ToDisplayString()} {p.Name};
-");
-                assigns.Add($@"
-            this.{p.Name} = {p.Name};
-");
+                var pd = new MemberDefinition() { Name = p.Name, TypeName = p.Type.ToDisplayString() };
+                fields.Add(pd);
             }
-            // 构造函数
-            builder.Append($@"
-        public {ctor.GetMethodName()}Proxy({string.Join(",", ctor.Parameters.Select(p => $"{p.Type.Name} {p.Name}"))})
-        {{
-            {string.Join("", assigns)}
-        }}
-");
-            return builder.ToString();
+            return BuildConstructorTemplate(implType.Name, implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray());
         }
-        private string BuildMethodProxy(Compilation compilation, ClassDeclarationSyntax classDeclaration, List<IMethodSymbol> methods)
+
+        private string BuildConstructorTemplate(string className, string interfaceName, MemberDefinition[] fields)
+        {
+            return $@"
+        {string.Join("", fields.Select(f => $"private {f.TypeName} {f.Name};\n"))}
+        private AspectContext[] contexts;
+        public {className}Proxy ({string.Join(",", fields.Select(f => $"{f.TypeName} {f.Name}"))})
+        {{
+            {string.Join("", fields.Select(f => $"this.{f.Name} = {f.Name};\n"))}
+            contexts = AspectContext.InitTypesContext(typeof({className}),typeof({interfaceName}));
+        }}
+";
+        }
+
+        /// <summary>
+        /// 构建代理函数
+        /// </summary>
+        /// <param name="compilation"></param>
+        /// <param name="classDeclaration"></param>
+        /// <param name="methods"></param>
+        /// <returns></returns>
+        private string BuildMethodProxy(Compilation compilation, ClassDeclarationSyntax classDeclaration, string aopInstanceField)
         {
             StringBuilder builder = new StringBuilder();
             var cn = classDeclaration.GetCurrentNode(classDeclaration);
-            var memberNodes = classDeclaration.Members.Select(m=>m as MethodDeclarationSyntax);
+            var memberNodes = classDeclaration.Members.Select(m => m as MethodDeclarationSyntax);
             foreach (var memberNode in memberNodes)
             {
                 if (memberNode == null) continue;
@@ -125,24 +165,47 @@ namespace {np?.Name}
                 if (method.MethodKind == MethodKind.Constructor) continue;
 
                 var parameters = method.Parameters;
-                var plist = parameters.Select(p => $"{(p.IsParams ? "params " : "")}{p.Type.ToDisplayString()} {p.Name}").ToList();
-                var asyncKeyWord = method.IsAsync ? " async " : " ";
-                var returnString = method.ReturnsVoid ? "void" : method.ReturnType.ToDisplayString();
-                builder.Append($@"
-        private{asyncKeyWord}{returnString} internal{method.Name}({string.Join(",", plist)})        
-{memberNode.Body.ToFullString()}
-        
-        public {(method.ReturnsVoid ? "void" : method.ReturnType.ToDisplayString())} {method.Name}({string.Join(",", plist)})
-        {{
-            Console.WriteLine(""from {method.Name} proxy"");
-            {(method.ReturnsVoid ? "" : "return ")}internal{method.Name}({string.Join(",", parameters.Select(p => p.Name))});
-        }}
-");
+                var md = new MemberDefinition();
+                md.Name = method.Name;
+                md.IsAsync = method.IsAsync;
+                md.IsReturnVoid = method.ReturnsVoid;
+                md.ReturnTypeString = method.ReturnType.ToDisplayString();
+                md.Body = memberNode.Body.ToFullString();
+                builder.Append(BuildMethodTemplate(md, parameters, aopInstanceField));
             }
             return builder.ToString();
         }
 
+        private string BuildMethodTemplate(MemberDefinition member, ImmutableArray<IParameterSymbol> parameters, string aopInstanceField)
+        {
+            var plist = parameters.Select(p => $"{(p.IsParams ? "params " : "")}{p.Type.ToDisplayString()} {p.Name}").ToList();
+            return $@"
+        private{member.AsyncKeyToken}{member.ReturnString} internal{member.Name}({string.Join(",", plist)})
+{member.Body}
 
+        public{member.AsyncKeyToken}{member.ReturnString} {member.Name}({string.Join(",", plist)})
+        {{
+            // invoke before
+            var context = contexts.First(x => x.ImplementMethod.Name == ""{member.Name}"");    
+            context.HasReturnValue = {(!member.IsReturnVoid).ToString().ToLower()};
+            {member.LocalVar}
+            if ({member.AwaitKeyToken}{aopInstanceField}.Before(context){member.GetTaskValue})
+            {{
+                {member.ReturnValueRecive}{member.AwaitKeyToken}internal{member.Name}({string.Join(",", parameters.Select(p => p.Name))}){member.InternalMethodResult};
+                {member.ReturnValAsign}
+                // invoke after
+                context.Exected = true;
+                {member.AwaitKeyToken}{aopInstanceField}.After(context){member.WaitTask};
+            }}
+            else
+            {{
+                context.Exected = false;
+                {member.AwaitKeyToken}{aopInstanceField}.After(context){member.WaitTask};
+            }}
+            {member.ReturnLabel}
+        }}
+";
+        }
     }
     internal static class Ex
     {
@@ -157,6 +220,48 @@ namespace {np?.Name}
                 }
             }
             throw new Exception("找不到方法名");
+        }
+
+        public static string[] GetInterfaceNames(this ClassDeclarationSyntax @class)
+        {
+            var list = @class.BaseList?.Types;
+            if (list == null) Array.Empty<string>();
+            List<string> ret = new List<string>();
+            foreach (var t in list)
+            {
+                if (t is SimpleBaseTypeSyntax @syntax)
+                {
+                    var ty = @syntax.Type as IdentifierNameSyntax;
+                    if (ty != null)
+                    {
+                        ret.Add(ty.Identifier.ValueText);
+                    }
+                }
+            }
+            return ret.ToArray();
+        }
+
+        public static string[] BuildAllUsings(this ClassDeclarationSyntax @class, params InterfaceDeclarationSyntax[] interfaceDels)
+        {
+            Dictionary<string, int> nps = new Dictionary<string, int>();
+            CompilationUnitSyntax top = @class.Parent?.Parent as CompilationUnitSyntax;
+            AddNamespace(nps, top?.Usings.Select(n => new KeyValuePair<string, int>(n.ToFullString(), 0)));
+            foreach (var item in interfaceDels)
+            {
+                CompilationUnitSyntax unit = item.Parent?.Parent as CompilationUnitSyntax;
+                if (unit is null) continue;
+                var i1 = unit.Usings.Select(n => new KeyValuePair<string, int>(n.ToFullString(), 0));
+                AddNamespace(nps, i1);
+            }
+            return nps.Keys.ToArray();
+
+            void AddNamespace(Dictionary<string, int> dic, IEnumerable<KeyValuePair<string, int>> values)
+            {
+                foreach (var item in values)
+                {
+                    dic[item.Key] = item.Value;
+                }
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 ﻿using LogAopCodeGenerator;
+using Project.AppCore;
+using Project.AppCore.Repositories;
 using Project.Common.Attributes;
-using Project.Repositories;
-using Project.Repositories.interfaces;
 using System.Reflection;
 
 namespace BlazorWebAdmin
@@ -11,8 +11,7 @@ namespace BlazorWebAdmin
         public static IServiceCollection AutoInjects(this IServiceCollection self)
         {
             var all = LoadAllAssembly();
-            var allTypes = LoadTypeFromAssembly(all.ToArray())
-                .Where(t => t.FullName!.StartsWith("Project"));
+            var allTypes = LoadTypeFromAssembly(all.ToArray());
 
             //class的程序集
             var implementTypes = allTypes.Where(x => x.IsClass).ToArray();
@@ -105,8 +104,10 @@ namespace BlazorWebAdmin
             foreach (var asm in assembly)
             {
                 var full = asm.GetCustomAttributesData().Any(cd => cd.AttributeType == typeof(AutoInjectAttribute));
-                foreach (var type in asm.GetTypes())
+                var types = asm.GetExportedTypes();
+                foreach (var type in types)
                 {
+                    if (!type.FullName!.StartsWith("Project.")) continue;
                     if (full && type.GetCustomAttribute<IgnoreAutoInjectAttribute>(false) == null)
                     {
                         yield return type;
@@ -128,7 +129,7 @@ namespace BlazorWebAdmin
             {
                 var filename = Path.GetFileName(file).Replace("\\", "/");
                 var fileext = Path.GetExtension(file);
-                if ((filename.StartsWith("BlazorWebAdmin") || filename.StartsWith("Project")) && fileext == ".dll")
+                if (filename.StartsWith("Project") && fileext == ".dll")
                 {
                     var asm = Assembly.LoadFrom(file);
                     if (asm != null)

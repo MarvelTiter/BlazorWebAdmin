@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.ApplicationStore.Store
+namespace Project.AppCore.Store
 {
     public class AppStore : StoreBase
     {

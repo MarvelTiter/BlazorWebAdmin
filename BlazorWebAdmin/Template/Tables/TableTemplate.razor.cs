@@ -6,7 +6,7 @@ using BlazorWebAdmin.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using MiniExcelLibs;
-using Project.ApplicationStore.Store;
+using Project.AppCore.Store;
 using Project.Models;
 using Project.Models.Request;
 using System.Data;
