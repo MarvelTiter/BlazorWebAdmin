@@ -4,7 +4,9 @@ namespace LogAopCodeGenerator
 {
     public struct FieldDefinition
     {
-
+        public string AccessLevel { get; set; }// public, private, etc..
+        public string TypeName { get; set; }
+        public string Name { get; set; }
     }
     public struct MemberDefinition
     {
