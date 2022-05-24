@@ -44,14 +44,13 @@
 	{
 		await base.OnParametersSetAsync();
 		var userRoles = await PermissionSrv.GetUserRolesAsync(Current.UserId);
-		if (userRoles?.TotalRecord > 0)
-			roleDefs = roles.Select(r => new RoleDef(r, userRoles.Payload.Any(ur => ur.RoleId == r.RoleId))).ToList();
+		roleDefs = roles.Select(r => new RoleDef(r, userRoles?.Payload?.Any(ur => ur.RoleId == r.RoleId) ?? false)).ToList();
 	}
 	async Task SaveUserRole()
 	{
 		var selectedRoles = roleDefs.Where(rd => rd.Check).Select(rd => rd.Role.RoleId).ToArray();
 		var flag = await PermissionSrv.SaveUserRole(Current.UserId, selectedRoles);
-		if (flag.Payload)
+		if (flag.Success)
 		{
 			_ = MessageSrv.Success("保存成功");
 		}
