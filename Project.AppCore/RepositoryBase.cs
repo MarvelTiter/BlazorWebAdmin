@@ -68,7 +68,7 @@ namespace Project.AppCore
 
         public virtual Task<int> UpdateAsync(Expression<Func<object>> updateExpression, Expression<Func<T, bool>>? whereExpression)
         {
-            Db.DbSet.Update(updateExpression).Where(whereExpression);
+            Db.DbSet.Update<T>(updateExpression).Where(whereExpression);
             return Db.ExecuteAsync();
         }
 

@@ -37,6 +37,7 @@ namespace BlazorWebAdmin.Components.MTree
         protected override void OnInitialized()
         {
             Root.AddNode(this);
+            collapse = Deepth > 0;
             base.OnInitialized();
         }
 
@@ -80,16 +81,16 @@ namespace BlazorWebAdmin.Components.MTree
             StateHasChanged();
             await Root.UpdateCheckedValues();
         }
-        bool expand = false;
+        bool collapse;
         ClassHelper NarrowClass => ClassHelper.Default
             .AddClass("node-narrow")
-            .AddClass("collapse", () => expand)
+            .AddClass("collapse", () => collapse)
             .AddClass("disable", () => !HasChild);
-        ClassHelper ChildrenContentClass => ClassHelper.Default.AddClass("childrens").AddClass("collapse", () => expand);
+        ClassHelper ChildrenContentClass => ClassHelper.Default.AddClass("childrens").AddClass("collapse", () => collapse);
         Task ToggleExpand()
         {
             if (!HasChild) return Task.CompletedTask;
-            expand = !expand;
+            collapse = !collapse;
             return Task.CompletedTask;
         }
 

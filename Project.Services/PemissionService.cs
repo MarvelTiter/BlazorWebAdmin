@@ -20,7 +20,7 @@ namespace Project.Services
         public async Task<IQueryCollectionResult<Power>> GetPowerListAsync(GeneralReq<Power> req)
         {
             var count = await repository.Table<Power>().GetCountAsync(req.Expression);
-            var list = await repository.Table<Power>().GetListAsync(req.Expression, req.PageIndex, req.PageSize);
+            var list = await repository.Table<Power>().GetListAsync(req.Expression, req.PageIndex, req.PageSize, p => p.Sort);
             return QueryResult.Success<Power>().CollectionResult(list, count);
         }
 
