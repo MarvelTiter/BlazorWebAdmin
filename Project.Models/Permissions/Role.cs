@@ -12,10 +12,10 @@ namespace Project.Models.Permissions
     public class Role
     {
         [PrimaryKey]
-        [TableHeader("角色编号")]
+        [ColumnDefinition("角色编号")]
         [ColumnName("ROLE_ID")]
         public string RoleId { get; set; }
-        [TableHeader("角色名称")]
+        [ColumnDefinition("角色名称")]
         [ColumnName("ROLE_NAME")]
         public string RoleName { get; set; }
     }

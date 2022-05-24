@@ -15,11 +15,11 @@ namespace BlazorWebAdmin.Template.Tables
         public static List<ColumnDefinition> GenerateColumns(this Type self)
         {
             var props = self.GetProperties();
-            var heads = props.Where(p => p.GetCustomAttribute<TableHeaderAttribute>() != null);
+            var heads = props.Where(p => p.GetCustomAttribute<ColumnDefinitionAttribute>() != null);
             List<ColumnDefinition> columns = new List<ColumnDefinition>();
             foreach (var col in heads)
             {
-                var head = col.GetCustomAttribute<TableHeaderAttribute>();
+                var head = col.GetCustomAttribute<ColumnDefinitionAttribute>();
                 ColumnDefinition column = new(head!.Label, col.Name)
                 {
                     Index = head.Sort,
