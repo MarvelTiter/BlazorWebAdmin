@@ -18,7 +18,7 @@ namespace Project.Services
         public async Task<IQueryCollectionResult<RunLog>> GetRunLogsAsync(GeneralReq<RunLog> req)
         {
             var total =await repository.Table<RunLog>().GetCountAsync(req.Expression);
-            var list = await repository.Table<RunLog>().GetListAsync(req.Expression,req.PageIndex, req.PageSize);
+            var list = await repository.Table<RunLog>().GetListAsync(req.Expression,req.PageIndex, req.PageSize, log => log.LogId, false);
             return QueryResult.Success<RunLog>().CollectionResult(list, total);
         }
 

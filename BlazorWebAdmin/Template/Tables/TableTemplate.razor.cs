@@ -35,6 +35,7 @@ namespace BlazorWebAdmin.Template.Tables
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+            TableOptions.RefreshData = RefreshData;
             if (TableOptions.LoadDataOnLoaded)
             {
                 await Search();
@@ -114,9 +115,10 @@ namespace BlazorWebAdmin.Template.Tables
             return Task.CompletedTask;
         }
 
-        public Task RefreshData()
+        public async Task RefreshData()
         {
-            return Search();
+            await Search();
+            StateHasChanged();
         }
 
         private static IEnumerable<Dictionary<string, object>> GeneralExcelData(List<ColumnDefinition> columns, IEnumerable<TData> data)
@@ -158,6 +160,7 @@ namespace BlazorWebAdmin.Template.Tables
         public Func<TQuery, Task<IQueryCollectionResult<TData>>> ExportDataLoader { get; set; }
         public Func<Task<bool>> AddHandle { get; set; }
         public Func<RowData<TData>, Task> OnRowClick { get; set; }
+        public Func<Task> RefreshData { get; set; }
         public bool Initialized => Columns != null && Columns.Count > 0;
         public Func<RowData<TData>, Dictionary<string, object>> OnRow { get; set; }
         public TableOptions()
