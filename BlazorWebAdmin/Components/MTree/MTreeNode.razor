@@ -8,7 +8,7 @@
 </div>
 <div class=@ChildrenContentClass.Class>
 	@foreach (var child in Children)
-	{//TODO 树节点子项折叠功能
+	{
 		<CascadingValue Value="this" TValue="MTreeNode<TNode>">
 			<MTreeNode NodeValue="child" Deepth=@(Deepth + 1)></MTreeNode>
 		</CascadingValue>

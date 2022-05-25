@@ -44,3 +44,7 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
+//TODO 界面组件独立库
+//TODO Camera组件
+//
