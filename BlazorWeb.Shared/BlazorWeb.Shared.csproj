@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\**" />
-    <Content Remove="wwwroot\**" />
-    <EmbeddedResource Remove="wwwroot\**" />
-    <None Remove="wwwroot\**" />
+    <Compile Remove="Template\Forms\ActionForm\**" />
+    <Content Remove="Template\Forms\ActionForm\**" />
+    <EmbeddedResource Remove="Template\Forms\ActionForm\**" />
+    <None Remove="Template\Forms\ActionForm\**" />
   </ItemGroup>
 
 
@@ -19,20 +19,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazor.SessionStorage" Version="2.0.10" />
+    <PackageReference Include="AntDesign" Version="0.10.7" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.5" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.5" />
     <PackageReference Include="MiniExcel" Version="1.26.2" />
     <PackageReference Include="MT.KitTools" Version="1.0.4-alpha" />
-    <PackageReference Include="MT.LightORM" Version="1.1.7" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <ProjectReference Include="..\LogAopCodeGenerator\LogAopCodeGenerator.csproj" />
+    <ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />
     <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
   </ItemGroup>
-
 </Project>

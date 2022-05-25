@@ -15,7 +15,6 @@
 
 	<ItemGroup>
 		<None Include="..\.editorconfig" Link=".editorconfig" />
-		<None Include="Template\Tables\TableTemplate.razor" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -27,16 +26,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Blazor.ECharts\Blazor.ECharts.csproj" />
+		<ProjectReference Include="..\BlazorWeb.UI\BlazorWeb.UI.csproj" />
 		<ProjectReference Include="..\LogAopCodeGenerator\LogAopCodeGenerator.csproj" />
 		<ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />
 		<ProjectReference Include="..\Project.Common\Project.Common.csproj" />
 		<ProjectReference Include="..\Project.Models\Project.Models.csproj" />
 		<ProjectReference Include="..\Project.Services\Project.Services.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Template\Forms\ActionForm\" />
 	</ItemGroup>
 
 </Project>

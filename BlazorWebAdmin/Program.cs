@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Project.AppCore.Auth;
 using Project.AppCore.Store;
 using Project.Common;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,6 @@ var services = builder.Services;
 // Add services to the container.
 services.AddRazorPages();
 services.AddServerSideBlazor();
-services.AddECharts();
 
 //
 services.AddAntDesign();
@@ -25,7 +25,7 @@ services.AutoInjects();
 services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 services.AddHttpContextAccessor();
 var app = builder.Build();
-
+Config.AddAssembly(typeof(BlazorWeb.UI.Program));
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

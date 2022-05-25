@@ -6,33 +6,27 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="wwwroot\**" />
-    <Content Remove="wwwroot\**" />
-    <EmbeddedResource Remove="wwwroot\**" />
-    <None Remove="wwwroot\**" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazor.SessionStorage" Version="2.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.5" />
+    <PackageReference Include="AntDesign" Version="0.10.7" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.5" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.5" />
     <PackageReference Include="MiniExcel" Version="1.26.2" />
-    <PackageReference Include="MT.KitTools" Version="1.0.4-alpha" />
-    <PackageReference Include="MT.LightORM" Version="1.1.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LogAopCodeGenerator\LogAopCodeGenerator.csproj" />
+    <ProjectReference Include="..\BlazorWeb.Shared\BlazorWeb.Shared.csproj" />
+    <ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />
     <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
+    <ProjectReference Include="..\Project.Services\Project.Services.csproj" />
   </ItemGroup>
 
 </Project>

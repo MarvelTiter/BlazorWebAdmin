@@ -1,7 +1,7 @@
 ﻿<CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(App).Assembly">
+    <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="Config.Pages">
         <Found Context="routeData">
-            <KeepPageStateRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <KeepPageStateRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
         <NotFound>

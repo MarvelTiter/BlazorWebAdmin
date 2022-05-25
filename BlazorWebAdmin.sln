@@ -16,11 +16,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Models", "Project.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Services", "Project.Services\Project.Services.csproj", "{0664D1E4-5F1B-4460-8031-ECDF2F169C39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.ECharts", "Blazor.ECharts\Blazor.ECharts.csproj", "{5D72223C-68C3-4876-8686-3DFC9E9AAA19}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogAopCodeGenerator", "LogAopCodeGenerator\LogAopCodeGenerator.csproj", "{16E2004F-0286-4B5D-83E0-A6AD1947878D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.AppCore", "Project.AppCore\Project.AppCore.csproj", "{91419C7B-E990-4A92-BC1C-55BCA449A659}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWeb.UI", "BlazorWeb.UI\BlazorWeb.UI.csproj", "{09528FF1-45D8-42D7-AA04-F299F8634469}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWeb.Shared", "BlazorWeb.Shared\BlazorWeb.Shared.csproj", "{5C05FEF4-6F98-4D6D-81CC-A02C942E501C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,10 +46,6 @@ Global
 		{0664D1E4-5F1B-4460-8031-ECDF2F169C39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0664D1E4-5F1B-4460-8031-ECDF2F169C39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0664D1E4-5F1B-4460-8031-ECDF2F169C39}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D72223C-68C3-4876-8686-3DFC9E9AAA19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D72223C-68C3-4876-8686-3DFC9E9AAA19}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D72223C-68C3-4876-8686-3DFC9E9AAA19}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5D72223C-68C3-4876-8686-3DFC9E9AAA19}.Release|Any CPU.Build.0 = Release|Any CPU
 		{16E2004F-0286-4B5D-83E0-A6AD1947878D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{16E2004F-0286-4B5D-83E0-A6AD1947878D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16E2004F-0286-4B5D-83E0-A6AD1947878D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,6 +54,14 @@ Global
 		{91419C7B-E990-4A92-BC1C-55BCA449A659}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91419C7B-E990-4A92-BC1C-55BCA449A659}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91419C7B-E990-4A92-BC1C-55BCA449A659}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09528FF1-45D8-42D7-AA04-F299F8634469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09528FF1-45D8-42D7-AA04-F299F8634469}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09528FF1-45D8-42D7-AA04-F299F8634469}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09528FF1-45D8-42D7-AA04-F299F8634469}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C05FEF4-6F98-4D6D-81CC-A02C942E501C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C05FEF4-6F98-4D6D-81CC-A02C942E501C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C05FEF4-6F98-4D6D-81CC-A02C942E501C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C05FEF4-6F98-4D6D-81CC-A02C942E501C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
