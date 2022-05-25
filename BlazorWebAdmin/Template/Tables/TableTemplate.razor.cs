@@ -163,10 +163,14 @@ namespace BlazorWebAdmin.Template.Tables
         public Func<Task> RefreshData { get; set; }
         public bool Initialized => Columns != null && Columns.Count > 0;
         public Func<RowData<TData>, Dictionary<string, object>> OnRow { get; set; }
-        public TableOptions()
+        public TableOptions() : this(new TQuery()) { }
+
+        public TableOptions(Func<TQuery> creator) : this(creator()) { }
+
+        public TableOptions(TQuery query)
         {
+            Query = query;
             Buttons = new List<ButtonDefinition<TData>>();
-            Query = new TQuery();
             if (!IsDataTableSource)
             {
                 Columns = typeof(TData).GenerateColumns();
