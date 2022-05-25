@@ -4,7 +4,7 @@
 @using Project.Models.Permissions
 <TwoSidePage OpenTrigger=@(() => CurrentRole != null) Expand=@sideExpand>
 	<FirstSide>
-		<TableTemplate TableOptions=roleOptions TData=Role TQuery=@(GeneralReq<Role>)>
+		<TableTemplate TableOptions=roleOptions TData=Role TQuery=@(GenericRequest<Role>)>
 		</TableTemplate>
 	</FirstSide>
 	<SecondSide>

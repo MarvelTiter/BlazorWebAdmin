@@ -19,7 +19,8 @@ namespace Project.Models.Request
     {
         public new Expression<Func<T, bool>>? Expression { get; set; }
     }
-    public class GeneralReq<T> : IRequest<T>
+    
+    public class GenericRequest<T> : IRequest<T>
     {
         public string Keyword { get; set; }
         public int PageIndex { get; set; } = 1;
@@ -41,5 +42,5 @@ namespace Project.Models.Request
             }
         }
     }
-    public class GeneralReq : GeneralReq<object> { }
+    public class GenericRequest : GenericRequest<object> { }
 }

@@ -15,9 +15,9 @@ namespace Project.AppCore.Services
     [Aspectable(AspectHandleType = typeof(LogAop))]
     public interface IPermissionService
     {
-        Task<IQueryCollectionResult<Power>> GetPowerListAsync(GeneralReq<Power> req);
+        Task<IQueryCollectionResult<Power>> GetPowerListAsync(GenericRequest<Power> req);
         Task<IQueryCollectionResult<Power>> GetPowerListAsync();
-        Task<IQueryCollectionResult<Role>> GetRoleListAsync(GeneralReq<Role> req);
+        Task<IQueryCollectionResult<Role>> GetRoleListAsync(GenericRequest<Role> req);
         Task<IQueryCollectionResult<Role>> GetRoleListAsync();
         Task<IQueryCollectionResult<Power>> GetPowerListByUserIdAsync(string usrId);
         Task<IQueryCollectionResult<Power>> GetPowerListByRoleIdAsync(string roleId);

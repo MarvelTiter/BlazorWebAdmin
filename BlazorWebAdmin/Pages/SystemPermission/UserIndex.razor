@@ -4,7 +4,7 @@
 @page "/user/index"
 <TwoSidePage OpenTrigger=@(() => currentSelected != null) Expand=@sideExpand MainFlex="3">
 	<FirstSide>
-		<TableTemplate TableOptions=tableOptions TData=User TQuery=@(GeneralReq<User>)></TableTemplate>
+		<TableTemplate TableOptions=tableOptions TData=User TQuery=@(GenericRequest<User>)></TableTemplate>
 	</FirstSide>
 	<SecondSide>
 		<AssignUserRoles Current="currentSelected"></AssignUserRoles>

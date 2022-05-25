@@ -11,7 +11,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
     {
         [Inject]
         public IRunLogService RunLogSrv { get; set; }
-        TableOptions<RunLog, GeneralReq<RunLog>> tableOptions = new TableOptions<RunLog, GeneralReq<RunLog>>();
+        TableOptions<RunLog, GenericRequest<RunLog>> tableOptions = new TableOptions<RunLog, GenericRequest<RunLog>>();
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -19,7 +19,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
             tableOptions.DataLoader = Search;
         }
 
-        Task<IQueryCollectionResult<RunLog>> Search(GeneralReq<RunLog> req)
+        Task<IQueryCollectionResult<RunLog>> Search(GenericRequest<RunLog> req)
         {
             return RunLogSrv.GetRunLogsAsync(req);
         }

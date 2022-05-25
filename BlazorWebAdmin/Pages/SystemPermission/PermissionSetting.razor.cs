@@ -19,7 +19,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         public DrawerService DrawerSrv { get; set; }
         [Inject]
         public IPermissionService PermissionSrv { get; set; }
-        TableOptions<Power, GeneralReq<Power>> tableOptions = new();
+        TableOptions<Power, GenericRequest<Power>> tableOptions = new();
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -29,7 +29,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
             tableOptions.AddButton(ButtonDefinition<Power>.Edit(EditPower));
             tableOptions.AddButton(ButtonDefinition<Power>.Delete(DeletePower));
         }
-        Task<IQueryCollectionResult<Power>> Search(GeneralReq<Power> req)
+        Task<IQueryCollectionResult<Power>> Search(GenericRequest<Power> req)
         {
             return PermissionSrv.GetPowerListAsync(req);
         }

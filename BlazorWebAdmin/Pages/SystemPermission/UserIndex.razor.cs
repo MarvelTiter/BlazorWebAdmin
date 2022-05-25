@@ -14,7 +14,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
 {
     public partial class UserIndex
     {
-        TableOptions<User, GeneralReq<User>> tableOptions;
+        TableOptions<User, GenericRequest<User>> tableOptions;
         [Inject]
         public ModalService ModalSrv { get; set; }
         [Inject]
@@ -24,7 +24,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            tableOptions = new TableOptions<User, GeneralReq<User>>();
+            tableOptions = new TableOptions<User, GenericRequest<User>>();
             tableOptions.LoadDataOnLoaded = true;
             tableOptions.AddButton(ButtonDefinition<User>.Edit(EditUser));
             tableOptions.AddButton(ButtonDefinition<User>.Delete(DeleteUser));
@@ -38,7 +38,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
             };
         }
 
-        Task<IQueryCollectionResult<User>> Search(GeneralReq<User> req)
+        Task<IQueryCollectionResult<User>> Search(GenericRequest<User> req)
         {
             return UserSrv.GetUserListAsync(req);
         }

@@ -11,7 +11,7 @@ namespace Project.AppCore.Services
 {
     public interface IRunLogService
     {
-        Task<IQueryCollectionResult<RunLog>> GetRunLogsAsync(GeneralReq<RunLog> runLog);
+        Task<IQueryCollectionResult<RunLog>> GetRunLogsAsync(GenericRequest<RunLog> runLog);
         Task Log(RunLog log);
     }
 }

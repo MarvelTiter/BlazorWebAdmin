@@ -19,12 +19,12 @@
 @code {
 	private int count;
 	private string selected;
-	TableOptions<DataRow, GeneralReq<DataRow>> tableOptions;
+	TableOptions<DataRow, GenericRequest<DataRow>> tableOptions;
 
 	protected override void OnInitialized()
 	{
 		base.OnInitialized();
-		tableOptions = new TableOptions<DataRow, GeneralReq<DataRow>>();
+		tableOptions = new TableOptions<DataRow, GenericRequest<DataRow>>();
 		tableOptions.ScrollX = "2000";
 		tableOptions.AddColumn("列1", "A")
 					.AddColumn("列2", "B")

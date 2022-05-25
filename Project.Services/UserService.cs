@@ -15,7 +15,7 @@ namespace Project.Services
             this.repository = repository;
         }
 
-        public async Task<IQueryCollectionResult<User>> GetUserListAsync(GeneralReq<User> req)
+        public async Task<IQueryCollectionResult<User>> GetUserListAsync(GenericRequest<User> req)
         {
             var count = await repository.Table<User>().GetCountAsync(req.Expression);
             var list = await repository.Table<User>().GetListAsync(req.Expression, req.PageIndex, req.PageSize);

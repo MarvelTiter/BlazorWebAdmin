@@ -11,7 +11,7 @@ namespace Project.AppCore.Services
 {
     public partial interface IUserService
     {
-        Task<IQueryCollectionResult<User>> GetUserListAsync(GeneralReq<User> req);
+        Task<IQueryCollectionResult<User>> GetUserListAsync(GenericRequest<User> req);
         Task<User> InsertUserAsync(User user);
         Task<int> UpdateUserAsync(User user);
     }

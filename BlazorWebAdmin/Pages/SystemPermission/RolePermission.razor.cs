@@ -18,7 +18,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         {
             public IList<PowerTreeNode> Children { get; set; }
         }
-        TableOptions<Role, GeneralReq<Role>> roleOptions = new();
+        TableOptions<Role, GenericRequest<Role>> roleOptions = new();
         bool powerLoading = false;
         Role? CurrentRole;
         IEnumerable<PowerTreeNode> powerTreeData;
@@ -89,7 +89,7 @@ namespace BlazorWebAdmin.Pages.SystemPermission
         }
         #endregion
 
-        Task<IQueryCollectionResult<Role>> GetRolesAsync(GeneralReq<Role> req)
+        Task<IQueryCollectionResult<Role>> GetRolesAsync(GenericRequest<Role> req)
         {
             return PermissionSrv.GetRoleListAsync(req);
         }

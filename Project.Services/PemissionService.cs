@@ -17,7 +17,7 @@ namespace Project.Services
             this.repository = repository;
         }
 
-        public async Task<IQueryCollectionResult<Power>> GetPowerListAsync(GeneralReq<Power> req)
+        public async Task<IQueryCollectionResult<Power>> GetPowerListAsync(GenericRequest<Power> req)
         {
             var count = await repository.Table<Power>().GetCountAsync(req.Expression);
             var list = await repository.Table<Power>().GetListAsync(req.Expression, req.PageIndex, req.PageSize, p => p.Sort);
@@ -30,7 +30,7 @@ namespace Project.Services
             return QueryResult.Success<Power>().CollectionResult(list);
         }
 
-        public async Task<IQueryCollectionResult<Role>> GetRoleListAsync(GeneralReq<Role> req)
+        public async Task<IQueryCollectionResult<Role>> GetRoleListAsync(GenericRequest<Role> req)
         {
             var count = await repository.Table<Role>().GetCountAsync(req.Expression);
             var list = await repository.Table<Role>().GetListAsync(req.Expression, req.PageIndex, req.PageSize);
