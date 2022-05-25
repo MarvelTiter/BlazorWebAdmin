@@ -22,6 +22,8 @@ namespace BlazorWebAdmin.Components.MTree
         public EventCallback<string[]> CheckedKeysChanged { get; set; }
         [Parameter]
         public bool IncludeIndeterminate { get; set; }
+        [Parameter]
+        public RenderFragment<TNode> TitleTemplate { get; set; }
 
         private List<MTreeNode<TNode>> nodes = new List<MTreeNode<TNode>>();
 
