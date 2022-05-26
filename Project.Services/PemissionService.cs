@@ -8,7 +8,7 @@ using Project.Models.Request;
 
 namespace Project.Services
 {
-    public class PemissionService : IPermissionService
+    public partial class PemissionService : IPermissionService
     {
         private readonly IRepository repository;
 

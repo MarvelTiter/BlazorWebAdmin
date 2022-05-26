@@ -4,7 +4,7 @@ using Project.Models.Permissions;
 
 namespace Project.Services
 {
-    public class LoginService : ILoginService
+    public partial class LoginService : ILoginService
     {
         public Task<bool> CheckUser(UserInfo info)
         {

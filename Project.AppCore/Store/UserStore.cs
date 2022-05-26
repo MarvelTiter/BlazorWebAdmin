@@ -7,7 +7,7 @@ using Project.Models.Permissions;
 
 namespace Project.AppCore.Store
 {
-    public class UserStore : StoreBase
+    public partial class UserStore : StoreBase
     {
         public UserInfo? UserInfo { get; set; }
         public IEnumerable<string> Roles => UserInfo?.Roles;
