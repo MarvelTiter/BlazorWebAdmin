@@ -1,9 +1,10 @@
-﻿using System;
+﻿using LogAopCodeGenerator;
+using System;
 
-namespace LogAopCodeGenerator
+namespace Project.AppCore.Aop
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class LogInfoAttribute : Attribute
+    public class LogInfoAttribute : AopMethodFlagAttribute
     {
         public string Module { get; set; }
         public string Action { get; set; }

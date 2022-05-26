@@ -22,8 +22,31 @@ namespace Project.AppCore.Aop
             this.logService = logService;
             this.store = store;
         }
-        public override async Task After(AspectContext context)
+        //public override async Task After(AspectContext context)
+        //{
+        //    var infoAttr = context.ServiceMethod.GetCustomAttribute<LogInfoAttribute>();
+        //    var result = context.ReturnValue as IQueryResult;
+        //    var userId = store?.UserId ?? GetUserIdFromContext(context);
+        //    var l = new RunLog()
+        //    {
+        //        UserId = userId,
+        //        ActionModule = infoAttr!.Module ?? "",
+        //        ActionName = infoAttr!.Action ?? "",
+        //        ActionResult = result?.Success ?? false ? "成功" : "失败",
+        //        ActionMessage = result?.Message ?? "",
+        //    };
+        //    await logService.Log(l);
+        //}
+
+
+        //public override Task<bool> Before(AspectContext context)
+        //{
+        //    return Task.FromResult(true);
+        //}
+
+        public override async Task Invoke(AspectContext context)
         {
+            await context.Proceed();
             var infoAttr = context.ServiceMethod.GetCustomAttribute<LogInfoAttribute>();
             var result = context.ReturnValue as IQueryResult;
             var userId = store?.UserId ?? GetUserIdFromContext(context);
@@ -38,11 +61,6 @@ namespace Project.AppCore.Aop
             await logService.Log(l);
         }
 
-
-        public override Task<bool> Before(AspectContext context)
-        {
-            return Task.FromResult(true);
-        }
         private string GetUserIdFromContext(AspectContext context)
         {
             if (context.ServiceMethod.Name == "LoginAsync")

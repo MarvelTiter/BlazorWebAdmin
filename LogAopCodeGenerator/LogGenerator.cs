@@ -41,16 +41,16 @@ namespace LogAopCodeGenerator
             if (!(context.SyntaxReceiver is SyntaxReceiver receiver))
                 return;
 
-            var logInfoAttr = context.Compilation.GetTypeByMetadataName("LogAopCodeGenerator.LogInfoAttribute");
+            var methodAopAttr = context.Compilation.GetTypeByMetadataName("LogAopCodeGenerator.AopMethodFlagAttribute");
             var aspectableAttr = context.Compilation.GetTypeByMetadataName("LogAopCodeGenerator.AspectableAttribute");
 
             foreach (var node in receiver.ClassSyntaxNodes)
             {
-                AopImplClass(context, node, logInfoAttr, aspectableAttr);
+                AopImplClass(context, node, methodAopAttr, aspectableAttr);
             }
         }
 
-        private void AopImplClass(GeneratorExecutionContext context, ClassDeclarationSyntax classDeclaration, INamedTypeSymbol logInfo, INamedTypeSymbol aspectable)
+        private void AopImplClass(GeneratorExecutionContext context, ClassDeclarationSyntax classDeclaration, INamedTypeSymbol methodAopAttr, INamedTypeSymbol aspectable)
         {
             // 获得类的类型描述符号,如果无法获得，就跳出
             var compilation = context.Compilation;
@@ -63,7 +63,7 @@ namespace LogAopCodeGenerator
 
             if (allAttributes.Any(x => x.AttributeClass.Equals(aspectable, SymbolEqualityComparer.Default)))
             {
-                BuildProxyClass(context, classDeclaration, classSymbol, logInfo, aspectable, allAttributes);
+                BuildProxyClass(context, classDeclaration, classSymbol, methodAopAttr, aspectable, allAttributes);
             }
         }
         /// <summary>
@@ -73,9 +73,9 @@ namespace LogAopCodeGenerator
         /// <param name="compilation"></param>
         /// <param name="classDeclaration"></param>
         /// <param name="implType"></param>
-        /// <param name="logInfo"></param>
+        /// <param name="methodAopAttr"></param>
         /// <param name="attributes"></param>
-        private void BuildProxyClass(GeneratorExecutionContext context, ClassDeclarationSyntax classDeclaration, INamedTypeSymbol implType, INamedTypeSymbol logInfo, INamedTypeSymbol aspectable, ImmutableArray<AttributeData> attributes)
+        private void BuildProxyClass(GeneratorExecutionContext context, ClassDeclarationSyntax classDeclaration, INamedTypeSymbol implType, INamedTypeSymbol methodAopAttr, INamedTypeSymbol aspectable, ImmutableArray<AttributeData> attributes)
         {
             List<IMethodSymbol> allMethods = implType.GetMembers().Where(x => x.Kind == SymbolKind.Method)
                           .Cast<IMethodSymbol>()
@@ -85,7 +85,7 @@ namespace LogAopCodeGenerator
             var interfaceNames = classDeclaration.GetInterfaceNames();
             var aopAttr = attributes.FirstOrDefault(a => a.AttributeClass.Equals(aspectable, SymbolEqualityComparer.Default));
             string ctors = BuildConstructor(implType, aopAttr, out var aopInstanceName);
-            string body = BuildMethodProxy(context.Compilation, classDeclaration, implType, logInfo, aopInstanceName);
+            string body = BuildMethodProxy(context.Compilation, classDeclaration, implType, methodAopAttr, aopInstanceName);
             string proxyClassTemplate = BuildClassTemplate(usings, npLabel, implType.Name, interfaceNames, ctors, body);
             context.AddSource($"{implType.Name}Proxy.cs", proxyClassTemplate);
         }
@@ -115,7 +115,7 @@ namespace {np}
             var ctor = implType.Constructors.FirstOrDefault();
             StringBuilder builder = new StringBuilder();
             List<string> assigns = new List<string>();
-            var handleType = aopAttr.NamedArguments.FirstOrDefault(x => x.Key == nameof(AspectableAttribute.AspectHandleType)).Value.Value as ITypeSymbol;
+            var handleType = aopAttr.NamedArguments.FirstOrDefault(x => x.Key == "AspectHandleType").Value.Value as ITypeSymbol;
             aopField = handleType.Name.ToLower();
 
             var fields = new List<FieldDefinition>();
@@ -136,11 +136,11 @@ namespace {np}
         {
             return $@"
         {string.Join("", fields.Select(f => $"private {f.TypeName} {f.Name};\n"))}
-        private AspectContext[] contexts;
+        private BaseContext[] contexts;
         public {className}Proxy ({string.Join(",", fields.Select(f => $"{f.TypeName} {f.Name}"))})
         {{
             {string.Join("", fields.Select(f => $"this.{f.Name} = {f.Name};\n"))}
-            contexts = AspectContext.InitTypesContext(typeof({className}),typeof({interfaceName}));
+            contexts = InitContext.InitTypesContext(typeof({className}),typeof({interfaceName}));
         }}
 ";
         }
@@ -152,7 +152,7 @@ namespace {np}
         /// <param name="classDeclaration"></param>
         /// <param name="methods"></param>
         /// <returns></returns>
-        private string BuildMethodProxy(Compilation compilation, ClassDeclarationSyntax classDeclaration, INamedTypeSymbol implType, INamedTypeSymbol logInfo, string aopInstanceField)
+        private string BuildMethodProxy(Compilation compilation, ClassDeclarationSyntax classDeclaration, INamedTypeSymbol implType, INamedTypeSymbol methodAopAttr, string aopInstanceField)
         {
             StringBuilder builder = new StringBuilder();
             var cn = classDeclaration.GetCurrentNode(classDeclaration);
@@ -169,7 +169,7 @@ namespace {np}
                 md.IsReturnVoid = method.ReturnsVoid;
                 md.ReturnTypeString = method.ReturnType.ToDisplayString();
                 md.Body = memberNode.Body.ToFullString();
-                if (method.HasAttribute(logInfo) || implType.HasAttribute(method, logInfo))
+                if (method.HasAttribute(methodAopAttr) || implType.HasAttribute(method, methodAopAttr))
                 {
                     // 代理
                     builder.Append(BuildProxyMethodTemplate(md, parameters, aopInstanceField));
@@ -192,24 +192,20 @@ namespace {np}
 
         public{member.AsyncKeyToken}{member.ReturnString} {member.Name}({string.Join(",", plist)})
         {{
-            // invoke before
-            var context = contexts.First(x => x.ImplementMethod.Name == ""{member.Name}"");    
+            var baseContext = contexts.First(x => x.ImplementMethod.Name == ""{member.Name}"");    
+            var context = InitContext.BuildContext(baseContext);
+            context.Exected = false;
             context.HasReturnValue = {(!member.IsReturnVoid).ToString().ToLower()};
             context.Parameters = new object[] {{ {string.Join(",", parameters.Select(p => p.Name))} }};
             {member.LocalVar}
-            if ({member.AwaitKeyToken}{aopInstanceField}.Before(context){member.GetTaskValue})
+            context.Proceed = {member.AsyncKeyToken}() => 
             {{
+                context.Exected = true;
                 {member.ReturnValueRecive}{member.AwaitKeyToken}internal{member.Name}({string.Join(",", parameters.Select(p => p.Name))}){member.InternalMethodResult};
                 {member.ReturnValAsign}
-                // invoke after
-                context.Exected = true;
-                {member.AwaitKeyToken}{aopInstanceField}.After(context){member.WaitTask};
-            }}
-            else
-            {{
-                context.Exected = false;
-                {member.AwaitKeyToken}{aopInstanceField}.After(context){member.WaitTask};
-            }}
+                {member.TaskReturnLabel}
+            }};
+            {member.AwaitKeyToken}{aopInstanceField}.Invoke(context){member.WaitTask};
             {member.ReturnLabel}
         }}
 ";
@@ -287,12 +283,12 @@ namespace {np}
         }
         public static bool HasAttribute(this IMethodSymbol method, INamedTypeSymbol attr)
         {
-            return method.GetAttributes().Any(x => x.AttributeClass.Equals(attr, SymbolEqualityComparer.Default));
+            return method.GetAttributes().Any(x => x.AttributeClass.BaseType.Equals(attr, SymbolEqualityComparer.Default));
         }
         public static bool HasAttribute(this INamedTypeSymbol @class, IMethodSymbol method, INamedTypeSymbol attr)
         {
             var all = @class.AllInterfaces.SelectMany(i => i.GetMembers().Where(s => s.Kind == SymbolKind.Method && s.Name == method.Name).Select(s => s as IMethodSymbol));
-            return all.SelectMany(a => a.GetAttributes()).Any(x => x.AttributeClass.Equals(attr, SymbolEqualityComparer.Default));
+            return all.SelectMany(a => a.GetAttributes()).Any(x => x.AttributeClass.BaseType.Equals(attr, SymbolEqualityComparer.Default));
         }
     }
 

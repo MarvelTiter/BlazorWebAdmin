@@ -106,6 +106,8 @@ namespace LogAopCodeGenerator
                 }
             }
         }
+
+        public string TaskReturnLabel => IsAsync ? "" : "return System.Threading.Tasks.Task.CompletedTask;";
         public string GetTaskValue => IsAsync ? "" : ".Result";
         public string WaitTask => IsAsync ? "" : ".Wait()";
         public string InternalMethodResult
@@ -144,5 +146,4 @@ namespace LogAopCodeGenerator
         public bool IsTaskWithoutValue => string.IsNullOrEmpty(RealReturnType);
         public string Body { get; set; }
     }
-
 }
