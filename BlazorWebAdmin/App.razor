@@ -1,4 +1,5 @@
-﻿<CascadingAuthenticationState>
+﻿@using BlazorWeb.Shared.Layouts
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="Config.Pages">
         <Found Context="routeData">
             <KeepPageStateRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>

@@ -1,6 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using BlazorWeb.Shared.Layouts.LayoutComponents
+@inherits LayoutComponentBase
 @layout AuthorizedLayout
-@using BlazorWebAdmin.Shared.LayoutComponents
 @inject RouterStore store
 
 <PageTitle>@($"管理系统 - {store.Current?.RouteName ?? "主页"}")</PageTitle>

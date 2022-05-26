@@ -1,15 +1,11 @@
 ﻿using AntDesign;
-using BlazorWebAdmin.Shared.LayoutComponents;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Project.AppCore.Store;
 using Project.Common;
-using Project.Services;
 
-namespace BlazorWebAdmin.Shared
+namespace BlazorWeb.Shared.Layouts
 {
     public partial class RootLayout : IDisposable
     {

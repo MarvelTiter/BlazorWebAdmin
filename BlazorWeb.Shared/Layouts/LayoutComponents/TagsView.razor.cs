@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazorWeb.Shared.Layouts;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Project.AppCore.Store;
 using Project.Common;
 
-namespace BlazorWebAdmin.Shared.LayoutComponents
+namespace BlazorWeb.Shared.Layouts.LayoutComponents
 {
     public partial class TagsView : IDisposable
     {
