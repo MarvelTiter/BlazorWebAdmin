@@ -29,5 +29,22 @@ namespace BlazorWeb.Shared.Components
                 return "";
             }
         }
+        static bool loaded;
+        public static async Task LoadAllIcons()
+        {
+            if (loaded) return;
+            var files = Directory.EnumerateFiles($"wwwroot/icons", "*.svg");
+            foreach (var f in files)
+            {
+                var name = Path.GetFileNameWithoutExtension(f);
+                _ = await GetIconDataByName(name);
+            }
+            loaded = true;
+        }
+
+        public static List<string> GetIcons()
+        {
+            return _cache.Keys.ToList();
+        }
     }
 }

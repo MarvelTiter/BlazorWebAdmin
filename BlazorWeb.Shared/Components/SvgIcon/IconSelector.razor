@@ -1,0 +1,46 @@
+﻿@namespace BlazorWeb.Shared.Components
+<Popover Title="图标选择" OnVisibleChange="OnVisibleChange" Visible="visible" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Click})" ContentTemplate="content">
+	<Button Type="primary">图标库</Button>
+</Popover>
+@code {
+	List<string> icons;
+	bool visible;
+	[Parameter]
+	public string Value { get; set; }
+	[Parameter]
+	public EventCallback<string> ValueChanged { get; set; }
+	RenderFragment content =>
+	@<div>
+		<div class="icons-wrapper">
+			@foreach (var item in icons)
+			{
+					<span @onclick="e => HandleClickEvent(item)">
+						<SvgIcon IconName="@item"></SvgIcon>
+					</span>
+			}
+			</div>
+			<a @onclick="_=>visible = false">关闭</a>
+		</div>
+	;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+		await SvgIconDataCache.LoadAllIcons();
+		icons = SvgIconDataCache.GetIcons();
+	}
+
+	private void OnVisibleChange(bool v)
+	{
+		visible = v;
+	}
+	async Task HandleClickEvent(string iconName)
+	{
+		if (ValueChanged.HasDelegate)
+		{
+			await ValueChanged.InvokeAsync(iconName);
+		}
+		visible = false;
+		//StateHasChanged();
+	}
+}
