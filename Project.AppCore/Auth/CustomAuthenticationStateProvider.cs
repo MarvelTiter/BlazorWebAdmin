@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using Project.AppCore.Services;
+using Project.AppCore.Store;
 using Project.Common.Attributes;
 using Project.Models.Permissions;
 using System.Security.Claims;
@@ -12,11 +13,13 @@ namespace Project.AppCore.Auth
     {
         private readonly ISessionStorageService storageService;
         private readonly ILoginService loginService;
+        private readonly UserStore store;
 
-        public CustomAuthenticationStateProvider(ISessionStorageService storageService, ILoginService loginService)
+        public CustomAuthenticationStateProvider(ISessionStorageService storageService, ILoginService loginService, UserStore store)
         {
             this.storageService = storageService;
             this.loginService = loginService;
+            this.store = store;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
@@ -35,7 +38,7 @@ namespace Project.AppCore.Auth
             {
                 identity = new ClaimsIdentity();
             }
-
+            store.SetUser(info);
             var user = new ClaimsPrincipal(identity);
             return new AuthenticationState(user);
         }
@@ -52,6 +55,7 @@ namespace Project.AppCore.Auth
             NotifyAuthenticationStateChanged(UpdateState());
         }
 
+        public UserInfo? Current => store.UserInfo;
         private static ClaimsIdentity Build(UserInfo info)
         {
             var claims = new List<Claim>

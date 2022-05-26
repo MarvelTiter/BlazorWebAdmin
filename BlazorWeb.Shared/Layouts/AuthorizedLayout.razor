@@ -1,7 +1,6 @@
 ﻿@inherits RootLayout
 @using Project.AppCore.Auth
 @using Project.Models.Permissions
-@inject UserStore store
 @inject RouterStore Router
 @inject AuthenticationStateProvider Auth
 <CascadingValue Value="this">
@@ -30,20 +29,11 @@
 				var state = await authenticationStateTask;
 				if (state.User.Identity!.IsAuthenticated)
 				{
-					if (store.UserInfo == null)
-					{
-						var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-						var roles = state.User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role).Select(c => c.Value);
-						var ui = new UserInfo();
-						ui.UserId = state.User.Identity!.Name!;
-						ui.UserName = state.User.Claims.First(c => c.Type == System.Security.Claims.ClaimTypes.GivenName).Value;
-						ui.Roles = roles;
-						UserStore.SetUser(ui);
-						await ((CustomAuthenticationStateProvider)Auth).IdentifyUser(ui);
-						await Router.InitRoutersAsync(ui);
-						NavigationManager.NavigateTo(url);
-						await RouterStore.TryAdd(url);
-					}
+					var ca = Auth as CustomAuthenticationStateProvider;
+					var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+					await Router.InitRoutersAsync(ca?.Current);
+					NavigationManager.NavigateTo(url);
+					await RouterStore.TryAdd(url);
 				}
 			}
 		}

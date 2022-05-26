@@ -19,7 +19,7 @@ namespace Project.AppCore.Store
             return UserInfo?.UserName ?? "Unknow";
         }
 
-        public void SetUser(UserInfo userInfo)
+        public void SetUser(UserInfo? userInfo)
         {
             UserInfo = userInfo;
         }        
