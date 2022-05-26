@@ -6,3 +6,6 @@
 .icons-wrapper span{
     margin:3px 5px;
 }
+    .icons-wrapper span.selected {
+        color: #1890ff;
+    }

@@ -14,7 +14,7 @@
 		<div class="icons-wrapper">
 			@foreach (var item in icons)
 			{
-					<span @onclick="e => HandleClickEvent(item)">
+					<span @onclick="e => HandleClickEvent(item)" class="@(Value==item? "selected":"")">
 						<SvgIcon IconName="@item"></SvgIcon>
 					</span>
 			}
