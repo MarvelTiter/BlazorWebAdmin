@@ -15,7 +15,7 @@ namespace Project.Services
     [IgnoreAutoInject]
     public class BasicService<T> : IBasicService<T>
     {
-        private readonly IRepository repository;
+        protected readonly IRepository repository;
 
         public BasicService(IRepository repository)
         {
