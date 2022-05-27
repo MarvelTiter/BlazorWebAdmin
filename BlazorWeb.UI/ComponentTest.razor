@@ -1,7 +1,23 @@
 ﻿@page "/test"
+@using Project.AppCore.Services
+@using Project.Models.Permissions
+@inject IPermissionService PermissionSrv
 <p>@selectedIcon</p>
 <IconSelector @bind-Value=selectedIcon></IconSelector>
-
+<TableTemplate TableOptions=tableOptions TData=Power TQuery=@(GenericRequest<Power>)>
+	<Buttons>
+		<Button>按钮1</Button>
+		<Button>按钮2</Button>
+		<Button>按钮3</Button>
+	</Buttons>
+</TableTemplate>
 @code {
 	string selectedIcon;
+	TableOptions<Power, GenericRequest<Power>> tableOptions = new TableOptions<Power, GenericRequest<Power>>();
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		tableOptions[nameof(Power.Path)].EnableEdit = true;
+		tableOptions.DataLoader = PermissionSrv.GetPowerListAsync;
+	}
 }

@@ -26,6 +26,8 @@ namespace BlazorWeb.Shared.Template.Tables
                     DataType = col.PropertyType,
                     Fixed = head.Fixed,
                     Width = head.Width,
+                    Visible = head.Visible,
+                    EnableEdit = head.EnableEdit,
                 };
                 if (column.IsEnum)
                 {

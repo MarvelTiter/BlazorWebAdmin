@@ -9,6 +9,8 @@ namespace BlazorWeb.Shared.Template.Tables.Setting
         public bool IsEnum => DataType.IsEnum;
         public string? Fixed { get; set; }
         public string? Width { get; set; }
+        public bool EnableEdit { get; set; }
+        public bool Visible { get; set; } = true;
         public Func<CellData, Dictionary<string, object>> OnCell { get; set; }
         public Dictionary<string, string> EnumValues { get; set; }
 

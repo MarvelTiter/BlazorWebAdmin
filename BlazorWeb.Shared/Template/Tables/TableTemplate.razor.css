@@ -8,3 +8,8 @@
 .condition {
     flex: 1;
 }
+
+.enable-edit:hover {
+    cursor: pointer;
+    color: #1890ff;
+}

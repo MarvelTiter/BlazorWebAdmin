@@ -20,5 +20,7 @@ namespace Project.Common.Attributes
         public int Sort { get; }
         public string? Fixed { get; }
         public string? Width { get; }
+        public bool EnableEdit { get; set; } = false;
+        public bool Visible { get; set; } = true;
     }
 }

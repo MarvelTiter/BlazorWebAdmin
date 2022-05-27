@@ -43,6 +43,10 @@
 		{
 			<Button Type="@ButtonType.Primary" OnClick=HandleAdd>新增</Button>
 		}
+		@if (Buttons != null)
+	   {
+		   @Buttons
+	   }
 	</div>
 </div>
 <Card Class="layout-card mt-10">
@@ -71,18 +75,6 @@
 					{
 						<Column TData="object" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex=@($"['{col.PropertyOrFieldName}']") CellRender="ColumnRender<object>(col)">
 						</Column>
-							//@if (col.IsEnum || col.EnumValues != null)
-							//{
-							//	var v = PathHelper.GetDelegate($"['{col.PropertyOrFieldName}']", typeof(TData)).Invoke(context);
-							//	if (v != null)
-							//	{
-							//		<span>@col.EnumValues[v.ToString()!]</span>
-							//	}
-							//}
-							//else
-							//{
-							//	<span>@PathHelper.GetDelegate($"['{col.PropertyOrFieldName}']", typeof(TData)).Invoke(context)</span>
-							//}
 					}
 				}
 				else
@@ -220,32 +212,59 @@
 	RenderFragment<PaginationTotalContext> totalFragment => (context) =>
 										{
 											return
-	@<span>总记录数：@context.Total</span>
-		;
+		@<span>总记录数：@context.Total</span>
+	;
 										};
 
-	
+	int currentRowIndex = -1;
+	string currentColumn = string.Empty;
 	RenderFragment<CellData<T>> ColumnRender<T>(ColumnDefinition col)
 	{
 		return context =>
-	{
-		var formattedValue = "";
-		if (col.IsEnum || col.EnumValues != null)
 		{
-			var v = context.FieldValue;
-			if (v != null)
+			var formattedValue = "";
+			if (col.IsEnum || col.EnumValues != null)
 			{
-				if (col.EnumValues.ContainsKey($"{v}"))
+				var v = context.FieldValue;
+				if (v != null)
 				{
-					formattedValue = col.EnumValues[$"{v}"];
+					if (col.EnumValues.ContainsKey($"{v}"))
+					{
+						formattedValue = col.EnumValues[$"{v}"];
+					}
 				}
+				context.FormattedValue = formattedValue;
 			}
-			context.FormattedValue = formattedValue;
-		}
-		return
-	@<span>@context.FormattedValue</span>
+			return
+			@<span>@context.FormattedValue</span>
+		//	@<span>
+		//		@if(currentRowIndex == context.RowData.RowIndex 
+		//			&& currentColumn == col.PropertyOrFieldName
+		//			&& col.EnableEdit)
+		//		{
+		//		// edit
+		//			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
+		//		}
+		//		else
+		//		{				
+		//			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
+		//		}
+		//</span>
 	;
-	};
+		};
+	}
+
+
+	void SetEdit(int index, string col)
+	{
+		this.currentRowIndex = index;
+		this.currentColumn = col;
+	}
+	void ClearEditState()
+	{
+		this.currentRowIndex = -1;
+		this.currentColumn = string.Empty;
+		var data = TableOptions.Datas;
 	}
 
 	public async Task PagingStatusChanged(PaginationEventArgs e)

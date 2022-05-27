@@ -20,13 +20,14 @@ namespace BlazorWeb.Shared.Template.Tables
         public TableOptions<TData, TQuery> TableOptions { get; set; }
         [Parameter]
         public RenderFragment<TQuery> QueryArea { get; set; }
+        [Parameter]
+        public RenderFragment Buttons { get; set; }
         [Inject]
         public RouterStore RouterStore { get; set; }
         [Inject]
         public MessageService MessageSrv { get; set; }
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
-
         public bool EnableGenerateQuery => QueryArea == null && !TableOptions.IsDataTableSource;
 
         bool loading;
