@@ -3,6 +3,7 @@
     public class ButtonDefinition<TData>
     {
         public string Label { get; set; }
+        public Func<string>? LabelFunc { get; set; }
         public string Icon { get; set; }
         public bool NeedConfirm { get; set; } = false;
         public string ButtonType { get; set; } = AntDesign.ButtonType.Text;

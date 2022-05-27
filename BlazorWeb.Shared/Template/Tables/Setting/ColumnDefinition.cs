@@ -12,7 +12,7 @@ namespace BlazorWeb.Shared.Template.Tables.Setting
         public bool EnableEdit { get; set; }
         public bool Visible { get; set; } = true;
         public Func<CellData, Dictionary<string, object>> OnCell { get; set; }
-        public Dictionary<string, string> EnumValues { get; set; }
+        public Dictionary<string, string>? EnumValues { get; set; }
 
     }
 }

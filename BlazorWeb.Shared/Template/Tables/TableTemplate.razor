@@ -186,7 +186,7 @@
 			 Icon=@definition.Icon
 			 OnClickStopPropagation
 			 OnClick=@(()=>InvokeButtonAction(definition.Callback, context))>
-		@definition.Label
+		@(definition.LabelFunc?.Invoke() ?? definition.Label)
 	</Button>
 		;
 	}
