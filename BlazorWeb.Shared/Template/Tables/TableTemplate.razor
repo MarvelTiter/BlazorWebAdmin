@@ -57,7 +57,7 @@
 		   OnRow=@TableOptions.OnRow
 		   ScrollX=@TableOptions.ScrollX
 		   Size="@TableSize.Small"
-		   SelectedRows=@TableOptions.Selected
+		   @bind-SelectedRows=@TableOptions.Selected
 		   OnRowClick=OnRowClickHandle
 		   @bind-PageSize=@TableOptions.Query.PageSize
 		   OnPageIndexChange=HandleChange
@@ -232,9 +232,9 @@
 			var v = context.FieldValue;
 			if (v != null)
 			{
-				if (col.EnumValues.ContainsKey($"{v}"))
+				if (col.EnumValues?.ContainsKey($"{v}") ?? false)
 				{
-					formattedValue = col.EnumValues[$"{v}"];
+					formattedValue = col.EnumValues?[$"{v}"];
 				}
 			}
 			context.FormattedValue = formattedValue;
