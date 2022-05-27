@@ -6,9 +6,9 @@
         public string Icon { get; set; }
         public bool NeedConfirm { get; set; } = false;
         public string ButtonType { get; set; } = AntDesign.ButtonType.Text;
-        public Func<TData, Task> Callback { get; set; }
+        public Func<TData, Task<bool>> Callback { get; set; }
 
-        public static ButtonDefinition<TData> Edit(Func<TData, Task> action)
+        public static ButtonDefinition<TData> Edit(Func<TData, Task<bool>> action)
         {
             return new ButtonDefinition<TData>
             {
@@ -18,7 +18,7 @@
             };
         }
 
-        public static ButtonDefinition<TData> Delete(Func<TData, Task> action)
+        public static ButtonDefinition<TData> Delete(Func<TData, Task<bool>> action)
         {
             return new ButtonDefinition<TData>
             {

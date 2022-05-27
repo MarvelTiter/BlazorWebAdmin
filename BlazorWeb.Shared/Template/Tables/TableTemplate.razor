@@ -44,9 +44,9 @@
 			<Button Type="@ButtonType.Primary" OnClick=HandleAdd>新增</Button>
 		}
 		@if (Buttons != null)
-	   {
-		   @Buttons
-	   }
+		{
+			@Buttons
+		}
 	</div>
 </div>
 <Card Class="layout-card mt-10">
@@ -184,74 +184,78 @@
 			 Size=@ButtonSize.Small
 			 Danger=@definition.NeedConfirm
 			 Icon=@definition.Icon
-			 	OnClickStopPropagation
+			 OnClickStopPropagation
 			 OnClick=@(()=>InvokeButtonAction(definition.Callback, context))>
 		@definition.Label
 	</Button>
-	;
+		;
 	}
 
-	public async Task InvokeButtonAction(Func<TData, Task> func, TData data)
+	public async Task InvokeButtonAction(Func<TData, Task<bool>> func, TData data)
 	{
-		await func.Invoke(data);
-		if (TableOptions.AutoRefreshData)
+		var result = await func.Invoke(data);
+		if (result)
 		{
-			await RefreshData();
+			_ = MessageSrv.Success("执行成功");
+			if (TableOptions.AutoRefreshData)
+				await RefreshData();
 		}
 	}
 
 	public async Task HandleAdd()
-	{
-		await TableOptions.AddHandle();
-		if (TableOptions.AutoRefreshData)
+	{		
+		var result = await TableOptions.AddHandle();
+		if (result)
 		{
-			await RefreshData();
+			_ = MessageSrv.Success("执行成功");
+			if (TableOptions.AutoRefreshData)
+				await RefreshData();
 		}
 	}
 
 	RenderFragment<PaginationTotalContext> totalFragment => (context) =>
-										{
-											return
-		@<span>总记录数：@context.Total</span>
-	;
-										};
+									{
+										return
+	@<span>总记录数：@context.Total</span>
+		;
+									};
 
 	int currentRowIndex = -1;
 	string currentColumn = string.Empty;
 	RenderFragment<CellData<T>> ColumnRender<T>(ColumnDefinition col)
 	{
 		return context =>
+	{
+		var formattedValue = "";
+		if (col.IsEnum || col.EnumValues != null)
 		{
-			var formattedValue = "";
-			if (col.IsEnum || col.EnumValues != null)
+			var v = context.FieldValue;
+			if (v != null)
 			{
-				var v = context.FieldValue;
-				if (v != null)
+				if (col.EnumValues.ContainsKey($"{v}"))
 				{
-					if (col.EnumValues.ContainsKey($"{v}"))
-					{
-						formattedValue = col.EnumValues[$"{v}"];
-					}
+					formattedValue = col.EnumValues[$"{v}"];
 				}
-				context.FormattedValue = formattedValue;
 			}
-			return
-			@<span>@context.FormattedValue</span>
-		//	@<span>
-		//		@if(currentRowIndex == context.RowData.RowIndex 
-		//			&& currentColumn == col.PropertyOrFieldName
-		//			&& col.EnableEdit)
-		//		{
-		//		// edit
-		//			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
-		//		}
-		//		else
-		//		{				
-		//			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
-		//		}
-		//</span>
+			context.FormattedValue = formattedValue;
+		}
+		return
+	@<span>@context.FormattedValue</span>
+	//	@<span>
+	//		@if(currentRowIndex == context.RowData.RowIndex
+	//			&& currentColumn == col.PropertyOrFieldName
+	//			&& col.EnableEdit)
+	//		{
+	//		// edit
+	//			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
+	//		}
+	//		else
+	//		{
+	//			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
+	//		}
+	//</span>
 	;
-		};
+	};
 	}
 
 

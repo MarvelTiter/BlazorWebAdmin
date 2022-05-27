@@ -191,7 +191,7 @@ namespace BlazorWeb.Shared.Template.Tables
             Columns.Add(col);
             return this;
         }
-        public TableOptions<TData, TQuery> AddButton(string label, Func<TData, Task> handle, string icon = "")
+        public TableOptions<TData, TQuery> AddButton(string label, Func<TData, Task<bool>> handle, string icon = "")
         {
             var btn = new ButtonDefinition<TData>();
             btn.Label = label;

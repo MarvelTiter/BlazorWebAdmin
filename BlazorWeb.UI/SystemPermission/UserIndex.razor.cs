@@ -57,15 +57,16 @@ namespace BlazorWeb.UI.SystemPermission
             await UserSrv.InsertUserAsync(user);
             return true;
         }
-        public async Task EditUser(User user)
+        public async Task<bool> EditUser(User user)
         {
             var n = await DrawerSrv.OpenDrawer<UserForm, User>("用户信息", user);
+            return false;
         }
 
-        public Task DeleteUser(User user)
+        public Task<bool> DeleteUser(User user)
         {
             // delete
-            return Task.CompletedTask;
+            return Task.FromResult(false);
         }
     }
 }

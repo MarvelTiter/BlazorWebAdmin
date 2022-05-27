@@ -99,10 +99,11 @@ namespace BlazorWeb.UI.SystemPermission
             await PermissionSrv.InsertRoleAsync(role);
             return true;
         }
-        async Task EditRole(Role role)
+        async Task<bool> EditRole(Role role)
         {
             var newRole = await ModalSrv.OpenDialog<RoleForm, Role>("编辑角色", role);
-            await PermissionSrv.UpdateRoleAsync(newRole);
+            var result = await PermissionSrv.UpdateRoleAsync(newRole);
+            return result.Success;
         }
         async Task SaveRolePower()
         {

@@ -36,19 +36,20 @@ namespace BlazorWeb.UI.SystemPermission
         async Task<bool> AddPower()
         {
             var power = await ModalSrv.OpenDialog<PowerForm, Power>("新增权限");
-            await PermissionSrv.InsertPowerAsync(power);
-            return true;
+            var result = await PermissionSrv.InsertPowerAsync(power);
+            return result.Success;
         }
-        async Task EditPower(Power power)
+        async Task<bool> EditPower(Power power)
         {
             var p = await ModalSrv.OpenDialog<PowerForm, Power>("编辑权限", power);
-            await PermissionSrv.UpdatePowerAsync(p);
+            var result = await PermissionSrv.UpdatePowerAsync(p);
+            return result.Success;
         }
 
-        Task DeletePower(Power power)
+        Task<bool> DeletePower(Power power)
         {
             //TODO delete power
-            return Task.CompletedTask;
+            return Task.FromResult(false);
         }
 
     }
