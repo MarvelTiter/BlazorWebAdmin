@@ -15,7 +15,8 @@
 		<EnumSelect TEnum="PowerType" @bind-Value=context.PowerType></EnumSelect>
 	</FormItem>
 	<FormItem Label="图标">
-		<Input @bind-Value=context.Icon></Input>
+		<Input @bind-Value=context.Icon ReadOnly></Input>
+		<IconSelector @bind-Value=context.Icon></IconSelector>
 	</FormItem>
 	<FormItem Label="路径">
 		<Input @bind-Value=context.Path></Input>
