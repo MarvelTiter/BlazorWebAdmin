@@ -98,7 +98,7 @@ namespace BlazorWeb.Shared.Template.Tables
             loading = false;
         }
 
-        public async Task HandleChange()
+        public async Task HandleChange(PaginationEventArgs e)
         {
             Console.WriteLine("HandleChange");
             if (TableOptions.Page)

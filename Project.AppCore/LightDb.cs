@@ -3,6 +3,7 @@ using Microsoft.Data.Sqlite;
 using Project.Common.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,11 @@ namespace Project.AppCore
                 }
                 return _db;
             }
+        }
+
+        public static IDbConnection CreateConnection()
+        {
+            return new SqliteConnection(ConnectString);
         }
 
         protected DbContext CreateDbContext()

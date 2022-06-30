@@ -1,4 +1,5 @@
 using BlazorWebAdmin;
+using MDbContext;
 using Microsoft.AspNetCore.Components.Authorization;
 using Project.AppCore.Auth;
 using Project.AppCore.Store;
@@ -14,7 +15,17 @@ services.AddServerSideBlazor();
 
 //
 services.AddAntDesign();
-
+services.UseLightOrm(config =>
+{
+    config.SetDatabase(DbBaseType.Sqlite, Project.AppCore.LightDb.CreateConnection)
+    .SetWatcher(option =>
+    {
+        option.BeforeExecute = sql =>
+        {
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{sql}\n");
+        };
+    });
+});
 services.AddSessionStorageServices();
 services.AutoInjects();
 //services.AddScoped<StateContainer>();

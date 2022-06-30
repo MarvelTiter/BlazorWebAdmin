@@ -19,13 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AntDesign" Version="0.11.0" />
     <PackageReference Include="Blazor.SessionStorage" Version="2.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.5" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.5" />
     <PackageReference Include="MiniExcel" Version="1.26.2" />
-    <PackageReference Include="MT.KitTools" Version="1.0.4-alpha" />
-    <PackageReference Include="MT.LightORM" Version="1.1.7" />
+    <PackageReference Include="MT.KitTools" Version="1.0.6" />
+    <PackageReference Include="MT.LightORM" Version="1.1.8.2" />
   </ItemGroup>
 
 

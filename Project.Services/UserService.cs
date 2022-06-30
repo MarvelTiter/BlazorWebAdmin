@@ -1,4 +1,6 @@
-﻿using Project.AppCore.Repositories;
+﻿using MDbContext.ExpressionSql;
+using MDbContext.Repository;
+using Project.AppCore.Repositories;
 using Project.AppCore.Services;
 using Project.Models;
 using Project.Models.Entities;
@@ -8,28 +10,27 @@ namespace Project.Services
 {
     public partial class UserService : IUserService
     {
-        private readonly IRepository repository;
+        private readonly IExpSql context;
 
-        public UserService(IRepository repository)
+        public UserService(IExpSql context)
         {
-            this.repository = repository;
+            this.context = context;
         }
 
         public async Task<IQueryCollectionResult<User>> GetUserListAsync(GenericRequest<User> req)
         {
-            var count = await repository.Table<User>().GetCountAsync(req.Expression);
-            var list = await repository.Table<User>().GetListAsync(req.Expression, req.PageIndex, req.PageSize);
-            return QueryResult.Success<User>().CollectionResult(list, count);
+            var list = await context.Repository<User>().GetListAsync(req.Expression, out var count, req.PageIndex, req.PageSize);
+            return QueryResult.Success<User>().CollectionResult(list, (int)count);
         }
 
         public async Task<User> InsertUserAsync(User user)
         {
-            return await repository.Table<User>().InsertAsync(user);
+            return await context.Repository<User>().InsertAsync(user);
         }
 
         public Task<int> UpdateUserAsync(User user)
         {
-            return repository.Table<User>().UpdateAsync(user, u => u.UserId == user.UserId);
+            return context.Repository<User>().UpdateAsync(user, u => u.UserId == user.UserId);
         }
     }
 }

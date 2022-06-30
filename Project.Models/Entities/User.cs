@@ -3,17 +3,17 @@ using Project.Common.Attributes;
 
 namespace Project.Models.Entities
 {
-    [TableName("USER")]
+    [Table(Name = "USER")]
     public class User
     {
         [ColumnDefinition("用户ID", 0)]
-        [ColumnName("USER_ID")]
+        [Column(Name = "USER_ID")]
         public string UserId { get; set; }
         [ColumnDefinition("用户名", 1)]
-        [ColumnName("USER_NAME")]
+        [Column(Name = "USER_NAME")]
         public string UserName { get; set; }
         [ColumnDefinition("用户密码", 2)]
-        [ColumnName("PASSWORD")]
+        [Column(Name = "PASSWORD")]
         public string Password { get; set; }
     }
 }

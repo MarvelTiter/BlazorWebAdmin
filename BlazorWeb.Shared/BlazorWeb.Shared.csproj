@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.10.7" />
+    <PackageReference Include="AntDesign" Version="0.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.5" />
     <PackageReference Include="MiniExcel" Version="1.26.2" />
-    <PackageReference Include="MT.KitTools" Version="1.0.4-alpha" />
+    <PackageReference Include="MT.KitTools" Version="1.0.6" />
   </ItemGroup>
 
   <ItemGroup>

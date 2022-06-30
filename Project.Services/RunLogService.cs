@@ -1,4 +1,6 @@
-﻿using Project.AppCore.Repositories;
+﻿using MDbContext.ExpressionSql;
+using MDbContext.Repository;
+using Project.AppCore.Repositories;
 using Project.AppCore.Services;
 using Project.Models;
 using Project.Models.Entities;
@@ -8,23 +10,22 @@ namespace Project.Services
 {
     public class RunLogService : IRunLogService
     {
-        private readonly IRepository repository;
+        private readonly IExpSql context;
 
-        public RunLogService(IRepository repository)
+        public RunLogService(IExpSql context)
         {
-            this.repository = repository;
+            this.context = context;
         }
 
         public async Task<IQueryCollectionResult<RunLog>> GetRunLogsAsync(GenericRequest<RunLog> req)
         {
-            var total =await repository.Table<RunLog>().GetCountAsync(req.Expression);
-            var list = await repository.Table<RunLog>().GetListAsync(req.Expression,req.PageIndex, req.PageSize, log => log.LogId, false);
-            return QueryResult.Success<RunLog>().CollectionResult(list, total);
+            var list = await context.Repository<RunLog>().GetListAsync(req.Expression,out var total, req.PageIndex, req.PageSize, log => log.LogId, false);
+            return QueryResult.Success<RunLog>().CollectionResult(list, (int)total);
         }
 
         public async Task Log(RunLog log)
         {
-            await repository.Table<RunLog>().InsertAsync(log);
+            await context.Repository<RunLog>().InsertAsync(log);
         }
     }
 }

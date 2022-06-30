@@ -153,14 +153,15 @@
 		</ChildContent>
 		<PaginationTemplate>
 			<Pagination Class="mt-10"
-						Size="small"
+						Size=@PaginationSize.Small
 						ShowSizeChanger
 						ShowQuickJumper
 						Current=@TableOptions.Query.PageIndex
 						PageSize=@TableOptions.Query.PageSize
 						Total=@TableOptions.Total
-						ShowTotal=totalFragment
-						OnChange=PagingStatusChanged></Pagination>
+						ShowTotal=@totalFragment
+						OnChange=PagingStatusChanged>
+			</Pagination>
 		</PaginationTemplate>
 	</Table>
 </Card>
@@ -184,11 +185,11 @@
 			 Size=@ButtonSize.Small
 			 Danger=@definition.NeedConfirm
 			 Icon=@definition.Icon
-			 OnClickStopPropagation
+			 	OnClickStopPropagation
 			 OnClick=@(()=>InvokeButtonAction(definition.Callback, context))>
 		@(definition.LabelFunc?.Invoke(context) ?? definition.Label)
-	</Button>
-		;
+		</Button>
+	;
 	}
 
 	public async Task InvokeButtonAction(Func<TData, Task<bool>> func, TData data)
@@ -203,7 +204,7 @@
 	}
 
 	public async Task HandleAdd()
-	{		
+	{
 		var result = await TableOptions.AddHandle();
 		if (result)
 		{
@@ -213,33 +214,33 @@
 		}
 	}
 
-	RenderFragment<PaginationTotalContext> totalFragment => (context) =>
-									{
-										return
-	@<span>总记录数：@context.Total</span>
-		;
-									};
+	Func<PaginationTotalContext, string> totalFragment => (context) => $"总记录数：{context.Total}";
+	//							{
+	//								return
+	//@<span>总记录数：@context.Total</span>
+	//;
+	//							};
 
 	int currentRowIndex = -1;
 	string currentColumn = string.Empty;
 	RenderFragment<CellData<T>> ColumnRender<T>(ColumnDefinition col)
 	{
 		return context =>
-	{
-		var formattedValue = "";
-		if (col.IsEnum || col.EnumValues != null)
 		{
-			var v = context.FieldValue;
-			if (v != null)
+	var formattedValue = "";
+	if (col.IsEnum || col.EnumValues != null)
+	{
+		var v = context.FieldValue;
+		if (v != null)
+		{
+			if (col.EnumValues?.ContainsKey($"{v}") ?? false)
 			{
-				if (col.EnumValues?.ContainsKey($"{v}") ?? false)
-				{
-					formattedValue = col.EnumValues?[$"{v}"];
-				}
+				formattedValue = col.EnumValues?[$"{v}"];
 			}
-			context.FormattedValue = formattedValue;
 		}
-		return
+		context.FormattedValue = formattedValue;
+	}
+	return
 	@<span>@context.FormattedValue</span>
 	//	@<span>
 	//		@if(currentRowIndex == context.RowData.RowIndex
@@ -271,7 +272,7 @@
 		var data = TableOptions.Datas;
 	}
 
-	public async Task PagingStatusChanged(PaginationEventArgs e)
+	public async void PagingStatusChanged(PaginationEventArgs e)
 	{
 		if (e.Page != TableOptions.Query.PageIndex)
 			TableOptions.Query.PageIndex = e.Page;
