@@ -77,7 +77,6 @@ namespace BlazorWeb.Shared.Components.MTree
             //    Console.WriteLine(item);
             //}
         }
-
         protected override async Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
@@ -97,12 +96,6 @@ namespace BlazorWeb.Shared.Components.MTree
         public bool HasChecked(string key)
         {
             return CheckedKeys?.Contains(key) ?? false;
-        }
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            await base.OnAfterRenderAsync(firstRender);
-
         }
     }
 }

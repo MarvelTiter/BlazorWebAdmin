@@ -119,7 +119,6 @@ namespace BlazorWeb.UI.SystemPermission
             CurrentRole = rowData.Data;
             sideExpand = true;
             StateHasChanged();
-
             var result = await PermissionSrv.GetPowerListByRoleIdAsync(CurrentRole.RoleId);
             var keys = result.Payload.Select(p => p.PowerId);
             selectedKeys = keys.ToArray();

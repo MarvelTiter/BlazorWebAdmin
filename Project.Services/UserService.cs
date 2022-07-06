@@ -10,9 +10,9 @@ namespace Project.Services
 {
     public partial class UserService : IUserService
     {
-        private readonly IExpSql context;
+        private readonly IExpressionContext context;
 
-        public UserService(IExpSql context)
+        public UserService(IExpressionContext context)
         {
             this.context = context;
         }

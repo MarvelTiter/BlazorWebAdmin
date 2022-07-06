@@ -13,9 +13,9 @@ namespace Project.Services
     public partial class PemissionService : IPermissionService
     {
         private readonly IRepository repository;
-        private readonly IExpSql context;
+        private readonly IExpressionContext context;
 
-        public PemissionService(IRepository repository, IExpSql context)
+        public PemissionService(IRepository repository, IExpressionContext context)
         {
             this.repository = repository;
             this.context = context;

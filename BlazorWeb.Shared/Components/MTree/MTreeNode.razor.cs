@@ -38,6 +38,7 @@ namespace BlazorWeb.Shared.Components.MTree
         {
             Root.AddNode(this);
             collapse = Deepth > 0;
+            ResetState(Root.CheckedKeys);
             base.OnInitialized();
         }
 

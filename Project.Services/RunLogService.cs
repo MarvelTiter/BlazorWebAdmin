@@ -10,9 +10,9 @@ namespace Project.Services
 {
     public class RunLogService : IRunLogService
     {
-        private readonly IExpSql context;
+        private readonly IExpressionContext context;
 
-        public RunLogService(IExpSql context)
+        public RunLogService(IExpressionContext context)
         {
             this.context = context;
         }
