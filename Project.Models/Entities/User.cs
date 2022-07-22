@@ -15,5 +15,8 @@ namespace Project.Models.Entities
         [ColumnDefinition("用户密码", 2)]
         [Column(Name = "PASSWORD")]
         public string Password { get; set; }
+        [ColumnDefinition("最后登录", 3)]
+        [Column(Name = "LAST_LOGIN")]
+        public DateTime? LastLogin { get; set; }
     }
 }

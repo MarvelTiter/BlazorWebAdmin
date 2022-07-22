@@ -87,7 +87,7 @@
 							</Column>
 							continue;
 						}
-						var type = col.DataType.Name.ToLower();
+						var type = (Nullable.GetUnderlyingType(col.DataType) ?? col.DataType).Name.ToLower();
 						switch (type)
 						{
 							case "string":
