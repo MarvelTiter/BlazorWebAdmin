@@ -60,7 +60,7 @@ namespace BlazorWeb.Shared.Template.Tables
             loading = true;
             TableOptions.Query.Expression = ConditionExpression;
             var result = await TableOptions.DataLoader(TableOptions.Query);
-            TableOptions.Datas = result.Payload;
+            TableOptions.Datas = (result.Payload);
             TableOptions.Total = result.TotalRecord;
             loading = false;
         }
@@ -74,13 +74,13 @@ namespace BlazorWeb.Shared.Template.Tables
         public async Task Export()
         {
             loading = true;
-            var data = TableOptions.Datas;
             if (TableOptions.Page)
             {
                 TableOptions.Query.Expression = ConditionExpression;
                 var result = await TableOptions.ExportDataLoader(TableOptions.Query);
-                data = result.Payload;
+                TableOptions.Datas = result.Payload;
             }
+            var data = TableOptions.Datas;
             if (data.Any())
             {
                 var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile");
@@ -153,7 +153,6 @@ namespace BlazorWeb.Shared.Template.Tables
         public bool EnableSelection { get; set; } = false;
         public bool LoadDataOnLoaded { get; set; } = false;
         public int Total { get; set; }
-        public IEnumerable<TData> Datas { get; set; } = Enumerable.Empty<TData>();
         public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow) || typeof(TData) == typeof(IDictionary<string, object>);
         public bool AutoRefreshData { get; set; } = true;
@@ -177,6 +176,17 @@ namespace BlazorWeb.Shared.Template.Tables
                 Columns = typeof(TData).GenerateColumns();
             }
         }
+
+        private List<TData> _datas = new List<TData>();
+        public IEnumerable<TData> Datas
+        {
+            get => _datas; set
+            {
+                _datas.Clear();
+                _datas.AddRange(value);
+            }
+        }
+
 
         public TableOptions<TData, TQuery> AddColumn(string label, string prop, ColumnDefinition? col = null)
         {

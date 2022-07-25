@@ -38,9 +38,10 @@ namespace BlazorWeb.UI.SystemPermission
             };
         }
 
-        Task<IQueryCollectionResult<User>> Search(GenericRequest<User> req)
+        async Task<IQueryCollectionResult<User>> Search(GenericRequest<User> req)
         {
-            return UserSrv.GetUserListAsync(req);
+            await Task.Delay(2000);
+            return await UserSrv.GetUserListAsync(req);
         }
         protected User currentSelected;
         bool sideExpand;
