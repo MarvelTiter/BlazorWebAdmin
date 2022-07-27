@@ -27,6 +27,7 @@ namespace BlazorWeb.Shared.Template.Tables
                     Fixed = head.Fixed,
                     Width = head.Width,
                     Visible = head.Visible,
+                    Ellipsis = head.Ellipsis,
                     EnableEdit = head.EnableEdit,
                 };
                 if (column.IsEnum)

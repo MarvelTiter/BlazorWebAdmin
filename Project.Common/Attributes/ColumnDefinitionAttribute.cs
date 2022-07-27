@@ -22,5 +22,6 @@ namespace Project.Common.Attributes
         public string? Width { get; }
         public bool EnableEdit { get; set; } = false;
         public bool Visible { get; set; } = true;
+        public bool Ellipsis { get; set; } = false;
     }
 }

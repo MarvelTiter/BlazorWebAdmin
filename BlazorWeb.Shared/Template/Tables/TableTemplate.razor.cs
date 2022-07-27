@@ -28,7 +28,7 @@ namespace BlazorWeb.Shared.Template.Tables
         public MessageService MessageSrv { get; set; }
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
-        public bool EnableGenerateQuery => QueryArea == null && !TableOptions.IsDataTableSource;
+        public bool EnableGenerateQuery => (QueryArea == null || TableOptions.EnabledAdvancedQuery) && !TableOptions.IsDataTableSource;
 
         bool loading;
         private ConditionInfo conditionInfo;
@@ -39,6 +39,7 @@ namespace BlazorWeb.Shared.Template.Tables
             TableOptions.RefreshData = RefreshData;
             if (TableOptions.LoadDataOnLoaded)
             {
+                Console.WriteLine("OnInitializedAsync");
                 await Search();
             }
         }
@@ -152,6 +153,7 @@ namespace BlazorWeb.Shared.Template.Tables
         public TQuery Query { get; set; }
         public bool EnableSelection { get; set; } = false;
         public bool LoadDataOnLoaded { get; set; } = false;
+        public bool EnabledAdvancedQuery { get; set; } = false;
         public int Total { get; set; }
         public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow) || typeof(TData) == typeof(IDictionary<string, object>);

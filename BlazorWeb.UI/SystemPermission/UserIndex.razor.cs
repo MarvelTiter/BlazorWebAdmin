@@ -25,7 +25,7 @@ namespace BlazorWeb.UI.SystemPermission
         {
             base.OnInitialized();
             tableOptions = new TableOptions<User, GenericRequest<User>>();
-            tableOptions.LoadDataOnLoaded = true;
+            //tableOptions.LoadDataOnLoaded = true;
             tableOptions.AddButton(ButtonDefinition<User>.Edit(EditUser));
             tableOptions.AddButton(ButtonDefinition<User>.Delete(DeleteUser));
             tableOptions.DataLoader = Search;

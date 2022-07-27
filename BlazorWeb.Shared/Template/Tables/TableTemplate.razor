@@ -59,9 +59,7 @@
 		   Size="@TableSize.Small"
 		   @bind-SelectedRows=@TableOptions.Selected
 		   OnRowClick=OnRowClickHandle
-		   @bind-PageSize=@TableOptions.Query.PageSize
-		   OnPageIndexChange=HandleChange
-		   OnPageSizeChange=HandleChange>
+		   @bind-PageSize=@TableOptions.Query.PageSize>
 		<ChildContent>
 			@{
 				// 选择列
@@ -73,7 +71,7 @@
 				{
 					foreach (var col in TableOptions.Columns)
 					{
-						<Column TData="object" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex=@($"['{col.PropertyOrFieldName}']") CellRender="ColumnRender<object>(col)">
+						<Column TData="object" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex=@($"['{col.PropertyOrFieldName}']") CellRender="ColumnRender<object>(col)">
 						</Column>
 					}
 				}
@@ -83,7 +81,7 @@
 					{
 						@if (col.IsEnum)
 						{
-							<Column TData="Enum" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Enum>(col)">
+							<Column TData="Enum" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Enum>(col)">
 							</Column>
 							continue;
 						}
@@ -91,23 +89,23 @@
 						switch (type)
 						{
 							case "string":
-								<Column TData="String" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<string>(col)">
+								<Column TData="String" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<string>(col)">
 								</Column>
 								break;
 							case "int32":
-								<Column TData="Int32?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Int32?>(col)">
+								<Column TData="Int32?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Int32?>(col)">
 								</Column>
 								break;
 							case "int16":
-								<Column TData="Int16?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Int16?>(col)">
+								<Column TData="Int16?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Int16?>(col)">
 								</Column>
 								break;
 							case "bool":
-								<Column TData="Boolean?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Boolean?>(col)">
+								<Column TData="Boolean?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Boolean?>(col)">
 								</Column>
 								break;
 							case "datetime":
-								<Column TData="DateTime?" OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
+								<Column TData="DateTime?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@col.Label" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
 								break;
 						}
 					}
@@ -188,8 +186,8 @@
 			 	OnClickStopPropagation
 			 OnClick=@(()=>InvokeButtonAction(definition.Callback, context))>
 		@(definition.LabelFunc?.Invoke(context) ?? definition.Label)
-		</Button>
-	;
+	</Button>
+		;
 	}
 
 	public async Task InvokeButtonAction(Func<TData, Task<bool>> func, TData data)
@@ -226,7 +224,7 @@
 	RenderFragment<CellData<T>> ColumnRender<T>(ColumnDefinition col)
 	{
 		return context =>
-		{
+				{
 	var formattedValue = "";
 	if (col.IsEnum || col.EnumValues != null)
 	{
@@ -242,21 +240,21 @@
 	}
 	return
 	@<span>@context.FormattedValue</span>
-	//	@<span>
-	//		@if(currentRowIndex == context.RowData.RowIndex
-	//			&& currentColumn == col.PropertyOrFieldName
-	//			&& col.EnableEdit)
-	//		{
-	//		// edit
-	//			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
-	//		}
-	//		else
-	//		{
-	//			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
-	//		}
-	//</span>
-	;
-	};
+		//	@<span>
+		//		@if(currentRowIndex == context.RowData.RowIndex
+		//			&& currentColumn == col.PropertyOrFieldName
+		//			&& col.EnableEdit)
+		//		{
+		//		// edit
+		//			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
+		//		}
+		//		else
+		//		{
+		//			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
+		//		}
+		//</span>
+		;
+			};
 	}
 
 
@@ -273,11 +271,13 @@
 	}
 
 	public async void PagingStatusChanged(PaginationEventArgs e)
-	{
-		if (e.Page != TableOptions.Query.PageIndex)
+	{	
+		if (e.Page != TableOptions.Query.PageIndex || e.PageSize != TableOptions.Query.PageSize)
+		{
 			TableOptions.Query.PageIndex = e.Page;
-		if (e.PageSize != TableOptions.Query.PageSize)
 			TableOptions.Query.PageSize = e.PageSize;
-		await Search();
+			await Search();
+			StateHasChanged();
+		}
 	}
 }

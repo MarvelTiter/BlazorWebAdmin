@@ -22,7 +22,9 @@ services.UseLightOrm(config =>
     {
         option.BeforeExecute = sql =>
         {
+#if DEBUG
             Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{sql}\n");
+#endif
         };
     });
 });
