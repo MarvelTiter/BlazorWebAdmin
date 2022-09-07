@@ -20,10 +20,10 @@ services.UseLightOrm(config =>
     config.SetDatabase(DbBaseType.Sqlite, Project.AppCore.LightDb.CreateConnection)
     .SetWatcher(option =>
     {
-        option.BeforeExecute = sql =>
+        option.BeforeExecute = e =>
         {
 #if DEBUG
-            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{sql}\n");
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{e.Sql}\n");
 #endif
         };
     });
