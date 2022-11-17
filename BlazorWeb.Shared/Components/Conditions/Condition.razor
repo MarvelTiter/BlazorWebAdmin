@@ -1,0 +1,46 @@
+﻿@namespace BlazorWeb.Shared.Components
+<Col Span="Parent.ColWidth">
+<div>
+    <label class="conditions">
+        <span class="label" style="width:@($"{Parent.LabelWidth}px")">@Label</span>
+            @if (Field != null && ChildContent == null)
+            {
+                @if (Field.DataType == typeof(DateTime))
+                {
+                <DatePicker @bind-Value=dateValue Style="width:100%;" OnChange=@(async () => await NotifyChanged())></DatePicker>
+                }
+                else if (Field?.EnumValues != null || (Field?.IsEnum ?? false))
+                {
+                <DictionarySelect Options=Field.EnumValues @bind-Value=stringValue OnChange=@(async () => await NotifyChanged()) Style="width:100%;"></DictionarySelect>
+                }
+                else
+                {
+                <Input @bind-Value=stringValue TValue=string OnChange=@(async () => await NotifyChanged())></Input>
+                }
+            }
+            else if (ChildContent != null)
+            {
+                @ChildContent
+            }
+    </label>
+</div>
+</Col>
+
+<style>
+    .conditions {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+        .conditions .label {
+            padding-right: 5px;
+            display: inline-block;
+            box-sizing: border-box;
+            text-align: right;
+        }
+
+            .conditions .label + * {
+                width: 100%;
+            }
+</style>

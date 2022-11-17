@@ -33,9 +33,19 @@ namespace BlazorWeb.Shared.Template.Tables
         bool loading;
         private ConditionInfo conditionInfo;
         private Expression<Func<TData, bool>>? ConditionExpression = e => true;
+        Action SetExpression;
+        void AssignExpression()
+        {
+            TableOptions.Query.Expression = ConditionExpression;
+        }
+        void IgnoreAssign()
+        {
+            // QueryArea内赋值，不需要内部赋值
+        }
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+            SetExpression = QueryArea == null ? AssignExpression : IgnoreAssign;
             TableOptions.RefreshData = RefreshData;
             if (TableOptions.LoadDataOnLoaded)
             {
@@ -47,7 +57,7 @@ namespace BlazorWeb.Shared.Template.Tables
         public async Task Search()
         {
             if (conditionInfo != null)
-                ConditionExpression = BuildCondition.CombineExpression<TData>(conditionInfo);
+                TableOptions.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
             await DoQuery();
         }
 
@@ -59,7 +69,7 @@ namespace BlazorWeb.Shared.Template.Tables
         private async Task DoQuery()
         {
             loading = true;
-            TableOptions.Query.Expression = ConditionExpression;
+            SetExpression.Invoke();
             var result = await TableOptions.DataLoader(TableOptions.Query);
             TableOptions.Datas = (result.Payload);
             TableOptions.Total = result.TotalRecord;
@@ -77,7 +87,8 @@ namespace BlazorWeb.Shared.Template.Tables
             loading = true;
             if (TableOptions.Page)
             {
-                TableOptions.Query.Expression = ConditionExpression;
+                //TableOptions.Query.Expression = ConditionExpression;
+                SetExpression.Invoke();
                 var result = await TableOptions.ExportDataLoader(TableOptions.Query);
                 TableOptions.Datas = result.Payload;
             }

@@ -1,9 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<PackageType>Template</PackageType>
+		<PackageVersion>1.0.0.0</PackageVersion>
+		<PackageId>BlazorWebAdmin.Template</PackageId>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Authors>MarvelTiter</Authors>
+		<Copyright>MIT</Copyright>
+
+		<IncludeContentInPack>true</IncludeContentInPack>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<ContentTargetFolders>content</ContentTargetFolders>
 	</PropertyGroup>
 
 	<ItemGroup>
