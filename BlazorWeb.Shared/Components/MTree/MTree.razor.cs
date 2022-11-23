@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BlazorWeb.Shared.Components.MTree
+namespace BlazorWeb.Shared.Components
 {
     public partial class MTree<TNode>
     {

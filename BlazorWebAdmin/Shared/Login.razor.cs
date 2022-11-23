@@ -5,6 +5,7 @@ using Project.AppCore.Auth;
 using Project.AppCore.Services;
 using Project.AppCore.Store;
 using Project.Models.Forms;
+using System.Web;
 
 namespace BlazorWebAdmin.Shared
 {
@@ -24,7 +25,14 @@ namespace BlazorWebAdmin.Shared
         [Inject]
         NavigationManager NavigationManager { get; set; }
         public bool Loading { get; set; } = false;
-        private async Task HandleLogin()
+		public string? Redirect { get; set; }
+		protected override void OnInitialized()
+		{
+			base.OnInitialized();
+			var full = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+			Redirect = HttpUtility.ParseQueryString(full.Query).Get(nameof(Redirect));
+		}
+		private async Task HandleLogin()
         {
             Loading = true;
             var result = await LoginSrv.LoginAsync(model.UserName, model.Password);
@@ -34,8 +42,11 @@ namespace BlazorWebAdmin.Shared
                 await ((CustomAuthenticationStateProvider)Auth).IdentifyUser(result.Payload);
                 await RouterStore.InitRoutersAsync(result.Payload);
                 _ = MessageSrv.Info("登录成功");
-                NavigationManager.NavigateTo("/");
-            }
+				if (string.IsNullOrEmpty(Redirect))
+					NavigationManager.NavigateTo("/");
+				else
+					NavigationManager.NavigateTo(Redirect);
+			}
             else
             {
                 _ = MessageSrv.Info(result.Message);

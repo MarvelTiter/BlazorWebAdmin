@@ -1,10 +1,13 @@
-﻿@inject NavigationManager Navigator
+﻿@using System.Web;
+@inject NavigationManager Navigator
 @*@inject MessageService MsgSrv*@
 @code {
     protected override void OnInitialized()
     {
         base.OnInitialized();
         @*_ = MsgSrv.Error("登录过期！请重新登录！");*@
-        Navigator.NavigateTo("/login", true);
+        var redirect = Navigator.ToBaseRelativePath(Navigator.Uri);
+        Navigator.NavigateTo($"/login?Redirect={HttpUtility.UrlEncode(redirect)}", true);
+        //Navigator.NavigateTo("/login", true);
     }
 }

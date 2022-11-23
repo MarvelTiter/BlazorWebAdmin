@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlazorWeb.Shared\BlazorWeb.Shared.csproj" />
-    <ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />
     <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
     <ProjectReference Include="..\Project.Services\Project.Services.csproj" />

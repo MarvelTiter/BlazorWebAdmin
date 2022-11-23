@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
 using Project.AppCore.Services;
 using Project.AppCore.Store;
@@ -11,11 +12,11 @@ namespace Project.AppCore.Auth
     [IgnoreAutoInject]
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private readonly ISessionStorageService storageService;
+        private readonly ProtectedLocalStorage storageService;
         private readonly ILoginService loginService;
         private readonly UserStore store;
 
-        public CustomAuthenticationStateProvider(ISessionStorageService storageService, ILoginService loginService, UserStore store)
+        public CustomAuthenticationStateProvider(ProtectedLocalStorage storageService, ILoginService loginService, UserStore store)
         {
             this.storageService = storageService;
             this.loginService = loginService;
@@ -23,8 +24,8 @@ namespace Project.AppCore.Auth
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            string? json = await storageService.GetItemAsync("UID");
-            return await UpdateState(Deserialize(json));
+            var result = await storageService.GetAsync<UserInfo>("UID");
+            return await UpdateState(result.Value);
         }
 
         async Task<AuthenticationState> UpdateState(UserInfo? info = null)
@@ -45,13 +46,13 @@ namespace Project.AppCore.Auth
 
         public async Task IdentifyUser(UserInfo info)
         {
-            await storageService.SetItemAsync("UID", System.Text.Json.JsonSerializer.Serialize(info));
+            await storageService.SetAsync("UID", info);
             NotifyAuthenticationStateChanged(UpdateState(info));
         }
 
         public async Task ClearState()
         {
-            await storageService.SetItemAsync("UID", null);
+            await storageService.SetAsync("UID", null);
             NotifyAuthenticationStateChanged(UpdateState());
         }
 

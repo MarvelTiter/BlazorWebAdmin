@@ -38,7 +38,7 @@ services.AutoInjects();
 services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 services.AddHttpContextAccessor();
 var app = builder.Build();
-Config.AddAssembly(typeof(BlazorWeb.UI.Program));
+//Config.AddAssembly(typeof(BlazorWeb.UI.Program));
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

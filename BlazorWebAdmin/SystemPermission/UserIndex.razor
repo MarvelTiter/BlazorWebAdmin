@@ -1,0 +1,16 @@
+﻿@using Project.Models.Entities
+@using Project.Models.Request
+@page "/user/index"
+<TwoSidePage OpenTrigger=@(() => currentSelected != null) Expand=@sideExpand MainFlex="3">
+	<FirstSide>
+		<TableTemplate TableOptions=tableOptions TData=User TQuery=@(GenericRequest<User>)></TableTemplate>
+	</FirstSide>
+	<SecondSide>
+		<AssignUserRoles Current="currentSelected"></AssignUserRoles>
+	</SecondSide>
+	<ClosedView>
+		<h1>用户角色</h1>
+	</ClosedView>
+</TwoSidePage>
+
+

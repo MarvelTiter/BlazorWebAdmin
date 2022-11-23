@@ -1,4 +1,5 @@
-﻿@typeparam TNode
+﻿@namespace BlazorWeb.Shared.Components
+@typeparam TNode
 <div class="power-tree-node" style="margin-left:@(Deepth * Root.Indent)px">
 	<span class=@NarrowClass.Class @onclick="ToggleExpand"></span>
 	<div class="power-tree-node" @onclick="OnNodeClickAsync" @onclick:preventDefault @onclick:stopPropagation>

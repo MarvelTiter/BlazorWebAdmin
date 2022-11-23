@@ -14,6 +14,16 @@
     <None Remove="Template\Forms\ActionForm\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Components\Condition.razor.cs" />
+    <Compile Remove="Components\QueryConditions.razor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Components\Conditions\Condition.razor" />
+    <None Include="Components\Conditions\QueryConditions.razor" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />

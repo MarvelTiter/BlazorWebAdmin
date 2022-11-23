@@ -3,16 +3,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<PackageType>Template</PackageType>
-		<PackageVersion>1.0.0.0</PackageVersion>
-		<PackageId>BlazorWebAdmin.Template</PackageId>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Authors>MarvelTiter</Authors>
-		<Copyright>MIT</Copyright>
-
-		<IncludeContentInPack>true</IncludeContentInPack>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<ContentTargetFolders>content</ContentTargetFolders>
+		
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -37,7 +28,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\BlazorWeb.UI\BlazorWeb.UI.csproj" />
 		<ProjectReference Include="..\LogAopCodeGenerator\LogAopCodeGenerator.csproj" />
-		<ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />
 		<ProjectReference Include="..\Project.Common\Project.Common.csproj" />
 		<ProjectReference Include="..\Project.Models\Project.Models.csproj" />
 		<ProjectReference Include="..\Project.Services\Project.Services.csproj" />
