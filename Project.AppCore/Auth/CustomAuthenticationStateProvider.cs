@@ -15,17 +15,23 @@ namespace Project.AppCore.Auth
         private readonly ProtectedLocalStorage storageService;
         private readonly ILoginService loginService;
         private readonly UserStore store;
+        private readonly int tokenExpire;
 
-        public CustomAuthenticationStateProvider(ProtectedLocalStorage storageService, ILoginService loginService, UserStore store)
+        public CustomAuthenticationStateProvider(ProtectedLocalStorage storageService, ILoginService loginService, UserStore store, IConfiguration configuration)
         {
             this.storageService = storageService;
             this.loginService = loginService;
             this.store = store;
+            this.tokenExpire = configuration.GetSection("Token").GetValue<int>("Expire");
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var result = await storageService.GetAsync<UserInfo>("UID");
-            return await UpdateState(result.Value);
+            if (result.Success && (DateTime.Now - result.Value!.CreatedTime).Days < tokenExpire)
+            {
+                return await UpdateState(result.Value);
+            }
+            return await UpdateState();
         }
 
         async Task<AuthenticationState> UpdateState(UserInfo? info = null)
