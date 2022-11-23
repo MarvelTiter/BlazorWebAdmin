@@ -1,18 +1,18 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+//using Microsoft.AspNetCore.Components;
+//using Microsoft.AspNetCore.Components.Web;
 
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+//var builder = WebApplication.CreateBuilder(args);
+//builder.Services.AddRazorPages();
+//builder.Services.AddServerSideBlazor();
 
-var app = builder.Build();
+//var app = builder.Build();
 
 
-app.UseStaticFiles();
+//app.UseStaticFiles();
 
-app.UseRouting();
+//app.UseRouting();
 
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+//app.MapBlazorHub();
+//app.MapFallbackToPage("/_Host");
 
-app.Run();
+//app.Run();
