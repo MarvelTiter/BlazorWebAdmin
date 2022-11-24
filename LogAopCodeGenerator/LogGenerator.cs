@@ -137,10 +137,12 @@ namespace {np}
             return $@"
         {string.Join("", fields.Select(f => $"private {f.TypeName} {f.Name};\n"))}
         private BaseContext[] contexts;
+        private {className} proxy;
         public {className}Proxy ({string.Join(",", fields.Select(f => $"{f.TypeName} {f.Name}"))})
         {{
             {string.Join("", fields.Select(f => $"this.{f.Name} = {f.Name};\n"))}
             contexts = InitContext.InitTypesContext(typeof({className}),typeof({interfaceName}));
+            proxy = new {className}({string.Join(",", fields.Skip(1).Select(f => f.Name))});
         }}
 ";
         }
@@ -186,10 +188,9 @@ namespace {np}
         private string BuildProxyMethodTemplate(MemberDefinition member, ImmutableArray<IParameterSymbol> parameters, string aopInstanceField)
         {
             var plist = parameters.Select(p => $"{(p.IsParams ? "params " : "")}{p.Type.ToDisplayString()} {p.Name}").ToList();
+            //private{member.AsyncKeyToken}{member.ReturnString} internal{member.Name}({string.Join(",", plist)})
+            //{ member.Body}
             return $@"
-        private{member.AsyncKeyToken}{member.ReturnString} internal{member.Name}({string.Join(",", plist)})
-{member.Body}
-
         public{member.AsyncKeyToken}{member.ReturnString} {member.Name}({string.Join(",", plist)})
         {{
             var baseContext = contexts.First(x => x.ImplementMethod.Name == ""{member.Name}"");    
@@ -201,7 +202,7 @@ namespace {np}
             context.Proceed = {member.AsyncKeyToken}() => 
             {{
                 context.Exected = true;
-                {member.ReturnValueRecive}{member.AwaitKeyToken}internal{member.Name}({string.Join(",", parameters.Select(p => p.Name))}){member.InternalMethodResult};
+                {member.ReturnValueRecive}{member.AwaitKeyToken}proxy.{member.Name}({string.Join(",", parameters.Select(p => p.Name))}){member.InternalMethodResult};
                 {member.ReturnValAsign}
                 {member.TaskReturnLabel}
             }};
@@ -214,13 +215,12 @@ namespace {np}
         private string BuildCommonMethodTemplate(MemberDefinition member, ImmutableArray<IParameterSymbol> parameters, string aopInstanceField)
         {
             var plist = parameters.Select(p => $"{(p.IsParams ? "params " : "")}{p.Type.ToDisplayString()} {p.Name}").ToList();
+//        private{member.AsyncKeyToken}{member.ReturnString} internal{member.Name}({string.Join(",", plist)})
+//{member.Body}
             return $@"
-        private{member.AsyncKeyToken}{member.ReturnString} internal{member.Name}({string.Join(",", plist)})
-{member.Body}
-
         public {member.ReturnString} {member.Name}({string.Join(",", plist)})
         {{            
-             {(member.IsReturnVoid ? "" : "return ")}internal{member.Name}({string.Join(",", parameters.Select(p => p.Name))});                
+             {(member.IsReturnVoid ? "" : "return ")}proxy.{member.Name}({string.Join(",", parameters.Select(p => p.Name))});                
         }}
 ";
         }

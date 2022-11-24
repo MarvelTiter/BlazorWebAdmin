@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Project.AppCore.Services
 {
-    //[Aspectable(AspectHandleType = typeof(LogAop))]
+    [Aspectable(AspectHandleType = typeof(LogAop))]
     public partial interface IPermissionService
     {
         Task<IQueryCollectionResult<Power>> GetPowerListAsync(GenericRequest<Power> req);
