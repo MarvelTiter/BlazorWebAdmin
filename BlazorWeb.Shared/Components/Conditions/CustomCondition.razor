@@ -1,0 +1,67 @@
+﻿@namespace BlazorWeb.Shared.Components
+@typeparam TData
+@inherits ConditionBase
+<Col Span="Parent.ColWidth">
+<div>
+    <label class="conditions">
+        <span class="label" style="width:@($"{Parent.LabelWidth}px")">@Label</span>
+            @if (typeof(TData) == typeof(DateTime))
+            {
+            <DatePicker @bind-Value=Value OnChange=@(async () => await NotifyChanged())></DatePicker>
+            }
+            else if (EnumValues != null)
+            {
+            <DictionarySelect Options=EnumValues @bind-Value=stringValue OnChange=@(async () => await NotifyChanged())></DictionarySelect>
+            }
+            else
+            {
+            <Input @bind-Value=Value TValue=TData OnChange=@(async () => await NotifyChanged())></Input>
+            }
+    </label>
+</div>
+</Col>
+
+@code {
+    [Parameter]
+    public TData? Value { get; set; }
+    [Parameter]
+    public EventCallback<TData> ValueChanged { get; set; }
+    [Parameter]
+    public Dictionary<string, string>? EnumValues { get; set; }
+
+    string stringValue = "";
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        stringValue = Value?.ToString() ?? "";
+    }
+
+    async Task NotifyChanged()
+    {
+        if (EnumValues != null)
+        {
+            Value = (TData)Convert.ChangeType(stringValue, typeof(TData));
+        }
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+}
+
+<style>
+    .conditions {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+        .conditions .label {
+            padding-right: 5px;
+            display: inline-block;
+            box-sizing: border-box;
+            text-align: right;
+        }
+
+            .conditions .label + * {
+                width: 100%;
+            }
+</style>

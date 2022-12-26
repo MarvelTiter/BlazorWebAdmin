@@ -4,7 +4,7 @@
 		Style=@Style
 		DataSource=Options
 		EnableSearch=@Searchable
-		@bind-Value=selected
+		@bind-Value=Value
 		ValueName="Value"
 		LabelName="Label"
 		DropdownMatchSelectWidth=@false
@@ -12,7 +12,7 @@
 </Select>
 
 @code {
-	private TItem selected;
+	//private TItem selected;
 	[Parameter]
 	public string Class { get; set; }
 	[Parameter]

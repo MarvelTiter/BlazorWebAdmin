@@ -23,14 +23,16 @@ namespace BlazorWeb.Shared.Components
         DayStart,
         DayEnd,
     }
-    public partial class Condition : ComponentBase, ICondition
+
+    public partial class Condition : ConditionBase
     {
-        [CascadingParameter] public IQueryCondition Parent { get; set; }
-        [Parameter] public string? Label { get; set; }
+        //[CascadingParameter] public IQueryCondition Parent { get; set; }
+        //[Parameter] public string? Label { get; set; }
         [Parameter] public CompareType Compare { get; set; } = CompareType.Equal;
-        [Parameter] public DateType? DateConfig { get; set; }
+        //[Parameter] public DateType? DateConfig { get; set; }
         [Parameter] public ColumnDefinition? Field { get; set; }
         [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter] public object? DefaultValue { get; set; }
         public int Index { get; set; }
         DateTime dateValue = DateTime.Now;
         string stringValue;
@@ -47,6 +49,11 @@ namespace BlazorWeb.Shared.Components
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
+                if (DefaultValue != null)
+                {
+                    if (DefaultValue is DateTime d) dateValue = d;
+                    else stringValue = $"{DefaultValue}";
+                }
                 await NotifyChanged();
             }
         }
