@@ -29,13 +29,23 @@
 				var state = await authenticationStateTask;
 				if (state.User.Identity!.IsAuthenticated)
 				{
-					var ca = Auth as CustomAuthenticationStateProvider;
+					//var ca = Auth as CustomAuthenticationStateProvider;
 					var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-					await Router.InitRoutersAsync(ca?.Current);
+					//await Router.InitRoutersAsync(ca?.Current);
 					NavigationManager.NavigateTo(url);
 					await RouterStore.TryAdd(url);
 				}
 			}
 		}
-	}
+
+		protected override async Task OnAfterRenderAsync(bool firstRender)
+		{
+			await base.OnAfterRenderAsync(firstRender);
+			if (firstRender)
+			{
+				var ca = Auth as CustomAuthenticationStateProvider;
+				await Router.InitRoutersAsync(ca?.Current);
+			}
+		}
+}
 }

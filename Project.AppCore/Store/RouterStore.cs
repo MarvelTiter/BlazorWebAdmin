@@ -142,7 +142,16 @@ namespace Project.AppCore.Store
             var result = await permissionService.GetPowerListByUserIdAsync(userInfo.UserId);
             var powers = result.Payload;
             var roots = powers.Where(p => p.ParentId == "ROOT");
-            Routers = new List<RouterMeta>();
+            Routers = new List<RouterMeta>
+            {
+                new RouterMeta
+                {
+                    RouteLink = "/",
+                    IconName = "home",
+                    RouteName = "主页",
+                    Children = new List<RouterMeta>()
+                }
+            };
             foreach (var item in roots)
             {
                 var n = new RouterMeta();
@@ -168,41 +177,6 @@ namespace Project.AppCore.Store
                 }
                 return childNodes;
             }
-            //Routers = new List<RouterMeta>
-            //{
-            //    new RouterMeta
-            //    {
-            //        RouteName = "设置",
-            //        IconName = "setting",
-            //        Children = new List<RouterMeta>
-            //            {
-            //                new RouterMeta
-            //                {
-            //                    RouteName = "计数器",
-            //                    IconName = "setting",
-            //                    RouteLink = "counter/index",
-            //                },
-            //                new RouterMeta
-            //                {
-            //                    RouteName = "用户",
-            //                    IconName = "setting",
-            //                    RouteLink = "user/index",
-            //                }
-            //            }
-            //    },
-            //    new RouterMeta()
-            //    {
-            //        RouteName = "权限配置",
-            //        IconName = "setting",
-            //        RouteLink = "rolepermission"
-            //    },
-            //    new RouterMeta()
-            //    {
-            //        RouteName = "权限设置",
-            //        IconName = "setting",
-            //        RouteLink = "permission"
-            //    }
-            //};
         }
     }
 }
