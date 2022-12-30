@@ -12,12 +12,10 @@ namespace Project.Services
 {
     public partial class PemissionService : IPermissionService
     {
-        private readonly IRepository repository;
         private readonly IExpressionContext context;
 
-        public PemissionService(IRepository repository, IExpressionContext context)
+        public PemissionService(IExpressionContext context)
         {
-            this.repository = repository;
             this.context = context;
         }
 
