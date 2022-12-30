@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
@@ -55,10 +56,10 @@ namespace LogAopCodeGenerator
             // 获得类的类型描述符号,如果无法获得，就跳出
             var compilation = context.Compilation;
             if (compilation.GetSemanticModel(classDeclaration.SyntaxTree).GetDeclaredSymbol(classDeclaration) is not INamedTypeSymbol classSymbol) return;
-
             // 所有特性
             ImmutableArray<AttributeData> allAttributes = classSymbol.GetAttributes()
                 .Concat(classSymbol.AllInterfaces.SelectMany(i => i.GetAttributes()))
+                .Concat(classSymbol.BaseType?.GetAttributes())
                 .ToImmutableArray();
 
             if (allAttributes.Any(x => x.AttributeClass.Equals(aspectable, SymbolEqualityComparer.Default)))
@@ -80,24 +81,25 @@ namespace LogAopCodeGenerator
             List<IMethodSymbol> allMethods = implType.GetMembers().Where(x => x.Kind == SymbolKind.Method)
                           .Cast<IMethodSymbol>()
                           .ToList();
-            var usings = classDeclaration.BuildAllUsings();
-            var npLabel = implType.ContainingNamespace.ToDisplayString();
-            var interfaceNames = classDeclaration.GetInterfaceNames();
+            //var usings = classDeclaration.BuildAllUsings();
+            //var npLabel = implType.ContainingNamespace.ToDisplayString();
+            //var interfaceNames = classDeclaration.GetInterfaceNames();
             var aopAttr = attributes.FirstOrDefault(a => a.AttributeClass.Equals(aspectable, SymbolEqualityComparer.Default));
-            string ctors = BuildConstructor(implType, aopAttr, out var aopInstanceName);
+            string ctors = BuildConstructor(implType, classDeclaration, aopAttr, out var aopInstanceName);
             string body = BuildMethodProxy(context.Compilation, classDeclaration, implType, methodAopAttr, aopInstanceName);
-            string proxyClassTemplate = BuildClassTemplate(usings, npLabel, implType.Name, interfaceNames, ctors, body);
+            string proxyClassTemplate = BuildClassTemplate(classDeclaration, implType, ctors, body);
+            
             context.AddSource($"{implType.Name}Proxy.cs", proxyClassTemplate);
         }
 
-        private string BuildClassTemplate(string[] usings, string np, string className, string[] interfacesString, params string[] bodys)
+        private string BuildClassTemplate(ClassDeclarationSyntax classDeclaration, INamedTypeSymbol implType, params string[] bodys)
         {
             return $@"
-{string.Join("", usings)}
+{string.Join("", classDeclaration.BuildAllUsings())}
 using LogAopCodeGenerator;
-namespace {np}
+namespace {implType.ContainingNamespace.ToDisplayString()}
 {{
-    public class {className}Proxy: {string.Join(",", interfacesString)}
+    public class {implType.Name}Proxy{classDeclaration.TypeParameterList?.ToFullString()}: {string.Join(",", classDeclaration.GetInterfaceNames())}
     {{            
          {string.Join("", bodys)}     
     }}
@@ -110,39 +112,72 @@ namespace {np}
         /// </summary>
         /// <param name="ctor"></param>
         /// <returns></returns>
-        private string BuildConstructor(INamedTypeSymbol implType, AttributeData aopAttr, out string aopField)
+        private string BuildConstructor(INamedTypeSymbol implType, ClassDeclarationSyntax @class, AttributeData aopAttr, out string aopField)
         {
-            var ctor = implType.Constructors.FirstOrDefault();
+            var ctors = @class.Members.Where(m => m is ConstructorDeclarationSyntax).Cast<ConstructorDeclarationSyntax>().ToArray();
+
             StringBuilder builder = new StringBuilder();
-            List<string> assigns = new List<string>();
+            builder.AppendLine("private BaseContext[] contexts;");
+            builder.AppendLine($"private {@class.Identifier.ValueText}{@class.TypeParameterList?.ToFullString()} proxy;");
             var handleType = aopAttr.NamedArguments.FirstOrDefault(x => x.Key == "AspectHandleType").Value.Value as ITypeSymbol;
             aopField = handleType.Name.ToLower();
 
-            var fields = new List<FieldDefinition>();
-            var aop = new FieldDefinition();
-            aop.Name = aopField;
-            aop.TypeName = handleType.ToDisplayString();
-            fields.Add(aop);
-
-            foreach (var p in ctor?.Parameters)
+            for (var i = 0; i < ctors.Length; i++)
             {
-                var pd = new FieldDefinition() { Name = p.Name, TypeName = p.Type.ToDisplayString() };
-                fields.Add(pd);
+                var item = ctors[i];
+                //var ctor = implType.Constructors[i];
+                var fields = new List<FieldDefinition>();
+                //item.ParameterList.Parameters[0].
+                //builder.Append(item.Modifiers.ToFullString());
+                //builder.Append(item.Identifier.ValueText);
+                //builder.Append(item.ParameterList.ToFullString());
+                //builder.Append(item.Initializer?.ToFullString());
+                //List<string> assigns = new List<string>();
+
+                var aop = new FieldDefinition();
+                aop.Name = aopField;
+                aop.TypeName = handleType.ToDisplayString();
+                fields.Add(aop);
+                foreach (var p in item.ParameterList.Parameters)//ctor?.Parameters
+                {
+                    var pd = new FieldDefinition() { Name = p.Identifier.ValueText, TypeName = p.Type?.ToFullString() };
+                    fields.Add(pd);
+                }
+
+                var body = BuildConstructorTemplate(@class.Identifier.ValueText, @class.TypeParameterList?.ToFullString(), implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray(), item.Initializer?.ToFullString());
+                builder.Append(body);
             }
-            return BuildConstructorTemplate(implType.Name, implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray());
+            if (ctors.Length == 0)
+            {// 只有一个默认的构造函数
+                var ctor = implType.Constructors.First();
+                var fields = new List<FieldDefinition>();
+                var aop = new FieldDefinition();
+                aop.Name = aopField;
+                aop.TypeName = handleType.ToDisplayString();
+                fields.Add(aop);
+                //foreach (var p in ctor.Parameters)//ctor?.Parameters
+                //{
+                //    var pd = new FieldDefinition() { Name = p.Name, TypeName = p.Type.ToDisplayString() };
+                //    fields.Add(pd);
+                //}
+                var gs = $"<{string.Join(",", implType.TypeParameters.Select(t => t.ToDisplayString()))}>";
+                var body = BuildConstructorTemplate(implType.Name, gs, implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray(), "");
+                builder.Append(body);
+            }
+            return builder.ToString();
         }
 
-        private string BuildConstructorTemplate(string className, string interfaceName, FieldDefinition[] fields)
+        private string BuildConstructorTemplate(string className,string types, string interfaceName, FieldDefinition[] fields, string @base)
         {
+            //private BaseContext[] contexts;
+            //private {className} proxy;
             return $@"
         {string.Join("", fields.Select(f => $"private {f.TypeName} {f.Name};\n"))}
-        private BaseContext[] contexts;
-        private {className} proxy;
-        public {className}Proxy ({string.Join(",", fields.Select(f => $"{f.TypeName} {f.Name}"))})
+        public {className}Proxy ({string.Join(",", fields.Select(f => $"{f.TypeName} {f.Name}"))}) {@base}
         {{
             {string.Join("", fields.Select(f => $"this.{f.Name} = {f.Name};\n"))}
-            contexts = InitContext.InitTypesContext(typeof({className}),typeof({interfaceName}));
-            proxy = new {className}({string.Join(",", fields.Skip(1).Select(f => f.Name))});
+            contexts = InitContext.InitTypesContext(typeof({className}{types}),typeof({interfaceName}{types}));
+            proxy = new {className}{types}({string.Join(",", fields.Skip(1).Select(f => f.Name))});
         }}
 ";
         }
@@ -157,12 +192,11 @@ namespace {np}
         private string BuildMethodProxy(Compilation compilation, ClassDeclarationSyntax classDeclaration, INamedTypeSymbol implType, INamedTypeSymbol methodAopAttr, string aopInstanceField)
         {
             StringBuilder builder = new StringBuilder();
-            var cn = classDeclaration.GetCurrentNode(classDeclaration);
             var memberNodes = classDeclaration.Members.Select(m => m as MethodDeclarationSyntax);
             foreach (var memberNode in memberNodes)
             {
                 if (memberNode == null) continue;
-                var method = compilation.GetSemanticModel(memberNode.SyntaxTree).GetDeclaredSymbol(memberNode) as IMethodSymbol;
+                var method = compilation.GetSemanticModel(memberNode.SyntaxTree).GetDeclaredSymbol(memberNode);
                 if (method.MethodKind == MethodKind.Constructor) continue;
                 var parameters = method.Parameters;
                 var md = new MemberDefinition();
@@ -215,8 +249,8 @@ namespace {np}
         private string BuildCommonMethodTemplate(MemberDefinition member, ImmutableArray<IParameterSymbol> parameters, string aopInstanceField)
         {
             var plist = parameters.Select(p => $"{(p.IsParams ? "params " : "")}{p.Type.ToDisplayString()} {p.Name}").ToList();
-//        private{member.AsyncKeyToken}{member.ReturnString} internal{member.Name}({string.Join(",", plist)})
-//{member.Body}
+            //        private{member.AsyncKeyToken}{member.ReturnString} internal{member.Name}({string.Join(",", plist)})
+            //{member.Body}
             return $@"
         public {member.ReturnString} {member.Name}({string.Join(",", plist)})
         {{            
@@ -249,10 +283,20 @@ namespace {np}
             {
                 if (t is SimpleBaseTypeSyntax @syntax)
                 {
-                    var ty = @syntax.Type as IdentifierNameSyntax;
-                    if (ty != null)
+                    if (syntax.Type is IdentifierNameSyntax ty)
                     {
-                        ret.Add(ty.Identifier.ValueText);
+                        if (ty != null)
+                        {
+
+                            ret.Add(ty.Identifier.ValueText);
+                        }
+                    }
+                    else if (syntax.Type is GenericNameSyntax g)
+                    {
+                        if (g != null)
+                        {
+                            ret.Add($"{g.Identifier.ValueText}{g.TypeArgumentList}");
+                        }
                     }
                 }
             }
