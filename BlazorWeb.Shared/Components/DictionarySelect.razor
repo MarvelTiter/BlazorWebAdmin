@@ -3,6 +3,8 @@
 		Style=@Style
 		EnableSearch
 		@bind-Value=selected
+		TItemValue="@(Options<string>)"
+		TItem="@(Options<string>)"
 		DataSource=@Options.Convert()
 		ValueName=@("Value")
 		LabelName=@("Label")
@@ -11,7 +13,7 @@
 </Select>
  
 @code {
-	string selected;
+	Options<string> selected;
 	[Parameter]
 	public string Class { get; set; }
 	[Parameter]

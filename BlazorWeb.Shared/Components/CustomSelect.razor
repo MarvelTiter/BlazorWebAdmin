@@ -3,8 +3,10 @@
 <Select Class=@Class
 		Style=@Style
 		DataSource=Options
+		TItemValue="@(Options<TItem>)"
+		TItem="@(Options<TItem>)"
 		EnableSearch=@Searchable
-		@bind-Value=Value
+		@bind-Value=selected
 		ValueName="Value"
 		LabelName="Label"
 		DropdownMatchSelectWidth=@false
@@ -12,7 +14,7 @@
 </Select>
 
 @code {
-	//private TItem selected;
+	private Options<TItem> selected;
 	[Parameter]
 	public string Class { get; set; }
 	[Parameter]

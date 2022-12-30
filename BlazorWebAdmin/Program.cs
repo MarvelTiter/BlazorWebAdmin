@@ -28,7 +28,7 @@ services.UseLightOrm(config =>
         };
     });
 });
-services.AddSessionStorageServices();
+//services.AddSessionStorageServices();
 services.AutoInjects();
 //services.AddScoped<StateContainer>();
 //services.AddScoped<RouterStore>();
