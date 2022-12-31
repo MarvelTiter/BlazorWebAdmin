@@ -157,7 +157,7 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
                 aop.Name = aopField;
                 aop.TypeName = handleType.ToDisplayString();
                 fields.Add(aop);
-                var gs = $"<{string.Join(",", implType.TypeParameters.Select(t => t.ToDisplayString()))}>";
+                var gs = implType.TypeParameters.Length > 0 ? $"<{string.Join(",", implType.TypeParameters.Select(t => t.ToDisplayString()))}>" : "";
                 var body = BuildConstructorTemplate(@class.Identifier.ValueText, gs, implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray(), "");
                 builder.Append(body);
             }
