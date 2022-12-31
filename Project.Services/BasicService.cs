@@ -1,4 +1,5 @@
-﻿using MDbContext.ExpressionSql;
+﻿using LogAopCodeGenerator;
+using MDbContext.ExpressionSql;
 using MDbContext.Repository;
 using Project.AppCore.Repositories;
 using Project.AppCore.Services;
@@ -47,9 +48,9 @@ namespace Project.Services
             return QueryResult.Return<bool>(flag > 0);
         }
 
-        public virtual async Task<IQueryResult<bool>> UpdateItem(Expression<Func<object>> Expression, Expression<Func<T, bool>> primaryKey)
+        public virtual async Task<IQueryResult<bool>> UpdateItem(Expression<Func<object>> exp, Expression<Func<T, bool>> primaryKey)
         {
-            var flag = await context.Repository<T>().UpdateAsync(Expression, primaryKey);
+            var flag = await context.Repository<T>().UpdateAsync(exp, primaryKey);
             return QueryResult.Return<bool>(flag > 0);
         }
     }

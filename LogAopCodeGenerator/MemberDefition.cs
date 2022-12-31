@@ -7,6 +7,11 @@ namespace LogAopCodeGenerator
         public string AccessLevel { get; set; }// public, private, etc..
         public string TypeName { get; set; }
         public string Name { get; set; }
+        /// <summary>
+        /// 是否传到基类  ctor (p1, p2): base(p1, p2)
+        /// </summary>
+        public bool InBase { get; set; }
+        public bool ProxyClassParameter { get; set; }
     }
     public struct MemberDefinition
     {

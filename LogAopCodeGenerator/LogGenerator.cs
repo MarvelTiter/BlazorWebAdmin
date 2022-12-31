@@ -28,12 +28,12 @@ namespace LogAopCodeGenerator
         }
         public void Initialize(GeneratorInitializationContext context)
         {
-//#if DEBUG
-//            if (!Debugger.IsAttached)
-//            {
-//                Debugger.Launch();
-//            }
-//#endif
+#if DEBUG
+            if (!Debugger.IsAttached)
+            {
+                Debugger.Launch();
+            }
+#endif
             context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
         }
 
@@ -81,14 +81,12 @@ namespace LogAopCodeGenerator
             List<IMethodSymbol> allMethods = implType.GetMembers().Where(x => x.Kind == SymbolKind.Method)
                           .Cast<IMethodSymbol>()
                           .ToList();
-            //var usings = classDeclaration.BuildAllUsings();
-            //var npLabel = implType.ContainingNamespace.ToDisplayString();
-            //var interfaceNames = classDeclaration.GetInterfaceNames();
+
             var aopAttr = attributes.FirstOrDefault(a => a.AttributeClass.Equals(aspectable, SymbolEqualityComparer.Default));
-            string ctors = BuildConstructor(implType, classDeclaration, aopAttr, out var aopInstanceName);
+            string ctors = BuildConstructor(context.Compilation, implType, classDeclaration, aopAttr, out var aopInstanceName);
             string body = BuildMethodProxy(context.Compilation, classDeclaration, implType, methodAopAttr, aopInstanceName);
             string proxyClassTemplate = BuildClassTemplate(classDeclaration, implType, ctors, body);
-            
+
             context.AddSource($"{implType.Name}Proxy.cs", proxyClassTemplate);
         }
 
@@ -101,7 +99,7 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
 {{
     public class {implType.Name}Proxy{classDeclaration.TypeParameterList?.ToFullString()}: {string.Join(",", classDeclaration.GetInterfaceNames())}
     {{            
-         {string.Join("", bodys)}     
+         {string.Join("", bodys)}
     }}
 }}
 ";
@@ -112,38 +110,42 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
         /// </summary>
         /// <param name="ctor"></param>
         /// <returns></returns>
-        private string BuildConstructor(INamedTypeSymbol implType, ClassDeclarationSyntax @class, AttributeData aopAttr, out string aopField)
+        private string BuildConstructor(Compilation compilation, INamedTypeSymbol implType, ClassDeclarationSyntax @class, AttributeData aopAttr, out string aopField)
         {
             var ctors = @class.Members.Where(m => m is ConstructorDeclarationSyntax).Cast<ConstructorDeclarationSyntax>().ToArray();
 
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("private BaseContext[] contexts;");
-            builder.AppendLine($"private {@class.Identifier.ValueText}{@class.TypeParameterList?.ToFullString()} proxy;");
+            builder.AppendLine($"private {@class.Identifier.ValueText}{@class.TypeParameterList?.ToFullString()} _{@class.Identifier.ValueText}Proxy;");
             var handleType = aopAttr.NamedArguments.FirstOrDefault(x => x.Key == "AspectHandleType").Value.Value as ITypeSymbol;
             aopField = handleType.Name.ToLower();
 
             for (var i = 0; i < ctors.Length; i++)
             {
                 var item = ctors[i];
-                //var ctor = implType.Constructors[i];
                 var fields = new List<FieldDefinition>();
-                //item.ParameterList.Parameters[0].
-                //builder.Append(item.Modifiers.ToFullString());
-                //builder.Append(item.Identifier.ValueText);
-                //builder.Append(item.ParameterList.ToFullString());
-                //builder.Append(item.Initializer?.ToFullString());
-                //List<string> assigns = new List<string>();
-
                 var aop = new FieldDefinition();
                 aop.Name = aopField;
                 aop.TypeName = handleType.ToDisplayString();
-                fields.Add(aop);
+                //fields.Add(aop);
                 foreach (var p in item.ParameterList.Parameters)//ctor?.Parameters
                 {
-                    var pd = new FieldDefinition() { Name = p.Identifier.ValueText, TypeName = p.Type?.ToFullString() };
+                    var symbol = compilation.GetSemanticModel(p.SyntaxTree).GetDeclaredSymbol(p);
+                    var fullTypeName = symbol.Type.ToDisplayString();
+                    var name = symbol.Name;
+                    if (fullTypeName == aop.TypeName)
+                    {
+                        aop.Name = name;
+                        aopField = name;
+                        aop.ProxyClassParameter = true;
+                        aop.InBase = item.Initializer?.ArgumentList.Arguments.Any(ba => ba.ToFullString() == name) ?? false;
+                        continue;
+                    }
+                    var pd = new FieldDefinition() { Name = name, TypeName = fullTypeName, ProxyClassParameter = true };
+                    pd.InBase = item.Initializer?.ArgumentList.Arguments.Any(ba => ba.ToFullString() == name) ?? false;
                     fields.Add(pd);
                 }
-
+                fields.Insert(0, aop);
                 var body = BuildConstructorTemplate(@class.Identifier.ValueText, @class.TypeParameterList?.ToFullString(), implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray(), item.Initializer?.ToFullString());
                 builder.Append(body);
             }
@@ -155,29 +157,24 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
                 aop.Name = aopField;
                 aop.TypeName = handleType.ToDisplayString();
                 fields.Add(aop);
-                //foreach (var p in ctor.Parameters)//ctor?.Parameters
-                //{
-                //    var pd = new FieldDefinition() { Name = p.Name, TypeName = p.Type.ToDisplayString() };
-                //    fields.Add(pd);
-                //}
                 var gs = $"<{string.Join(",", implType.TypeParameters.Select(t => t.ToDisplayString()))}>";
-                var body = BuildConstructorTemplate(implType.Name, gs, implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray(), "");
+                var body = BuildConstructorTemplate(@class.Identifier.ValueText, gs, implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray(), "");
                 builder.Append(body);
             }
             return builder.ToString();
         }
 
-        private string BuildConstructorTemplate(string className,string types, string interfaceName, FieldDefinition[] fields, string @base)
+        private string BuildConstructorTemplate(string className, string types, string interfaceName, FieldDefinition[] fields, string @base)
         {
             //private BaseContext[] contexts;
-            //private {className} proxy;
+            //private {className} proxy;            
             return $@"
-        {string.Join("", fields.Select(f => $"private {f.TypeName} {f.Name};\n"))}
+        {string.Join("", fields.Where(f => !f.InBase).Select(f => $"protected {f.TypeName} {f.Name};\n"))}
         public {className}Proxy ({string.Join(",", fields.Select(f => $"{f.TypeName} {f.Name}"))}) {@base}
         {{
-            {string.Join("", fields.Select(f => $"this.{f.Name} = {f.Name};\n"))}
+            {string.Join("", fields.Where(f => !f.InBase).Select(f => $"this.{f.Name} = {f.Name};\n"))}
             contexts = InitContext.InitTypesContext(typeof({className}{types}),typeof({interfaceName}{types}));
-            proxy = new {className}{types}({string.Join(",", fields.Skip(1).Select(f => f.Name))});
+            _{className}Proxy = new {className}{types}({string.Join(",", fields.Where(f => f.ProxyClassParameter).Select(f => f.Name))});
         }}
 ";
         }
@@ -193,6 +190,7 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
         {
             StringBuilder builder = new StringBuilder();
             var memberNodes = classDeclaration.Members.Select(m => m as MethodDeclarationSyntax);
+            var proxyInstanceName = $"_{classDeclaration.Identifier.ValueText}Proxy";
             foreach (var memberNode in memberNodes)
             {
                 if (memberNode == null) continue;
@@ -208,18 +206,18 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
                 if (method.HasAttribute(methodAopAttr) || implType.HasAttribute(method, methodAopAttr))
                 {
                     // 代理
-                    builder.Append(BuildProxyMethodTemplate(md, parameters, aopInstanceField));
+                    builder.Append(BuildProxyMethodTemplate(proxyInstanceName, md, parameters, aopInstanceField));
                 }
                 else
                 {
                     // 不代理
-                    builder.Append(BuildCommonMethodTemplate(md, parameters, aopInstanceField));
+                    builder.Append(BuildCommonMethodTemplate(proxyInstanceName, md, parameters, aopInstanceField));
                 }
             }
             return builder.ToString();
         }
 
-        private string BuildProxyMethodTemplate(MemberDefinition member, ImmutableArray<IParameterSymbol> parameters, string aopInstanceField)
+        private string BuildProxyMethodTemplate(string proxyInstance, MemberDefinition member, ImmutableArray<IParameterSymbol> parameters, string aopInstanceField)
         {
             var plist = parameters.Select(p => $"{(p.IsParams ? "params " : "")}{p.Type.ToDisplayString()} {p.Name}").ToList();
             //private{member.AsyncKeyToken}{member.ReturnString} internal{member.Name}({string.Join(",", plist)})
@@ -236,7 +234,7 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
             context.Proceed = {member.AsyncKeyToken}() => 
             {{
                 context.Exected = true;
-                {member.ReturnValueRecive}{member.AwaitKeyToken}proxy.{member.Name}({string.Join(",", parameters.Select(p => p.Name))}){member.InternalMethodResult};
+                {member.ReturnValueRecive}{member.AwaitKeyToken}{proxyInstance}.{member.Name}({string.Join(",", parameters.Select(p => p.Name))}){member.InternalMethodResult};
                 {member.ReturnValAsign}
                 {member.TaskReturnLabel}
             }};
@@ -246,7 +244,7 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
 ";
         }
 
-        private string BuildCommonMethodTemplate(MemberDefinition member, ImmutableArray<IParameterSymbol> parameters, string aopInstanceField)
+        private string BuildCommonMethodTemplate(string proxyInstance, MemberDefinition member, ImmutableArray<IParameterSymbol> parameters, string aopInstanceField)
         {
             var plist = parameters.Select(p => $"{(p.IsParams ? "params " : "")}{p.Type.ToDisplayString()} {p.Name}").ToList();
             //        private{member.AsyncKeyToken}{member.ReturnString} internal{member.Name}({string.Join(",", plist)})
@@ -254,7 +252,7 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
             return $@"
         public {member.ReturnString} {member.Name}({string.Join(",", plist)})
         {{            
-             {(member.IsReturnVoid ? "" : "return ")}proxy.{member.Name}({string.Join(",", parameters.Select(p => p.Name))});                
+             {(member.IsReturnVoid ? "" : "return ")}{proxyInstance}.{member.Name}({string.Join(",", parameters.Select(p => p.Name))});                
         }}
 ";
         }

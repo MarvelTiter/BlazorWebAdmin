@@ -43,13 +43,18 @@ namespace Project.AppCore.Aop
         //{
         //    return Task.FromResult(true);
         //}
-
+        
         public override async Task Invoke(AspectContext context)
         {
             await context.Proceed();
             var infoAttr = context.ServiceMethod.GetCustomAttribute<LogInfoAttribute>();
             var result = context.ReturnValue as IQueryResult;
             var userId = store?.UserId ?? GetUserIdFromContext(context);
+            if (infoAttr!.Module == "BasicService")
+            {
+                var type = context.ServiceType.GetGenericArguments().First();
+                infoAttr!.Action = $"[{type.Name}]{infoAttr!.Action}";
+            }
             var l = new RunLog()
             {
                 UserId = userId,
