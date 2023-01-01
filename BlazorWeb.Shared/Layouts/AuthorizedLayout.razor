@@ -4,48 +4,53 @@
 @inject RouterStore Router
 @inject AuthenticationStateProvider Auth
 <CascadingValue Value="this">
-	<AuthorizeView>
-		<Authorized>
-			@Body
-		</Authorized>
-		<NotAuthorized>
-			<RedirectToLogin></RedirectToLogin>
-		</NotAuthorized>
-	</AuthorizeView>
+    <AuthorizeView>
+        <Authorized>
+            @Body
+        </Authorized>
+        <NotAuthorized>
+            <RedirectToLogin></RedirectToLogin>
+        </NotAuthorized>
+    </AuthorizeView>
 </CascadingValue>
 
 @code {
-	@code {
-		[CascadingParameter]
-		private Task<AuthenticationState>? authenticationStateTask { get; set; }
-		[Parameter]
-		public RenderFragment? ChildContent { get; set; }
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    [Inject]
+    public ILogger<AuthorizedLayout> Logger { get; set; }
 
-		protected override async Task OnInitializedAsync()
-		{
-			await base.OnInitializedAsync();
-			if (authenticationStateTask != null)
-			{
-				var state = await authenticationStateTask;
-				if (state.User.Identity!.IsAuthenticated)
-				{
-					//var ca = Auth as CustomAuthenticationStateProvider;
-					var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-					//await Router.InitRoutersAsync(ca?.Current);
-					NavigationManager.NavigateTo(url);
-					await RouterStore.TryAdd(url);
-				}
-			}
-		}
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (authenticationStateTask != null)
+        {
+            var state = await authenticationStateTask;
+            if (state.User.Identity!.IsAuthenticated)
+            {
+                var ca = Auth as CustomAuthenticationStateProvider;
+                await Router.InitRoutersAsync(ca?.Current);
+                var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+                NavigationManager.NavigateTo(url);
+                await RouterStore.TryAdd(url);
+                Logger.LogInformation("InitializedAsync: InitRoutersAsync");
+            }
+        }
+    }
 
-		protected override async Task OnAfterRenderAsync(bool firstRender)
-		{
-			await base.OnAfterRenderAsync(firstRender);
-			if (firstRender)
-			{
-				var ca = Auth as CustomAuthenticationStateProvider;
-				await Router.InitRoutersAsync(ca?.Current);
-			}
-		}
-}
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //	await base.OnAfterRenderAsync(firstRender);
+    //	if (firstRender)
+    //	{
+    //		var ca = Auth as CustomAuthenticationStateProvider;
+    //		await Router.InitRoutersAsync(ca?.Current);
+    //		var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+    //		NavigationManager.NavigateTo(url);
+    //		await RouterStore.TryAdd(url);
+    //		Logger.LogInformation("AfterRender: InitRoutersAsync");
+    //	}
+    //}
 }
