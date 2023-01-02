@@ -13,7 +13,6 @@ namespace BlazorWeb.Shared.Utils
             options.OkText = "确定";
             options.CancelText = "取消";
             var modalRef = await service.CreateModalAsync<Template, T, T>(options, param);
-
             modalRef.OnOk = async (result) =>
             {
                 await Task.Delay(1);
