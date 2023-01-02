@@ -31,6 +31,7 @@ namespace Project.AppCore.Auth
 				var result = await storageService.GetAsync<UserInfo>("UID");
 				if (result.Success && (DateTime.Now - result.Value?.CreatedTime)?.Days < tokenExpire)
 				{
+					await loginService.UpdateLastLoginTimeAsync(result.Value!.UserId);
 					return await UpdateState(result.Value);
 				}
 			}

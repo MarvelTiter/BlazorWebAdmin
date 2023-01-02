@@ -1,11 +1,20 @@
-﻿using Project.AppCore.Services;
+﻿using MDbContext.ExpressionSql;
+using MDbContext.Repository;
+using Project.AppCore.Services;
 using Project.Models;
+using Project.Models.Entities;
 using Project.Models.Permissions;
 
 namespace Project.Services
 {
     public partial class LoginService : ILoginService
     {
+        private readonly IExpressionContext context;
+
+        public LoginService(IExpressionContext context)
+        {
+            this.context = context;
+        }
         public Task<bool> CheckUser(UserInfo info)
         {
             return Task.FromResult(true);
@@ -13,13 +22,43 @@ namespace Project.Services
 
         public async Task<IQueryResult<UserInfo>> LoginAsync(string username, string password)
         {
-            var roles = new List<string> { "admin", "superadmin", "vistor" };
-            return await Task.FromResult(new QueryResult<UserInfo>() { Success = true, Message = "Done", Payload = new UserInfo { UserId = username, Roles = roles, UserName = "测试" } });
+            var u = await context.Repository<User>().GetSingleAsync(u => u.UserId == username);
+            var result = QueryResult.Return<UserInfo>(u != null);
+            if (!result.Success)
+            {
+                result.Message = $"用户：{username} 不存在";
+                return result;
+            }
+            if (u!.Password != password)
+            {
+                result.Message = "密码错误";
+                result.Success = false;
+                return result;
+            }
+            await UpdateLastLoginTimeAsync(username);
+            var roles = await context.Repository<UserRole>().GetListAsync(ur => ur.UserId == username);
+            var userInfo = new UserInfo
+            {
+                UserId = username,
+                UserName = u.UserName,
+                Roles = roles.Select(ur => ur.RoleId).ToList()
+            };
+            result.SetPayload(userInfo);
+            return result;
         }
 
-        public Task<bool> LogoutAsync()
-        {            
-            throw new NotImplementedException();
+        public async Task<IQueryResult<bool>> UpdateLastLoginTimeAsync(string username)
+        {
+            var flag = await context.Update<User>()
+                                    .Set(u => u.LastLogin, DateTime.Now)
+                                    .Where(u => u.UserId == username).ExecuteAsync();
+            return QueryResult.Return<bool>(flag > 0);
         }
+
+        public Task<IQueryResult<bool>> LogoutAsync()
+        {
+            //TODO 用户登出处理
+            return Task.FromResult(QueryResult.Return<bool>(true));
+		}
     }
 }

@@ -68,7 +68,7 @@ namespace Project.AppCore.Aop
 
         private string GetUserIdFromContext(AspectContext context)
         {
-            if (context.ServiceMethod.Name == "LoginAsync")
+            if (context.ServiceType == typeof(ILoginService))
             {
                 return context.Parameters.FirstOrDefault()?.ToString();
             }

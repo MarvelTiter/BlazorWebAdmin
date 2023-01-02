@@ -22,7 +22,7 @@ namespace BlazorWebAdmin
 
             var entities = GetDbEntities(all.First(asm => asm.FullName!.Contains("Project.Models"))).ToArray();
 
-            InjectGeneralRepository(self, entities, typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+            //InjectGeneralRepository(self, entities, typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
             return self;
         }

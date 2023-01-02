@@ -1,8 +1,10 @@
 ﻿@using Project.AppCore.Auth
+@using Project.AppCore.Services;
 @using Project.Common
 @inject EventDispatcher dispatcher
 @inject UserStore store
 @inject AuthenticationStateProvider Auth
+@inject ILoginService LoginSrv
 <div class="wrapper">
 	<div class="inner_box">
 		<AuthorizeView>
@@ -43,9 +45,10 @@
 		return Task.CompletedTask;
 	}
 
-	Task HandleLogout()
+	async Task HandleLogout()
 	{
 		store.ClearUser();
-		return ((CustomAuthenticationStateProvider)Auth).ClearState();
+		await LoginSrv.LogoutAsync();
+		await ((CustomAuthenticationStateProvider)Auth).ClearState();
 	}
 }
