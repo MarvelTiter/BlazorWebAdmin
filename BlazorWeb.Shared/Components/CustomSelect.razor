@@ -32,6 +32,7 @@
 
 	private async void HandleSelectedChanged(Options<TItem> item)
 	{
+		if (item == null) return;
 		await ValueChanged.InvokeAsync(item.Value);
 		if (OnChange.HasDelegate)
 		{
