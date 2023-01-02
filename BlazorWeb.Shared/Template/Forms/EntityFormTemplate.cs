@@ -24,7 +24,7 @@ namespace BlazorWeb.Shared.Template.Forms
 
         protected virtual Task<bool> OnPostAsync()
         {
-            return Task.FromResult(false);
+            return Task.FromResult(true);
         }
 
         public override async Task OnFeedbackOkAsync(ModalClosingEventArgs args)
@@ -39,7 +39,7 @@ namespace BlazorWeb.Shared.Template.Forms
             }
             if (result)
             {
-                await (FeedbackRef as IOkCancelRef<TEntity>)!.OkAsync(Value);
+                await OkCancelRefWithResult.OkAsync(Value);
             }
             else
             {
