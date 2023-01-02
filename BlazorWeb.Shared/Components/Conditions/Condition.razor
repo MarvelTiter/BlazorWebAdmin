@@ -2,7 +2,7 @@
 @inherits ConditionBase
 <Col Span="Parent.ColWidth">
 <div>
-    <label class="conditions">
+    <label class="conditions" style="@Style">
         <span class="label" style="width:@($"{Parent.LabelWidth}px")">@Label</span>
             @if (Field != null && ChildContent == null)
             {
@@ -16,7 +16,7 @@
                 }
                 else
                 {
-                <Input @bind-Value=stringValue TValue=string OnChange=@(async () => await NotifyChanged())></Input>
+                <Input @bind-Value=stringValue TValue=string BindOnInput=@true OnChange=@(async () => await NotifyChanged())></Input>
                 }
             }
             else if (ChildContent != null)

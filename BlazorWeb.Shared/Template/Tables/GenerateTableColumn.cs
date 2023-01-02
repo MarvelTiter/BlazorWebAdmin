@@ -1,4 +1,5 @@
 ﻿using BlazorWeb.Shared.Template.Tables.Setting;
+using MDbEntity.Attributes;
 using Project.Common.Attributes;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,26 @@ namespace BlazorWeb.Shared.Template.Tables
 {
     public static class GenerateTableColumn
     {
+        public static ColumnDefinition GenerateColumn(this PropertyInfo self)
+        {
+            var head = self.GetCustomAttribute<ColumnDefinitionAttribute>();
+            var dbInfo = self.GetCustomAttribute<ColumnAttribute>();
+            ColumnDefinition column = new(head!.Label, self.Name)
+            {
+                Index = head.Sort,
+                DataType = self.PropertyType,
+                Fixed = head.Fixed,
+                Width = head.Width,
+                Visible = head.Visible,
+                Ellipsis = head.Ellipsis,
+                EnableEdit = head.EnableEdit,
+            };
+            if (column.IsEnum)
+            {
+                column.EnumValues = ParseDictionary(self.PropertyType);
+            }
+            return column;
+        }
         public static List<ColumnDefinition> GenerateColumns(this Type self)
         {
             var props = self.GetProperties();
@@ -19,24 +40,10 @@ namespace BlazorWeb.Shared.Template.Tables
             List<ColumnDefinition> columns = new List<ColumnDefinition>();
             foreach (var col in heads)
             {
-                var head = col.GetCustomAttribute<ColumnDefinitionAttribute>();
-                ColumnDefinition column = new(head!.Label, col.Name)
-                {
-                    Index = head.Sort,
-                    DataType = col.PropertyType,
-                    Fixed = head.Fixed,
-                    Width = head.Width,
-                    Visible = head.Visible,
-                    Ellipsis = head.Ellipsis,
-                    EnableEdit = head.EnableEdit,
-                };
-                if (column.IsEnum)
-                {
-                    column.EnumValues = ParseDictionary(col.PropertyType);
-                }
+                var column = col.GenerateColumn();
                 columns.Add(column);
             }
-            columns.Sort((a, b) => a.Index - b.Index);
+            //columns.Sort((a, b) => a.Index - b.Index);
             return columns;
         }
 

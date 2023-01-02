@@ -29,12 +29,13 @@ namespace BlazorWeb.Shared.Utils
             return await tcs.Task;
         }
 
-        public static Task<T> OpenDialog<Template, T>(this ModalService service, string title, T? param = default)
+        public static Task<T> OpenDialog<Template, T>(this ModalService service, string title, T? param = default, int width = 0)
             where Template : FeedbackComponent<T, T>
             where T : new()
         {
             var options = new ModalOptions();
             options.Title = title;
+            if (width > 0) options.Width = width;
             options.DestroyOnClose = true;
             return OpenDialog<Template, T>(service, options, param);
         }
@@ -54,12 +55,13 @@ namespace BlazorWeb.Shared.Utils
             return await tcs.Task;
         }
 
-        public static Task<T> OpenDrawer<Template, T>(this DrawerService service, string title, T? param = default)
+        public static Task<T> OpenDrawer<Template, T>(this DrawerService service, string title, T? param = default, int width = 0)
            where Template : FeedbackComponent<T, T>
            where T : new()
         {
             var options = new DrawerOptions();
             options.Title = title;
+            if (width > 0) options.Width = width;
             return OpenDrawer<Template, T>(service, options, param);
         }
 

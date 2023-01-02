@@ -3,7 +3,7 @@
 @inherits ConditionBase
 <Col Span="Parent.ColWidth">
 <div>
-    <label class="conditions">
+    <label class="conditions" style="@Style">
         <span class="label" style="width:@($"{Parent.LabelWidth}px")">@Label</span>
             @if (typeof(TData) == typeof(DateTime))
             {
@@ -15,7 +15,7 @@
             }
             else
             {
-            <Input @bind-Value=Value TValue=TData OnChange=@(async () => await NotifyChanged())></Input>
+            <Input @bind-Value=Value TValue=TData BindOnInput=@true OnChange=@(async () => await NotifyChanged())></Input>
             }
     </label>
 </div>

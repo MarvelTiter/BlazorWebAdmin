@@ -28,12 +28,12 @@ namespace LogAopCodeGenerator
         }
         public void Initialize(GeneratorInitializationContext context)
         {
-#if DEBUG
-            if (!Debugger.IsAttached)
-            {
-                Debugger.Launch();
-            }
-#endif
+//#if DEBUG
+//            if (!Debugger.IsAttached)
+//            {
+//                Debugger.Launch();
+//            }
+//#endif
             context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
         }
 

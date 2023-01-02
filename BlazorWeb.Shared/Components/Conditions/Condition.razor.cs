@@ -2,6 +2,7 @@
 using BlazorWeb.Shared.Template.Tables.Setting;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.Extensions.Logging;
 using MT.KitTools.DateTimeExtension;
 using MT.KitTools.StringExtension;
 using System;
@@ -33,9 +34,10 @@ namespace BlazorWeb.Shared.Components
         [Parameter] public ColumnDefinition? Field { get; set; }
         [Parameter] public RenderFragment ChildContent { get; set; }
         [Parameter] public object? DefaultValue { get; set; }
+        [Inject] public ILogger<Condition> Logger { get; set; }
         public int Index { get; set; }
         DateTime dateValue = DateTime.Now;
-        string stringValue;
+        string stringValue = string.Empty;
 
         protected override void OnInitialized()
         {
@@ -110,6 +112,8 @@ namespace BlazorWeb.Shared.Components
         {
             if (Field == null) return Task.CompletedTask;
             var innerValue = GetInnerValue(out bool validValue);
+            //if (validValue)
+            //    Logger.LogInformation(innerValue.ToString());
             var condition = new ConditionInfo(Field.PropertyOrFieldName, Compare, innerValue, Field.DataType, validValue);
             condition.LinkType = Index > 0 ? ExpressionType.AndAlso : null;
             return Parent.UpdateCondition(Index, condition);

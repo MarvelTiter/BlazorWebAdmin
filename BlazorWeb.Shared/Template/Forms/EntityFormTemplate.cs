@@ -22,8 +22,14 @@ namespace BlazorWeb.Shared.Template.Forms
             }
         }
 
+        protected virtual Task OnPostAsync()
+        {
+            return Task.CompletedTask;
+        }
+
         public override async Task OnFeedbackOkAsync(ModalClosingEventArgs args)
         {
+            await OnPostAsync();
             await (FeedbackRef as IOkCancelRef<TEntity>)!.OkAsync(Value);
             await base.OnFeedbackOkAsync(args);
         }

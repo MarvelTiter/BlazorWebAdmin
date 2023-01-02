@@ -7,5 +7,6 @@ namespace BlazorWeb.Shared.Components
         [CascadingParameter] public IQueryCondition Parent { get; set; }
         [Parameter] public string? Label { get; set; }
         [Parameter] public DateType? DateConfig { get; set; }
+        [Parameter] public string? Style { get; set; }
     }
 }

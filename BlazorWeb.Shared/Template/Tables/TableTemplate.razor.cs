@@ -36,6 +36,8 @@ namespace BlazorWeb.Shared.Template.Tables
         Action SetExpression;
         void AssignExpression()
         {
+            if (conditionInfo != null)
+                ConditionExpression = BuildCondition.CombineExpression<TData>(conditionInfo);
             TableOptions.Query.Expression = ConditionExpression;
         }
         void IgnoreAssign()
