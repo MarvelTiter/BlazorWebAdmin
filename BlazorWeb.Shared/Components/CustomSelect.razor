@@ -3,18 +3,18 @@
 <Select Class=@Class
 		Style=@Style
 		DataSource=Options
-		TItemValue="@(Options<TItem>)"
+		TItemValue="@(TItem)"
 		TItem="@(Options<TItem>)"
 		EnableSearch=@Searchable
-		@bind-Value=selected
-		ValueName="Value"
-		LabelName="Label"
+		@bind-Value=Value
+		ValueName=@("Value")
+		LabelName=@("Label")
 		DropdownMatchSelectWidth=@false
 		OnSelectedItemChanged=HandleSelectedChanged>
 </Select>
 
 @code {
-	private Options<TItem> selected;
+	private TItem selected;
 	[Parameter]
 	public string Class { get; set; }
 	[Parameter]
@@ -26,10 +26,16 @@
 	[Parameter]
 	public EventCallback<TItem> ValueChanged { get; set; }
 	[Parameter]
+	public EventCallback<TItem> OnChange { get; set; }
+	[Parameter]
 	public bool Searchable { get; set; }
 
 	private async void HandleSelectedChanged(Options<TItem> item)
 	{
 		await ValueChanged.InvokeAsync(item.Value);
+		if (OnChange.HasDelegate)
+		{
+			await OnChange.InvokeAsync(item.Value);
+		}
 	}
 }
