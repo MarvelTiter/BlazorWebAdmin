@@ -23,7 +23,12 @@ namespace Project.Services
         public async Task<IQueryResult<UserInfo>> LoginAsync(string username, string password)
         {
             var u = await context.Repository<User>().GetSingleAsync(u => u.UserId == username);
-            var result = QueryResult.Return<UserInfo>(u != null);
+            var userInfo = new UserInfo
+            {
+                UserId = username,
+                UserName = u?.UserName ?? "",
+            };
+            var result = userInfo.Result(u != null);
             if (!result.Success)
             {
                 result.Message = $"用户：{username} 不存在";
@@ -37,13 +42,14 @@ namespace Project.Services
             }
             await UpdateLastLoginTimeAsync(username);
             var roles = await context.Repository<UserRole>().GetListAsync(ur => ur.UserId == username);
-            var userInfo = new UserInfo
-            {
-                UserId = username,
-                UserName = u.UserName,
-                Roles = roles.Select(ur => ur.RoleId).ToList()
-            };
-            result.SetPayload(userInfo);
+            //var userInfo = new UserInfo
+            //{
+            //    UserId = username,
+            //    UserName = u.UserName,
+            //    Roles = roles.Select(ur => ur.RoleId).ToList()
+            //};
+            userInfo.Roles = roles.Select(ur => ur.RoleId).ToList();
+            //result.SetPayload(userInfo);
             return result;
         }
 
@@ -52,13 +58,13 @@ namespace Project.Services
             var flag = await context.Update<User>()
                                     .Set(u => u.LastLogin, DateTime.Now)
                                     .Where(u => u.UserId == username).ExecuteAsync();
-            return QueryResult.Return<bool>(flag > 0);
+            return (flag > 0).Result();
         }
 
         public Task<IQueryResult<bool>> LogoutAsync()
         {
             //TODO 用户登出处理
-            return Task.FromResult(QueryResult.Return<bool>(true));
+            return Task.FromResult((true).Result());
 		}
     }
 }

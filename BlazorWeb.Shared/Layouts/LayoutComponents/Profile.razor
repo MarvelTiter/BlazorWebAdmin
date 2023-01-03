@@ -47,8 +47,8 @@
 
 	async Task HandleLogout()
 	{
-		store.ClearUser();
 		await LoginSrv.LogoutAsync();
+		store.ClearUser();
 		await ((CustomAuthenticationStateProvider)Auth).ClearState();
 	}
 }

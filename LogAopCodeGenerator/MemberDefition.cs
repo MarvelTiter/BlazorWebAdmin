@@ -24,28 +24,25 @@ namespace LogAopCodeGenerator
         public string ReturnString => IsReturnVoid ? "void" : ReturnTypeString;
         public string AsyncKeyToken => IsAsync ? " async " : " ";
         public string AwaitKeyToken => IsAsync ? " await " : " ";
-        public string ReturnValAsign
+        public string ReturnValAsign(string contextName)
         {
-            get
+            if (IsReturnVoid)
             {
-                if (IsReturnVoid)
+                return "";
+            }
+            else
+            {
+                if (IsTask)
                 {
-                    return "";
+                    if (IsTaskWithoutValue)
+                        return "";
+                    else
+                        return $"{contextName}.ReturnValue = val;";
+
                 }
                 else
                 {
-                    if (IsTask)
-                    {
-                        if (IsTaskWithoutValue)
-                            return "";
-                        else
-                            return "context.ReturnValue = val;";
-
-                    }
-                    else
-                    {
-                        return "context.ReturnValue = val;";
-                    }
+                    return $"{contextName}.ReturnValue = val;";
                 }
             }
         }

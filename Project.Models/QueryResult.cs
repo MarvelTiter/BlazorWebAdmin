@@ -16,7 +16,7 @@ namespace Project.Models
     {
         new T Payload { get; set; }
     }
-    
+
     public interface IQueryCollectionResult<T> : IQueryResult
     {
         int TotalRecord { get; set; }
@@ -30,7 +30,7 @@ namespace Project.Models
         public T Payload { get; set; }
         object IQueryResult.Payload { get => Payload; set => Payload = (T)value; }
     }
-       
+
 
     public class QueryCollectionResult<T> : IQueryCollectionResult<T>
     {
@@ -59,30 +59,30 @@ namespace Project.Models
                 Message = msg,
             };
         }
-        public static IQueryResult<object> Success(string msg = "操作成功")
-        {
-            return new QueryResult<object>()
-            {
-                Success = true,
-                Message = msg,
-            };
-        }
-        public static IQueryResult<object> Fail(string msg = "操作失败")
-        {
-            return new QueryResult<object>()
-            {
-                Success = false,
-                Message = msg,
-            };
-        }
+        //public static IQueryResult<object> Success(string msg = "操作成功")
+        //{
+        //    return new QueryResult<object>()
+        //    {
+        //        Success = true,
+        //        Message = msg,
+        //    };
+        //}
+        //public static IQueryResult<object> Fail(string msg = "操作失败")
+        //{
+        //    return new QueryResult<object>()
+        //    {
+        //        Success = false,
+        //        Message = msg,
+        //    };
+        //}
 
         public static IQueryResult<T> Return<T>(bool success)
-		{
+        {
             if (success)
                 return Success<T>();
             else
                 return Fail<T>();
-		}
+        }
 
         public static IQueryResult<T> SetPayload<T>(this IQueryResult<T> self, T payload)
         {
@@ -92,13 +92,13 @@ namespace Project.Models
 
         public static IQueryCollectionResult<T> CollectionResult<T>(this IQueryResult self, IEnumerable<T> payload)
         {
-            return new QueryCollectionResult<T>
-            {
-                Success = self.Success,
-                Message = self.Message,
-                TotalRecord = payload.Count(),
-                Payload = payload
-            };
+            return CollectionResult(self, payload, payload.Count());
+            //{
+            //    Success = self.Success,
+            //    Message = self.Message,
+            //    TotalRecord = payload.Count(),
+            //    Payload = payload
+            //};
         }
 
         public static IQueryCollectionResult<T> CollectionResult<T>(this IQueryResult self, IEnumerable<T> payload, int total)
@@ -110,6 +110,31 @@ namespace Project.Models
                 TotalRecord = total,
                 Payload = payload
             };
+        }
+    }
+
+    public static class BooleanExtensionForQueryResult
+    {
+        public static IQueryResult<bool> Result(this bool value)
+        {
+            return QueryResult.Return<bool>(value);
+        }
+    }
+
+    public static class TypedResultExtensionForQueryResult
+    {
+        public static IQueryResult<T> Result<T>(this T payload, bool success)
+        {
+            return QueryResult.Return<T>(success).SetPayload(payload);
+        }
+    }
+
+    public static class EnumerableExtensionForQueryResult
+    {
+        public static IQueryCollectionResult<T> Result<T>(this IEnumerable<T> values, int total = 0)
+        {
+            if (total == 0) total = values.Count();
+            return QueryResult.Success<T>().CollectionResult(values, total);
         }
     }
 }

@@ -7,6 +7,7 @@
 		TItem="@(Options<TItem>)"
 		EnableSearch=@Searchable
 		@bind-Value=Value
+		OnSearch="OnSearch"
 		ValueName=@("Value")
 		LabelName=@("Label")
 		DropdownMatchSelectWidth=@false
@@ -29,6 +30,8 @@
 	public EventCallback<TItem> OnChange { get; set; }
 	[Parameter]
 	public bool Searchable { get; set; }
+	[Parameter]
+	public Action<string> OnSearch{ get; set; }
 
 	private async void HandleSelectedChanged(Options<TItem> item)
 	{

@@ -57,7 +57,9 @@ namespace Project.Models
             return this;
         }
 
-        private class Enumerator : IEnumerator<Options<T>>
+		public void Clear() => items.Clear();
+
+		private class Enumerator : IEnumerator<Options<T>>
         {
             public Enumerator(List<Options<T>> options)
             {

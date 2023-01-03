@@ -206,7 +206,7 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
                 if (method.HasAttribute(methodAopAttr) || implType.HasAttribute(method, methodAopAttr))
                 {
                     // 代理
-                    builder.Append(BuildProxyMethodTemplate(proxyInstanceName, md, parameters, aopInstanceField));
+                    builder.Append(BuildProxyMethodTemplate(classDeclaration.Identifier.ValueText, proxyInstanceName, md, parameters, aopInstanceField));
                 }
                 else
                 {
@@ -217,7 +217,7 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
             return builder.ToString();
         }
 
-        private string BuildProxyMethodTemplate(string proxyInstance, MemberDefinition member, ImmutableArray<IParameterSymbol> parameters, string aopInstanceField)
+        private string BuildProxyMethodTemplate(string unitPrefix, string proxyInstance, MemberDefinition member, ImmutableArray<IParameterSymbol> parameters, string aopInstanceField)
         {
             var plist = parameters.Select(p => $"{(p.IsParams ? "params " : "")}{p.Type.ToDisplayString()} {p.Name}").ToList();
             //private{member.AsyncKeyToken}{member.ReturnString} internal{member.Name}({string.Join(",", plist)})
@@ -226,19 +226,19 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
         public{member.AsyncKeyToken}{member.ReturnString} {member.Name}({string.Join(",", plist)})
         {{
             var baseContext = contexts.First(x => x.ImplementMethod.Name == ""{member.Name}"");    
-            var context = InitContext.BuildContext(baseContext);
-            context.Exected = false;
-            context.HasReturnValue = {(!member.IsReturnVoid).ToString().ToLower()};
-            context.Parameters = new object[] {{ {string.Join(",", parameters.Select(p => p.Name))} }};
+            var _{unitPrefix}context = InitContext.BuildContext(baseContext);
+            _{unitPrefix}context.Exected = false;
+            _{unitPrefix}context.HasReturnValue = {(!member.IsReturnVoid).ToString().ToLower()};
+            _{unitPrefix}context.Parameters = new object[] {{ {string.Join(",", parameters.Select(p => p.Name))} }};
             {member.LocalVar}
-            context.Proceed = {member.AsyncKeyToken}() => 
+            _{unitPrefix}context.Proceed = {member.AsyncKeyToken}() => 
             {{
-                context.Exected = true;
+                _{unitPrefix}context.Exected = true;
                 {member.ReturnValueRecive}{member.AwaitKeyToken}{proxyInstance}.{member.Name}({string.Join(",", parameters.Select(p => p.Name))}){member.InternalMethodResult};
-                {member.ReturnValAsign}
+                {member.ReturnValAsign($"_{unitPrefix}context")}
                 {member.TaskReturnLabel}
             }};
-            {member.AwaitKeyToken}{aopInstanceField}.Invoke(context){member.WaitTask};
+            {member.AwaitKeyToken}{aopInstanceField}.Invoke(_{unitPrefix}context){member.WaitTask};
             {member.ReturnLabel}
         }}
 ";

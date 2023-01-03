@@ -25,13 +25,13 @@ namespace Project.Services
             //var list = await repository.Table<Power>().GetListAsync(req.Expression, req.PageIndex, req.PageSize, p => p.Sort);
             //return QueryResult.Success<Power>().CollectionResult(list, count);
             var list = await context.Repository<Power>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize, p => p.Sort);
-            return QueryResult.Success<Power>().CollectionResult(list, (int)total);
+            return list.Result((int)total);
         }
 
         public async Task<IQueryCollectionResult<Power>> GetPowerListAsync()
         {
             var list = await context.Repository<Power>().GetListAsync(e => true);
-            return QueryResult.Success<Power>().CollectionResult(list);
+            return list.Result();
         }
 
         public async Task<IQueryCollectionResult<Role>> GetRoleListAsync(GenericRequest<Role> req)
@@ -39,13 +39,13 @@ namespace Project.Services
             //var count = await repository.Table<Role>().GetCountAsync(req.Expression);
             //var list = await repository.Table<Role>().GetListAsync(req.Expression, req.PageIndex, req.PageSize);
             var list = await context.Repository<Role>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize);
-            return QueryResult.Success<Role>().CollectionResult(list, (int)total);
+            return list.Result((int)total);
         }
 
         public async Task<IQueryCollectionResult<Role>> GetRoleListAsync()
         {
             var list = await context.Repository<Role>().GetListAsync(e => true);
-            return QueryResult.Success<Role>().CollectionResult(list);
+            return list.Result();
         }
 
         public async Task<IQueryCollectionResult<Power>> GetPowerListByUserIdAsync(string usrId)
@@ -63,7 +63,7 @@ namespace Project.Services
                                       .Where(w => w.Tb3.UserId == usrId)
                                       .OrderBy(w => w.Tb1.Sort)
                                       .ToListAsync();
-            return QueryResult.Success<Power>().CollectionResult(powers);
+            return powers.Result();
         }
 
         public async Task<IQueryCollectionResult<Power>> GetPowerListByRoleIdAsync(string roleId)
@@ -72,7 +72,7 @@ namespace Project.Services
                                       .InnerJoin<RolePower>((r, p) => p.PowerId == r.PowerId)
                                       .Where((r, rp) => rp.RoleId == roleId)
                                       .ToListAsync();
-            return QueryResult.Success<Power>().CollectionResult(powers);
+            return powers.Result();
         }
 
         public async Task<IQueryCollectionResult<Role>> GetUserRolesAsync(string usrId)
@@ -81,7 +81,7 @@ namespace Project.Services
                                      .InnerJoin<UserRole>((r, ur) => r.RoleId == ur.RoleId)
                                      .Where<UserRole>(ur => ur.UserId == usrId)
                                      .ToListAsync();
-            return QueryResult.Success<Role>().CollectionResult(roles);
+            return roles.Result();
         }
 
         public async Task<IQueryResult<bool>> SaveUserRole(string usrId, params string[] roles)
@@ -105,7 +105,7 @@ namespace Project.Services
                 db.Insert<UserRole>().AppendData(ur).AttachTransaction();
             }
             var n = await db.CommitTransactionAsync();
-            return QueryResult.Return<bool>(n);
+            return n.Result();
         }
 
         public async Task<IQueryResult<bool>> SaveRolePower(string roleId, params string[] powers)
@@ -129,31 +129,31 @@ namespace Project.Services
                 db.Insert<RolePower>().AppendData(rp).AttachTransaction();
             }
             var n = await db.CommitTransactionAsync();
-            return QueryResult.Return<bool>(n);
+            return n.Result();
         }
 
         public async Task<IQueryResult<bool>> UpdatePowerAsync(Power power)
         {
             var n = await context.Repository<Power>().UpdateAsync(power, p => p.PowerId == power.PowerId);
-            return QueryResult.Return<bool>(n > 0);
+            return (n > 0).Result();
         }
 
         public async Task<IQueryResult<bool>> InsertPowerAsync(Power power)
         {
             var n = await context.Repository<Power>().InsertAsync(power);
-            return QueryResult.Return<bool>(n != null);
+            return (n != null).Result();
         }
 
         public async Task<IQueryResult<bool>> UpdateRoleAsync(Role role)
         {
             var n = await context.Repository<Role>().UpdateAsync(role, r => r.RoleId == role.RoleId);
-            return QueryResult.Return<bool>(n > 0);
+            return (n > 0).Result();
         }
 
         public async Task<IQueryResult<bool>> InsertRoleAsync(Role role)
         {
             var n = await context.Repository<Role>().InsertAsync(role);
-            return QueryResult.Return<bool>(n != null);
+            return (n != null).Result();
         }
     }
 }
