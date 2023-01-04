@@ -6,7 +6,12 @@ using Project.AppCore.Store;
 using Project.Common;
 using System.Reflection;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationOptions options = new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = AppContext.BaseDirectory
+};
+var builder = WebApplication.CreateBuilder(options);
 
 var services = builder.Services;
 // Add services to the container.
@@ -37,6 +42,7 @@ services.AutoInjects();
 //services.AddScoped<EventDispatcher>();
 services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 services.AddHttpContextAccessor();
+builder.Host.UseWindowsService();
 var app = builder.Build();
 //Config.AddAssembly(typeof(BlazorWeb.UI.Program));
 // Configure the HTTP request pipeline.
