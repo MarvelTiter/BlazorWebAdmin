@@ -139,31 +139,6 @@ namespace Project.Common
             return doc;
         }
 
-        //private static SpreadsheetDocument Create(SpreadsheetDocument doc, object data, string sheetName = "sheet1")
-        //{
-        //    //创建WorkbookPart（工作簿）
-        //    WorkbookPart workbookPart = doc.AddWorkbookPart();
-        //    workbookPart.Workbook = new Workbook();
-        //    //构建SharedStringTablePart
-        //    var shareStringPart = workbookPart.AddNewPart<SharedStringTablePart>();
-        //    shareStringPart.SharedStringTable = new SharedStringTable(); //创建根元素
-        //    //创建WorksheetPart（工作簿中的工作表）
-        //    var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-        //    //Workbook 下创建Sheets节点, 建立一个子节点Sheet，关联工作表WorksheetPart
-        //    var rid = workbookPart.GetIdOfPart(worksheetPart);
-        //    doc.WorkbookPart!.Workbook.AppendChild(
-        //        new Sheets(new Sheet()
-        //        {
-        //            Id = rid,
-        //            SheetId = 1,
-        //            Name = sheetName
-        //        }));
-
-        //    WriteSheet(workbookPart, worksheetPart, shareStringPart, data);
-
-        //    return doc;
-        //}
-
         /// <summary>
         /// 初始化工作表
         /// </summary>
@@ -281,7 +256,17 @@ namespace Project.Common
 
         IEnumerable<Row> DataTableBodyRender(object data)
         {
-            throw new NotImplementedException();
+            var table = (DataTable)data;
+            foreach (DataRow item in table.Rows)
+            {
+                var row = new Row();
+                foreach (DataColumn column in table.Columns)
+                {
+                    var cell = CreateTypedCell(column.DataType, item[column]);
+                    row.AppendChild(cell);
+                }
+                yield return row;
+            }
         }
 
         IEnumerable<Row> DataReaderBodyRender(object data)
@@ -317,19 +302,19 @@ namespace Project.Common
                 cell.CellValue = new CellValue((DateTimeOffset)value);
                 cell.DataType = new EnumValue<CellValues>(CellValues.Date);
             }
-            else if (type == typeof(decimal))
+            else if (value.IsNumeric<decimal>(out var v))
             {
-                cell.CellValue = new CellValue((decimal)value);
+                cell.CellValue = new CellValue((decimal)v);
                 cell.DataType = new EnumValue<CellValues>(CellValues.Number);
             }
-            else if (type == typeof(double))
+            else if (value.IsNumeric<double>(out var v1))
             {
-                cell.CellValue = new CellValue((double)value);
+                cell.CellValue = new CellValue((double)v1);
                 cell.DataType = new EnumValue<CellValues>(CellValues.Number);
             }
-            else if (type == typeof(int))
+            else if (value.IsNumeric<int>(out var v2))
             {
-                cell.CellValue = new CellValue((int)value);
+                cell.CellValue = new CellValue((int)v2);
                 cell.DataType = new EnumValue<CellValues>(CellValues.Number);
             }
             else
@@ -340,5 +325,44 @@ namespace Project.Common
 
             return cell;
         }
+    }
+}
+
+public static class Ex
+{
+    public static bool IsNumeric<T>(this object obj, out object value) where T : struct
+    {
+        value = null;
+        if (obj == null)
+        {
+            return false;
+        }
+        if (typeof(T) == typeof(decimal))
+        {
+            if (decimal.TryParse(obj.ToString(), out var d))
+            {
+                value = d;
+                return true;
+            }
+        }
+
+        if (typeof(T) == typeof(double))
+        {
+            if (double.TryParse(obj.ToString(), out var d))
+            {
+                value = d;
+                return true;
+            }
+        }
+
+        if (typeof(T) == typeof(int))
+        {
+            if (int.TryParse(obj.ToString(), out var d))
+            {
+                value = d;
+                return true;
+            }
+        }
+        return false;
     }
 }
