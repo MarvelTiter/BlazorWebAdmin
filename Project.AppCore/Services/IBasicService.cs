@@ -17,6 +17,7 @@ namespace Project.AppCore.Services
     {
         //[LogInfo(Action = "查询", Module = "BasicService")]
         Task<IQueryCollectionResult<T>> GetListAsync(GenericRequest<T> req);
+        Task<IQueryResult<T>> GetSingleAsync(Expression<Func<T, bool>> whereExp);
         [LogInfo(Action = "新增", Module = "BasicService")]
         Task<IQueryResult<bool>> AddItem(T item);
         [LogInfo(Action = "更新", Module = "BasicService")]
