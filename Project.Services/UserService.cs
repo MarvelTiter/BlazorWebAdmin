@@ -20,7 +20,7 @@ namespace Project.Services
         public async Task<IQueryCollectionResult<User>> GetUserListAsync(GenericRequest<User> req)
         {
             var list = await context.Repository<User>().GetListAsync(req.Expression, out var count, req.PageIndex, req.PageSize);
-            return list.Result((int)count);
+            return list.CollectionResult((int)count);
         }
 
         public async Task<User> InsertUserAsync(User user)

@@ -39,7 +39,13 @@ namespace Project.Services
         public virtual async Task<IQueryCollectionResult<T>> GetListAsync(GenericRequest<T> req)
         {
             var list = await context.Repository<T>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize);
-            return list.Result((int)total);
+            return list.CollectionResult((int)total);
+        }
+
+        public async Task<IQueryResult<T>> GetSingleAsync(Expression<Func<T, bool>> whereExp)
+        {
+            var result = await context.Repository<T>().GetSingleAsync(whereExp);
+            return result?.Result();
         }
 
         public virtual async Task<IQueryResult<bool>> UpdateItem(T item, Expression<Func<T, bool>> primaryKey)

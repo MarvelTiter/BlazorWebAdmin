@@ -20,7 +20,7 @@ namespace Project.Services
         public async Task<IQueryCollectionResult<RunLog>> GetRunLogsAsync(GenericRequest<RunLog> req)
         {
             var list = await context.Repository<RunLog>().GetListAsync(req.Expression,out var total, req.PageIndex, req.PageSize, log => log.LogId, false);
-            return list.Result((int)total);
+            return list.CollectionResult((int)total);
         }
 
         public async Task Log(RunLog log)

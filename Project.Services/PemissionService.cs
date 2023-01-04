@@ -25,13 +25,13 @@ namespace Project.Services
             //var list = await repository.Table<Power>().GetListAsync(req.Expression, req.PageIndex, req.PageSize, p => p.Sort);
             //return QueryResult.Success<Power>().CollectionResult(list, count);
             var list = await context.Repository<Power>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize, p => p.Sort);
-            return list.Result((int)total);
+            return list.CollectionResult((int)total);
         }
 
         public async Task<IQueryCollectionResult<Power>> GetPowerListAsync()
         {
             var list = await context.Repository<Power>().GetListAsync(e => true);
-            return list.Result();
+            return list.CollectionResult();
         }
 
         public async Task<IQueryCollectionResult<Role>> GetRoleListAsync(GenericRequest<Role> req)
@@ -39,13 +39,13 @@ namespace Project.Services
             //var count = await repository.Table<Role>().GetCountAsync(req.Expression);
             //var list = await repository.Table<Role>().GetListAsync(req.Expression, req.PageIndex, req.PageSize);
             var list = await context.Repository<Role>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize);
-            return list.Result((int)total);
+            return list.CollectionResult((int)total);
         }
 
         public async Task<IQueryCollectionResult<Role>> GetRoleListAsync()
         {
             var list = await context.Repository<Role>().GetListAsync(e => true);
-            return list.Result();
+            return list.CollectionResult();
         }
 
         public async Task<IQueryCollectionResult<Power>> GetPowerListByUserIdAsync(string usrId)
@@ -63,7 +63,7 @@ namespace Project.Services
                                       .Where(w => w.Tb3.UserId == usrId)
                                       .OrderBy(w => w.Tb1.Sort)
                                       .ToListAsync();
-            return powers.Result();
+            return powers.CollectionResult();
         }
 
         public async Task<IQueryCollectionResult<Power>> GetPowerListByRoleIdAsync(string roleId)
@@ -72,7 +72,7 @@ namespace Project.Services
                                       .InnerJoin<RolePower>((r, p) => p.PowerId == r.PowerId)
                                       .Where((r, rp) => rp.RoleId == roleId)
                                       .ToListAsync();
-            return powers.Result();
+            return powers.CollectionResult();
         }
 
         public async Task<IQueryCollectionResult<Role>> GetUserRolesAsync(string usrId)
@@ -81,7 +81,7 @@ namespace Project.Services
                                      .InnerJoin<UserRole>((r, ur) => r.RoleId == ur.RoleId)
                                      .Where<UserRole>(ur => ur.UserId == usrId)
                                      .ToListAsync();
-            return roles.Result();
+            return roles.CollectionResult();
         }
 
         public async Task<IQueryResult<bool>> SaveUserRole(string usrId, params string[] roles)

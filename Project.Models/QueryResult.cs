@@ -119,19 +119,26 @@ namespace Project.Models
         {
             return QueryResult.Return<bool>(value);
         }
+
     }
 
     public static class TypedResultExtensionForQueryResult
     {
-        public static IQueryResult<T> Result<T>(this T payload, bool success)
+        public static IQueryResult<T> Result<T>(this T payload, bool? success = null)
         {
-            return QueryResult.Return<T>(success).SetPayload(payload);
+            var s = success ?? payload != null;
+            return QueryResult.Return<T>(s).SetPayload(payload);
+        }
+        public static IQueryResult<T> SetMessage<T>(this IQueryResult<T> self, string message)
+        {
+            self.Message = message;
+            return self;
         }
     }
 
     public static class EnumerableExtensionForQueryResult
     {
-        public static IQueryCollectionResult<T> Result<T>(this IEnumerable<T> values, int total = 0)
+        public static IQueryCollectionResult<T> CollectionResult<T>(this IEnumerable<T> values, int total = 0)
         {
             if (total == 0) total = values.Count();
             return QueryResult.Success<T>().CollectionResult(values, total);
