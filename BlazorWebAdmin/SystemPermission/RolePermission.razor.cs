@@ -25,12 +25,10 @@ namespace BlazorWebAdmin.SystemPermission
         IEnumerable<Power> allPower;
         string[]? selectedKeys;
         bool sideExpand;
-        [Inject]
-        public ModalService ModalSrv { get; set; }
-        [Inject]
-        public IPermissionService PermissionSrv { get; set; }
-        [Inject]
-        public MessageService MessageSrv { get; set; }
+        [Inject] public ModalService ModalSrv { get; set; }
+        [Inject] public IPermissionService PermissionSrv { get; set; }
+        [Inject] public MessageService MessageSrv { get; set; }
+        [Inject] public ConfirmService ConfirmSrv { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -38,6 +36,7 @@ namespace BlazorWebAdmin.SystemPermission
             roleOptions.DataLoader = GetRolesAsync;
             roleOptions.AddHandle = AddRoleAsync;
             roleOptions.AddButton(ButtonDefinition<Role>.Edit(EditRole));
+            roleOptions.AddButton(ButtonDefinition<Role>.Delete(DeleteRole));
             roleOptions.OnRowClick = HandleRowClick;
             _ = InitPowerTree();
         }
@@ -104,6 +103,16 @@ namespace BlazorWebAdmin.SystemPermission
             var newRole = await ModalSrv.OpenDialog<RoleForm, Role>("编辑角色", role);
             var result = await PermissionSrv.UpdateRoleAsync(newRole);
             return result.Success;
+        }
+        async Task<bool> DeleteRole(Role role)
+        {
+            var confirm = await ConfirmSrv.Show("该操作无法恢复！", "是否确认删除角色！");
+            if (confirm == ConfirmResult.OK)
+            {
+                var result = await PermissionSrv.DeleteRoleAsync(role);
+                return result.Success;
+            }
+            return false;
         }
         async Task SaveRolePower()
         {

@@ -143,5 +143,10 @@ namespace Project.Models
             if (total == 0) total = values.Count();
             return QueryResult.Success<T>().CollectionResult(values, total);
         }
+        public static IQueryCollectionResult<T> SetMessage<T>(this IQueryCollectionResult<T> self, string message)
+        {
+            self.Message = message;
+            return self;
+        }
     }
 }

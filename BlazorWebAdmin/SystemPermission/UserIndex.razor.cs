@@ -18,14 +18,14 @@ namespace BlazorWebAdmin.SystemPermission
         [Inject]
         public ModalService ModalSrv { get; set; }
         [Inject]
-        public DrawerService DrawerSrv { get; set; }
+        public ConfirmService ConfirmSrv { get; set; }
         [Inject]
         public IUserService UserSrv { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();
             tableOptions = new TableOptions<User, GenericRequest<User>>();
-            //tableOptions.LoadDataOnLoaded = true;
+            tableOptions.LoadDataOnLoaded = true;
             tableOptions.AddButton(ButtonDefinition<User>.Edit(EditUser));
             tableOptions.AddButton(ButtonDefinition<User>.Delete(DeleteUser));
             tableOptions.DataLoader = Search;
@@ -40,7 +40,6 @@ namespace BlazorWebAdmin.SystemPermission
 
         async Task<IQueryCollectionResult<User>> Search(GenericRequest<User> req)
         {
-            await Task.Delay(2000);
             return await UserSrv.GetUserListAsync(req);
         }
         protected User currentSelected;
@@ -60,14 +59,20 @@ namespace BlazorWebAdmin.SystemPermission
         }
         public async Task<bool> EditUser(User user)
         {
-            var n = await DrawerSrv.OpenDrawer<UserForm, User>("用户信息", user);
-            return false;
+            var n = await ModalSrv.OpenDialog<UserForm, User>("用户信息", user);
+            await UserSrv.UpdateUserAsync(user);
+            return true;
         }
 
-        public Task<bool> DeleteUser(User user)
+        public async Task<bool> DeleteUser(User user)
         {
-            // delete
-            return Task.FromResult(false);
+            var result = await ConfirmSrv.Show("该操作无法恢复！", "是否确认删除用户！");
+            if (result == ConfirmResult.OK)
+            {
+                var ret = await UserSrv.DeleteUserAsync(user);
+                return ret.Success;
+            }
+            return false;
         }
     }
 }

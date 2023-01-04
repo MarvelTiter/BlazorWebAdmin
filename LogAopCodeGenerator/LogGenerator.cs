@@ -201,6 +201,8 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
                 md.Name = method.Name;
                 md.IsAsync = method.IsAsync;
                 md.IsReturnVoid = method.ReturnsVoid;
+                md.IsOverride = method.IsOverride;
+                md.IsVirtual = method.IsVirtual;
                 md.ReturnTypeString = method.ReturnType.ToDisplayString();
                 md.Body = memberNode.Body.ToFullString();
                 if (method.HasAttribute(methodAopAttr) || implType.HasAttribute(method, methodAopAttr))
@@ -223,7 +225,7 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
             //private{member.AsyncKeyToken}{member.ReturnString} internal{member.Name}({string.Join(",", plist)})
             //{ member.Body}
             return $@"
-        public{member.AsyncKeyToken}{member.ReturnString} {member.Name}({string.Join(",", plist)})
+        public{member.OverrideToken}{member.VirtualToken}{member.AsyncKeyToken}{member.ReturnString} {member.Name}({string.Join(",", plist)})
         {{
             var baseContext = contexts.First(x => x.ImplementMethod.Name == ""{member.Name}"");    
             var _{unitPrefix}context = InitContext.BuildContext(baseContext);

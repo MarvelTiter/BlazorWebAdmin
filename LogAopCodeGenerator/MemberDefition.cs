@@ -21,9 +21,13 @@ namespace LogAopCodeGenerator
         public bool IsReturnVoid { get; set; }
         public bool IsAsync { get; set; }
         public string ReturnTypeString { get; set; }
+        public bool IsOverride { get; set; }
+        public bool IsVirtual { get; set; }
         public string ReturnString => IsReturnVoid ? "void" : ReturnTypeString;
         public string AsyncKeyToken => IsAsync ? " async " : " ";
         public string AwaitKeyToken => IsAsync ? " await " : " ";
+        public string OverrideToken => IsOverride ? " override " : "";
+        public string VirtualToken => IsVirtual ? " virtual " : "";
         public string ReturnValAsign(string contextName)
         {
             if (IsReturnVoid)

@@ -155,5 +155,15 @@ namespace Project.Services
             var n = await context.Repository<Role>().InsertAsync(role);
             return (n != null).Result();
         }
+
+        public async Task<IQueryResult<bool>> DeleteRoleAsync(Role role)
+        {
+            var trans = context.BeginTransaction();
+            trans.Delete<Role>().Where(r => r.RoleId == role.RoleId).AttachTransaction();
+            trans.Delete<UserRole>().Where(ur => ur.RoleId == role.RoleId).AttachTransaction();
+            trans.Delete<RolePower>().Where(rp => rp.RoleId == role.RoleId).AttachTransaction();
+            var flag = await trans.CommitTransactionAsync();
+            return flag.Result();
+        }
     }
 }

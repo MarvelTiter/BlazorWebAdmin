@@ -1,4 +1,6 @@
-﻿using Project.Models;
+﻿using LogAopCodeGenerator;
+using Project.AppCore.Aop;
+using Project.Models;
 using Project.Models.Entities;
 using Project.Models.Request;
 using System;
@@ -9,10 +11,15 @@ using System.Threading.Tasks;
 
 namespace Project.AppCore.Services
 {
+    [Aspectable(AspectHandleType = typeof(LogAop))]
     public partial interface IUserService
     {
         Task<IQueryCollectionResult<User>> GetUserListAsync(GenericRequest<User> req);
-        Task<User> InsertUserAsync(User user);
-        Task<int> UpdateUserAsync(User user);
+        [LogInfo(Action = "新增用户", Module = "权限控制")]
+        Task<IQueryResult> InsertUserAsync(User user);
+        [LogInfo(Action = "修改用户", Module = "权限控制")]
+        Task<IQueryResult> UpdateUserAsync(User user);
+        [LogInfo(Action = "删除用户", Module = "权限控制")]
+        Task<IQueryResult> DeleteUserAsync(User user);
     }
 }

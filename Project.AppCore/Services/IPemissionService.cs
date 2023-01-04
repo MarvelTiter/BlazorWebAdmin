@@ -34,5 +34,7 @@ namespace Project.AppCore.Services
         Task<IQueryResult<bool>> UpdateRoleAsync(Role role);
         [LogInfo(Action = "新增角色", Module = "权限控制")]
         Task<IQueryResult<bool>> InsertRoleAsync(Role role);
+        [LogInfo(Action = "删除角色", Module = "权限控制")]
+        Task<IQueryResult<bool>> DeleteRoleAsync(Role role);
     }
 }
