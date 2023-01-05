@@ -45,7 +45,7 @@ namespace LogAopCodeGenerator
             var methodAopAttr = context.Compilation.GetTypeByMetadataName("LogAopCodeGenerator.AopMethodFlagAttribute");
             var aspectableAttr = context.Compilation.GetTypeByMetadataName("LogAopCodeGenerator.AspectableAttribute");
 
-            foreach (var node in receiver.ClassSyntaxNodes)
+            foreach (var node in receiver.ClassSyntaxNodes.OrderByDescending(syn => syn.BaseList?.Types.Count))
             {
                 AopImplClass(context, node, methodAopAttr, aspectableAttr);
             }
@@ -86,27 +86,38 @@ namespace LogAopCodeGenerator
             string ctors = BuildConstructor(context.Compilation, implType, classDeclaration, aopAttr, out var aopInstanceName);
             string body = BuildMethodProxy(context.Compilation, classDeclaration, implType, methodAopAttr, aopInstanceName);
             string proxyClassTemplate = BuildClassTemplate(classDeclaration, implType, ctors, body);
+            var fileName = CreateFileName(classDeclaration);
+            context.AddSource(fileName, proxyClassTemplate);
+        }
 
-            context.AddSource($"{implType.Name}Proxy.cs", proxyClassTemplate);
+        private string CreateFileName(ClassDeclarationSyntax @class)
+        {
+            if (@class.Modifiers.Any(token => token.ValueText == "partial"))
+            {
+                return $"{@class.Identifier.ValueText}Proxy.Partial{Guid.NewGuid():N}.cs";
+            }
+            return $"{@class.Identifier.ValueText}Proxy.cs";
         }
 
         private string BuildClassTemplate(ClassDeclarationSyntax classDeclaration, INamedTypeSymbol implType, params string[] bodys)
         {
             // public 、 partial 之类的关键字
             var classModifiers = classDeclaration.Modifiers.Select(token => token.ValueText);
+            var allInherits = classDeclaration.GetInterfaceNames();
+            var colon = allInherits.Length > 0 ? ":" : "";
             return $@"
 {string.Join("", classDeclaration.BuildAllUsings())}
 using LogAopCodeGenerator;
 namespace {implType.ContainingNamespace.ToDisplayString()}
 {{
-    {string.Join(",", classModifiers)} class {implType.Name}Proxy{classDeclaration.TypeParameterList?.ToFullString()}: {string.Join(",", classDeclaration.GetInterfaceNames())}
+    {string.Join(" ", classModifiers)} class {implType.Name}Proxy{classDeclaration.TypeParameterList?.ToFullString()}{colon} {string.Join(",", allInherits)}
     {{            
          {string.Join("", bodys)}
     }}
 }}
 ";
         }
-
+        List<string> createdClass = new List<string>();
         /// <summary>
         /// 构建构造函数
         /// </summary>
@@ -117,10 +128,14 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
             var ctors = @class.Members.Where(m => m is ConstructorDeclarationSyntax).Cast<ConstructorDeclarationSyntax>().ToArray();
 
             StringBuilder builder = new StringBuilder();
-            builder.AppendLine("private BaseContext[] contexts;");
-            builder.AppendLine($"private {@class.Identifier.ValueText}{@class.TypeParameterList?.ToFullString()} _{@class.Identifier.ValueText}Proxy;");
+            string className = @class.Identifier.ValueText;
             var handleType = aopAttr.NamedArguments.FirstOrDefault(x => x.Key == "AspectHandleType").Value.Value as ITypeSymbol;
             aopField = handleType.Name.ToLower();
+            if (!createdClass.Contains(className))
+            {
+                builder.AppendLine("private BaseContext[] contexts;");
+                builder.AppendLine($"private {className}{@class.TypeParameterList?.ToFullString()} _{className}Proxy;");
+            }
 
             for (var i = 0; i < ctors.Length; i++)
             {
@@ -148,10 +163,11 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
                     fields.Add(pd);
                 }
                 fields.Insert(0, aop);
-                var body = BuildConstructorTemplate(@class.Identifier.ValueText, @class.TypeParameterList?.ToFullString(), implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray(), item.Initializer?.ToFullString());
+                var body = BuildConstructorTemplate(className, @class.TypeParameterList?.ToFullString(), implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray(), item.Initializer?.ToFullString());
                 builder.Append(body);
+                createdClass.Add(className);
             }
-            if (ctors.Length == 0)
+            if (ctors.Length == 0 && !createdClass.Contains(className))
             {// 只有一个默认的构造函数
                 var ctor = implType.Constructors.First();
                 var fields = new List<FieldDefinition>();
@@ -160,8 +176,9 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
                 aop.TypeName = handleType.ToDisplayString();
                 fields.Add(aop);
                 var gs = implType.TypeParameters.Length > 0 ? $"<{string.Join(",", implType.TypeParameters.Select(t => t.ToDisplayString()))}>" : "";
-                var body = BuildConstructorTemplate(@class.Identifier.ValueText, gs, implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray(), "");
+                var body = BuildConstructorTemplate(className, gs, implType.Interfaces.FirstOrDefault()?.Name, fields.ToArray(), "");
                 builder.Append(body);
+                createdClass.Add(className);
             }
             return builder.ToString();
         }
@@ -279,7 +296,7 @@ namespace {implType.ContainingNamespace.ToDisplayString()}
         public static string[] GetInterfaceNames(this ClassDeclarationSyntax @class)
         {
             var list = @class.BaseList?.Types;
-            if (list == null) Array.Empty<string>();
+            if (list == null) return Array.Empty<string>();
             List<string> ret = new List<string>();
             foreach (var t in list)
             {
