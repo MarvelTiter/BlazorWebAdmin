@@ -56,8 +56,19 @@ namespace Project.Models
             items.Add(new Options<T>(label, value));
             return this;
         }
-
-		public void Clear() => items.Clear();
+        private Dictionary<string, string> _enumValues;
+        public Dictionary<string, string> EnumValues
+        {
+            get
+            {
+                if (_enumValues == null)
+                {
+                    _enumValues = this.ParseEnumValues();
+                }
+                return _enumValues;
+            }
+        }
+        public void Clear() => items.Clear();
 
 		private class Enumerator : IEnumerator<Options<T>>
         {
