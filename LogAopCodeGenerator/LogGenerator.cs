@@ -92,12 +92,14 @@ namespace LogAopCodeGenerator
 
         private string BuildClassTemplate(ClassDeclarationSyntax classDeclaration, INamedTypeSymbol implType, params string[] bodys)
         {
+            // public 、 partial 之类的关键字
+            var classModifiers = classDeclaration.Modifiers.Select(token => token.ValueText);
             return $@"
 {string.Join("", classDeclaration.BuildAllUsings())}
 using LogAopCodeGenerator;
 namespace {implType.ContainingNamespace.ToDisplayString()}
 {{
-    public class {implType.Name}Proxy{classDeclaration.TypeParameterList?.ToFullString()}: {string.Join(",", classDeclaration.GetInterfaceNames())}
+    {string.Join(",", classModifiers)} class {implType.Name}Proxy{classDeclaration.TypeParameterList?.ToFullString()}: {string.Join(",", classDeclaration.GetInterfaceNames())}
     {{            
          {string.Join("", bodys)}
     }}
