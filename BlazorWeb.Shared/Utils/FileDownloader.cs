@@ -6,15 +6,23 @@ namespace BlazorWeb.Shared.Utils
     {
         public static async Task PushAsync(this IJSRuntime js, string path)
         {
-            var fileStream = GetFileStream(path);
-            var fileName = Path.GetFileName(path);
-            using var streamRef = new DotNetStreamReference(stream: fileStream);
-            await js.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+            if (GetFileStream(path, out var fileStream))
+            {
+                var fileName = Path.GetFileName(path);
+                using var streamRef = new DotNetStreamReference(stream: fileStream);
+                await js.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+            }
         }
 
-        private static Stream GetFileStream(string path)
+        private static bool GetFileStream(string path, out Stream? stream)
         {
-            return File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var fileExist = File.Exists(path);
+            stream = null;
+            if (fileExist)
+            {
+                stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            }
+            return fileExist;
         }
     }
 }
