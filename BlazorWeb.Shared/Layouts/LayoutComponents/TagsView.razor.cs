@@ -19,8 +19,8 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         public async Task ToggleMenu()
         {
             collapse = !collapse;
-            await dispatcher.Invoke<SideBar>("MenuCollapse", ValueBoxes.BooleanBox(collapse));
-            await dispatcher.Invoke<Profile>("AvatarCollapse", ValueBoxes.BooleanBox(collapse));
+            await dispatcher.Invoke<SideBar>("MenuCollapse", this, ValueBoxes.BooleanBox(collapse));
+            await dispatcher.Invoke<Profile>("AvatarCollapse", this, ValueBoxes.BooleanBox(collapse));
             StateHasChanged();
         }
 

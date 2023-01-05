@@ -28,11 +28,11 @@
     private string Width => collapse ? "80px" : "200px";
     private bool collapse = false;
 
-    private Task ToggleMenuCollapse(object e)
+    private Task<object> ToggleMenuCollapse(object sender, object e)
     {
         collapse = (bool)e;
         StateHasChanged();
-        return Task.CompletedTask;
+        return Task.FromResult<object>(0);
     }
 
     private async Task OnMenuItemClick(MenuItem item)

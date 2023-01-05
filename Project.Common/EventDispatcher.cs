@@ -19,19 +19,18 @@ namespace Project.Common
     [AutoInject]
     public class EventDispatcher
     {
-        ConcurrentDictionary<Type, Dictionary<string, Func<object, Task<object>>>> allActions = new ConcurrentDictionary<Type, Dictionary<string, Func<object, Task<object>>>>();
-        ConcurrentDictionary<string, Func<object, Task>> actions = new ConcurrentDictionary<string, Func<object, Task>>();
+        ConcurrentDictionary<Type, Dictionary<string, Func<object, object, Task<object>>>> allActions = new ConcurrentDictionary<Type, Dictionary<string, Func<object, object, Task<object>>>>();
 
-        public void Register<TSender>(string key, Func<object, Task<object>> action)
+        public void Register<TOwner>(string key, Func<object, object, Task<object>> action)
         {
-            Register(typeof(TSender), key, action);
+            Register(typeof(TOwner), key, action);
         }
 
-        public void Register(Type type, string key, Func<object, Task<object>> action)
+        public void Register(Type type, string key, Func<object, object, Task<object>> action)
         {
             if (!allActions.TryGetValue(type, out var typeDic))
             {
-                typeDic = new Dictionary<string, Func<object, Task<object>>>();
+                typeDic = new Dictionary<string, Func<object, object, Task<object>>>();
                 allActions.TryAdd(type, typeDic);
             }
             if (!typeDic.ContainsKey(key))
@@ -40,10 +39,15 @@ namespace Project.Common
             }
         }
 
-        public async Task<object> Invoke<T>(string key, object args)
+        public Task<object> Invoke<TOwner>(string key, object sender, object args)
+        {
+            return Invoke<TOwner, object>(key, sender, args);
+        }
+
+        public async Task<TReturn> Invoke<TOwner, TReturn>(string key, object sender, object args)
         {
             if (string.IsNullOrEmpty(key)) return default;
-            var type = typeof(T);
+            var type = typeof(TOwner);
             if (!allActions.TryGetValue(type, out var typeDic))
             {
                 Console.WriteLine($"类型[{type.Name}]未注册任何事件");
@@ -53,7 +57,8 @@ namespace Project.Common
             {
                 throw new ArgumentException($"类型[{type.Name}]:事件[{key}]未注册");
             }
-            return  await func.Invoke(args);
+            var ret = await func.Invoke(sender, args);
+            return (TReturn)ret;
         }
     }
 }
