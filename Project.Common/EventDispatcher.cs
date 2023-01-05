@@ -19,19 +19,19 @@ namespace Project.Common
     [AutoInject]
     public class EventDispatcher
     {
-        ConcurrentDictionary<Type, Dictionary<string, Func<object, Task>>> allActions = new ConcurrentDictionary<Type, Dictionary<string, Func<object, Task>>>();
+        ConcurrentDictionary<Type, Dictionary<string, Func<object, Task<object>>>> allActions = new ConcurrentDictionary<Type, Dictionary<string, Func<object, Task<object>>>>();
         ConcurrentDictionary<string, Func<object, Task>> actions = new ConcurrentDictionary<string, Func<object, Task>>();
 
-        public void Register<T>(string key, Func<object, Task> action)
+        public void Register<TSender>(string key, Func<object, Task<object>> action)
         {
-            Register(typeof(T), key, action);
+            Register(typeof(TSender), key, action);
         }
 
-        public void Register(Type type, string key, Func<object, Task> action)
+        public void Register(Type type, string key, Func<object, Task<object>> action)
         {
             if (!allActions.TryGetValue(type, out var typeDic))
             {
-                typeDic = new Dictionary<string, Func<object, Task>>();
+                typeDic = new Dictionary<string, Func<object, Task<object>>>();
                 allActions.TryAdd(type, typeDic);
             }
             if (!typeDic.ContainsKey(key))
@@ -40,20 +40,20 @@ namespace Project.Common
             }
         }
 
-        public async Task Invoke<T>(string key, object args)
+        public async Task<object> Invoke<T>(string key, object args)
         {
-            if (string.IsNullOrEmpty(key)) return;
+            if (string.IsNullOrEmpty(key)) return default;
             var type = typeof(T);
             if (!allActions.TryGetValue(type, out var typeDic))
             {
                 Console.WriteLine($"类型[{type.Name}]未注册任何事件");
-                return;
+                return default;
             }
             if (!typeDic.TryGetValue(key, out var func))
             {
                 throw new ArgumentException($"类型[{type.Name}]:事件[{key}]未注册");
             }
-            await func.Invoke(args);
+            return  await func.Invoke(args);
         }
     }
 }

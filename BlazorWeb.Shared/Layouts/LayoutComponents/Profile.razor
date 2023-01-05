@@ -38,11 +38,11 @@
 		dispatcher.Register<Profile>("AvatarCollapse", ToggleavatarCollapse);
 		return base.OnInitializedAsync();
 	}
-	private Task ToggleavatarCollapse(object e)
+	private Task<object> ToggleavatarCollapse(object e)
 	{
 		collapse = (bool)e;
 		StateHasChanged();
-		return Task.CompletedTask;
+		return Task.FromResult<object>(0);
 	}
 
 	async Task HandleLogout()
