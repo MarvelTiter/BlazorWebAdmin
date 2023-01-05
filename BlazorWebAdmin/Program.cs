@@ -1,4 +1,5 @@
 using BlazorWebAdmin;
+using LightExcel;
 using MDbContext;
 using Microsoft.AspNetCore.Components.Authorization;
 using Project.AppCore.Auth;
@@ -33,6 +34,7 @@ services.UseLightOrm(config =>
         };
     });
 });
+services.AddLightExcel();
 //services.AddSessionStorageServices();
 services.AutoInjects();
 //services.AddScoped<StateContainer>();

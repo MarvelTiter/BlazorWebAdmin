@@ -3,9 +3,9 @@ using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.TableModels;
 using BlazorWeb.Shared.Template.Tables.Setting;
 using BlazorWeb.Shared.Utils;
+using LightExcel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using MiniExcelLibs;
 using Project.AppCore.Store;
 using Project.Models;
 using Project.Models.Request;
@@ -28,6 +28,8 @@ namespace BlazorWeb.Shared.Template.Tables
         public MessageService MessageSrv { get; set; }
         [Inject]
         public IJSRuntime JSRuntime { get; set; }
+        [Inject]
+        public IExcelHelper Excel { get; set; }
         public bool EnableGenerateQuery => (QueryArea == null || TableOptions.EnabledAdvancedQuery) && !TableOptions.IsDataTableSource;
 
         bool loading;
@@ -101,7 +103,7 @@ namespace BlazorWeb.Shared.Template.Tables
                 if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
                 var path = Path.Combine(folder, $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}.xlsx");
                 var excelData = GeneralExcelData(TableOptions.Columns, data);
-                await MiniExcel.SaveAsAsync(path, excelData);
+                Excel.WriteExcel(path, excelData);
                 _ = MessageSrv.Success("导出成功！请下载文件！");
                 _ = JSRuntime.PushAsync(path);
             }
