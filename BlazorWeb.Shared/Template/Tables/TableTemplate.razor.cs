@@ -218,6 +218,15 @@ namespace BlazorWeb.Shared.Template.Tables
             Columns.Add(col);
             return this;
         }
+        public TableOptions<TData, TQuery> AddColumn(ColumnDefinition col)
+        {
+            if (Columns == null)
+            {
+                Columns = new List<ColumnDefinition>();
+            }
+            Columns.Add(col);
+            return this;
+        }
         public TableOptions<TData, TQuery> AddButton(string label, Func<TData, Task<bool>> handle, string icon = "")
         {
             var btn = new ButtonDefinition<TData>();
