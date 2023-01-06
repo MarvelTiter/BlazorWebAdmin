@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
-<div @onclick="HandleRootClick">
-    <CascadingValue Value=this>
+<div id="root" @onclick="HandleRootClick" @onkeyup=HandleKeyAction @ref="RootWrapper">
+    <CascadingValue Value=this Name="LayoutRoot">
         @Body
     </CascadingValue>
 </div>

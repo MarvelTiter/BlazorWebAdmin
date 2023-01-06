@@ -1,18 +1,20 @@
-﻿@inherits RootLayout
-@using Project.AppCore.Auth
+﻿@using Project.AppCore.Auth
 @using Project.Models.Permissions
 @inject RouterStore Router
+@inherits RootLayout
 @inject AuthenticationStateProvider Auth
-<CascadingValue Value="this">
-    <AuthorizeView>
-        <Authorized>
-            @Body
-        </Authorized>
-        <NotAuthorized>
-            <RedirectToLogin></RedirectToLogin>
-        </NotAuthorized>
-    </AuthorizeView>
-</CascadingValue>
+<div @onclick="HandleRootClick" @onkeydown=HandleKeyAction tabindex="0">
+    <CascadingValue Value="this">
+        <AuthorizeView>
+            <Authorized>
+                @Body
+            </Authorized>
+            <NotAuthorized>
+                <RedirectToLogin></RedirectToLogin>
+            </NotAuthorized>
+        </AuthorizeView>
+    </CascadingValue>
+</div>
 
 @code {
     [CascadingParameter]

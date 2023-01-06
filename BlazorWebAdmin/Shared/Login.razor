@@ -1,13 +1,13 @@
 ﻿@page "/login"
 @using BlazorWeb.Shared.Layouts
 @layout NotAuthorizedLayout
+@inject IConfiguration Configuration
 <PageTitle>登录</PageTitle>
-<div class="login-container">
-	@*style="background-image: url('assets/login_bg.png')"*@
+<div class="login-container" style="background-image: url('assets/login_bg.png')">	
 	<div class="title-container">
 		<div class="title-position">
 			@*style="background-image: url('assets/logo.png')"*@
-			<h3 class="title">BlazorWebAdmin</h3>
+			<h3 class="title">@(Configuration.GetValue<string>("AppTitle"))</h3>
 		</div>
 	</div>
 	<div class="login-form">
@@ -20,7 +20,7 @@
 				</Input>
 			</FormItem>
 			<FormItem>
-				<InputPassword @bind-Value="@context.Password" placeholder="Password" tabindex="2" AutoComplete="true">
+				<InputPassword @bind-Value="@context.Password" placeholder="Password" tabindex="2" AutoComplete="true" OnPressEnter="HandleLogin">
 					<Prefix>
 						<Icon Type="lock" Theme="outline" />
 					</Prefix>

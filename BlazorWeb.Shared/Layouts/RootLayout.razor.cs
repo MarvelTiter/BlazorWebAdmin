@@ -20,13 +20,24 @@ namespace BlazorWeb.Shared.Layouts
         [Inject]
         public EventDispatcher Dispatcher { get; set; }
         public event Action<MouseEventArgs> BodyClickEvent;
-
-        protected override async Task OnInitializedAsync()
+        public event Action<KeyboardEventArgs> OnKeyDown;
+        public event Action<KeyboardEventArgs> OnKeyUp;
+        protected ElementReference? RootWrapper { get; set; }
+		protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
             if (NavigationManager != null)
             {
                 NavigationManager.LocationChanged += NavigationManager_LocationChanged;
+            }
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                _ = RootWrapper?.FocusAsync();
             }
         }
 
@@ -46,9 +57,14 @@ namespace BlazorWeb.Shared.Layouts
             StateHasChanged();
         }
 
-        public void HandleRootClick(MouseEventArgs e)
+        protected void HandleRootClick(MouseEventArgs e)
         {
             BodyClickEvent?.Invoke(e);
+        }
+
+        protected void HandleKeyAction(KeyboardEventArgs e)
+        {
+            OnKeyDown?.Invoke(e);
         }
 
         private bool disposedValue;
