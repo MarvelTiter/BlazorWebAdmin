@@ -41,6 +41,8 @@
 	public bool Expand { get; set; }
 	[Parameter]
 	public EventCallback<bool> ExpandChanged { get; set; }
+	[Parameter]
+	public bool ShowClose { get; set; } = true;
 
 	public bool CanExpand => (OpenTrigger?.Invoke() ?? true) && Expand;
 
