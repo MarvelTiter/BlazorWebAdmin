@@ -21,7 +21,7 @@ services.AddServerSideBlazor();
 
 //
 services.AddAntDesign();
-services.UseLightOrm(config =>
+services.AddLightOrm(config =>
 {
     config.SetDatabase(DbBaseType.Sqlite, Project.AppCore.LightDb.CreateConnection)
     .SetWatcher(option =>

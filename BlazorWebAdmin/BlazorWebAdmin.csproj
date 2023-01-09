@@ -22,7 +22,7 @@
 		<PackageReference Include="LightExcel" Version="1.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.1" />
 		<PackageReference Include="MT.KitTools" Version="1.0.7.1" />
-		<PackageReference Include="MT.LightORM" Version="1.1.8.7" />
+		<PackageReference Include="MT.LightORM" Version="1.1.9" />
 	</ItemGroup>
 
 	<ItemGroup>
