@@ -103,7 +103,7 @@ namespace BlazorWeb.Shared.Components
         {
             check = false;
             Indeterminate = false;
-            if (HasChild) return;
+            if (HasChild || keys == null) return;
             Checked = keys.Contains(Key);
             NotifyParent();
         }
