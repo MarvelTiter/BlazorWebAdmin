@@ -9,7 +9,7 @@
 		@bind-Value=Value
 		OnSearch="OnSearch"
 		ValueName=@("Value")
-		LabelName=@("Label")
+		LabelTemplate="labelRender"
 		DropdownMatchSelectWidth=@false
 		OnSelectedItemChanged=HandleSelectedChanged>
 </Select>
@@ -32,6 +32,14 @@
 	public bool Searchable { get; set; }
 	[Parameter]
 	public Action<string> OnSearch{ get; set; }
+	[Parameter]
+	public Func<TItem,string>? LabelExpression { get; set; }
+
+	RenderFragment<Options<TItem>> labelRender => context =>
+	{
+		var label = LabelExpression?.Invoke(context.Value) ?? context.Label;
+		return@<span>@label</span>;
+	};
 
 	private async void HandleSelectedChanged(Options<TItem> item)
 	{
