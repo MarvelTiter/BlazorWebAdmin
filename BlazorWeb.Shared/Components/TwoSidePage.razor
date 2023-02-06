@@ -1,75 +1,78 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 <div class="two-side-page-wrapper" style="flex-direction:@Direction">
-	<div class="page-content first" style="flex:@MainFlex;">
-		@FirstSide
-	</div>
-	<div class="page-content second" style="flex:@(CanExpand?"1":"0");">
-		@if (CanExpand)
-		{
-			@SecondSide
-			<div style="position:absolute;top:20px;right:20px;">
-				<Button Icon="close" OnClick="CloseSide"></Button>
-			</div>
+    <div class="page-content first" style="flex:@MainFlex;">
+        @FirstSide
+    </div>
+    <div class="page-content second" style="flex:@(CanExpand?"1":"0");">
+        @if (CanExpand)
+        {
+            @SecondSide
+            @if (ShowClose)
+            {
+                <div style="position:absolute;top:20px;right:20px;">
+                    <Button Icon="close" OnClick="CloseSide"></Button>
+                </div>
+            }
 
-		}
-		else
-		{
-			if (ClosedView != null)
-			{
-				@ClosedView
-			}
-		}
-	</div>
+        }
+        else
+        {
+            if (ClosedView != null)
+            {
+                @ClosedView
+            }
+        }
+    </div>
 </div>
 
 @code {
-	[Parameter]
-	[NotNull]
-	public RenderFragment FirstSide { get; set; }
-	[Parameter]
-	public int MainFlex { get; set; } = 1;
-	[Parameter]
-	[NotNull]
-	public RenderFragment SecondSide { get; set; }
-	[Parameter]
-	public RenderFragment ClosedView { get; set; }
-	[Parameter]
-	public Func<bool> OpenTrigger { get; set; }
-	[Parameter]
-	public string Direction { get; set; } = Row;
-	[Parameter]
-	public bool Expand { get; set; }
-	[Parameter]
-	public EventCallback<bool> ExpandChanged { get; set; }
-	[Parameter]
-	public bool ShowClose { get; set; } = true;
+    [Parameter]
+    [NotNull]
+    public RenderFragment FirstSide { get; set; }
+    [Parameter]
+    public int MainFlex { get; set; } = 1;
+    [Parameter]
+    [NotNull]
+    public RenderFragment SecondSide { get; set; }
+    [Parameter]
+    public RenderFragment ClosedView { get; set; }
+    [Parameter]
+    public Func<bool> OpenTrigger { get; set; }
+    [Parameter]
+    public string Direction { get; set; } = Row;
+    [Parameter]
+    public bool Expand { get; set; }
+    [Parameter]
+    public EventCallback<bool> ExpandChanged { get; set; }
+    [Parameter]
+    public bool ShowClose { get; set; } = true;
 
-	public bool CanExpand => (OpenTrigger?.Invoke() ?? true) && Expand;
+    public bool CanExpand => (OpenTrigger?.Invoke() ?? true) && Expand;
 
-	public const string Row = "row";
-	public const string RowReverse = "row-reverse";
-	public const string Column = "column";
-	public const string ColumnReverse = "column-reverse";
+    public const string Row = "row";
+    public const string RowReverse = "row-reverse";
+    public const string Column = "column";
+    public const string ColumnReverse = "column-reverse";
 
-	async Task CloseSide()
-	{
-		Expand = false;
-		if (ExpandChanged.HasDelegate)
-			await ExpandChanged.InvokeAsync(Expand);
-	}
+    async Task CloseSide()
+    {
+        Expand = false;
+        if (ExpandChanged.HasDelegate)
+            await ExpandChanged.InvokeAsync(Expand);
+    }
 }
 
 <style>
-	.two-side-page-wrapper {
-		display: flex;
-	}
+    .two-side-page-wrapper {
+        display: flex;
+    }
 
-	.page-content {
-		transition: all 0.3s ease;
-	}
+    .page-content {
+        transition: all 0.3s ease;
+    }
 
-		.page-content.second {
-			margin-left: 10px;
-			position: relative;
-		}
+        .page-content.second {
+            margin-left: 10px;
+            position: relative;
+        }
 </style>
