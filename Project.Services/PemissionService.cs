@@ -1,8 +1,5 @@
-﻿using MDbContext;
-using MDbContext.Context.Extension;
-using MDbContext.ExpressionSql;
+﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
-using Project.AppCore.Repositories;
 using Project.AppCore.Services;
 using Project.Models;
 using Project.Models.Permissions;

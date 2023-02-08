@@ -1,6 +1,4 @@
 ﻿using LogAopCodeGenerator;
-using Project.AppCore;
-using Project.AppCore.Repositories;
 using Project.Common.Attributes;
 using System.Reflection;
 
