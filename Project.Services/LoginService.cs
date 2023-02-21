@@ -1,5 +1,6 @@
 ﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
+using Project.AppCore.Auth;
 using Project.AppCore.Services;
 using Project.Models;
 using Project.Models.Entities;
@@ -40,7 +41,6 @@ namespace Project.Services
                 result.Success = false;
                 return result;
             }
-            await UpdateLastLoginTimeAsync(username);
             var roles = await context.Repository<UserRole>().GetListAsync(ur => ur.UserId == username);
             //var userInfo = new UserInfo
             //{
@@ -49,15 +49,17 @@ namespace Project.Services
             //    Roles = roles.Select(ur => ur.RoleId).ToList()
             //};
             userInfo.Roles = roles.Select(ur => ur.RoleId).ToList();
+            await UpdateLastLoginTimeAsync(userInfo);
             //result.SetPayload(userInfo);
             return result;
         }
 
-        public async Task<IQueryResult<bool>> UpdateLastLoginTimeAsync(string username)
+        public async Task<IQueryResult<bool>> UpdateLastLoginTimeAsync(UserInfo info)
         {
             var flag = await context.Update<User>()
                                     .Set(u => u.LastLogin, DateTime.Now)
-                                    .Where(u => u.UserId == username).ExecuteAsync();
+                                    .Where(u => u.UserId == info.UserId).ExecuteAsync();
+            info.Payload = JwtTokenHelper.GetToken(info.UserId, null, info.Roles.ToArray());
             return (flag > 0).Result();
         }
 

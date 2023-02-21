@@ -25,6 +25,7 @@ namespace BlazorWebAdmin.SystemPermission
         {
             base.OnInitialized();
             tableOptions = new TableOptions<User, GenericRequest<User>>();
+            tableOptions.Page = false;
             tableOptions.LoadDataOnLoaded = true;
             tableOptions.AddButton(ButtonDefinition<User>.Edit(EditUser));
             tableOptions.AddButton(ButtonDefinition<User>.Delete(DeleteUser));
@@ -40,6 +41,7 @@ namespace BlazorWebAdmin.SystemPermission
 
         async Task<IQueryCollectionResult<User>> Search(GenericRequest<User> req)
         {
+            await Task.Delay(2000);
             return await UserSrv.GetUserListAsync(req);
         }
         protected User currentSelected;

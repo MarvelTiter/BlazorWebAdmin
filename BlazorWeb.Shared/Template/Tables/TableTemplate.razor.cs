@@ -101,11 +101,13 @@ namespace BlazorWeb.Shared.Template.Tables
             {
                 var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile");
                 if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
-                var path = Path.Combine(folder, $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}.xlsx");
+                var filename = $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}";
+                var path = Path.Combine(folder, $"{filename}.xlsx");
                 var excelData = GeneralExcelData(TableOptions.Columns, data);
-                Excel.WriteExcel(path, excelData);
-                _ = MessageSrv.Success("导出成功！请下载文件！");
-                _ = JSRuntime.PushAsync(path);
+                Excel.WriteExcel(path, data);
+                //_ = MessageSrv.Success("导出成功！请下载文件！");
+                //_ = JSRuntime.PushAsync(path);
+                _ = JSRuntime.OpenNewTab($"/download/{filename}/xlsx");
             }
             else
             {

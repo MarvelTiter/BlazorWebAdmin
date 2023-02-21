@@ -18,15 +18,18 @@ var services = builder.Services;
 // Add services to the container.
 services.AddRazorPages();
 services.AddServerSideBlazor();
-
+services.AddControllers();
+services.AddHttpClient();
+//services.AddAuthentication("Bearer")
+    
 //
 services.AddAntDesign();
-services.AddLightOrm(config =>
+services.AddLightOrm(option =>
 {
-    config.SetDatabase(DbBaseType.Sqlite, Project.AppCore.LightDb.CreateConnection)
-    .SetWatcher(option =>
+    option.SetDatabase(DbBaseType.Sqlite, Project.AppCore.LightDb.CreateConnection)
+    .SetWatcher(sql =>
     {
-        option.BeforeExecute = e =>
+        sql.BeforeExecute = e =>
         {
 #if DEBUG
             Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{e.Sql}\n");
@@ -46,7 +49,7 @@ services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvide
 services.AddHttpContextAccessor();
 builder.Host.UseWindowsService();
 var app = builder.Build();
-//Config.AddAssembly(typeof(BlazorWeb.UI.Program));
+Config.AddAssembly(typeof(BlazorWeb.Shared.Program));
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -62,6 +65,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapBlazorHub();
+app.MapControllers();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
