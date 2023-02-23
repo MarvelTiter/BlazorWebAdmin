@@ -1,45 +1,56 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 @typeparam TItem
 <Select Class=@Class
-		Style=@Style
-		DataSource=Options
-		TItemValue="@(TItem)"
-		TItem="@(Options<TItem>)"
-		EnableSearch=@Searchable
-		@bind-Value=Value
-		OnSearch="OnSearch"
-		ValueName=@("Value")
-		LabelName=@("Label")
-		DropdownMatchSelectWidth=@false
-		OnSelectedItemChanged=HandleSelectedChanged>
+        Style=@Style
+        DataSource=Options
+        TItemValue="@(TItem)"
+        TItem="@(Options<TItem>)"
+        EnableSearch=@Searchable
+        @bind-Value=Value
+        OnSearch="OnSearch"
+        ValueName=@("Value")
+        LabelTemplate="labelRender"
+        DropdownMatchSelectWidth=@false
+        OnSelectedItemChanged=HandleSelectedChanged>
+    <ItemTemplate>
+        @labelRender(context)
+    </ItemTemplate>
 </Select>
 
 @code {
-	private TItem selected;
-	[Parameter]
-	public string Class { get; set; }
-	[Parameter]
-	public string Style { get; set; }
-	[Parameter]
-	public SelectItem<TItem> Options { get; set; }
-	[Parameter]
-	public TItem Value { get; set; }
-	[Parameter]
-	public EventCallback<TItem> ValueChanged { get; set; }
-	[Parameter]
-	public EventCallback<TItem> OnChange { get; set; }
-	[Parameter]
-	public bool Searchable { get; set; }
-	[Parameter]
-	public Action<string> OnSearch{ get; set; }
+    private TItem selected;
+    [Parameter]
+    public string Class { get; set; }
+    [Parameter]
+    public string Style { get; set; }
+    [Parameter]
+    public SelectItem<TItem> Options { get; set; }
+    [Parameter]
+    public TItem Value { get; set; }
+    [Parameter]
+    public EventCallback<TItem> ValueChanged { get; set; }
+    [Parameter]
+    public EventCallback<TItem> OnChange { get; set; }
+    [Parameter]
+    public bool Searchable { get; set; }
+    [Parameter]
+    public Action<string> OnSearch { get; set; }
+    [Parameter]
+    public Func<TItem, string>? LabelExpression { get; set; }
 
-	private async void HandleSelectedChanged(Options<TItem> item)
-	{
-		if (item == null) return;
-		await ValueChanged.InvokeAsync(item.Value);
-		if (OnChange.HasDelegate)
-		{
-			await OnChange.InvokeAsync(item.Value);
-		}
-	}
+    RenderFragment<Options<TItem>> labelRender => context =>
+    {
+        var label = LabelExpression?.Invoke(context.Value) ?? context.Label;
+        return@<span class="ant-select-selection-item">@label</span>;
+    };
+
+    private async void HandleSelectedChanged(Options<TItem> item)
+    {
+        if (item == null) return;
+        await ValueChanged.InvokeAsync(item.Value);
+        if (OnChange.HasDelegate)
+        {
+            await OnChange.InvokeAsync(item.Value);
+        }
+    }
 }
