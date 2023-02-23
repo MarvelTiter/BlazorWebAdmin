@@ -1,6 +1,16 @@
 ﻿@page "/"
 @inject NavigationManager nav
 <h1>主页</h1>
-@code{
-	
+<Camera AutoPlay Width="600" Height="300" @ref=camera>
+    @*<DeviceSelectorRender>
+        <Button Type="@ButtonType.Primary" OnClick="() => SwitchCamera(context,0)">证件照</Button>
+        <Button Type="@ButtonType.Primary" OnClick="() => SwitchCamera(context,1)">人像照</Button>
+    </DeviceSelectorRender>*@
+</Camera>
+@code {
+    Camera? camera;
+    public async Task SwitchCamera(IEnumerable<Camera.DeviceInfo> devices, int type)
+    {
+        await camera!.SwitchCamera(devices.First(d => d.Kind == "videoinput").DeviceId);
+    }
 }

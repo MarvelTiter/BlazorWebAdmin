@@ -1,0 +1,28 @@
+﻿@page "/download/{file}/{extension}"
+@layout BlazorWeb.Shared.Layouts.AuthorizedLayout
+@inject IJSRuntime Js
+@inject AuthenticationStateProvider Auth
+@inject UserStore UserStore
+<div style="width:100%; text-align:center;padding-top:100px;">
+    <h2>正在请求下载文件……</h2>
+    <form action="/api/download" method="post">
+        <input name="token" value="@UserStore.UserInfo?.Payload?.ToString()" hidden />
+        <input name="filename" value="@($"{File}.{Extension}")" hidden />
+        <h3>未开始下载? <button type="submit" @ref=downloadADom>点击重试</button></h3>
+    </form>
+</div>
+
+@code {
+    [Parameter] public string? File { get; set; }
+    [Parameter] public string? Extension { get; set; }
+    string DownloadUrl => $"/api/download/{File}.{Extension}";
+    Microsoft.AspNetCore.Components.ElementReference? downloadADom;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await Js.InvokeVoidAsync("clickElement", downloadADom);
+        }
+    }
+}

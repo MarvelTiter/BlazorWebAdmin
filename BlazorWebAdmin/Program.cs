@@ -1,7 +1,9 @@
 using BlazorWebAdmin;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using LightExcel;
 using MDbContext;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using Project.AppCore.Auth;
 using Project.AppCore.Store;
 using Project.Common;
@@ -20,8 +22,12 @@ services.AddRazorPages();
 services.AddServerSideBlazor();
 services.AddControllers();
 services.AddHttpClient();
+services.Configure<HubOptions>(options =>
+{
+    options.MaximumReceiveMessageSize = 1024 * 1024 * 2; // 1MB or use null
+});
 //services.AddAuthentication("Bearer")
-    
+
 //
 services.AddAntDesign();
 services.AddLightOrm(option =>

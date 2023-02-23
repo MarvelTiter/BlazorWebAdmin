@@ -99,15 +99,15 @@ namespace BlazorWeb.Shared.Template.Tables
             var data = TableOptions.Datas;
             if (data.Any())
             {
-                var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile");
-                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                //var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile");
+                //if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
                 var filename = $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}";
-                var path = Path.Combine(folder, $"{filename}.xlsx");
-                var excelData = GeneralExcelData(TableOptions.Columns, data);
+                var path = Path.Combine(AppConst.TempFilePath, $"{filename}.xlsx");
+                //var excelData = GeneralExcelData(TableOptions.Columns, data);
                 Excel.WriteExcel(path, data);
                 //_ = MessageSrv.Success("导出成功！请下载文件！");
                 //_ = JSRuntime.PushAsync(path);
-                _ = JSRuntime.OpenNewTab($"/download/{filename}/xlsx");
+                _ = JSRuntime.DownloadFile(filename, "xlsx");
             }
             else
             {

@@ -82,5 +82,10 @@ namespace BlazorWeb.Shared.Utils
         {
             await runtime.InvokeVoidAsync("open", url);
         }
+
+        public static async Task DownloadFile(this IJSRuntime runtime, string filename, string extension)
+        {
+            await runtime.OpenNewTab($"/download/{filename}/{extension}");
+        }
     }
 }

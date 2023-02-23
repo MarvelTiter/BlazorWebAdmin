@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BlazorWeb.Shared.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.AppCore.Auth;
 using Project.AppCore.Services;
@@ -30,7 +31,7 @@ namespace BlazorWebAdmin.Controllers
             {
                 return Forbid();
             }
-            var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile", request.Filename);
+            var file = Path.Combine(AppConst.TempFilePath, request.Filename);
             if (System.IO.File.Exists(file))
             {
                 var ext = Path.GetExtension(request.Filename);

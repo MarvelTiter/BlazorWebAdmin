@@ -18,7 +18,7 @@ namespace Project.Models
             }
             return result;
         }
-        public static SelectItem<string> Convert(this Dictionary<string,string> self)
+        public static SelectItem<string> Convert(this Dictionary<string, string> self)
         {
             SelectItem<string> options = new SelectItem<string>();
             foreach (var item in self)
@@ -56,6 +56,13 @@ namespace Project.Models
             items.Add(new Options<T>(label, value));
             return this;
         }
+
+        public SelectItem<T> AddRange(IEnumerable<Options<T>> options)
+        {
+            items.AddRange(options);
+            return this;
+        }
+
         private Dictionary<string, string> _enumValues;
         public Dictionary<string, string> EnumValues
         {
@@ -70,7 +77,7 @@ namespace Project.Models
         }
         public void Clear() => items.Clear();
 
-		private class Enumerator : IEnumerator<Options<T>>
+        private class Enumerator : IEnumerator<Options<T>>
         {
             public Enumerator(List<Options<T>> options)
             {
