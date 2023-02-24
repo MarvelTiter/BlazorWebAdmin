@@ -18,6 +18,8 @@ namespace BlazorWeb.Shared.Components
         [Parameter] public int Width { get; set; }
         [Parameter] public int Height { get; set; }
         [Parameter] public RenderFragment<IEnumerable<DeviceInfo>> DeviceSelectorRender { get; set; }
+        [Parameter] public EventCallback<CaptureInfo> OnCapture { get; set; }
+        [Parameter] public bool AutoDownload { get; set; }
         private IJSObjectReference cameraHelper;
         private ElementReference? videoDom;
         private ElementReference? clipDom;
@@ -32,6 +34,11 @@ namespace BlazorWeb.Shared.Components
             /// videoinput | audioouput | audioinput
             /// </summary>
             public string Kind { get; set; }
+        }
+        public struct CaptureInfo
+        {
+            public string Filename { get; set; }
+            public string Content { get; set; }
         }
         private SelectItem<string> dropdownDevices = new SelectItem<string>();
         public IEnumerable<DeviceInfo> Devices { get; set; } = Enumerable.Empty<DeviceInfo>();
@@ -48,7 +55,7 @@ namespace BlazorWeb.Shared.Components
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                cameraHelper = await Js.InvokeAsync<IJSObjectReference>("import", "./camera.js");
+                cameraHelper = await Js.InvokeAsync<IJSObjectReference>("import", "./js/camera.js");
                 await InitDevices();
                 await cameraHelper.InvokeVoidAsync("init", videoDom, canvasDom);
                 var result = await Storage.GetAsync<string>("previousSelectedDevice");
@@ -102,12 +109,22 @@ namespace BlazorWeb.Shared.Components
         public async Task Capture()
         {
             var base64 = await cameraHelper.InvokeAsync<string>("capture");
-            return;
             var filename = $"CameraCapture_{DateTime.Now:yyyyMMddHHmmss}";
-            using var fs = File.Open(Path.Combine(AppConst.TempFilePath, $"{filename}.jpeg"), FileMode.Create, FileAccess.Write);
-            fs.Write(Convert.FromBase64String(base64));
-            await fs.FlushAsync();
-            _ = Js.DownloadFile(filename, "jpeg");
+            if (OnCapture.HasDelegate)
+            {
+                await OnCapture.InvokeAsync(new CaptureInfo
+                {
+                    Filename = filename,
+                    Content = base64,
+                });
+            }
+            if (AutoDownload)
+            {
+                using var fs = File.Open(Path.Combine(AppConst.TempFilePath, $"{filename}.jpeg"), FileMode.Create, FileAccess.Write);
+                fs.Write(Convert.FromBase64String(base64));
+                await fs.FlushAsync();
+                _ = Js.DownloadFile(filename, "jpeg");
+            }
         }
     }
 }

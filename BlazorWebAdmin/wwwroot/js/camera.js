@@ -1,4 +1,9 @@
-﻿const camera = {
+﻿/**
+ * clipBox.init => 初始化截取框，标志enable
+ * 
+ */
+
+const camera = {
     id: '',
     width: 0,
     height: 0,
@@ -55,7 +60,7 @@
             ctx.drawImage(this.video, x, y, w, h, 0, 0, w, h);
 
             var dataURL = this.canvas.toDataURL("image/jpeg", 1);
-            window.document.getElementById('test').src = dataURL
+            //window.document.getElementById('test').src = dataURL
             if (dataURL.split(',').length > 1)
                 return dataURL.split(',')[1];
             else
@@ -139,7 +144,7 @@ export function init(video, canvas) {
     camera.canvas = canvas;
 }
 
-export function enumerateDevices(canvas) {
+export function enumerateDevices() {
     if (navigator && navigator.mediaDevices)
         return navigator.mediaDevices.enumerateDevices()
     return []
@@ -200,6 +205,11 @@ export function initClipBox(clip, width, height) {
     clipBox.el.addEventListener("mouseover", handleClipMouseOver);
 }
 
+export function capture() {
+    var imgData = camera.draw();
+    return imgData;
+}
+
 function handleClipMouseOver(e) {
     e.target.addEventListener("mousemove", handleClipMouseMove);
     e.target.addEventListener("mouseout", handleClipMouseOut);
@@ -255,11 +265,4 @@ function handleClipMouseOut(e) {
     e.target.removeEventListener("mousemove", handleClipMouseMove);
     e.target.removeEventListener("mouseout", handleClipMouseOut);
     e.target.removeEventListener("mousedown", handleMouseDown);
-}
-
-
-export function capture() {
-    var imgData = camera.draw();
-    console.log(imgData)
-    return imgData;
 }
