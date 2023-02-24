@@ -1,7 +1,22 @@
 ﻿@page "/camera/test"
 @namespace BlazorWeb.Shared.Components
 @layout Layouts.NotAuthorizedLayout
-<Camera AutoPlay EnableClip Width="600" Height="300"></Camera>
+<Camera AutoPlay EnableClip Width="600" Height="300" OnCapture="handleCapture"></Camera>
+<div style="width:500px;">
+    <img src="@src" style="width:100%;" />
+</div>
 @code {
+    Camera? camera;
+    public async Task SwitchCamera(IEnumerable<Camera.DeviceInfo> devices, int type)
+    {
+        await camera!.SwitchCamera(devices.First(d => d.Kind == "videoinput").DeviceId);
+    }
 
+    string src;
+
+    public void handleCapture(Camera.CaptureInfo info)
+    {
+        src = $"data:image/jpeg;base64,{info.Content}";
+        StateHasChanged();
+    }
 }

@@ -1,7 +1,17 @@
-﻿/**
- * clipBox.init => 初始化截取框，标志enable
- * 
- */
+﻿function success(msg, payload) {
+    return {
+        success: true,
+        message: msg,
+        payload: payload
+    }
+}
+
+function failed(msg) {
+    return {
+        success: false,
+        message: msg,
+    }
+}
 
 const camera = {
     id: '',
@@ -18,11 +28,10 @@ const camera = {
                 this.video.onloadedmetadata = function (e) {
                     this.play();
                     clipBox.show();
-                    resolve(true);
+                    resolve(success('开始播放'));
                 };
             } catch (e) {
-                console.error(e);
-                resolve(false);
+                resolve(failed(e.message));
             }
         })
     },
@@ -41,37 +50,41 @@ const camera = {
         this.tracks = [];
     },
     draw: function () {
-        //return new Promise(resolve => {
-        //})
-        if (this.video && this.canvas) {
-            var ctx = this.canvas.getContext('2d');
-            var x = 0, y = 0, w = this.video.videoWidth, h = this.video.videoHeight
-            if (clipBox.enable) {
-                clipBox.applyRect()
-                var scaleX = this.video.videoWidth / clipBox.videoWindowWidth
-                var scaleY = this.video.videoHeight / clipBox.videoWindowHeight
-                x = clipBox.x * scaleX
-                y = clipBox.y * scaleY
-                w = clipBox.w * scaleX
-                h = clipBox.h * scaleY
-            }
-            this.canvas.width = w
-            this.canvas.height = h
-            ctx.drawImage(this.video, x, y, w, h, 0, 0, w, h);
+        try {
+            var data = ''
+            if (this.video && this.canvas) {
+                var ctx = this.canvas.getContext('2d');
+                var x = 0, y = 0, w = this.video.videoWidth, h = this.video.videoHeight
+                if (clipBox.enable) {
+                    clipBox.applyRect()
+                    var scaleX = this.video.videoWidth / clipBox.videoWindowWidth
+                    var scaleY = this.video.videoHeight / clipBox.videoWindowHeight
+                    x = clipBox.x * scaleX
+                    y = clipBox.y * scaleY
+                    w = clipBox.w * scaleX
+                    h = clipBox.h * scaleY
+                }
+                this.canvas.width = w
+                this.canvas.height = h
+                ctx.drawImage(this.video, x, y, w, h, 0, 0, w, h);
 
-            var dataURL = this.canvas.toDataURL("image/jpeg", 1);
-            //window.document.getElementById('test').src = dataURL
-            if (dataURL.split(',').length > 1)
-                return dataURL.split(',')[1];
-            else
-                return "";
-        }
-        else {
-            return "";
+                var dataURL = this.canvas.toDataURL("image/jpeg", 1);
+                //window.document.getElementById('test').src = dataURL
+                if (dataURL.split(',').length > 1)
+                    data = dataURL.split(',')[1];
+                return success('', data)
+            }
+            return failed('')
+        } catch (e) {
+            return failed(e.message)
         }
     }
 }
 
+/**
+ * clipBox.init => 初始化截取框，标志enable
+ * 
+ */
 const clipBox = {
     el: null,
     x: 0,
@@ -144,10 +157,12 @@ export function init(video, canvas) {
     camera.canvas = canvas;
 }
 
-export function enumerateDevices() {
-    if (navigator && navigator.mediaDevices)
-        return navigator.mediaDevices.enumerateDevices()
-    return []
+export async function enumerateDevices() {
+    if (navigator && navigator.mediaDevices) {
+        var devices = await navigator.mediaDevices.enumerateDevices()
+        return success('', devices)
+    }
+    return failed('获取设备失败！请检查设备连接或者浏览器配置！')
 }
 /**
 * 加载视频
@@ -158,7 +173,6 @@ export function enumerateDevices() {
 */
 export function loadUserMedia(deviceId, width, height) {
     return new Promise(resolve => {
-        debugger
         if (navigator && navigator.mediaDevices) {
             navigator.mediaDevices.getUserMedia({
                 video: {
@@ -178,18 +192,22 @@ export function loadUserMedia(deviceId, width, height) {
                 })
                 .catch(function (err) {
                     /* 处理 error */
-                    console.error("loadUserMedia", err);
-                    resolve(false);
+                    resolve(failed(err.message));
                 });
         } else {
-            resolve(false)
+            resolve(failed('浏览器不支持'))
         }
     })
 }
 
 export function closeUserMedia() {
-    camera.close();
-    return true;
+    try {
+        camera.close();
+        return success();
+
+    } catch (e) {
+        return failed(e.message)
+    }
 }
 
 /**
@@ -201,13 +219,11 @@ export function closeUserMedia() {
 export function initClipBox(clip, width, height) {
     clipBox.el = clip;
     clipBox.init(width, height);
-    clipBox.show();
     clipBox.el.addEventListener("mouseover", handleClipMouseOver);
 }
 
 export function capture() {
-    var imgData = camera.draw();
-    return imgData;
+    return camera.draw();    
 }
 
 function handleClipMouseOver(e) {

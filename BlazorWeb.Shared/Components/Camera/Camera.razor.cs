@@ -56,7 +56,8 @@ namespace BlazorWeb.Shared.Components
             if (firstRender)
             {
                 cameraHelper = await Js.InvokeAsync<IJSObjectReference>("import", "./js/camera.js");
-                await InitDevices();
+                if (!await InitDevices())
+                    return;
                 await cameraHelper.InvokeVoidAsync("init", videoDom, canvasDom);
                 var result = await Storage.GetAsync<string>("previousSelectedDevice");
                 if (result.Success)
@@ -71,32 +72,50 @@ namespace BlazorWeb.Shared.Components
             }
         }
 
-        private async Task InitDevices()
+        private async Task<bool> InitDevices()
         {
-            Devices = await cameraHelper.InvokeAsync<IEnumerable<DeviceInfo>>("enumerateDevices");
-            if (Devices.Any())
+            var result = await cameraHelper.InvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");
+            if (result.Success)
             {
+                Devices = result.Payload;
                 dropdownDevices.Clear();
                 dropdownDevices.AddRange(Devices.Where(d => d.Kind == "videoinput").Select(d => new Options<string>(d.Label, d.DeviceId)));
                 StateHasChanged();
+                return true;
             }
             else
             {
-                _ = MsgSrv.Error("获取设备失败！请检查设备连接或者浏览器配置！", 0);
+                _ = MsgSrv.Error(result.Message, 0);
+                return false;
             }
         }
         bool playButtonStatus = false;
         public async Task Start()
         {
-            playButtonStatus = await cameraHelper.InvokeAsync<bool>("loadUserMedia", selectedDeviceId, 1920, 1080);
-
-            await Storage.SetAsync("previousSelectedDevice", selectedDeviceId);
-            StateHasChanged();
+            var result = await cameraHelper.InvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, 1920, 1080);
+            if (result.Success)
+            {
+                playButtonStatus = result.Success;
+                await Storage.SetAsync("previousSelectedDevice", selectedDeviceId);
+                StateHasChanged();
+            }
+            else
+            {
+                _ = MsgSrv.Error(result.Message, 0);
+            }
         }
 
         public async Task Stop()
         {
-            playButtonStatus = !await cameraHelper.InvokeAsync<bool>("closeUserMedia");
+            var result = await cameraHelper.InvokeAsync<JsActionResult>("closeUserMedia");
+            if (result.Success)
+            {
+                playButtonStatus = !result.Success;
+            }
+            else
+            {
+                _ = MsgSrv.Error(result.Message, 0);
+            }
         }
 
         public async Task SwitchCamera(string deviceId)
@@ -108,22 +127,29 @@ namespace BlazorWeb.Shared.Components
 
         public async Task Capture()
         {
-            var base64 = await cameraHelper.InvokeAsync<string>("capture");
-            var filename = $"CameraCapture_{DateTime.Now:yyyyMMddHHmmss}";
-            if (OnCapture.HasDelegate)
+            var result = await cameraHelper.InvokeAsync<JsActionResult<string>>("capture");
+            if (result.Success)
             {
-                await OnCapture.InvokeAsync(new CaptureInfo
+                var filename = $"CameraCapture_{DateTime.Now:yyyyMMddHHmmss}";
+                if (OnCapture.HasDelegate)
                 {
-                    Filename = filename,
-                    Content = base64,
-                });
+                    await OnCapture.InvokeAsync(new CaptureInfo
+                    {
+                        Filename = filename,
+                        Content = result.Payload,
+                    });
+                }
+                if (AutoDownload)
+                {
+                    using var fs = File.Open(Path.Combine(AppConst.TempFilePath, $"{filename}.jpeg"), FileMode.Create, FileAccess.Write);
+                    fs.Write(Convert.FromBase64String(result.Payload));
+                    await fs.FlushAsync();
+                    _ = Js.DownloadFile(filename, "jpeg");
+                }
             }
-            if (AutoDownload)
+            else
             {
-                using var fs = File.Open(Path.Combine(AppConst.TempFilePath, $"{filename}.jpeg"), FileMode.Create, FileAccess.Write);
-                fs.Write(Convert.FromBase64String(base64));
-                await fs.FlushAsync();
-                _ = Js.DownloadFile(filename, "jpeg");
+                _ = MsgSrv.Error(result.Message);
             }
         }
     }

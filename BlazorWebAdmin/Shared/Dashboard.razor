@@ -1,27 +1,7 @@
 ﻿@page "/"
 @inject NavigationManager nav
 <h1>主页</h1>
-<Camera AutoPlay Width="600" Height="300" @ref=camera OnCapture="handleCapture">
-    @*<DeviceSelectorRender>
-        <Button Type="@ButtonType.Primary" OnClick="() => SwitchCamera(context,0)">证件照</Button>
-        <Button Type="@ButtonType.Primary" OnClick="() => SwitchCamera(context,1)">人像照</Button>
-    </DeviceSelectorRender>*@
-</Camera>
-<div style="width:500px;">
-    <img src="@src" style="width:100%;" />
-</div>
+<CameraTest></CameraTest>
 @code {
-    Camera? camera;
-    public async Task SwitchCamera(IEnumerable<Camera.DeviceInfo> devices, int type)
-    {
-        await camera!.SwitchCamera(devices.First(d => d.Kind == "videoinput").DeviceId);
-    }
-
-    string src;
-
-    public void handleCapture(Camera.CaptureInfo info)
-    {
-        src = $"data:image/jpeg;base64,{info.Content}";
-        StateHasChanged();
-    }
+    
 }
