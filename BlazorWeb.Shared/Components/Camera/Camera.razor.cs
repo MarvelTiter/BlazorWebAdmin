@@ -59,6 +59,8 @@ namespace BlazorWeb.Shared.Components
                 if (!await InitDevices())
                     return;
                 await cameraHelper.InvokeVoidAsync("init", videoDom, canvasDom);
+                if (EnableClip)
+                    await cameraHelper.InvokeVoidAsync("initClipBox", clipDom, Width, Height);
                 var result = await Storage.GetAsync<string>("previousSelectedDevice");
                 if (result.Success)
                 {
@@ -67,8 +69,6 @@ namespace BlazorWeb.Shared.Components
                     if (AutoPlay)
                         await Start();
                 }
-                if (EnableClip)
-                    await cameraHelper.InvokeVoidAsync("initClipBox", clipDom, Width, Height);
             }
         }
 

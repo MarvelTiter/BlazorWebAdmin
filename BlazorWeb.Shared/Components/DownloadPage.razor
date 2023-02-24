@@ -3,6 +3,7 @@
 @inject IJSRuntime Js
 @inject AuthenticationStateProvider Auth
 @inject UserStore UserStore
+<PageTitle>文件下载</PageTitle>
 <div style="width:100%; text-align:center;padding-top:100px;">
     <h2>正在请求下载文件……</h2>
     <form action="/api/download" method="post">
@@ -15,7 +16,7 @@
 @code {
     [Parameter] public string? File { get; set; }
     [Parameter] public string? Extension { get; set; }
-    string DownloadUrl => $"/api/download/{File}.{Extension}";
+    //string DownloadUrl => $"/api/download/{File}.{Extension}";
     Microsoft.AspNetCore.Components.ElementReference? downloadADom;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
