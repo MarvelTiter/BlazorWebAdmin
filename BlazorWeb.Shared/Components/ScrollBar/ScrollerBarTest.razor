@@ -1,0 +1,45 @@
+﻿@namespace BlazorWeb.Shared.Components
+@page "/scrollbar/test"
+@layout BlazorWeb.Shared.Layouts.NotAuthorizedLayout
+<ScrollBar>
+    <div style="padding:20px;border:1px solid #ccc">
+        <ScrollBar Height="200" Always>
+            @foreach (var item in Enumerable.Range(1, 20))
+            {
+                <p>Row++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ @item</p>
+            }
+        </ScrollBar>
+    </div>
+    <p></p>
+    <div style="padding:20px;height:200px;border:1px solid #ccc">
+        <ScrollBar Always BarWidth="10">
+            @foreach (var item in Enumerable.Range(1, 20))
+            {
+                <p>Row++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ @item</p>
+            }
+        </ScrollBar>
+    </div>
+    <p></p>
+    @if (show)
+    {
+        <div style="padding:20px;border:1px solid #ccc">
+            <ScrollBar Height="200" BarColor="green" @ref=scrollBar>
+                @foreach (var item in Enumerable.Range(1, 20))
+                {
+                    <p>Row++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ @item</p>
+                }
+            </ScrollBar>
+        </div>
+    }
+    <button @onclick=handleClick>dispose</button>
+</ScrollBar>
+@code {
+    ScrollBar scrollBar;
+    bool show = true;
+    async Task handleClick()
+    {
+        show = !show;
+        await scrollBar.DisposeAsync();
+        StateHasChanged();
+    }
+}

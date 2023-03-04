@@ -8,9 +8,8 @@ using System;
 
 namespace BlazorWeb.Shared.Components
 {
-    public partial class Camera
+    public partial class Camera : JsComponentBase
     {
-        [Inject] public IJSRuntime Js { get; set; }
         [Inject] public ProtectedLocalStorage Storage { get; set; }
         [Inject] public MessageService MsgSrv { get; set; }
         [Parameter] public bool AutoPlay { get; set; }
@@ -50,31 +49,49 @@ namespace BlazorWeb.Shared.Components
             if (Height < 100) Height = 100;
         }
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+        //protected override async Task OnAfterRenderAsync(bool firstRender)
+        //{
+        //    await base.OnAfterRenderAsync(firstRender);
+        //    if (firstRender)
+        //    {
+        //        cameraHelper = await Js.InvokeAsync<IJSObjectReference>("import", "./js/camera.js");
+        //        if (!await InitDevices())
+        //            return;
+        //        await cameraHelper.InvokeVoidAsync("init", videoDom, canvasDom);
+        //        if (EnableClip)
+        //            await cameraHelper.InvokeVoidAsync("initClipBox", clipDom, Width, Height);
+        //        var result = await Storage.GetAsync<string>("previousSelectedDevice");
+        //        if (result.Success)
+        //        {
+        //            selectedDeviceId = result.Value ?? "";
+        //            StateHasChanged();
+        //            if (AutoPlay)
+        //                await Start();
+        //        }
+        //    }
+        //}
+
+        protected override async ValueTask Init()
         {
-            await base.OnAfterRenderAsync(firstRender);
-            if (firstRender)
+            if (!await InitDevices())
+                return;
+            if (EnableClip)
+                await ModuleInvokeVoidAsync("init", videoDom, canvasDom, clipDom, Width, Height);
+            else
+                await ModuleInvokeVoidAsync("init", videoDom, canvasDom);
+            var result = await Storage.GetAsync<string>("previousSelectedDevice");
+            if (result.Success)
             {
-                cameraHelper = await Js.InvokeAsync<IJSObjectReference>("import", "./js/camera.js");
-                if (!await InitDevices())
-                    return;
-                await cameraHelper.InvokeVoidAsync("init", videoDom, canvasDom);
-                if (EnableClip)
-                    await cameraHelper.InvokeVoidAsync("initClipBox", clipDom, Width, Height);
-                var result = await Storage.GetAsync<string>("previousSelectedDevice");
-                if (result.Success)
-                {
-                    selectedDeviceId = result.Value ?? "";
-                    StateHasChanged();
-                    if (AutoPlay)
-                        await Start();
-                }
+                selectedDeviceId = result.Value ?? "";
+                StateHasChanged();
+                if (AutoPlay)
+                    await Start();
             }
         }
 
         private async Task<bool> InitDevices()
         {
-            var result = await cameraHelper.InvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");
+            var result = await ModuleInvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");
             if (result.Success)
             {
                 Devices = result.Payload;
@@ -92,7 +109,7 @@ namespace BlazorWeb.Shared.Components
         bool playButtonStatus = false;
         public async Task Start()
         {
-            var result = await cameraHelper.InvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, 1920, 1080);
+            var result = await ModuleInvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, 1920, 1080);
             if (result.Success)
             {
                 playButtonStatus = result.Success;
@@ -107,7 +124,7 @@ namespace BlazorWeb.Shared.Components
 
         public async Task Stop()
         {
-            var result = await cameraHelper.InvokeAsync<JsActionResult>("closeUserMedia");
+            var result = await ModuleInvokeAsync<JsActionResult>("closeUserMedia");
             if (result.Success)
             {
                 playButtonStatus = !result.Success;
@@ -127,7 +144,7 @@ namespace BlazorWeb.Shared.Components
 
         public async Task Capture()
         {
-            var result = await cameraHelper.InvokeAsync<JsActionResult<string>>("capture");
+            var result = await ModuleInvokeAsync<JsActionResult<string>>("capture");
             if (result.Success)
             {
                 var filename = $"CameraCapture_{DateTime.Now:yyyyMMddHHmmss}";

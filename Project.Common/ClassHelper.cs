@@ -1,4 +1,6 @@
-﻿namespace Project.Common
+﻿using System.Text;
+
+namespace Project.Common
 {
     public class ClassHelper
     {
@@ -23,10 +25,10 @@
         }
 
 
-        public ClassHelper AddClass(string cssClass, Func<bool> condition = null)
+        public ClassHelper AddClass(string? cssClass, Func<bool>? condition = null)
         {
-            if (condition == null)
-                condition = () => true;
+            if (cssClass == null) return this;
+            condition ??= () => true;
             cssClassMap.Add(cssClass, condition);
             return this;
         }

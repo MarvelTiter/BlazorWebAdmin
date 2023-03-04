@@ -1,9 +1,10 @@
 ﻿@using BlazorWeb.Shared.Layouts.LayoutComponents
 @inherits LayoutComponentBase
 @layout AuthorizedLayout
-@inject RouterStore store
+@inject RouterStore Store
+@inject AppStore App
 
-<PageTitle>@($"管理系统 - {store.Current?.RouteName ?? "主页"}")</PageTitle>
+<PageTitle>@($"管理系统 - {Store.Current?.RouteName ?? "主页"}")</PageTitle>
 @*<ReadyToDisplay>*@
     <div class="page">
         @*<div class="sidebar">

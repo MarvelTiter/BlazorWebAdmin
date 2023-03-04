@@ -18,3 +18,19 @@
 function clickElement(dom) {
     dom.click();
 }
+
+function elementOperation(dom, funcName, ...args) {
+    var func = dom[funcName];
+    if (func) {
+        window.t = func
+        window.d = dom
+        window.a = args
+        var r = func.call(dom, ...args);
+        console.log(r);
+        return r;
+    }
+}
+
+function elementProperty(dom, prop) {
+    return dom[prop];
+}

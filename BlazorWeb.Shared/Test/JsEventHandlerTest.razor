@@ -1,0 +1,20 @@
+﻿@page "/handler/test"
+@layout BlazorWeb.Shared.Layouts.NotAuthorizedLayout
+@inject IJSRuntime Js
+<h3 @ref=h31>JsEventHandlerTest</h3>
+<h3 @ref=h32>JsEventHandlerTest</h3>
+<h3 @ref=h33>JsEventHandlerTest</h3>
+<button @ref=button>remove</button>
+@code {
+    ElementReference? h31;
+    ElementReference? h32;
+    ElementReference? h33;
+    ElementReference? button;
+    IJSObjectReference module;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        module = await Js.InvokeAsync<IJSObjectReference>("import", "./js/test.js");
+        await module.InvokeVoidAsync("init", h31, h32, h33, button);
+    }
+}
