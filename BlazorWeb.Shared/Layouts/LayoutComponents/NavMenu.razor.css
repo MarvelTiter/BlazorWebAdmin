@@ -4,6 +4,7 @@
     height: 100%;
     margin-left: auto;
     overflow: hidden;
+    margin-left: 16px;
 }
 
     .nav-menu .nav-menu-item:hover {

@@ -1,6 +1,7 @@
 ﻿::deep a {
     color: #000000;
     text-decoration: none;
+    white-space: nowrap;
 }
 
     ::deep a.active {

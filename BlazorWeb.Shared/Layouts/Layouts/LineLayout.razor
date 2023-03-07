@@ -9,10 +9,12 @@
         </SideBar>
     </aside>
 </section>*@
-<section style="display:flex;flex-direction:column; width:100%;height:100%;">
+<section style="display:flex;flex-direction:column; width:100vw;height:100vh;">
     <header style="display:flex;width:100%;height: 50px;">
         <Banner ShowCollapseButton=false Class="line"></Banner>
-        <SideBar Class="line" Horizontal></SideBar>
+        <ScrollBar>
+            <SideBar Class="line" Horizontal></SideBar>
+        </ScrollBar>
         <NavMenu Class="line"></NavMenu>
     </header>
     <main style="padding:16px;height: calc(100vh - 50px);">
