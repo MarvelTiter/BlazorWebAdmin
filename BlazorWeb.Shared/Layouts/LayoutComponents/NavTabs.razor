@@ -1,7 +1,8 @@
 ﻿@inject RouterStore store
 @inject NavigationManager nav
 @inject AppStore App
-<div style="flex:1;">
+@inject IJSRuntime Js
+<div style="flex:1;width:calc(100% - @(navMenuWidth + 16)px)">
     <ScrollBar>
         <div class="tags_box @Class" style="--tags_box-theme-color: @App.MainThemeColor;display:flex;height:50px;">
             @foreach (var item in store.TopLink)

@@ -32,5 +32,10 @@ namespace BlazorWeb.Shared.Utils
         {
             return runtime.InvokeAsync<T>("elementProperty", dom, prop);
         }
+
+        public static ValueTask<T> ElementProperty<T>(this IJSRuntime runtime, string selector, string prop)
+        {
+            return runtime.InvokeAsync<T>("elementProperty", selector, prop);
+        }
     }
 }

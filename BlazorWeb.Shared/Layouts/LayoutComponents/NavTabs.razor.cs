@@ -1,4 +1,5 @@
 ﻿using BlazorWeb.Shared.Layouts;
+using BlazorWeb.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Project.AppCore.Store;
@@ -14,6 +15,16 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         private RouterMeta current;
         [CascadingParameter] public RootLayout RootLayout { get; set; }
         [Parameter] public string Class { get; set; }
+        private int navMenuWidth = 200;
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                navMenuWidth = await Js.ElementProperty<int>(".nav-menu", "offsetWidth");
+            }
+        }
 
         private ClassHelper ContextmenuClass => ClassHelper.Default.AddClass("context").AddClass("open", () => showContextmenu);
 

@@ -32,5 +32,11 @@ function elementOperation(dom, funcName, ...args) {
 }
 
 function elementProperty(dom, prop) {
-    return dom[prop];
+    if (dom[prop]) {
+        return dom[prop]
+    }
+    else {
+        var el = document.querySelector(dom)
+        return el[prop]
+    }
 }
