@@ -1,9 +1,4 @@
-.page {
-    position: relative;
-    display: flex;
-    height: 100vh;
-    max-width: 100vw;
-}
+
 
 aside {
     -moz-user-select: none; /*»ðºü*/
@@ -50,7 +45,7 @@ main {
         text-overflow: ellipsis;
     }
 
-@media (max-width: 640.98px) {
+/*@media (max-width: 640.98px) {
     .top-row:not(.auth) {
         display: none;
     }
@@ -86,4 +81,4 @@ main {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
     }
-}
+}*/

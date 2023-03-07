@@ -35,17 +35,17 @@ namespace BlazorWeb.Shared.Components
 
         protected abstract ValueTask Init();
 
-        protected ValueTask ModuleInvokeVoidAsync(string identifier, params object[] args)
+        protected ValueTask ModuleInvokeVoidAsync(string identifier, params object?[]? args)
         {
             var arguments = new List<object> { Id };
-            arguments.AddRange(args ?? Array.Empty<object>());
+            arguments.AddRange((args ?? Array.Empty<object>())!);
             return Module!.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray());
         }
 
-        protected ValueTask<T> ModuleInvokeAsync<T>(string identifier, params object[] args)
+        protected ValueTask<T> ModuleInvokeAsync<T>(string identifier, params object?[]? args)
         {
             var arguments = new List<object> { Id };
-            arguments.AddRange(args ?? Array.Empty<object>());
+            arguments.AddRange((args ?? Array.Empty<object>())!);
             return Module!.InvokeAsync<T>($"{ModuleName}.{identifier}", arguments.ToArray());
         }
 

@@ -1,19 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Project.Common.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project.AppCore.Store
 {
     public enum LayoutMode
     {
+        [Display(Name = "经典")]
         Classic,
+        [Display(Name = "卡片式")]
         Card,
+        [Display(Name = "流线型")]
         Line,
     }
     public class AppStore : StoreBase
     {
-        public LayoutMode Mode { get; set; } = LayoutMode.Classic;
+        public const string KEY = "APP_SETTING";
+        public LayoutMode? Mode { get; set; }
+        public bool DarkMode { get; set; }
+        public int SideBarExpandWidth { get; set; } = 260;
+        public string MainThemeColor { get; set; } = "#1464ff";
     }
 }

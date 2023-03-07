@@ -1,0 +1,26 @@
+﻿@inject RouterStore store
+@inject NavigationManager nav
+@inject AppStore App
+<ScrollBar>
+    <div class="tags_box @Class" style="--tags_box-theme-color: @App.MainThemeColor;display:flex;height:50px;">
+        @foreach (var item in store.TopLink)
+        {
+            <div class="nav_top @(item.IsActive ? "active":"")" @oncontextmenu="e => OpenContextMenu(e, item)">
+                <NavLink href="@item.RouteLink" Match="NavLinkMatch.All">
+                    <span @oncontextmenu:preventDefault>@item.RouteName</span>
+                    @if (item.IsActive && item.Closable)
+                    {
+                        <span style="padding-left:5px;" @onclick="e => CloseTag(item)" @onclick:stopPropagation @onclick:preventDefault>
+                            X
+                        </span>
+                    }
+                </NavLink>
+            </div>
+        }
+    </div>
+</ScrollBar>
+<ul class="@ContextmenuClass.Class" style="left:@contextmenuLeft;top:@contextmenuTop">
+    <li @onclick="e => CloseOther()">除此之外全部关闭</li>
+    <li @onclick="e => CloseAll()">关闭全部选项卡</li>
+    <li @onclick="e => CloseSelf()">关闭</li>
+</ul>

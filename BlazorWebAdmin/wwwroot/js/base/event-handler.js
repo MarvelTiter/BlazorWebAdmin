@@ -80,12 +80,15 @@ function addListener(el, eventType, action, once) {
 
 export const EventHandler = {
     listen: function (el, eventType, action) {
+        if (!el) return
         addListener(el, eventType, action, false)
     },
     once: function (el, eventType, action) {
+        if (!el) return
         addListener(el, eventType, action, true)
     },
     remove: function (el, eventType, action) {
+        if (!el) return
         const ets = getElementEvents(el);
         ets.removeHandler(eventType, action);
     }

@@ -36,7 +36,6 @@ namespace BlazorWeb.Shared.Components
         [Parameter] public int MinSize { get; set; }
         [Parameter] public int BarWidth { get; set; } = 6;
         [Parameter] public string BarColor { get; set; } = "#909399";
-        [Inject] public IJSRuntime Js { get; set; }
 
         protected override async ValueTask Init()
         {

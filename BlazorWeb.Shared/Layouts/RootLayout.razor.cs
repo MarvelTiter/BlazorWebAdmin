@@ -1,6 +1,7 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Project.AppCore.Store;
 using Project.Common;
@@ -9,21 +10,18 @@ namespace BlazorWeb.Shared.Layouts
 {
     public partial class RootLayout : IDisposable
     {
-        [Inject]
-        public NavigationManager NavigationManager { get; set; }
-        [Inject]
-        public RouterStore RouterStore { get; set; }
-        [Inject]
-        public UserStore UserStore { get; set; }
-        [Inject]
-        public MessageService MsgSrv { get; set; }
-        [Inject]
-        public EventDispatcher Dispatcher { get; set; }
+        [Inject] public NavigationManager NavigationManager { get; set; }
+        [Inject] public RouterStore RouterStore { get; set; }
+        [Inject] public UserStore UserStore { get; set; }
+        [Inject] public MessageService MsgSrv { get; set; }
+        [Inject] public ProtectedLocalStorage Storage { get; set; }
+        [Inject] public AppStore App { get; set; }
+
         public event Action<MouseEventArgs> BodyClickEvent;
         public event Action<KeyboardEventArgs> OnKeyDown;
         public event Action<KeyboardEventArgs> OnKeyUp;
         protected ElementReference? RootWrapper { get; set; }
-		protected override async Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
             if (NavigationManager != null)
@@ -38,6 +36,15 @@ namespace BlazorWeb.Shared.Layouts
             if (firstRender)
             {
                 _ = RootWrapper?.FocusAsync();
+                var result = await Storage.GetAsync<AppStore>(AppStore.KEY);
+                if (result.Success && result.Value != null)
+                {
+                    App.Mode = result.Value.Mode;
+                }
+                else
+                {
+                    App.Mode = LayoutMode.Classic;
+                }
             }
         }
 

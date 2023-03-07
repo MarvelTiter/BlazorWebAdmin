@@ -39,8 +39,6 @@ export class Camera extends BaseComponent {
                 })
                     .then((stream) => {
                         /* 使用这个 stream stream */
-                        debugger
-
                         this.width = width;
                         this.height = height;
                         this.currentId = deviceId;
@@ -48,7 +46,6 @@ export class Camera extends BaseComponent {
                             this.video.srcObject = stream;
                             this.tracks = stream.getTracks();
                             this.video.onloadedmetadata = (e) => {
-                                debugger
                                 this.video.play();
                                 if (this.clipBox)
                                     this.clipBox.setVisible(true);
@@ -108,8 +105,12 @@ export class Camera extends BaseComponent {
     }
 
     dispose() {
-
+        if (this.clipBox) {
+            this.clipBox.dispose()
+            this.clipBox = null
+        }
     }
+
     static init(id, video, canvas, clip, width, height) {
         var component = getComponentById(id, () => {
             return new Camera(video, canvas)

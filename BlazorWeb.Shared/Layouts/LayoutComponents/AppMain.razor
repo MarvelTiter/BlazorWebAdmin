@@ -1,13 +1,15 @@
 ﻿@using BlazorWeb.Shared.Components
 @inject RouterStore store
 @implements IDisposable
-@foreach (var item in store.TopLink)
-{
-    if (item.Content == null) continue;
-    <div id=@item.RouteLink class=@item.ItemClass>
-        @RenderCacheItemContent(item.Content.Body)
-    </div>
-}
+<ScrollBar>
+    @foreach (var item in store.TopLink)
+    {
+        if (item.Content == null) continue;
+        <div id=@item.RouteLink class=@item.ItemClass>
+            @RenderCacheItemContent(item.Content.Body)
+        </div>
+    }
+</ScrollBar>
 
 @code {
     [Parameter]
@@ -29,11 +31,11 @@
             if (item.Content == null)
             {
                 item.Content = new CacheItem()
-                {
-                    StartTime = DateTime.Now,
-                    ActiveTime = DateTime.Now,
-                    Body = ChildContent,
-                };
+                    {
+                        StartTime = DateTime.Now,
+                        ActiveTime = DateTime.Now,
+                        Body = ChildContent,
+                    };
             }
         }
         StateHasChanged();
@@ -73,9 +75,9 @@
 <style>
     .main_content {
         display: none;
-        padding: 10px;
-        overflow: auto;
-        flex: 1;
+        /*overflow: auto;
+            flex: 1;
+            padding: 10px;*/
     }
 
         .main_content.active {

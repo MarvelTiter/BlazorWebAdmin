@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using LightExcel;
 using MDbContext;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.SignalR;
 using Project.AppCore.Auth;
 using Project.AppCore.Store;
@@ -46,7 +47,6 @@ services.AddLightOrm(option =>
 services.AddLightExcel();
 //services.AddSessionStorageServices();
 services.AutoInjects();
-//services.AddScoped<StateContainer>();
 //services.AddScoped<RouterStore>();
 //services.AddScoped<CounterStore>();
 //services.AddScoped<UserStore>();

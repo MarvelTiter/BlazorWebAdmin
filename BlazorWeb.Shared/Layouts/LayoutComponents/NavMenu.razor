@@ -1,0 +1,52 @@
+﻿@using System.Diagnostics.CodeAnalysis;
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+<div class="nav-menu @Class">
+    @*全屏按钮*@
+    <div class="nav-menu-item" @onclick=ToggleFullScreen>
+        <FullScreen @ref="fullscreen"></FullScreen>
+        <SvgIcon IconName="fullscreen"
+                 ClassName="nav-menu-icon" />
+    </div>
+
+    @*登录用户*@
+    <div>
+        <Profile></Profile>
+    </div>
+    @*系统设置*@
+    <div class="nav-menu-item" @onclick=OpenSetting>
+        <SvgIcon IconName="setting">
+        </SvgIcon>
+    </div>
+</div>
+
+<Drawer Visible=showSetting OnClose="SaveSetting">
+    <p>布局样式</p>
+    <EnumSelect TEnum="LayoutMode" @bind-Value=Mode></EnumSelect>
+    @*<p></p>*@
+</Drawer>
+
+@code {
+    [Parameter] public string Class { get; set; }
+    FullScreen? fullscreen;
+    [Inject][NotNull] public AppStore App { get; set; }
+    [Inject] public ProtectedLocalStorage Storage { get; set; }
+    LayoutMode Mode
+    {
+        get => App.Mode ?? LayoutMode.Classic;
+        set => App.Mode = value;
+    }
+    async Task ToggleFullScreen()
+    {
+        await fullscreen!.Toggle();
+    }
+    private bool showSetting;
+    void OpenSetting()
+    {
+        showSetting = true;
+    }
+    async Task SaveSetting()
+    {
+        await Storage.SetAsync(AppStore.KEY, App);
+        showSetting = false;
+    }
+}

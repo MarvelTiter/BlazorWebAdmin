@@ -3,6 +3,7 @@ using Project.AppCore.Services;
 using Project.AppCore.Store;
 using Project.Models;
 using Project.Models.Entities;
+using Project.Models.Permissions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +71,8 @@ namespace Project.AppCore.Aop
         {
             if (context.ServiceType == typeof(ILoginService))
             {
-                return context.Parameters.FirstOrDefault()?.ToString();
+                // UpdateLastLoginTimeAsync 和 LoginAsync
+                return (context.Parameters.FirstOrDefault() as UserInfo)?.UserId ?? context.Parameters.FirstOrDefault()?.ToString();
             }
             return "Unknow";
         }

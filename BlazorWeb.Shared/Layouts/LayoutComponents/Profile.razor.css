@@ -1,35 +1,24 @@
-﻿.wrapper {
-    background-color: #001529;
+﻿::deep .out_wrapper {
+    display: unset !important;
+}
+.wrapper {
     display: flex;
-    justify-content: center;
+    height: 100%;
+    padding: 0 10px;
     align-items: center;
-    padding-bottom: 8px;
+    cursor: pointer;
+    user-select: none;
+    color: #000;
 }
 
-    .wrapper .inner_box {
-        margin-top: 10px;
-        padding: 0 10px 10px 10px;
-        border-bottom: 1px solid white;
-    }
-
     .wrapper .avatar {
-        display: inline-block;
         box-sizing: border-box;
-        height: 40px;
-        width: 40px;
-        background-color: #ccc;
-        border-radius: 20px;
-        border: 1px solid #d8dce5;
+        height: 25px;
+        width: 25px;
+        border-radius: 50%;
     }
 
     .wrapper .name {
-        color: #d8dce5;
-        margin-left: 10px;
-        opacity: 1;
-        transition: all 0.3s ease;
+        padding-left: 6px;
+        white-space: nowrap;
     }
-
-        .wrapper .name.hide {
-            margin-left: 0px;
-            opacity: 0;
-        }

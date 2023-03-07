@@ -1,13 +1,15 @@
 ﻿@inject EventDispatcher dispatcher
 @inject RouterStore routeStore
+@inject AppStore App
 @implements IDisposable
-<div class="side_bar" style="display: flex;flex-direction: column;width: @Width;height:100vh;">
-    <Menu Theme="@MenuTheme.Dark" Mode="@MenuMode.Inline" InlineCollapsed=collapse Style="flex: 1;" OnMenuItemClicked="OnMenuItemClick">
-        <Profile></Profile>
+<div class="side_bar @Class" style="display: flex;flex-direction: column;width:@Width">
+    @TopBanner
+    <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed=collapse Style="flex: 1;" OnMenuItemClicked="OnMenuItemClick">
+        @*<Profile></Profile>*@
         @*<MenuItem RouterLink="/" RouterMatch="NavLinkMatch.All" Title="主页">
-            <IconTemplate>
-                <SvgIcon ClassName="nav-icon" IconName="home"></SvgIcon>
-            </IconTemplate>
+        <IconTemplate>
+        <SvgIcon ClassName="nav-icon" IconName="home"></SvgIcon>
+        </IconTemplate>
         </MenuItem>*@
         @foreach (var item in routeStore.Routers)
         {
@@ -17,7 +19,9 @@
 </div>
 
 @code {
-
+    [Parameter] public RenderFragment TopBanner { get; set; }
+    [Parameter] public string Class { get; set; }
+    [Parameter] public bool Horizontal { get; set; }
     protected override Task OnInitializedAsync()
     {
         dispatcher.Register<SideBar>("MenuCollapse", ToggleMenuCollapse);
@@ -25,7 +29,7 @@
         return base.OnInitializedAsync();
     }
 
-    private string Width => collapse ? "80px" : "200px";
+    private string Width => collapse ? "80px" : App.SideBarExpandWidth.ToPixel();
     private bool collapse = false;
 
     private Task<object> ToggleMenuCollapse(object sender, object e)
@@ -33,6 +37,12 @@
         collapse = (bool)e;
         StateHasChanged();
         return Task.FromResult<object>(0);
+    }
+
+    public void ToggleCollapse(bool newState)
+    {
+        collapse = newState;
+        StateHasChanged();
     }
 
     private async Task OnMenuItemClick(MenuItem item)
@@ -61,13 +71,4 @@
         GC.SuppressFinalize(this);
     }
 }
-<style>
-    .side_bar {
-        transition: background .3s,width .3s cubic-bezier(.2,0,0,1) 0s;
-        transition-property: background, width;
-        transition-duration: 0.3s, 0.3s;
-        transition-timing-function: ease, cubic-bezier(0.2, 0, 0, 1);
-        transition-delay: 0s, 0s;
-    }
-</style>
 

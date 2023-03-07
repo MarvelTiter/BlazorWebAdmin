@@ -1,23 +1,38 @@
 ﻿@using BlazorWeb.Shared.Layouts.LayoutComponents
+@using BlazorWeb.Shared.Layouts.Layouts
 @inherits LayoutComponentBase
 @layout AuthorizedLayout
 @inject RouterStore Store
 @inject AppStore App
 
 <PageTitle>@($"管理系统 - {Store.Current?.RouteName ?? "主页"}")</PageTitle>
-@*<ReadyToDisplay>*@
-    <div class="page">
-        @*<div class="sidebar">
-            <NavMenu />
-            </div>*@
-        <aside>
-            <SideBar></SideBar>
-        </aside>
-        <main>
-            <TagsView></TagsView>           
-            <AppMain ChildContent="Body">
-            </AppMain>
-        </main>
-        @*<BackTop TargetSelector=@("#main_content")></BackTop>*@
-    </div>
-@*</ReadyToDisplay>*@
+
+    <CascadingValue Value="this">
+        @if (App.Mode.HasValue)
+    {
+        <div class="page">
+            @if (App.Mode == LayoutMode.Classic)
+            {
+                <ClassicLayout ChildContent="Body">
+                </ClassicLayout>
+            }
+            else if (App.Mode == LayoutMode.Card)
+            {
+                <CardLayout ChildContent="Body">
+                </CardLayout>
+            }
+            else
+            {
+                <LineLayout ChildContent="Body">
+                </LineLayout>
+            }
+        </div>
+    }
+    else
+    {
+        <div style="height:100vh; width:100vw;display: flex; align-items: center;justify-content: center;">
+            <Spin Spinning Tip="初始化中……">
+            </Spin>
+        </div>
+    }
+</CascadingValue>

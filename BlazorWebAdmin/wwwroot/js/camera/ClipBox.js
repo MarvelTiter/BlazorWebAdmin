@@ -14,8 +14,6 @@ export class ClipBox extends BaseComponent {
         this.videoWindowHeight = height;
         this.el.style.width = this.w + 'px';
         this.el.style.height = this.h + 'px';
-        this.originX = 0;
-        this.originY = 0;
         this.scaleWidth = 10;
         this.applyRect();
     }
@@ -70,5 +68,9 @@ export class ClipBox extends BaseComponent {
 
     initEvents() {
         EventHandler.listen(this.el, 'mousedown', this.handleMouseDown.bind(this))
+    }
+
+    dispose() {
+        EventHandler.remove(this.el, 'mousedown')
     }
 }

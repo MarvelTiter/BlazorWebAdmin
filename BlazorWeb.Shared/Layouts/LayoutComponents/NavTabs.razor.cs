@@ -6,31 +6,16 @@ using Project.Common;
 
 namespace BlazorWeb.Shared.Layouts.LayoutComponents
 {
-    public partial class TagsView : IDisposable
+    public partial class NavTabs : IDisposable
     {
-        private bool collapse = false;
         private bool showContextmenu = false;
         private string contextmenuLeft = "";
         private string contextmenuTop = "";
         private RouterMeta current;
-        private string IconName => collapse ? "expand_menu" : "collapse_menu";
-        [CascadingParameter]
-        public RootLayout RootLayout { get; set; }
-        public async Task ToggleMenu()
-        {
-            collapse = !collapse;
-            await dispatcher.Invoke<SideBar>("MenuCollapse", this, ValueBoxes.BooleanBox(collapse));
-            await dispatcher.Invoke<Profile>("AvatarCollapse", this, ValueBoxes.BooleanBox(collapse));
-            StateHasChanged();
-        }
+        [CascadingParameter] public RootLayout RootLayout { get; set; }
+        [Parameter] public string Class { get; set; }
 
-        private ClassHelper ContextmenuClass = new ClassHelper().AddClass("context");
-        protected override async Task OnInitializedAsync()
-        {
-            store.DataChangedEvent += StateHasChanged;
-            ContextmenuClass.AddClass("open", () => showContextmenu);
-            await base.OnInitializedAsync();
-        }
+        private ClassHelper ContextmenuClass => ClassHelper.Default.AddClass("context").AddClass("open", () => showContextmenu);
 
         private async Task CloseTag(RouterMeta state)
         {
