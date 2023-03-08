@@ -58,10 +58,9 @@ export class ScrollBar extends BaseComponent {
         EventHandler.listen(this.root, 'mousemove', this.handleMouseMove.bind(this));
         EventHandler.listen(this.root, 'mouseleave', this.handleMouseLeave.bind(this));
         EventHandler.listen(this.wrap, 'scroll', this.handleScroll.bind(this));
-        //EventHandler.listen(this.wrap, 'resize', (entries) => {
-        //    console.log(entries)
-        //    this.update()
-        //})
+        EventHandler.listen(this.wrap, 'resize', (entries) => {
+            this.update()
+        })
         EventHandler.listen(this.resize, 'resize', () => {
             this.update()
         })
@@ -73,6 +72,8 @@ export class ScrollBar extends BaseComponent {
         EventHandler.remove(this.root, 'mousemove');
         EventHandler.remove(this.root, 'mouseleave');
         EventHandler.remove(this.wrap, 'scroll');
+        EventHandler.remove(this.wrap, 'resize');
+        EventHandler.remove(this.resize, 'resize');
     }
 
     static initScrollbar(id, scrollbar, wrap, resize, minSize, always) {

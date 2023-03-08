@@ -1,0 +1,24 @@
+﻿.wrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+}
+
+.wrap::-webkit-scrollbar {
+    height: 5px;
+}
+
+.wrap::-webkit-scrollbar-thumb {
+    background: #eaeaea;
+    border-radius: var(--el-border-radius-base);
+    box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.wrap::-webkit-scrollbar-track {
+/*    background: v-bind('config.layout.layoutMode == "Default" ? "none":config.getColorVal("headerBarBackground")');*/
+}
+
+.wrap:hover::-webkit-scrollbar-thumb:hover {
+    background: #c8c9cc;
+}

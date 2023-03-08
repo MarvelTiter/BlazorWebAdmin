@@ -39,10 +39,12 @@
         color: rgb(64, 158, 255);
     }
 
-    .tags_box.card .nav_top.active {
-        background-color: #fff;
-        color: rgb(64, 158, 255);
-    }
+.tags_box.card .nav_top.active {
+    background-color: #fff;
+    color: rgb(64, 158, 255);
+    box-shadow: 0px 0px 12px rgb(0 0 0 / 12%);
+    border-radius: 4px;
+}
 
     .tags_box .nav_top.active::before {
         content: '';

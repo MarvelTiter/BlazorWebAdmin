@@ -24,7 +24,7 @@
     {
         <div style="padding:20px;border:1px solid #ccc">
             <ScrollBar Height="200" BarColor="green" @ref=scrollBar>
-                @foreach (var item in Enumerable.Range(1, 20))
+                @foreach (var item in list)
                 {
                     <p>Row++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ @item</p>
                 }
@@ -32,14 +32,21 @@
         </div>
     }
     <button @onclick=handleClick>dispose</button>
+    <button @onclick=addItem>add</button>
 </ScrollBar>
 @code {
-    ScrollBar scrollBar;
+    ScrollBar? scrollBar;
     bool show = true;
+    List<int> list = Enumerable.Range(1, 20).ToList();
     async Task handleClick()
     {
         show = !show;
-        await scrollBar.DisposeAsync();
+        if (scrollBar != null)
+            await scrollBar.DisposeAsync();
         StateHasChanged();
+    }
+    void addItem()
+    {
+        list.AddRange(Enumerable.Range(1, 20));
     }
 }
