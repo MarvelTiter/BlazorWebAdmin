@@ -14,8 +14,6 @@ namespace BlazorWeb.Shared.Layouts
         [Inject] public RouterStore RouterStore { get; set; }
         [Inject] public UserStore UserStore { get; set; }
         [Inject] public MessageService MsgSrv { get; set; }
-        [Inject] public ProtectedLocalStorage Storage { get; set; }
-        [Inject] public AppStore App { get; set; }
 
         public event Action<MouseEventArgs> BodyClickEvent;
         public event Action<KeyboardEventArgs> OnKeyDown;
@@ -35,16 +33,7 @@ namespace BlazorWeb.Shared.Layouts
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                _ = RootWrapper?.FocusAsync();
-                var result = await Storage.GetAsync<AppStore>(AppStore.KEY);
-                if (result.Success && result.Value != null)
-                {
-                    App.Mode = result.Value.Mode;
-                }
-                else
-                {
-                    App.Mode = LayoutMode.Classic;
-                }
+                _ = RootWrapper?.FocusAsync();               
             }
         }
 

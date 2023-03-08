@@ -1,5 +1,6 @@
 ﻿@using BlazorWeb.Shared.Layouts.LayoutComponents
 @using BlazorWeb.Shared.Layouts.Layouts
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 @inherits LayoutComponentBase
 @layout AuthorizedLayout
 @inject RouterStore Store
@@ -36,3 +37,25 @@
         </div>
     }
 </CascadingValue>
+
+@code {
+    [Inject] public ProtectedLocalStorage Storage { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            var result = await Storage.GetAsync<AppStore>(AppStore.KEY);
+            if (result.Success && result.Value != null)
+            {
+                App.Mode = result.Value.Mode;
+            }
+            else
+            {
+                App.Mode = LayoutMode.Card;
+            }
+            StateHasChanged();
+        }
+    }
+}
