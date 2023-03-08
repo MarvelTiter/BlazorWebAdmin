@@ -17,6 +17,7 @@ namespace Project.AppCore.Store
         public const string KEY = "APP_SETTING";
         public LayoutMode? Mode { get; set; }
         public bool DarkMode { get; set; }
+        public bool Collapsed { get; set; }
         public int SideBarExpandWidth { get; set; } = 260;
         public string MainThemeColor { get; set; } = "#1464ff";
     }

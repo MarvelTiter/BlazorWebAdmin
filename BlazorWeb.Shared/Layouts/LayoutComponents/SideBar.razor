@@ -29,7 +29,7 @@
         return base.OnInitializedAsync();
     }
 
-    private string Width => collapse ? "80px" : App.SideBarExpandWidth.ToPixel();
+    private string Width => collapse ? 80.ToPixel() : App.SideBarExpandWidth.ToPixel();
     private bool collapse = false;
 
     private Task<object> ToggleMenuCollapse(object sender, object e)

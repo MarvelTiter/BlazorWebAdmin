@@ -21,7 +21,12 @@
     {
         collapse = !collapse;
         await OnToggleCollapse.InvokeAsync(collapse);
+    }
 
+    public async Task UpdateToggleMenu(bool state)
+    {
+        collapse = state;
+        await OnToggleCollapse.InvokeAsync(collapse);
     }
 }
 

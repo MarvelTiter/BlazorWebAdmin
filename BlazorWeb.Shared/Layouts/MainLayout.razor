@@ -14,17 +14,17 @@
         <div class="page">
             @if (App.Mode == LayoutMode.Classic)
             {
-                <ClassicLayout ChildContent="Body">
+                <ClassicLayout ChildContent="Body" @ref=layout>
                 </ClassicLayout>
             }
             else if (App.Mode == LayoutMode.Card)
             {
-                <CardLayout ChildContent="Body">
+                <CardLayout ChildContent="Body" @ref=layout>
                 </CardLayout>
             }
             else
             {
-                <LineLayout ChildContent="Body">
+                <LineLayout ChildContent="Body" @ref=layout>
                 </LineLayout>
             }
         </div>
@@ -40,22 +40,37 @@
 
 @code {
     [Inject] public ProtectedLocalStorage Storage { get; set; }
-
+    LayoutBase? layout;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            var result = await Storage.GetAsync<AppStore>(AppStore.KEY);
-            if (result.Success && result.Value != null)
+            try
             {
-                App.Mode = result.Value.Mode;
+                var result = await Storage.GetAsync<AppStore>(AppStore.KEY);
+                if (result.Success && result.Value != null)
+                {
+                    App.Mode = result.Value.Mode;
+                    App.Collapsed = result.Value.Collapsed;
+                }
+                else
+                {
+                    App.Mode = LayoutMode.Card;
+                }
             }
-            else
+            catch
             {
                 App.Mode = LayoutMode.Card;
             }
-            StateHasChanged();
+            finally
+            {
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            layout?.Banner?.UpdateToggleMenu(App.Collapsed);
         }
     }
 }
