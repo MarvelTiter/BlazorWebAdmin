@@ -2,7 +2,7 @@
 
 namespace BlazorWeb.Shared.Template.Tables.Setting
 {
-    public record ColumnDefinition(string Label, string PropertyOrFieldName)
+    public record TableOptionColumn(string Label, string PropertyOrFieldName)
     {
         public int Index { get; set; }
         public Type DataType { get; set; } = typeof(string);

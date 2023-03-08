@@ -19,9 +19,9 @@
 	}
 </div>
 @code {
-	[Parameter]
-	public List<ColumnDefinition> Columns { get; set; }
-	[Parameter]
+    [Parameter]
+    public List<Shared.Template.Tables.Setting.TableOptionColumn> Columns { get; set; }
+    [Parameter]
 	public Expression<Func<TData, bool>> Expression { get; set; }
 	[Parameter]
 	public EventCallback<Expression<Func<TData, bool>>> ExpressionChanged { get; set; }

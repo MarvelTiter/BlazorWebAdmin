@@ -140,29 +140,29 @@ namespace BlazorWeb.Shared.Template.Tables
             StateHasChanged();
         }
 
-        private static IEnumerable<Dictionary<string, object>> GeneralExcelData(List<ColumnDefinition> columns, IEnumerable<TData> data)
-        {
-            var dataType = typeof(TData);
-            var isDataRow = dataType == typeof(DataRow);
-            foreach (var item in data)
-            {
-                var row = new Dictionary<string, object>();
-                foreach (var col in columns)
-                {
-                    var key = isDataRow ? $"['{col.PropertyOrFieldName}']" : col.PropertyOrFieldName;
-                    var val = PathHelper.GetDelegate(key, typeof(TData)).Invoke(item);
-                    row[col.Label] = val;
-                }
-                yield return row;
-            }
-        }
+        //private static IEnumerable<Dictionary<string, object>> GeneralExcelData(List<Setting.ColumnDefinition> columns, IEnumerable<TData> data)
+        //{
+        //    var dataType = typeof(TData);
+        //    var isDataRow = dataType == typeof(DataRow);
+        //    foreach (var item in data)
+        //    {
+        //        var row = new Dictionary<string, object>();
+        //        foreach (var col in columns)
+        //        {
+        //            var key = isDataRow ? $"['{col.PropertyOrFieldName}']" : col.PropertyOrFieldName;
+        //            var val = PathHelper.GetDelegate(key, typeof(TData)).Invoke(item);
+        //            row[col.Label] = val;
+        //        }
+        //        yield return row;
+        //    }
+        //}
     }
 
 
     public class TableOptions<TData, TQuery> where TQuery : IRequest, new()
     {
 
-        public List<ColumnDefinition> Columns { get; set; }
+        public List<Setting.TableOptionColumn> Columns { get; set; }
         public List<ButtonDefinition<TData>> Buttons { get; set; }
         //public Expression<Func<TData, bool>> Expression { get; set; }
         public string ScrollX { get; set; }
@@ -207,24 +207,24 @@ namespace BlazorWeb.Shared.Template.Tables
         }
 
 
-        public TableOptions<TData, TQuery> AddColumn(string label, string prop, ColumnDefinition? col = null)
+        public TableOptions<TData, TQuery> AddColumn(string label, string prop, Setting.TableOptionColumn? col = null)
         {
             if (Columns == null)
             {
-                Columns = new List<ColumnDefinition>();
+                Columns = new List<Setting.TableOptionColumn>();
             }
             if (col == null)
             {
-                col = new ColumnDefinition(label, prop);
+                col = new Setting.TableOptionColumn(label, prop);
             }
             Columns.Add(col);
             return this;
         }
-        public TableOptions<TData, TQuery> AddColumn(ColumnDefinition col)
+        public TableOptions<TData, TQuery> AddColumn(Setting.TableOptionColumn col)
         {
             if (Columns == null)
             {
-                Columns = new List<ColumnDefinition>();
+                Columns = new List<Setting.TableOptionColumn>();
             }
             Columns.Add(col);
             return this;
@@ -252,7 +252,7 @@ namespace BlazorWeb.Shared.Template.Tables
         }
 
 
-        public ColumnDefinition this[string columnName]
+        public Setting.TableOptionColumn this[string columnName]
         {
             get
             {

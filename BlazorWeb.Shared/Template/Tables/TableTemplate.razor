@@ -223,7 +223,7 @@
 
     int currentRowIndex = -1;
     string currentColumn = string.Empty;
-    RenderFragment<CellData<T>> ColumnRender<T>(ColumnDefinition col)
+    RenderFragment<CellData<T>> ColumnRender<T>(Shared.Template.Tables.Setting.TableOptionColumn col)
     {
         return context =>
                     {

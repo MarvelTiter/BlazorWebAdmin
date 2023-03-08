@@ -13,11 +13,11 @@ namespace BlazorWeb.Shared.Template.Tables
 {
     public static class GenerateTableColumn
     {
-        public static ColumnDefinition GenerateColumn(this PropertyInfo self)
+        public static TableOptionColumn GenerateColumn(this PropertyInfo self)
         {
             var head = self.GetCustomAttribute<ColumnDefinitionAttribute>();
             var dbInfo = self.GetCustomAttribute<ColumnAttribute>();
-            ColumnDefinition column = new(head!.Label, self.Name)
+            TableOptionColumn column = new(head!.Label, self.Name)
             {
                 Index = head.Sort,
                 DataType = self.PropertyType,
@@ -33,11 +33,11 @@ namespace BlazorWeb.Shared.Template.Tables
             }
             return column;
         }
-        public static List<ColumnDefinition> GenerateColumns(this Type self)
+        public static List<TableOptionColumn> GenerateColumns(this Type self)
         {
             var props = self.GetProperties();
             var heads = props.Where(p => p.GetCustomAttribute<ColumnDefinitionAttribute>() != null);
-            List<ColumnDefinition> columns = new List<ColumnDefinition>();
+            List<TableOptionColumn> columns = new List<TableOptionColumn>();
             foreach (var col in heads)
             {
                 var column = col.GenerateColumn();
