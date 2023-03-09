@@ -31,7 +31,7 @@
 		public bool Check { get; set; }
 	}
 	[Parameter]
-	public User Current { get; set; }
+	public IUser Current { get; set; }
 	List<RoleDef> roleDefs = new List<RoleDef>();
 	IEnumerable<Role> roles = Enumerable.Empty<Role>();
 	protected override async Task OnInitializedAsync()
