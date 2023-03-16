@@ -2,18 +2,24 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 <div class="nav-menu @Class">
     @*全屏按钮*@
-    <div class="nav-menu-item" @onclick=ToggleFullScreen>
+    <div class="nav-menu-item" @onclick=ToggleFullScreen title="切换全屏模式">
         <FullScreen @ref="fullscreen"></FullScreen>
         <SvgIcon IconName="fullscreen"
                  ClassName="nav-menu-icon" />
     </div>
 
+    @*清除LocalStorage*@
+    <div class="nav-menu-item" @onclick=ClearLocalStorage title="清除数据缓存">
+        <SvgIcon IconName="clear"
+                 ClassName="nav-menu-icon" />
+    </div>
+
     @*登录用户*@
-    <div>
+    <div title="登录用户">
         <Profile></Profile>
     </div>
     @*系统设置*@
-    <div class="nav-menu-item" @onclick=OpenSetting>
+    <div class="nav-menu-item" @onclick=OpenSetting title="系统配置">
         <SvgIcon IconName="setting">
         </SvgIcon>
     </div>
@@ -30,6 +36,7 @@
     FullScreen? fullscreen;
     [Inject][NotNull] public AppStore App { get; set; }
     [Inject] public ProtectedLocalStorage Storage { get; set; }
+    [Inject] IJSRuntime Js { get; set; }
     LayoutMode Mode
     {
         get => App.Mode ?? LayoutMode.Classic;
@@ -39,14 +46,21 @@
     {
         await fullscreen!.Toggle();
     }
+
     private bool showSetting;
     void OpenSetting()
     {
         showSetting = true;
     }
+
     async Task SaveSetting()
     {
         await Storage.SetAsync(AppStore.KEY, App);
         showSetting = false;
+    }
+
+    async Task ClearLocalStorage()
+    {
+        await Js.InvokeVoidAsync("localStorageClear");
     }
 }

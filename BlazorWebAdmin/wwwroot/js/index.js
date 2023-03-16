@@ -40,3 +40,7 @@ function elementProperty(dom, prop) {
         return el[prop]
     }
 }
+
+function localStorageClear() {
+    localStorage.clear();
+}
