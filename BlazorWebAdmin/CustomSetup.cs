@@ -25,5 +25,15 @@ namespace BlazorWebAdmin
     })
 			);
         }
+
+        public static void RegisterBlazorViewAssembly()
+        {
+            Config.AddAssembly(typeof(BlazorWeb.Shared.Program));
+        }
+
+        public static void SetupCustomAppUsage(WebApplication app)
+        {
+
+        }
     }
 }

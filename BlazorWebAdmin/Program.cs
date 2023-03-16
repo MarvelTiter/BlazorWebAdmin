@@ -46,12 +46,14 @@ CustomSetup.SetupCustomServices(services);
 
 builder.Host.UseWindowsService();
 var app = builder.Build();
-Config.AddAssembly(typeof(BlazorWeb.Shared.Program));
+CustomSetup.RegisterBlazorViewAssembly();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
 	app.UseExceptionHandler("/Error");
 }
+
+CustomSetup.SetupCustomAppUsage(app);
 
 app.UseStaticFiles();
 
@@ -65,7 +67,3 @@ app.MapControllers();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
-
-//TODO 界面组件独立库
-//TODO Camera组件
-//
