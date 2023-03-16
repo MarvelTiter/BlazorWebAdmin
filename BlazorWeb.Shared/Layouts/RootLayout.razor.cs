@@ -33,7 +33,7 @@ namespace BlazorWeb.Shared.Layouts
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                _ = RootWrapper?.FocusAsync();               
+                _ = RootWrapper?.FocusAsync();    
             }
         }
 

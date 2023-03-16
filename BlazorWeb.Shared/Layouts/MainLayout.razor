@@ -9,27 +9,26 @@
 <PageTitle>@($"管理系统 - {Store.Current?.RouteName ?? "主页"}")</PageTitle>
 
     <CascadingValue Value="this">
-        @if (App.Mode.HasValue)
-    {
-        <div class="page">
+
+        <div class="page" style="@(Loading ? "display:none":"display:block")">
             @if (App.Mode == LayoutMode.Classic)
-            {
-                <ClassicLayout ChildContent="Body" @ref=layout>
-                </ClassicLayout>
-            }
-            else if (App.Mode == LayoutMode.Card)
-            {
-                <CardLayout ChildContent="Body" @ref=layout>
-                </CardLayout>
-            }
-            else
-            {
-                <LineLayout ChildContent="Body" @ref=layout>
-                </LineLayout>
-            }
-        </div>
-    }
-    else
+        {
+            <ClassicLayout ChildContent="Body" @ref=layout>
+            </ClassicLayout>
+        }
+        else if (App.Mode == LayoutMode.Card)
+        {
+            <CardLayout ChildContent="Body" @ref=layout>
+            </CardLayout>
+        }
+        else
+        {
+            <LineLayout ChildContent="Body" @ref=layout>
+            </LineLayout>
+        }
+    </div>
+
+    @if (Loading)
     {
         <div style="height:100vh; width:100vw;display: flex; align-items: center;justify-content: center;">
             <Spin Spinning Tip="初始化中……">
@@ -40,7 +39,9 @@
 
 @code {
     [Inject] public ProtectedLocalStorage Storage { get; set; }
+    [Inject] public NavigationManager NavigationManager { get; set; }
     LayoutBase? layout;
+    bool Loading => !App.Mode.HasValue;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
@@ -66,11 +67,8 @@
             finally
             {
                 StateHasChanged();
+                layout?.Banner?.UpdateToggleMenu(App.Collapsed);
             }
-        }
-        else
-        {
-            layout?.Banner?.UpdateToggleMenu(App.Collapsed);
         }
     }
 }

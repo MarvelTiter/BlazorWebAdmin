@@ -1,24 +1,5 @@
 ﻿@using BlazorWeb.Shared.Layouts.LayoutComponents
 @inherits LayoutBase
-@*<section style="display:flex;width:100%;">
-    <aside>
-        <SideBar @ref=SideBar Class="classic">
-            <TopBanner>
-                <Banner OnToggleCollapse="e=>HandleToggleCollapse(e)"></Banner>
-            </TopBanner>
-        </SideBar>
-    </aside>
-    <section style="display:flex;flex-direction:column; width:calc(100vw - @(MainWidthOffset)px);height:100%;">
-        <header style="height:50px;">
-            <NavBar Class="classic"></NavBar>
-        </header>
-        <main style="padding:16px;height: calc(100vh - 50px);">
-            <AppMain ChildContent="@(ChildContent!)">
-            </AppMain>
-        </main>
-    </section>
-</section>*@
-
 <Section>
     <Aside>
         <SideBar @ref=SideBar Class="classic">
@@ -27,11 +8,11 @@
             </TopBanner>
         </SideBar>
     </Aside>
-    <Section Vertical Style="width:100%;height:100%;">
+    <Section Vertical Style="width:100%;height:100vh;">
         <BlazorWeb.Shared.Layouts.Layouts.Header>
             <NavBar Class="classic"></NavBar>
         </BlazorWeb.Shared.Layouts.Layouts.Header>
-        <Main Style="padding:16px;height: calc(100vh - 50px);">
+        <Main Style="padding:16px;height: 100%;">
             <AppMain ChildContent="@(ChildContent!)">
             </AppMain>
         </Main>
