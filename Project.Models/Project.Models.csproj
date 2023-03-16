@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MT.KitTools" Version="1.0.7.1" />
-    <PackageReference Include="MT.LightORM" Version="1.1.9" />
+    <PackageReference Include="MT.LightORM" Version="1.2.3" />
+    <PackageReference Include="MT.Toolkit" Version="1.0.7.2" />
   </ItemGroup>
 
   <ItemGroup>

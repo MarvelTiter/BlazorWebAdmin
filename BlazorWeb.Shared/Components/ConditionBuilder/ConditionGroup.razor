@@ -1,6 +1,5 @@
 ﻿@using BlazorWeb.Shared.Template.Tables.Setting
 @using System.Linq.Expressions
-@using MT.KitTools.StringExtension
 @namespace BlazorWeb.Shared.Components
 @typeparam TData
 <div style="text-align:right;margin-bottom:10px;">
@@ -20,7 +19,7 @@
 </div>
 @code {
     [Parameter]
-    public List<Shared.Template.Tables.Setting.TableOptionColumn> Columns { get; set; }
+    public List<TableOptionColumn> Columns { get; set; }
     [Parameter]
 	public Expression<Func<TData, bool>> Expression { get; set; }
 	[Parameter]

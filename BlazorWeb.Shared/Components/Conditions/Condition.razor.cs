@@ -1,17 +1,8 @@
-﻿using AntDesign;
-using BlazorWeb.Shared.Template.Tables.Setting;
+﻿using BlazorWeb.Shared.Template.Tables.Setting;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.Extensions.Logging;
-using MT.KitTools.DateTimeExtension;
-using MT.KitTools.StringExtension;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+using MT.Toolkit.DateTimeExtension;
+using MT.Toolkit.StringExtension;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BlazorWeb.Shared.Components
 {
@@ -31,7 +22,7 @@ namespace BlazorWeb.Shared.Components
         //[Parameter] public string? Label { get; set; }
         [Parameter] public CompareType Compare { get; set; } = CompareType.Equal;
         //[Parameter] public DateType? DateConfig { get; set; }
-        [Parameter] public Template.Tables.Setting.TableOptionColumn? Field { get; set; }
+        [Parameter] public TableOptionColumn? Field { get; set; }
         [Parameter] public RenderFragment ChildContent { get; set; }
         [Parameter] public object? DefaultValue { get; set; }
         [Inject] public ILogger<Condition> Logger { get; set; }

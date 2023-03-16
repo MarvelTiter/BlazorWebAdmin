@@ -35,7 +35,7 @@
     <PackageReference Include="LightExcel" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.5" />
-    <PackageReference Include="MT.KitTools" Version="1.0.7.1" />
+    <PackageReference Include="MT.Toolkit" Version="1.0.7.2" />
   </ItemGroup>
 
   <ItemGroup>
