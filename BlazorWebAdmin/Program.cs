@@ -34,16 +34,14 @@ services.AddDataProtection().SetApplicationName("BlazorWebAdmin");
 //services.AddAuthentication("Bearer")
 
 services.AddAntDesign();
-services.AddLightOrm(option =>
-{
-	CustomSetup.SetupLightOrm(builder.Configuration, option);
-});
+
 
 services.AddLightExcel();
 services.AutoInjects();
 services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 services.AddHttpContextAccessor();
 
+CustomSetup.SetupLightOrm(services, builder.Configuration);
 CustomSetup.SetupCustomServices(services);
 
 builder.Host.UseWindowsService();
@@ -54,7 +52,6 @@ if (!app.Environment.IsDevelopment())
 {
 	app.UseExceptionHandler("/Error");
 }
-
 
 app.UseStaticFiles();
 
