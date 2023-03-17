@@ -1,0 +1,71 @@
+﻿@namespace BlazorWeb.Shared.Components
+
+@*
+    自定义 UI 中的连接状态 (Blazor Server)
+    https://learn.microsoft.com/zh-cn/aspnet/core/blazor/fundamentals/signalr?view=aspnetcore-7.0#reflect-the-connection-state-in-the-ui-blazor-server
+*@
+<div id="components-reconnect-modal">
+    <div class="reconnect-state show">
+        @if (ReconnectingTemplate != null)
+        {
+            @ReconnectingTemplate
+        }
+        else
+        {
+            <div>
+                There was a problem with the connection!
+                (Current reconnect attempt:
+                <span id="components-reconnect-current-attempt"></span> /
+                <span id="components-reconnect-max-retries"></span>)
+            </div>
+        }
+    </div>
+
+    <div class="reconnect-state failed">
+        @if (ReconnectFailedTemplate != null)
+        {
+            @ReconnectFailedTemplate
+        }
+        else
+        {
+            <span>Oh snap! Failed to reconnect with the server. This is typically caused by a longer network outage, or if the server has been taken down. You can try to <a href="javascript:window.Blazor.reconnect()">reconnect</a>, but if that does not work, you need to <a href="javascript:location.reload()">reload</a> the page.</span>
+        }
+    </div>
+
+    <div class="reconnect-state rejected">
+        @if (ReconnectRejectedTemplate != null)
+        {
+            @ReconnectRejectedTemplate
+        }
+        else
+        {
+            <span>Oh man! The server rejected the attempt to reconnect. The only option now is to <a href="javascript:location.reload()">reload</a> the page, but be prepared that it won't work, since this is typically caused by a failure on the server.</span>
+        }
+    </div>
+</div>
+@code {
+    [Parameter]
+    public bool AutoReconnect { get; set; } = true;
+    /// <summary>
+    /// 获得/设置 ReconnectingTemplate 模板
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ReconnectingTemplate { get; set; }
+
+    /// <summary>
+    /// 获得/设置 ReconnectFailedTemplate 模板
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ReconnectFailedTemplate { get; set; }
+
+    /// <summary>
+    /// 获得/设置 ReconnectRejectedTemplate 模板
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ReconnectRejectedTemplate { get; set; }
+
+    //protected override ValueTask Init()
+    //{
+    //    throw new NotImplementedException();
+    //}
+}
