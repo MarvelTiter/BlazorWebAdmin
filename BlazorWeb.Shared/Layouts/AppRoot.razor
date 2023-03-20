@@ -1,0 +1,10 @@
+﻿<ErrorCatcher>
+    <CascadingValue Value="this" IsFixed="true">
+        @ChildContent
+    </CascadingValue>
+</ErrorCatcher>
+
+@code{
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

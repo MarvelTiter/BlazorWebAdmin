@@ -6,38 +6,45 @@
     {
         if (item.Content == null) continue;
         <div id=@item.RouteLink class=@item.ItemClass>
-            @RenderCacheItemContent(item.Content.Body)
+            @*@RenderCacheItemContent(item.Content.Body)*@
+            @item.Content.Body
         </div>
     }
 </ScrollBar>
 
 @code {
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    //[Parameter]
+    //public RenderFragment? ChildContent { get; set; }
     [CascadingParameter]
     public RootLayout? Parent { get; set; }
+    [Inject]
+    public NavigationManager Navigator { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Parent!.OnNavigated += OnNavigated;
+        //Parent!.OnNavigated += OnNavigated;
+        Navigator.LocationChanged += OnNavigated;
     }
 
-    void OnNavigated(LocationChangedEventArgs e)
+    void OnNavigated(object? sender, LocationChangedEventArgs e)
     {
-        var uri = e.Location;
-        var item = store.Current;
-        if (item != null)
-        {
-            if (item.Content == null)
-            {
-                item.Content = new CacheItem()
-                    {
-                        StartTime = DateTime.Now,
-                        ActiveTime = DateTime.Now,
-                        Body = ChildContent,
-                    };
-            }
-        }
+        //var uri = e.Location;
+        //var item = store.Current;
+        //if (item != null)
+        //{
+        //    if (item.Content == null)
+        //    {
+        //        item.Content = new CacheItem()
+        //            {
+        //                StartTime = DateTime.Now,
+        //                ActiveTime = DateTime.Now,
+        //                Body = new RenderFragment(builder =>
+        //                {
+        //                    RenderCacheItemContent(ChildContent);
+        //                }),
+        //            };
+        //    }
+        //}
         StateHasChanged();
     }
 
@@ -57,7 +64,7 @@
             if (disposing)
             {
                 // 释放托管状态(托管对象)
-                Parent!.OnNavigated -= OnNavigated;
+                //Parent!.OnNavigated -= OnNavigated;
             }
 
             // 释放未托管的资源(未托管的对象)并重写终结器
@@ -76,8 +83,8 @@
     .main_content {
         display: none;
         /*overflow: auto;
-            flex: 1;
-            padding: 10px;*/
+                    flex: 1;
+                    padding: 10px;*/
     }
 
         .main_content.active {

@@ -3,7 +3,7 @@
 @inject RouterStore Router
 @inherits RootLayout
 @inject AuthenticationStateProvider Auth
-<div @onclick="HandleRootClick" @onkeydown=HandleKeyAction tabindex="0">
+<div @onclick="HandleRootClick" @onkeydown=HandleKeyAction tabindex="0" @ref="RootWrapper">
     <CascadingValue Value="this">
         <AuthorizeView>
             <Authorized>
@@ -34,9 +34,9 @@
             {
                 var ca = Auth as CustomAuthenticationStateProvider;
                 await Router.InitRoutersAsync(ca?.Current);
-                var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-                NavigationManager.NavigateTo(url);
-                await RouterStore.TryAdd(url);
+                var url = Navigator.ToBaseRelativePath(Navigator.Uri);
+                Navigator.NavigateTo(url);
+                RouterStore.TryAdd(url);
                 Logger.LogInformation("InitializedAsync: InitRoutersAsync");
             }
         }

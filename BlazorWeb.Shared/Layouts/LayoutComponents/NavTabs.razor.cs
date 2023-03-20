@@ -28,9 +28,9 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
 
         private ClassHelper ContextmenuClass => ClassHelper.Default.AddClass("context").AddClass("open", () => showContextmenu);
 
-        private async Task CloseTag(RouterMeta state)
+        private void CloseTag(RouterMeta state)
         {
-            await store.Remove(state.RouteLink);
+            store.Remove(state.RouteLink);
             nav.NavigateTo(store.Current.RouteLink);
         }
 
@@ -43,9 +43,9 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
             RootLayout.BodyClickEvent += RootLayout_BodyClickEvent; ;
         }
 
-        private void RootLayout_BodyClickEvent(MouseEventArgs obj)
+        private Task RootLayout_BodyClickEvent(MouseEventArgs obj)
         {
-            CloseMenu();
+            return CloseMenu();
         }
 
         private async Task CloseOther()
@@ -68,7 +68,7 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         private async Task CloseSelf()
         {
             if (current == null) return;
-            await CloseTag(current);
+            CloseTag(current);
             await CloseMenu();
         }
 

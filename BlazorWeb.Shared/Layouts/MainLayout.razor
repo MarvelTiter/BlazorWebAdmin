@@ -11,7 +11,7 @@
     <CascadingValue Value="this">
 
         <div class="page" style="@(Loading ? "display:none":"display:block")">
-            @if (App.Mode == LayoutMode.Classic)
+         @*   @if (App.Mode == LayoutMode.Classic)
         {
             <ClassicLayout ChildContent="Body" @ref=layout>
             </ClassicLayout>
@@ -24,6 +24,24 @@
         else
         {
             <LineLayout ChildContent="Body" @ref=layout>
+            </LineLayout>
+        }*@
+        @if (App.Mode == LayoutMode.Classic)
+        {
+            <ClassicLayout @ref=layout>
+                @*@Body*@
+            </ClassicLayout>
+        }
+        else if (App.Mode == LayoutMode.Card)
+        {
+            <CardLayout @ref=layout>
+                @*@Body*@
+            </CardLayout>
+        }
+        else
+        {
+            <LineLayout @ref=layout>
+                @*@Body*@
             </LineLayout>
         }
     </div>

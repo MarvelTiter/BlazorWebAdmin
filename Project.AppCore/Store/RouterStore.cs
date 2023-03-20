@@ -18,7 +18,7 @@ namespace Project.AppCore.Store
     public class TagRoute : RouterMeta
     {
         public bool Closable { get; set; } = true;
-        public CacheItem? Content { get; set; }
+        public CacheItem Content { get; set; } = new CacheItem();
         public string ItemClass => ClassHelper.Default
             .AddClass("main_content")
             .AddClass("active", () => IsActive).Class;
@@ -47,12 +47,12 @@ namespace Project.AppCore.Store
 
         public TagRoute Current => TopLink.FirstOrDefault(r => r.IsActive);
 
-        public Task SetActive(string link)
+        public void SetActive(string link)
         {
             if (link == "") link = "/";
             TopLink.ForEach(a => a.SetActive(a.IsActive = link == a.RouteLink));
             NotifyChanged();
-            return Task.CompletedTask;
+            //return Task.CompletedTask;
         }
         private RouterMeta FindRecursive(IEnumerable<RouterMeta> groups, string link)
         {
@@ -75,7 +75,7 @@ namespace Project.AppCore.Store
             }
             return null;
         }
-        public async Task TryAdd(string link)
+        public void TryAdd(string link)
         {
             //if (string.IsNullOrEmpty(link) || link == "/")
             //{
@@ -93,21 +93,21 @@ namespace Project.AppCore.Store
                     RouteName = route.RouteName,
                 });
             }
-            await SetActive(link);
+            SetActive(link);
         }
 
-        public async Task Remove(string link)
+        public void Remove(string link)
         {
             var index = TopLink.FindIndex(rs => rs.RouteLink == link);
             TopLink.RemoveAt(index);
             if (index < TopLink.Count)
             {
                 // 跳到后一个标签
-                await SetActive(TopLink[index].RouteLink);
+                SetActive(TopLink[index].RouteLink);
             }
             else
             {
-                await SetActive(TopLink[index - 1].RouteLink);
+                SetActive(TopLink[index - 1].RouteLink);
             }
             NotifyChanged();
         }

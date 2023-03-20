@@ -45,9 +45,10 @@
         StateHasChanged();
     }
 
-    private async Task OnMenuItemClick(MenuItem item)
+    private Task OnMenuItemClick(MenuItem item)
     {
-        await routeStore.TryAdd(item.RouterLink);
+        routeStore.TryAdd(item.RouterLink);
+        return Task.CompletedTask;
     }
     private bool disposedValue;
     protected virtual void Dispose(bool disposing)

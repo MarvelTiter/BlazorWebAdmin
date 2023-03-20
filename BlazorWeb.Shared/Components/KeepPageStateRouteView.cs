@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BlazorWeb.Shared.Layouts.LayoutComponents;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Rendering;
+using Project.AppCore.Store;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
@@ -10,13 +12,30 @@ namespace BlazorWeb.Shared.Components
 {
     public class KeepPageStateRouteView : RouteView
     {
+        [Inject]
+        [NotNull]
+        public NavigationManager Navigator { get; set; }
+        [Inject]
+        public RouterStore RouterStore { get; set; }
+        public string CurrentUrl => Fixed(Navigator.ToBaseRelativePath(Navigator.Uri));
+        static string Fixed(string url) => url == "" ? "/" : url;
         protected override void Render(RenderTreeBuilder builder)
         {
             var layoutType = RouteData.PageType.GetCustomAttribute<LayoutAttribute>()?.LayoutType ?? DefaultLayout;
+            RouterStore.SetActive(CurrentUrl);
+            var current = RouterStore.Current;
+            var body = CreateBody();
             builder.OpenComponent<LayoutView>(0);
             builder.AddAttribute(1, "Layout", layoutType);
-            builder.AddAttribute(2, "ChildContent", CreateBody());
+            builder.AddAttribute(2, "ChildContent", GetBody(current, body));
             builder.CloseComponent();
+        }
+
+        RenderFragment GetBody(TagRoute? route, RenderFragment def)
+        {
+            if (route == null) return def;
+            if (route.Content.Body == null) route.Content.Body = def;
+            return route.Content.Body;
         }
 
         private RenderFragment CreateBody()

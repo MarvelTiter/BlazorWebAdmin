@@ -31,17 +31,22 @@ namespace BlazorWebAdmin.Shared
             Root.OnKeyDown += OnPressEnter;
         }
 
-        private void OnPressEnter(KeyboardEventArgs e)
+        private Task OnPressEnter(KeyboardEventArgs e)
         {
-            Console.WriteLine("OnPressEnter: " + e.Key);
+            //Console.WriteLine("OnPressEnter: " + e.Key);
             if (e.Key == "Enter")
-                _ = HandleLogin();
+            {
+                return HandleLogin();
+            }
+            return Task.CompletedTask;
         }
 
         private async Task HandleLogin()
         {
             Loading = true;
+            //await Task.Delay(100);
             await Task.Yield();
+            //throw new Exception("ErrorCatcher Test");
             var result = await LoginSrv.LoginAsync(model.UserName, model.Password);
             if (result.Success)
             {
@@ -58,8 +63,9 @@ namespace BlazorWebAdmin.Shared
             else
             {
                 _ = MessageSrv.Info(result.Message);
-            }
+            }            
             Loading = false;
+            //StateHasChanged();
         }
     }
 }
