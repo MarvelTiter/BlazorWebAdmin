@@ -22,14 +22,14 @@
             display: block;
         }
 
-.reconnect-state > span {
+.reconnect-state .message {
     background-color: rgb(64, 158, 255);
     display: block;
     padding: 1rem;
     color: #fff;
 }
 
-    .reconnect-state > span > a {
+    .reconnect-state .message > a {
         text-decoration: underline;
         color: #fff;
     }

@@ -1,3 +1,4 @@
+using BlazorWeb.Shared.Extensions;
 using BlazorWebAdmin;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using LightExcel;
@@ -24,6 +25,7 @@ services.AddRazorPages();
 services.AddServerSideBlazor();
 services.AddControllers();
 services.AddHttpClient();
+services.SharedComponentsInit();
 services.Configure<HubOptions>(options =>
 {
 	options.MaximumReceiveMessageSize = 1024 * 1024 * 2; // 1MB or use null

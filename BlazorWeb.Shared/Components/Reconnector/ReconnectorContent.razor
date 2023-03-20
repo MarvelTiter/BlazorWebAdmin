@@ -1,5 +1,4 @@
 ﻿@namespace BlazorWeb.Shared.Components
-
 @*
     自定义 UI 中的连接状态 (Blazor Server)
     https://learn.microsoft.com/zh-cn/aspnet/core/blazor/fundamentals/signalr?view=aspnetcore-7.0#reflect-the-connection-state-in-the-ui-blazor-server
@@ -12,7 +11,7 @@
         }
         else
         {
-            <div>
+            <div class="message">
                 There was a problem with the connection!
                 (Current reconnect attempt:
                 <span id="components-reconnect-current-attempt"></span> /
@@ -28,7 +27,7 @@
         }
         else
         {
-            <span>Oh snap! Failed to reconnect with the server. This is typically caused by a longer network outage, or if the server has been taken down. You can try to <a href="javascript:window.Blazor.reconnect()">reconnect</a>, but if that does not work, you need to <a href="javascript:location.reload()">reload</a> the page.</span>
+            <div class="message">Oh snap! Failed to reconnect with the server. This is typically caused by a longer network outage, or if the server has been taken down. You can try to <a href="javascript:window.Blazor.reconnect()">reconnect</a>, but if that does not work, you need to <a href="javascript:location.reload()">reload</a> the page.</div>
         }
     </div>
 
@@ -39,7 +38,7 @@
         }
         else
         {
-            <span>Oh man! The server rejected the attempt to reconnect. The only option now is to <a href="javascript:location.reload()">reload</a> the page, but be prepared that it won't work, since this is typically caused by a failure on the server.</span>
+            <div class="message">Oh man! The server rejected the attempt to reconnect. The only option now is to <a href="javascript:location.reload()">reload</a> the page, but be prepared that it won't work, since this is typically caused by a failure on the server.</div>
         }
     </div>
 </div>
@@ -47,25 +46,37 @@
     [Parameter]
     public bool AutoReconnect { get; set; } = true;
     /// <summary>
-    /// 获得/设置 ReconnectingTemplate 模板
+    /// 正在重连的模板
     /// </summary>
     [Parameter]
     public RenderFragment? ReconnectingTemplate { get; set; }
 
     /// <summary>
-    /// 获得/设置 ReconnectFailedTemplate 模板
+    /// 重连失败的模板
     /// </summary>
     [Parameter]
     public RenderFragment? ReconnectFailedTemplate { get; set; }
 
     /// <summary>
-    /// 获得/设置 ReconnectRejectedTemplate 模板
+    /// 服务器拒绝的模板
     /// </summary>
     [Parameter]
     public RenderFragment? ReconnectRejectedTemplate { get; set; }
 
-    //protected override ValueTask Init()
-    //{
-    //    throw new NotImplementedException();
-    //}
+    [Inject] public IReconnectorProvider Provider { get; set; }
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        Provider.RegisterView(ApplyTemplate);
+        return base.SetParametersAsync(parameters);
+    }
+
+    private void ApplyTemplate(IReconnector reconnector)
+    {
+        this.ReconnectingTemplate = reconnector.ReconnectingTemplate;
+        this.ReconnectFailedTemplate = reconnector.ReconnectFailedTemplate;
+        this.ReconnectRejectedTemplate = reconnector.ReconnectRejectedTemplate;
+        StateHasChanged();
+    }
+
 }
