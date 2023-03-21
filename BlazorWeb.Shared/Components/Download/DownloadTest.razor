@@ -1,0 +1,12 @@
+﻿@namespace BlazorWeb.Shared.Components
+@using BlazorWeb.Shared.Utils;
+<h3>DownloadTest</h3>
+<Button OnClick="Download">下载测试</Button>
+
+@code {
+    [Inject] public IJSRuntime Js { get; set; }
+    Task Download()
+    {
+        return Js.DownloadFile("CGS", "db");
+    }
+}
