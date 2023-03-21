@@ -24,17 +24,16 @@ namespace BlazorWeb.Shared.Components
             var layoutType = RouteData.PageType.GetCustomAttribute<LayoutAttribute>()?.LayoutType ?? DefaultLayout;
             RouterStore.SetActive(CurrentUrl);
             var current = RouterStore.Current;
-            var body = CreateBody();
             builder.OpenComponent<LayoutView>(0);
             builder.AddAttribute(1, "Layout", layoutType);
-            builder.AddAttribute(2, "ChildContent", GetBody(current, body));
+            builder.AddAttribute(2, "ChildContent", GetCurrentBody(current));
             builder.CloseComponent();
         }
 
-        RenderFragment GetBody(TagRoute? route, RenderFragment def)
+        RenderFragment GetCurrentBody(TagRoute? route)
         {
-            if (route == null) return def;
-            if (route.Content.Body == null) route.Content.Body = def;
+            if (route == null) return CreateBody();
+            if (route.Content.Body == null) route.Content.Body = CreateBody();
             return route.Content.Body;
         }
 
