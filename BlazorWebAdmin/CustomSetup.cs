@@ -1,5 +1,6 @@
 ﻿using MDbContext;
 using MDbContext.ExpressionSql;
+using Project.AppCore.Locales.Extensions;
 
 namespace BlazorWebAdmin
 {
@@ -7,7 +8,7 @@ namespace BlazorWebAdmin
     {
         public static void SetupCustomServices(IServiceCollection services)
         {
-
+            services.AddJsonLocales();
         }
 
         public static void SetupLightOrm(this IServiceCollection services, ConfigurationManager configuration)

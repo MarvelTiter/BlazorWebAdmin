@@ -30,4 +30,8 @@
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Locales\Langs\" />
+  </ItemGroup>
+
 </Project>

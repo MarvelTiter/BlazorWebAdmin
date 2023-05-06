@@ -60,7 +60,7 @@ CustomSetup.SetupCustomAppUsage(app);
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -1,8 +1,10 @@
 ﻿@namespace BlazorWeb.Shared.Components
 @using BlazorWeb.Shared.Utils;
+@using Microsoft.Extensions.Localization;
+@inject IStringLocalizer<DownloadTest> Localizer
 <h3>DownloadTest</h3>
 <Button OnClick="Download">下载测试</Button>
-
+@Localizer["Hello"]
 @code {
     [Inject] public IJSRuntime Js { get; set; }
     Task Download()
