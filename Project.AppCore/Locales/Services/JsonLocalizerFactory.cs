@@ -25,8 +25,7 @@ namespace Project.AppCore.Locales.Services
             {
                 throw new ArgumentNullException(nameof(resourceSource));
             }
-            var resourceName = TrimPrefix(resourceSource.FullName!, "");
-            return CreateJsonLocalizer(resourceName);
+            return CreateJsonLocalizer(resourceSource.Name);
         }
 
         public IStringLocalizer Create(string baseName, string location)
@@ -41,8 +40,7 @@ namespace Project.AppCore.Locales.Services
                 throw new ArgumentNullException(nameof(location));
             }
 
-            var resourceName = TrimPrefix(baseName, location + ".");
-            return CreateJsonLocalizer(resourceName);
+            return CreateJsonLocalizer(location);
         }
 
         private JsonLocalizer CreateJsonLocalizer(string resourceName)
@@ -54,14 +52,5 @@ namespace Project.AppCore.Locales.Services
                 logger));
         }
 
-        private static string TrimPrefix(string name, string prefix)
-        {
-            if (name.StartsWith(prefix, StringComparison.Ordinal))
-            {
-                return name.Substring(prefix.Length);
-            }
-
-            return name;
-        }
     }
 }

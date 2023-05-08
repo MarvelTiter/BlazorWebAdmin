@@ -2,7 +2,7 @@
   "Hello": "你好",
   "L1": {
     "L2": {
-      "Test": "嵌套测试"
+      "Test": "LocalizerTest嵌套测试"
     }
   }
 }

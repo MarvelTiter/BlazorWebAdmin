@@ -3,12 +3,13 @@ using Microsoft.Extensions.Logging.Abstractions;
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Project.AppCore.Locales.Services
 {
     public class JsonLocalizer : IStringLocalizer
     {
-        private readonly ConcurrentDictionary<string, Dictionary<string, string>> resourcesCache = new();
+        private readonly ConcurrentDictionary<string, JsonDocument> documentCache = new();
         private readonly string resourcesPath;
         private readonly string resourceName;
         private readonly ILogger logger;
@@ -51,48 +52,72 @@ namespace Project.AppCore.Locales.Services
             }
         }
 
-        private string GetStringSafely(string name)
+        private string? GetStringSafely(string name)
         {
             if (name == null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
-            string value = null;
-
-            var resources = GetResources(CultureInfo.CurrentUICulture.Name);
-            if (resources?.ContainsKey(name) ?? false)
-            {
-                value = resources[name];
-            }
-
-            return value;
+            var doc = GetJsonDocument(CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "zh-CN");
+            return SolveJsonPath(doc.RootElement, name);
         }
 
-        private Dictionary<string, string> GetResources(string culture)
+        private string? SolveJsonPath(JsonElement root, string name)
         {
-            return resourcesCache.GetOrAdd(culture, _ =>
+            if (name.IndexOf('.') > -1)
             {
-                var resourceFile = $"{culture}.json";
-                searchedLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Locales", "Langs", resourceFile);
-                Dictionary<string, string> value = null;
-                if (File.Exists(searchedLocation))
+                var paths = new Queue<string>(name.Split('.'));
+                while (paths.Count > 0)
                 {
-                    var content = File.ReadAllText(searchedLocation, System.Text.Encoding.UTF8);
-                    if (!string.IsNullOrWhiteSpace(content))
+                    if (!root.TryGetProperty(paths.Dequeue(), out root))
                     {
-                        try
-                        {
-                            value = JsonSerializer.Deserialize<Dictionary<string, string>>(content) ?? new();
-                        }
-                        catch (Exception e)
-                        {
-                            logger.LogWarning(e, $"invalid json content, path: {searchedLocation}, content: {content}");
-                        }
+                        return "";
                     }
+                }
+                return root.GetString();
+            }
+            else
+            {
+                return root.GetProperty(name).GetString();
+            }
+        }
+
+        private JsonDocument GetJsonDocument(string culture)
+        {
+            return documentCache.GetOrAdd(culture, lang =>
+            {
+                var resourceFile = $"{lang}.json";
+                searchedLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Locales", "Langs", resourceName, resourceFile);
+                if (!LoadJsonDocumentFromPath(out var value))
+                {
+                    searchedLocation = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Locales", "Langs", resourceFile);
+                    LoadJsonDocumentFromPath(out value);
                 }
                 return value;
             });
+        }
+
+        private bool LoadJsonDocumentFromPath(out JsonDocument? value)
+        {
+            if (File.Exists(searchedLocation))
+            {
+                var content = File.ReadAllText(searchedLocation, System.Text.Encoding.UTF8);
+                if (!string.IsNullOrWhiteSpace(content))
+                {
+                    try
+                    {
+                        value = JsonDocument.Parse(content);
+                        return true;
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogWarning(e, $"invalid json content, path: {searchedLocation}, content: {content}");
+                    }
+                }
+            }
+            value = null;
+            return false;
         }
 
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
