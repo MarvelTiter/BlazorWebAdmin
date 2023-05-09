@@ -4,10 +4,11 @@
 <h3>Hello：@Localizer["Hello"]</h3>
 <h3>嵌套测试：@Localizer["L1.L2.Test"]</h3>
 
-<CustomSelect Options="langs" TItem=string OnChange="ToggleLang"></CustomSelect>
-
+@*<CustomSelect Options="langs" TItem=string OnChange="ToggleLang"></CustomSelect>*@
+<Pagination ShowQuickJumper Total="500"></Pagination>
 @code {
     SelectItem<string> langs = new();
+    [Inject] NavigationManager Navigator { get; set; }
     protected override void OnInitialized()
     {
         langs.Add("简体中文", "zh-CN");

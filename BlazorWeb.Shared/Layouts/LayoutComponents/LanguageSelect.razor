@@ -1,0 +1,45 @@
+﻿@using System.Globalization;
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+<Dropdown Trigger=@(new Trigger[]{Trigger.Click}) Style="display:unset;">
+    <Overlay>
+        @*<CustomSelect @bind-Value=current Options="langs" TItem=string OnChange="ToggleLang"></CustomSelect>*@
+        <Menu>
+            <MenuItem>
+                <Button Type="@ButtonType.Text" OnClick="@(()=>ToggleLang("zh-CN"))">简体中文</Button>
+            </MenuItem>
+            <MenuItem>
+                <Button Type="@ButtonType.Text" OnClick="@(()=>ToggleLang("en-US"))">English</Button>
+            </MenuItem>
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        <SvgIcon IconName="language"
+                 ClassName="nav-menu-icon" />
+    </ChildContent>
+</Dropdown>
+
+@code {
+    SelectItem<string> langs = new();
+    string current = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "";
+    [Inject] NavigationManager Navigator { get; set; }
+    [Inject] ProtectedLocalStorage Storage{ get; set; }
+    [Inject] AppStore App { get; set; }
+    protected override void OnInitialized()
+    {
+        langs.Add("简体中文", "zh-CN");
+        langs.Add("English", "en-US");
+    }
+    void ToggleLang(string lang)
+    {
+        if (lang != CultureInfo.DefaultThreadCurrentUICulture?.Name)
+        {
+            var culture = CultureInfo.GetCultureInfo(lang);
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            App.AppLanguage = lang;
+            Storage.SetAsync(AppStore.KEY, App);
+            Navigator.NavigateTo(Navigator.Uri, true);
+        }
+    }
+}

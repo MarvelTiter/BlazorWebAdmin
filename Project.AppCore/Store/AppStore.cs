@@ -16,6 +16,7 @@ namespace Project.AppCore.Store
     {
         public const string KEY = "APP_SETTING";
         public LayoutMode? Mode { get; set; }
+        public string AppLanguage { get; set; } = "zh-CN";
         public bool DarkMode { get; set; }
         public bool Collapsed { get; set; }
         public int SideBarExpandWidth { get; set; } = 260;

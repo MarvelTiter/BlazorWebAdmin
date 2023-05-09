@@ -1,6 +1,7 @@
 ﻿@using BlazorWeb.Shared.Layouts.LayoutComponents
 @using BlazorWeb.Shared.Layouts.Layouts
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@using System.Globalization;
 @inherits LayoutComponentBase
 @layout AuthorizedLayout
 @inject RouterStore Store
@@ -72,6 +73,8 @@
                 {
                     App.Mode = result.Value.Mode;
                     App.Collapsed = result.Value.Collapsed;
+                    App.AppLanguage = result.Value.AppLanguage;
+                    CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(App.AppLanguage);
                 }
                 else
                 {

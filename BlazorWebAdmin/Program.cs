@@ -34,9 +34,8 @@ services.Configure<HubOptions>(options =>
 services.AddDataProtection().SetApplicationName("BlazorWebAdmin");
 
 //services.AddAuthentication("Bearer")
-
+//services.AddLocalization();
 services.AddAntDesign();
-
 
 services.AddLightExcel();
 services.AutoInjects();
@@ -60,7 +59,7 @@ CustomSetup.SetupCustomAppUsage(app);
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseRequestLocalization();
+//app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
 

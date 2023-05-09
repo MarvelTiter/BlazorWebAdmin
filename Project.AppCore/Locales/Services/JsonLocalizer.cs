@@ -48,7 +48,7 @@ namespace Project.AppCore.Locales.Services
 
                 var format = GetStringSafely(name);
                 var value = string.Format(format ?? name, arguments);
-                return new LocalizedString(name, value, resourceNotFound: format == null, searchedLocation: searchedLocation);
+                return new LocalizedString(name, value ?? name, resourceNotFound: format == null, searchedLocation: searchedLocation);
             }
         }
 
@@ -59,7 +59,9 @@ namespace Project.AppCore.Locales.Services
                 throw new ArgumentNullException(nameof(name));
             }
 
-            var doc = GetJsonDocument(CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "zh-CN");
+            //var doc = GetJsonDocument(CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "zh-CN");
+            var doc = GetJsonDocument(CultureInfo.CurrentUICulture.Name);
+            if (doc == null) return null;
             return SolveJsonPath(doc.RootElement, name);
         }
 
@@ -72,7 +74,7 @@ namespace Project.AppCore.Locales.Services
                 {
                     if (!root.TryGetProperty(paths.Dequeue(), out root))
                     {
-                        return "";
+                        return null;
                     }
                 }
                 return root.GetString();
