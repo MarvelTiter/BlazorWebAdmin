@@ -13,6 +13,7 @@ namespace Project.Services
 {
 	public partial class LoginService
 	{
+		//TODO 处理登录功能
 		public async Task<IQueryResult<UserInfo>> GetUserInfo(string username, string password)
 		{
 			var u = await context.Repository<User>().GetSingleAsync(u => u.UserId == username);

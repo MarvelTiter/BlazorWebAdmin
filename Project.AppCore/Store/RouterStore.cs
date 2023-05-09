@@ -135,7 +135,7 @@ namespace Project.AppCore.Store
             });
             return Task.CompletedTask;
         }
-
+        //TODO 获取权限列表
         public async Task InitRoutersAsync(UserInfo? userInfo)
         {
             if (userInfo == null) return;
