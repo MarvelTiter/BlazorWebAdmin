@@ -3,18 +3,18 @@
 @namespace BlazorWeb.Shared.Components
 @typeparam TData
 <div style="text-align:right;margin-bottom:10px;">
-	<Button Type=@ButtonType.Primary OnClick="AddCondition">增加条件</Button>
+	<Button Type=@ButtonType.Primary OnClick="AddCondition">@TableLocalizer["TableButtons.AddCondition"]</Button>
 </div>
 @for (var i = 0; i < Conditions.Count; i++)
 {
 	int index = i;
-	<ConditionBuilder Index=index Columns=Columns InfoChanged=@(newInfo => Conditions[index] = newInfo) Style="width:100%;"></ConditionBuilder>
+	<ConditionBuilder Localizer="Localizer" Index=index Columns=Columns InfoChanged=@(newInfo => Conditions[index] = newInfo) Style="width:100%;"></ConditionBuilder>
 }
 <div style="text-align:right;margin-top:10px;">
-	<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToSearch">查询</Button>
+	<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToSearch">@TableLocalizer["TableButtons.Query"]</Button>
 	@if (ShowExportButton)
 	{
-		<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToExport">导出</Button>
+		<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToExport">@TableLocalizer["TableButtons.Export"]</Button>
 	}
 </div>
 @code {
@@ -30,6 +30,10 @@
 	public EventCallback OnConfirmToSearch { get; set; }
 	[Parameter]
 	public EventCallback OnConfirmToExport { get; set; }
+	[Parameter]
+	public IStringLocalizer Localizer { get; set; }
+	[Parameter]
+	public IStringLocalizer TableLocalizer { get; set; }
 	private List<ConditionInfo> Conditions = new List<ConditionInfo>();
 	protected override void OnInitialized()
 	{

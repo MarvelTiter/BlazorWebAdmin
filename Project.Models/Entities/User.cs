@@ -7,22 +7,22 @@ namespace Project.Models.Entities
 	[Table(Name = "USER")]
 	public class User : IUser
 	{
-		[ColumnDefinition("用户ID", 0, fix: "left", width: "100px")]
+		[ColumnDefinition]
 		[Column(Name = "USER_ID")]
 		public string UserId { get; set; }
-		[ColumnDefinition("用户名", 1, fix: "left", width: "100px")]
+		[ColumnDefinition]
 		[Column(Name = "USER_NAME")]
 		public string UserName { get; set; }
-		[ColumnDefinition("用户密码", 2, fix: "left")]
+		[ColumnDefinition]
 		[Column(Name = "PASSWORD")]
 		public string Password { get; set; }
-		[ColumnDefinition("年龄", 3)]
+		[ColumnDefinition]
 		[Column(Name = "AGE")]
 		public int? Age { get; set; }
-		[ColumnDefinition("签名", 4)]
+		[ColumnDefinition]
 		[Column(Name = "SIGN")]
 		public string Sign { get; set; }
-		[ColumnDefinition("最后登录", 5)]
+		[ColumnDefinition]
 		[Column(Name = "LAST_LOGIN")]
 		public DateTime? LastLogin { get; set; }
 	}

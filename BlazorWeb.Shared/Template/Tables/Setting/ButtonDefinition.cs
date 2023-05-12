@@ -13,7 +13,7 @@
         {
             return new ButtonDefinition<TData>
             {
-                Label = "编辑",
+                Label = "Edit",
                 Icon = "edit",
                 Callback = action
             };
@@ -23,7 +23,7 @@
         {
             return new ButtonDefinition<TData>
             {
-                Label = "删除",
+                Label = "Delete",
                 Icon = "delete",
                 NeedConfirm = true,
                 Callback = action

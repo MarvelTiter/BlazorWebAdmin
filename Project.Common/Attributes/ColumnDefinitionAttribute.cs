@@ -9,14 +9,18 @@ namespace Project.Common.Attributes
     [AttributeUsage(AttributeTargets.Property)]
     public class ColumnDefinitionAttribute : Attribute
     {
-        public ColumnDefinitionAttribute(string label, int sort = 0, string? fix = null, string? width = null)
+        public ColumnDefinitionAttribute(int sort = 0, string? fix = null, string? width = null) : this(null, sort, fix, width)
+        {
+
+        }
+        public ColumnDefinitionAttribute(string? label, int sort = 0, string? fix = null, string? width = null)
         {
             Label = label;
             Sort = sort;
             Fixed = fix;
             Width = width;
         }
-        public string Label { get; }
+        public string? Label { get; set; }
         public int Sort { get; }
         public string? Fixed { get; }
         public string? Width { get; }

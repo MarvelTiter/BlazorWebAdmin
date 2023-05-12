@@ -17,6 +17,10 @@ namespace BlazorWeb.Shared.Template.Tables
         {
             var head = self.GetCustomAttribute<ColumnDefinitionAttribute>();
             var dbInfo = self.GetCustomAttribute<ColumnAttribute>();
+            if (head!.Label == null)
+            {
+                head!.Label = $"{self.DeclaringType!.Name}.{self.Name}";
+            }
             TableOptionColumn column = new(head!.Label, self.Name)
             {
                 Index = head.Sort,

@@ -1,8 +1,10 @@
 {
-  "Hello": "你好",
-  "L1": {
-    "L2": {
-      "Test": "嵌套测试"
-    }
+  "User": {
+    "UserId": "用户ID",
+    "UserName": "用户昵称",
+    "Password": "登录密码",
+    "Age": "年龄",
+    "Sign": "签名",
+    "LastLogin": "最后登录"
   }
 }

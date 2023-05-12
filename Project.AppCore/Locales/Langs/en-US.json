@@ -1,3 +1,10 @@
 {
-  "Hello": "Hello"
+  "User": {
+    "UserId": "ID",
+    "UserName": "Name",
+    "Password": "Password",
+    "Age": "Age",
+    "Sign": "Sign",
+    "LastLogin": "LastLogin"
+  }
 }

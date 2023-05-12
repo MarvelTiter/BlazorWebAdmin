@@ -1,4 +1,6 @@
-﻿using Project.AppCore.Services;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
+using Project.AppCore.Services;
 using Project.Common;
 using Project.Models.Permissions;
 
@@ -33,11 +35,13 @@ namespace Project.AppCore.Store
     public class RouterStore : StoreBase
     {
         private readonly IPermissionService permissionService;
+        private readonly IStringLocalizer<RouterStore> localizer;
 
-        public RouterStore(IPermissionService permissionService)
+        public RouterStore(IPermissionService permissionService, IStringLocalizer<RouterStore> localizer)
         {
-            Reset();
             this.permissionService = permissionService;
+            this.localizer = localizer;
+            Reset();
         }
         public List<TagRoute> TopLink { get; set; } = new List<TagRoute>();
 
@@ -130,7 +134,7 @@ namespace Project.AppCore.Store
             TopLink.Add(new TagRoute
             {
                 RouteLink = "/",
-                RouteName = "主页",
+                RouteName = localizer["Home"],
                 Closable = false,
             });
             return Task.CompletedTask;
@@ -148,14 +152,14 @@ namespace Project.AppCore.Store
                 {
                     RouteLink = "/",
                     IconName = "home",
-                    RouteName = "主页",
+                    RouteName = localizer["Home"],
                     Children = new List<RouterMeta>()
                 }
             };
             foreach (var item in roots)
             {
                 var n = new RouterMeta();
-                n.RouteName = item.PowerName;
+                n.RouteName = localizer[item.PowerId];
                 n.RouteLink = item.Path;
                 n.IconName = item.Icon;
                 n.Children = FindChildren(powers, item);
@@ -169,7 +173,7 @@ namespace Project.AppCore.Store
                 foreach (var child in children)
                 {
                     var n1 = new RouterMeta();
-                    n1.RouteName = child.PowerName;
+                    n1.RouteName = localizer[child.PowerId];
                     n1.RouteLink = child.Path;
                     n1.IconName = child.Icon;
                     n1.Children = FindChildren(all, child);

@@ -13,15 +13,17 @@
 <Row Style=@($"min-width:350px;{Style}")>
     <Col Span=10>
     <Select DataSource="Columns"
-            Placeholder="请选择查询内容"
+            Placeholder="Select"
             DropdownMatchSelectWidth=false
             Style="width: 100%;"
             TItem=Shared.Template.Tables.Setting.TableOptionColumn
             TItemValue=string
             DefaultValue=@(selectedField?.PropertyOrFieldName)
             ValueName=@(nameof(TableOptionColumn.PropertyOrFieldName))
-            LabelName=@(nameof(TableOptionColumn.Label))
             OnSelectedItemChanged="UpdateField">
+            <ItemTemplate>
+                @GetLocalizerString(context)
+            </ItemTemplate>
     </Select>
     </Col>
     <Col Span=4>
@@ -60,7 +62,12 @@
     public string Style { get; set; }
     [Parameter]
     public int Index { get; set; }
-
+    [Parameter]
+    public IStringLocalizer Localizer { get; set; }
+    RenderFragment GetLocalizerString (TableOptionColumn context )
+    {
+        return @<span>@(Localizer == null ? context.Label : Localizer[context.Label])</span>;
+    }
     object GetInnerValue(out bool legal)
     {
         if (selectedField?.DataType == typeof(DateTime))
