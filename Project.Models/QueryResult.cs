@@ -9,6 +9,7 @@ namespace Project.Models
     public interface IQueryResult
     {
         bool Success { get; set; }
+        public int Code { get; set; }
         string Message { get; set; }
         object Payload { get; set; }
     }
