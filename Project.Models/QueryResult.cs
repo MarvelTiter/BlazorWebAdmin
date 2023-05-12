@@ -27,6 +27,7 @@ namespace Project.Models
     public class QueryResult<T> : IQueryResult<T>
     {
         public bool Success { get; set; }
+        public int Code { get; set; }
         public string Message { get; set; }
         public T Payload { get; set; }
         object IQueryResult.Payload { get => Payload; set => Payload = (T)value; }
@@ -36,6 +37,7 @@ namespace Project.Models
     public class QueryCollectionResult<T> : IQueryCollectionResult<T>
     {
         public bool Success { get; set; }
+        public int Code { get; set; }
         public string Message { get; set; }
         public int TotalRecord { get; set; }
         public IEnumerable<T> Payload { get; set; }
