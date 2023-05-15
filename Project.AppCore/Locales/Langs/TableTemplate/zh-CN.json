@@ -15,5 +15,9 @@
     "More": "更多",
     "DangerActionConfirmTitle": "该操作无法恢复！",
     "DangerActionConfirmContent": "是否确认操作？"
+  },
+  "ConditionSwitch": {
+    "AndAlso": "并且",
+    "OrElse": "或者"
   }
 }

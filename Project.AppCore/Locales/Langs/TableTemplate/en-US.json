@@ -12,6 +12,12 @@
     "Total": "Total",
     "ActionColumn": "Action",
     "ActionSuccess": "Successfully",
-    "More": "More"
+    "More": "More",
+    "DangerActionConfirmTitle": "this operation cannot be resumed!",
+    "DangerActionConfirmContent": "confirm operation?"
+  },
+  "ConditionSwitch": {
+    "AndAlso": "AndAlso",
+    "OrElse": "OrElse"
   }
 }

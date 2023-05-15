@@ -13,20 +13,20 @@
 	<div class="login-form">
 		<Form Model="model">
 			<FormItem>
-				<Input @bind-Value="@context.UserName" placeholder="Username" name="username" type="text" tabindex="1" AutoComplete="true">
+				<Input @bind-Value="@context.UserName" placeholder="@Localizer["Login.Placeholder.UserName"].Value" name="username" type="text" tabindex="1" AutoComplete="true">
 				<Prefix>
 					<Icon Type="user" Theme="outline" />
 				</Prefix>
 				</Input>
 			</FormItem>
 			<FormItem>
-				<InputPassword @bind-Value="@context.Password" placeholder="Password" tabindex="2" AutoComplete="true" OnPressEnter="HandleLogin">
+				<InputPassword @bind-Value="@context.Password" placeholder="@Localizer["Login.Placeholder.Password"].Value" tabindex="2" AutoComplete="true" OnPressEnter="HandleLogin">
 					<Prefix>
 						<Icon Type="lock" Theme="outline" />
 					</Prefix>
 				</InputPassword>
 			</FormItem>
 		</Form>
-		<Button Loading="Loading" Type="@ButtonType.Primary" OnClick="HandleLogin">登录</Button>
+		<Button Loading="Loading" Type="@ButtonType.Primary" OnClick="HandleLogin">@Localizer["Login.Buttons.Login"]</Button>
 	</div>
 </div>

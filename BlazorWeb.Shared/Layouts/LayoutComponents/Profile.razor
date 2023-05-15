@@ -5,14 +5,15 @@
 @inject UserStore store
 @inject AuthenticationStateProvider Auth
 @inject ILoginService LoginSrv
+@inject IStringLocalizer<Profile> Localizer
 <Dropdown Trigger=@(new Trigger[]{Trigger.Click}) Style="display:unset;">
     <Overlay>
         <Menu>
             <MenuItem>
-                <Button Type="@ButtonType.Text" OnClick="HandlePwdModify">修改密码</Button>
+                <Button Type="@ButtonType.Text" OnClick="HandlePwdModify">@Localizer["NavMenu.UserAction.ModifyPassword"]</Button>
             </MenuItem>
             <MenuItem>
-                <Button Type="@ButtonType.Text" OnClick="HandleLogout">注销</Button>
+                <Button Type="@ButtonType.Text" OnClick="HandleLogout">@Localizer["NavMenu.UserAction.Logout"]</Button>
             </MenuItem>
         </Menu>
     </Overlay>

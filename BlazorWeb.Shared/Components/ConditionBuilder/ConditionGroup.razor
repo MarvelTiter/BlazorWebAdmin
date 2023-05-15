@@ -8,7 +8,7 @@
 @for (var i = 0; i < Conditions.Count; i++)
 {
 	int index = i;
-	<ConditionBuilder Localizer="Localizer" Index=index Columns=Columns InfoChanged=@(newInfo => Conditions[index] = newInfo) Style="width:100%;"></ConditionBuilder>
+	<ConditionBuilder Localizer="Localizer" TableLocalizer=TableLocalizer Index=index Columns=Columns InfoChanged=@(newInfo => Conditions[index] = newInfo) Style="width:100%;"></ConditionBuilder>
 }
 <div style="text-align:right;margin-top:10px;">
 	<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToSearch">@TableLocalizer["TableButtons.Query"]</Button>

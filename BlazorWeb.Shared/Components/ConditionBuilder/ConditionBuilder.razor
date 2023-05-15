@@ -7,7 +7,7 @@
 <Row>
     @if (Index > 0)
     {
-        <Switch Checked="LinkType == ExpressionType.AndAlso" CheckedChildren="并且" UnCheckedChildren="或者" OnChange=UpdateLinkType />
+        <Switch Checked="LinkType == ExpressionType.AndAlso" CheckedChildren=@TableLocalizer["ConditionSwitch.AndAlso"] UnCheckedChildren=@TableLocalizer["ConditionSwitch.OrElse"] OnChange=UpdateLinkType />
     }
 </Row>
 <Row Style=@($"min-width:350px;{Style}")>
@@ -21,9 +21,9 @@
             DefaultValue=@(selectedField?.PropertyOrFieldName)
             ValueName=@(nameof(TableOptionColumn.PropertyOrFieldName))
             OnSelectedItemChanged="UpdateField">
-            <ItemTemplate>
+        <ItemTemplate>
                 @GetLocalizerString(context)
-            </ItemTemplate>
+        </ItemTemplate>
     </Select>
     </Col>
     <Col Span=4>
@@ -64,7 +64,9 @@
     public int Index { get; set; }
     [Parameter]
     public IStringLocalizer Localizer { get; set; }
-    RenderFragment GetLocalizerString (TableOptionColumn context )
+    [Parameter]
+    public IStringLocalizer TableLocalizer { get; set; }
+    RenderFragment GetLocalizerString(TableOptionColumn context)
     {
         return @<span>@(Localizer == null ? context.Label : Localizer[context.Label])</span>;
     }
