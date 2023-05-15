@@ -170,8 +170,8 @@
     <Modal Visible="AdvanceModalVisible" OnCancel=@(()=>AdvanceModalVisible = false) Title=@TableLocalizer["TableButtons.AdvancedQuery"] Footer=null>
         <ConditionGroup Columns=@TableOptions.Columns
                     TData=TData
-                    Localizer="Localizer"
-                    TableLocalizer="TableLocalizer"
+                        Localizer="Localizer"
+                        TableLocalizer="TableLocalizer"
                     @bind-Expression="ConditionExpression"
                     ShowExportButton=@(TableOptions.ExportDataLoader != null || !TableOptions.Page)
                     OnConfirmToSearch=AdvanceSearch
@@ -188,21 +188,34 @@
              Danger=@definition.NeedConfirm
              Icon=@definition.Icon
                       OnClickStopPropagation
-             OnClick=@(()=>InvokeButtonAction(definition.Callback, context))>
-        @(definition.LabelFunc?.Invoke(context) ?? TableLocalizer[$"TableButtons.{definition.Label}"])
-    </Button>
-                                ;
+             OnClick=@(()=>InvokeButtonAction(definition, context))>
+        @(definition.LabelFunc?.Invoke(context) ?? TableLocalizer[definition.Label])
+            </Button>
+    ;
     }
 
-    public async Task InvokeButtonAction(Func<TData, Task<bool>> func, TData data)
+    public async Task InvokeButtonAction(ButtonDefinition<TData> definition, TData data)
     {
-        var result = await func.Invoke(data);
-        if (result)
+        if (definition.NeedConfirm)
         {
-            var msg = TableLocalizer["TableTips.ActionSuccess"].Value;
-            _ = MessageSrv.Success(msg);
-            if (TableOptions.AutoRefreshData)
-                await RefreshData();
+            var confirmResult = await ConfirmSrv.Show(
+                    TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+                , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+            if (confirmResult == ConfirmResult.OK)
+            {
+                await CallButtonAction();
+            }
+        }
+        async Task CallButtonAction()
+        {
+            var result = await definition.Callback.Invoke(data);
+            if (result)
+            {
+                var msg = TableLocalizer["TableTips.ActionSuccess"].Value;
+                _ = MessageSrv.Success(msg);
+                if (TableOptions.AutoRefreshData)
+                    await RefreshData();
+            }
         }
     }
 
@@ -230,7 +243,7 @@
     RenderFragment<CellData<T>> ColumnRender<T>(Shared.Template.Tables.Setting.TableOptionColumn col)
     {
         return context =>
-                            {
+                                {
     var formattedValue = "";
     if (col.IsEnum || col.EnumValues != null)
     {
@@ -260,7 +273,7 @@
         //		}
         //</span>
         ;
-                        };
+                            };
     }
 
 

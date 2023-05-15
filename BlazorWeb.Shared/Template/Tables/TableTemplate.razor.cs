@@ -16,20 +16,14 @@ namespace BlazorWeb.Shared.Template.Tables
 {
     public partial class TableTemplate<TData, TQuery> where TQuery : IRequest, new()
     {
-        [Parameter]
-        public TableOptions<TData, TQuery> TableOptions { get; set; }
-        [Parameter]
-        public RenderFragment<TQuery> QueryArea { get; set; }
-        [Parameter]
-        public RenderFragment Buttons { get; set; }
-        [Inject]
-        public RouterStore RouterStore { get; set; }
-        [Inject]
-        public MessageService MessageSrv { get; set; }
-        [Inject]
-        public IJSRuntime JSRuntime { get; set; }
-        [Inject]
-        public IExcelHelper Excel { get; set; }
+        [Parameter] public TableOptions<TData, TQuery> TableOptions { get; set; }
+        [Parameter] public RenderFragment<TQuery> QueryArea { get; set; }
+        [Parameter] public RenderFragment Buttons { get; set; }
+        [Inject] public RouterStore RouterStore { get; set; }
+        [Inject] public MessageService MessageSrv { get; set; }
+        [Inject] public IJSRuntime JSRuntime { get; set; }
+        [Inject] public IExcelHelper Excel { get; set; }
+        [Inject] ConfirmService ConfirmSrv { get; set; }
         public bool EnableGenerateQuery => (QueryArea == null || TableOptions.EnabledAdvancedQuery) && !TableOptions.IsDataTableSource;
 
         bool loading;

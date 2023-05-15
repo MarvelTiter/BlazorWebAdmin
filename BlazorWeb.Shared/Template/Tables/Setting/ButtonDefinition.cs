@@ -6,6 +6,8 @@
         public Func<TData, string>? LabelFunc { get; set; }
         public string Icon { get; set; }
         public bool NeedConfirm { get; set; } = false;
+        public string? ConfirmTitle { get; set; }
+        public string? ConfirmContent { get; set; }
         public string ButtonType { get; set; } = AntDesign.ButtonType.Text;
         public Func<TData, Task<bool>> Callback { get; set; }
 
@@ -13,7 +15,7 @@
         {
             return new ButtonDefinition<TData>
             {
-                Label = "Edit",
+                Label = "TableButtons.Edit",
                 Icon = "edit",
                 Callback = action
             };
@@ -23,7 +25,7 @@
         {
             return new ButtonDefinition<TData>
             {
-                Label = "Delete",
+                Label = "TableButtons.Delete",
                 Icon = "delete",
                 NeedConfirm = true,
                 Callback = action
