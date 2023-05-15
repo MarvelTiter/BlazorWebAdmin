@@ -15,19 +15,30 @@ namespace Project.AppCore.Auth
 		private readonly ProtectedLocalStorage storageService;
 		private readonly ILoginService loginService;
 		private readonly UserStore store;
-		private readonly int tokenExpire;
+        private readonly AppStore appStore;
+        private readonly int tokenExpire;
 
-		public CustomAuthenticationStateProvider(ProtectedLocalStorage storageService, ILoginService loginService, UserStore store, IConfiguration configuration)
+		public CustomAuthenticationStateProvider(ProtectedLocalStorage storageService
+			, ILoginService loginService
+			, UserStore store
+			, AppStore appStore
+			, IConfiguration configuration)
 		{
 			this.storageService = storageService;
 			this.loginService = loginService;
 			this.store = store;
-			this.tokenExpire = configuration.GetSection("Token").GetValue<int>("Expire");
+            this.appStore = appStore;
+            this.tokenExpire = configuration.GetSection("Token").GetValue<int>("Expire");
 		}
 		public override async Task<AuthenticationState> GetAuthenticationStateAsync()
 		{
 			try
 			{
+				var app = await storageService.GetAsync<AppStore>(AppStore.KEY);
+				if (app.Success)
+				{
+					appStore.ApplySetting(app.Value);
+				}
 				var result = await storageService.GetAsync<UserInfo>("UID");
 				if (result.Success && (DateTime.Now - result.Value?.CreatedTime)?.Days < tokenExpire)
 				{

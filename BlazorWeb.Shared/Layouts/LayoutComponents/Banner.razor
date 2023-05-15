@@ -15,8 +15,16 @@
     [Parameter] public bool ShowCollapseButton { get; set; } = true;
     [Parameter] public string Class { get; set; }
     [Inject] public IConfiguration Config { get; set; }
+    [Inject] AppStore App { get; set; }
     private bool collapse = false;
     private string IconName => collapse ? "expand_menu" : "collapse_menu";
+
+    protected override void OnInitialized()
+    {
+        collapse = App.Collapsed;
+        _ = OnToggleCollapse.InvokeAsync(collapse);
+    }
+
     async Task ToggleMenu()
     {
         collapse = !collapse;

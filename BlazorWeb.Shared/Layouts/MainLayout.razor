@@ -57,53 +57,54 @@
 </CascadingValue>
 
 @code {
-    [Inject] public ProtectedLocalStorage Storage { get; set; }
-    [Inject] public NavigationManager NavigationManager { get; set; }
+    //[Inject] public ProtectedLocalStorage Storage { get; set; }
+    //[Inject] public NavigationManager NavigationManager { get; set; }
     LayoutBase? layout;
-    bool done;
-    bool Loading => !App.Mode.HasValue || !done;
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-        if (firstRender)
-        {
-            try
-            {
-                var result = await Storage.GetAsync<AppStore>(AppStore.KEY);
-                if (result.Success && result.Value != null)
-                {
-                    App.Mode = result.Value.Mode;
-                    App.Collapsed = result.Value.Collapsed;
-                    App.AppLanguage = result.Value.AppLanguage;
-                    CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(App.AppLanguage);
-                    if (!result.Value.Init)
-                    {
-                        App.Init = true;
-                        await Storage.SetAsync(AppStore.KEY, App);
-                        NavigationManager.NavigateTo(NavigationManager.Uri, true);
-                    }
-                    else
-                    {
-                        App.Init = false;
-                        await Storage.SetAsync(AppStore.KEY, App);
-                        done = true;
-                    }
-                }
-                else
-                {
-                    App.Mode = LayoutMode.Card;
-                    done = true;
-                }
-            }
-            catch
-            {
-                App.Mode = LayoutMode.Card;
-            }
-            finally
-            {
-                StateHasChanged();
-                layout?.Banner?.UpdateToggleMenu(App.Collapsed);
-            }
-        }
-    }
+    //bool done;
+    bool Loading => false;//!App.Mode.HasValue || !done;
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    await base.OnAfterRenderAsync(firstRender);
+    //    return;
+    //    if (firstRender)
+    //    {
+    //        try
+    //        {
+    //            var result = await Storage.GetAsync<AppStore>(AppStore.KEY);
+    //            if (result.Success && result.Value != null)
+    //            {
+    //                App.Mode = result.Value.Mode;
+    //                App.Collapsed = result.Value.Collapsed;
+    //                App.AppLanguage = result.Value.AppLanguage;
+    //                CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(App.AppLanguage);
+    //                if (!result.Value.Init)
+    //                {
+    //                    App.Init = true;
+    //                    await Storage.SetAsync(AppStore.KEY, App);
+    //                    NavigationManager.NavigateTo(NavigationManager.Uri, true);
+    //                }
+    //                else
+    //                {
+    //                    App.Init = false;
+    //                    await Storage.SetAsync(AppStore.KEY, App);
+    //                    done = true;
+    //                }
+    //            }
+    //            else
+    //            {
+    //                App.Mode = LayoutMode.Card;
+    //                done = true;
+    //            }
+    //        }
+    //        catch
+    //        {
+    //            App.Mode = LayoutMode.Card;
+    //        }
+    //        finally
+    //        {
+    //            StateHasChanged();
+    //            layout?.Banner?.UpdateToggleMenu(App.Collapsed);
+    //        }
+    //    }
+    //}
 }
