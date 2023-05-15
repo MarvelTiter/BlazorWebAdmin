@@ -13,11 +13,11 @@ namespace Project.Models.Permissions
     public class Role
     {
         [PrimaryKey]
-        [ColumnDefinition("角色编号")]
+        [ColumnDefinition]
         [ColumnName("ROLE_ID")]
         [Column(Name = "ROLE_ID", PrimaryKey = true)]
         public string RoleId { get; set; }
-        [ColumnDefinition("角色名称")]
+        [ColumnDefinition]
         [ColumnName("ROLE_NAME")]
         [Column(Name = "ROLE_NAME", PrimaryKey = true)]
         public string RoleName { get; set; }

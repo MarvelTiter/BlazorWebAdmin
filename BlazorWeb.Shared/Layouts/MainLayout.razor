@@ -60,7 +60,8 @@
     [Inject] public ProtectedLocalStorage Storage { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
     LayoutBase? layout;
-    bool Loading => !App.Mode.HasValue;
+    bool done;
+    bool Loading => !App.Mode.HasValue || !done;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
@@ -75,10 +76,23 @@
                     App.Collapsed = result.Value.Collapsed;
                     App.AppLanguage = result.Value.AppLanguage;
                     CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(App.AppLanguage);
+                    if (!result.Value.Init)
+                    {
+                        App.Init = true;
+                        await Storage.SetAsync(AppStore.KEY, App);
+                        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+                    }
+                    else
+                    {
+                        App.Init = false;
+                        await Storage.SetAsync(AppStore.KEY, App);
+                        done = true;
+                    }
                 }
                 else
                 {
                     App.Mode = LayoutMode.Card;
+                    done = true;
                 }
             }
             catch

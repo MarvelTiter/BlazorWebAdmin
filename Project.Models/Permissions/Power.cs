@@ -22,31 +22,31 @@ namespace Project.Models.Permissions
     public class Power
     {
         [PrimaryKey]
-        [ColumnDefinition("权限ID")]
+        [ColumnDefinition]
         [ColumnName("POWER_ID")]
         [Column(Name = "POWER_ID", PrimaryKey = true)]
         public string PowerId { get; set; }
-        [ColumnDefinition("权限名称")]
+        [ColumnDefinition]
         [ColumnName("POWER_NAME")]
         [Column(Name = "POWER_NAME")]
         public string PowerName { get; set; }
-        [ColumnDefinition("父级权限")]
+        [ColumnDefinition]
         [ColumnName("PARENT_ID")]
         [Column(Name = "PARENT_ID")]
         public string ParentId { get; set; }
-        [ColumnDefinition("权限类型")]
+        [ColumnDefinition]
         [ColumnName("POWER_TYPE")]
         [Column(Name = "POWER_TYPE")]
         public PowerType PowerType { get; set; }
-        [ColumnDefinition("图标")]
+        [ColumnDefinition]
         [ColumnName("ICON")]
         [Column(Name = "ICON")]
         public string Icon { get; set; }
-        [ColumnDefinition("路径")]
+        [ColumnDefinition]
         [ColumnName("PATH")]
         [Column(Name = "PATH")]
         public string Path { get; set; }
-        [ColumnDefinition("排序")]
+        [ColumnDefinition]
         [ColumnName("SORT")]
         [Column(Name = "SORT")]
         public int Sort { get; set; }

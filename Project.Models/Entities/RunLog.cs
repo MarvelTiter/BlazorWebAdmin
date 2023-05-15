@@ -12,26 +12,26 @@ namespace Project.Models.Entities
     public class RunLog
     {
         [Column(Name = "LOG_ID")]
-        [ColumnDefinition("日志ID")]
+        [ColumnDefinition]
         [PrimaryKey]
         public int? LogId { get; set; }
         [Column(Name = "USER_ID")]
-        [ColumnDefinition("操作用户")]
+        [ColumnDefinition]
         public string UserId { get; set; }
         [Column(Name = "ACTION_MODULE")]
-        [ColumnDefinition("操作模块")]
+        [ColumnDefinition]
         public string ActionModule { get; set; }
         [Column(Name = "ACTION_NAME")]
-        [ColumnDefinition("操作动作")]
+        [ColumnDefinition]
         public string ActionName { get; set; }
         [Column(Name = "ACTION_TIME")]
-        [ColumnDefinition("操作时间")]
+        [ColumnDefinition]
         public DateTime ActionTime { get; init; } = DateTime.Now;
         [Column(Name = "ACTION_RESULT")]
-        [ColumnDefinition("操作结果")]
+        [ColumnDefinition]
         public string ActionResult { get; set; }
         [Column(Name = "ACTION_MESSAGE")]
-        [ColumnDefinition("操作信息")]
+        [ColumnDefinition]
         public string ActionMessage { get; set; }
     }
 }
