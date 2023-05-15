@@ -1,4 +1,6 @@
 ﻿using AntDesign;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using MT.Toolkit.Mapper;
 
 namespace BlazorWeb.Shared.Template.Forms
@@ -7,6 +9,7 @@ namespace BlazorWeb.Shared.Template.Forms
     {
         protected TEntity Value;
         protected bool edit;
+        [Inject] IStringLocalizer<TEntity> Localizer { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();

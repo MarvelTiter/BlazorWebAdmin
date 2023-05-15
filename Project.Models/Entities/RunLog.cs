@@ -12,7 +12,6 @@ namespace Project.Models.Entities
     public class RunLog
     {
         [Column(Name = "LOG_ID")]
-        [ColumnDefinition]
         [PrimaryKey]
         public int? LogId { get; set; }
         [Column(Name = "USER_ID")]
