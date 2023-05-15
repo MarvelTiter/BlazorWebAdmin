@@ -12,6 +12,8 @@
     "Total": "总记录数",
     "ActionColumn": "操作",
     "ActionSuccess": "操作成功",
-    "More": "更多"
+    "More": "更多",
+    "DangerActionConfirmTitle": "该操作无法恢复！",
+    "DangerActionConfirmContent": "是否确认操作？"
   }
 }

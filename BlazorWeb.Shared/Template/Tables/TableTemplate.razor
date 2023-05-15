@@ -206,6 +206,10 @@
                 await CallButtonAction();
             }
         }
+        else
+        {
+            await CallButtonAction();
+        }
         async Task CallButtonAction()
         {
             var result = await definition.Callback.Invoke(data);
