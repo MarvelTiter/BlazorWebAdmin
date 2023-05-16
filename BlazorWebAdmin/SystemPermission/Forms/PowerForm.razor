@@ -1,27 +1,28 @@
-﻿@using Project.Models.Permissions
+﻿@using BlazorWeb.Shared.Template.Forms;
+@using Project.Models.Permissions
 @inherits EntityFormTemplate<Power>
 
 <Form Model="Value" LabelAlign=@AntLabelAlignType.Right LabelColSpan="8" WrapperColSpan="16">
-	<FormItem Label="权限ID">
+	<FormItem Label="@GetLocalizeString(nameof(Value.PowerId))">
 		<Input @bind-Value=context.PowerId Disabled=edit></Input>
 	</FormItem>
-	<FormItem Label="权限名称">
+	<FormItem Label="@GetLocalizeString(nameof(Value.PowerName))">
 		<Input @bind-Value=context.PowerName></Input>
 	</FormItem>
-	<FormItem Label="父级权限">
+	<FormItem Label="@GetLocalizeString(nameof(Value.ParentId))">
 		<Input @bind-Value=context.ParentId></Input>
 	</FormItem>
-	<FormItem Label="权限类型">
+	<FormItem Label="@GetLocalizeString(nameof(Value.PowerType))">
 		<EnumSelect TEnum="PowerType" @bind-Value=context.PowerType></EnumSelect>
 	</FormItem>
-	<FormItem Label="图标">
+	<FormItem Label="@GetLocalizeString(nameof(Value.Icon))">
 		<Input @bind-Value=context.Icon ReadOnly></Input>
 		<IconSelector @bind-Value=context.Icon></IconSelector>
 	</FormItem>
-	<FormItem Label="路径">
+	<FormItem Label="@GetLocalizeString(nameof(Value.Path))">
 		<Input @bind-Value=context.Path></Input>
 	</FormItem>
-	<FormItem Label="排序">
+	<FormItem Label="@GetLocalizeString(nameof(Value.Sort))">
 		<AntDesign.InputNumber @bind-Value=context.Sort></AntDesign.InputNumber>
 	</FormItem>
 </Form>

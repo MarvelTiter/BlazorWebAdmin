@@ -10,7 +10,10 @@ namespace BlazorWeb.Shared.Template.Forms
         protected TEntity Value;
         protected bool edit;
         [Inject] protected IStringLocalizer<TEntity> Localizer { get; set; }
-        protected override void OnInitialized()
+
+		protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TEntity).Name}.{prop}"];
+
+		protected override void OnInitialized()
         {
             base.OnInitialized();
             if (Options == null)

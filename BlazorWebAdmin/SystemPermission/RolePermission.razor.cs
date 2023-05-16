@@ -1,9 +1,9 @@
 ﻿using AntDesign;
 using AntDesign.TableModels;
-using BlazorWeb.Shared.Template.Forms.EntityForms;
 using BlazorWeb.Shared.Template.Tables;
 using BlazorWeb.Shared.Template.Tables.Setting;
 using BlazorWeb.Shared.Utils;
+using BlazorWebAdmin.SystemPermission.Forms;
 using Microsoft.AspNetCore.Components;
 using Project.AppCore.Services;
 using Project.Models;

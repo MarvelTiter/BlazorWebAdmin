@@ -1,13 +1,14 @@
-﻿@inherits EntityFormDrawer<User>
+﻿@using BlazorWeb.Shared.Template.Forms;
+@inherits EntityFormDrawer<User>
 
 <Form Model=Value LabelAlign=@AntLabelAlignType.Right LabelColSpan="8" WrapperColSpan="16">
-	<FormItem Label="用户ID">
+	<FormItem Label="@GetLocalizeString(nameof(Value.UserId))">
 		<Input @bind-Value=context.UserId Disabled=edit></Input>
 	</FormItem>
-	<FormItem Label="用户姓名">
+	<FormItem Label="@GetLocalizeString(nameof(Value.UserName))">
 		<Input @bind-Value=context.UserName></Input>
 	</FormItem>
-	<FormItem Label="用户密码">
+	<FormItem Label="@GetLocalizeString(nameof(Value.Password))">
 		<InputPassword @bind-Value=context.Password></InputPassword>
 	</FormItem>
 </Form>
