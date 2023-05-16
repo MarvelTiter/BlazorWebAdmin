@@ -18,7 +18,7 @@
       "Password": "输入密码"
     }
   },
-  "NavNemu": {
+  "NavMenu": {
     "TipTitle": {
       "FullScreen": "切换全屏模式",
       "ClearStorage": "清除数据缓存",
