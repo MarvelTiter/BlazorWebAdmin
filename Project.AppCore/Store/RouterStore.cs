@@ -143,6 +143,7 @@ namespace Project.AppCore.Store
         public async Task InitRoutersAsync(UserInfo? userInfo)
         {
             if (userInfo == null) return;
+            await Reset();
             var result = await permissionService.GetPowerListByUserIdAsync(userInfo.UserId);
             var powers = result.Payload;
             var roots = powers.Where(p => p.ParentId == "ROOT");

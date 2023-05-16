@@ -1,5 +1,6 @@
 ﻿using Project.Common.Attributes;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace Project.AppCore.Store
 {
@@ -27,6 +28,7 @@ namespace Project.AppCore.Store
             this.Mode = app?.Mode ?? LayoutMode.Card;
             this.AppLanguage = app?.AppLanguage ?? "zh-CN";
             this.Collapsed = app?.Collapsed ?? false;
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(this.AppLanguage);
         }
     }
 }
