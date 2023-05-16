@@ -1,4 +1,13 @@
 {
+  "CustomButtons": {
+    "Ok": "确定",
+    "Cancel": "取消",
+    "Close": "关闭"
+  },
+  "IconSelector": {
+    "Title": "图标选择",
+    "ButtonText": "图标库"
+  },
   "Login": {
     "SuccessTips": "登录成功",
     "Buttons": {

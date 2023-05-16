@@ -8,11 +8,6 @@
                  ClassName="nav-menu-icon" />
     </div>
 
-    @*清除LocalStorage*@
-    <div class="nav-menu-item" @onclick=ClearLocalStorage title="@Localizer["NavNemu.TipTitle.ClearStorage"]">
-        <SvgIcon IconName="clear"
-                 ClassName="nav-menu-icon" />
-    </div>
     @*语言选择*@
     <div class="nav-menu-item" title="@Localizer["NavNemu.TipTitle.LangSelect"]">
         <LanguageSelect></LanguageSelect>
@@ -20,6 +15,11 @@
     @*登录用户*@
     <div title="登录用户">
         <Profile></Profile>
+    </div>
+    @*清除LocalStorage*@
+    <div class="nav-menu-item" @onclick=ClearLocalStorage title="@Localizer["NavNemu.TipTitle.ClearStorage"]">
+        <SvgIcon IconName="clear"
+                 ClassName="nav-menu-icon" />
     </div>
     @*系统设置*@
     <div class="nav-menu-item" @onclick=OpenSetting title="@Localizer["NavNemu.TipTitle.SysSetting"]">

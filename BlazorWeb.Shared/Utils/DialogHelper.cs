@@ -1,17 +1,21 @@
 ﻿using AntDesign;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
+using Project.AppCore;
 
 namespace BlazorWeb.Shared.Utils
 {
     public static class DialogHelper
     {
+        static IStringLocalizer<ModalOptions> GetLocalizer() => ServiceLocator.Instance.GetService<IStringLocalizer<ModalOptions>>();
         public static async Task<T> OpenDialog<Template, T>(this ModalService service, ModalOptions options, T? param = default)
             where Template : FeedbackComponent<T, T>
             where T : new()
         {
             TaskCompletionSource<T> tcs = new();
-            options.OkText = "确定";
-            options.CancelText = "取消";
+            var localizer = GetLocalizer();
+            options.OkText = localizer["CustomButtons.Ok"].Value;
+            options.CancelText = localizer["CustomButtons.Cancel"].Value;
             var modalRef = await service.CreateModalAsync<Template, T, T>(options, param);
             modalRef.OnOk = async (result) =>
             {

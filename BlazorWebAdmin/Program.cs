@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.SignalR;
+using Project.AppCore;
 using Project.AppCore.Auth;
 using Project.AppCore.Store;
 using Project.Common;
@@ -55,7 +56,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 CustomSetup.SetupCustomAppUsage(app);
-
+ServiceLocator.Instance = app.Services;
 app.UseStaticFiles();
 
 app.UseRouting();

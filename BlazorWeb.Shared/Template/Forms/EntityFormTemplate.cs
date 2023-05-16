@@ -11,11 +11,10 @@ namespace BlazorWeb.Shared.Template.Forms
         protected bool edit;
         [Inject] protected IStringLocalizer<TEntity> Localizer { get; set; }
 
-		protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TEntity).Name}.{prop}"];
+        protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TEntity).Name}.{prop}"];
 
-		protected override void OnInitialized()
+        protected override void OnInitialized()
         {
-            base.OnInitialized();
             if (Options == null)
             {
                 Value = new TEntity();
@@ -26,6 +25,7 @@ namespace BlazorWeb.Shared.Template.Forms
                 Value = Mapper.Map<TEntity, TEntity>(Options);
                 edit = true;
             }
+            base.OnInitialized();
         }
 
         protected virtual Task<bool> OnPostAsync()
@@ -41,7 +41,7 @@ namespace BlazorWeb.Shared.Template.Forms
                 modalRef.Config.ConfirmLoading = true;
                 await modalRef.UpdateConfigAsync();
                 result = await OnPostAsync();
-                modalRef.Config.ConfirmLoading = false;                
+                modalRef.Config.ConfirmLoading = false;
             }
             if (result)
             {

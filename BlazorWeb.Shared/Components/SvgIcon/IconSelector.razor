@@ -1,6 +1,6 @@
 ﻿@namespace BlazorWeb.Shared.Components
-<Popover Title="图标选择" OnVisibleChange="OnVisibleChange" Visible="visible" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Click})" ContentTemplate="content">
-	<Button Type="primary">图标库</Button>
+<Popover Title="@Localizer["IconSelector.Title"]" OnVisibleChange="OnVisibleChange" Visible="visible" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Click})" ContentTemplate="content">
+	<Button Type="primary">@Localizer["IconSelector.ButtonText"]</Button>
 </Popover>
 @code {
 	List<string> icons;
@@ -9,6 +9,7 @@
 	public string Value { get; set; }
 	[Parameter]
 	public EventCallback<string> ValueChanged { get; set; }
+	[Inject] IStringLocalizer<IconSelector> Localizer{ get; set; }
 	RenderFragment content =>
 	@<div>
 		<div class="icons-wrapper">
@@ -19,7 +20,7 @@
 					</span>
 			}
 			</div>
-			<a @onclick="_=>visible = false">关闭</a>
+		<a @onclick="_=>visible = false">@Localizer["CustomButtons.Close"]</a>
 		</div>
 	;
 
