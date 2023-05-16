@@ -9,7 +9,7 @@ namespace BlazorWeb.Shared.Template.Forms
     {
         protected TEntity Value;
         protected bool edit;
-        [Inject] IStringLocalizer<TEntity> Localizer { get; set; }
+        [Inject] protected IStringLocalizer<TEntity> Localizer { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();

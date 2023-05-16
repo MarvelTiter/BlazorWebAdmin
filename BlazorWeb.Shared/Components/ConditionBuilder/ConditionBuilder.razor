@@ -20,6 +20,7 @@
             TItemValue=string
             DefaultValue=@(selectedField?.PropertyOrFieldName)
             ValueName=@(nameof(TableOptionColumn.PropertyOrFieldName))
+            LabelTemplate="GetLocalizerString"
             OnSelectedItemChanged="UpdateField">
         <ItemTemplate>
                 @GetLocalizerString(context)
@@ -68,7 +69,7 @@
     public IStringLocalizer TableLocalizer { get; set; }
     RenderFragment GetLocalizerString(TableOptionColumn context)
     {
-        return @<span>@(Localizer == null ? context.Label : Localizer[context.Label])</span>;
+        return @<span class="ant-select-selection-item">@(Localizer == null ? context.Label : Localizer[context.Label])</span>;
     }
     object GetInnerValue(out bool legal)
     {
