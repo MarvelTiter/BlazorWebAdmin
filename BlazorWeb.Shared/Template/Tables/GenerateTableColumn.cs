@@ -2,6 +2,7 @@
 using MDbEntity.Attributes;
 using Project.Common.Attributes;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace BlazorWeb.Shared.Template.Tables
 {
     public static class GenerateTableColumn
     {
+        static readonly ConcurrentDictionary<Type, List<TableOptionColumn>> caches = new();
         public static TableOptionColumn GenerateColumn(this PropertyInfo self)
         {
             var head = self.GetCustomAttribute<ColumnDefinitionAttribute>();
@@ -39,16 +41,19 @@ namespace BlazorWeb.Shared.Template.Tables
         }
         public static List<TableOptionColumn> GenerateColumns(this Type self)
         {
-            var props = self.GetProperties();
-            var heads = props.Where(p => p.GetCustomAttribute<ColumnDefinitionAttribute>() != null);
-            List<TableOptionColumn> columns = new List<TableOptionColumn>();
-            foreach (var col in heads)
-            {
-                var column = col.GenerateColumn();
-                columns.Add(column);
-            }
-            //columns.Sort((a, b) => a.Index - b.Index);
-            return columns;
+            return caches.GetOrAdd(self, type =>
+             {
+                 var props = type.GetProperties();
+                 var heads = props.Where(p => p.GetCustomAttribute<ColumnDefinitionAttribute>() != null);
+                 List<TableOptionColumn> columns = new List<TableOptionColumn>();
+                 foreach (var col in heads)
+                 {
+                     var column = col.GenerateColumn();
+                     columns.Add(column);
+                 }
+                 //columns.Sort((a, b) => a.Index - b.Index);
+                 return columns;
+             });
         }
 
         public static Dictionary<string, string> ParseDictionary(Type enumType)
