@@ -35,7 +35,7 @@ namespace BlazorWeb.Shared.Template.Tables
             };
             if (column.IsEnum)
             {
-                column.EnumValues = ParseDictionary(self.PropertyType);
+                column.EnumValues = ParseDictionary(column.UnderlyingType ?? column.DataType);
             }
             return column;
         }
