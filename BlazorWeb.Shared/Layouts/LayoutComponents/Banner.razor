@@ -1,8 +1,10 @@
-﻿<div class="layout-logo @Class">
+﻿@using Microsoft.Extensions.Options;
+@using Project.AppCore.Options;
+<div class="layout-logo @Class">
     @if (!collapse)
     {
         <img class="logo-img" src="/assets/logo.png" alt="logo">
-        <div class="website-name" style="color: rgb(64, 158, 255);">@(Config.GetValue<string>("AppShortName") ?? "BlazorWeb")</div>
+        <div class="website-name" style="color: rgb(64, 158, 255);">@(Config.CurrentValue.AppShortName ?? "BlazorWeb")</div>
     }
     @if (ShowCollapseButton)
     {
@@ -14,7 +16,7 @@
     [Parameter] public EventCallback<bool> OnToggleCollapse { get; set; }
     [Parameter] public bool ShowCollapseButton { get; set; } = true;
     [Parameter] public string Class { get; set; }
-    [Inject] public IConfiguration Config { get; set; }
+    [Inject] public IOptionsMonitor<AppSetting> Config { get; set; }
     [Inject] AppStore App { get; set; }
     private bool collapse = false;
     private string IconName => collapse ? "expand_menu" : "collapse_menu";

@@ -1,5 +1,7 @@
 ﻿@using System.Diagnostics.CodeAnalysis;
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@using Microsoft.Extensions.Options;
+@using Project.AppCore.Options;
 <div class="nav-menu @Class">
     @*全屏按钮*@
     <div class="nav-menu-item" @onclick=ToggleFullScreen title="@Localizer["NavNemu.TipTitle.FullScreen"]">
@@ -7,11 +9,13 @@
         <SvgIcon IconName="fullscreen"
                  ClassName="nav-menu-icon" />
     </div>
-
-    @*语言选择*@
-    <div class="nav-menu-item" title="@Localizer["NavNemu.TipTitle.LangSelect"]">
-        <LanguageSelect></LanguageSelect>
-    </div>
+    @if (CultureOptions.CurrentValue.Enabled)
+    {
+        @*语言选择*@
+        <div class="nav-menu-item" title="@Localizer["NavNemu.TipTitle.LangSelect"]">
+            <LanguageSelect Options="CultureOptions.CurrentValue"></LanguageSelect>
+        </div>
+    }
     @*登录用户*@
     <div title="登录用户">
         <Profile></Profile>
@@ -40,7 +44,8 @@
     [Inject][NotNull] public AppStore App { get; set; }
     [Inject] public ProtectedLocalStorage Storage { get; set; }
     [Inject] IJSRuntime Js { get; set; }
-    [Inject] IStringLocalizer<NavMenu> Localizer{ get; set; }
+    [Inject] IStringLocalizer<NavMenu> Localizer { get; set; }
+    [Inject] IOptionsMonitor<CultureOptions> CultureOptions { get; set; }
     LayoutMode Mode
     {
         get => App.Mode ?? LayoutMode.Classic;

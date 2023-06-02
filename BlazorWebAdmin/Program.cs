@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.SignalR;
 using Project.AppCore;
 using Project.AppCore.Auth;
 using Project.AppCore.Locales.Extensions;
+using Project.AppCore.Options;
+using Project.AppCore.Options.Extensions;
 
 WebApplicationOptions options = new WebApplicationOptions
 {
@@ -38,6 +40,15 @@ services.AutoInjects();
 services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 services.AddHttpContextAccessor();
 services.AddJsonLocales();
+
+services.AddWebConfiguration<AppSetting>(app =>
+{
+	builder.Configuration.GetSection(nameof(AppSetting)).Bind(app);
+});
+services.AddWebConfiguration<CultureOptions>(culture =>
+{
+	builder.Configuration.GetSection(nameof(CultureOptions)).Bind(culture);
+});
 
 CustomSetup.SetupLightOrm(services, builder.Configuration);
 CustomSetup.SetupCustomServices(services);

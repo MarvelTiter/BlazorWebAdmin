@@ -1,15 +1,19 @@
 ﻿@using System.Globalization;
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@using Project.AppCore.Options;
 <Dropdown Trigger=@(new Trigger[]{Trigger.Click}) Style="display:unset;">
     <Overlay>
         @*<CustomSelect @bind-Value=current Options="langs" TItem=string OnChange="ToggleLang"></CustomSelect>*@
         <Menu>
-            <MenuItem>
-                <Button Type="@ButtonType.Text" OnClick="@(()=>ToggleLang("zh-CN"))">简体中文</Button>
-            </MenuItem>
-            <MenuItem>
-                <Button Type="@ButtonType.Text" OnClick="@(()=>ToggleLang("en-US"))">English</Button>
-            </MenuItem>
+            @foreach (var item in Options.SupportedCulture)
+            {
+                <MenuItem>
+                    <Button Type="@ButtonType.Text" OnClick="@(()=>ToggleLang(item.Culture))">@item.Name</Button>
+                </MenuItem>
+                @*<MenuItem>
+                    <Button Type="@ButtonType.Text" OnClick="@(()=>ToggleLang("en-US"))">English</Button>
+                </MenuItem>*@
+            }
         </Menu>
     </Overlay>
     <ChildContent>
@@ -19,16 +23,12 @@
 </Dropdown>
 
 @code {
-    SelectItem<string> langs = new();
     string current = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "";
     [Inject] NavigationManager Navigator { get; set; }
-    [Inject] ProtectedLocalStorage Storage{ get; set; }
+    [Inject] ProtectedLocalStorage Storage { get; set; }
     [Inject] AppStore App { get; set; }
-    protected override void OnInitialized()
-    {
-        langs.Add("简体中文", "zh-CN");
-        langs.Add("English", "en-US");
-    }
+    [Parameter] public CultureOptions Options { get; set; }
+
     void ToggleLang(string lang)
     {
         if (lang != CultureInfo.DefaultThreadCurrentUICulture?.Name)

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
+using Project.AppCore.Options;
 using Project.AppCore.Services;
 using Project.Common;
 using Project.Models.Permissions;
@@ -36,11 +38,13 @@ namespace Project.AppCore.Store
     {
         private readonly IPermissionService permissionService;
         private readonly IStringLocalizer<RouterStore> localizer;
+        private readonly IOptionsMonitor<CultureOptions> options;
 
-        public RouterStore(IPermissionService permissionService, IStringLocalizer<RouterStore> localizer)
+        public RouterStore(IPermissionService permissionService, IStringLocalizer<RouterStore> localizer, IOptionsMonitor<CultureOptions> options)
         {
             this.permissionService = permissionService;
             this.localizer = localizer;
+            this.options = options;
             Reset();
         }
         public List<TagRoute> TopLink { get; set; } = new List<TagRoute>();
@@ -116,6 +120,18 @@ namespace Project.AppCore.Store
             NotifyChanged();
         }
 
+        string GetLocalizerString(Power power)
+        {
+            if (options.CurrentValue.Enabled) return localizer[power.PowerId];
+            else return power.PowerName;
+        }
+
+        string GetHomeLocalizer()
+        {
+            if (options.CurrentValue.Enabled) return localizer["Home"];
+            else return "主页";
+        }
+
         public Task RemoveOther(string link)
         {
             var removes = TopLink.Where(r => r.RouteLink != link).ToArray();
@@ -134,7 +150,7 @@ namespace Project.AppCore.Store
             TopLink.Add(new TagRoute
             {
                 RouteLink = "/",
-                RouteName = localizer["Home"],
+                RouteName = GetHomeLocalizer(),
                 Closable = false,
             });
             return Task.CompletedTask;
@@ -153,14 +169,14 @@ namespace Project.AppCore.Store
                 {
                     RouteLink = "/",
                     IconName = "home",
-                    RouteName = localizer["Home"],
+                    RouteName =GetHomeLocalizer(),
                     Children = new List<RouterMeta>()
                 }
             };
             foreach (var item in roots)
             {
                 var n = new RouterMeta();
-                n.RouteName = localizer[item.PowerId];
+                n.RouteName = GetLocalizerString(item);
                 n.RouteLink = item.Path;
                 n.IconName = item.Icon;
                 n.Children = FindChildren(powers, item);
@@ -174,7 +190,7 @@ namespace Project.AppCore.Store
                 foreach (var child in children)
                 {
                     var n1 = new RouterMeta();
-                    n1.RouteName = localizer[child.PowerId];
+                    n1.RouteName = GetLocalizerString(child);
                     n1.RouteLink = child.Path;
                     n1.IconName = child.Icon;
                     n1.Children = FindChildren(all, child);
