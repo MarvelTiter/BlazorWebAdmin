@@ -8,7 +8,7 @@ namespace BlazorWebAdmin
     {
         public static void SetupCustomServices(IServiceCollection services)
         {
-            services.AddJsonLocales();
+
         }
 
         public static void SetupLightOrm(this IServiceCollection services, ConfigurationManager configuration)

@@ -1,17 +1,12 @@
 using BlazorWeb.Shared.Extensions;
 using BlazorWebAdmin;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using LightExcel;
-using MDbContext;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.SignalR;
 using Project.AppCore;
 using Project.AppCore.Auth;
-using Project.AppCore.Store;
-using Project.Common;
-using System.Reflection;
+using Project.AppCore.Locales.Extensions;
 
 WebApplicationOptions options = new WebApplicationOptions
 {
@@ -42,6 +37,7 @@ services.AddLightExcel();
 services.AutoInjects();
 services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 services.AddHttpContextAccessor();
+services.AddJsonLocales();
 
 CustomSetup.SetupLightOrm(services, builder.Configuration);
 CustomSetup.SetupCustomServices(services);
