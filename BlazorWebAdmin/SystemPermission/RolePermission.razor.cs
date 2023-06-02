@@ -125,6 +125,7 @@ namespace BlazorWebAdmin.SystemPermission
         async Task HandleRowClick(RowData<Role> rowData)
         {
             powerLoading = true;
+            await InitPowerTree();
             CurrentRole = rowData.Data;
             sideExpand = true;
             StateHasChanged();

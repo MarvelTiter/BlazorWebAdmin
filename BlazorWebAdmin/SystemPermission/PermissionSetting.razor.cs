@@ -3,6 +3,7 @@ using BlazorWeb.Shared.Template.Tables;
 using BlazorWeb.Shared.Template.Tables.Setting;
 using BlazorWeb.Shared.Utils;
 using BlazorWebAdmin.SystemPermission.Forms;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Project.AppCore.Services;
@@ -18,33 +19,31 @@ namespace BlazorWebAdmin.SystemPermission
     }
     public partial class PermissionSetting
     {
-        [Inject]
-        public ModalService ModalSrv { get; set; }
-        [Inject]
-        public DrawerService DrawerSrv { get; set; }
-        [Inject]
-        public IPermissionService PermissionSrv { get; set; }
+        [Inject] public ModalService ModalSrv { get; set; }
+        [Inject] public DrawerService DrawerSrv { get; set; }
+        [Inject] ConfirmService ConfirmSrv { get; set; }
+        [Inject] IStringLocalizer<TableTemplate> TableLocalizer { get; set; }
+        [Inject] public IPermissionService PermissionSrv { get; set; }
         [Inject] IStringLocalizer<Power> Localizer { get; set; }
 
         //TableOptions<Power, GenericRequest<Power>> tableOptions = new();
         IEnumerable<PowerTreeNode> powerTree;
         IEnumerable<Power> allPower;
-        protected override void OnInitialized()
+
+        protected override async Task OnInitializedAsync()
         {
-            base.OnInitialized();
-            //tableOptions.LoadDataOnLoaded = true;
-            //tableOptions.DataLoader = Search;
-            //tableOptions.AddHandle = AddPower;
-            //tableOptions.AddButton(ButtonDefinition<Power>.Edit(EditPower));
-            //tableOptions.AddButton(ButtonDefinition<Power>.Delete(DeletePower));
-            _ = InitPowerTree();
+            await base.OnInitializedAsync();
+            await InitPowerTree();
         }
 
         #region 初始化权限树
+        bool loading = false;
         async Task InitPowerTree()
         {
+            loading = true;
             await GetAllPowersAsync();
             await GeneratePowerTreeDataAsync();
+            loading = false;
         }
         /// <summary>
         /// 获取所有权限
@@ -119,17 +118,23 @@ namespace BlazorWebAdmin.SystemPermission
                 await InitPowerTree();
             }
         }
-        async Task<bool> EditPower(PowerTreeNode node)
+        async Task EditPower(PowerTreeNode node)
         {
             var p = await ModalSrv.OpenDialog<PowerForm, Power>("编辑权限", node.Node);
-            var result = await PermissionSrv.UpdatePowerAsync(p);
-            return result.Success;
+            await PermissionSrv.UpdatePowerAsync(p);
+            await InitPowerTree();
         }
 
-        Task<bool> DeletePower(PowerTreeNode node)
+        async Task DeletePower(PowerTreeNode node)
         {
-            //TODO delete power
-            return Task.FromResult(false);
+            var confirmResult = await ConfirmSrv.Show(
+                   TableLocalizer["TableTips.DangerActionConfirmContent"].Value
+               , TableLocalizer["TableTips.DangerActionConfirmTitle"].Value);
+            if (confirmResult == ConfirmResult.OK)
+            {
+                await PermissionSrv.DeletePowerAsync(node.Node);
+                await InitPowerTree();
+            }
         }
 
     }

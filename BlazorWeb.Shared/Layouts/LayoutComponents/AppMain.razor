@@ -6,15 +6,12 @@
     {
         if (item.Content == null) continue;
         <div id=@item.RouteLink class=@item.ItemClass>
-            @*@RenderCacheItemContent(item.Content.Body)*@
             @item.Content.Body
         </div>
     }
 </ScrollBar>
 
 @code {
-    //[Parameter]
-    //public RenderFragment? ChildContent { get; set; }
     [CascadingParameter]
     public RootLayout? Parent { get; set; }
     [Inject]
@@ -22,40 +19,14 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        //Parent!.OnNavigated += OnNavigated;
         Navigator.LocationChanged += OnNavigated;
     }
 
     void OnNavigated(object? sender, LocationChangedEventArgs e)
-    {
-        //var uri = e.Location;
-        //var item = store.Current;
-        //if (item != null)
-        //{
-        //    if (item.Content == null)
-        //    {
-        //        item.Content = new CacheItem()
-        //            {
-        //                StartTime = DateTime.Now,
-        //                ActiveTime = DateTime.Now,
-        //                Body = new RenderFragment(builder =>
-        //                {
-        //                    RenderCacheItemContent(ChildContent);
-        //                }),
-        //            };
-        //    }
-        //}
+    {        
         StateHasChanged();
     }
-
-    private RenderFragment? RenderCacheItemContent(RenderFragment? content) => builder =>
-    {
-        var index = 0;
-        builder.OpenComponent<ErrorCatcher>(index++);
-        builder.AddAttribute(index++, nameof(ErrorCatcher.ChildContent), content);
-        builder.CloseComponent();
-    };
-
+        
     private bool disposedValue;
     protected virtual void Dispose(bool disposing)
     {

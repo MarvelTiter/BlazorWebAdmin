@@ -3,7 +3,7 @@
 @*<TableTemplate TableOptions=tableOptions TData=Power TQuery=@(GenericRequest<Power>)>
 
 </TableTemplate>*@
-<Table DataSource="powerTree" TreeChildren="t=>t.Children" DefaultExpandAllRows>
+<Table DataSource="powerTree" TreeChildren="t=>t.Children" DefaultExpandAllRows Loading=loading>
     <PropertyColumn Title=@Localizer["Power.PowerId"] Property="c=>c.Node.PowerId"></PropertyColumn>
     <PropertyColumn Title=@Localizer["Power.PowerName"] Property="c=>c.Node.PowerName"></PropertyColumn>
     <PropertyColumn Title=@Localizer["Power.ParentId"] Property="c=>c.Node.ParentId"></PropertyColumn>

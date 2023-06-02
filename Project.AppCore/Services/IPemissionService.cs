@@ -30,6 +30,8 @@ namespace Project.AppCore.Services
         Task<IQueryResult<bool>> UpdatePowerAsync(Power power);
         [LogInfo(Action = "新增权限信息", Module = "权限控制")]
         Task<IQueryResult<bool>> InsertPowerAsync(Power power);
+        [LogInfo(Action = "删除权限信息", Module = "权限控制")]
+        Task<IQueryResult<bool>> DeletePowerAsync(Power power);
         [LogInfo(Action = "修改角色信息", Module = "权限控制")]
         Task<IQueryResult<bool>> UpdateRoleAsync(Role role);
         [LogInfo(Action = "新增角色", Module = "权限控制")]

@@ -18,23 +18,18 @@ namespace Project.Services
 
         public async Task<IQueryCollectionResult<Power>> GetPowerListAsync(GenericRequest<Power> req)
         {
-            //var count = await repository.Table<Power>().GetCountAsync(req.Expression);
-            //var list = await repository.Table<Power>().GetListAsync(req.Expression, req.PageIndex, req.PageSize, p => p.Sort);
-            //return QueryResult.Success<Power>().CollectionResult(list, count);
             var list = await context.Repository<Power>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize, p => p.Sort);
             return list.CollectionResult((int)total);
         }
 
         public async Task<IQueryCollectionResult<Power>> GetPowerListAsync()
         {
-            var list = await context.Repository<Power>().GetListAsync(e => true);
+            var list = await context.Repository<Power>().GetListAsync(e => true, e => e.Sort);
             return list.CollectionResult();
         }
 
         public async Task<IQueryCollectionResult<Role>> GetRoleListAsync(GenericRequest<Role> req)
         {
-            //var count = await repository.Table<Role>().GetCountAsync(req.Expression);
-            //var list = await repository.Table<Role>().GetListAsync(req.Expression, req.PageIndex, req.PageSize);
             var list = await context.Repository<Role>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize);
             return list.CollectionResult((int)total);
         }
@@ -47,12 +42,6 @@ namespace Project.Services
 
         public async Task<IQueryCollectionResult<Power>> GetPowerListByUserIdAsync(string usrId)
         {
-            //var powers = await repository.Query().Select<RolePower, Power>(distinct: true)
-            //                    .InnerJoin<Power>((r, p) => p.PowerId == r.PowerId)
-            //                    .InnerJoin<UserRole>((u, r) => u.RoleId == r.RoleId)
-            //                    .Where<UserRole>(u => u.UserId == usrId)
-            //                    .OrderByAsc<Power>(p => p.Sort)
-            //                    .ToListAsync<Power>();
             var powers = await context.Select<Power, RolePower, UserRole>()
                                       .Distinct()
                                       .InnerJoin<RolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
@@ -83,17 +72,6 @@ namespace Project.Services
 
         public async Task<IQueryResult<bool>> SaveUserRole(string usrId, params string[] roles)
         {
-            //var db = repository.Context();
-            //db.DbSet.Delete<UserRole>().Where(u => u.UserId == usrId);
-            //db.AddTrans();
-            //foreach (var r in roles)
-            //{
-            //    var ur = new UserRole() { UserId = usrId, RoleId = r };
-            //    db.DbSet.Insert(ur);
-            //    db.AddTrans();
-            //}
-            //var n = await db.ExecuteTransAsync();
-            //return QueryResult.Return<bool>(n);
             var db = context.BeginTransaction();
             db.Delete<UserRole>().Where(u => u.UserId == usrId).AttachTransaction();
             foreach (var r in roles)
@@ -107,17 +85,6 @@ namespace Project.Services
 
         public async Task<IQueryResult<bool>> SaveRolePower(string roleId, params string[] powers)
         {
-            //var db = repository.Context();
-            //db.DbSet.Delete<RolePower>().Where(r => r.RoleId == roleId);
-            //db.AddTrans();
-            //foreach (var p in powers)
-            //{
-            //    var rp = new RolePower() { RoleId = roleId, PowerId = p };
-            //    db.DbSet.Insert(rp);
-            //    db.AddTrans();
-            //}
-            //var n = await db.ExecuteTransAsync();
-            //return QueryResult.Return<bool>(n);
             var db = context.BeginTransaction();
             db.Delete<RolePower>().Where(r => r.RoleId == roleId).AttachTransaction();
             foreach (var p in powers)
@@ -159,6 +126,15 @@ namespace Project.Services
             trans.Delete<Role>().Where(r => r.RoleId == role.RoleId).AttachTransaction();
             trans.Delete<UserRole>().Where(ur => ur.RoleId == role.RoleId).AttachTransaction();
             trans.Delete<RolePower>().Where(rp => rp.RoleId == role.RoleId).AttachTransaction();
+            var flag = await trans.CommitTransactionAsync();
+            return flag.Result();
+        }
+
+        public async Task<IQueryResult<bool>> DeletePowerAsync(Power power)
+        {
+            var trans = context.BeginTransaction();
+            trans.Delete<Power>().Where(p => p.PowerId == power.PowerId || p.ParentId == power.PowerId).AttachTransaction();
+            trans.Delete<RolePower>().Where(p => p.PowerId == power.PowerId).AttachTransaction();
             var flag = await trans.CommitTransactionAsync();
             return flag.Result();
         }
