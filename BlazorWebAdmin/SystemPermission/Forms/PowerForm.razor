@@ -4,16 +4,16 @@
 
 <Form Model="Value" LabelAlign=@AntLabelAlignType.Right LabelColSpan="8" WrapperColSpan="16">
 	<FormItem Label="@GetLocalizeString(nameof(Value.PowerId))">
-		<Input @bind-Value=context.PowerId Disabled=edit></Input>
+		<Input @bind-Value=context.PowerId Disabled=Edit></Input>
 	</FormItem>
 	<FormItem Label="@GetLocalizeString(nameof(Value.PowerName))">
 		<Input @bind-Value=context.PowerName></Input>
 	</FormItem>
-	<FormItem Label="@GetLocalizeString(nameof(Value.ParentId))">
+	@*<FormItem Label="@GetLocalizeString(nameof(Value.ParentId))">
 		<Input @bind-Value=context.ParentId></Input>
-	</FormItem>
+	</FormItem>*@
 	<FormItem Label="@GetLocalizeString(nameof(Value.PowerType))">
-		<EnumSelect TEnum="PowerType" @bind-Value=context.PowerType></EnumSelect>
+		<EnumSelect TEnum="PowerType" @bind-Value=context.PowerType Disabled=Edit></EnumSelect>
 	</FormItem>
 	<FormItem Label="@GetLocalizeString(nameof(Value.Icon))">
 		<Input @bind-Value=context.Icon ReadOnly></Input>
@@ -22,7 +22,7 @@
 	<FormItem Label="@GetLocalizeString(nameof(Value.Path))">
 		<Input @bind-Value=context.Path></Input>
 	</FormItem>
-	<FormItem Label="@GetLocalizeString(nameof(Value.Sort))">
+	@*<FormItem Label="@GetLocalizeString(nameof(Value.Sort))">
 		<AntDesign.InputNumber @bind-Value=context.Sort></AntDesign.InputNumber>
-	</FormItem>
+	</FormItem>*@
 </Form>

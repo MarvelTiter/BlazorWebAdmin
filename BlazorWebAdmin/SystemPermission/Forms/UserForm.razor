@@ -3,7 +3,7 @@
 
 <Form Model=Value LabelAlign=@AntLabelAlignType.Right LabelColSpan="8" WrapperColSpan="16">
 	<FormItem Label="@GetLocalizeString(nameof(Value.UserId))">
-		<Input @bind-Value=context.UserId Disabled=edit></Input>
+		<Input @bind-Value=context.UserId Disabled=Edit></Input>
 	</FormItem>
 	<FormItem Label="@GetLocalizeString(nameof(Value.UserName))">
 		<Input @bind-Value=context.UserName></Input>

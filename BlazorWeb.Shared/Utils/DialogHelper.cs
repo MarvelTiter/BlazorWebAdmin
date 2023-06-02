@@ -1,4 +1,5 @@
 ﻿using AntDesign;
+using BlazorWeb.Shared.Template.Forms;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using Project.AppCore;
@@ -8,15 +9,24 @@ namespace BlazorWeb.Shared.Utils
     public static class DialogHelper
     {
         static IStringLocalizer<ModalOptions> GetLocalizer() => ServiceLocator.Instance.GetService<IStringLocalizer<ModalOptions>>();
-        public static async Task<T> OpenDialog<Template, T>(this ModalService service, ModalOptions options, T? param = default)
-            where Template : FeedbackComponent<T, T>
+     
+        static FormParam<T> CreateParam<T>(T? value, bool? edit)
+        {
+            if (edit.HasValue) return new FormParam<T>(value, edit.Value);
+            else return new FormParam<T>(value);
+        }
+
+        public static async Task<T> OpenDialog<Template, T>(this ModalService service, ModalOptions options, T? param, bool? edit = null)
+            where Template : FeedbackComponent<FormParam<T>, T>
             where T : new()
         {
             TaskCompletionSource<T> tcs = new();
             var localizer = GetLocalizer();
             options.OkText = localizer["CustomButtons.Ok"].Value;
             options.CancelText = localizer["CustomButtons.Cancel"].Value;
-            var modalRef = await service.CreateModalAsync<Template, T, T>(options, param);
+            var p = CreateParam(param, edit);
+            var modalRef = await service.CreateModalAsync<Template, FormParam<T>, T>(options, p);
+            
             modalRef.OnOk = async (result) =>
             {
                 await Task.Delay(1);
@@ -32,15 +42,15 @@ namespace BlazorWeb.Shared.Utils
             return await tcs.Task;
         }
 
-        public static Task<T> OpenDialog<Template, T>(this ModalService service, string title, T? param = default, int width = 0)
-            where Template : FeedbackComponent<T, T>
+        public static Task<T> OpenDialog<Template, T>(this ModalService service, string title, T? param = default, bool? edit = null, int width = 0)
+            where Template : FeedbackComponent<FormParam<T>, T>
             where T : new()
         {
             var options = new ModalOptions();
             options.Title = title;
             if (width > 0) options.Width = width;
             options.DestroyOnClose = true;
-            return OpenDialog<Template, T>(service, options, param);
+            return OpenDialog<Template, T>(service, options, param, edit);
         }
 
         public static async Task<T> OpenDrawer<Template, T>(this DrawerService service, DrawerOptions options, T? param = default)
@@ -80,6 +90,6 @@ namespace BlazorWeb.Shared.Utils
             options.Title = title;
             options.DestroyOnClose = true;
             return OpenDialogView<Template, T>(service, options, param);
-        }        
+        }
     }
 }

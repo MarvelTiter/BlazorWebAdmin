@@ -5,25 +5,38 @@ using MT.Toolkit.Mapper;
 
 namespace BlazorWeb.Shared.Template.Forms
 {
-    public class EntityFormTemplate<TEntity> : FeedbackComponent<TEntity, TEntity> where TEntity : class, new()
+    public class FormParam<TEntity>
     {
-        protected TEntity Value;
-        protected bool edit;
+        public TEntity? Value { get; set; }
+        public bool Edit { get; set; }
+        public FormParam(TEntity? entity, bool edit)
+        {
+            Value = entity;
+            Edit = edit;
+        }
+
+        public FormParam(TEntity? entity) : this(entity, entity != null)
+        {
+
+        }
+    }
+    public class EntityFormTemplate<TEntity> : FeedbackComponent<FormParam<TEntity>, TEntity> where TEntity : class, new()
+    {
+        protected TEntity Value => Options.Value!;
+        protected bool Edit => Options.Edit;
         [Inject] protected IStringLocalizer<TEntity> Localizer { get; set; }
 
         protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TEntity).Name}.{prop}"];
 
         protected override void OnInitialized()
         {
-            if (Options == null)
+            if (Options.Value == null)
             {
-                Value = new TEntity();
-                edit = false;
+                Options.Value = new TEntity();
             }
             else
             {
-                Value = Mapper.Map<TEntity, TEntity>(Options);
-                edit = true;
+                Options.Value = Mapper.Map<TEntity, TEntity>(Options.Value);
             }
             base.OnInitialized();
         }

@@ -2,7 +2,9 @@
   "CustomButtons": {
     "Ok": "确定",
     "Cancel": "取消",
-    "Close": "关闭"
+    "Close": "关闭",
+    "Edit": "编辑",
+    "Delete": "删除"
   },
   "IconSelector": {
     "Title": "图标选择",
@@ -58,5 +60,8 @@
     "Icon": "图标",
     "Path": "路径",
     "Sort": "排序序号"
+  },
+  "PermissionSetting": {
+    "AddChild": "新增子项"
   }
 }
