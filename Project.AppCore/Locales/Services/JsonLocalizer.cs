@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Collections.Concurrent;
@@ -9,14 +11,69 @@ using System.Text.RegularExpressions;
 
 namespace Project.AppCore.Locales.Services
 {
+    public class JsonInfo
+    {
+        public JsonDocument? Fallback { get; set; }
+        public JsonDocument? Main { get; set; }
+        public bool UseTypedName { get; set; }
+        public string SearchedLocation { get; set; }
+        private bool TryGetValue(JsonElement? root, string key, string typedName, out string? value)
+        {
+            if (!root.HasValue)
+            {
+                value = null;
+                return false;
+            }
+            var node = root.Value;
+            if (key.IndexOf('.') > -1)
+            {
+                var paths = new Queue<string>(key.Split('.'));
+                while (paths.Count > 0)
+                {
+                    var p = paths.Dequeue();
+                    if (p == typedName && UseTypedName) continue;
+                    if (!node.TryGetProperty(p, out node))
+                    {
+                        value = null;
+                        return false;
+                    }
+                }
+                value = node.GetString();
+                return true;
+            }
+            else
+            {
+                if (node.TryGetProperty(key, out node) && node.ValueKind == JsonValueKind.String)
+                {
+                    value = node.GetString();
+                    return true;
+                }
+                value = null;
+                return false;
+            }
+        }
+
+        public bool TryGetValueFromMain(string key, string typedName, out string? value)
+        {
+            return TryGetValue(Main?.RootElement, key, typedName, out value);
+        }
+
+        public bool TryGetValueFromFallback(string key , string typedName, out string? value)
+        {
+            return TryGetValue(Fallback?.RootElement, key, typedName, out value);
+        }
+
+    }
     public class JsonLocalizer : IStringLocalizer
     {
         private readonly ConcurrentDictionary<string, JsonDocument> documentCache = new();
         private static readonly ConcurrentDictionary<string, JsonDocument> allJsonFiles = new();
         private static readonly ConcurrentDictionary<string, JsonDocument> fallbackJsonFiles = new();
         private readonly string typedName;
-        private readonly ILogger logger;
         private string? searchedLocation;
+        private readonly ConcurrentDictionary<string, JsonInfo> infos = new();
+
+        private readonly ILogger logger;
         public JsonLocalizer()
         {
 
@@ -63,13 +120,18 @@ namespace Project.AppCore.Locales.Services
             }
 
             //var doc = GetJsonDocument(CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "zh-CN");
-            var (first, fallback) = GetJsonDocument(CultureInfo.CurrentUICulture.Name);
-            if (first == null && fallback == null) return null;
-            string? value = null;
-            if (first != null)
-                value = SolveJsonPath(first.RootElement, name);
-            if (value == null && fallback != null)
-                value = SolveJsonPath(fallback.RootElement, name);
+            var info = GetJsonDocument(CultureInfo.CurrentUICulture.Name);
+            //if (info.Main == null && info.Fallback == null) return null;
+            //string? value = null;
+            //if (info.Main != null)
+            //    value = SolveJsonPath(info.Main.RootElement, name);
+            //if (value == null && info.Fallback != null)
+            //    value = SolveJsonPath(info.Fallback.RootElement, name);
+            //return value;
+            if (!info.TryGetValueFromMain(name, typedName, out var value))
+            {
+                info.TryGetValueFromFallback(name, typedName, out value);
+            }
             return value;
         }
         /// <summary>
@@ -102,36 +164,48 @@ namespace Project.AppCore.Locales.Services
                 return null;
             }
         }
-        private (JsonDocument? First, JsonDocument? Fallback) GetJsonDocument(string culture)
+        private JsonInfo GetJsonDocument(string culture)
         {
-            var fallback = GetFallbackJsonDocument(culture);
-            var doc = documentCache.GetOrAdd(culture, lang =>
+            if (!infos.TryGetValue(culture, out var info))
             {
-                JsonDocument? value = null;
-                // Locales/Langs/zh-CN/resourceName/index.json
-                if (CheckFileExits(true, true, true, lang, out var path))
+                var useTypedName = false;
+                var fallback = GetFallbackJsonDocument(culture);
+                var doc = documentCache.GetOrAdd(culture, lang =>
                 {
-                    LoadJsonDocumentFromPath(path, out value);
-                }
-                // Locales/Langs/zh-CN/resourceName.json
-                else if (CheckFileExits(true, false, true, lang, out path))
+                    JsonDocument? value = null;
+                    // Locales/Langs/zh-CN/resourceName/index.json
+                    if (CheckFileExits(true, true, true, lang, out var path))
+                    {
+                        LoadJsonDocumentFromPath(path, out value);
+                    }
+                    // Locales/Langs/zh-CN/resourceName.json
+                    else if (CheckFileExits(true, false, true, lang, out path))
+                    {
+                        LoadJsonDocumentFromPath(path, out value);
+                    }
+                    // Locales/Langs/resourceName/zh-CN.json
+                    else if (CheckFileExits(false, true, true, lang, out path))
+                    {
+                        LoadJsonDocumentFromPath(path, out value);
+                    }
+                    // Locales/Langs/resourceName.zh-CN.json
+                    else if (CheckFileExits(false, false, true, lang, out path))
+                    {
+                        LoadJsonDocumentFromPath(path, out value);
+                    }
+                    useTypedName = value != null;
+                    return value;
+                });
+                info = new JsonInfo
                 {
-                    LoadJsonDocumentFromPath(path, out value);
-                }
-                // Locales/Langs/resourceName/zh-CN.json
-                else if (CheckFileExits(false, true, true, lang, out path))
-                {
-                    LoadJsonDocumentFromPath(path, out value);
-                }
-                // Locales/Langs/resourceName.zh-CN.json
-                else if (CheckFileExits(false, false, true, lang, out path))
-                {
-                    LoadJsonDocumentFromPath(path, out value);
-                }
-                useResourceName = value != null;
-                return value;
-            });
-            return (doc, fallback);
+                    Fallback = fallback,
+                    Main = doc,
+                    UseTypedName = doc != null,
+                    SearchedLocation = searchedLocation ?? ""
+                };
+                infos[culture] = info;
+            }
+            return info;
         }
 
         private string ConstructJsonFilePath(bool useCultureFolder, bool useTypedFolder, bool useTypedName, string culture)
