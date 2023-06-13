@@ -134,36 +134,36 @@ namespace Project.AppCore.Locales.Services
             }
             return value;
         }
-        /// <summary>
-        /// 判断获取的Json文件，是不是按resourceName区分文件夹
-        /// </summary>
-        bool useResourceName = false;
-        private string? SolveJsonPath(JsonElement root, string name)
-        {
-            var node = root;
-            if (name.IndexOf('.') > -1)
-            {
-                var paths = new Queue<string>(name.Split('.'));
-                while (paths.Count > 0)
-                {
-                    var p = paths.Dequeue();
-                    if (p == typedName && useResourceName) continue;
-                    if (!node.TryGetProperty(p, out node))
-                    {
-                        return null;
-                    }
-                }
-                return node.GetString();
-            }
-            else
-            {
-                if (node.TryGetProperty(name, out node) && node.ValueKind == JsonValueKind.String)
-                {
-                    return node.GetString();
-                }
-                return null;
-            }
-        }
+        ///// <summary>
+        ///// 判断获取的Json文件，是不是按resourceName区分文件夹
+        ///// </summary>
+        //bool useResourceName = false;
+        //private string? SolveJsonPath(JsonElement root, string name)
+        //{
+        //    var node = root;
+        //    if (name.IndexOf('.') > -1)
+        //    {
+        //        var paths = new Queue<string>(name.Split('.'));
+        //        while (paths.Count > 0)
+        //        {
+        //            var p = paths.Dequeue();
+        //            if (p == typedName && useResourceName) continue;
+        //            if (!node.TryGetProperty(p, out node))
+        //            {
+        //                return null;
+        //            }
+        //        }
+        //        return node.GetString();
+        //    }
+        //    else
+        //    {
+        //        if (node.TryGetProperty(name, out node) && node.ValueKind == JsonValueKind.String)
+        //        {
+        //            return node.GetString();
+        //        }
+        //        return null;
+        //    }
+        //}
         private JsonInfo GetJsonDocument(string culture)
         {
             if (!infos.TryGetValue(culture, out var info))
