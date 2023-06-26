@@ -161,7 +161,7 @@ namespace Project.AppCore.Store
             if (userInfo == null) return;
             await Reset();
             var result = await permissionService.GetPowerListByUserIdAsync(userInfo.UserId);
-            var powers = result.Payload;
+            var powers = result.Payload.Where(p => p.PowerType == PowerType.Page);
             var roots = powers.Where(p => p.ParentId == "ROOT");
             Routers = new List<RouterMeta>
             {

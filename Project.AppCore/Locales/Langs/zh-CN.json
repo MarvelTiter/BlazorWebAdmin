@@ -57,6 +57,7 @@
     "PowerName": "权限名称",
     "ParentId": "父级权限",
     "PowerType": "权限类型",
+    "Level": "权限等级",
     "Icon": "图标",
     "Path": "路径",
     "Sort": "排序序号"
