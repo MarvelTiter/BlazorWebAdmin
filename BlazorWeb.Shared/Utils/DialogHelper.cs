@@ -22,8 +22,14 @@ namespace BlazorWeb.Shared.Utils
         {
             TaskCompletionSource<T> tcs = new();
             var localizer = GetLocalizer();
-            options.OkText = localizer["CustomButtons.Ok"].Value;
-            options.CancelText = localizer["CustomButtons.Cancel"].Value;
+            if (options.OkText.AsT0 == "OK")
+                options.OkText = localizer["CustomButtons.Ok"].Value;
+            else
+                options.OkText = localizer[options.OkText.AsT0].Value;
+            if (options.CancelText.AsT0 == "Cancel")
+                options.CancelText = localizer["CustomButtons.Cancel"].Value;
+            else
+                options.OkText = localizer[options.CancelText.AsT0].Value;
             var p = CreateParam(param, edit);
             var modalRef = await service.CreateModalAsync<Template, FormParam<T>, T>(options, p);
             
