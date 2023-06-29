@@ -35,8 +35,8 @@ namespace Project.Models.Permissions
         public PowerType PowerType { get; set; }
 
         [ColumnDefinition]
-        [Column(Name = "LEVEL")]
-        public int Level { get; set; }
+        [Column(Name = "POWER_LEVEL")]
+        public int PowerLevel { get; set; }
 
         [ColumnDefinition]
         [Column(Name = "ICON")]
