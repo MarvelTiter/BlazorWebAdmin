@@ -95,7 +95,7 @@ namespace BlazorWebAdmin.SystemPermission
         {
             var power = await ModalSrv.OpenDialog<PowerForm, Power>("新增权限");
             power.ParentId = parent.Node.PowerId;
-            power.Level = parent.Node.Level + 1;
+            power.PowerLevel = parent.Node.PowerLevel + 1;
             power.Sort = parent.Children.Count + 1;
             var result = await PermissionSrv.InsertPowerAsync(power);
             if (result.Success)
@@ -110,7 +110,7 @@ namespace BlazorWebAdmin.SystemPermission
                             ParentId = power.PowerId,
                             PowerName = $"{power.PowerName}:{item}",
                             PowerType = PowerType.Button,
-                            Level = power.Level + 1,
+                            PowerLevel = power.PowerLevel + 1,
                         };
                         await PermissionSrv.InsertPowerAsync(p);
                     }
