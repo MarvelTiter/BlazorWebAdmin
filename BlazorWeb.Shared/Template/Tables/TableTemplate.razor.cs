@@ -1,10 +1,12 @@
 ﻿using AntDesign;
 using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.TableModels;
+using BlazorWeb.Shared.Components;
 using BlazorWeb.Shared.Template.Tables.Setting;
 using BlazorWeb.Shared.Utils;
 using LightExcel;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
 using Project.AppCore.Store;
 using Project.Models;
@@ -24,10 +26,11 @@ namespace BlazorWeb.Shared.Template.Tables
         [Inject] public IJSRuntime JSRuntime { get; set; }
         [Inject] public IExcelHelper Excel { get; set; }
         [Inject] ConfirmService ConfirmSrv { get; set; }
+        [Inject] ProtectedLocalStorage LocalStorage { get; set; }
         public bool EnableGenerateQuery => (QueryArea == null || TableOptions.EnabledAdvancedQuery) && !TableOptions.IsDataTableSource;
 
         bool loading;
-        private ConditionInfo conditionInfo;
+        private ConditionInfo? conditionInfo;
         private Expression<Func<TData, bool>>? ConditionExpression = e => true;
         Action SetExpression;
         void AssignExpression()
@@ -47,10 +50,26 @@ namespace BlazorWeb.Shared.Template.Tables
             TableOptions.RefreshData = RefreshData;
             if (TableOptions.LoadDataOnLoaded)
             {
-                Console.WriteLine("OnInitializedAsync");
                 await Search();
             }
         }
+        ConditionBuilder insRef;
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                var result = await LocalStorage.GetAsync<ConditionInfo>(cache_key);
+                if (result.Success)
+                {
+                    if(insRef != null)
+                    {
+                        insRef.InitStatus(result.Value!);
+                    }
+                }
+            }
+        }
+
         private bool AdvanceModalVisible = false;
         public async Task Search()
         {
@@ -134,22 +153,13 @@ namespace BlazorWeb.Shared.Template.Tables
             StateHasChanged();
         }
 
-        //private static IEnumerable<Dictionary<string, object>> GeneralExcelData(List<Setting.ColumnDefinition> columns, IEnumerable<TData> data)
-        //{
-        //    var dataType = typeof(TData);
-        //    var isDataRow = dataType == typeof(DataRow);
-        //    foreach (var item in data)
-        //    {
-        //        var row = new Dictionary<string, object>();
-        //        foreach (var col in columns)
-        //        {
-        //            var key = isDataRow ? $"['{col.PropertyOrFieldName}']" : col.PropertyOrFieldName;
-        //            var val = PathHelper.GetDelegate(key, typeof(TData)).Invoke(item);
-        //            row[col.Label] = val;
-        //        }
-        //        yield return row;
-        //    }
-        //}
+        readonly string cache_key = $"TableTemplate_{typeof(TData).Name}_ConditionAction";
+        async Task CacheInfo(ConditionInfo info)
+        {
+            await LocalStorage.SetAsync(cache_key, info);
+        }
+
+       
     }
 
 

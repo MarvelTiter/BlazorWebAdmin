@@ -17,7 +17,7 @@
                 @if (EnableGenerateQuery)
                 {
                     <SpaceItem>
-                        <ConditionBuilder Columns=@TableOptions.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer"></ConditionBuilder>
+                        <ConditionBuilder Columns=@TableOptions.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder>
                     </SpaceItem>
                 }
                 <SpaceItem>

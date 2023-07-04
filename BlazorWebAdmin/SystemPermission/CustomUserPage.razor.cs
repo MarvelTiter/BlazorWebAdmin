@@ -41,7 +41,7 @@ namespace BlazorWebAdmin.SystemPermission
 
         async Task<IQueryCollectionResult<User>> Search(GenericRequest<User> req)
         {
-            await Task.Delay(2000);
+            //await Task.Delay(2000);
             return await UserSrv.GetUserListAsync(req);
         }
         protected User currentSelected;
