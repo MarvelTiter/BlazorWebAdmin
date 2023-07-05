@@ -5,6 +5,7 @@ using BlazorWeb.Shared.Template.Tables.Setting;
 using BlazorWeb.Shared.Utils;
 using BlazorWebAdmin.SystemPermission.Forms;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Project.AppCore.Services;
 using Project.Models;
 using Project.Models.Entities;
@@ -15,12 +16,10 @@ namespace BlazorWebAdmin.SystemPermission
     public partial class CustomUserPage
     {
         TableOptions<User, GenericRequest<User>> tableOptions;
-        [Inject]
-        public ModalService ModalSrv { get; set; }
-        [Inject]
-        public ConfirmService ConfirmSrv { get; set; }
-        [Inject]
-        public IUserService UserSrv { get; set; }
+        [Inject] public ModalService ModalSrv { get; set; }
+        [Inject] public ConfirmService ConfirmSrv { get; set; }
+        [Inject] public IUserService UserSrv { get; set; }
+        [Inject] public IStringLocalizer<CustomUserPage> Localizer { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -55,13 +54,13 @@ namespace BlazorWebAdmin.SystemPermission
         }
         async Task<bool> AddUser()
         {
-            var user = await ModalSrv.OpenDialog<UserForm, User>("创建用户");
+            var user = await ModalSrv.OpenDialog<UserForm, User>(Localizer["User.DialogTitle.Add"]);
             await UserSrv.InsertUserAsync(user);
             return true;
         }
         public async Task<bool> EditUser(User user)
         {
-            var n = await ModalSrv.OpenDialog<UserForm, User>("用户信息", user);
+            var n = await ModalSrv.OpenDialog<UserForm, User>(Localizer["User.DialogTitle.Modify"], user);
             await UserSrv.UpdateUserAsync(user);
             return true;
         }

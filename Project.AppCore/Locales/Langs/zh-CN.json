@@ -38,7 +38,11 @@
     "Password": "登录密码",
     "Age": "年龄",
     "Sign": "签名",
-    "LastLogin": "最后登录"
+    "LastLogin": "最后登录",
+    "DialogTitle": {
+      "Add": "新增用户",
+      "Modify": "编辑用户"
+    }
   },
   "RunLog": {
     "UserId": "操作用户",
