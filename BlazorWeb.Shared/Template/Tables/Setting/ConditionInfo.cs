@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Text.Json.Serialization;
 
 namespace BlazorWeb.Shared.Template.Tables.Setting
 {
@@ -16,8 +17,8 @@ namespace BlazorWeb.Shared.Template.Tables.Setting
         {
 
         }
-        [NonSerialized]
-        public Type ValueType;
+        [JsonIgnore]
+        public Type ValueType { get; set; }
         public ExpressionType? LinkType { get; set; }
         public string Name { get; set; }
         public CompareType Type { get; set; }
