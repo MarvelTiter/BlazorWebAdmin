@@ -15,10 +15,10 @@ namespace BlazorWeb.Shared.Template.Tables
     public static class GenerateTableColumn
     {
         static readonly ConcurrentDictionary<Type, List<TableOptionColumn>> caches = new();
-        public static TableOptionColumn GenerateColumn(this PropertyInfo self)
+        public static TableOptionColumn GenerateColumn(this PropertyInfo self, ColumnDefinitionAttribute head)
         {
-            var head = self.GetCustomAttribute<ColumnDefinitionAttribute>();
-            var dbInfo = self.GetCustomAttribute<ColumnAttribute>();
+            //var head = self.GetCustomAttribute<ColumnDefinitionAttribute>();
+            //var dbInfo = self.GetCustomAttribute<ColumnAttribute>();
             if (head!.Label == null)
             {
                 head!.Label = $"{self.DeclaringType!.Name}.{self.Name}";
@@ -32,10 +32,24 @@ namespace BlazorWeb.Shared.Template.Tables
                 Visible = head.Visible,
                 Ellipsis = head.Ellipsis,
                 EnableEdit = head.EnableEdit,
+                UseTag = head.UseTag
             };
             if (column.IsEnum)
             {
                 column.EnumValues = ParseDictionary(column.UnderlyingType ?? column.DataType);
+            }
+            if (column.UseTag)
+            {
+                var colors = self.GetCustomAttributes<ColumnTagAttribute>();
+                if (colors?.Count() > 0)
+                {
+                    column.TagColors = new();
+                    foreach (var c in colors)
+                    {
+                        if (c == null) continue;
+                        column.TagColors.TryAdd(c.Value, c.Color);
+                    }
+                }
             }
             return column;
         }
@@ -44,11 +58,12 @@ namespace BlazorWeb.Shared.Template.Tables
             return caches.GetOrAdd(self, type =>
              {
                  var props = type.GetProperties();
-                 var heads = props.Where(p => p.GetCustomAttribute<ColumnDefinitionAttribute>() != null);
+                 var heads = props.Select(p => (Prop: p, Column: p.GetCustomAttribute<ColumnDefinitionAttribute>()));
                  List<TableOptionColumn> columns = new List<TableOptionColumn>();
                  foreach (var col in heads)
                  {
-                     var column = col.GenerateColumn();
+                     if (col.Column == null) continue;
+                     var column = col.Prop.GenerateColumn(col.Column);
                      columns.Add(column);
                  }
                  //columns.Sort((a, b) => a.Index - b.Index);

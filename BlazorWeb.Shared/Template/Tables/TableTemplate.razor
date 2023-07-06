@@ -170,8 +170,8 @@
     <Modal Visible="AdvanceModalVisible" OnCancel=@(()=>AdvanceModalVisible = false) Title=@TableLocalizer["TableButtons.AdvancedQuery"] Footer=null>
         <ConditionGroup Columns=@TableOptions.Columns
                     TData=TData
-                        Localizer="Localizer"
-                        TableLocalizer="TableLocalizer"
+                    Localizer="Localizer"
+                    TableLocalizer="TableLocalizer"
                     @bind-Expression="ConditionExpression"
                     ShowExportButton=@(TableOptions.ExportDataLoader != null || !TableOptions.Page)
                     OnConfirmToSearch=AdvanceSearch
@@ -190,7 +190,7 @@
                       OnClickStopPropagation
              OnClick=@(()=>InvokeButtonAction(definition, context))>
         @(definition.LabelFunc?.Invoke(context) ?? TableLocalizer[definition.Label])
-            </Button>
+    </Button>
     ;
     }
 
@@ -248,36 +248,42 @@
     {
         return context =>
                                 {
-    var formattedValue = "";
-    if (col.IsEnum || col.EnumValues != null)
-    {
-        var v = context.FieldValue;
-        if (v != null)
-        {
-            if (col.EnumValues?.ContainsKey($"{v}") ?? false)
-            {
-                formattedValue = col.EnumValues?[$"{v}"];
-            }
-        }
-        context.FormattedValue = formattedValue;
-    }
-    return
-    @<span>@context.FormattedValue</span>
-        //	@<span>
-        //		@if(currentRowIndex == context.RowData.RowIndex
-        //			&& currentColumn == col.PropertyOrFieldName
-        //			&& col.EnableEdit)
-        //		{
-        //		// edit
-        //			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
-        //		}
-        //		else
-        //		{
-        //			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
-        //		}
-        //</span>
-        ;
-                            };
+                                    var formattedValue = "";
+                                    if (col.IsEnum || col.EnumValues != null)
+                                    {
+                                        var v = context.FieldValue;
+                                        if (v != null)
+                                        {
+                                            if (col.EnumValues?.ContainsKey($"{v}") ?? false)
+                                            {
+                                                formattedValue = col.EnumValues?[$"{v}"];
+                                            }
+                                        }
+                                        context.FormattedValue = formattedValue;
+                                    }
+                                    if (col.IsEnum || col.UseTag)
+                                    {
+                                        return@<Tag Color="@(col.GetTagColor(context.FormattedValue))">@context.FormattedValue</Tag>;
+                                    }
+                                    else
+                                    {
+                                        return@<span>@context.FormattedValue</span>;
+                                }
+                                //	@<span>
+                                //		@if(currentRowIndex == context.RowData.RowIndex
+                                //			&& currentColumn == col.PropertyOrFieldName
+                                //			&& col.EnableEdit)
+                                //		{
+                                //		// edit
+                                //			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
+                                //		}
+                                //		else
+                                //		{
+                                //			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
+                                //		}
+                                //</span>
+                                ;
+                                };
     }
 
 
