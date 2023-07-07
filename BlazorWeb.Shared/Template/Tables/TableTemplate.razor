@@ -61,6 +61,7 @@
            DefaultExpandAllRows=@TableOptions.DefaultExpandAllRows
            @bind-SelectedRows=@TableOptions.Selected
            OnRowClick=OnRowClickHandle
+           HidePagination
            @bind-PageSize=@TableOptions.Query.PageSize>
         <ChildContent>
             @{
@@ -118,10 +119,10 @@
                 if (TableOptions.Buttons.Count > 0)
                 {
                     <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Fixed="right" Width=100>
-                        @if (TableOptions.Buttons.Count <= 3)
+                        @if (TableOptions.Buttons.Count(b => b.Visible(context)) <= 3)
                         {
                             <Space Size=@("small")>
-                                @foreach (var btn in TableOptions.Buttons)
+                                @foreach (var btn in TableOptions.Buttons.Where(b => b.Visible(context)))
                                 {
                                     <SpaceItem>
                                         @CreateButton(btn, context)
@@ -134,7 +135,7 @@
                             <Dropdown>
                                 <Overlay>
                                     <Menu>
-                                        @foreach (var btn in TableOptions.Buttons)
+                                        @foreach (var btn in TableOptions.Buttons.Where(b => b.Visible(context)))
                                         {
                                             <MenuItem>
                                                 @CreateButton(btn, context)
@@ -153,21 +154,23 @@
                 }
             }
         </ChildContent>
-        <PaginationTemplate>
-            <Pagination Class="mt-10"
-                        Size=@PaginationSize.Small
-                            ShowSizeChanger
-                            ShowQuickJumper
-                        Current=@TableOptions.Query.PageIndex
-                        PageSize=@TableOptions.Query.PageSize
-                        Total=@TableOptions.Total
-                        ShowTotal=@totalFragment
-                        OnChange=PagingStatusChanged>
-            </Pagination>
-        </PaginationTemplate>
-        </Table>
-        </Card>
-        @if (EnableGenerateQuery)
+
+    </Table>
+    @if (TableOptions.Page)
+    {
+        <Pagination Class="mt-10"
+                Size=@PaginationSize.Small
+                    ShowSizeChanger
+                    ShowQuickJumper
+                Current=@TableOptions.Query.PageIndex
+                PageSize=@TableOptions.Query.PageSize
+                Total=@TableOptions.Total
+                ShowTotal=@totalFragment
+                OnChange=PagingStatusChanged>
+        </Pagination>
+    }
+</Card>
+@if (EnableGenerateQuery)
 {
     <Modal Visible="AdvanceModalVisible" OnCancel=@(()=>AdvanceModalVisible = false) Title=@TableLocalizer["TableButtons.AdvancedQuery"] Footer=null>
         <ConditionGroup Columns=@TableOptions.Columns
@@ -271,20 +274,20 @@
                                     {
                                         return@<span>@context.FormattedValue</span>;
                                     }
-                            //	@<span>
-                            //		@if(currentRowIndex == context.RowData.RowIndex
-                            //			&& currentColumn == col.PropertyOrFieldName
-                            //			&& col.EnableEdit)
-                            //		{
-                            //		// edit
-                            //			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
-                            //		}
-                            //		else
-                            //		{
-                            //			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
-                            //		}
-                            //</span>
-                            ;
+            //	@<span>
+            //		@if(currentRowIndex == context.RowData.RowIndex
+            //			&& currentColumn == col.PropertyOrFieldName
+            //			&& col.EnableEdit)
+            //		{
+            //		// edit
+            //			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
+            //		}
+            //		else
+            //		{
+            //			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
+            //		}
+            //</span>
+            ;
                                 };
     }
 

@@ -19,7 +19,7 @@ namespace Project.Models.Permissions
 
     [TableName("POWERS")]
     [Table(Name = "POWERS")]
-    public class Power : ICloneable
+    public class Power
     {
         [ColumnDefinition]
         [Column(Name = "POWER_ID", PrimaryKey = true)]
@@ -51,9 +51,7 @@ namespace Project.Models.Permissions
         [Ignore]
         public IEnumerable<Power> Children { get; set; }
 
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
+        [Ignore]
+        public bool GenerateCRUDButton { get; set; }
     }
 }

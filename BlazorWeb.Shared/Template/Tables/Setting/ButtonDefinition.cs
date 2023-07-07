@@ -10,6 +10,7 @@
         public string? ConfirmContent { get; set; }
         public string ButtonType { get; set; } = AntDesign.ButtonType.Primary;
         public Func<TData, Task<bool>> Callback { get; set; }
+        public Func<TData, bool> Visible { get; set; } = t => true;
 
         public static ButtonDefinition<TData> Edit(Func<TData, Task<bool>> action)
         {

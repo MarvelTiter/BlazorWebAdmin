@@ -39,7 +39,14 @@ namespace BlazorWebAdmin.SystemPermission
             tableOptions.TreeChildren = p => p.Children;
             tableOptions.DefaultExpandAllRows = true;
             tableOptions.DataLoader = Search;
-            tableOptions.AddButton(Localizer["PermissionSetting.AddChild"], AddPower);
+            var addPowerBtn = new ButtonDefinition<Power>
+            {
+                Label = Localizer["PermissionSetting.AddChild"],
+                Callback = AddPower,
+                Visible = p => p.PowerType == PowerType.Page
+
+            };
+            tableOptions.AddButton(addPowerBtn);
             tableOptions.AddButton(ButtonDefinition<Power>.Edit(EditPower));
             tableOptions.AddButton(ButtonDefinition<Power>.Delete(DeletePower));
         }
@@ -97,7 +104,7 @@ namespace BlazorWebAdmin.SystemPermission
 
         async Task<IQueryCollectionResult<Power>> Search(GenericRequest<Power> req)
         {
-            var result = await PermissionSrv.GetPowerListAsync(req);
+            var result = await PermissionSrv.GetPowerListAsync();
             var powers = result.Payload;
             result.Payload = GeneratePowerTreeDataAsync(powers);
             return result;
@@ -112,7 +119,7 @@ namespace BlazorWebAdmin.SystemPermission
             var result = await PermissionSrv.InsertPowerAsync(power);
             if (result.Success)
             {
-                if (power.PowerType == PowerType.Page)
+                if (power.PowerType == PowerType.Page && power.GenerateCRUDButton)
                 {
                     foreach (var item in defaultPageButtons)
                     {
@@ -125,9 +132,9 @@ namespace BlazorWebAdmin.SystemPermission
                             PowerLevel = power.PowerLevel + 1,
                         };
                         await PermissionSrv.InsertPowerAsync(p);
-                        return true;
                     }
                 }
+                return true;
                 //await InitPowerTree();
             }
             return false;
