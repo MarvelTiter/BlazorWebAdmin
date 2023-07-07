@@ -117,8 +117,8 @@
                 }
                 // 按钮列
                 if (TableOptions.Buttons.Count > 0)
-                {
-                    <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Fixed="right">
+                {// Width="0",根据内容适用最小宽度
+                    <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Fixed="right" Width="0">
                         @if (TableOptions.Buttons.Count(b => b.Visible(context)) <= 3)
                         {
                             <Space Size=@("small")>
