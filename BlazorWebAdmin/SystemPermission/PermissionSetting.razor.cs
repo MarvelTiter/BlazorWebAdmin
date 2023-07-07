@@ -26,25 +26,33 @@ namespace BlazorWebAdmin.SystemPermission
         [Inject] public IPermissionService PermissionSrv { get; set; }
         [Inject] IStringLocalizer<Power> Localizer { get; set; }
 
-        //TableOptions<Power, GenericRequest<Power>> tableOptions = new();
+        TableOptions<Power, GenericRequest<Power>> tableOptions = new();
         IEnumerable<PowerTreeNode> powerTree;
         IEnumerable<Power> allPower;
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            await InitPowerTree();
+            //await InitPowerTree();
+            tableOptions.Page = false;
+            tableOptions.LoadDataOnLoaded = true;
+            tableOptions.TreeChildren = p => p.Children;
+            tableOptions.DefaultExpandAllRows = true;
+            tableOptions.DataLoader = Search;
+            tableOptions.AddButton(Localizer["PermissionSetting.AddChild"], AddPower);
+            tableOptions.AddButton(ButtonDefinition<Power>.Edit(EditPower));
+            tableOptions.AddButton(ButtonDefinition<Power>.Delete(DeletePower));
         }
 
         #region 初始化权限树
-        bool loading = false;
-        async Task InitPowerTree()
-        {
-            loading = true;
-            await GetAllPowersAsync();
-            await GeneratePowerTreeDataAsync();
-            loading = false;
-        }
+        //bool loading = false;
+        //async Task InitPowerTree()
+        //{
+        //    loading = true;
+        //    await GetAllPowersAsync();
+        //    await GeneratePowerTreeDataAsync();
+        //    loading = false;
+        //}
         /// <summary>
         /// 获取所有权限
         /// </summary>
@@ -58,45 +66,49 @@ namespace BlazorWebAdmin.SystemPermission
         /// 构建权限树
         /// </summary>
         /// <returns></returns>
-        Task GeneratePowerTreeDataAsync()
+        IEnumerable<Power> GeneratePowerTreeDataAsync(IEnumerable<Power> all)
         {
-            List<PowerTreeNode> powerTreeNodes = new();
-            var rootNodes = allPower.Where(p => p.PowerId == "ROOT");
+            List<Power> powers = new();
+            var topLevel = all.Min(p => p.PowerLevel);
+            var rootNodes = all.Where(p => p.PowerLevel == topLevel);
             foreach (var item in rootNodes)
             {
-                var n = new PowerTreeNode(item);
-                n.Children = FindChildren(allPower, item);
-                powerTreeNodes.Add(n);
+                //var n = (Power)item.Clone();
+                item.Children = FindChildren(all, item);
+                powers.Add(item);
             }
-            powerTree = powerTreeNodes;
-            return Task.CompletedTask;
 
-            List<PowerTreeNode> FindChildren(IEnumerable<Power> all, Power parent)
+            return powers;
+
+            List<Power> FindChildren(IEnumerable<Power> all, Power parent)
             {
                 var children = all.Where(p => p.ParentId == parent.PowerId);
-                List<PowerTreeNode> childNodes = new();
+                List<Power> childNodes = new();
                 foreach (var child in children)
                 {
-                    var n1 = new PowerTreeNode(child);
-                    n1.Children = FindChildren(all, child);
-                    childNodes.Add(n1);
+                    //var n1 = (Power)child.Clone();
+                    child.Children = FindChildren(all, child);
+                    childNodes.Add(child);
                 }
                 return childNodes;
             }
         }
         #endregion
 
-        Task<IQueryCollectionResult<Power>> Search(GenericRequest<Power> req)
+        async Task<IQueryCollectionResult<Power>> Search(GenericRequest<Power> req)
         {
-            return PermissionSrv.GetPowerListAsync(req);
+            var result = await PermissionSrv.GetPowerListAsync(req);
+            var powers = result.Payload;
+            result.Payload = GeneratePowerTreeDataAsync(powers);
+            return result;
         }
         string[] defaultPageButtons = new[] { "Add", "Modify", "Delete" };
-        async Task AddPower(PowerTreeNode parent)
+        async Task<bool> AddPower(Power parent)
         {
             var power = await ModalSrv.OpenDialog<PowerForm, Power>("新增权限");
-            power.ParentId = parent.Node.PowerId;
-            power.PowerLevel = parent.Node.PowerLevel + 1;
-            power.Sort = parent.Children.Count + 1;
+            power.ParentId = parent.PowerId;
+            power.PowerLevel = parent.PowerLevel + 1;
+            power.Sort = parent.Children.Count() + 1;
             var result = await PermissionSrv.InsertPowerAsync(power);
             if (result.Success)
             {
@@ -113,28 +125,32 @@ namespace BlazorWebAdmin.SystemPermission
                             PowerLevel = power.PowerLevel + 1,
                         };
                         await PermissionSrv.InsertPowerAsync(p);
+                        return true;
                     }
                 }
-                await InitPowerTree();
+                //await InitPowerTree();
             }
+            return false;
         }
-        async Task EditPower(PowerTreeNode node)
+        async Task<bool> EditPower(Power node)
         {
-            var p = await ModalSrv.OpenDialog<PowerForm, Power>("编辑权限", node.Node);
-            await PermissionSrv.UpdatePowerAsync(p);
-            await InitPowerTree();
+            var p = await ModalSrv.OpenDialog<PowerForm, Power>("编辑权限", node);
+            var result = await PermissionSrv.UpdatePowerAsync(p);
+            //await InitPowerTree();
+            return result.Success;
         }
 
-        async Task DeletePower(PowerTreeNode node)
+        async Task<bool> DeletePower(Power node)
         {
-            var confirmResult = await ConfirmSrv.Show(
-                   TableLocalizer["TableTips.DangerActionConfirmContent"].Value
-               , TableLocalizer["TableTips.DangerActionConfirmTitle"].Value);
-            if (confirmResult == ConfirmResult.OK)
-            {
-                await PermissionSrv.DeletePowerAsync(node.Node);
-                await InitPowerTree();
-            }
+            //var confirmResult = await ConfirmSrv.Show(
+            //       TableLocalizer["TableTips.DangerActionConfirmContent"].Value
+            //   , TableLocalizer["TableTips.DangerActionConfirmTitle"].Value);
+            //if (confirmResult == ConfirmResult.OK)
+            //{
+            //    //await InitPowerTree();
+            //}
+            var result = await PermissionSrv.DeletePowerAsync(node);
+            return result.Success;
         }
 
     }

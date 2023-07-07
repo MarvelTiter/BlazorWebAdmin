@@ -168,13 +168,14 @@ namespace BlazorWeb.Shared.Template.Tables
 
         public List<Setting.TableOptionColumn> Columns { get; set; }
         public List<ButtonDefinition<TData>> Buttons { get; set; }
-        //public Expression<Func<TData, bool>> Expression { get; set; }
+        public Func<TData, IEnumerable<TData>> TreeChildren { get; set; } = t => Enumerable.Empty<TData>();
         public string ScrollX { get; set; }
         public bool Page { get; set; } = true;
         public TQuery Query { get; set; }
         public bool EnableSelection { get; set; } = false;
         public bool LoadDataOnLoaded { get; set; } = false;
         public bool EnabledAdvancedQuery { get; set; } = false;
+        public bool DefaultExpandAllRows { get; set; }
         public int Total { get; set; }
         public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow) || typeof(TData) == typeof(IDictionary<string, object>);
@@ -203,7 +204,8 @@ namespace BlazorWeb.Shared.Template.Tables
         private List<TData> _datas = new List<TData>();
         public IEnumerable<TData> Datas
         {
-            get => _datas; set
+            get => _datas; 
+            set
             {
                 _datas.Clear();
                 _datas.AddRange(value);

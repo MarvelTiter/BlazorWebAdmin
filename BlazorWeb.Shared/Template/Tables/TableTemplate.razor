@@ -56,7 +56,9 @@
            Bordered
            OnRow=@TableOptions.OnRow
            ScrollX=@TableOptions.ScrollX
+           TreeChildren="@TableOptions.TreeChildren"
            Size="@TableSize.Small"
+           DefaultExpandAllRows=@TableOptions.DefaultExpandAllRows
            @bind-SelectedRows=@TableOptions.Selected
            OnRowClick=OnRowClickHandle
            @bind-PageSize=@TableOptions.Query.PageSize>
@@ -268,21 +270,21 @@
                                     else
                                     {
                                         return@<span>@context.FormattedValue</span>;
-                                }
-                                //	@<span>
-                                //		@if(currentRowIndex == context.RowData.RowIndex
-                                //			&& currentColumn == col.PropertyOrFieldName
-                                //			&& col.EnableEdit)
-                                //		{
-                                //		// edit
-                                //			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
-                                //		}
-                                //		else
-                                //		{
-                                //			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
-                                //		}
-                                //</span>
-                                ;
+                                    }
+                            //	@<span>
+                            //		@if(currentRowIndex == context.RowData.RowIndex
+                            //			&& currentColumn == col.PropertyOrFieldName
+                            //			&& col.EnableEdit)
+                            //		{
+                            //		// edit
+                            //			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
+                            //		}
+                            //		else
+                            //		{
+                            //			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
+                            //		}
+                            //</span>
+                            ;
                                 };
     }
 

@@ -8,7 +8,7 @@
         public bool NeedConfirm { get; set; } = false;
         public string? ConfirmTitle { get; set; }
         public string? ConfirmContent { get; set; }
-        public string ButtonType { get; set; } = AntDesign.ButtonType.Text;
+        public string ButtonType { get; set; } = AntDesign.ButtonType.Primary;
         public Func<TData, Task<bool>> Callback { get; set; }
 
         public static ButtonDefinition<TData> Edit(Func<TData, Task<bool>> action)
