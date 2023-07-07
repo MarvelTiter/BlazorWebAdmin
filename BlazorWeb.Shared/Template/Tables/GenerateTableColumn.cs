@@ -15,6 +15,11 @@ namespace BlazorWeb.Shared.Template.Tables
     public static class GenerateTableColumn
     {
         static readonly ConcurrentDictionary<Type, List<TableOptionColumn>> caches = new();
+        public static TableOptionColumn GenerateColumn(this PropertyInfo self)
+        {
+            var head = self.GetCustomAttribute<ColumnDefinitionAttribute>() ?? throw new ArgumentException();
+            return GenerateColumn(self, head);
+        }
         public static TableOptionColumn GenerateColumn(this PropertyInfo self, ColumnDefinitionAttribute head)
         {
             //var head = self.GetCustomAttribute<ColumnDefinitionAttribute>();
