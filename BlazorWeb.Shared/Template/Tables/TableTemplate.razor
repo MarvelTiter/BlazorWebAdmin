@@ -105,6 +105,14 @@
                                 <Column TData="Int16?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Int16?>(col)">
                                 </Column>
                                 break;
+                            case "single":
+                                <Column TData="Single?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Single?>(col)">
+                                </Column>
+                                break;
+                            case "double":
+                                <Column TData="Double?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Double?>(col)">
+                                </Column>
+                                break;
                             case "bool":
                                 <Column TData="Boolean?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Boolean?>(col)">
                                 </Column>
