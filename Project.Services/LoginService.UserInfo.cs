@@ -21,6 +21,7 @@ namespace Project.Services
 			{
 				UserId = username,
 				UserName = u?.UserName ?? "",
+				Password = password
 			};
 			var result = userInfo.Result(u != null);
 			if (!result.Success)

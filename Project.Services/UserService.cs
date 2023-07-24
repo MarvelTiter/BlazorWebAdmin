@@ -38,6 +38,12 @@ namespace Project.Services
             return u.Result();
         }
 
+        public async Task<IQueryResult> ModifyUserPasswordAsync(string uid, string pwd)
+        {
+            var flag = await context.Update<User>().Set(u => u.Password, pwd).Where(u => u.UserId == uid).ExecuteAsync();
+            return flag.Result();
+        }
+
         public async Task<IQueryResult> UpdateUserAsync(User user)
         {
             var flag = await context.Repository<User>().UpdateAsync(user, u => u.UserId == user.UserId);

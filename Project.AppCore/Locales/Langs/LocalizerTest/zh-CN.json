@@ -1,8 +1,0 @@
-{
-  "Hello": "你好",
-  "L1": {
-    "L2": {
-      "Test": "LocalizerTest嵌套测试"
-    }
-  }
-}

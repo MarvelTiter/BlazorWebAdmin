@@ -1,11 +1,15 @@
-﻿@using Project.AppCore.Auth
+﻿@using BlazorWeb.Shared.Utils;
+@using Project.AppCore.Auth
 @using Project.AppCore.Services;
 @using Project.Common
+@using Project.Models.Permissions;
 @inject EventDispatcher dispatcher
 @inject UserStore store
 @inject AuthenticationStateProvider Auth
 @inject ILoginService LoginSrv
+@inject IUserService UserSrv
 @inject IStringLocalizer<Profile> Localizer
+@inject ModalService ModalSrv
 <Dropdown Trigger=@(new Trigger[]{Trigger.Click}) Style="display:unset;">
     <Overlay>
         <Menu>
@@ -35,9 +39,11 @@
         await ((CustomAuthenticationStateProvider)Auth).ClearState();
     }
 
-    Task HandlePwdModify()
-    {
-        return Task.CompletedTask;
-    }
 
+
+    async Task HandlePwdModify()
+    {
+        var pwd = await ModalSrv.OpenDialog<ModifyUserPassword, UserPwd>(Localizer["UserPwd.Title"]);
+        await UserSrv.ModifyUserPasswordAsync(store.UserInfo!.UserId, pwd.Password);
+    }
 }
