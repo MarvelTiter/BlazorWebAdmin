@@ -8,6 +8,7 @@ using LightExcel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
+using MT.Toolkit.StringExtension;
 using Project.AppCore.Store;
 using Project.Models;
 using Project.Models.Request;
@@ -62,7 +63,7 @@ namespace BlazorWeb.Shared.Template.Tables
                 var result = await LocalStorage.GetAsync<ConditionInfo>(cache_key);
                 if (result.Success)
                 {
-                    if(insRef != null)
+                    if (insRef != null)
                     {
                         insRef.InitStatus(result.Value!);
                     }
@@ -102,24 +103,26 @@ namespace BlazorWeb.Shared.Template.Tables
         public async Task Export()
         {
             loading = true;
-            if (TableOptions.Page)
+            var data = TableOptions.Datas;
+            if (TableOptions.ExportDataLoader != null)
             {
                 //TableOptions.Query.Expression = ConditionExpression;
                 SetExpression.Invoke();
                 var result = await TableOptions.ExportDataLoader(TableOptions.Query);
-                TableOptions.Datas = result.Payload;
+                data = result.Payload;
             }
-            var data = TableOptions.Datas;
             if (data.Any())
             {
-                //var folder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile");
-                //if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
                 var filename = $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}";
                 var path = Path.Combine(AppConst.TempFilePath, $"{filename}.xlsx");
-                //var excelData = GeneralExcelData(TableOptions.Columns, data);
-                Excel.WriteExcel(path, data);
-                //_ = MessageSrv.Success("导出成功！请下载文件！");
-                //_ = JSRuntime.PushAsync(path);
+                if (TableOptions.ExcelTemplatePath.IsEnable())
+                {
+                    Excel.WriteExcel(path, TableOptions.ExcelTemplatePath, data);
+                }
+                else
+                {
+                    Excel.WriteExcel(path, data);
+                }
                 _ = JSRuntime.DownloadFile(filename, "xlsx");
             }
             else
@@ -159,7 +162,7 @@ namespace BlazorWeb.Shared.Template.Tables
             await LocalStorage.SetAsync(cache_key, info);
         }
 
-       
+
     }
 
 
@@ -169,6 +172,7 @@ namespace BlazorWeb.Shared.Template.Tables
         public List<Setting.TableOptionColumn> Columns { get; set; }
         public List<ButtonDefinition<TData>> Buttons { get; set; }
         public Func<TData, IEnumerable<TData>> TreeChildren { get; set; } = t => Enumerable.Empty<TData>();
+
         public string ScrollX { get; set; }
         public bool Page { get; set; } = true;
         public TQuery Query { get; set; }
@@ -182,6 +186,7 @@ namespace BlazorWeb.Shared.Template.Tables
         public bool AutoRefreshData { get; set; } = true;
         public Func<TQuery, Task<IQueryCollectionResult<TData>>> DataLoader { get; set; }
         public Func<TQuery, Task<IQueryCollectionResult<TData>>> ExportDataLoader { get; set; }
+        public string ExcelTemplatePath { get; set; }
         public Func<Task<bool>> AddHandle { get; set; }
         public Func<RowData<TData>, Task> OnRowClick { get; set; }
         public Func<Task> RefreshData { get; set; }
@@ -204,7 +209,7 @@ namespace BlazorWeb.Shared.Template.Tables
         private List<TData> _datas = new List<TData>();
         public IEnumerable<TData> Datas
         {
-            get => _datas; 
+            get => _datas;
             set
             {
                 _datas.Clear();
@@ -267,5 +272,11 @@ namespace BlazorWeb.Shared.Template.Tables
                 return col;
             }
         }
+    }
+
+    public class ExportOption<TQuery, TData>
+    {
+        public string ExcelTemplatePath { get; set; }
+        public Func<TQuery, Task<IQueryCollectionResult<TData>>> ExportDataLoader { get; set; }
     }
 }
