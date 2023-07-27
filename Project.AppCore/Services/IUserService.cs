@@ -22,6 +22,6 @@ namespace Project.AppCore.Services
         [LogInfo(Action = "删除用户", Module = "权限控制")]
         Task<IQueryResult> DeleteUserAsync(User user);
         [LogInfo(Action = "修改密码", Module = "权限控制")]
-        Task<IQueryResult> ModifyUserPasswordAsync(string uid, string pwd);
+        Task<IQueryResult> ModifyUserPasswordAsync(string uid, string old,string pwd);
     }
 }

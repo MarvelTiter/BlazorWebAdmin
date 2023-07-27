@@ -44,6 +44,6 @@
     async Task HandlePwdModify()
     {
         var pwd = await ModalSrv.OpenDialog<ModifyUserPassword, UserPwd>(Localizer["UserPwd.Title"]);
-        await UserSrv.ModifyUserPasswordAsync(store.UserInfo!.UserId, pwd.Password);
+        await UserSrv.ModifyUserPasswordAsync(store.UserInfo!.UserId, pwd.OldPassword, pwd.Password);
     }
 }
