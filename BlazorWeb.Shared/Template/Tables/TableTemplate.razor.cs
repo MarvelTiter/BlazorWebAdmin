@@ -115,13 +115,20 @@ namespace BlazorWeb.Shared.Template.Tables
             {
                 var filename = $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}";
                 var path = Path.Combine(AppConst.TempFilePath, $"{filename}.xlsx");
-                if (TableOptions.ExcelTemplatePath.IsEnable())
+                if (TableOptions.ExportHandler != null)
                 {
-                    Excel.WriteExcel(path, TableOptions.ExcelTemplatePath, data);
+                    await TableOptions.ExportHandler.Invoke(path, data);
                 }
                 else
                 {
-                    Excel.WriteExcel(path, data);
+                    if (TableOptions.ExcelTemplatePath.IsEnable())
+                    {
+                        Excel.WriteExcel(path, TableOptions.ExcelTemplatePath, data);
+                    }
+                    else
+                    {
+                        Excel.WriteExcel(path, data);
+                    }
                 }
                 _ = JSRuntime.DownloadFile(filename, "xlsx");
             }
@@ -186,6 +193,7 @@ namespace BlazorWeb.Shared.Template.Tables
         public bool AutoRefreshData { get; set; } = true;
         public Func<TQuery, Task<IQueryCollectionResult<TData>>> DataLoader { get; set; }
         public Func<TQuery, Task<IQueryCollectionResult<TData>>> ExportDataLoader { get; set; }
+        public Func<string, IEnumerable<TData>, Task> ExportHandler { get; set; }
         public string ExcelTemplatePath { get; set; }
         public Func<Task<bool>> AddHandle { get; set; }
         public Func<RowData<TData>, Task> OnRowClick { get; set; }
