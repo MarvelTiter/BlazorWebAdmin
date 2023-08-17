@@ -13,7 +13,8 @@ namespace BlazorWeb.Shared
 {
     public class Program
     {
-        public static void Run(Action<WebApplicationBuilder>? builderOption
+        public static void Run(string appName
+            , Action<WebApplicationBuilder>? builderOption
             , Action<WebApplication>? appOption
             , Func<IEnumerable<Type>>? registerAssembly
             , params string[] args)
@@ -37,7 +38,7 @@ namespace BlazorWeb.Shared
                 options.MaximumReceiveMessageSize = 1024 * 1024 * 2; // 1MB or use null
             });
 
-            services.AddDataProtection().SetApplicationName("BlazorWebAdmin");
+            services.AddDataProtection().SetApplicationName(appName);
 
             //services.AddAuthentication("Bearer")
             //services.AddLocalization();

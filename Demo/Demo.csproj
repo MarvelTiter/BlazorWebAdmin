@@ -1,0 +1,116 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\assets\avator.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\Cortana.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\login_bg.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\assets\logo.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\app.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\echarts.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\FONT-LICENSE" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.eot" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.otf" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.woff" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\ICON-LICENSE" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\README.md" />
+    <_ContentIncludedByDefault Remove="wwwroot\css\site.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\base\base-component.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\base\component-store.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\base\CustomEventHandler.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\base\drag-helper.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\base\event-handler.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\base\HandlerBase.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\base\ResizeHandler.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\camera\camera.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\camera\ClipBox.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\fullscreen\fullscreen.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\horizontalscroll\horizontalscroll.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\index.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\scrollbar\bar.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\scrollbar\old_bk.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\scrollbar\scrollbar.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\scrollbar\thumb.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\scrollbar\util.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\test.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\avator.png" />
+    <None Include="wwwroot\assets\Cortana.png" />
+    <None Include="wwwroot\assets\login_bg.png" />
+    <None Include="wwwroot\assets\logo.png" />
+    <None Include="wwwroot\css\app.css" />
+    <None Include="wwwroot\css\bootstrap\bootstrap.min.css" />
+    <None Include="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    <None Include="wwwroot\css\echarts.css" />
+    <None Include="wwwroot\css\open-iconic\FONT-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css" />
+    <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.eot" />
+    <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.otf" />
+    <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
+    <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.ttf" />
+    <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.woff" />
+    <None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\README.md" />
+    <None Include="wwwroot\css\site.css" />
+    <None Include="wwwroot\favicon.ico" />
+    <None Include="wwwroot\js\base\base-component.js" />
+    <None Include="wwwroot\js\base\component-store.js" />
+    <None Include="wwwroot\js\base\CustomEventHandler.js" />
+    <None Include="wwwroot\js\base\drag-helper.js" />
+    <None Include="wwwroot\js\base\event-handler.js" />
+    <None Include="wwwroot\js\base\HandlerBase.js" />
+    <None Include="wwwroot\js\base\ResizeHandler.js" />
+    <None Include="wwwroot\js\camera\camera.js" />
+    <None Include="wwwroot\js\camera\ClipBox.js" />
+    <None Include="wwwroot\js\fullscreen\fullscreen.js" />
+    <None Include="wwwroot\js\horizontalscroll\horizontalscroll.js" />
+    <None Include="wwwroot\js\index.js" />
+    <None Include="wwwroot\js\scrollbar\bar.js" />
+    <None Include="wwwroot\js\scrollbar\old_bk.js" />
+    <None Include="wwwroot\js\scrollbar\scrollbar.js" />
+    <None Include="wwwroot\js\scrollbar\thumb.js" />
+    <None Include="wwwroot\js\scrollbar\util.js" />
+    <None Include="wwwroot\js\test.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorWeb.Shared\BlazorWeb.Shared.csproj" />
+    <ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />
+    <ProjectReference Include="..\Project.Services\Project.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Pages\_Host.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Pages\_Layout.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,1 @@
+BlazorWeb.Shared.Program.Run("Demo", null, null, null, args);
