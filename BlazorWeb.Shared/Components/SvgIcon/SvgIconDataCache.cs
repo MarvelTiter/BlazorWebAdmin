@@ -21,6 +21,9 @@ namespace BlazorWeb.Shared.Components
             var iconFile = $"wwwroot/icons/{name}.svg";
             if (File.Exists(iconFile))
             {
+                //FileInfo f = new FileInfo(iconFile);
+                //var files = Directory.EnumerateFiles($"./_content", "*.svg", SearchOption.AllDirectories);
+
                 var svgContent = await File.ReadAllTextAsync(iconFile);
                 return svgContent;
             }
@@ -33,7 +36,7 @@ namespace BlazorWeb.Shared.Components
         public static async Task LoadAllIcons()
         {
             if (loaded) return;
-            var files = Directory.EnumerateFiles($"wwwroot/icons", "*.svg");
+            var files = Directory.EnumerateFiles($"wwwroot/icons", "*.svg", SearchOption.AllDirectories);
             foreach (var f in files)
             {
                 var name = Path.GetFileNameWithoutExtension(f);

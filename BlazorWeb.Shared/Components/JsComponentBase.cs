@@ -27,8 +27,8 @@ namespace BlazorWeb.Shared.Components
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                var path = $"./js/{ModuleName}/{ModuleName}.js".ToLower();
-                //var path = $"_content/{ProjectName}/js/{ModuleName}/{ModuleName}.js".ToLower();
+                //var path = $"./js/{ModuleName}/{ModuleName}.js".ToLower();
+                var path = $"./_content/{ProjectName}/js/{ModuleName}/{ModuleName}.js".ToLower();
                 Module = await Js.InvokeAsync<IJSObjectReference>("import", path);
                 await Init();
             }
