@@ -2,8 +2,8 @@
 
 namespace BlazorWeb.Shared.Components
 {
-    [Obsolete("未符合预期的功能")]
-    public interface IErrorHandler
+    //[Obsolete("未符合预期的功能")]
+    public interface IExceptionHandler
     {
         Task HandleExceptionAsync(Exception exception);
     }
@@ -11,7 +11,7 @@ namespace BlazorWeb.Shared.Components
     {
         //event Func<Exception, Task> OnHandleExcetionAsync;
         //event Action<Exception> OnHandleExcetion;
-        void Register<TComponent>(TComponent component) where TComponent : IComponent, IErrorHandler;
-        void UnRegister<TComponent>(TComponent component) where TComponent : IComponent, IErrorHandler;
+        void Register<TComponent>(TComponent component) where TComponent : IComponent, IExceptionHandler;
+        void UnRegister<TComponent>(TComponent component) where TComponent : IComponent, IExceptionHandler;
     }
 }

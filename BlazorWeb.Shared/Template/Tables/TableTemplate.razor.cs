@@ -44,29 +44,27 @@ namespace BlazorWeb.Shared.Template.Tables
         {
             // QueryArea内赋值，不需要内部赋值
         }
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
-            await base.OnInitializedAsync();
+            base.OnInitialized();
             SetExpression = QueryArea == null ? AssignExpression : IgnoreAssign;
             TableOptions.RefreshData = RefreshData;
-            if (TableOptions.LoadDataOnLoaded)
-            {
-                await Search();
-            }
         }
+
         ConditionBuilder insRef;
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
+                if (TableOptions.LoadDataOnLoaded)
+                {
+                    await Search();
+                }
                 var result = await LocalStorage.GetAsync<ConditionInfo>(cache_key);
                 if (result.Success)
                 {
-                    if (insRef != null)
-                    {
-                        insRef.InitStatus(result.Value!);
-                    }
+                    insRef?.InitStatus(result.Value!);
                 }
             }
         }

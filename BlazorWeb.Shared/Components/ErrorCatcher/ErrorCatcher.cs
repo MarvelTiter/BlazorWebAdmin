@@ -54,7 +54,7 @@ namespace BlazorWeb.Shared.Components
             builder.AddAttribute(index++, nameof(CascadingValue<IError>.Value), this);
             builder.AddAttribute(index++, nameof(CascadingValue<IError>.IsFixed), true);
 
-            //if (ErrorContent != null && CurrentException != null)
+            //if (CurrentException != null)
             //{
             //    if (Caches.Any())
             //    {
@@ -103,17 +103,18 @@ namespace BlazorWeb.Shared.Components
                 Description = exception.Message,
                 Placement = NotificationPlacement.BottomRight,
             });
+            Logger.LogError(exception, exception.Message);
             await ErrorBoundaryLogger.LogErrorAsync(exception);
         }
 
-        List<IErrorHandler> Caches = new List<IErrorHandler>();
+        readonly List<IExceptionHandler> Caches = new();
 
-        public void Register<TComponent>(TComponent component) where TComponent : IComponent, IErrorHandler
+        public void Register<TComponent>(TComponent component) where TComponent : IComponent, IExceptionHandler
         {
             Caches.Add(component);
         }
 
-        public void UnRegister<TComponent>(TComponent component) where TComponent : IComponent, IErrorHandler
+        public void UnRegister<TComponent>(TComponent component) where TComponent : IComponent, IExceptionHandler
         {
             Caches.Add(component);
         }

@@ -33,7 +33,16 @@ namespace BlazorWeb.Shared.Components
         RenderFragment GetCurrentBody(TagRoute? route)
         {
             if (route == null) return CreateBody();
-            if (route.Content.Body == null) route.Content.Body = CreateBody();
+            if (route.Content.Body == null)
+            {
+                var content = CreateBody();
+                route.Content.Body = builder =>
+                {
+                    builder.OpenComponent<ErrorCatcher>(0);
+                    builder.AddAttribute(1, nameof(ErrorCatcher.ChildContent), content);
+                    builder.CloseComponent();
+                };
+            }
             return route.Content.Body;
         }
 
@@ -43,10 +52,11 @@ namespace BlazorWeb.Shared.Components
             var routeValues = RouteData.RouteValues;
             void RenderForLastValue(RenderTreeBuilder builder)
             {                //dont reference RouteData again
-                builder.OpenComponent(0, pagetype);
+                var seq = 0;
+                builder.OpenComponent(seq++, pagetype);
                 foreach (KeyValuePair<string, object> routeValue in routeValues)
                 {
-                    builder.AddAttribute(1, routeValue.Key, routeValue.Value);
+                    builder.AddAttribute(seq++, routeValue.Key, routeValue.Value);
                 }
                 builder.CloseComponent();
             }
