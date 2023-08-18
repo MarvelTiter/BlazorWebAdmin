@@ -66,6 +66,7 @@ namespace BlazorWeb.Shared.Template.Tables
                 {
                     insRef?.InitStatus(result.Value!);
                 }
+                StateHasChanged();
             }
         }
 
