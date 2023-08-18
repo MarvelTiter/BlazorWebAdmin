@@ -1,19 +1,20 @@
 # 基于 AntDesignBlazor 的 Blazor 后台管理框架
 
-## 集成权限模块
+### . 创建新项目（启动程序），引用 Shared，AppCore，Services 项目
 
-## 自动注入
+1. 修改 Program
 
-## 全局异常捕获处理
+```CSharp
+using BlazorWeb.Shared;
 
-## 通用 Table 数据展示与查询组件(根据实体生成列与高级查询、Excel 导出下载等等)
+BlazorWeb.Shared.Program.Run("Demo", DefaultSetup.Setup, DefaultSetup.SetupCustomAppUsage, null, args);
+```
 
-## ModalService 与 DrawerService 的简单封装
+2. 修改 App.Razor
 
-## Js window.open 简单封装
+```CSharp
+@using BlazorWeb.Shared.Layouts
+<AppRoot AppAssembly="@typeof(App).Assembly"></AppRoot>
+```
 
-## 基于 LightOrm 的仓储模式
-
-...
-
-...
+3. 拷贝 Demo 项目中的 wwwroot、Pages、appsettings.json
