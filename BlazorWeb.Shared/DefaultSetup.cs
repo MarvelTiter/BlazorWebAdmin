@@ -6,7 +6,7 @@ using Project.AppCore.Locales.Extensions;
 
 namespace BlazorWeb.Shared
 {
-    public static class CustomSetup
+    public static class DefaultSetup
     {
         public static void Setup(WebApplicationBuilder builder)
         {
@@ -40,7 +40,7 @@ namespace BlazorWeb.Shared
 
         public static IEnumerable<Type> RegisterBlazorViewAssembly()
         {
-            yield return typeof(Program);
+            return Enumerable.Empty<Type>();
         }
 
         public static void SetupCustomAppUsage(WebApplication app)

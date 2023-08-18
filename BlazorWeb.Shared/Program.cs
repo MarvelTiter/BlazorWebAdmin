@@ -15,8 +15,8 @@ namespace BlazorWeb.Shared
     public class Program
     {
         public static void Run(string appName
-            , Action<WebApplicationBuilder>? builderOption
-            , Action<WebApplication>? appOption
+            , Action<WebApplicationBuilder> builderOption
+            , Action<WebApplication> appOption
             , Func<IEnumerable<Type>>? registerAssembly
             , params string[] args)
         {
@@ -60,11 +60,12 @@ namespace BlazorWeb.Shared
                 builder.Configuration.GetSection(nameof(CultureOptions)).Bind(culture);
             });
 
-            builderOption ??= CustomSetup.Setup;
+            //builderOption ??= DefaultSetup.Setup;
             builderOption.Invoke(builder);
 
-            registerAssembly ??= CustomSetup.RegisterBlazorViewAssembly;
-            var types = registerAssembly.Invoke();
+            //registerAssembly ??= DefaultSetup.RegisterBlazorViewAssembly;
+            var types = (registerAssembly?.Invoke() ?? Enumerable.Empty<Type>()).ToList();
+            types.Add(typeof(Program));
             Config.AddAssembly(types.ToArray());
 
             builder.Host.UseWindowsService();
@@ -74,7 +75,7 @@ namespace BlazorWeb.Shared
             {
                 app.UseExceptionHandler("/Error");
             }
-            appOption ??= CustomSetup.SetupCustomAppUsage;
+            //appOption ??= DefaultSetup.SetupCustomAppUsage;
             appOption.Invoke(app);
 
             ServiceLocator.Instance = app.Services;
