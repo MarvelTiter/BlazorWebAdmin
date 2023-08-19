@@ -1,0 +1,26 @@
+﻿@namespace BlazorWeb.Shared.Components
+<Fetch Url="@url" TData="string" Method="GET" OnCompleted="HandleCompleted" OnSuccessed="HandleSuccessed" OnFailed="HandleFailed"></Fetch>
+<Button OnClick="Update">更新</Button>
+@code {
+    string url = "https://www.baidu.com";
+    [Inject] MessageService MessageSrv { get; set; }
+    public void Update()
+    {
+        url += "?111";
+    }
+
+    void HandleCompleted()
+    {
+        _ = MessageSrv.Info("完成");
+    }
+
+    void HandleSuccessed(string ret)
+    {
+        _ = MessageSrv.Success("成功");
+    }
+
+    void HandleFailed(string msg)
+    {
+        _ = MessageSrv.Error($"失败:{msg}");
+    }
+}

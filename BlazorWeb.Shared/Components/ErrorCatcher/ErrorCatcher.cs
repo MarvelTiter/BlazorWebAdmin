@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorWeb.Shared.Components
@@ -96,13 +97,15 @@ namespace BlazorWeb.Shared.Components
             //var handler = Caches.Last();
             //if (handler != null)
             //    await handler.HandleExceptionAsync(exception);
-
-            _ = NotificationSrv.Error(new NotificationConfig()
+            if (exception is not JSException)
             {
-                Message = "程序异常",
-                Description = exception.Message,
-                Placement = NotificationPlacement.BottomRight,
-            });
+                _ = NotificationSrv.Error(new NotificationConfig()
+                {
+                    Message = "程序异常",
+                    Description = exception.Message,
+                    Placement = NotificationPlacement.BottomRight,
+                });
+            }
             Logger.LogError(exception, exception.Message);
             await ErrorBoundaryLogger.LogErrorAsync(exception);
         }

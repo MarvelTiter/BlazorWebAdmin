@@ -1,21 +1,9 @@
 ﻿import { BaseComponent } from "../base/base-component.js";
 import { getComponentById } from "../base/component-store.js";
+import { success, failed } from "../base/utils.js";
 import { ClipBox } from "./clipbox.js";
 
-function success(msg, payload) {
-    return {
-        success: true,
-        message: msg,
-        payload: payload
-    }
-}
 
-function failed(msg) {
-    return {
-        success: false,
-        message: msg,
-    }
-}
 export class Camera extends BaseComponent {
     constructor(video, canvas) {
         super()

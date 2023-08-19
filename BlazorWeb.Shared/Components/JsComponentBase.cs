@@ -20,7 +20,18 @@ namespace BlazorWeb.Shared.Components
             }
         }
 
-        protected string ModuleName => GetType().Name;
+        protected string ModuleName => GetModuleName();
+
+        private string GetModuleName()
+        {
+            var type = GetType();
+            if (type.IsGenericType)
+            {
+                return type.Name.Split('`')[0];
+            }
+            return type.Name;
+        }
+
         protected string ProjectName => GetType().Assembly.GetName().Name;
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
