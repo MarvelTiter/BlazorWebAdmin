@@ -1,7 +1,7 @@
 ﻿@page "/rolepermission"
 @using AntDesign.TableModels
 @using Project.Models.Permissions
-<TwoSidePage OpenTrigger=@(() => CurrentRole != null) @bind-Expand=@sideExpand>
+<TwoSidePage OpenTrigger=@(() => CurrentRole != null) @bind-Expand=@sideExpand MainFlex="3">
 	<FirstSide>
 		<TableTemplate TableOptions=roleOptions TData=Role TQuery=@(GenericRequest<Role>)>
 		</TableTemplate>

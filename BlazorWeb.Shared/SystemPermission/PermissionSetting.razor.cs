@@ -46,9 +46,9 @@ namespace BlazorWeb.Shared.SystemPermission
                 Visible = p => p.PowerType == PowerType.Page
 
             };
-            tableOptions.AddButton(addPowerBtn);
             tableOptions.AddButton(ButtonDefinition<Power>.Edit(EditPower));
             tableOptions.AddButton(ButtonDefinition<Power>.Delete(DeletePower));
+            tableOptions.AddButton(addPowerBtn);
         }
 
         #region 初始化权限树
