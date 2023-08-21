@@ -187,6 +187,7 @@ namespace BlazorWeb.Shared.Template.Tables
         public bool EnabledAdvancedQuery { get; set; } = false;
         public bool DefaultExpandAllRows { get; set; }
         public int Total { get; set; }
+        public string ActionColumnWidth { get; set; } = "100";
         public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow) || typeof(TData) == typeof(IDictionary<string, object>);
         public bool AutoRefreshData { get; set; } = true;
