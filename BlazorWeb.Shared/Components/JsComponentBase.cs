@@ -21,7 +21,7 @@ namespace BlazorWeb.Shared.Components
         }
 
         protected string ModuleName => GetModuleName();
-
+        protected bool IsLibrary { get; set; } = true;
         private string GetModuleName()
         {
             var type = GetType();
@@ -38,8 +38,10 @@ namespace BlazorWeb.Shared.Components
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                //var path = $"./js/{ModuleName}/{ModuleName}.js".ToLower();
-                var path = $"./_content/{ProjectName}/js/{ModuleName}/{ModuleName}.js".ToLower();
+                //var path = 
+                var path = IsLibrary 
+                    ? $"./_content/{ProjectName}/js/{ModuleName}/{ModuleName}.js".ToLower() 
+                    : $"./js/{ModuleName}/{ModuleName}.js".ToLower(); ;
                 Module = await Js.InvokeAsync<IJSObjectReference>("import", path);
                 await Init();
             }

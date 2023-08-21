@@ -10,57 +10,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Remove="wwwroot\js\index.js" />
-		<Content Remove="wwwroot\js\test.js" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<_ContentIncludedByDefault Remove="wwwroot\assets\avator.png" />
-		<_ContentIncludedByDefault Remove="wwwroot\assets\Cortana.png" />
-		<_ContentIncludedByDefault Remove="wwwroot\assets\login_bg.png" />
-		<_ContentIncludedByDefault Remove="wwwroot\assets\logo.png" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\app.css" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\bootstrap\bootstrap.min.css.map" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\echarts.css" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\FONT-LICENSE" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.eot" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.otf" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.ttf" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\font\fonts\open-iconic.woff" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\ICON-LICENSE" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\open-iconic\README.md" />
-		<_ContentIncludedByDefault Remove="wwwroot\css\site.css" />
-		<_ContentIncludedByDefault Remove="wwwroot\favicon.ico" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="wwwroot\assets\avator.png" />
-		<None Include="wwwroot\assets\Cortana.png" />
-		<None Include="wwwroot\assets\login_bg.png" />
-		<None Include="wwwroot\assets\logo.png" />
-		<None Include="wwwroot\css\app.css" />
-		<None Include="wwwroot\css\bootstrap\bootstrap.min.css" />
-		<None Include="wwwroot\css\bootstrap\bootstrap.min.css.map" />
-		<None Include="wwwroot\css\echarts.css" />
-		<None Include="wwwroot\css\open-iconic\FONT-LICENSE" />
-		<None Include="wwwroot\css\open-iconic\font\css\open-iconic-bootstrap.min.css" />
-		<None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.eot" />
-		<None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.otf" />
-		<None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
-		<None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.ttf" />
-		<None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.woff" />
-		<None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
-		<None Include="wwwroot\css\open-iconic\README.md" />
-		<None Include="wwwroot\css\site.css" />
-		<None Include="wwwroot\favicon.ico" />
-		<None Include="wwwroot\js\index.js" />
-		<None Include="wwwroot\js\test.js" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\BlazorWeb.Shared\BlazorWeb.Shared.csproj" />
 		<ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />
 		<ProjectReference Include="..\Project.Services\Project.Services.csproj" />
