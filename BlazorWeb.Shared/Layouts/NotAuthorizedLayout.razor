@@ -3,8 +3,6 @@
 @*https://github.com/dotnet/aspnetcore/issues/11137*@
 <div @onclick="HandleRootClick"
 @onkeydown=HandleKeyAction 
-@onkeydown:stopPropagation 
-@onkeydown:preventDefault 
 tabindex="0" 
 @ref="RootWrapper">
     <CascadingValue Value="this">
