@@ -1,7 +1,14 @@
 ﻿@inherits RootLayout
 @*<div>元素需要加上 tabindex 才能触发键盘事件*@
 @*https://github.com/dotnet/aspnetcore/issues/11137*@
-<div @onclick="HandleRootClick" @onkeydown=HandleKeyAction tabindex="0" @ref="RootWrapper">
+<div @onclick="HandleRootClick"
+@onclick:stopPropagation
+@onclick:preventDefault
+@onkeydown=HandleKeyAction 
+@onkeydown:stopPropagation 
+@onkeydown:preventDefault 
+tabindex="0" 
+@ref="RootWrapper">
     <CascadingValue Value="this">
         @Body
     </CascadingValue>

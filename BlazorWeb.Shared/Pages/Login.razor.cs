@@ -33,14 +33,13 @@ namespace BlazorWeb.Shared.Pages
             Root.OnKeyDown += OnPressEnter;
         }
 
-        private Task OnPressEnter(KeyboardEventArgs e)
+        private async Task OnPressEnter(KeyboardEventArgs e)
         {
             //Console.WriteLine("OnPressEnter: " + e.Key);
             if (e.Key == "Enter")
             {
-                return HandleLogin();
+                await HandleLogin();
             }
-            return Task.CompletedTask;
         }
 
         private async Task HandleLogin()

@@ -3,7 +3,14 @@
 @inject RouterStore Router
 @inherits RootLayout
 @inject AuthenticationStateProvider Auth
-<div @onclick="HandleRootClick" @onkeydown=HandleKeyAction tabindex="0" @ref="RootWrapper">
+<div @onclick="HandleRootClick" 
+    @onclick:stopPropagation
+    @onclick:preventDefault
+    @onkeydown=HandleKeyAction 
+    @onkeydown:stopPropagation 
+    @onkeydown:preventDefault 
+    tabindex="0" 
+    @ref="RootWrapper">
     <CascadingValue Value="this">
         <AuthorizeView>
             <Authorized>
