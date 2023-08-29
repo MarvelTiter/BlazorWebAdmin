@@ -1,6 +1,7 @@
 ﻿::deep .out_wrapper {
     display: unset !important;
 }
+
 .wrapper {
     display: flex;
     height: 100%;
@@ -21,4 +22,23 @@
     .wrapper .name {
         padding-left: 6px;
         white-space: nowrap;
+    }
+
+.menu-item {
+    border: 1px solid #ccc;
+    padding: 2px 10px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+    .menu-item.green-tag {
+        color: #389e0d;
+        background: #f6ffed;
+        border-color: #b7eb8f;
+    }
+
+    .menu-item.red-tag {
+        color: #cf1322;
+        background: #fff1f0;
+        border-color: #ffa39e;
     }

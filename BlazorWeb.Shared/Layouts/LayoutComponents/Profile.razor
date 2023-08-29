@@ -10,14 +10,14 @@
 @inject IUserService UserSrv
 @inject IStringLocalizer<Profile> Localizer
 @inject ModalService ModalSrv
-<Dropdown Trigger=@(new Trigger[]{Trigger.Click}) Style="display:unset;">
+<Dropdown Trigger=@(new Trigger[]{Trigger.Click}) Style="display:unset;" HiddenMode>
     <Overlay>
         <Menu>
-            <MenuItem>
-                <Button Type="@ButtonType.Text" OnClick="HandlePwdModify">@Localizer["NavMenu.UserAction.ModifyPassword"]</Button>
+            <MenuItem OnClick="HandlePwdModify">
+                <div class="menu-item green-tag">@Localizer["NavMenu.UserAction.ModifyPassword"]</div>
             </MenuItem>
-            <MenuItem>
-                <Button Type="@ButtonType.Text" OnClick="HandleLogout">@Localizer["NavMenu.UserAction.Logout"]</Button>
+            <MenuItem OnClick="HandleLogout">
+                <div class="menu-item red-tag">@Localizer["NavMenu.UserAction.Logout"]</div>
             </MenuItem>
         </Menu>
     </Overlay>
@@ -47,3 +47,8 @@
         await UserSrv.ModifyUserPasswordAsync(store.UserInfo!.UserId, pwd.OldPassword, pwd.Password);
     }
 }
+<style>
+    .ant-menu-title-content {
+        flex: 1;
+    }
+</style>

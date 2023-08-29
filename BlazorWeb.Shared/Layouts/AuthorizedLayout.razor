@@ -4,8 +4,6 @@
 @inherits RootLayout
 @inject AuthenticationStateProvider Auth
 <div @onclick="HandleRootClick" 
-    @onclick:stopPropagation
-    @onclick:preventDefault
     @onkeydown=HandleKeyAction 
     @onkeydown:stopPropagation 
     @onkeydown:preventDefault 
