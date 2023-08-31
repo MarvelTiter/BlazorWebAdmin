@@ -53,14 +53,14 @@ namespace BlazorWeb.Shared.Components
         {
             var arguments = new List<object> { Id };
             arguments.AddRange((args ?? Array.Empty<object>())!);
-            return Module!.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray());
+            return Module?.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled(CancellationToken.None);
         }
 
         protected ValueTask<T> ModuleInvokeAsync<T>(string identifier, params object?[]? args)
         {
             var arguments = new List<object> { Id };
             arguments.AddRange((args ?? Array.Empty<object>())!);
-            return Module!.InvokeAsync<T>($"{ModuleName}.{identifier}", arguments.ToArray());
+            return Module?.InvokeAsync<T>($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled<T>(CancellationToken.None);
         }
 
         protected virtual async ValueTask DisposeAsync(bool disposing)
