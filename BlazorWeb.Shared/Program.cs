@@ -60,6 +60,11 @@ namespace BlazorWeb.Shared
                 builder.Configuration.GetSection(nameof(CultureOptions)).Bind(culture);
             });
 
+            services.AddWebConfiguration<Token>(token =>
+            {
+                builder.Configuration.GetSection(nameof(Token)).Bind(token);
+            });
+
             //builderOption ??= DefaultSetup.Setup;
             builderOption.Invoke(builder);
 

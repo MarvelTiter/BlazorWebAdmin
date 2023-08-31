@@ -14,12 +14,14 @@ namespace Project.Models.Permissions
         public object? Payload { get; set; }
         public IEnumerable<string> Roles { get; set; }
         public DateTime CreatedTime { get; set; }
+        public DateTime ActiveTime { get; set; }
         public UserInfo()
         {
             UserId = string.Empty;
             Payload = null;
             Roles = Enumerable.Empty<string>();
             CreatedTime = DateTime.Now;
+            ActiveTime = DateTime.Now;
         }
     }
 }

@@ -1,32 +1,40 @@
-﻿@using Project.AppCore.Auth
+﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@using Microsoft.Extensions.Options;
+@using Project.AppCore.Auth
+@using Project.AppCore.Options;
 @using Project.Models.Permissions
 @inject RouterStore Router
 @inherits RootLayout
 @inject AuthenticationStateProvider Auth
-<div @onclick="HandleRootClick" 
-    @onkeydown=HandleKeyAction 
-    tabindex="0" 
-    @ref="RootWrapper">
+@inject ProtectedLocalStorage LocalStorage
+@inject IOptionsMonitor<Token> Token
+<div @onclick="HandleRootClick"
+@onkeydown=HandleKeyAction
+     tabindex="0"
+@ref="RootWrapper">
     <CascadingValue Value="this">
         <AuthorizeView>
             <Authorized>
-                @Body
-            </Authorized>
-            <NotAuthorized>
-                <RedirectToLogin></RedirectToLogin>
-            </NotAuthorized>
-        </AuthorizeView>
-    </CascadingValue>
-</div>
+                <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
+                     <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken">
+                         @Body
+                     </ActionWatcher>
+                 </ActionWatcher>
+             </Authorized>
+             <NotAuthorized>
+                 <RedirectToLogin></RedirectToLogin>
+             </NotAuthorized>
+         </AuthorizeView>
+     </CascadingValue>
+ </div>
 
-@code {
+ @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationStateTask { get; set; }
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     [Inject]
     public ILogger<AuthorizedLayout> Logger { get; set; }
-
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -44,18 +52,25 @@
             }
         }
     }
+    bool rendered = false;
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        rendered = true;
+    }
 
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //	await base.OnAfterRenderAsync(firstRender);
-    //	if (firstRender)
-    //	{
-    //		var ca = Auth as CustomAuthenticationStateProvider;
-    //		await Router.InitRoutersAsync(ca?.Current);
-    //		var url = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-    //		NavigationManager.NavigateTo(url);
-    //		await RouterStore.TryAdd(url);
-    //		Logger.LogInformation("AfterRender: InitRoutersAsync");
-    //	}
-    //}
+    async Task UpdateUserToken()
+    {
+        var ca = Auth as CustomAuthenticationStateProvider;
+        if (rendered && ca != null && ca.Current != null)
+        {
+            ca.Current.ActiveTime = DateTime.Now;
+            await LocalStorage.SetAsync("UID", ca.Current);
+        }
+    }
+    Task NoneOperation()
+    {
+        var ca = Auth as CustomAuthenticationStateProvider;
+        return ca?.ClearState();
+    }
 }

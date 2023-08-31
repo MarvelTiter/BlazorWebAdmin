@@ -1,12 +1,20 @@
 ﻿@page "/"
 @inject NavigationManager nav
+@inject UserStore Current
 <h1>主页</h1>
+<h2>
+    CreatedTime: @Current?.UserInfo?.CreatedTime
+</h2>
+<h2>
+    ActiveTime:  @Current?.UserInfo?.ActiveTime
+</h2>
 <DownloadTest></DownloadTest>
 <LocalizerTest></LocalizerTest>
 <ErrorCatcher>
     <BlazorWeb.Shared.Test.ErrorCatcherTest></BlazorWeb.Shared.Test.ErrorCatcherTest>
 </ErrorCatcher>
 <FetchTest></FetchTest>
+<Button OnClick="@(()=>StateHasChanged())">StateChanged</Button>
 @code {
 
 }

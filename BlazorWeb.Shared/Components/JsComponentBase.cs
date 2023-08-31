@@ -39,8 +39,8 @@ namespace BlazorWeb.Shared.Components
             if (firstRender)
             {
                 //var path = 
-                var path = IsLibrary 
-                    ? $"./_content/{ProjectName}/js/{ModuleName}/{ModuleName}.js".ToLower() 
+                var path = IsLibrary
+                    ? $"./_content/{ProjectName}/js/{ModuleName}/{ModuleName}.js".ToLower()
                     : $"./js/{ModuleName}/{ModuleName}.js".ToLower(); ;
                 Module = await Js.InvokeAsync<IJSObjectReference>("import", path);
                 await Init();
@@ -67,6 +67,12 @@ namespace BlazorWeb.Shared.Components
         {
             if (Module != null && disposing)
             {
+                //try
+                //{
+                //}
+                //finally
+                //{
+                //}
                 await Module.InvokeVoidAsync($"{ModuleName}.dispose", Id);
                 await Module.DisposeAsync();
                 Module = null;
