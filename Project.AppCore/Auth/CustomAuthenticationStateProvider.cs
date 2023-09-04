@@ -38,10 +38,7 @@ namespace Project.AppCore.Auth
             try
             {
                 var app = await storageService.GetAsync<AppStore>(AppStore.KEY);
-                if (app.Success)
-                {
-                    appStore.ApplySetting(app.Value);
-                }
+                appStore.ApplySetting(app.Value);
                 var result = await storageService.GetAsync<UserInfo>("UID");
                 var diff = DateTime.Now - result.Value?.CreatedTime;
                 var actived = DateTime.Now - result.Value?.ActiveTime;
