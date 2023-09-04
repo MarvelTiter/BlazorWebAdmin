@@ -23,7 +23,7 @@
                 </Input>
             </FormItem>
             <FormItem>
-                <InputPassword @bind-Value=@context.Password BindOnInput placeholder="@Localizer["Login.Placeholder.Password"].Value" tabindex="2" AutoComplete="true">
+                <InputPassword OnInput="@(e => model.Password = e.Value?.ToString() ??"")" placeholder="@Localizer["Login.Placeholder.Password"].Value" tabindex="2" AutoComplete="true">
                     <Prefix>
                         <Icon Type="lock" Theme="outline" />
                     </Prefix>
