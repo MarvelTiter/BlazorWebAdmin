@@ -38,6 +38,10 @@ namespace BlazorWeb.Shared.Pages
             //Console.WriteLine("OnPressEnter: " + e.Key);
             if (e.Key == "Enter")
             {
+                if (Loading)
+                {
+                    return;
+                }
                 await HandleLogin();
             }
         }
@@ -45,7 +49,7 @@ namespace BlazorWeb.Shared.Pages
         private async Task HandleLogin()
         {
             Loading = true;
-            //await Task.Delay(100);
+            //await Task.Delay(10000);
             await Task.Yield();
             //throw new Exception("ErrorCatcher Test");
             var result = await LoginSrv.LoginAsync(model.UserName, model.Password);
