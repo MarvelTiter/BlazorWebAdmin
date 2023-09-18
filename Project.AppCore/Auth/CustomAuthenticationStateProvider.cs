@@ -42,7 +42,7 @@ namespace Project.AppCore.Auth
                 var result = await storageService.GetAsync<UserInfo>("UID");
                 var diff = DateTime.Now - result.Value?.CreatedTime;
                 var actived = DateTime.Now - result.Value?.ActiveTime;
-                if (result.Success && (diff?.Days < token.CurrentValue.Expire || actived?.Seconds < token.CurrentValue.LimitedFreeTime))
+                if (result.Success && (diff?.Days < token.CurrentValue.Expire || actived?.TotalSeconds < token.CurrentValue.LimitedFreeTime))
                 {
                     await loginService.UpdateLastLoginTimeAsync(result.Value!);
                     return await UpdateState(result.Value);
