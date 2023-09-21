@@ -3,7 +3,6 @@ using BlazorWeb.Shared.SystemPermission.Forms;
 using BlazorWeb.Shared.Template.Tables;
 using BlazorWeb.Shared.Template.Tables.Setting;
 using BlazorWeb.Shared.Utils;
-using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Project.AppCore.Services;

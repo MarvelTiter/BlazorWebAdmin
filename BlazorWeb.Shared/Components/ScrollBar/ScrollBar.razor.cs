@@ -1,11 +1,4 @@
-﻿using AntDesign;
-using BlazorWeb.Shared.Interfaces;
-using BlazorWeb.Shared.Utils;
-using DocumentFormat.OpenXml.Drawing.Charts;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.JSInterop;
-using System.Threading;
+﻿using Microsoft.AspNetCore.Components;
 namespace BlazorWeb.Shared.Components
 {
     public partial class ScrollBar : JsComponentBase

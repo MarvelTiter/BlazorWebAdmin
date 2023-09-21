@@ -1,17 +1,11 @@
-﻿using DocumentFormat.OpenXml.EMMA;
-using MDbContext.Repository;
+﻿using MDbContext.Repository;
 using Project.Models;
 using Project.Models.Entities;
 using Project.Models.Permissions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Services
 {
-	public partial class LoginService
+    public partial class LoginService
 	{
 		//TODO 处理登录功能
 		public async Task<IQueryResult<UserInfo>> GetUserInfo(string username, string password)

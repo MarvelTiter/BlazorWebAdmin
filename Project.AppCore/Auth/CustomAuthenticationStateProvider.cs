@@ -1,8 +1,6 @@
-﻿using DocumentFormat.OpenXml.Office.PowerPoint.Y2021.M06.Main;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.Extensions.Options;
-using Microsoft.JSInterop;
 using Project.AppCore.Options;
 using Project.AppCore.Services;
 using Project.AppCore.Store;

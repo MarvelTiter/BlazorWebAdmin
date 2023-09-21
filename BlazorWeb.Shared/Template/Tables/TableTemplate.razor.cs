@@ -122,7 +122,7 @@ namespace BlazorWeb.Shared.Template.Tables
                 {
                     if (TableOptions.ExcelTemplatePath.IsEnable())
                     {
-                        Excel.WriteExcel(path, TableOptions.ExcelTemplatePath, data);
+                        Excel.WriteExcelByTemplate(path, TableOptions.ExcelTemplatePath, data);
                     }
                     else
                     {
