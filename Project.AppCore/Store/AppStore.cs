@@ -17,7 +17,7 @@ namespace Project.AppCore.Store
     {
         public const string KEY = "APP_SETTING";
         public bool Init { get; set; }
-        public LayoutMode? Mode { get; set; }
+        public LayoutMode? Mode { get; set; } = LayoutMode.Card;
         public string? AppLanguage { get; set; } = "zh-CN";
         public bool DarkMode { get; set; }
         public bool Collapsed { get; set; }
