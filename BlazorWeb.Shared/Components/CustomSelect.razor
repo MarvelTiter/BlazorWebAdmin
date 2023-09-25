@@ -4,10 +4,10 @@
         Style=@Style
         Disabled=@Disabled
         DataSource=Options
+        AllowClear=@AllowClear
         TItemValue="@(TItem)"
         TItem="@(Options<TItem>)"
         EnableSearch=@Searchable
-        @bind-Value=Value
         OnSearch="OnSearch"
         ValueName=@("Value")
         LabelTemplate="labelRender"
@@ -30,6 +30,7 @@
     public SelectItem<TItem> Options { get; set; }
     [Parameter]
     public TItem Value { get; set; }
+    [Parameter] public bool AllowClear { get; set; }
     [Parameter]
     public EventCallback<TItem> ValueChanged { get; set; }
     [Parameter]
@@ -49,11 +50,21 @@
 
     private async void HandleSelectedChanged(Options<TItem> item)
     {
-        if (item == null) return;
-        await ValueChanged.InvokeAsync(item.Value);
-        if (OnChange.HasDelegate)
+        if (item == null)
         {
-            await OnChange.InvokeAsync(item.Value);
+            await ValueChanged.InvokeAsync(default);
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(default);
+            }
+        }
+        else
+        {
+            await ValueChanged.InvokeAsync(item.Value);
+            if (OnChange.HasDelegate)
+            {
+                await OnChange.InvokeAsync(item.Value);
+            }
         }
     }
 }

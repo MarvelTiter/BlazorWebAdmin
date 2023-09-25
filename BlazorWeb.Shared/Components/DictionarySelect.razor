@@ -2,7 +2,7 @@
 <Select Class=@Class
 		Style=@Style
 		EnableSearch
-		@bind-Value=Value
+		AllowClear
 		TItemValue="@(string)"
 		TItem="@(Options<string>)"
 		DataSource=@Options.Convert()
@@ -12,7 +12,7 @@
 		OnSelectedItemChanged=HandleSelectedChanged>
 </Select>
  
-@code {
+	@code {
 	string selected;
 	[Parameter]
 	public string Class { get; set; }
@@ -29,9 +29,20 @@
 
 	private async void HandleSelectedChanged(Options<string> item)
 	{
-		await ValueChanged.InvokeAsync(item.Value);
-		if (OnChange.HasDelegate)
-			await OnChange.InvokeAsync();
+		if (item == null)
+		{
+			await ValueChanged.InvokeAsync(null);
+			if (OnChange.HasDelegate)
+			{
+				await OnChange.InvokeAsync(null);
+			}
+		}
+		else
+		{
+			await ValueChanged.InvokeAsync(item.Value);
+			if (OnChange.HasDelegate)
+				await OnChange.InvokeAsync();
+		}
 	}
 }
 
