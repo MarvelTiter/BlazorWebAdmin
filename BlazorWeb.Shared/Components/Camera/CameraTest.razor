@@ -1,6 +1,5 @@
 ﻿@page "/camera/test"
 @namespace BlazorWeb.Shared.Components
-@layout Layouts.NotAuthorizedLayout
 <Camera AutoPlay EnableClip Width="600" Height="300" OnCapture="handleCapture" AutoDownload></Camera>
 <div style="width:500px;">
     <img src="@src" style="width:100%;" />
