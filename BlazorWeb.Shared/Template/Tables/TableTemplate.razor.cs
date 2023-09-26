@@ -33,21 +33,10 @@ namespace BlazorWeb.Shared.Template.Tables
         bool loading;
         private ConditionInfo? conditionInfo;
         private Expression<Func<TData, bool>>? ConditionExpression = e => true;
-        Action SetExpression;
-        void AssignExpression()
-        {
-            if (conditionInfo != null)
-                ConditionExpression = BuildCondition.CombineExpression<TData>(conditionInfo);
-            TableOptions.Query.Expression = ConditionExpression;
-        }
-        void IgnoreAssign()
-        {
-            // QueryArea内赋值，不需要内部赋值
-        }
+        
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            SetExpression = QueryArea == null ? AssignExpression : IgnoreAssign;
             TableOptions.RefreshData = RefreshData;
         }
 
@@ -75,18 +64,19 @@ namespace BlazorWeb.Shared.Template.Tables
         {
             if (conditionInfo != null)
                 TableOptions.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
-            await DoQuery();
+		
+			await DoQuery();
         }
 
         public async Task AdvanceSearch()
         {
-            AdvanceModalVisible = false;
+            TableOptions.Query.Expression = ConditionExpression;
+			AdvanceModalVisible = false;
             await DoQuery();
         }
         private async Task DoQuery()
         {
             loading = true;
-            SetExpression.Invoke();
             var result = await TableOptions.DataLoader(TableOptions.Query);
             TableOptions.Datas = (result.Payload);
             TableOptions.Total = result.TotalRecord;
@@ -95,48 +85,55 @@ namespace BlazorWeb.Shared.Template.Tables
 
         public async void AdvanceExport()
         {
-            AdvanceModalVisible = false;
-            await Export();
+			TableOptions.Query.Expression = ConditionExpression;
+			AdvanceModalVisible = false;
+            await DoExport();
         }
 
         public async Task Export()
         {
-            loading = true;
-            var data = TableOptions.Datas;
-            if (TableOptions.ExportDataLoader != null)
-            {
-                //TableOptions.Query.Expression = ConditionExpression;
-                SetExpression.Invoke();
-                var result = await TableOptions.ExportDataLoader(TableOptions.Query);
-                data = result.Payload;
-            }
-            if (data.Any())
-            {
-                var filename = $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}";
-                var path = Path.Combine(AppConst.TempFilePath, $"{filename}.xlsx");
-                if (TableOptions.ExportHandler != null)
-                {
-                    await TableOptions.ExportHandler.Invoke(path, data);
-                }
-                else
-                {
-                    if (TableOptions.ExcelTemplatePath.IsEnable())
-                    {
-                        Excel.WriteExcelByTemplate(path, TableOptions.ExcelTemplatePath, data);
-                    }
-                    else
-                    {
-                        Excel.WriteExcel(path, data);
-                    }
-                }
-                _ = JSRuntime.DownloadFile(filename, "xlsx");
-            }
-            else
-            {
-                _ = MessageSrv.Error("导出数据为空！");
-            }
-            loading = false;
+			if (conditionInfo != null)
+				TableOptions.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
+			await DoExport();
         }
+
+        private async Task DoExport()
+        {
+			loading = true;
+			var data = TableOptions.Datas;
+			if (TableOptions.ExportDataLoader != null)
+			{
+				//TableOptions.Query.Expression = ConditionExpression;
+				var result = await TableOptions.ExportDataLoader(TableOptions.Query);
+				data = result.Payload;
+			}
+			if (data.Any())
+			{
+				var filename = $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}";
+				var path = Path.Combine(AppConst.TempFilePath, $"{filename}.xlsx");
+				if (TableOptions.ExportHandler != null)
+				{
+					await TableOptions.ExportHandler.Invoke(path, data);
+				}
+				else
+				{
+					if (TableOptions.ExcelTemplatePath.IsEnable())
+					{
+						Excel.WriteExcelByTemplate(path, TableOptions.ExcelTemplatePath, data);
+					}
+					else
+					{
+						Excel.WriteExcel(path, data);
+					}
+				}
+				_ = JSRuntime.DownloadFile(filename, "xlsx");
+			}
+			else
+			{
+				_ = MessageSrv.Error("导出数据为空！");
+			}
+			loading = false;
+		}
 
         public async Task HandleChange(PaginationEventArgs e)
         {
