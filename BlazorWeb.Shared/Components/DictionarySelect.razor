@@ -3,13 +3,13 @@
               Style=@Style
                 EnableSearch
                 AllowClear
- @bind-Value=Value
+               DefaultValue="@Value"
                DropdownMatchSelectWidth=@false
                OnSelectedItemChanged=HandleSelectedChanged>
-    <SelectOptions>
-        @foreach (var item in Options)
+     <SelectOptions>
+         @foreach (var item in Options)
         {
-            <SimpleSelectOption Value="@item.Value" Label="@item.Key"></SimpleSelectOption>
+            <SimpleSelectOption Value="@item.Key" Label="@item.Value"></SimpleSelectOption>
         }
     </SelectOptions>
 </SimpleSelect>
