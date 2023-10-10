@@ -1,49 +1,51 @@
 ﻿@using System.Diagnostics.CodeAnalysis
-<Select Class=@Class
-		Style=@Style
-		EnableSearch
-		AllowClear
-		TItemValue="@(string)"
-		Value=@Value
-		TItem="@(Options<string>)"
-		DataSource=@Options.Convert()
-		ValueName=@("Value")
-		LabelName=@("Label")
-		DropdownMatchSelectWidth=@false
-		OnSelectedItemChanged=HandleSelectedChanged>
-</Select>
- 
-	@code {
-	string selected;
-	[Parameter]
-	public string Class { get; set; }
-	[Parameter]
-	public string Style { get; set; }
-	[Parameter]
-	public Dictionary<string, string> Options { get; set; }
-	[Parameter]
-	public string Value { get; set; }
-	[Parameter]
-	public EventCallback<string> ValueChanged { get; set; }
-	[Parameter]
-	public EventCallback OnChange { get; set; }
+<SimpleSelect Class=@Class
+              Style=@Style
+                EnableSearch
+                AllowClear
+ @bind-Value=Value
+               DropdownMatchSelectWidth=@false
+               OnSelectedItemChanged=HandleSelectedChanged>
+    <SelectOptions>
+        @foreach (var item in Options)
+        {
+            <SimpleSelectOption Value="@item.Value" Label="@item.Key"></SimpleSelectOption>
+        }
+    </SelectOptions>
+</SimpleSelect>
 
-	private async void HandleSelectedChanged(Options<string> item)
-	{
-		if (item == null)
-		{
-			await ValueChanged.InvokeAsync(null);
-			if (OnChange.HasDelegate)
-			{
-				await OnChange.InvokeAsync(null);
-			}
-		}
-		else
-		{
-			await ValueChanged.InvokeAsync(item.Value);
-			if (OnChange.HasDelegate)
-				await OnChange.InvokeAsync();
-		}
-	}
+@code {
+    string selected;
+    [Parameter]
+    public string Class { get; set; }
+    [Parameter]
+    public string Style { get; set; }
+    [Parameter]
+    public Dictionary<string, string> Options { get; set; } = new();
+    [Parameter]
+    public string Value { get; set; }
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+    [Parameter]
+    public EventCallback OnChange { get; set; }
+
+    private async void HandleSelectedChanged(string value)
+    {
+        // if (item == null)
+        // {
+        // 	await ValueChanged.InvokeAsync(null);
+        // 	if (OnChange.HasDelegate)
+        // 	{
+        // 		await OnChange.InvokeAsync(null);
+        // 	}
+        // }
+        // else
+        // {
+
+        // }
+        await ValueChanged.InvokeAsync(value);
+        if (OnChange.HasDelegate)
+            await OnChange.InvokeAsync();
+    }
 }
 

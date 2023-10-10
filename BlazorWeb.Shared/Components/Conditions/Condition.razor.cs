@@ -23,7 +23,7 @@ namespace BlazorWeb.Shared.Components
         [Parameter] public CompareType Compare { get; set; } = CompareType.Equal;
         //[Parameter] public DateType? DateConfig { get; set; }
         [Parameter] public TableOptionColumn? Field { get; set; }
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        
         [Parameter] public object? DefaultValue { get; set; }
         [Inject] public ILogger<Condition> Logger { get; set; }
         public int Index { get; set; }

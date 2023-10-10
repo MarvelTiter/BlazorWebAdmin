@@ -15,6 +15,14 @@
 </ErrorCatcher>
 <FetchTest></FetchTest>
 <Button OnClick="@(()=>StateHasChanged())">StateChanged</Button>
+<DictionarySelect Options="dic" @bind-Value=selected></DictionarySelect>
 @code {
+    Dictionary<string, string> dic = new()
+        {
+            ["选项1"] = "1",
+            ["选项2"] = "2",
+            ["选项3"] = "3",
+        };
 
+    string selected = "2";
 }
