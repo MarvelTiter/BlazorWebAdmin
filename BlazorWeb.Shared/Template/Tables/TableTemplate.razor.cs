@@ -48,7 +48,7 @@ namespace BlazorWeb.Shared.Template.Tables
             {
                 if (TableOptions.LoadDataOnLoaded)
                 {
-                    await Search();
+                    await NewSearch();
                 }
                 var result = await LocalStorage.GetAsync<ConditionInfo>(cache_key);
                 if (result.Success)
@@ -60,18 +60,25 @@ namespace BlazorWeb.Shared.Template.Tables
         }
 
         private bool AdvanceModalVisible = false;
+
+        public async Task NewSearch()
+        {
+            TableOptions.Query.PageIndex = 1;
+            await Search();
+        }
+
         public async Task Search()
         {
             if (conditionInfo != null)
                 TableOptions.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
-		
 			await DoQuery();
         }
 
         public async Task AdvanceSearch()
         {
+            TableOptions.Query.PageIndex = 1;
             TableOptions.Query.Expression = ConditionExpression;
-			AdvanceModalVisible = false;
+            AdvanceModalVisible = false;
             await DoQuery();
         }
         private async Task DoQuery()
@@ -135,14 +142,14 @@ namespace BlazorWeb.Shared.Template.Tables
 			loading = false;
 		}
 
-        public async Task HandleChange(PaginationEventArgs e)
-        {
-            Console.WriteLine("HandleChange");
-            if (TableOptions.Page)
-            {
-                await Search();
-            }
-        }
+        //public async Task HandleChange(PaginationEventArgs e)
+        //{
+        //    Console.WriteLine("HandleChange");
+        //    if (TableOptions.Page)
+        //    {
+        //        await Search();
+        //    }
+        //}
 
         public Task OnRowClickHandle(RowData<TData> row)
         {
@@ -164,11 +171,7 @@ namespace BlazorWeb.Shared.Template.Tables
         {
             await LocalStorage.SetAsync(cache_key, info);
         }
-
-
     }
-
-
     public class TableOptions<TData, TQuery> where TQuery : IRequest, new()
     {
 

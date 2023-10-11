@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using System.Linq.Expressions;
 @inject NavigationManager nav
 @inject UserStore Current
 <h1>主页</h1>
@@ -16,6 +17,9 @@
 <FetchTest></FetchTest>
 <Button OnClick="@(()=>StateHasChanged())">StateChanged</Button>
 <DictionarySelect Options="dic" @bind-Value=selected></DictionarySelect>
+<QueryConditions @bind-Expression=expression>
+    <CustomCondition EnumValues="dic" Label="测试" @bind-Value=selected></CustomCondition>
+</QueryConditions>
 @code {
     Dictionary<string, string> dic = new()
         {
@@ -23,6 +27,6 @@
             ["选项2"] = "2",
             ["选项3"] = "3",
         };
-
-    string selected = "2";
+    Expression<Func<int, bool>> expression = i => true;
+    string selected = "";
 }

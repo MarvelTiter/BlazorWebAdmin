@@ -3,11 +3,11 @@
               Style=@Style
                 EnableSearch
                 AllowClear
- @bind-Value=Value
+                DefaultValue=@selected
                DropdownMatchSelectWidth=@false
                OnSelectedItemChanged=HandleSelectedChanged>
-    <SelectOptions>
-        @foreach (var item in Options)
+     <SelectOptions>
+         @foreach (var item in Options)
         {
             <SimpleSelectOption Value="@item.Value" Label="@item.Key"></SimpleSelectOption>
         }
@@ -15,7 +15,7 @@
 </SimpleSelect>
 
 @code {
-    string selected;
+    string? selected;
     [Parameter]
     public string Class { get; set; }
     [Parameter]
@@ -28,6 +28,15 @@
     public EventCallback<string> ValueChanged { get; set; }
     [Parameter]
     public EventCallback OnChange { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (!string.IsNullOrWhiteSpace(Value))
+        {
+            selected = Value;
+        }
+    }
 
     private async void HandleSelectedChanged(string value)
     {

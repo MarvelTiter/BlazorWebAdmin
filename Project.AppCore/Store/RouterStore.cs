@@ -55,6 +55,12 @@ namespace Project.AppCore.Store
 
         public TagRoute Current => TopLink.FirstOrDefault(r => r.IsActive);
 
+        protected override void Release()
+        {
+            TopLink.Clear();
+            Routers.Clear();
+        }
+
         public void SetActive(string link)
         {
             if (link == "") link = "/";

@@ -33,7 +33,7 @@ namespace BlazorWeb.Shared.Components
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            Index = Parent.Conditions.Count;
+            Index = Parent!.Conditions.Count;
             Parent.AddCondition(this);
         }
 
@@ -107,7 +107,7 @@ namespace BlazorWeb.Shared.Components
             //    Logger.LogInformation(innerValue.ToString());
             var condition = new ConditionInfo(Field.PropertyOrFieldName, Compare, innerValue, Field.DataType, validValue);
             condition.LinkType = Index > 0 ? ExpressionType.AndAlso : null;
-            return Parent.UpdateCondition(Index, condition);
+            return Parent!.UpdateCondition(Index, condition);
         }
     }
 }

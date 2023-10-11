@@ -1,9 +1,9 @@
 ﻿@namespace BlazorWeb.Shared.Components
 @typeparam TData
 @inherits ConditionBase
-<Col Span="Parent.ColWidth">
+<Col Span="Parent!.ColWidth">
 <div>
-    <label class="conditions" style="@Style">
+    <span class="conditions" style="@Style">
         <span class="label" style="width:@($"{Parent.LabelWidth}px")">@Label</span>
             @if (typeof(TData) == typeof(DateTime))
             {
@@ -17,7 +17,7 @@
             {
             <Input @bind-Value=Value TValue=TData BindOnInput=@true OnChange=@(async () => await NotifyChanged())></Input>
             }
-    </label>
+    </span>
 </div>
 </Col>
 
@@ -29,18 +29,21 @@
     [Parameter]
     public Dictionary<string, string>? EnumValues { get; set; }
 
-    string stringValue = "";
+    string? stringValue = null;
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        stringValue = Value?.ToString() ?? "";
+        stringValue = Value?.ToString();
     }
 
     async Task NotifyChanged()
     {
         if (EnumValues != null)
         {
-            Value = (TData)Convert.ChangeType(stringValue, typeof(TData));
+            if (stringValue != null)
+                Value = (TData)Convert.ChangeType(stringValue, typeof(TData));
+            else
+                Value = default;
         }
         await ValueChanged.InvokeAsync(Value);
     }
