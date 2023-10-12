@@ -6,7 +6,10 @@
     {
         if (item.Content == null) continue;
         <div id=@item.RouteLink class=@item.ItemClass>
-            @item.Content.Body
+            <!-- 在TableTemplate中获取当前页的信息 -->
+            <CascadingValue Value="item">
+                @item.Content.Body
+            </CascadingValue>
         </div>
     }
 </ScrollBar>
@@ -23,10 +26,10 @@
     }
 
     void OnNavigated(object? sender, LocationChangedEventArgs e)
-    {        
+    {
         StateHasChanged();
     }
-        
+
     private bool disposedValue;
     protected virtual void Dispose(bool disposing)
     {
@@ -55,8 +58,8 @@
     .main_content {
         display: none;
         /*overflow: auto;
-                    flex: 1;
-                    padding: 10px;*/
+                        flex: 1;
+                        padding: 10px;*/
     }
 
         .main_content.active {

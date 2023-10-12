@@ -1,4 +1,5 @@
-﻿using BlazorWeb.Shared.Layouts;
+﻿using BlazorWeb.Shared.Interfaces;
+using BlazorWeb.Shared.Layouts;
 using BlazorWeb.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,7 +14,7 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         private string contextmenuLeft = "";
         private string contextmenuTop = "";
         private RouterMeta current;
-        [CascadingParameter] public RootLayout RootLayout { get; set; }
+        [CascadingParameter] public IDomEventHandler RootLayout { get; set; }
         [Parameter] public string Class { get; set; }
         private int navMenuWidth = 200;
 
@@ -40,7 +41,7 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
             contextmenuLeft = $"{e.ClientX + 10}px";
             contextmenuTop = $"{e.ClientY + 10}px";
             showContextmenu = true;
-            RootLayout.BodyClickEvent += RootLayout_BodyClickEvent; ;
+            RootLayout.BodyClickEvent += RootLayout_BodyClickEvent;
         }
 
         private Task RootLayout_BodyClickEvent(MouseEventArgs obj)
@@ -83,6 +84,7 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         public void Dispose()
         {
             store.DataChangedEvent -= StateHasChanged;
+            RootLayout.BodyClickEvent -= RootLayout_BodyClickEvent;
         }
     }
 }

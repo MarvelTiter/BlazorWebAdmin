@@ -14,10 +14,11 @@ using Project.Models;
 using Project.Models.Request;
 using System.Data;
 using System.Linq.Expressions;
+using BlazorWeb.Shared.Interfaces;
 
 namespace BlazorWeb.Shared.Template.Tables
 {
-    public partial class TableTemplate<TData, TQuery> where TQuery : IRequest, new()
+    public partial class TableTemplate<TData, TQuery> : IDisposable where TQuery : IRequest, new()
     {
         [Parameter] public TableOptions<TData, TQuery> TableOptions { get; set; }
         [Parameter] public RenderFragment<TQuery> QueryArea { get; set; }
@@ -29,15 +30,32 @@ namespace BlazorWeb.Shared.Template.Tables
         [Inject] ConfirmService ConfirmSrv { get; set; }
         [Inject] ProtectedLocalStorage LocalStorage { get; set; }
         public bool EnableGenerateQuery => (QueryArea == null || TableOptions.EnabledAdvancedQuery) && !TableOptions.IsDataTableSource;
-
+        [CascadingParameter] IDomEventHandler Root { get; set; }
+        [CascadingParameter] TagRoute? TagRoute { get; set; }
         bool loading;
         private ConditionInfo? conditionInfo;
         private Expression<Func<TData, bool>>? ConditionExpression = e => true;
-        
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
             TableOptions.RefreshData = RefreshData;
+            Root.OnKeyDown += Root_OnKeyDown;
+        }
+
+        private Task Root_OnKeyDown(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs arg)
+        {
+#if DEBUG
+            Console.WriteLine($"=== {typeof(TData).Name},{typeof(TQuery).Name}, Active Status: {TagRoute?.IsActive} ===");
+#endif
+            if (TagRoute?.IsActive ?? false)
+            {
+                if (arg.Key == "Enter")
+                {
+                    return NewSearch();
+                }
+            }
+            return Task.CompletedTask;
         }
 
         ConditionBuilder insRef;
@@ -60,6 +78,7 @@ namespace BlazorWeb.Shared.Template.Tables
         }
 
         private bool AdvanceModalVisible = false;
+        private bool disposedValue;
 
         public async Task NewSearch()
         {
@@ -71,7 +90,7 @@ namespace BlazorWeb.Shared.Template.Tables
         {
             if (conditionInfo != null)
                 TableOptions.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
-			await DoQuery();
+            await DoQuery();
         }
 
         public async Task AdvanceSearch()
@@ -92,64 +111,55 @@ namespace BlazorWeb.Shared.Template.Tables
 
         public async void AdvanceExport()
         {
-			TableOptions.Query.Expression = ConditionExpression;
-			AdvanceModalVisible = false;
+            TableOptions.Query.Expression = ConditionExpression;
+            AdvanceModalVisible = false;
             await DoExport();
         }
 
         public async Task Export()
         {
-			if (conditionInfo != null)
-				TableOptions.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
-			await DoExport();
+            if (conditionInfo != null)
+                TableOptions.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
+            await DoExport();
         }
 
         private async Task DoExport()
         {
-			loading = true;
-			var data = TableOptions.Datas;
-			if (TableOptions.ExportDataLoader != null)
-			{
-				//TableOptions.Query.Expression = ConditionExpression;
-				var result = await TableOptions.ExportDataLoader(TableOptions.Query);
-				data = result.Payload;
-			}
-			if (data.Any())
-			{
-				var filename = $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}";
-				var path = Path.Combine(AppConst.TempFilePath, $"{filename}.xlsx");
-				if (TableOptions.ExportHandler != null)
-				{
-					await TableOptions.ExportHandler.Invoke(path, data);
-				}
-				else
-				{
-					if (TableOptions.ExcelTemplatePath.IsEnable())
-					{
-						Excel.WriteExcelByTemplate(path, TableOptions.ExcelTemplatePath, data);
-					}
-					else
-					{
-						Excel.WriteExcel(path, data);
-					}
-				}
-				_ = JSRuntime.DownloadFile(filename, "xlsx");
-			}
-			else
-			{
-				_ = MessageSrv.Error("导出数据为空！");
-			}
-			loading = false;
-		}
-
-        //public async Task HandleChange(PaginationEventArgs e)
-        //{
-        //    Console.WriteLine("HandleChange");
-        //    if (TableOptions.Page)
-        //    {
-        //        await Search();
-        //    }
-        //}
+            loading = true;
+            var data = TableOptions.Datas;
+            if (TableOptions.ExportDataLoader != null)
+            {
+                //TableOptions.Query.Expression = ConditionExpression;
+                var result = await TableOptions.ExportDataLoader(TableOptions.Query);
+                data = result.Payload;
+            }
+            if (data.Any())
+            {
+                var filename = $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}";
+                var path = Path.Combine(AppConst.TempFilePath, $"{filename}.xlsx");
+                if (TableOptions.ExportHandler != null)
+                {
+                    await TableOptions.ExportHandler.Invoke(path, data);
+                }
+                else
+                {
+                    if (TableOptions.ExcelTemplatePath.IsEnable())
+                    {
+                        Excel.WriteExcelByTemplate(path, TableOptions.ExcelTemplatePath, data);
+                    }
+                    else
+                    {
+                        Excel.WriteExcel(path, data);
+                    }
+                }
+                _ = JSRuntime.DownloadFile(filename, "xlsx");
+            }
+            else
+            {
+                _ = MessageSrv.Error("导出数据为空！");
+            }
+            loading = false;
+        }
 
         public Task OnRowClickHandle(RowData<TData> row)
         {
@@ -170,6 +180,24 @@ namespace BlazorWeb.Shared.Template.Tables
         async Task CacheInfo(ConditionInfo info)
         {
             await LocalStorage.SetAsync(cache_key, info);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Root.OnKeyDown -= Root_OnKeyDown;
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
     public class TableOptions<TData, TQuery> where TQuery : IRequest, new()

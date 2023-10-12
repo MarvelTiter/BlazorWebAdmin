@@ -1,5 +1,6 @@
 ﻿using AntDesign;
 using BlazorWeb.Shared.Components;
+using BlazorWeb.Shared.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -9,7 +10,7 @@ using Project.Common;
 
 namespace BlazorWeb.Shared.Layouts
 {
-    public partial class RootLayout : IDisposable
+    public partial class RootLayout : IDomEventHandler, IDisposable
     {
         [Inject] public NavigationManager Navigator { get; set; }
         [Inject] public RouterStore RouterStore { get; set; }
