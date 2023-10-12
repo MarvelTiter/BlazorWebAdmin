@@ -9,6 +9,7 @@ using BlazorWeb.Shared.Extensions;
 using LightExcel;
 using Project.AppCore;
 using Microsoft.Extensions.FileProviders;
+using System.Diagnostics;
 
 namespace BlazorWeb.Shared
 {
@@ -20,6 +21,23 @@ namespace BlazorWeb.Shared
             , Func<IEnumerable<Type>>? registerAssembly
             , params string[] args)
         {
+#if RELEASE
+            try
+            {
+                var processName = Process.GetCurrentProcess().ProcessName;
+                bool isNewInstance;
+                Mutex mtx = new Mutex(true, processName, out isNewInstance);
+                if (!isNewInstance)
+                {
+                    var process = Process.GetProcessesByName(processName).FirstOrDefault();
+                    process?.Kill();
+                }
+            }
+            catch
+            {
+            }
+#endif
+
             WebApplicationOptions options = new WebApplicationOptions
             {
                 Args = args,
