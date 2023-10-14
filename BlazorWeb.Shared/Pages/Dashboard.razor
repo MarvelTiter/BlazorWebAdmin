@@ -17,9 +17,7 @@
 <FetchTest></FetchTest>
 <Button OnClick="@(()=>StateHasChanged())">StateChanged</Button>
 <DictionarySelect Options="dic" @bind-Value=selected></DictionarySelect>
-<QueryConditions @bind-Expression=expression>
-    <CustomCondition EnumValues="dic" Label="测试" @bind-Value=selected></CustomCondition>
-</QueryConditions>
+<BlazorWeb.Shared.Test.AppWorkingBlockTest></BlazorWeb.Shared.Test.AppWorkingBlockTest>
 @code {
     Dictionary<string, string> dic = new()
         {

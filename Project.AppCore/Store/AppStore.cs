@@ -17,6 +17,10 @@ namespace Project.AppCore.Store
     {
         public const string KEY = "APP_SETTING";
         public bool Init { get; set; }
+        /// <summary>
+        /// 是否在进行长时间任务、防止长时间无动作后自动跳转到登录页
+        /// </summary>
+        public bool Working { get; set; }
         public LayoutMode? Mode { get; set; } = LayoutMode.Card;
         public string? AppLanguage { get; set; } = "zh-CN";
         public bool DarkMode { get; set; }

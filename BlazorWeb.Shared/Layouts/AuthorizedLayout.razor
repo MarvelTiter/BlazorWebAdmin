@@ -8,6 +8,7 @@
 @inject AuthenticationStateProvider Auth
 @inject ProtectedLocalStorage LocalStorage
 @inject IOptionsMonitor<Token> Token
+@inject AppStore App
 <div @onclick="HandleRootClick"
 @onkeydown=HandleKeyAction
      tabindex="0"
@@ -48,7 +49,6 @@
                 var url = Navigator.ToBaseRelativePath(Navigator.Uri);
                 Navigator.NavigateTo(url);
                 RouterStore.TryAdd(url);
-                Logger.LogInformation("InitializedAsync: InitRoutersAsync");
             }
         }
     }
@@ -70,6 +70,10 @@
     }
     Task NoneOperation()
     {
+        if (App.Working)
+        {
+            return Task.CompletedTask;
+        }
         var ca = Auth as CustomAuthenticationStateProvider;
         return ca?.ClearState();
     }
