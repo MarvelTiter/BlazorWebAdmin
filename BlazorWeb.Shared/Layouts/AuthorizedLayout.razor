@@ -72,7 +72,7 @@
     {
         if (App.Working)
         {
-            return Task.CompletedTask;
+            return UpdateUserToken();
         }
         var ca = Auth as CustomAuthenticationStateProvider;
         return ca?.ClearState();
