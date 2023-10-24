@@ -54,15 +54,15 @@
            Loading=@loading
            TItem=TData
            Bordered
-           OnRow=@TableOptions.OnRow
-           ScrollX=@TableOptions.ScrollX
-           TreeChildren="@TableOptions.TreeChildren"
-           Size="@TableSize.Small"
-           DefaultExpandAllRows=@TableOptions.DefaultExpandAllRows
-           @bind-SelectedRows=@TableOptions.Selected
-           OnRowClick=OnRowClickHandle
+            OnRow=@TableOptions.OnRow
+            ScrollX=@TableOptions.ScrollX
+            TreeChildren="@TableOptions.TreeChildren"
+            Size="@TableSize.Small"
+            DefaultExpandAllRows=@TableOptions.DefaultExpandAllRows
+     @bind-SelectedRows=@TableOptions.Selected
+            OnRowClick=OnRowClickHandle
            HidePagination
-           @bind-PageSize=@TableOptions.Query.PageSize>
+     @bind-PageSize=@TableOptions.Query.PageSize>
         <ChildContent>
             @{
                 // 选择列
@@ -86,41 +86,11 @@
                         @if (!col.Visible) continue;
                         @if (col.IsEnum)
                         {
-                            <Column TData="Enum" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Enum>(col)">
+                            <Column TData="Enum" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Sortable=@col.Sortable Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Enum>(col)">
                             </Column>
                             continue;
                         }
-                        var type = (Nullable.GetUnderlyingType(col.DataType) ?? col.DataType).Name.ToLower();
-                        switch (type)
-                        {
-                            case "string":
-                                <Column TData="String" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<string>(col)">
-                                </Column>
-                                break;
-                            case "int32":
-                                <Column TData="Int32?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Int32?>(col)">
-                                </Column>
-                                break;
-                            case "int16":
-                                <Column TData="Int16?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Int16?>(col)">
-                                </Column>
-                                break;
-                            case "single":
-                                <Column TData="Single?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Single?>(col)">
-                                </Column>
-                                break;
-                            case "double":
-                                <Column TData="Double?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Double?>(col)">
-                                </Column>
-                                break;
-                            case "bool":
-                                <Column TData="Boolean?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Boolean?>(col)">
-                                </Column>
-                                break;
-                            case "datetime":
-                                <Column TData="DateTime?" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName"></Column>
-                                break;
-                        }
+                        @RenderColumn(col)
                     }
                 }
                 // 按钮列
@@ -167,28 +137,28 @@
     @if (TableOptions.Page)
     {
         <Pagination Class="mt-10"
-                Size=@PaginationSize.Small
+                    Size=@PaginationSize.Small
                     ShowSizeChanger
                     ShowQuickJumper
-                Current=@TableOptions.Query.PageIndex
-                PageSize=@TableOptions.Query.PageSize
-                Total=@TableOptions.Total
-                ShowTotal=@totalFragment
-                OnChange=PagingStatusChanged>
-        </Pagination>
+                     Current=@TableOptions.Query.PageIndex
+                     PageSize=@TableOptions.Query.PageSize
+                     Total=@TableOptions.Total
+                     ShowTotal=@totalFragment
+                     OnChange=PagingStatusChanged>
+         </Pagination>
     }
 </Card>
 @if (EnableGenerateQuery)
 {
     <Modal Visible="AdvanceModalVisible" OnCancel=@(()=>AdvanceModalVisible = false) Title=@TableLocalizer["TableButtons.AdvancedQuery"] Footer=null>
         <ConditionGroup Columns=@TableOptions.Columns
-                    TData=TData
-                    Localizer="Localizer"
-                    TableLocalizer="TableLocalizer"
-                    @bind-Expression="ConditionExpression"
-                    ShowExportButton=@(TableOptions.ExportDataLoader != null || !TableOptions.Page)
-                    OnConfirmToSearch=AdvanceSearch
-                    OnConfirmToExport=AdvanceExport>
+                        TData=TData
+                        Localizer="Localizer"
+                        TableLocalizer="TableLocalizer"
+        @bind-Expression="ConditionExpression"
+                        ShowExportButton=@(TableOptions.ExportDataLoader != null || !TableOptions.Page)
+                        OnConfirmToSearch=AdvanceSearch
+                        OnConfirmToExport=AdvanceExport>
         </ConditionGroup>
     </Modal>
 }
@@ -197,12 +167,12 @@
     {
         return
     @<Button Type=@definition.ButtonType
-             Size=@ButtonSize.Small
-             Danger=@definition.NeedConfirm
-             Icon=@definition.Icon
+                 Size=@ButtonSize.Small
+                 Danger=@definition.NeedConfirm
+                 Icon=@definition.Icon
                       OnClickStopPropagation
-             OnClick=@(()=>InvokeButtonAction(definition, context))>
-        @(definition.LabelFunc?.Invoke(context) ?? TableLocalizer[definition.Label])
+                  OnClick=@(()=>InvokeButtonAction(definition, context))>
+         @(definition.LabelFunc?.Invoke(context) ?? TableLocalizer[definition.Label])
     </Button>
     ;
     }
@@ -212,8 +182,8 @@
         if (definition.NeedConfirm)
         {
             var confirmResult = await ConfirmSrv.Show(
-                    TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
-                , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+    TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+        , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
             if (confirmResult == ConfirmResult.OK)
             {
                 await CallButtonAction();
@@ -257,46 +227,80 @@
 
     int currentRowIndex = -1;
     string currentColumn = string.Empty;
+
+    RenderFragment RenderColumn(Shared.Template.Tables.Setting.TableOptionColumn col)
+    {
+        var type = (Nullable.GetUnderlyingType(col.DataType) ?? col.DataType).Name.ToLower();
+        switch (type)
+        {
+            case "string":
+                return RenderColumn<string>(col);
+            case "int32":
+                return RenderColumn<Int32?>(col);
+            case "int16":
+                return RenderColumn<Int16?>(col);
+            case "single":
+                return RenderColumn<Single?>(col);
+            case "double":
+                return RenderColumn<Double?>(col);
+            case "bool":
+                return RenderColumn<Boolean?>(col);
+            case "datetime":
+                return RenderColumn<DateTime?>(col);
+            default:
+                return RenderColumn<string>(col);
+        }
+
+    }
+
+    RenderFragment RenderColumn<TColumnData>(Shared.Template.Tables.Setting.TableOptionColumn col)
+    {
+        return
+    @<Column TData="TColumnData" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Sortable=@col.Sortable Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<TColumnData>(col)">
+    </Column>
+    ;
+    }
+
     RenderFragment<CellData<T>> ColumnRender<T>(Shared.Template.Tables.Setting.TableOptionColumn col)
     {
         return context =>
-                                {
-                                    var formattedValue = "";
-                                    if (col.IsEnum || col.EnumValues != null)
                                     {
-                                        var v = context.FieldValue;
-                                        if (v != null)
+                                        var formattedValue = "";
+                                        if (col.IsEnum || col.EnumValues != null)
                                         {
-                                            if (col.EnumValues?.ContainsKey($"{v}") ?? false)
+                                            var v = context.FieldValue;
+                                            if (v != null)
                                             {
-                                                formattedValue = col.EnumValues?[$"{v}"];
+                                                if (col.EnumValues?.ContainsKey($"{v}") ?? false)
+                                                {
+                                                    formattedValue = col.EnumValues?[$"{v}"];
+                                                }
                                             }
+                                            context.FormattedValue = formattedValue;
                                         }
-                                        context.FormattedValue = formattedValue;
-                                    }
-                                    if (col.IsEnum || col.UseTag)
-                                    {
-                                        return@<Tag Color="@(col.GetTagColor(context.FormattedValue))">@context.FormattedValue</Tag>;
-                                    }
-                                    else
-                                    {
-                                        return@<span>@context.FormattedValue</span>;
-                                    }
-            //	@<span>
-            //		@if(currentRowIndex == context.RowData.RowIndex
-            //			&& currentColumn == col.PropertyOrFieldName
-            //			&& col.EnableEdit)
-            //		{
-            //		// edit
-            //			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
-            //		}
-            //		else
-            //		{
-            //			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
-            //		}
-            //</span>
-            ;
-                                };
+                                        if (col.IsEnum || col.UseTag)
+                                        {
+                                            return@<Tag Color="@(col.GetTagColor(context.FormattedValue))">@context.FormattedValue</Tag>;
+                                        }
+                                        else
+                                        {
+                                            return@<span>@context.FormattedValue</span>;
+                                        }
+     //	@<span>
+     //		@if (currentRowIndex == context.RowData.RowIndex
+     //			&& currentColumn == col.PropertyOrFieldName
+     //			&& col.EnableEdit)
+     //		{
+     //		// edit
+     //			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
+     //		}
+     //		else
+     //		{
+     //			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
+     //		}
+     //</span>
+     ;
+                                    };
     }
 
 

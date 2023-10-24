@@ -6,8 +6,8 @@
         DataSource=Options
         AllowClear=@AllowClear
         TItemValue="@(TItem)"
+        DefaultValue="@Value"
         TItem="@(Options<TItem>)"
-        Value=@Value
         EnableSearch=@Searchable
         OnSearch="OnSearch"
         ValueName=@("Value")
@@ -51,21 +51,10 @@
 
     private async void HandleSelectedChanged(Options<TItem> item)
     {
-        if (item == null)
+        await ValueChanged.InvokeAsync(item.Value);
+        if (OnChange.HasDelegate)
         {
-            await ValueChanged.InvokeAsync(default);
-            if (OnChange.HasDelegate)
-            {
-                await OnChange.InvokeAsync(default);
-            }
-        }
-        else
-        {
-            await ValueChanged.InvokeAsync(item.Value);
-            if (OnChange.HasDelegate)
-            {
-                await OnChange.InvokeAsync(item.Value);
-            }
+            await OnChange.InvokeAsync(item.Value);
         }
     }
 }
