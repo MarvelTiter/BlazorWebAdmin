@@ -1,0 +1,16 @@
+﻿<Button OnClick="()=>StartWork(true)">Start</Button>
+<Button OnClick="()=>StartWork(false)">Stop</Button>
+<Card>
+    <Spin Spinning=Loading>
+        <h1>Loading</h1>
+    </Spin>
+</Card>
+@code {
+    [Inject] AppStore App { get; set; }
+    public bool Loading { get; set; }
+    public void StartWork(bool status)
+    {
+        App.Working = status;
+        Loading = status;
+    }
+}

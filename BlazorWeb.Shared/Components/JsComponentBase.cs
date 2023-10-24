@@ -49,33 +49,54 @@ namespace BlazorWeb.Shared.Components
 
         protected abstract ValueTask Init();
 
-        protected ValueTask ModuleInvokeVoidAsync(string identifier, params object?[]? args)
+        protected async ValueTask ModuleInvokeVoidAsync(string identifier, params object?[]? args)
         {
-            var arguments = new List<object> { Id };
-            arguments.AddRange((args ?? Array.Empty<object>())!);
-            return Module?.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled(CancellationToken.None);
+            try
+            {
+                var arguments = new List<object> { Id };
+                arguments.AddRange((args ?? Array.Empty<object>())!);
+                await (Module?.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled(CancellationToken.None));
+            }
+            catch { }
+            finally
+            {
+
+            }
         }
 
-        protected ValueTask<T> ModuleInvokeAsync<T>(string identifier, params object?[]? args)
+        protected async ValueTask<T> ModuleInvokeAsync<T>(string identifier, params object?[]? args)
         {
-            var arguments = new List<object> { Id };
-            arguments.AddRange((args ?? Array.Empty<object>())!);
-            return Module?.InvokeAsync<T>($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled<T>(CancellationToken.None);
+            var ret = default(T);
+            try
+            {
+                var arguments = new List<object> { Id };
+                arguments.AddRange((args ?? Array.Empty<object>())!);
+                ret = await (Module?.InvokeAsync<T>($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled<T>(CancellationToken.None));
+            }
+            catch { }
+            finally
+            {
+
+            }
+            return ret;
         }
 
         protected virtual async ValueTask DisposeAsync(bool disposing)
         {
             if (Module != null && disposing)
             {
-                //try
-                //{
-                //}
-                //finally
-                //{
-                //}
-                await Module.InvokeVoidAsync($"{ModuleName}.dispose", Id);
-                await Module.DisposeAsync();
-                Module = null;
+                // 忽略警告和报错
+                try
+                {
+                    await Module.InvokeVoidAsync($"{ModuleName}.dispose", Id);
+                    await Module.DisposeAsync();
+                    Module = null;
+                }
+                catch { }
+                finally
+                {
+
+                }
             }
         }
 

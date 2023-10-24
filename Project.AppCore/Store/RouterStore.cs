@@ -99,12 +99,12 @@ namespace Project.AppCore.Store
             //}
             if (link == "") link = "/";
             var route = FindRecursive(Routers, link);
-            if (!TopLink.Any(x => link == x.RouteLink) && route != null)
+            if (!TopLink.Any(x => link == x.RouteLink))
             {
                 TopLink.Add(new TagRoute
                 {
-                    RouteLink = route.RouteLink,
-                    RouteName = route.RouteName,
+                    RouteLink = route?.RouteLink ?? link,
+                    RouteName = route?.RouteName ?? GetLocalizerString("Dynamic", "动态页"),
                 });
             }
             SetActive(link);
@@ -130,6 +130,12 @@ namespace Project.AppCore.Store
         {
             if (options.CurrentValue.Enabled) return localizer[power.PowerId];
             else return power.PowerName;
+        }
+
+        string GetLocalizerString(string key, string defaultValue)
+        {
+            if (options.CurrentValue.Enabled) return localizer[key];
+            else return defaultValue;
         }
 
         string GetHomeLocalizer()

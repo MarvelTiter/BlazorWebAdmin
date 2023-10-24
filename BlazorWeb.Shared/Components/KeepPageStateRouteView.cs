@@ -24,6 +24,11 @@ namespace BlazorWeb.Shared.Components
             var layoutType = RouteData.PageType.GetCustomAttribute<LayoutAttribute>()?.LayoutType ?? DefaultLayout;
             RouterStore.SetActive(CurrentUrl);
             var current = RouterStore.Current;
+            if (current == null)
+            {
+                RouterStore.TryAdd(CurrentUrl);
+                current = RouterStore.Current;
+            }
             builder.OpenComponent<LayoutView>(0);
             builder.AddAttribute(1, "Layout", layoutType);
             builder.AddAttribute(2, "ChildContent", GetCurrentBody(current));
