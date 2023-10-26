@@ -22,7 +22,7 @@ namespace BlazorWeb.Shared.Template.Tables
     {
         [Parameter] public TableOptions<TData, TQuery> TableOptions { get; set; }
         [Parameter] public RenderFragment<TQuery> QueryArea { get; set; }
-        [Parameter] public RenderFragment Buttons { get; set; }
+        [Parameter] public RenderFragment<TQuery> TableHeader { get; set; }
         [Inject] public RouterStore RouterStore { get; set; }
         [Inject] public MessageService MessageSrv { get; set; }
         [Inject] public IJSRuntime JSRuntime { get; set; }
@@ -216,6 +216,7 @@ namespace BlazorWeb.Shared.Template.Tables
         public bool DefaultExpandAllRows { get; set; }
         public int Total { get; set; }
         public string ActionColumnWidth { get; set; } = "100";
+        public bool Exportable { get; set; }
         public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
         public bool IsDataTableSource => typeof(TData) == typeof(DataRow) || typeof(TData) == typeof(IDictionary<string, object>);
         public bool AutoRefreshData { get; set; } = true;

@@ -3,52 +3,56 @@
 @using BlazorWeb.Shared.Template.Tables.Setting
 @typeparam TData
 @typeparam TQuery
-<div class="queryarea">
-    <div class="condition">
-        <Space Style="width:100%;">
-            @if (QueryArea != null)
-            {
-                <SpaceItem Style="width:100%;">
-                    @QueryArea(TableOptions.Query)
-                </SpaceItem>
-            }
-            @if (TableOptions.DataLoader != null)
-            {
-                @if (EnableGenerateQuery)
+@if (TableHeader == null)
+{
+    <div class="queryarea">
+        <div class="condition">
+            <Space Style="width:100%;">
+                @if (QueryArea != null)
                 {
-                    <SpaceItem>
-                        <ConditionBuilder Columns=@TableOptions.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder>
+                    <SpaceItem Style="width:100%;">
+                        @QueryArea(TableOptions.Query)
                     </SpaceItem>
                 }
-                <SpaceItem>
-                    <Button Type="@ButtonType.Primary" OnClick="NewSearch">@TableLocalizer["TableButtons.Query"]</Button>
-                </SpaceItem>
-                @if (EnableGenerateQuery)
+                @if (TableOptions.DataLoader != null)
+                {
+                    @if (EnableGenerateQuery)
+                    {
+                        <SpaceItem>
+                            <ConditionBuilder Columns=@TableOptions.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder>
+                        </SpaceItem>
+                    }
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" OnClick="NewSearch">@TableLocalizer["TableButtons.Query"]</Button>
+                    </SpaceItem>
+                    @if (EnableGenerateQuery)
+                    {
+                        <SpaceItem>
+                            <Button OnClick=@(()=>AdvanceModalVisible = true)>@TableLocalizer["TableButtons.AdvancedQuery"]</Button>
+                        </SpaceItem>
+                    }
+                }
+                @if (TableOptions.Exportable || TableOptions.ExportDataLoader != null)
                 {
                     <SpaceItem>
-                        <Button OnClick=@(()=>AdvanceModalVisible = true)>@TableLocalizer["TableButtons.AdvancedQuery"]</Button>
+                        <Button Type="@ButtonType.Primary" OnClick="Export">@TableLocalizer["TableButtons.Export"]</Button>
                     </SpaceItem>
                 }
-            }
-            @if (TableOptions.ExportDataLoader != null || !TableOptions.Page)
-            {
-                <SpaceItem>
-                    <Button Type="@ButtonType.Primary" OnClick="Export">@TableLocalizer["TableButtons.Export"]</Button>
-                </SpaceItem>
-            }
-        </Space>
+                @if (TableOptions.AddHandle != null)
+                {
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" OnClick=HandleAdd>@TableLocalizer["TableButtons.Add"]</Button>
+                    </SpaceItem>
+                }
+            </Space>
+        </div>
     </div>
-    <div class="rightbutton">
-        @if (TableOptions.AddHandle != null)
-        {
-            <Button Type="@ButtonType.Primary" OnClick=HandleAdd>@TableLocalizer["TableButtons.Add"]</Button>
-        }
-        @if (Buttons != null)
-        {
-            @Buttons
-        }
-    </div>
-</div>
+}
+else
+{
+    @TableHeader(TableOptions.Query)
+}
+
 <Card Class="layout-card mt-10">
     <Table DataSource=@TableOptions.Datas
            Loading=@loading
@@ -174,7 +178,7 @@
                   OnClick=@(()=>InvokeButtonAction(definition, context))>
          @(definition.LabelFunc?.Invoke(context) ?? TableLocalizer[definition.Label])
     </Button>
-    ;
+        ;
     }
 
     public async Task InvokeButtonAction(ButtonDefinition<TData> definition, TData data)
@@ -182,8 +186,8 @@
         if (definition.NeedConfirm)
         {
             var confirmResult = await ConfirmSrv.Show(
-    TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
-        , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+        TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+    , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
             if (confirmResult == ConfirmResult.OK)
             {
                 await CallButtonAction();
