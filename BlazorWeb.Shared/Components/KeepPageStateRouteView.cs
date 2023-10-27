@@ -38,17 +38,17 @@ namespace BlazorWeb.Shared.Components
         RenderFragment GetCurrentBody(TagRoute? route)
         {
             if (route == null) return CreateBody();
-            if (route.Content.Body == null)
+            if (route.Body == null)
             {
                 var content = CreateBody();
-                route.Content.Body = builder =>
+                route.Body = builder =>
                 {
                     builder.OpenComponent<ErrorCatcher>(0);
                     builder.AddAttribute(1, nameof(ErrorCatcher.ChildContent), content);
                     builder.CloseComponent();
                 };
             }
-            return route.Content.Body;
+            return route.Body;
         }
 
         private RenderFragment CreateBody()

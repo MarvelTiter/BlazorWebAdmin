@@ -57,4 +57,10 @@ namespace Project.Common.Attributes
             }
         }
     }
+
+    [AttributeUsage(AttributeTargets.Class)]
+    public class RoutePageAttribute : Attribute
+    {
+        public bool NoCache { get; set; }
+    }
 }

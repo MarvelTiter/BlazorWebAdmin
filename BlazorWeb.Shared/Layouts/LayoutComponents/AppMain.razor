@@ -4,11 +4,11 @@
 <ScrollBar>
     @foreach (var item in store.TopLink)
     {
-        if (item.Content == null) continue;
+        if (item.Body == null) continue;
         <div id=@item.RouteLink class=@item.ItemClass>
             <!-- 在TableTemplate中获取当前页的信息 -->
             <CascadingValue Value="item">
-                @item.Content.Body
+                @item.Body
             </CascadingValue>
         </div>
     }

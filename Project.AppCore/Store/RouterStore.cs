@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Project.AppCore.Options;
@@ -22,7 +23,12 @@ namespace Project.AppCore.Store
     public class TagRoute : RouterMeta
     {
         public bool Closable { get; set; } = true;
-        public CacheItem Content { get; set; } = new CacheItem();
+        //public CacheItem Content { get; set; } = new CacheItem();
+        public DateTime StartTime { get; set; }
+        public DateTime ActiveTime { get; set; }
+        public TimeSpan LifeTime { get; set; }
+        public RenderFragment? Body { get; set; }
+        public RenderFragment? Title { get; set; } 
         public string ItemClass => ClassHelper.Default
             .AddClass("main_content")
             .AddClass("active", () => IsActive).Class;
@@ -30,7 +36,8 @@ namespace Project.AppCore.Store
         public void SetActive(bool active)
         {
             IsActive = active;
-            if (active && Content != null) Content.ActiveTime = DateTime.Now;
+            //if (active && Content != null) Content.ActiveTime = DateTime.Now;
+            if (active) ActiveTime = DateTime.Now;
         }
     }
 
