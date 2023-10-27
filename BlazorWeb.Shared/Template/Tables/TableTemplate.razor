@@ -178,7 +178,7 @@ else
                   OnClick=@(()=>InvokeButtonAction(definition, context))>
          @(definition.LabelFunc?.Invoke(context) ?? TableLocalizer[definition.Label])
     </Button>
-        ;
+    ;
     }
 
     public async Task InvokeButtonAction(ButtonDefinition<TData> definition, TData data)
@@ -186,8 +186,8 @@ else
         if (definition.NeedConfirm)
         {
             var confirmResult = await ConfirmSrv.Show(
-        TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
-    , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+    TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+        , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
             if (confirmResult == ConfirmResult.OK)
             {
                 await CallButtonAction();
@@ -239,6 +239,8 @@ else
         {
             case "string":
                 return RenderColumn<string>(col);
+            case "int64":
+                return RenderColumn<Int64?>(col);
             case "int32":
                 return RenderColumn<Int32?>(col);
             case "int16":
