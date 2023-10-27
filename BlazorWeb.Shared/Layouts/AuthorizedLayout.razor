@@ -13,7 +13,7 @@
 @onkeydown=HandleKeyAction
      tabindex="0"
 @ref="RootWrapper">
-    <CascadingValue Value="this">
+    <CascadingValue Value="this" IsFixed>
         <AuthorizeView>
             <Authorized>
                 <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
