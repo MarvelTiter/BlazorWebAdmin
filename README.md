@@ -17,4 +17,4 @@ BlazorWeb.Shared.Program.Run("Demo", DefaultSetup.Setup, DefaultSetup.SetupCusto
 <AppRoot AppAssembly="@typeof(App).Assembly"></AppRoot>
 ```
 
-3. 拷贝 Demo 项目中的 wwwroot、Pages、appsettings.json
+3. 拷贝 Demo 项目中的 Pages、appsettings.json
