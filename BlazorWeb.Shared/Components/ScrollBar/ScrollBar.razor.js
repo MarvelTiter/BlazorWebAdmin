@@ -1,10 +1,11 @@
-﻿import { BaseComponent } from "../base/base-component.js";
-import { getComponentById } from "../base/component-store.js";
-import { EventHandler } from "../base/event-handler.js";
-import { Bar } from "./bar.js";
-import { Thumb } from "./thumb.js";
-import { GAP } from "./util.js";
-
+import { BaseComponent } from "/_content/BlazorWeb.Shared/js/jscomponentbase/base-component.js";
+import { getComponentById } from "/_content/BlazorWeb.Shared/js/jscomponentbase/component-store.js";
+import { EventHandler } from "/_content/BlazorWeb.Shared/js/jscomponentbase/event-handler.js";
+//import { Bar } from "/_content/BlazorWeb.Shared/js/scrollbar/bar.js";
+//import { Thumb } from "/_content/BlazorWeb.Shared/js/scrollbar/thumb.js";
+import { GAP } from "/_content/BlazorWeb.Shared/js/jscomponentbase/utils.js";
+import { Bar } from "./Bar.razor.js";
+import { Thumb } from "./Thumb.razor.js";
 export class ScrollBar extends BaseComponent {
     constructor() {
         super();
@@ -102,29 +103,3 @@ export class ScrollBar extends BaseComponent {
         component.bar[position] = o;
     }
 }
-
-//export function initScrollbar(id, scrollbar, wrap, resize, minSize, always) {
-//    const component = getComponentById(id, () => {
-//        return new ScrollBar();
-//    });
-//    component.root = scrollbar;
-//    component.wrap = wrap;
-//    component.resize = resize;
-//    component.minSize = minSize;
-//    component.initEvents();
-//    component.update();
-//    if (always) {
-//        component.bar.setVisible(true);
-//        component.bar.always = always;
-//    }
-//}
-
-//export function initBarInstance(id, position, tracker, thumb) {
-//    const component = getComponentById(id, () => {
-//        return new ScrollBar();
-//    });
-//    var o = new Thumb(component, position, tracker, thumb);
-//    o.setVisible(false);
-//    o.initEvents();
-//    component.bar[position] = o;
-//}

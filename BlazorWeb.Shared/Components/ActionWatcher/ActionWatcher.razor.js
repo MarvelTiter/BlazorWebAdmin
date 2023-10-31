@@ -1,8 +1,9 @@
-import { BaseComponent } from '../base/base-component.js'
-import { getComponentById } from '../base/component-store.js'
-import { EventHandler } from '../base/event-handler.js'
+import { BaseComponent } from "/_content/BlazorWeb.Shared/js/jscomponentbase/base-component.js";
+import { getComponentById } from "/_content/BlazorWeb.Shared/js/jscomponentbase/component-store.js";
+import { EventHandler } from "/_content/BlazorWeb.Shared/js/jscomponentbase/event-handler.js";
+
 export class ActionWatcher extends BaseComponent {
-    constructor(instance,type, timeout, element) {
+    constructor(instance, type, timeout, element) {
         super()
         this.instance = instance
         this.timeout = timeout

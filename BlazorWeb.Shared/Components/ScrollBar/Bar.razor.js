@@ -1,5 +1,5 @@
-﻿import { BaseComponent } from "../base/base-component.js";
-import { GAP } from "./util.js";
+﻿import { BaseComponent } from "/_content/BlazorWeb.Shared/js/jscomponentbase/base-component.js";
+import { GAP } from "/_content/BlazorWeb.Shared/js/jscomponentbase/utils.js";
 
 export class Bar extends BaseComponent {
     constructor(scrollbar) {

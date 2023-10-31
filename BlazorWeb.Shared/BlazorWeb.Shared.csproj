@@ -20,6 +20,22 @@
 		<Compile Remove="Components\QueryConditions.razor.cs" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="Components\ScrollBar\Bar.razor.js" />
+	  <None Remove="Components\ScrollBar\Thumb.razor.js" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Components\ScrollBar\Bar.razor.js">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Include="Components\ScrollBar\Thumb.razor.js">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	</ItemGroup>
+
 	
 
 

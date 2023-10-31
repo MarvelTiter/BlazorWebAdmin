@@ -1,6 +1,6 @@
 ﻿namespace BlazorWeb.Shared.Components
 {
-    public class FullScreen : JsComponentBase
+    public partial class FullScreen : JsComponentBase
     {
         protected override async ValueTask Init()
         {

@@ -1,8 +1,7 @@
-﻿import { BaseComponent } from "../base/base-component.js"
-import { getComponentById } from "../base/component-store.js"
-import { EventHandler } from "../base/event-handler.js"
-import { Thumb } from "../scrollbar/thumb.js"
-import { GAP } from "../scrollbar/util.js"
+import { BaseComponent } from "/_content/BlazorWeb.Shared/js/jscomponentbase/base-component.js";
+import { getComponentById } from "/_content/BlazorWeb.Shared/js/jscomponentbase/component-store.js";
+import { EventHandler } from "/_content/BlazorWeb.Shared/js/jscomponentbase/event-handler.js";
+import { GAP } from "/_content/BlazorWeb.Shared/js/jscomponentbase/utils.js"
 
 export class HorizontalScroll extends BaseComponent {
 
@@ -54,21 +53,16 @@ export class HorizontalScroll extends BaseComponent {
 
     initEvents() {
         this.handleWheelEvent()
-        //EventHandler.listen(this.wrap, 'resize', this.update.bind(this))
-        //EventHandler.listen(this.resize, 'resize', this.update.bind(this))
     }
 
     dispose() {
         EventHandler.remove(this.wrap, this.wheel, this.scroll)
-        //EventHandler.remove(this.wrap, 'resize')
-        //EventHandler.remove(this.resize, 'resize')
     }
 
     static init(id, element) {
         const bar = getComponentById(id, () => {
             return new HorizontalScroll(element)
         })
-        //bar.horizontal = new Thumb(bar, 'horizontal', tracker, thumb)
         bar.initEvents()
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BlazorWeb.Shared.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Project.Common.Attributes;
 using System.Reflection;
 
 namespace BlazorWeb.Shared.Components
@@ -27,27 +28,53 @@ namespace BlazorWeb.Shared.Components
             var type = GetType();
             if (type.IsGenericType)
             {
-                return type.Name.Split('`')[0];
+                var i = type.Name.IndexOf('`');
+                return type.Name[..i];
             }
             return type.Name;
         }
 
         protected string ProjectName => GetType().Assembly.GetName().Name;
+        protected string RelativePath { get; set; }
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
+            RelativePath = attr?.Path ?? $"Components/{ModuleName}";
+            if (attr?.IsLibrary == false)
+            {
+                IsLibrary = false;
+            }
+        }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
                 //var path = 
-                var path = IsLibrary
-                    ? $"./_content/{ProjectName}/js/{ModuleName}/{ModuleName}.js".ToLower()
-                    : $"./js/{ModuleName}/{ModuleName}.js".ToLower(); ;
-                Module = await Js.InvokeAsync<IJSObjectReference>("import", path);
+                await LoadJsAsync();
                 await Init();
             }
         }
 
-        protected abstract ValueTask Init();
+        protected virtual async Task LoadJsAsync()
+        {
+            //var path = IsLibrary
+            //    ? $"./_content/{ProjectName}/js/{ModuleName}/{ModuleName}.js".ToLower()
+            //    : $"./js/{ModuleName}/{ModuleName}.js".ToLower();
+            //Module = await Js.InvokeAsync<IJSObjectReference>("import", path);
+
+            var path = IsLibrary
+               ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}.razor.js"
+               : $"./{RelativePath}/{ModuleName}.razor.js";
+            Module = await Js.InvokeAsync<IJSObjectReference>("import", path);
+        }
+
+        protected virtual ValueTask Init()
+        {
+            return ValueTask.CompletedTask;
+        }
 
         protected async ValueTask ModuleInvokeVoidAsync(string identifier, params object?[]? args)
         {

@@ -23,7 +23,7 @@ namespace BlazorWeb.Shared.Components
         private ElementReference? videoDom;
         private ElementReference? clipDom;
         private ElementReference? canvasDom;
-        private string selectedDeviceId = "";
+        private string? selectedDeviceId = null;
         public class DeviceInfo
         {
             public string DeviceId { get; set; }
@@ -49,26 +49,12 @@ namespace BlazorWeb.Shared.Components
             if (Height < 100) Height = 100;
         }
 
-        //protected override async Task OnAfterRenderAsync(bool firstRender)
+        //protected override async Task LoadJsAsync()
         //{
-        //    await base.OnAfterRenderAsync(firstRender);
-        //    if (firstRender)
-        //    {
-        //        cameraHelper = await Js.InvokeAsync<IJSObjectReference>("import", "./js/camera.js");
-        //        if (!await InitDevices())
-        //            return;
-        //        await cameraHelper.InvokeVoidAsync("init", videoDom, canvasDom);
-        //        if (EnableClip)
-        //            await cameraHelper.InvokeVoidAsync("initClipBox", clipDom, Width, Height);
-        //        var result = await Storage.GetAsync<string>("previousSelectedDevice");
-        //        if (result.Success)
-        //        {
-        //            selectedDeviceId = result.Value ?? "";
-        //            StateHasChanged();
-        //            if (AutoPlay)
-        //                await Start();
-        //        }
-        //    }
+        //    var path = IsLibrary
+        //        ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}/{ModuleName}.razor.js"
+        //        : $"./{RelativePath}/{ModuleName}/{ModuleName}.razor.js";
+        //    Module = await Js.InvokeAsync<IJSObjectReference>("import", path);
         //}
 
         protected override async ValueTask Init()

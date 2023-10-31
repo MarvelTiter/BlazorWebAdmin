@@ -1,5 +1,5 @@
-﻿import { getComponentById } from '../base/component-store.js'
-import { BaseComponent } from "../base/base-component.js"
+import { BaseComponent } from "/_content/BlazorWeb.Shared/js/jscomponentbase/base-component.js";
+import { getComponentById } from "/_content/BlazorWeb.Shared/js/jscomponentbase/component-store.js";
 
 export class FullScreen extends BaseComponent {
 

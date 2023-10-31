@@ -25,6 +25,10 @@ namespace BlazorWeb.Shared.Components
                 {
                     await Request();
                 }
+                catch(Exception ex)
+                {
+                    
+                }
                 finally
                 {
                     parametersChanged = false;

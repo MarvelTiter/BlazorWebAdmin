@@ -12,3 +12,5 @@ export function failed(msg) {
         message: msg,
     }
 }
+
+export const GAP = 4;
