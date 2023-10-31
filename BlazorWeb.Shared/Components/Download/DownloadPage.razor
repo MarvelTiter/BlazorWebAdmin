@@ -1,9 +1,12 @@
 ﻿@namespace BlazorWeb.Shared.Components
 @page "/download/{file}/{extension}"
+@using Project.Common.Attributes;
 @layout BlazorWeb.Shared.Layouts.AuthorizedLayout
 @inject IJSRuntime Js
 @inject AuthenticationStateProvider Auth
 @inject UserStore UserStore
+@inherits JsComponentBase
+@attribute [AutoLoadJsModule(Path = "Components/Download")]
 <PageTitle>文件下载</PageTitle>
 <div style="width:100%; text-align:center;padding-top:100px;">
     <h2>正在请求下载文件……</h2>
@@ -24,7 +27,7 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            await Js.InvokeVoidAsync("clickElement", downloadADom);
+            await (Module?.InvokeVoidAsync("download", downloadADom) ?? ValueTask.CompletedTask);
         }
     }
 }

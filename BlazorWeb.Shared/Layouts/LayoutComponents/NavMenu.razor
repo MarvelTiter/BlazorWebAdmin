@@ -2,6 +2,9 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 @using Microsoft.Extensions.Options;
 @using Project.AppCore.Options;
+@using Project.Common.Attributes;
+@inherits JsComponentBase
+@attribute [AutoLoadJsModule(Path = "Layouts/LayoutComponents")]
 <div class="nav-menu @Class">
     @*全屏按钮*@
     <div class="nav-menu-item" @onclick=ToggleFullScreen title="@Localizer["NavNemu.TipTitle.FullScreen"]">
@@ -18,7 +21,7 @@
     }
     @*登录用户*@
     <div title="登录用户">
-        <Profile></Profile>
+        <Profile @ref=profile></Profile>
     </div>
     @*清除LocalStorage*@
     <div class="nav-menu-item" @onclick=ClearLocalStorage title="@Localizer["NavNemu.TipTitle.ClearStorage"]">
@@ -41,6 +44,7 @@
 @code {
     [Parameter] public string Class { get; set; }
     FullScreen? fullscreen;
+    Profile? profile;
     [Inject][NotNull] public AppStore App { get; set; }
     [Inject] public ProtectedLocalStorage Storage { get; set; }
     [Inject] IJSRuntime Js { get; set; }
@@ -70,6 +74,7 @@
 
     async Task ClearLocalStorage()
     {
-        await Js.InvokeVoidAsync("localStorageClear");
+        await (Module?.InvokeVoidAsync("clearLocalStorage") ?? ValueTask.CompletedTask);
+        await (profile?.HandleLogout() ?? Task.CompletedTask);
     }
 }

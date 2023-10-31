@@ -14,28 +14,5 @@ namespace BlazorWeb.Shared.Utils
         {
             await runtime.OpenNewTab($"/download/{filename}/{extension}");
         }
-
-        public static ValueTask<T> ElementOperation<T>(this IJSRuntime runtime, ElementReference dom, string functionName, params object[] args)
-        {
-            return runtime.InvokeAsync<T>("elementOperation", dom, functionName, args);
-            //if (args.Length > 0)
-            //else
-            //    return runtime.InvokeAsync<T>("elementOperation", dom, functionName);
-        }
-
-        public static ValueTask ElementOperation(this IJSRuntime runtime, ElementReference dom, string functionName, params object[] args)
-        {
-            return runtime.InvokeVoidAsync("elementOperation", dom, functionName, args);
-        }
-
-        public static ValueTask<T> ElementProperty<T>(this IJSRuntime runtime, ElementReference dom, string prop)
-        {
-            return runtime.InvokeAsync<T>("elementProperty", dom, prop);
-        }
-
-        public static ValueTask<T> ElementProperty<T>(this IJSRuntime runtime, string selector, string prop)
-        {
-            return runtime.InvokeAsync<T>("elementProperty", selector, prop);
-        }
     }
 }

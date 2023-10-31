@@ -3,6 +3,7 @@ using BlazorWeb.Shared.Layouts;
 using BlazorWeb.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 using Project.AppCore.Store;
 using Project.Common;
 
@@ -23,7 +24,7 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                navMenuWidth = await Js.ElementProperty<int>(".nav-menu", "offsetWidth");
+                navMenuWidth = await Module!.InvokeAsync<int>("getMenuWidth", "");
             }
         }
 

@@ -13,4 +13,8 @@ export class BaseComponent {
             removeComponent(id);
         }
     }
+
+    static init() {
+
+    }
 }
