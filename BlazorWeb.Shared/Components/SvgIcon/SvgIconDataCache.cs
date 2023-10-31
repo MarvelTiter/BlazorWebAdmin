@@ -5,25 +5,28 @@ namespace BlazorWeb.Shared.Components
 {
     internal static class SvgIconDataCache
     {
-        private static readonly ConcurrentDictionary<string, string> _cache = new();
+        private static readonly ConcurrentDictionary<string, string> _contentCache = new();
+        private static readonly ConcurrentDictionary<string, string> _nameCache = new();
         public static async Task<string> GetIconDataByName(string name)
         {
-            if (!_cache.TryGetValue(name, out var result))
+            if (!_contentCache.TryGetValue(name, out var result))
             {
                 result = await ReadIconData(name);
-                _cache[name] = result; // Safe race - doesn't matter if it overwrites
             }
             return result;
         }
 
         private static async Task<string> ReadIconData(string name)
         {
-            var iconFile = $"wwwroot/icons/{name}.svg";
-            if (File.Exists(iconFile))
+            if (!_nameCache.TryGetValue(name, out var iconFile))
+            {
+                LoadAllIcons();
+                return await ReadIconData(name);
+            }
+            if (iconFile != null)
             {
                 //FileInfo f = new FileInfo(iconFile);
                 //var files = Directory.EnumerateFiles($"./_content", "*.svg", SearchOption.AllDirectories);
-
                 var svgContent = await File.ReadAllTextAsync(iconFile);
                 return svgContent;
             }
@@ -33,21 +36,26 @@ namespace BlazorWeb.Shared.Components
             }
         }
         static bool loaded;
-        public static async Task LoadAllIcons()
+        public static void LoadAllIcons()
         {
             if (loaded) return;
-            var files = Directory.EnumerateFiles($"wwwroot/icons", "*.svg", SearchOption.AllDirectories);
+            var path = AppDomain.CurrentDomain.BaseDirectory;
+#if DEBUG
+            path = new DirectoryInfo(path).Parent!.Parent!.Parent!.Parent!.FullName;
+#endif
+            var files = Directory.EnumerateFiles(path, "*.svg", SearchOption.AllDirectories).Where(f => f.Contains("wwwroot") && !f.Contains("Release"));
             foreach (var f in files)
             {
                 var name = Path.GetFileNameWithoutExtension(f);
-                _ = await GetIconDataByName(name);
+                _nameCache.TryAdd(name, f);
             }
             loaded = true;
         }
 
         public static List<string> GetIcons()
         {
-            return _cache.Keys.ToList();
+            LoadAllIcons();
+            return _nameCache.Keys.ToList();
         }
     }
 }
