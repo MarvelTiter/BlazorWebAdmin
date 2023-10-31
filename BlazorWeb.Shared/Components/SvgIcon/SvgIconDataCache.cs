@@ -20,8 +20,11 @@ namespace BlazorWeb.Shared.Components
         {
             if (!_nameCache.TryGetValue(name, out var iconFile))
             {
-                LoadAllIcons();
-                return await ReadIconData(name);
+                if (!loaded)
+                {
+                    LoadAllIcons();
+                    return await ReadIconData(name);
+                }
             }
             if (iconFile != null)
             {
