@@ -37,9 +37,9 @@ namespace Project.AppCore.Auth
             {
                 var app = await storageService.GetAsync<AppStore>(AppStore.KEY);
                 appStore.ApplySetting(app.Value);
+                var result = await storageService.GetAsync<UserInfo>("UID");
                 if (token.CurrentValue.NeedAuthentication)
                 {
-                    var result = await storageService.GetAsync<UserInfo>("UID");
                     var diff = DateTime.Now - result.Value?.CreatedTime;
                     var actived = DateTime.Now - result.Value?.ActiveTime;
                     if (result.Success && (diff?.Days < token.CurrentValue.Expire || actived?.TotalSeconds < token.CurrentValue.LimitedFreeTime))
@@ -50,7 +50,7 @@ namespace Project.AppCore.Auth
                 }
                 else
                 {
-                    return await UpdateState(new UserInfo { UserId = "admin", UserName = "admin" });
+                    return await UpdateState(result.Value ?? new UserInfo { UserId = "admin", UserName = "admin" });
                 }
             }
             catch (Exception)

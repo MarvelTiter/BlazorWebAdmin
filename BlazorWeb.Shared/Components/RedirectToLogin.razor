@@ -8,7 +8,8 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-
+        // var redirect = Navigator.ToBaseRelativePath(Navigator.Uri);
+        // Navigator.NavigateTo($"/login?Redirect={HttpUtility.UrlEncode(redirect)}", true);
     }
 
     protected override void OnAfterRender(bool firstRender)

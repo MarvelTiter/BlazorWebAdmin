@@ -5,6 +5,7 @@ using BlazorWeb.Shared.Template.Tables.Setting;
 using BlazorWeb.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
+using Project.AppCore.PageHelper;
 using Project.AppCore.Services;
 using Project.Models;
 using Project.Models.Permissions;
@@ -16,7 +17,7 @@ namespace BlazorWeb.Shared.SystemPermission
     {
         public IList<PowerTreeNode> Children { get; set; }
     }
-    public partial class PermissionSetting
+    public partial class PermissionSetting : ITagPage
     {
         [Inject] public ModalService ModalSrv { get; set; }
         [Inject] public DrawerService DrawerSrv { get; set; }
@@ -159,5 +160,16 @@ namespace BlazorWeb.Shared.SystemPermission
             return result.Success;
         }
 
+        public Task OnShowAsync()
+        {
+            Console.WriteLine($"PermissionSetting Page [OnShowAsync] {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            return Task.CompletedTask;
+        }
+
+        public Task OnHiddenAsync()
+        {
+            Console.WriteLine($"PermissionSetting Page [OnHiddenAsync] {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            return Task.CompletedTask;
+        }
     }
 }

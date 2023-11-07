@@ -8,4 +8,5 @@ namespace BlazorWeb.Shared.Interfaces
         event Func<KeyboardEventArgs, Task> OnKeyDown;
         event Func<KeyboardEventArgs, Task> OnKeyUp;
     }
+
 }

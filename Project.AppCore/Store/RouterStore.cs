@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Project.AppCore.Options;
+using Project.AppCore.PageHelper;
 using Project.AppCore.Services;
 using Project.Common;
 using Project.Common.Attributes;
@@ -42,21 +43,37 @@ namespace Project.AppCore.Store
     public class TagRoute : RouterMeta
     {
         public bool Closable { get; set; } = true;
-        //public CacheItem Content { get; set; } = new CacheItem();
         public DateTime StartTime { get; set; }
         public DateTime ActiveTime { get; set; }
         public TimeSpan LifeTime { get; set; }
         public RenderFragment? Body { get; set; }
         public RenderFragment? Title { get; set; }
+        public object PageRef { get; set; }
+
+        private bool isActive;
+        public new bool IsActive { get => isActive; set => SetActive(value); }
         public string ItemClass => ClassHelper.Default
             .AddClass("main_content")
             .AddClass("active", () => IsActive).Class;
 
         public void SetActive(bool active)
         {
-            IsActive = active;
-            //if (active && Content != null) Content.ActiveTime = DateTime.Now;
             if (active) ActiveTime = DateTime.Now;
+#if DEBUG
+            Console.WriteLine($"{PageRef?.GetType().Name} [Update Active Status] {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+#endif
+            if (isActive != active && PageRef is ITagPage page)
+            {
+                if (active)
+                {
+                    _ = page.OnShowAsync();
+                }
+                else
+                {
+                    _ = page.OnHiddenAsync();
+                }
+            }
+            isActive = active;
         }
     }
 
@@ -135,9 +152,8 @@ namespace Project.AppCore.Store
         public void SetActive(string link)
         {
             if (link == "") link = "/";
-            TopLink.ForEach(a => a.SetActive(a.IsActive = link == a.RouteLink));
+            TopLink.ForEach(a => a.IsActive = (link == a.RouteLink));
             NotifyChanged();
-            //return Task.CompletedTask;
         }
         private RouterMeta FindRecursive(IEnumerable<RouterMeta> groups, string link)
         {

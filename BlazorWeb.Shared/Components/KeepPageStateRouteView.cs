@@ -40,7 +40,7 @@ namespace BlazorWeb.Shared.Components
             if (route == null) return CreateBody();
             if (route.Body == null)
             {
-                var content = CreateBody();
+                var content = CreateBody(route);
                 route.Body = builder =>
                 {
                     builder.OpenComponent<ErrorCatcher>(0);
@@ -51,7 +51,7 @@ namespace BlazorWeb.Shared.Components
             return route.Body;
         }
 
-        private RenderFragment CreateBody()
+        private RenderFragment CreateBody(TagRoute? route = null)
         {
             var pagetype = RouteData.PageType;
             var routeValues = RouteData.RouteValues;
@@ -63,6 +63,11 @@ namespace BlazorWeb.Shared.Components
                 {
                     builder.AddAttribute(seq++, routeValue.Key, routeValue.Value);
                 }
+                builder.AddComponentReferenceCapture(seq++, obj =>
+                {
+                    if (route != null)
+                        route.PageRef = obj;
+                });
                 builder.CloseComponent();
             }
             return RenderForLastValue;
