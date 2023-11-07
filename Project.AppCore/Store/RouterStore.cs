@@ -5,11 +5,13 @@ using Microsoft.Extensions.Options;
 using Project.AppCore.Options;
 using Project.AppCore.Services;
 using Project.Common;
+using Project.Common.Attributes;
 using Project.Models.Permissions;
+using System.Reflection;
 
 namespace Project.AppCore.Store
 {
-    public class RouterMeta
+    public class RouterMeta : ICloneable
     {
         public bool IsActive { get; set; }
         public string RouteLink { get; set; }
@@ -17,7 +19,24 @@ namespace Project.AppCore.Store
         public string RouteName { get; set; }
         public bool HasChildren => Children != null && Children.Any();
         public string Redirect { get; set; } = "NoRedirect";
+        public bool Pin { get; set; }
+        public string? Parent { get; set; }
+        public bool Menu { get; set; }
         public IEnumerable<RouterMeta> Children { get; set; }
+
+        public object Clone()
+        {
+            return new RouterMeta
+            {
+                IsActive = false,
+                RouteLink = RouteLink,
+                IconName = IconName,
+                RouteName = RouteName,
+                Redirect = Redirect,
+                Pin = Pin,
+                Parent = Parent,
+            };
+        }
     }
 
     public class TagRoute : RouterMeta
@@ -28,7 +47,7 @@ namespace Project.AppCore.Store
         public DateTime ActiveTime { get; set; }
         public TimeSpan LifeTime { get; set; }
         public RenderFragment? Body { get; set; }
-        public RenderFragment? Title { get; set; } 
+        public RenderFragment? Title { get; set; }
         public string ItemClass => ClassHelper.Default
             .AddClass("main_content")
             .AddClass("active", () => IsActive).Class;
@@ -41,18 +60,63 @@ namespace Project.AppCore.Store
         }
     }
 
+
+    public static class AllPages
+    {
+        public static IList<Assembly> Assemblies { get; }
+        public static IList<RouterMeta> AllRoutes { get; }
+        static AllPages()
+        {
+            var entryAssembly = Assembly.GetEntryAssembly();
+            if (entryAssembly == null)
+            {
+                Assemblies = new List<Assembly>();
+                return;
+            }
+            var referencedAssemblies = entryAssembly.GetReferencedAssemblies().Select(Assembly.Load);
+            Assemblies = new List<Assembly> { entryAssembly }.Union(referencedAssemblies).ToList();
+            List<RouterMeta> routes = new();
+            foreach (var assembly in Assemblies)
+            {
+                routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).Select(t => GetRouterMeta(t)));
+            }
+            AllRoutes = routes;
+        }
+
+        private static RouterMeta GetRouterMeta(Type t)
+        {
+            var routerAttr = t.GetCustomAttribute<RouteAttribute>();
+            var info = t.GetCustomAttribute<PageInfoAttribute>();
+            var template = routerAttr!.Template;
+            RouterMeta meta = new()
+            {
+                RouteLink = template.Length > 1 ? template[1..] : template,
+                RouteName = info?.Title ?? t.Name,
+                IconName = info?.Icon ?? "",
+                Pin = info?.Pin ?? false,
+                Parent = info?.Parent,
+                Menu = info?.IsMenu ?? false,
+            };
+            return meta;
+        }
+    }
+
     public class RouterStore : StoreBase
     {
         private readonly IPermissionService permissionService;
         private readonly IStringLocalizer<RouterStore> localizer;
         private readonly IOptionsMonitor<CultureOptions> options;
+        private readonly IOptionsMonitor<Token> token;
 
-        public RouterStore(IPermissionService permissionService, IStringLocalizer<RouterStore> localizer, IOptionsMonitor<CultureOptions> options)
+        public RouterStore(IPermissionService permissionService
+            , IStringLocalizer<RouterStore> localizer
+            , IOptionsMonitor<CultureOptions> options
+            , IOptionsMonitor<Token> token)
         {
             this.permissionService = permissionService;
             this.localizer = localizer;
             this.options = options;
-            Reset();
+            this.token = token;
         }
         public List<TagRoute> TopLink { get; set; } = new List<TagRoute>();
 
@@ -60,7 +124,7 @@ namespace Project.AppCore.Store
 
         public int Count { get; set; }
 
-        public TagRoute Current => TopLink.FirstOrDefault(r => r.IsActive);
+        public TagRoute? Current => TopLink.FirstOrDefault(r => r.IsActive);
 
         protected override void Release()
         {
@@ -98,20 +162,15 @@ namespace Project.AppCore.Store
         }
         public void TryAdd(string link)
         {
-            //if (string.IsNullOrEmpty(link) || link == "/")
-            //{
-            //    TopLink.ForEach(a => a.IsActive = false);
-            //    NotifyChanged();
-            //    return;
-            //}
             if (link == "") link = "/";
-            var route = FindRecursive(Routers, link);
-            if (!TopLink.Any(x => link == x.RouteLink))
+            var route = FindRecursive(Routers, link) ?? AllPages.AllRoutes.FirstOrDefault(r => r.RouteLink == link);
+            if (route != null && !TopLink.Any(x => link == x.RouteLink))
             {
                 TopLink.Add(new TagRoute
                 {
-                    RouteLink = route?.RouteLink ?? link,
-                    RouteName = route?.RouteName ?? GetLocalizerString("Dynamic", "动态页"),
+                    RouteLink = route.RouteLink,
+                    RouteName = route.RouteName,
+                    Closable = !route.Pin
                 });
             }
             SetActive(link);
@@ -128,7 +187,8 @@ namespace Project.AppCore.Store
             }
             else
             {
-                SetActive(TopLink[index - 1].RouteLink);
+                if (TopLink.Count > 0)
+                    SetActive(TopLink[index - 1].RouteLink);
             }
             NotifyChanged();
         }
@@ -175,7 +235,54 @@ namespace Project.AppCore.Store
             return Task.CompletedTask;
         }
         //TODO 获取权限列表
-        public async Task InitRoutersAsync(UserInfo? userInfo)
+        public Task InitRoutersAsync(UserInfo? userInfo)
+        {
+            if (!token.CurrentValue.NeedAuthentication)
+            {
+                InitRoutersByDefault();
+                return Task.CompletedTask;
+            }
+            else
+            {
+                return InitRoutersAsyncByUser(userInfo);
+            }
+        }
+
+        private void InitRoutersByDefault()
+        {
+            Routers = new List<RouterMeta>();
+            var roots = AllPages.AllRoutes.Where(meta => meta.Menu && meta.Parent == null);
+            var groups = AllPages.AllRoutes.Where(meta => meta.Menu && meta.Parent != null).GroupBy(meta => meta.Parent).Select(g =>
+             {
+                 return new RouterMeta
+                 {
+                     RouteLink = g.Key!,
+                     RouteName = GetLocalizerString(g.Key!, g.Key!)
+                 };
+             });
+            roots = roots.Concat(groups);
+            foreach (var item in roots)
+            {
+                var route = (RouterMeta)item.Clone();
+                route.Children = FindChildren(item);
+                Routers.Add(route);
+            }
+
+            List<RouterMeta> FindChildren(RouterMeta parent)
+            {
+                var children = AllPages.AllRoutes.Where(p => p.Parent == parent.RouteLink);
+                List<RouterMeta> childNodes = new();
+                foreach (var child in children)
+                {
+                    var n1 = (RouterMeta)child.Clone();
+                    n1.Children = FindChildren(child);
+                    childNodes.Add(n1);
+                }
+                return childNodes;
+            }
+        }
+
+        private async Task InitRoutersAsyncByUser(UserInfo? userInfo)
         {
             if (userInfo == null) return;
             await Reset();

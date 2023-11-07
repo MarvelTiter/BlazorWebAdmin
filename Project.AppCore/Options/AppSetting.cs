@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Project.AppCore.Store;
 
 namespace Project.AppCore.Options
 {
@@ -6,5 +7,7 @@ namespace Project.AppCore.Options
     {
         public string AppTitle { get; set; }
         public string AppShortName { get; set; }
+        public LayoutMode? LayoutMode { get; set; }
+        public string? AppLanguage { get; set; }
     }
 }

@@ -18,4 +18,14 @@ namespace Project.Common.Attributes
         /// </summary>
         public bool IsLibrary { get; set; } = true;
     }
+
+    [AttributeUsage (AttributeTargets.Class)]
+    public class PageInfoAttribute : Attribute
+    {
+        public string? Title { get; set; }
+        public string? Icon { get; set; }
+        public bool Pin { get; set; }
+        public bool IsMenu { get; set; }
+        public string? Parent { get; set; }
+    }
 }

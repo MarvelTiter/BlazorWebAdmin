@@ -33,7 +33,8 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         private void CloseTag(RouterMeta state)
         {
             store.Remove(state.RouteLink);
-            nav.NavigateTo(store.Current.RouteLink);
+            if (store.Current != null)
+                nav.NavigateTo(store.Current.RouteLink);
         }
 
         private void OpenContextMenu(MouseEventArgs e, RouterMeta current)
