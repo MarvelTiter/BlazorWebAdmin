@@ -35,7 +35,7 @@
     <Col Span=10>
         @if (selectedField?.DataType == typeof(DateTime))
         {
-        <DatePicker @bind-Value=dateValue Style="width:100%;" OnChange=@(async () => await NotifyChanged())></DatePicker>
+        <DatePicker @bind-Value=dateValue Style="width:100%;" TValue="DateTime" OnChange=@UpdateDate></DatePicker>
         }
         else if (selectedField?.EnumValues != null || (selectedField?.IsEnum ?? false))
         {
@@ -125,7 +125,10 @@
         LinkType = check ? ExpressionType.AndAlso : ExpressionType.OrElse;
         await NotifyChanged();
     }
-
+    Task UpdateDate(DateTimeChangedEventArgs<DateTime> args)
+    {
+        return NotifyChanged();
+    }
     async Task NotifyChanged()
     {
         

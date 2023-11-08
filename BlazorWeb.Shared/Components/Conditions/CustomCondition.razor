@@ -7,7 +7,7 @@
         <span class="label" style="width:@($"{Parent.LabelWidth}px")">@Label</span>
             @if (typeof(TData) == typeof(DateTime))
             {
-            <DatePicker @bind-Value=Value OnChange=@(async () => await NotifyChanged())></DatePicker>
+            <DatePicker @bind-Value=Value TValue="TData" OnChange=UpdateDate></DatePicker>
             }
             else if (EnumValues != null)
             {
@@ -34,6 +34,11 @@
     {
         base.OnParametersSet();
         stringValue = Value?.ToString();
+    }
+
+    Task UpdateDate(DateTimeChangedEventArgs<TData> args)
+    {
+        return NotifyChanged();
     }
 
     async Task NotifyChanged()

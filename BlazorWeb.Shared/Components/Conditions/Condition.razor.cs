@@ -1,8 +1,10 @@
-﻿using BlazorWeb.Shared.Template.Tables.Setting;
+﻿using AntDesign;
+using BlazorWeb.Shared.Template.Tables.Setting;
 using Microsoft.AspNetCore.Components;
 using MT.Toolkit.DateTimeExtension;
 using MT.Toolkit.StringExtension;
 using System.Linq.Expressions;
+using System.Xml.Linq;
 
 namespace BlazorWeb.Shared.Components
 {
@@ -98,7 +100,10 @@ namespace BlazorWeb.Shared.Components
                 || Field.DataType == typeof(DateTime?);
             }
         }
-
+        Task UpdateDate(DateTimeChangedEventArgs<DateTime> args)
+        {
+            return NotifyChanged();
+        }
         Task NotifyChanged()
         {
             if (Field == null) return Task.CompletedTask;
