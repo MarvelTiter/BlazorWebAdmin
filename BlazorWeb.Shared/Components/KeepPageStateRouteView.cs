@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Rendering;
-using Project.AppCore.Store;
+using Project.AppCore.Routers;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
@@ -22,13 +22,13 @@ namespace BlazorWeb.Shared.Components
         protected override void Render(RenderTreeBuilder builder)
         {
             var layoutType = RouteData.PageType.GetCustomAttribute<LayoutAttribute>()?.LayoutType ?? DefaultLayout;
-            RouterStore.SetActive(CurrentUrl);
+            // RouterStore.SetActive(CurrentUrl);
             var current = RouterStore.Current;
-            if (current == null)
-            {
-                RouterStore.TryAdd(CurrentUrl);
-                current = RouterStore.Current;
-            }
+            //if (current == null)
+            //{
+            //    RouterStore.TryAdd(CurrentUrl);
+            //    current = RouterStore.Current;
+            //}
             builder.OpenComponent<LayoutView>(0);
             builder.AddAttribute(1, "Layout", layoutType);
             builder.AddAttribute(2, "ChildContent", GetCurrentBody(current));

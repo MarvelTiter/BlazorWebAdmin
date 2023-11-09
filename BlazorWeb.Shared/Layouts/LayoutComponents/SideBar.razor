@@ -1,17 +1,12 @@
-﻿@inject EventDispatcher dispatcher
+﻿@using Project.AppCore.Routers;
+@inject EventDispatcher dispatcher
 @inject RouterStore routeStore
 @inject AppStore App
 @implements IDisposable
 <div class="side_bar @Class" style="display: flex;flex-direction: column;width:@Width">
     @TopBanner
     <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed=collapse Style="flex: 1;" OnMenuItemClicked="OnMenuItemClick">
-        @*<Profile></Profile>*@
-        @*<MenuItem RouterLink="/" RouterMatch="NavLinkMatch.All" Title="主页">
-        <IconTemplate>
-        <SvgIcon ClassName="nav-icon" IconName="home"></SvgIcon>
-        </IconTemplate>
-        </MenuItem>*@
-        @foreach (var item in routeStore.Routers)
+        @foreach (var item in routeStore.Menus.Where(m => m.Group == "ROOT"))
         {
             <SideBarItem Route=item></SideBarItem>
         }
@@ -47,7 +42,7 @@
 
     private Task OnMenuItemClick(MenuItem item)
     {
-        routeStore.TryAdd(item.RouterLink);
+        routeStore.TryAddTopLink(item.RouterLink, item.Title);
         return Task.CompletedTask;
     }
     private bool disposedValue;

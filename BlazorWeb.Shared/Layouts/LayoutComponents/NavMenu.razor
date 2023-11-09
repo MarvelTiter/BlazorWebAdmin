@@ -20,12 +20,21 @@
         </div>
     }
     @*登录用户*@
-    @if (Token.CurrentValue.NeedAuthentication)
-    {
-        <div title="登录用户">
-            <Profile @ref=profile></Profile>
-        </div>
-    }
+    <AuthorizeView>
+        <Authorized>
+            <div title="登录用户">
+                <Profile @ref=profile></Profile>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            @if (Token.CurrentValue.NeedAuthentication)
+            {
+                <div title="登录">
+                    <SvgIcon IconName="login"></SvgIcon>
+                </div>
+            }
+        </NotAuthorized>
+    </AuthorizeView>
     @*清除LocalStorage*@
     <div class="nav-menu-item" @onclick=ClearLocalStorage title="@Localizer["NavMenu.TipTitle.ClearStorage"]">
         <SvgIcon IconName="clear"

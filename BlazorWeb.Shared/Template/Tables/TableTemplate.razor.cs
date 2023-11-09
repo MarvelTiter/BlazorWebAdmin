@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
 using MT.Toolkit.StringExtension;
-using Project.AppCore.Store;
 using Project.Models;
 using Project.Models.Request;
 using System.Data;
 using System.Linq.Expressions;
 using BlazorWeb.Shared.Interfaces;
+using Project.AppCore.Routers;
 
 namespace BlazorWeb.Shared.Template.Tables
 {

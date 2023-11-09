@@ -15,10 +15,7 @@
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-        if (!Token.CurrentValue.NeedAuthentication)
-        {
-            return;
-        }
+        
         @*_ = MsgSrv.Error("登录过期！请重新登录！");*@
         var redirect = Navigator.ToBaseRelativePath(Navigator.Uri);
         Navigator.NavigateTo($"/login?Redirect={HttpUtility.UrlEncode(redirect)}", true);

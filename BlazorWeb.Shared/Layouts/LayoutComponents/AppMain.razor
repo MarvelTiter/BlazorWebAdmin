@@ -1,33 +1,35 @@
 ﻿@using BlazorWeb.Shared.Components
-@inject RouterStore store
+@using Project.AppCore.Routers;
 @implements IDisposable
 <ScrollBar>
-    @foreach (var item in store.TopLink)
+    @foreach (var item in Store.TopLinks)
     {
         if (item.Body == null) continue;
-        <div id=@item.RouteLink class=@item.ItemClass>
+        <div id=@item.RouteLink style="@(item.RouteLink == Store.CurrentUrl ? "display: block;":"display: none;")">
             <!-- 在TableTemplate中获取当前页的信息 -->
             <CascadingValue Value="item">
-                @item.Body
+                <ErrorCatcher>
+                    @item.Body
+                </ErrorCatcher>
             </CascadingValue>
         </div>
     }
 </ScrollBar>
 
 @code {
-    [CascadingParameter]
-    public RootLayout? Parent { get; set; }
-    [Inject]
-    public NavigationManager Navigator { get; set; }
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        Navigator.LocationChanged += OnNavigated;
-    }
+    [CascadingParameter] public RouteData RouteData { get; set; }
+    [Inject] RouterStore Store { get; set; }
 
-    void OnNavigated(object? sender, LocationChangedEventArgs e)
+    public override Task SetParametersAsync(ParameterView parameters)
     {
-        StateHasChanged();
+        if (parameters.TryGetValue(nameof(RouteData), out RouteData? routeData))
+        {
+            if (routeData != null)
+            {
+                _ = Store.RouteDataChangedHandleAsync(routeData);
+            }
+        }
+        return base.SetParametersAsync(parameters);
     }
 
     private bool disposedValue;
@@ -38,8 +40,6 @@
             if (disposing)
             {
                 // 释放托管状态(托管对象)
-                //Parent!.OnNavigated -= OnNavigated;
-                Navigator.LocationChanged -= OnNavigated;
             }
 
             // 释放未托管的资源(未托管的对象)并重写终结器
@@ -53,16 +53,3 @@
         GC.SuppressFinalize(this);
     }
 }
-
-<style>
-    .main_content {
-        display: none;
-        /*overflow: auto;
-                        flex: 1;
-                        padding: 10px;*/
-    }
-
-        .main_content.active {
-            display: block;
-        }
-</style>

@@ -9,5 +9,6 @@ namespace Project.AppCore.Options
         public string AppShortName { get; set; }
         public LayoutMode? LayoutMode { get; set; }
         public string? AppLanguage { get; set; }
+        public string? LauchUrl { get; set; }
     }
 }

@@ -2,12 +2,14 @@
 @using Microsoft.Extensions.Options;
 @using Project.AppCore.Auth
 @using Project.AppCore.Options;
+@using Project.AppCore.Routers;
 @using Project.Models.Permissions
 @inject RouterStore Router
 @inherits RootLayout
 @inject AuthenticationStateProvider Auth
 @inject ProtectedLocalStorage LocalStorage
 @inject IOptionsMonitor<Token> Token
+@inject IOptionsMonitor<AppSetting> Setting
 @inject AppStore App
 <div @onclick="HandleRootClick"
 @onkeydown=HandleKeyAction
@@ -23,22 +25,33 @@
                  </ActionWatcher>
              </Authorized>
              <NotAuthorized>
-                 <RedirectToLogin></RedirectToLogin>
-             </NotAuthorized>
-         </AuthorizeView>
-     </CascadingValue>
- </div>
+                 @if (Token.CurrentValue.NeedAuthentication)
+                {
+                    <RedirectToLogin></RedirectToLogin>
+                }
+                else
+                {
+                    @Body
+                }
+            </NotAuthorized>
+        </AuthorizeView>
+    </CascadingValue>
+</div>
 
- @code {
+@code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationStateTask { get; set; }
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     [Inject]
     public ILogger<AuthorizedLayout> Logger { get; set; }
+
+    string? LauchUrl => Setting.CurrentValue.LauchUrl;
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        Console.WriteLine("OnInitializedAsync");
         if (authenticationStateTask != null)
         {
             var state = await authenticationStateTask;
@@ -48,7 +61,10 @@
                 await Router.InitRoutersAsync(ca?.Current);
                 var url = Navigator.ToBaseRelativePath(Navigator.Uri);
                 Navigator.NavigateTo(url);
-                RouterStore.TryAdd(url);
+            }
+            else
+            {
+                await Router.InitRoutersAsync(null);
             }
         }
     }

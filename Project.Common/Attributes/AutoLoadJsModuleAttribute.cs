@@ -22,10 +22,12 @@ namespace Project.Common.Attributes
     [AttributeUsage (AttributeTargets.Class)]
     public class PageInfoAttribute : Attribute
     {
-        public string? Title { get; set; }
+        public string? PageId { get; set; }
+        public string? PageTitle { get; set; }
+        public string? Group { get; set; }
         public string? Icon { get; set; }
+        public int Sort { get; set; }
         public bool Pin { get; set; }
-        public bool IsMenu { get; set; }
-        public string? Parent { get; set; }
+
     }
 }

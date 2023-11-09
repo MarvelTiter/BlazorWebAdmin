@@ -5,8 +5,10 @@
         <CascadingAuthenticationState>
             <Router AppAssembly="AppAssembly" AdditionalAssemblies="Config.Pages">
                 <Found Context="routeData">
-                    <KeepPageStateRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                    <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+                    <CascadingValue Value="@routeData">
+                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+                    </CascadingValue>
                 </Found>
                 <NotFound>
                     <PageTitle>Not found</PageTitle>
@@ -22,9 +24,9 @@
 
 <AntContainer />
 
-@code{
+@code {
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     [Parameter]
-    public Assembly AppAssembly{ get; set; }
+    public Assembly AppAssembly { get; set; }
 }

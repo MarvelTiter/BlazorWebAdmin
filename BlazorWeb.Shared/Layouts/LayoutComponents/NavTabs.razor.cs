@@ -4,7 +4,7 @@ using BlazorWeb.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
-using Project.AppCore.Store;
+using Project.AppCore.Routers;
 using Project.Common;
 
 namespace BlazorWeb.Shared.Layouts.LayoutComponents
@@ -14,11 +14,15 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         private bool showContextmenu = false;
         private string contextmenuLeft = "";
         private string contextmenuTop = "";
-        private RouterMeta current;
+        private TagRoute current;
         [CascadingParameter] public IDomEventHandler RootLayout { get; set; }
         [Parameter] public string Class { get; set; }
         private int navMenuWidth = 200;
-
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            store.DataChangedEvent += StateHasChanged;
+        }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -30,14 +34,24 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
 
         private ClassHelper ContextmenuClass => ClassHelper.Default.AddClass("context").AddClass("open", () => showContextmenu);
 
-        private void CloseTag(RouterMeta state)
+        private void CloseTag(TagRoute state)
         {
+            var index = store.TopLinks.IndexOf(state);
             store.Remove(state.RouteLink);
-            if (store.Current != null)
-                nav.NavigateTo(store.Current.RouteLink);
+            if (index < store.TopLinks.Count)
+            {
+                nav.NavigateTo(store.TopLinks[index].RouteLink);
+            }
+            else
+            {
+                if (store.TopLinks.Count > 1)
+                    nav.NavigateTo(store.TopLinks[index - 1].RouteLink);
+                else if (store.TopLinks.Count == 1)
+                    nav.NavigateTo(store.TopLinks[0].RouteLink);
+            }
         }
 
-        private void OpenContextMenu(MouseEventArgs e, RouterMeta current)
+        private void OpenContextMenu(MouseEventArgs e, TagRoute current)
         {
             this.current = current;
             contextmenuLeft = $"{e.ClientX + 10}px";
@@ -54,9 +68,6 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         private async Task CloseOther()
         {
             if (current == null) return;
-            //await store.Reset();
-            //await store.TryAdd(current.RouteLink, current.RouteName);
-            //nav.NavigateTo("/" + current.RouteLink);
             await store.RemoveOther(current.RouteLink);
             await CloseMenu();
         }

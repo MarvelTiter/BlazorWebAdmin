@@ -1,40 +1,46 @@
-﻿@using System.Linq
-@if (!Route.HasChildren || onlyOneChildren)
+﻿@using Project.AppCore.Routers;
+@using System.Linq
+@if (!HasChildren || onlyOneChildren)
 {
-	<MenuItem RouterLink="@Current.RouteLink" RouterMatch="NavLinkMatch.All" Title=@Current.RouteName>
-		<IconTemplate>
-			<SvgIcon ClassName="nav-icon" IconName="@Current.IconName"></SvgIcon>
-		</IconTemplate>
-	</MenuItem>
+    <MenuItem RouterLink="@Current.RouteLink" RouterMatch="NavLinkMatch.All" Title=@Current.RouteName>
+        <IconTemplate>
+            <SvgIcon ClassName="nav-icon" IconName="@Current.IconName"></SvgIcon>
+        </IconTemplate>
+    </MenuItem>
 }
 else
 {
-	<SubMenu>
-		<TitleTemplate>
-			<span class="subtitle_template">
-				<Icon>
-					<Component>
-						<SvgIcon ClassName="nav-icon" IconName="@Route.IconName"></SvgIcon>
-					</Component>
-				</Icon>
-				<span>@Route.RouteName</span>
-			</span>
-		</TitleTemplate>
-		<ChildContent>
-			@foreach (var item in Route.Children)
-			{
-				<SideBarItem Route=item></SideBarItem>
-			}
-		</ChildContent>
-	</SubMenu>
+    <SubMenu>
+        <TitleTemplate>
+            <span class="subtitle_template">
+                <Icon>
+                    <Component>
+                        <SvgIcon ClassName="nav-icon" IconName="@Route.IconName"></SvgIcon>
+                    </Component>
+                </Icon>
+                <span>@Route.RouteName</span>
+            </span>
+        </TitleTemplate>
+        <ChildContent>
+            @foreach (var item in Children)
+            {
+                <SideBarItem Route=item></SideBarItem>
+            }
+        </ChildContent>
+    </SubMenu>
 }
 
 
 @code {
-	[Parameter]
-	public RouterMeta Route { get; set; }
+    [Parameter] public RouteMenu Route { get; set; }
 
-	public RouterMeta Current => onlyOneChildren ? Route.Children.First() : Route;
+    [Inject] RouterStore RouterStore { get; set; }
 
-	private bool onlyOneChildren => Route.Children.Count() == 1;
+    public RouteMenu Current => onlyOneChildren ? Children.First() : Route;
+
+    private bool onlyOneChildren => Children.Count() == 1;
+
+    private bool HasChildren => Children.Any();
+
+    private IEnumerable<RouteMenu> Children => RouterStore.Menus.Where(m => m.Group == Route.Id);
 }
