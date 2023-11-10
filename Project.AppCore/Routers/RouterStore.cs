@@ -17,19 +17,19 @@ namespace Project.AppCore.Routers
         private readonly NavigationManager navigationManager;
         private readonly IStringLocalizer<RouterStore> localizer;
         private readonly IOptionsMonitor<CultureOptions> options;
-        private readonly IOptionsMonitor<Token> token;
+        private readonly IOptionsMonitor<AppSetting> setting;
 
         public RouterStore(IPermissionService permissionService
             , NavigationManager navigationManager
             , IStringLocalizer<RouterStore> localizer
             , IOptionsMonitor<CultureOptions> options
-            , IOptionsMonitor<Token> token)
+            , IOptionsMonitor<AppSetting> setting)
         {
             this.permissionService = permissionService;
             this.navigationManager = navigationManager;
             this.localizer = localizer;
             this.options = options;
-            this.token = token;
+            this.setting = setting;
         }
 
 
@@ -93,22 +93,6 @@ namespace Project.AppCore.Routers
             return RenderForLastValue;
         }
 
-        //public void TryAddTopLink(string url, string title)
-        //{
-        //    if (!pages.TryGetValue(CurrentUrl, out var tag))
-        //    {
-        //        var meta = AllPages.AllRoutes.First(r => r.RouteUrl == CurrentUrl);
-        //        tag = new TagRoute
-        //        {
-        //            RouteUrl = url,
-        //            RouteTitle = title,
-        //            Pin = meta.Pin,
-        //        };
-        //        pages[CurrentUrl] = tag;
-        //    }
-        //    NotifyChanged();
-        //}
-
         public void Remove(string link)
         {
             pages.Remove(link);
@@ -156,7 +140,10 @@ namespace Project.AppCore.Routers
             {
                 await InitRoutersAsyncByUser(userInfo);
             }
-            InitRoutersByDefault();
+            if (setting.CurrentValue.LoadUnregisteredPage)
+            {
+                InitRoutersByDefault();
+            }
         }
 
         private void InitRoutersByDefault()

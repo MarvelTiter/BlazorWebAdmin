@@ -10,5 +10,6 @@ namespace Project.AppCore.Options
         public LayoutMode? LayoutMode { get; set; }
         public string? AppLanguage { get; set; }
         public string? LauchUrl { get; set; }
+        public bool LoadUnregisteredPage { get; set; }
     }
 }
