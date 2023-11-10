@@ -37,17 +37,17 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         private void CloseTag(TagRoute state)
         {
             var index = store.TopLinks.IndexOf(state);
-            store.Remove(state.RouteLink);
+            store.Remove(state.RouteUrl);
             if (index < store.TopLinks.Count)
             {
-                nav.NavigateTo(store.TopLinks[index].RouteLink);
+                nav.NavigateTo(store.TopLinks[index].RouteUrl);
             }
             else
             {
                 if (store.TopLinks.Count > 1)
-                    nav.NavigateTo(store.TopLinks[index - 1].RouteLink);
+                    nav.NavigateTo(store.TopLinks[index - 1].RouteUrl);
                 else if (store.TopLinks.Count == 1)
-                    nav.NavigateTo(store.TopLinks[0].RouteLink);
+                    nav.NavigateTo(store.TopLinks[0].RouteUrl);
             }
         }
 
@@ -68,7 +68,7 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         private async Task CloseOther()
         {
             if (current == null) return;
-            await store.RemoveOther(current.RouteLink);
+            await store.RemoveOther(current.RouteUrl);
             await CloseMenu();
         }
 
@@ -86,7 +86,7 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
             await CloseMenu();
         }
 
-        private Task CloseMenu(MouseEventArgs e = null)
+        private Task CloseMenu()
         {
             if (showContextmenu)
                 showContextmenu = false;

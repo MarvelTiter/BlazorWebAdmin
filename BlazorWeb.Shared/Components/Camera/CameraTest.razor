@@ -1,6 +1,6 @@
 ﻿@page "/camera/test"
 @namespace BlazorWeb.Shared.Components
-<Camera AutoPlay EnableClip Width="600" Height="300" OnCapture="handleCapture" AutoDownload></Camera>
+<Camera AutoPlay EnableClip Width="600" Height="300" OnCapture="handleCapture" AutoDownload @ref=camera></Camera>
 <div style="width:500px;">
     <img src="@src" style="width:100%;" />
 </div>

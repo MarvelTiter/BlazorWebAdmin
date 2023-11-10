@@ -19,7 +19,7 @@ namespace BlazorWeb.Shared.Components
         [Parameter] public RenderFragment<IEnumerable<DeviceInfo>> DeviceSelectorRender { get; set; }
         [Parameter] public EventCallback<CaptureInfo> OnCapture { get; set; }
         [Parameter] public bool AutoDownload { get; set; }
-        private IJSObjectReference cameraHelper;
+
         private ElementReference? videoDom;
         private ElementReference? clipDom;
         private ElementReference? canvasDom;
@@ -96,7 +96,7 @@ namespace BlazorWeb.Shared.Components
         public async Task Start()
         {
             var result = await ModuleInvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, 1920, 1080);
-            if (result.Success)
+            if (result.Success && selectedDeviceId != null)
             {
                 playButtonStatus = result.Success;
                 await Storage.SetAsync("previousSelectedDevice", selectedDeviceId);

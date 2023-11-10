@@ -58,11 +58,11 @@ namespace Project.AppCore.Routers
         {
             if (!pages.TryGetValue(CurrentUrl, out var tag))
             {
-                var meta = AllPages.AllRoutes.First(r => r.RouteLink == CurrentUrl);
+                var meta = AllPages.AllRoutes.First(r => r.RouteUrl == CurrentUrl);
                 tag = new TagRoute
                 {
-                    RouteLink = meta.RouteLink,
-                    RouteName = meta.RouteName,
+                    RouteUrl = meta.RouteUrl,
+                    RouteTitle = meta.RouteTitle,
                     Pin = meta.Pin,
                 };
                 pages[CurrentUrl] = tag;
@@ -93,31 +93,25 @@ namespace Project.AppCore.Routers
             return RenderForLastValue;
         }
 
-        public void TryAddTopLink(string url, string title)
-        {
-            if (!pages.TryGetValue(CurrentUrl, out var tag))
-            {
-                var meta = AllPages.AllRoutes.First(r => r.RouteLink == CurrentUrl);
-                tag = new TagRoute
-                {
-                    RouteLink = url,
-                    RouteName = title,
-                    Pin = meta.Pin,
-                };
-                pages[CurrentUrl] = tag;
-            }
-            NotifyChanged();
-        }
+        //public void TryAddTopLink(string url, string title)
+        //{
+        //    if (!pages.TryGetValue(CurrentUrl, out var tag))
+        //    {
+        //        var meta = AllPages.AllRoutes.First(r => r.RouteUrl == CurrentUrl);
+        //        tag = new TagRoute
+        //        {
+        //            RouteUrl = url,
+        //            RouteTitle = title,
+        //            Pin = meta.Pin,
+        //        };
+        //        pages[CurrentUrl] = tag;
+        //    }
+        //    NotifyChanged();
+        //}
 
         public void Remove(string link)
         {
             pages.Remove(link);
-        }
-
-        string GetLocalizerString(Power power)
-        {
-            if (options.CurrentValue.Enabled) return localizer[power.PowerId];
-            else return power.PowerName;
         }
 
         string GetLocalizerString(string key, string defaultValue)
@@ -149,8 +143,8 @@ namespace Project.AppCore.Routers
             pages.Clear();
             pages.Add("/", new TagRoute
             {
-                RouteLink = "/",
-                RouteName = GetHomeLocalizer(),
+                RouteUrl = "/",
+                RouteTitle = GetHomeLocalizer(),
                 Pin = true
             });
             return Task.CompletedTask;
@@ -167,14 +161,23 @@ namespace Project.AppCore.Routers
 
         private void InitRoutersByDefault()
         {
-            foreach (var item in AllPages.AllRoutes.Where(m => !m.Ignore))
+            foreach (var item in AllPages.AllRoutes.Where(m => !m.Ignore).OrderBy(m => m.Sort))
             {
-                if (Menus.Any(m => m.RouteLink == item.RouteLink))
+                if (Menus.Any(m => m.RouteUrl == item.RouteUrl))
                 {
                     continue;
                 }
-                item.RouteName = GetLocalizerString(item.Id ?? item.RouteName, item.RouteName);
-                item.Group ??= "ROOT";
+                item.RouteTitle = GetLocalizerString(item.RouteId, item.RouteTitle);
+                if (item.Group != null && !Menus.Any(m => m.RouteId == item.Group))
+                {
+                    Menus.Add(new RouteMenu()
+                    {
+                        RouteId = item.Group,
+                        Group = "ROOT",
+                        RouteTitle = GetLocalizerString(item.Group, item.Group),
+                        Icon = item.Icon,
+                    });
+                }
                 Menus.Add(new RouteMenu(item));
             }
         }
@@ -188,19 +191,19 @@ namespace Project.AppCore.Routers
             Menus.Clear();
             Menus.Add(new()
             {
-                Id = "Dashboard",
-                RouteLink = "/",
-                IconName = "home",
+                RouteId = "Dashboard",
+                RouteUrl = "/",
+                Icon = "home",
                 Group = "ROOT",
-                RouteName = GetHomeLocalizer(),
+                RouteTitle = GetHomeLocalizer(),
             });
             foreach (var pow in powers)
             {
-                var meta = AllPages.AllRoutes.First(m => m.RouteLink == "/" + pow.Path);
+                var meta = AllPages.AllRoutes.First(m => m.RouteUrl == "/" + pow.Path);
                 if (meta == null) continue;
-                meta.RouteName = GetLocalizerString(pow);
-                meta.Id = pow.PowerId;
-                meta.IconName = pow.Icon;
+                meta.RouteTitle = GetLocalizerString(pow.PowerId, pow.PowerName);
+                meta.RouteId = pow.PowerId;
+                meta.Icon = pow.Icon;
                 meta.Group = pow.ParentId;
                 meta.Sort = pow.Sort;
                 Menus.Add(new(meta));

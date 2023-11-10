@@ -1,16 +1,13 @@
-﻿namespace Project.AppCore.Routers
+﻿using System.Collections.Concurrent;
+
+namespace Project.AppCore.Routers
 {
-    public struct MenuGroup
-    {
-        public string Name { get; set; }
-        public string Icon { get; set; }
-    }
     public class RouterMeta
     {
-        public string? Id { get; set; }
-        public string RouteLink { get; set; }
-        public string IconName { get; set; }
-        public string RouteName { get; set; }
+        public string RouteId { get; set; }
+        public string RouteUrl { get; set; }
+        public string Icon { get; set; }
+        public string RouteTitle { get; set; }
         public string Redirect { get; set; } = "NoRedirect";
         public bool Pin { get; set; }
         public string? Group { get; set; }
@@ -22,14 +19,14 @@
     {
         public RouteMenu()
         {
-            
+
         }
         public RouteMenu(RouterMeta meta)
         {
-            Id = meta.Id;
-            RouteLink = meta.RouteLink;
-            IconName = meta.IconName;
-            RouteName = meta.RouteName;
+            RouteId = meta.RouteId;
+            RouteUrl = meta.RouteUrl;
+            Icon = meta.Icon;
+            RouteTitle = meta.RouteTitle;
             Redirect = meta.Redirect;
             Pin = meta.Pin;
             Group = meta.Group;

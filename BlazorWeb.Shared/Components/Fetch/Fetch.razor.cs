@@ -25,7 +25,7 @@ namespace BlazorWeb.Shared.Components
                 {
                     await Request();
                 }
-                catch(Exception ex)
+                catch
                 {
                     
                 }

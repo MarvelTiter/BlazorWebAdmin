@@ -59,7 +59,6 @@
     Profile? profile;
     [Inject][NotNull] public AppStore App { get; set; }
     [Inject] public ProtectedLocalStorage Storage { get; set; }
-    [Inject] IJSRuntime Js { get; set; }
     [Inject] IStringLocalizer<NavMenu> Localizer { get; set; }
     [Inject] IOptionsMonitor<CultureOptions> CultureOptions { get; set; }
     [Inject] IOptionsMonitor<Token> Token { get; set; }

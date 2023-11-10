@@ -34,16 +34,17 @@ namespace Project.AppCore.Routers
         {
             var routerAttr = t.GetCustomAttribute<RouteAttribute>();
             var info = t.GetCustomAttribute<PageInfoAttribute>();
+            var groupInfo = t.GetCustomAttribute<PageGroupAttribute>();
             //var template = routerAttr!.Template;
             RouterMeta meta = new()
             {
-                Id = info?.PageId ?? t.Name,
-                RouteLink = routerAttr!.Template,
-                RouteName = info?.PageTitle ?? t.Name,
-                IconName = info?.Icon ?? "",
+                RouteId = info?.Id ?? t.FullName!,
+                RouteUrl = routerAttr!.Template,
+                RouteTitle = info?.Title ?? t.Name,
+                Icon = groupInfo?.Icon ?? info?.Icon ?? "",
                 Pin = info?.Pin ?? false,
-                Group = info?.Group,
-                Sort = info?.Sort ?? 0,
+                Group = groupInfo?.Name ?? info?.Group,
+                Sort = groupInfo?.Sort ?? info?.Sort ?? 0,
                 Ignore = info == null,
             };
             return meta;

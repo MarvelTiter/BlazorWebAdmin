@@ -5,7 +5,7 @@
 @implements IDisposable
 <div class="side_bar @Class" style="display: flex;flex-direction: column;width:@Width">
     @TopBanner
-    <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed=collapse Style="flex: 1;" OnMenuItemClicked="OnMenuItemClick">
+    <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed=collapse Style="flex: 1;">
         @foreach (var item in routeStore.Menus.Where(m => m.Group == "ROOT"))
         {
             <SideBarItem Route=item></SideBarItem>
@@ -40,11 +40,12 @@
         StateHasChanged();
     }
 
-    private Task OnMenuItemClick(MenuItem item)
-    {
-        routeStore.TryAddTopLink(item.RouterLink, item.Title);
-        return Task.CompletedTask;
-    }
+    // private Task OnMenuItemClick(MenuItem item)
+    // {
+    //     routeStore.TryAddTopLink(item.RouterLink, item.Title);
+    //     return Task.CompletedTask;
+    // }
+
     private bool disposedValue;
     protected virtual void Dispose(bool disposing)
     {

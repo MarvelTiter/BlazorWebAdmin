@@ -18,16 +18,4 @@ namespace Project.Common.Attributes
         /// </summary>
         public bool IsLibrary { get; set; } = true;
     }
-
-    [AttributeUsage (AttributeTargets.Class)]
-    public class PageInfoAttribute : Attribute
-    {
-        public string? PageId { get; set; }
-        public string? PageTitle { get; set; }
-        public string? Group { get; set; }
-        public string? Icon { get; set; }
-        public int Sort { get; set; }
-        public bool Pin { get; set; }
-
-    }
 }

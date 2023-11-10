@@ -135,7 +135,7 @@ namespace BlazorWeb.Shared.Template.Tables
             }
             if (data.Any())
             {
-                var filename = $"{RouterStore.Current?.RouteName ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}";
+                var filename = $"{RouterStore.Current?.RouteTitle ?? "Temp"}_{DateTime.Now:yyyyMMdd-HHmmss}";
                 var path = Path.Combine(AppConst.TempFilePath, $"{filename}.xlsx");
                 if (TableOptions.ExportHandler != null)
                 {

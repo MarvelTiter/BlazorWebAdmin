@@ -8,7 +8,7 @@
 @inject RouterStore Store
 @inject AppStore App
 
-<PageTitle>@($"管理系统 - {Store.Current?.RouteName ?? "主页"}")</PageTitle>
+<PageTitle>@($"管理系统 - {Store.Current?.RouteTitle ?? "主页"}")</PageTitle>
 
     <CascadingValue Value="this" IsFixed>
 

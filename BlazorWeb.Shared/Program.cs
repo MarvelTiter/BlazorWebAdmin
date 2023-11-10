@@ -10,6 +10,9 @@ using LightExcel;
 using Project.AppCore;
 using Microsoft.Extensions.FileProviders;
 using System.Diagnostics;
+using MT.Toolkit.ReflectionExtension;
+using AntDesign.Core.Helpers.MemberPath;
+using Project.AppCore.Middlewares;
 
 namespace BlazorWeb.Shared
 {
@@ -83,6 +86,9 @@ namespace BlazorWeb.Shared
                 builder.Configuration.GetSection(nameof(Token)).Bind(token);
             });
 
+
+            services.AddSingleton<RedirectToLauchUrlMiddleware>();
+
             //builderOption ??= DefaultSetup.Setup;
             builderOption.Invoke(builder);
 
@@ -103,7 +109,8 @@ namespace BlazorWeb.Shared
 
             ServiceLocator.Instance = app.Services;
             app.UseStaticFiles();
-
+            app.UseMiddleware<RedirectToLauchUrlMiddleware>();
+           
             app.UseRouting();
             //app.UseRequestLocalization();
             app.UseAuthentication();

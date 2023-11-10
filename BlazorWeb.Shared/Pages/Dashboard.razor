@@ -3,7 +3,6 @@
 @using Project.Common.Attributes;
 @inject NavigationManager Nav
 @inject UserStore Current
-@attribute [PageInfo(PageTitle = "主页", Icon = "home")]
 <Card>
     <h2>
         会话创建时间: @(Current?.UserInfo?.CreatedTime.ToString("yyyy-MM-dd HH:mm:ss"))

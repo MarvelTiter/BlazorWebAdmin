@@ -2,9 +2,9 @@
 @using System.Linq
 @if (!HasChildren || onlyOneChildren)
 {
-    <MenuItem RouterLink="@Current.RouteLink" RouterMatch="NavLinkMatch.All" Title=@Current.RouteName>
+    <MenuItem RouterLink="@Current.RouteUrl" RouterMatch="NavLinkMatch.All" Title=@Current.RouteTitle>
         <IconTemplate>
-            <SvgIcon ClassName="nav-icon" IconName="@Current.IconName"></SvgIcon>
+            <SvgIcon ClassName="nav-icon" IconName="@Current.Icon"></SvgIcon>
         </IconTemplate>
     </MenuItem>
 }
@@ -15,10 +15,10 @@ else
             <span class="subtitle_template">
                 <Icon>
                     <Component>
-                        <SvgIcon ClassName="nav-icon" IconName="@Route.IconName"></SvgIcon>
+                        <SvgIcon ClassName="nav-icon" IconName="@Route.Icon"></SvgIcon>
                     </Component>
                 </Icon>
-                <span>@Route.RouteName</span>
+                <span>@Route.RouteTitle</span>
             </span>
         </TitleTemplate>
         <ChildContent>
@@ -42,5 +42,5 @@ else
 
     private bool HasChildren => Children.Any();
 
-    private IEnumerable<RouteMenu> Children => RouterStore.Menus.Where(m => m.Group == Route.Id);
+    private IEnumerable<RouteMenu> Children => RouterStore.Menus.Where(m => m.Group == Route.RouteId);
 }

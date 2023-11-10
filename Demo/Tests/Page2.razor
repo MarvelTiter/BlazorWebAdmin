@@ -1,6 +1,7 @@
 ﻿@page "/page2"
 @using Project.Common.Attributes;
-@attribute [PageInfo(PageTitle = "测试1", Sort = 2)]
+@attribute [PageGroup("测试", "home")]
+@attribute [PageInfo(Title = "测试1", Sort = 2)]
 <h3>Page2</h3>
 
 @code {

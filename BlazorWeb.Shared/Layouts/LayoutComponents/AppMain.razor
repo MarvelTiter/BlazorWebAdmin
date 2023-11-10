@@ -5,7 +5,7 @@
     @foreach (var item in Store.TopLinks)
     {
         if (item.Body == null) continue;
-        <div id=@item.RouteLink style="@(item.RouteLink == Store.CurrentUrl ? "display: block;":"display: none;")">
+        <div id=@item.RouteUrl style="@(item.RouteUrl == Store.CurrentUrl ? "display: block;":"display: none;")">
             <!-- 在TableTemplate中获取当前页的信息 -->
             <CascadingValue Value="item">
                 <ErrorCatcher>

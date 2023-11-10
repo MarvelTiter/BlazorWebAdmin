@@ -10,11 +10,11 @@
         <div class="tags_box @Class" style="--tags_box-theme-color: @App.MainThemeColor;display:flex;height:50px;">
             @foreach (var item in store.TopLinks)
             {
-                <div class="nav_top @(item.RouteLink == store.CurrentUrl ? "active":"")" @oncontextmenu="e => OpenContextMenu(e, item)">
-                    <NavLink href="@item.RouteLink" Match="NavLinkMatch.All">
-                        <span @oncontextmenu:preventDefault>@item.RouteName</span>
+                <div class="nav_top @(item.RouteUrl == store.CurrentUrl ? "active":"")" @oncontextmenu="e => OpenContextMenu(e, item)">
+                    <NavLink href="@item.RouteUrl" Match="NavLinkMatch.All">
+                        <span @oncontextmenu:preventDefault>@item.RouteTitle</span>
 
-                        @if (item.RouteLink == store.CurrentUrl && !item.Pin)
+                        @if (item.RouteUrl == store.CurrentUrl && !item.Pin)
                         {
                             <span style="padding-left:5px;" @onclick="e => CloseTag(item)" @onclick:stopPropagation @onclick:preventDefault>
                                 X
