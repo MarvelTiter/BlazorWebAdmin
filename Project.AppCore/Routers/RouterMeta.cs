@@ -11,7 +11,6 @@ namespace Project.AppCore.Routers
         public string Redirect { get; set; } = "NoRedirect";
         public bool Pin { get; set; }
         public string? Group { get; set; }
-        public bool Ignore { get; set; }
         public int Sort { get; set; }
     }
 
@@ -30,7 +29,6 @@ namespace Project.AppCore.Routers
             Redirect = meta.Redirect;
             Pin = meta.Pin;
             Group = meta.Group;
-            Ignore = meta.Ignore;
         }
         public IEnumerable<RouteMenu> Children { get; set; }
         public bool HasChildren => Children != null && Children.Any();

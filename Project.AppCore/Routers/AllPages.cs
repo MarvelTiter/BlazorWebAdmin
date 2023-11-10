@@ -23,31 +23,42 @@ namespace Project.AppCore.Routers
             List<RouterMeta> routes = new();
             foreach (var assembly in Assemblies)
             {
-                routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).Select(t => GetRouterMeta(t)));
+                routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).SelectMany(t => GetRouterMeta(t)));
             }
             AllRoutes = routes.OrderBy(r => r.Sort).ToList();
 
             InitRouteMenu();
         }
 
-        private static RouterMeta GetRouterMeta(Type t)
+        private static IEnumerable<RouterMeta> GetRouterMeta(Type t)
         {
             var routerAttr = t.GetCustomAttribute<RouteAttribute>();
             var info = t.GetCustomAttribute<PageInfoAttribute>();
             var groupInfo = t.GetCustomAttribute<PageGroupAttribute>();
             //var template = routerAttr!.Template;
-            RouterMeta meta = new()
+
+            if (groupInfo != null)
+            {
+                yield return new()
+                {
+                    RouteId = groupInfo.Name,
+                    RouteTitle = groupInfo.Name,
+                    Icon = groupInfo.Icon,
+                    Sort = groupInfo.Sort,
+                    Group = "ROOT",
+                };
+            }
+
+            yield return new()
             {
                 RouteId = info?.Id ?? t.FullName!,
-                RouteUrl = routerAttr!.Template,
                 RouteTitle = info?.Title ?? t.Name,
-                Icon = groupInfo?.Icon ?? info?.Icon ?? "",
+                RouteUrl = routerAttr!.Template,
+                Icon = info?.Icon ?? "",
                 Pin = info?.Pin ?? false,
-                Group = groupInfo?.Name ?? info?.Group,
-                Sort = groupInfo?.Sort ?? info?.Sort ?? 0,
-                Ignore = info == null,
+                Group = groupInfo?.Name,
+                Sort = info?.Sort ?? 0,
             };
-            return meta;
         }
 
         private static void InitRouteMenu()

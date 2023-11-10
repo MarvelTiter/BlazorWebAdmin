@@ -148,23 +148,13 @@ namespace Project.AppCore.Routers
 
         private void InitRoutersByDefault()
         {
-            foreach (var item in AllPages.AllRoutes.Where(m => !m.Ignore).OrderBy(m => m.Sort))
+            foreach (var item in AllPages.AllRoutes.OrderBy(m => m.Sort))
             {
-                if (Menus.Any(m => m.RouteUrl == item.RouteUrl))
+                if (Menus.Any(m => m.RouteUrl == item.RouteUrl && m.RouteId == item.RouteId))
                 {
                     continue;
                 }
                 item.RouteTitle = GetLocalizerString(item.RouteId, item.RouteTitle);
-                if (item.Group != null && !Menus.Any(m => m.RouteId == item.Group))
-                {
-                    Menus.Add(new RouteMenu()
-                    {
-                        RouteId = item.Group,
-                        Group = "ROOT",
-                        RouteTitle = GetLocalizerString(item.Group, item.Group),
-                        Icon = item.Icon,
-                    });
-                }
                 Menus.Add(new RouteMenu(item));
             }
         }
@@ -186,8 +176,9 @@ namespace Project.AppCore.Routers
             });
             foreach (var pow in powers)
             {
-                var meta = AllPages.AllRoutes.First(m => m.RouteUrl == "/" + pow.Path);
-                if (meta == null) continue;
+                var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteUrl == "/" + pow.Path);
+                if (meta == null)
+                    continue;
                 meta.RouteTitle = GetLocalizerString(pow.PowerId, pow.PowerName);
                 meta.RouteId = pow.PowerId;
                 meta.Icon = pow.Icon;
