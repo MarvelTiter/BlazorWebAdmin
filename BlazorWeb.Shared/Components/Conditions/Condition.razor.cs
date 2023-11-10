@@ -16,6 +16,10 @@ namespace BlazorWeb.Shared.Components
     {
         DayStart,
         DayEnd,
+        /// <summary>
+        /// 当天时间
+        /// </summary>
+        InDay,
     }
 
     public partial class Condition : ConditionBase
@@ -25,7 +29,7 @@ namespace BlazorWeb.Shared.Components
         [Parameter] public CompareType Compare { get; set; } = CompareType.Equal;
         //[Parameter] public DateType? DateConfig { get; set; }
         [Parameter] public TableOptionColumn? Field { get; set; }
-        
+
         [Parameter] public object? DefaultValue { get; set; }
         [Inject] public ILogger<Condition> Logger { get; set; }
         public int Index { get; set; }
@@ -35,7 +39,11 @@ namespace BlazorWeb.Shared.Components
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            Index = Parent!.Conditions.Count;
+            Index = Parent!.Conditions.Count + Parent.IndexFixed;
+            if (DateConfig.HasValue && DateConfig.Value == DateType.InDay)
+            {
+                Parent.IndexFixed += 1;
+            }
             Parent.AddCondition(this);
         }
 
@@ -53,26 +61,37 @@ namespace BlazorWeb.Shared.Components
             }
         }
 
-        object GetInnerValue(out bool legal)
+        (object?, CompareType)[] CreateTuple(params (object?, CompareType)[] values) => values;
+
+        (object?, CompareType)[] GetInnerValue(out bool legal)
         {
             if (Field == null)
             {
                 legal = false;
-                return null;
+                return CreateTuple((null, Compare));
             }
             if (Field.DataType == typeof(DateTime))
             {
                 legal = dateValue != default;
                 if (DateConfig.HasValue)
                 {
-                    return DateConfig.Value == DateType.DayStart ? dateValue.DayStart() : dateValue.DayEnd();
+                    if (DateConfig.Value == DateType.InDay)
+                    {
+                        return CreateTuple((dateValue.DayStart(), CompareType.GreaterThanOrEqual), (dateValue.DayEnd(), CompareType.LessThan));
+                    }
+                    else
+                    {
+                        var d = DateConfig.Value == DateType.DayStart ? dateValue.DayStart() : dateValue.DayEnd();
+                        return CreateTuple((d, Compare));
+                    }
                 }
-                return dateValue;
+                return CreateTuple((dateValue, Compare));
             }
             else if (Field.EnumValues != null && Field.IsEnum)
             {
                 legal = stringValue.IsEnable();
-                return stringValue;
+                return CreateTuple((stringValue, Compare));
+
             }
             else
             {
@@ -81,7 +100,7 @@ namespace BlazorWeb.Shared.Components
                 {
                     legal = stringValue.IsNumeric<int>(out _);
                 }
-                return stringValue;
+                return CreateTuple((stringValue, Compare));
             }
 
             bool IsNumberOrDateTime()
@@ -100,19 +119,23 @@ namespace BlazorWeb.Shared.Components
                 || Field.DataType == typeof(DateTime?);
             }
         }
+
         Task UpdateDate(DateTimeChangedEventArgs<DateTime> args)
         {
             return NotifyChanged();
         }
-        Task NotifyChanged()
+        async Task NotifyChanged()
         {
-            if (Field == null) return Task.CompletedTask;
-            var innerValue = GetInnerValue(out bool validValue);
-            //if (validValue)
-            //    Logger.LogInformation(innerValue.ToString());
-            var condition = new ConditionInfo(Field.PropertyOrFieldName, Compare, innerValue, Field.DataType, validValue);
-            condition.LinkType = Index > 0 ? ExpressionType.AndAlso : null;
-            return Parent!.UpdateCondition(Index, condition);
+            if (Field == null) return;
+            var values = GetInnerValue(out bool validValue);
+            int count = 0;
+            foreach (var value in values)
+            {
+                var condition = new ConditionInfo(Field.PropertyOrFieldName, value.Item2, value.Item1, Field.DataType, validValue);
+                condition.LinkType = Index > 0 || count > 0 ? ExpressionType.AndAlso : null;
+                await Parent!.UpdateCondition(Index + count, condition);
+                count++;
+            }
         }
     }
 }
