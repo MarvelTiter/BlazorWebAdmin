@@ -1,7 +1,7 @@
 ﻿@page "/permission"
 @using Project.Models.Permissions
 <TableTemplate TableOptions=tableOptions TData=Power TQuery=@(GenericRequest<Power>)>
-    <QueryArea></QueryArea>
+    <TableHeader></TableHeader>
 </TableTemplate>
 @*<Table DataSource="powerTree" TreeChildren="t=>t.Children" DefaultExpandAllRows Loading=loading>
     <PropertyColumn Title=@Localizer["Power.PowerId"] Property="c=>c.Node.PowerId"></PropertyColumn>

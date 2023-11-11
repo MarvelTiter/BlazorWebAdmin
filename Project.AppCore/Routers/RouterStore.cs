@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Project.AppCore.Options;
+using Project.AppCore.PageHelper;
 using Project.AppCore.Services;
 using Project.AppCore.Store;
 using Project.Models.Permissions;
@@ -17,18 +18,21 @@ namespace Project.AppCore.Routers
         private readonly NavigationManager navigationManager;
         private readonly IStringLocalizer<RouterStore> localizer;
         private readonly IOptionsMonitor<CultureOptions> options;
+        private readonly ILogger<RouterStore> logger;
         private readonly IOptionsMonitor<AppSetting> setting;
 
         public RouterStore(IPermissionService permissionService
             , NavigationManager navigationManager
             , IStringLocalizer<RouterStore> localizer
             , IOptionsMonitor<CultureOptions> options
+            , ILogger<RouterStore> logger
             , IOptionsMonitor<AppSetting> setting)
         {
             this.permissionService = permissionService;
             this.navigationManager = navigationManager;
             this.localizer = localizer;
             this.options = options;
+            this.logger = logger;
             this.setting = setting;
         }
 
@@ -53,7 +57,7 @@ namespace Project.AppCore.Routers
         {
             get => "/" + navigationManager.ToBaseRelativePath(navigationManager.Uri);
         }
-
+        TagRoute? preview;
         public Task RouteDataChangedHandleAsync(Microsoft.AspNetCore.Components.RouteData routeData)
         {
             if (!pages.TryGetValue(CurrentUrl, out var tag))
@@ -68,6 +72,10 @@ namespace Project.AppCore.Routers
                 pages[CurrentUrl] = tag;
             }
             tag.Body ??= CreateBody(tag, routeData);
+            preview?.SetActive(false);
+            tag.SetActive(true);
+            preview = tag;
+            NotifyChanged();
             return Task.CompletedTask;
         }
 

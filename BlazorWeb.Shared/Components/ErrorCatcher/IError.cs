@@ -2,7 +2,6 @@
 
 namespace BlazorWeb.Shared.Components
 {
-    //[Obsolete("未符合预期的功能")]
     public interface IExceptionHandler
     {
         Task HandleExceptionAsync(Exception exception);

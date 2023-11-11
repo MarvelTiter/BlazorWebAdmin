@@ -32,6 +32,7 @@ namespace BlazorWeb.Shared.Template.Tables
         public bool EnableGenerateQuery => (QueryArea == null || TableOptions.EnabledAdvancedQuery) && !TableOptions.IsDataTableSource;
         [CascadingParameter] IDomEventHandler Root { get; set; }
         [CascadingParameter] TagRoute? TagRoute { get; set; }
+        [CascadingParameter] IExceptionHandler ExceptionHandler { get; set; }
         bool loading;
         private ConditionInfo? conditionInfo;
         private Expression<Func<TData, bool>>? ConditionExpression = e => true;
@@ -102,11 +103,19 @@ namespace BlazorWeb.Shared.Template.Tables
         }
         private async Task DoQuery()
         {
-            loading = true;
-            var result = await TableOptions.DataLoader(TableOptions.Query);
-            TableOptions.Datas = (result.Payload);
-            TableOptions.Total = result.TotalRecord;
-            loading = false;
+            try
+            {
+                loading = true;
+                var result = await TableOptions.DataLoader(TableOptions.Query);
+                TableOptions.Datas = (result.Payload);
+                TableOptions.Total = result.TotalRecord;
+            }
+            catch (Exception ex)
+            {
+                await ExceptionHandler.HandleExceptionAsync(ex);
+            }
+            finally { loading = false; }
+
         }
 
         public async void AdvanceExport()

@@ -17,7 +17,7 @@ namespace BlazorWeb.Shared.SystemPermission
     {
         public IList<PowerTreeNode> Children { get; set; }
     }
-    public partial class PermissionSetting : ITagPage
+    public partial class PermissionSetting : IPageAction
     {
         [Inject] public ModalService ModalSrv { get; set; }
         [Inject] public DrawerService DrawerSrv { get; set; }
@@ -149,13 +149,6 @@ namespace BlazorWeb.Shared.SystemPermission
 
         async Task<bool> DeletePower(Power node)
         {
-            //var confirmResult = await ConfirmSrv.Show(
-            //       TableLocalizer["TableTips.DangerActionConfirmContent"].Value
-            //   , TableLocalizer["TableTips.DangerActionConfirmTitle"].Value);
-            //if (confirmResult == ConfirmResult.OK)
-            //{
-            //    //await InitPowerTree();
-            //}
             var result = await PermissionSrv.DeletePowerAsync(node);
             return result.Success;
         }

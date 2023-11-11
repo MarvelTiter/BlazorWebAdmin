@@ -4,8 +4,11 @@ using BlazorWeb.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
+using Project.AppCore.PageHelper;
 using Project.AppCore.Routers;
+using Project.AppCore.Store;
 using Project.Common;
+using System;
 
 namespace BlazorWeb.Shared.Layouts.LayoutComponents
 {
@@ -17,11 +20,14 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         private TagRoute current;
         [CascadingParameter] public IDomEventHandler RootLayout { get; set; }
         [Parameter] public string Class { get; set; }
+        [Inject] RouterStore Store { get; set; }
+        [Inject] NavigationManager Nav { get; set; }
+        [Inject] AppStore App { get; set; }
         private int navMenuWidth = 200;
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            store.DataChangedEvent += StateHasChanged;
+            Store.DataChangedEvent += StateHasChanged;
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -36,18 +42,18 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
 
         private void CloseTag(TagRoute state)
         {
-            var index = store.TopLinks.IndexOf(state);
-            store.Remove(state.RouteUrl);
-            if (index < store.TopLinks.Count)
+            var index = Store.TopLinks.IndexOf(state);
+            Store.Remove(state.RouteUrl);
+            if (index < Store.TopLinks.Count)
             {
-                nav.NavigateTo(store.TopLinks[index].RouteUrl);
+                Nav.NavigateTo(Store.TopLinks[index].RouteUrl);
             }
             else
             {
-                if (store.TopLinks.Count > 1)
-                    nav.NavigateTo(store.TopLinks[index - 1].RouteUrl);
-                else if (store.TopLinks.Count == 1)
-                    nav.NavigateTo(store.TopLinks[0].RouteUrl);
+                if (Store.TopLinks.Count > 1)
+                    Nav.NavigateTo(Store.TopLinks[index - 1].RouteUrl);
+                else if (Store.TopLinks.Count == 1)
+                    Nav.NavigateTo(Store.TopLinks[0].RouteUrl);
             }
         }
 
@@ -68,14 +74,14 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
         private async Task CloseOther()
         {
             if (current == null) return;
-            await store.RemoveOther(current.RouteUrl);
+            await Store.RemoveOther(current.RouteUrl);
             await CloseMenu();
         }
 
         private async Task CloseAll()
         {
-            await store.Reset();
-            nav.NavigateTo("/");
+            await Store.Reset();
+            Nav.NavigateTo("/");
             await CloseMenu();
         }
 
@@ -96,7 +102,7 @@ namespace BlazorWeb.Shared.Layouts.LayoutComponents
 
         public void Dispose()
         {
-            store.DataChangedEvent -= StateHasChanged;
+            Store.DataChangedEvent -= StateHasChanged;
             RootLayout.BodyClickEvent -= RootLayout_BodyClickEvent;
         }
     }

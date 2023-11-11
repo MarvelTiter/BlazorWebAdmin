@@ -1,6 +1,6 @@
 ﻿namespace Project.AppCore.PageHelper
 {
-    public interface ITagPage
+    public interface IPageAction
     {
         Task OnShowAsync();
         Task OnHiddenAsync();

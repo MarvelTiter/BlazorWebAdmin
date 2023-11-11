@@ -2,18 +2,18 @@
 @using Project.AppCore.Routers;
 @implements IDisposable
 <ScrollBar>
-    @foreach (var item in Store.TopLinks)
-    {
-        if (item.Body == null) continue;
-        <div id=@item.RouteUrl style="@(item.RouteUrl == Store.CurrentUrl ? "display: block;":"display: none;")">
-            <!-- 在TableTemplate中获取当前页的信息 -->
-            <CascadingValue Value="item">
-                <ErrorCatcher>
+    <ErrorCatcher>
+        @foreach (var item in Store.TopLinks)
+        {
+            if (item.Body == null) continue;
+            <div id=@item.RouteUrl style="@(item.RouteUrl == Store.CurrentUrl ? "display: block;":"display: none;")">
+                <!-- 在TableTemplate中获取当前页的信息 -->
+                <CascadingValue Value="item">
                     @item.Body
-                </ErrorCatcher>
-            </CascadingValue>
-        </div>
-    }
+                </CascadingValue>
+            </div>
+        }
+    </ErrorCatcher>
 </ScrollBar>
 
 @code {

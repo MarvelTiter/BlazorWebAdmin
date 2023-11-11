@@ -1,9 +1,21 @@
 ﻿@page "/page1"
+@using Project.AppCore.PageHelper;
 @using Project.Common.Attributes;
 @attribute [PageGroup("测试", "home")]
 @attribute [PageInfo(Title = "测试1", Sort = 1)]
+@implements IPageAction
 <h3>Page1</h3>
 
 @code {
+    public Task OnShowAsync()
+    {
+        Console.WriteLine("Page1 OnShowAsync");
+        return Task.CompletedTask;
+    }
 
+    public Task OnHiddenAsync()
+    {
+        Console.WriteLine("Page1 OnHiddenAsync");
+        return Task.CompletedTask;
+    }
 }

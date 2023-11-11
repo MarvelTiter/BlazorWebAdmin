@@ -16,21 +16,21 @@ namespace Project.AppCore.Routers
         private bool isActive;
         public bool IsActive { get => isActive; set => SetActive(value); }
 
-        public void SetActive(bool active)
+        public async void SetActive(bool active)
         {
             if (active) ActiveTime = DateTime.Now;
 #if DEBUG
-            Console.WriteLine($"{PageRef?.GetType().Name} [Update Active Status] {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+            Console.WriteLine($"{PageRef?.GetType().Name} [Update Active Status ({active})] {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
 #endif
-            if (isActive != active && PageRef is ITagPage page)
+            if (isActive != active && PageRef is IPageAction page)
             {
                 if (active)
                 {
-                    _ = page.OnShowAsync();
+                    await page.OnShowAsync();
                 }
                 else
                 {
-                    _ = page.OnHiddenAsync();
+                    await page.OnHiddenAsync();
                 }
             }
             isActive = active;

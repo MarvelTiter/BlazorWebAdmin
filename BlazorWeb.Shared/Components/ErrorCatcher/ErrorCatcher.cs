@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorWeb.Shared.Components
 {
-    public class ErrorCatcher : ErrorBoundaryBase, IError
+    public class ErrorCatcher : ErrorBoundaryBase, IExceptionHandler
     {
         /// <summary>
         /// 
@@ -51,9 +51,9 @@ namespace BlazorWeb.Shared.Components
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             var index = 0;
-            builder.OpenComponent<CascadingValue<IError>>(index++);
-            builder.AddAttribute(index++, nameof(CascadingValue<IError>.Value), this);
-            builder.AddAttribute(index++, nameof(CascadingValue<IError>.IsFixed), true);
+            builder.OpenComponent<CascadingValue<IExceptionHandler>>(index++);
+            builder.AddAttribute(index++, nameof(CascadingValue<IExceptionHandler>.Value), this);
+            builder.AddAttribute(index++, nameof(CascadingValue<IExceptionHandler>.IsFixed), true);
 
             //if (CurrentException != null)
             //{
@@ -64,7 +64,7 @@ namespace BlazorWeb.Shared.Components
             //    }
             //}
 
-            builder.AddAttribute(index++, nameof(CascadingValue<IError>.ChildContent), ChildContent);
+            builder.AddAttribute(index++, nameof(CascadingValue<IExceptionHandler>.ChildContent), ChildContent);
             builder.CloseComponent();
         }
 
@@ -110,16 +110,9 @@ namespace BlazorWeb.Shared.Components
             await ErrorBoundaryLogger.LogErrorAsync(exception);
         }
 
-        readonly List<IExceptionHandler> Caches = new();
-
-        public void Register<TComponent>(TComponent component) where TComponent : IComponent, IExceptionHandler
+        public Task HandleExceptionAsync(Exception exception)
         {
-            Caches.Add(component);
-        }
-
-        public void UnRegister<TComponent>(TComponent component) where TComponent : IComponent, IExceptionHandler
-        {
-            Caches.Add(component);
+            return OnErrorAsync(exception);
         }
     }
 }
