@@ -69,3 +69,7 @@ html, body {
     width: 1em;
     height: 1em;
 }
+
+.top-link-icon {
+    margin-right: 5px;
+}

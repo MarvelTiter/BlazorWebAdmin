@@ -1,38 +1,31 @@
 ﻿@using Project.AppCore.Routers;
-@inject EventDispatcher dispatcher
-@inject RouterStore routeStore
 @inject AppStore App
 @implements IDisposable
 <div class="side_bar @Class" style="display: flex;flex-direction: column;width:@Width">
     @TopBanner
-    <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed=collapse Style="flex: 1;">
-        @foreach (var item in routeStore.Menus.Where(m => m.Group == "ROOT"))
-        {
-            <SideBarItem Route=item></SideBarItem>
-        }
-    </Menu>
+    <ScrollBar>
+        <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed=collapse Style="flex: 1;">
+            @foreach (var item in RouteStore.Menus.Where(m => m.Group == "ROOT"))
+            {
+                <SideBarItem Route=item></SideBarItem>
+            }
+        </Menu>
+    </ScrollBar>
 </div>
 
 @code {
     [Parameter] public RenderFragment TopBanner { get; set; }
     [Parameter] public string Class { get; set; }
     [Parameter] public bool Horizontal { get; set; }
+    [Inject] RouterStore RouteStore { get; set; }
     protected override Task OnInitializedAsync()
     {
-        dispatcher.Register<SideBar>("MenuCollapse", ToggleMenuCollapse);
-        routeStore.DataChangedEvent += StateHasChanged;
+        RouteStore.DataChangedEvent += StateHasChanged;
         return base.OnInitializedAsync();
     }
 
     private string Width => collapse ? 80.ToPixel() : App.SideBarExpandWidth.ToPixel();
     private bool collapse = false;
-
-    private Task<object> ToggleMenuCollapse(object sender, object e)
-    {
-        collapse = (bool)e;
-        StateHasChanged();
-        return Task.FromResult<object>(0);
-    }
 
     public void ToggleCollapse(bool newState)
     {
@@ -54,7 +47,7 @@
             if (disposing)
             {
                 // 释放托管状态(托管对象)
-                routeStore.DataChangedEvent -= StateHasChanged;
+                RouteStore.DataChangedEvent -= StateHasChanged;
             }
 
             // 释放未托管的资源(未托管的对象)并重写终结器

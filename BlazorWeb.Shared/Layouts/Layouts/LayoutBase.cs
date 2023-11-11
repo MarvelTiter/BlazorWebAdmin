@@ -18,17 +18,18 @@ namespace BlazorWeb.Shared.Layouts.Layouts
         [Inject] public ProtectedLocalStorage Storage { get; set; }
         public Banner? Banner { get; set; }
         public SideBar? SideBar { get; set; }
-        public void HandleToggleCollapse(bool newState)
+        public WebSetting? WebSetting { get; set; }
+        public async void HandleToggleCollapse(bool newState)
         {
             SideBar?.ToggleCollapse(newState);
             App.Collapsed = newState;
-            _ = Storage.SetAsync(AppStore.KEY, App);
+            await Storage.SetAsync(AppStore.KEY, App);
         }
 
-        public void UpdateCollapse(bool state)
-        {
-            _ = Banner?.UpdateToggleMenu(state);
-        }
+        //public void UpdateCollapse(bool state)
+        //{
+        //    _ = Banner?.UpdateToggleMenu(state);
+        //}
 
         public int MainWidthOffset
         {

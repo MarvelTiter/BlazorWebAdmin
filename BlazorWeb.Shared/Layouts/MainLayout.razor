@@ -7,30 +7,25 @@
 @layout AuthorizedLayout
 @inject RouterStore Store
 @inject AppStore App
+@implements IDisposable
 
-<PageTitle>@($"管理系统 - {Store.Current?.RouteTitle ?? "主页"}")</PageTitle>
+<PageTitle>
+    @($"管理系统 - {Store.Current?.RouteTitle ?? "主页"}")
+</PageTitle>
 
+<div class="page">
     <CascadingValue Value="this" IsFixed>
-
-        <div class="page">
-
-            @if (App.Mode == LayoutMode.Classic)
+        @if (App.Mode == LayoutMode.Classic)
         {
-            <ClassicLayout>
-                @*@Body*@
-            </ClassicLayout>
+            <ClassicLayout @ref=LayoutBase></ClassicLayout>
         }
         else if (App.Mode == LayoutMode.Card)
         {
-            <CardLayout >
-                @*@Body*@
-            </CardLayout>
+            <CardLayout @ref=LayoutBase></CardLayout>
         }
         else if (App.Mode == LayoutMode.Line)
         {
-            <LineLayout>
-                @*@Body*@
-            </LineLayout>
+            <LineLayout @ref=LayoutBase></LineLayout>
         }
         else
         {
@@ -39,5 +34,25 @@
                  </Spin>
              </div>
         }
-    </div>
-</CascadingValue>
+        <WebSetting @ref=WebSetting></WebSetting>
+    </CascadingValue>
+</div>
+@code {
+    public LayoutBase? LayoutBase{ get; set; }
+    public WebSetting? WebSetting { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            WebSetting!.SettingChanged += StateHasChanged;
+        }
+    }
+
+    public void Dispose()
+    {
+        WebSetting!.SettingChanged -= StateHasChanged;
+    }
+
+}

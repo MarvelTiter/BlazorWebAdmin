@@ -62,11 +62,13 @@ namespace Project.AppCore.Routers
         {
             if (!pages.TryGetValue(CurrentUrl, out var tag))
             {
-                var meta = AllPages.AllRoutes.First(r => r.RouteUrl == CurrentUrl);
+                var meta = Menus.FirstOrDefault(r => r.RouteUrl == CurrentUrl) 
+                    ?? AllPages.AllRoutes.First(r => r.RouteUrl == CurrentUrl);
                 tag = new TagRoute
                 {
                     RouteUrl = meta.RouteUrl,
                     RouteTitle = meta.RouteTitle,
+                    Icon = meta.Icon,
                     Pin = meta.Pin,
                 };
                 pages[CurrentUrl] = tag;
@@ -137,6 +139,7 @@ namespace Project.AppCore.Routers
             {
                 RouteUrl = "/",
                 RouteTitle = GetHomeLocalizer(),
+                Icon = "home",
                 Pin = true
             });
             return Task.CompletedTask;
