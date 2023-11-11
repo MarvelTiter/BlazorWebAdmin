@@ -4,7 +4,7 @@
 <div class="side_bar @Class" style="display: flex;flex-direction: column;width:@Width">
     @TopBanner
     <ScrollBar>
-        <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed=collapse Style="flex: 1;">
+        <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed=@App.Collapsed Style="flex: 1;">
             @foreach (var item in RouteStore.Menus.Where(m => m.Group == "ROOT"))
             {
                 <SideBarItem Route=item></SideBarItem>
@@ -24,12 +24,12 @@
         return base.OnInitializedAsync();
     }
 
-    private string Width => collapse ? 80.ToPixel() : App.SideBarExpandWidth.ToPixel();
+    private string Width => App.Collapsed ? 80.ToPixel() : App.SideBarExpandWidth.ToPixel();
     private bool collapse = false;
 
-    public void ToggleCollapse(bool newState)
+    public void ToggleCollapse()
     {
-        collapse = newState;
+        // collapse = newState;
         StateHasChanged();
     }
 

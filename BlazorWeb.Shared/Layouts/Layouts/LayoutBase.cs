@@ -19,11 +19,11 @@ namespace BlazorWeb.Shared.Layouts.Layouts
         public Banner? Banner { get; set; }
         public SideBar? SideBar { get; set; }
         public WebSetting? WebSetting { get; set; }
-        public async void HandleToggleCollapse(bool newState)
+        public void HandleToggleCollapse(bool newState)
         {
-            SideBar?.ToggleCollapse(newState);
             App.Collapsed = newState;
-            await Storage.SetAsync(AppStore.KEY, App);
+            SideBar?.ToggleCollapse();
+            //await Storage.SetAsync(AppStore.KEY, App);
         }
 
         //public void UpdateCollapse(bool state)
