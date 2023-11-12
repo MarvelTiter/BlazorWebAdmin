@@ -1,5 +1,4 @@
-﻿using LogAopCodeGenerator;
-using Project.Common.Attributes;
+﻿using Project.Common.Attributes;
 using System.Reflection;
 
 namespace Project.AppCore
@@ -35,7 +34,7 @@ namespace Project.AppCore
                 }
                 var interfaceType = interfaceTypes.FirstOrDefault(x => x.IsAssignableFrom(implementType));
                 var injectType = implementType.GetCustomAttribute<AutoInjectAttribute>();
-                if (implementType.GetCustomAttribute<AspectableAttribute>() != null) continue;
+                //if (implementType.GetCustomAttribute<AspectableAttribute>() != null) continue;
                 DIType dIType = DIType.Scope;
                 if (injectType != null)
                 {

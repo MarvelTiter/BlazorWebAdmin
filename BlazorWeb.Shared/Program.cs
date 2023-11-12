@@ -13,6 +13,7 @@ using System.Diagnostics;
 using MT.Toolkit.ReflectionExtension;
 using AntDesign.Core.Helpers.MemberPath;
 using Project.AppCore.Middlewares;
+using AspectCore.Extensions.DependencyInjection;
 
 namespace BlazorWeb.Shared
 {
@@ -71,7 +72,6 @@ namespace BlazorWeb.Shared
             services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddHttpContextAccessor();
             services.AddJsonLocales();
-
             services.AddWebConfiguration<AppSetting>(app =>
             {
                 builder.Configuration.GetSection(nameof(AppSetting)).Bind(app);
@@ -98,6 +98,8 @@ namespace BlazorWeb.Shared
             Config.AddAssembly(types.ToArray());
 
             builder.Host.UseWindowsService();
+            services.ConfigureDynamicProxy();
+            builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
             var app = builder.Build();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

@@ -1,11 +1,11 @@
-﻿using LogAopCodeGenerator;
-using Project.AppCore.Aop;
+﻿using Project.AppCore.Aop;
 using Project.Models;
 using Project.Models.Permissions;
 
 namespace Project.AppCore.Services
 {
-    [Aspectable(AspectHandleType = typeof(LogAop))]
+    //[Aspectable(AspectHandleType = typeof(LogAop))]
+    [LogAop]
     public partial interface ILoginService
     {
         [LogInfo(Action = "用户登录", Module = "登录模块")]

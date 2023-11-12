@@ -17,7 +17,7 @@ namespace BlazorWeb.Shared.SystemPermission
     {
         public IList<PowerTreeNode> Children { get; set; }
     }
-    public partial class PermissionSetting : IPageAction
+    public partial class PermissionSetting
     {
         [Inject] public ModalService ModalSrv { get; set; }
         [Inject] public DrawerService DrawerSrv { get; set; }
@@ -151,18 +151,6 @@ namespace BlazorWeb.Shared.SystemPermission
         {
             var result = await PermissionSrv.DeletePowerAsync(node);
             return result.Success;
-        }
-
-        public Task OnShowAsync()
-        {
-            Console.WriteLine($"PermissionSetting Page [OnShowAsync] {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-            return Task.CompletedTask;
-        }
-
-        public Task OnHiddenAsync()
-        {
-            Console.WriteLine($"PermissionSetting Page [OnHiddenAsync] {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-            return Task.CompletedTask;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using LogAopCodeGenerator;
+﻿using AspectCore.DynamicProxy;
 using Project.AppCore.Services;
 using Project.AppCore.Store;
 using Project.Models;
@@ -10,29 +10,27 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Project.AppCore.Aop
 {
-    public class LogAop : Interceptor
+    public class LogAopAttribute : AbstractInterceptorAttribute
     {
-        private readonly IRunLogService logService;
-        private readonly UserStore store;
-
-        public LogAop(IRunLogService logService, UserStore store)
+        public override async Task Invoke(AspectCore.DynamicProxy.AspectContext context, AspectDelegate next)
         {
-            this.logService = logService;
-            this.store = store;
-        }
-               
-        public override async Task Invoke(AspectContext context)
-        {
-            await context.Proceed();
+            await next(context);
             var infoAttr = context.ServiceMethod.GetCustomAttribute<LogInfoAttribute>();
-            var result = context.ReturnValue as IQueryResult;
+            if (infoAttr == null)
+            {
+                return;
+            }
+            var result = await GetReturnValue<IQueryResult>(context);
+            var store = context.ServiceProvider.GetService<UserStore>();
+            var logService = context.ServiceProvider.GetService<IRunLogService>();
             var userId = store?.UserId ?? GetUserIdFromContext(context);
             if (infoAttr!.Module == "BasicService")
             {
-                var type = context.ServiceType.GetGenericArguments().First();
+                var type = context.ServiceMethod.DeclaringType!.GetGenericArguments().First();
                 infoAttr!.Action = $"[{type.Name}]{infoAttr!.Action}";
             }
             var l = new RunLog()
@@ -43,17 +41,71 @@ namespace Project.AppCore.Aop
                 ActionResult = result?.Success ?? false ? "成功" : "失败",
                 ActionMessage = result?.Message ?? "",
             };
-            await logService.Log(l);
+            await logService!.Log(l);
         }
 
-        private string GetUserIdFromContext(AspectContext context)
+        private static async Task<T> GetReturnValue<T>(AspectCore.DynamicProxy.AspectContext context)
         {
-            if (context.ServiceType == typeof(ILoginService))
+            if (context.IsAsync())
             {
-                // UpdateLastLoginTimeAsync 和 LoginAsync
-                return (context.Parameters.FirstOrDefault() as UserInfo)?.UserId ?? context.Parameters.FirstOrDefault()?.ToString();
+                return await context.UnwrapAsyncReturnValue<T>();
             }
-            return "Unknow";
+            else
+            {
+                return (T)context.ReturnValue;
+            }
+        }
+
+        private static string GetUserIdFromContext(AspectCore.DynamicProxy.AspectContext context)
+        {
+            return (context.Parameters.FirstOrDefault() as UserInfo)?.UserId ?? context.Parameters.FirstOrDefault()?.ToString();
         }
     }
+
+
+    //public class LogAop : Interceptor
+    //{
+    //    private readonly IRunLogService logService;
+    //    private readonly UserStore store;
+
+    //    public LogAop(IRunLogService logService, UserStore store)
+    //    {
+    //        this.logService = logService;
+    //        this.store = store;
+    //    }
+
+    //    public override async Task Invoke(LogAopCodeGenerator.AspectContext context)
+    //    {
+    //        await context.Proceed();
+    //        var infoAttr = context.ServiceMethod.GetCustomAttribute<LogInfoAttribute>();
+    //        var result = context.ReturnValue as IQueryResult;
+    //        var userId = store?.UserId ?? GetUserIdFromContext(context);
+    //        if (infoAttr!.Module == "BasicService")
+    //        {
+    //            var type = context.ServiceType.GetGenericArguments().First();
+    //            infoAttr!.Action = $"[{type.Name}]{infoAttr!.Action}";
+    //        }
+    //        var l = new RunLog()
+    //        {
+    //            UserId = userId,
+    //            ActionModule = infoAttr!.Module ?? "",
+    //            ActionName = infoAttr!.Action ?? "",
+    //            ActionResult = result?.Success ?? false ? "成功" : "失败",
+    //            ActionMessage = result?.Message ?? "",
+    //        };
+    //        await logService.Log(l);
+    //    }
+
+    //    private string GetUserIdFromContext(LogAopCodeGenerator.AspectContext context)
+    //    {
+    //        if (context.ServiceType == typeof(ILoginService))
+    //        {
+    //            // UpdateLastLoginTimeAsync 和 LoginAsync
+    //            return (context.Parameters.FirstOrDefault() as UserInfo)?.UserId ?? context.Parameters.FirstOrDefault()?.ToString();
+    //        }
+    //        return "Unknow";
+    //    }
+
+    //}
+
 }

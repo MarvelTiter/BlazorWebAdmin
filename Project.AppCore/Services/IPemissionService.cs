@@ -1,5 +1,4 @@
-﻿using LogAopCodeGenerator;
-using Project.AppCore.Aop;
+﻿using Project.AppCore.Aop;
 using Project.Models;
 using Project.Models.Permissions;
 using Project.Models.Request;
@@ -12,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace Project.AppCore.Services
 {
-    [Aspectable(AspectHandleType = typeof(LogAop))]
+    //[Aspectable(AspectHandleType = typeof(LogAop))]
+    [LogAop]
     public partial interface IPermissionService
     {
         Task<IQueryCollectionResult<Power>> GetPowerListAsync(GenericRequest<Power> req);

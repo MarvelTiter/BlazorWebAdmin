@@ -1,5 +1,6 @@
 ﻿using BlazorWeb.Shared.Template.Tables;
 using Microsoft.AspNetCore.Components;
+using Project.AppCore.PageHelper;
 using Project.AppCore.Services;
 using Project.Models;
 using Project.Models.Entities;
@@ -7,7 +8,7 @@ using Project.Models.Request;
 
 namespace BlazorWeb.Shared.SystemPermission
 {
-    public partial class OperationLog
+    public partial class OperationLog : IPageAction
     {
         [Inject]
         public IRunLogService RunLogSrv { get; set; }
@@ -22,6 +23,16 @@ namespace BlazorWeb.Shared.SystemPermission
         Task<IQueryCollectionResult<RunLog>> Search(GenericRequest<RunLog> req)
         {
             return RunLogSrv.GetRunLogsAsync(req);
+        }
+
+        public async Task OnShowAsync()
+        {
+            await tableOptions.RefreshData();
+        }
+
+        public Task OnHiddenAsync()
+        {
+            return Task.CompletedTask;
         }
     }
 }
