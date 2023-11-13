@@ -39,6 +39,7 @@ namespace Project.AppCore.Routers
 
             if (groupInfo != null)
             {
+                if (info == null) throw new Exception($"{nameof(PageGroupAttribute)} should used with {nameof(PageInfoAttribute)}");
                 yield return new()
                 {
                     RouteId = groupInfo.Name,
@@ -46,6 +47,7 @@ namespace Project.AppCore.Routers
                     Icon = groupInfo.Icon,
                     Sort = groupInfo.Sort,
                     Group = "ROOT",
+                    HasPageInfo = true
                 };
             }
 
@@ -58,6 +60,7 @@ namespace Project.AppCore.Routers
                 Pin = info?.Pin ?? false,
                 Group = groupInfo?.Name,
                 Sort = info?.Sort ?? 0,
+                HasPageInfo = info != null,
             };
         }
 

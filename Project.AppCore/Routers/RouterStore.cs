@@ -62,7 +62,7 @@ namespace Project.AppCore.Routers
         {
             if (!pages.TryGetValue(CurrentUrl, out var tag))
             {
-                var meta = Menus.FirstOrDefault(r => r.RouteUrl == CurrentUrl) 
+                var meta = Menus.FirstOrDefault(r => r.RouteUrl == CurrentUrl)
                     ?? AllPages.AllRoutes.First(r => r.RouteUrl == CurrentUrl);
                 tag = new TagRoute
                 {
@@ -159,13 +159,16 @@ namespace Project.AppCore.Routers
 
         private void InitRoutersByDefault()
         {
-            foreach (var item in AllPages.AllRoutes.OrderBy(m => m.Sort))
+            foreach (var item in AllPages.AllRoutes.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
             {
                 if (Menus.Any(m => m.RouteUrl == item.RouteUrl && m.RouteId == item.RouteId))
                 {
                     continue;
                 }
-                item.RouteTitle = GetLocalizerString(item.RouteId, item.RouteTitle);
+                var title = GetLocalizerString(item.RouteId, item.RouteTitle);
+                if (title == item.RouteId)
+                    title = item.RouteTitle;
+                item.RouteTitle = title;
                 Menus.Add(new RouteMenu(item));
             }
         }

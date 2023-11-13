@@ -12,6 +12,7 @@ namespace Project.AppCore.Routers
         public bool Pin { get; set; }
         public string? Group { get; set; }
         public int Sort { get; set; }
+        public bool HasPageInfo { get; set; }
     }
 
     public class RouteMenu : RouterMeta
