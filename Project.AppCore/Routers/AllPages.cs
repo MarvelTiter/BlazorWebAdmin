@@ -58,7 +58,7 @@ namespace Project.AppCore.Routers
                 RouteUrl = routerAttr!.Template,
                 Icon = info?.Icon ?? "",
                 Pin = info?.Pin ?? false,
-                Group = groupInfo?.Name,
+                Group = groupInfo?.Name ?? "ROOT",
                 Sort = info?.Sort ?? 0,
                 HasPageInfo = info != null,
             };
