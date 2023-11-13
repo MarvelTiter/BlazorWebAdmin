@@ -12,7 +12,8 @@ namespace Project.AppCore.Routers
         public RenderFragment? Body { get; set; }
         public RenderFragment? Title { get; set; }
         public object PageRef { get; set; }
-
+        public bool NoCache { get; set; }
+        
         private bool isActive;
         public bool IsActive { get => isActive; set => SetActive(value); }
 

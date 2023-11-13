@@ -1,0 +1,13 @@
+﻿@page "/nocache/{Hello}"
+<h3>NoCachePageTest</h3>
+<h3>Recived: @Hello</h3>
+<h3>@date</h3>
+@code {
+    [Parameter] public string Hello { get; set; }
+    DateTime date;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        date = DateTime.Now;
+    }
+}

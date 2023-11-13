@@ -7,6 +7,7 @@
         <div class="tags_box @Class" style="--tags_box-theme-color: @App.MainThemeColor;display:flex;height:50px;">
             @foreach (var item in Store.TopLinks)
             {
+                @if (item.NoCache) continue;
                 <div class="nav_top @(item.RouteUrl == Store.CurrentUrl ? "active":"")" @oncontextmenu="e => OpenContextMenu(e, item)">
                     <NavLink href="@item.RouteUrl" Match="NavLinkMatch.All">
                         <div style="display:flex;padding:0 5px 0 5px;align-items: center;">

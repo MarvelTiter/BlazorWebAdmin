@@ -5,8 +5,10 @@
 @attribute [PageInfo(Title = "测试1", Sort = 1)]
 @implements IPageAction
 <h3>Page1</h3>
-
+<AntDesign.Button OnClick="@OnClick">跳转测试</AntDesign.Button>
 @code {
+
+    [Inject] NavigationManager Nav { get; set; }
     public Task OnShowAsync()
     {
         Console.WriteLine("Page1 OnShowAsync");
@@ -17,5 +19,10 @@
     {
         Console.WriteLine("Page1 OnHiddenAsync");
         return Task.CompletedTask;
+    }
+
+    void OnClick()
+    {
+        Nav.NavigateTo("/nocache/page1");
     }
 }

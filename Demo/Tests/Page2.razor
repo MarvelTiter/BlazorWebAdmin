@@ -2,11 +2,13 @@
 @using Project.AppCore.PageHelper;
 @using Project.Common.Attributes;
 @attribute [PageGroup("测试", "home")]
-@attribute [PageInfo(Title = "测试1", Sort = 2)]
+@attribute [PageInfo(Title = "测试2", Sort = 2)]
 @implements IPageAction
 <h3>Page2</h3>
+<AntDesign.Button OnClick="@OnClick">跳转测试</AntDesign.Button>
 
 @code {
+    [Inject] NavigationManager Nav { get; set; }
     public Task OnShowAsync()
     {
         Console.WriteLine("Page2 OnShowAsync");
@@ -17,5 +19,9 @@
     {
         Console.WriteLine("Page2 OnHiddenAsync");
         return Task.CompletedTask;
+    }
+    void OnClick()
+    {
+        Nav.NavigateTo("/nocache/page2");
     }
 }

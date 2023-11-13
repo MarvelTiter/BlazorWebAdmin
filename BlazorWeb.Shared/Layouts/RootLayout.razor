@@ -1,10 +1,6 @@
 ﻿@inherits LayoutComponentBase
 <div id="root" @onclick="HandleRootClick"
-@onclick:stopPropagation
-@onclick:preventDefault
 @onkeydown=HandleKeyAction
-@onkeydown:stopPropagation
-@onkeydown:preventDefault
 @ref="RootWrapper">
     <CascadingValue Value=this Name="LayoutRoot" IsFixed>
         @Body

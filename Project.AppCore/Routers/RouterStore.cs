@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AspectCore.DependencyInjection;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
@@ -62,19 +63,35 @@ namespace Project.AppCore.Routers
         {
             if (!pages.TryGetValue(CurrentUrl, out var tag))
             {
-                var meta = Menus.FirstOrDefault(r => r.RouteUrl == CurrentUrl)
-                    ?? AllPages.AllRoutes.First(r => r.RouteUrl == CurrentUrl);
+                RouterMeta? meta = Menus.FirstOrDefault(r => r.RouteUrl == CurrentUrl);
+                bool nocache = false;
+                if (meta == null)
+                {
+                    meta = AllPages.AllRoutes.FirstOrDefault(r => r.RouteUrl == CurrentUrl);
+                    nocache = true;
+                }
                 tag = new TagRoute
                 {
-                    RouteUrl = meta.RouteUrl,
-                    RouteTitle = meta.RouteTitle,
-                    Icon = meta.Icon,
-                    Pin = meta.Pin,
+                    RouteUrl = meta?.RouteUrl ?? CurrentUrl,
+                    RouteTitle = meta?.RouteTitle ?? "",
+                    Icon = meta?.Icon ?? "",
+                    Pin = meta?.Pin ?? false,
+                    NoCache = nocache
                 };
                 pages[CurrentUrl] = tag;
             }
             tag.Body ??= CreateBody(tag, routeData);
-            preview?.SetActive(false);
+            if (preview != null)
+            {
+                if (preview.NoCache)
+                {
+                    Remove(preview.RouteUrl);
+                }
+                else
+                {
+                    preview.SetActive(false);
+                }
+            }
             tag.SetActive(true);
             preview = tag;
             NotifyChanged();
