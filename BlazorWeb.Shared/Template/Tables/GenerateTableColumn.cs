@@ -37,7 +37,8 @@ namespace BlazorWeb.Shared.Template.Tables
                 Visible = head.Visible,
                 Ellipsis = head.Ellipsis,
                 EnableEdit = head.EnableEdit,
-                UseTag = head.UseTag
+                UseTag = head.UseTag,
+                Sortable = head.Sortable
             };
             if (column.IsEnum)
             {

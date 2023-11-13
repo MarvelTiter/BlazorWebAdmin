@@ -23,7 +23,14 @@ namespace Project.Common.Attributes
             Width = width;
         }
         public string? Label { get; set; }
+        /// <summary>
+        /// 列排序
+        /// </summary>
         public int Sort { get; }
+        /// <summary>
+        /// 数据排序
+        /// </summary>
+        public bool Sortable { get; set; }
         public string? Fixed { get; }
         public string? Width { get; }
         /// <summary>
