@@ -263,7 +263,7 @@ else
     {
         return
     @<Column TData="TColumnData" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Sortable=@col.Sortable Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<TColumnData>(col)">
-    </Column>
+        </Column>
     ;
     }
 
@@ -271,7 +271,7 @@ else
     {
         return context =>
                                     {
-                                        var formattedValue = "";
+                                        string? formattedValue = null;
                                         if (col.IsEnum || col.EnumValues != null)
                                         {
                                             var v = context.FieldValue;
@@ -282,6 +282,13 @@ else
                                                     formattedValue = col.EnumValues?[$"{v}"];
                                                 }
                                             }
+                                        }
+                                        if (col.ValueFormat != null && context.FieldValue!= null)
+                                        {
+                                            formattedValue = col.ValueFormat.Invoke(context.FieldValue);
+                                        }
+                                        if (formattedValue != null)
+                                        {
                                             context.FormattedValue = formattedValue;
                                         }
                                         if (col.IsEnum || col.UseTag)

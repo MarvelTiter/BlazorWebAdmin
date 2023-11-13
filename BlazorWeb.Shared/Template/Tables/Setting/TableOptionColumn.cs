@@ -18,7 +18,7 @@ namespace BlazorWeb.Shared.Template.Tables.Setting
         public Func<CellData, Dictionary<string, object>> OnCell { get; set; }
         public Dictionary<string, string>? EnumValues { get; set; }
         public bool Sortable { get; set; }
-
+        public Func<object, string>? ValueFormat { get; set; }
         internal Dictionary<string, string> TagColors { get; set; }
         public string GetTagColor(object? val)
         {
