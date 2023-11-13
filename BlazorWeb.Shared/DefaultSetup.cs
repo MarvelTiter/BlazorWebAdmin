@@ -1,5 +1,6 @@
 ﻿using MDbContext;
 using MDbContext.ExpressionSql;
+using Microsoft.Data.Sqlite;
 using MT.Toolkit.LogTool.LogExtension;
 using Project.AppCore;
 using Project.AppCore.Locales.Extensions;
@@ -25,7 +26,11 @@ namespace BlazorWeb.Shared
         public static void SetupLightOrm(WebApplicationBuilder builder)
         {
             builder.Services.AddLightOrm(option =>
-            option.SetDatabase(DbBaseType.Sqlite, Project.AppCore.LightDb.CreateConnection)
+            option.SetDatabase(DbBaseType.Sqlite, () =>
+            {
+                var connStr = builder.Configuration.GetConnectionString("Sqlite");
+                return new SqliteConnection(connStr);
+            })
     .SetWatcher(sql =>
     {
         sql.BeforeExecute = e =>
