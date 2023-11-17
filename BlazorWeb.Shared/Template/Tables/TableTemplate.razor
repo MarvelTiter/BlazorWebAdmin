@@ -24,25 +24,25 @@
                     }
                     <SpaceItem>
                         <Button Type="@ButtonType.Primary" OnClick="NewSearch">@TableLocalizer["TableButtons.Query"]</Button>
-                    </SpaceItem>
+                        </SpaceItem>
                     @if (EnableGenerateQuery)
                     {
                         <SpaceItem>
                             <Button OnClick=@(()=>AdvanceModalVisible = true)>@TableLocalizer["TableButtons.AdvancedQuery"]</Button>
-                        </SpaceItem>
+                            </SpaceItem>
                     }
                 }
                 @if (TableOptions.Exportable || TableOptions.ExportDataLoader != null)
                 {
                     <SpaceItem>
                         <Button Type="@ButtonType.Primary" OnClick="Export">@TableLocalizer["TableButtons.Export"]</Button>
-                    </SpaceItem>
+                        </SpaceItem>
                 }
                 @if (TableOptions.AddHandle != null)
                 {
                     <SpaceItem>
                         <Button Type="@ButtonType.Primary" OnClick=HandleAdd>@TableLocalizer["TableButtons.Add"]</Button>
-                    </SpaceItem>
+                        </SpaceItem>
                 }
             </Space>
         </div>
@@ -58,15 +58,16 @@ else
            Loading=@loading
            TItem=TData
            Bordered
+           Resizable
             OnRow=@TableOptions.OnRow
             ScrollX=@TableOptions.ScrollX
             TreeChildren="@TableOptions.TreeChildren"
             Size="@TableSize.Small"
             DefaultExpandAllRows=@TableOptions.DefaultExpandAllRows
-     @bind-SelectedRows=@TableOptions.Selected
+            @bind-SelectedRows=@TableOptions.Selected
             OnRowClick=OnRowClickHandle
            HidePagination
-     @bind-PageSize=@TableOptions.Query.PageSize>
+            @bind-PageSize=@TableOptions.Query.PageSize>
         <ChildContent>
             @{
                 // 选择列
@@ -159,7 +160,7 @@ else
                         TData=TData
                         Localizer="Localizer"
                         TableLocalizer="TableLocalizer"
-        @bind-Expression="ConditionExpression"
+                        @bind-Expression="ConditionExpression"
                         ShowExportButton=@(TableOptions.ExportDataLoader != null || !TableOptions.Page)
                         OnConfirmToSearch=AdvanceSearch
                         OnConfirmToExport=AdvanceExport>
@@ -174,11 +175,11 @@ else
                  Size=@ButtonSize.Small
                  Danger=@definition.NeedConfirm
                  Icon=@definition.Icon
-                      OnClickStopPropagation
-                  OnClick=@(()=>InvokeButtonAction(definition, context))>
-         @(definition.LabelFunc?.Invoke(context) ?? TableLocalizer[definition.Label])
+                 OnClickStopPropagation
+                 OnClick=@(()=>InvokeButtonAction(definition, context))>
+        @(definition.LabelFunc?.Invoke(context) ?? TableLocalizer[definition.Label])
     </Button>
-    ;
+        ;
     }
 
     public async Task InvokeButtonAction(ButtonDefinition<TData> definition, TData data)
@@ -186,8 +187,8 @@ else
         if (definition.NeedConfirm)
         {
             var confirmResult = await ConfirmSrv.Show(
-    TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
-        , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+        TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+    , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
             if (confirmResult == ConfirmResult.OK)
             {
                 await CallButtonAction();
@@ -263,7 +264,7 @@ else
     {
         return
     @<Column TData="TColumnData" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Sortable=@col.Sortable Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<TColumnData>(col)">
-        </Column>
+    </Column>
     ;
     }
 
@@ -283,7 +284,7 @@ else
                                                 }
                                             }
                                         }
-                                        if (col.ValueFormat != null && context.FieldValue!= null)
+                                        if (col.ValueFormat != null && context.FieldValue != null)
                                         {
                                             formattedValue = col.ValueFormat.Invoke(context.FieldValue);
                                         }

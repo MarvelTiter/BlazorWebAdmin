@@ -20,8 +20,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.AppCore", "Project.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo", "Demo\Demo.csproj", "{0B0ECABA-45E0-4FE6-93B8-78AC9EB74ACE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogAopCodeGenerator", "LogAopCodeGenerator\LogAopCodeGenerator.csproj", "{D654174F-660C-431A-A5FD-3EF9238F65DE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,10 +50,6 @@ Global
 		{0B0ECABA-45E0-4FE6-93B8-78AC9EB74ACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B0ECABA-45E0-4FE6-93B8-78AC9EB74ACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B0ECABA-45E0-4FE6-93B8-78AC9EB74ACE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D654174F-660C-431A-A5FD-3EF9238F65DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D654174F-660C-431A-A5FD-3EF9238F65DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D654174F-660C-431A-A5FD-3EF9238F65DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D654174F-660C-431A-A5FD-3EF9238F65DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

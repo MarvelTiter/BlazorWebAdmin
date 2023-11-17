@@ -3,19 +3,21 @@
 @using Project.Common.Attributes;
 @inject NavigationManager Nav
 @inject UserStore Current
-<Card>
-    <h2>
-        会话创建时间: @(Current?.UserInfo?.CreatedTime.ToString("yyyy-MM-dd HH:mm:ss"))
-    </h2>
-</Card>
-<Card>
-    <h2>
-        会话活跃时间: @((Current?.UserInfo?.ActiveTime - Current?.UserInfo?.CreatedTime)?.ToString())
-    </h2>
-</Card>
+<ActionWatcher Timeout="1000" Type="ActionWatcher.WatchType.Debounce" Callback="Update">
+    <Card>
+        <h2>
+            会话创建时间: @(Current?.UserInfo?.CreatedTime.ToString("yyyy-MM-dd HH:mm:ss"))
+        </h2>
+    </Card>
+    <Card>
+        <h2>
+            会话活跃时间: @((Current?.UserInfo?.ActiveTime - Current?.UserInfo?.CreatedTime)?.ToString())
+        </h2>
+    </Card>
+</ActionWatcher>
 @code {
-    protected override void OnInitialized()
+    void Update()
     {
-        base.OnInitialized();
+        StateHasChanged();
     }
 }

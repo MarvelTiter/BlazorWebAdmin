@@ -14,12 +14,13 @@ using MT.Toolkit.ReflectionExtension;
 using AntDesign.Core.Helpers.MemberPath;
 using Project.AppCore.Middlewares;
 using AspectCore.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
 
 namespace BlazorWeb.Shared
 {
     public class Program
     {
-        public static void Run(string appName
+        public static void Run<TApp>(string appName
             , Action<WebApplicationBuilder> builderOption
             , Action<WebApplication> appOption
             , Func<IEnumerable<Type>>? registerAssembly
@@ -53,6 +54,9 @@ namespace BlazorWeb.Shared
             // Add services to the container.
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
+            //services.AddRazorComponents().AddInteractiveServerComponents();
+
             services.AddControllers().AddApplicationPart(typeof(Project.AppCore.Program).Assembly);
             services.AddHttpClient();
             services.SharedComponentsInit();
@@ -112,16 +116,19 @@ namespace BlazorWeb.Shared
             ServiceLocator.Instance = app.Services;
             app.UseStaticFiles();
             app.UseMiddleware<RedirectToLauchUrlMiddleware>();
-           
+
             app.UseRouting();
+            app.UseAntiforgery();
             //app.UseRequestLocalization();
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapBlazorHub();
-            app.MapControllers();
             app.MapFallbackToPage("/_Host");
 
+            //app.MapRazorComponents<TApp>().AddInteractiveServerRenderMode();
+            //.AddAdditionalAssemblies(Config.Pages.ToArray());
+
+            app.MapControllers();
             app.Run();
         }
     }
