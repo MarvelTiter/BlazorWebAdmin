@@ -19,7 +19,7 @@ namespace Project.Models.Permissions
         public string RoleId { get; set; }
         [ColumnDefinition]
         [ColumnName("ROLE_NAME")]
-        [Column(Name = "ROLE_NAME", PrimaryKey = true)]
+        [Column(Name = "ROLE_NAME")]
         public string RoleName { get; set; }
     }
 }
