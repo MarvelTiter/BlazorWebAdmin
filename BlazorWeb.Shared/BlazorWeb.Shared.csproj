@@ -45,11 +45,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="AntDesign" Version="0.16.2" />
-		<PackageReference Include="LightExcel" Version="2.0.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.5" />
-		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.1" />
+		<PackageReference Include="LightExcel" Version="2.1.0.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
-		<PackageReference Include="MT.LightORM" Version="1.2.8" />
+		<PackageReference Include="MT.LightORM" Version="1.2.9" />
 		<PackageReference Include="MT.Toolkit" Version="1.0.7.2" />
 	</ItemGroup>
 
