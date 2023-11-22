@@ -6,8 +6,10 @@
 @implements IPageAction
 <h3>Page2</h3>
 <AntDesign.Button OnClick="@OnClick">跳转测试</AntDesign.Button>
-
+@* <BlazorWeb.Shared.Components.JsTimer Interval="2000" Callback="Callback"></BlazorWeb.Shared.Components.JsTimer> *@
+@* <BlazorWeb.Shared.Components.Downloader @ref=download></BlazorWeb.Shared.Components.Downloader> *@
 @code {
+    BlazorWeb.Shared.Components.Downloader? download;
     [Inject] NavigationManager Nav { get; set; }
     public Task OnShowAsync()
     {
@@ -23,5 +25,10 @@
     void OnClick()
     {
         Nav.NavigateTo("/nocache/page2");
+    }
+
+    void Callback()
+    {
+        Console.WriteLine("page2 interval...");
     }
 }

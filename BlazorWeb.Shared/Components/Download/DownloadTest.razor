@@ -3,10 +3,19 @@
 @using BlazorWeb.Shared.Utils;
 <h3>DownloadTest</h3>
 <Button OnClick="Download">下载测试</Button>
+<Button OnClick="Download2">下载测试2</Button>
+
 @code {
     [Inject] public IJSRuntime Js { get; set; }
+    [Inject] IDownloadService downloadService{ get; set; }
+
     Task Download()
     {
         return Js.DownloadFile("CGS", "db");
+    }
+
+    Task Download2()
+    {
+        return downloadService.DownloadAsync("CameraCapture_20231117120616.jpeg");
     }
 }

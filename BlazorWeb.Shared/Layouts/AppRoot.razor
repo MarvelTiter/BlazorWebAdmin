@@ -1,5 +1,6 @@
 ﻿@using Project.AppCore;
 @using System.Reflection;
+@using BlazorWeb.Shared.Components;
 <ErrorCatcher>
     <CascadingValue Value="this" IsFixed="true">
         <CascadingAuthenticationState>
@@ -23,6 +24,7 @@
 </ErrorCatcher>
 
 <AntContainer />
+<Downloader />
 
 @code {
     [Parameter]
