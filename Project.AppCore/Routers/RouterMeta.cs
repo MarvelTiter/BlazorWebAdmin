@@ -13,6 +13,7 @@ namespace Project.AppCore.Routers
         public string? Group { get; set; }
         public int Sort { get; set; }
         public bool HasPageInfo { get; set; }
+        public bool Cache { get; set; } = true;
     }
 
     public class RouteMenu : RouterMeta
@@ -30,6 +31,7 @@ namespace Project.AppCore.Routers
             Redirect = meta.Redirect;
             Pin = meta.Pin;
             Group = meta.Group;
+            Cache = meta.Cache;
         }
         public IEnumerable<RouteMenu> Children { get; set; }
         public bool HasChildren => Children != null && Children.Any();

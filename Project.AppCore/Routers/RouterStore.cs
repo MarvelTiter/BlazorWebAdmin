@@ -17,6 +17,7 @@ namespace Project.AppCore.Routers
     {
         private readonly IPermissionService permissionService;
         private readonly NavigationManager navigationManager;
+        private readonly UserStore userStore;
         private readonly IStringLocalizer<RouterStore> localizer;
         private readonly IOptionsMonitor<CultureOptions> options;
         private readonly ILogger<RouterStore> logger;
@@ -24,6 +25,7 @@ namespace Project.AppCore.Routers
 
         public RouterStore(IPermissionService permissionService
             , NavigationManager navigationManager
+            , UserStore userStore
             , IStringLocalizer<RouterStore> localizer
             , IOptionsMonitor<CultureOptions> options
             , ILogger<RouterStore> logger
@@ -31,6 +33,7 @@ namespace Project.AppCore.Routers
         {
             this.permissionService = permissionService;
             this.navigationManager = navigationManager;
+            this.userStore = userStore;
             this.localizer = localizer;
             this.options = options;
             this.logger = logger;
@@ -64,11 +67,9 @@ namespace Project.AppCore.Routers
             if (!pages.TryGetValue(CurrentUrl, out var tag))
             {
                 RouterMeta? meta = Menus.FirstOrDefault(r => r.RouteUrl == CurrentUrl);
-                bool nocache = false;
                 if (meta == null)
                 {
                     meta = AllPages.AllRoutes.FirstOrDefault(r => r.RouteUrl == CurrentUrl);
-                    nocache = true;
                 }
                 tag = new TagRoute
                 {
@@ -76,14 +77,14 @@ namespace Project.AppCore.Routers
                     RouteTitle = meta?.RouteTitle ?? "",
                     Icon = meta?.Icon ?? "",
                     Pin = meta?.Pin ?? false,
-                    NoCache = nocache
+                    Cache = meta?.Cache ?? false,
                 };
                 pages[CurrentUrl] = tag;
             }
             tag.Body ??= CreateBody(tag, routeData);
             if (preview != null)
             {
-                if (preview.NoCache)
+                if (!preview.Cache)
                 {
                     Remove(preview.RouteUrl);
                 }
@@ -92,6 +93,7 @@ namespace Project.AppCore.Routers
                     preview.SetActive(false);
                 }
             }
+            //preview?.SetActive(false);
             tag.SetActive(true);
             preview = tag;
             NotifyChanged();
@@ -203,6 +205,7 @@ namespace Project.AppCore.Routers
                 RouteUrl = "/",
                 Icon = "home",
                 Group = "ROOT",
+                Cache = true,
                 RouteTitle = GetHomeLocalizer(),
             });
             foreach (var pow in powers)
@@ -215,6 +218,7 @@ namespace Project.AppCore.Routers
                 meta.Icon = pow.Icon;
                 meta.Group = pow.ParentId;
                 meta.Sort = pow.Sort;
+                meta.Cache = true;
                 Menus.Add(new(meta));
             }
         }
