@@ -3,21 +3,35 @@
 @using Project.Common.Attributes;
 @inject NavigationManager Nav
 @inject UserStore Current
+@inject IDashboardContentProvider DashboardProvider
 <ActionWatcher Timeout="1000" Type="ActionWatcher.WatchType.Debounce" Callback="Update">
-    <Card>
-        <h2>
-            会话创建时间: @(Current?.UserInfo?.CreatedTime.ToString("yyyy-MM-dd HH:mm:ss"))
-        </h2>
-    </Card>
-    <Card>
-        <h2>
-            会话活跃时间: @((Current?.UserInfo?.ActiveTime - Current?.UserInfo?.CreatedTime)?.ToString())
-        </h2>
-    </Card>
+    @if (homeType == null)
+    {
+        <Card>
+            <h2>
+                会话创建时间: @(Current?.UserInfo?.CreatedTime.ToString("yyyy-MM-dd HH:mm:ss"))
+            </h2>
+        </Card>
+        <Card>
+            <h2>
+                会话活跃时间: @((Current?.UserInfo?.ActiveTime - Current?.UserInfo?.CreatedTime)?.ToString())
+            </h2>
+        </Card>
+    }
+    else
+    {
+        <DynamicComponent Type="homeType"></DynamicComponent>
+    }
 </ActionWatcher>
 @code {
     void Update()
     {
         StateHasChanged();
+    }
+    Type? homeType;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        homeType = DashboardProvider.GetComponentType();
     }
 }

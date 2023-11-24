@@ -1,4 +1,5 @@
 ﻿using BlazorWeb.Shared.Components;
+using BlazorWeb.Shared.Pages;
 
 namespace BlazorWeb.Shared.Extensions
 {
@@ -8,6 +9,7 @@ namespace BlazorWeb.Shared.Extensions
         {
             services.AddScoped<IReconnectorProvider, ReconnectorProvider>();
             services.AddScoped<IDownloadServiceProvider, DownloadServiceProvider>();
+            services.AddSingleton<IDashboardContentProvider, DashboardContentProvider>();
             services.AddScoped<IDownloadService>(provider =>
             {
                 var sp = provider.GetService<IDownloadServiceProvider>();
