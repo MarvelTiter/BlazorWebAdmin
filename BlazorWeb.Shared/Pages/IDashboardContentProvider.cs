@@ -5,7 +5,7 @@ namespace BlazorWeb.Shared.Pages
     public interface IDashboardContentProvider
     {
         Type? GetComponentType();
-        void SetComponentType(Type type);
+        void SetComponentType(Type? type);
     }
 
     public class DashboardContentProvider : IDashboardContentProvider
@@ -16,7 +16,7 @@ namespace BlazorWeb.Shared.Pages
             return componentType;
         }
 
-        public void SetComponentType(Type type)
+        public void SetComponentType(Type? type)
         {
             componentType = type;
         }
