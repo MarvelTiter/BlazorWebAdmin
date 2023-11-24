@@ -50,11 +50,11 @@ namespace BlazorWeb.Shared
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            //services.AddRazorComponents().AddInteractiveServerComponents();
-
             services.AddControllers().AddApplicationPart(typeof(Project.AppCore.Program).Assembly);
             services.AddHttpClient();
             services.SharedComponentsInit();
+            services.ConfigureAppSettings(builder);
+
             services.Configure<HubOptions>(options =>
             {
                 options.MaximumReceiveMessageSize = 1024 * 1024 * 2; // 1MB or use null
@@ -66,25 +66,7 @@ namespace BlazorWeb.Shared
             //services.AddLocalization();
             services.AddAntDesign();
 
-            services.AddLightExcel();
-            services.AutoInjects();
-            services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             services.AddHttpContextAccessor();
-            services.AddJsonLocales();
-            services.AddWebConfiguration<AppSetting>(app =>
-            {
-                builder.Configuration.GetSection(nameof(AppSetting)).Bind(app);
-            });
-            services.AddWebConfiguration<CultureOptions>(culture =>
-            {
-                builder.Configuration.GetSection(nameof(CultureOptions)).Bind(culture);
-            });
-
-            services.AddWebConfiguration<Token>(token =>
-            {
-                builder.Configuration.GetSection(nameof(Token)).Bind(token);
-            });
-
 
             services.AddSingleton<RedirectToLauchUrlMiddleware>();
 
@@ -119,9 +101,6 @@ namespace BlazorWeb.Shared
             app.UseAuthorization();
             app.MapBlazorHub();
             app.MapFallbackToPage("/_Host");
-
-            //app.MapRazorComponents<TApp>().AddInteractiveServerRenderMode();
-            //.AddAdditionalAssemblies(Config.Pages.ToArray());
 
             app.MapControllers();
             app.Run();
