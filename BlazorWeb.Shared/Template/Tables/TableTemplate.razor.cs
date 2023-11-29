@@ -212,7 +212,7 @@ namespace BlazorWeb.Shared.Template.Tables
     public class TableOptions<TData, TQuery> where TQuery : IRequest, new()
     {
 
-        public List<Setting.TableOptionColumn> Columns { get; set; }
+        public List<TableOptionColumn> Columns { get; set; }
         public List<ButtonDefinition<TData>> Buttons { get; set; }
         public Func<TData, IEnumerable<TData>> TreeChildren { get; set; } = t => Enumerable.Empty<TData>();
 
@@ -264,24 +264,24 @@ namespace BlazorWeb.Shared.Template.Tables
         }
 
 
-        public TableOptions<TData, TQuery> AddColumn(string label, string prop, Setting.TableOptionColumn? col = null)
+        public TableOptions<TData, TQuery> AddColumn(string label, string prop, TableOptionColumn? col = null)
         {
             if (Columns == null)
             {
-                Columns = new List<Setting.TableOptionColumn>();
+                Columns = new List<TableOptionColumn>();
             }
             if (col == null)
             {
-                col = new Setting.TableOptionColumn(label, prop);
+                col = new TableOptionColumn(label, prop);
             }
             Columns.Add(col);
             return this;
         }
-        public TableOptions<TData, TQuery> AddColumn(Setting.TableOptionColumn col)
+        public TableOptions<TData, TQuery> AddColumn(TableOptionColumn col)
         {
             if (Columns == null)
             {
-                Columns = new List<Setting.TableOptionColumn>();
+                Columns = new List<TableOptionColumn>();
             }
             Columns.Add(col);
             return this;
@@ -309,7 +309,7 @@ namespace BlazorWeb.Shared.Template.Tables
         }
 
 
-        public Setting.TableOptionColumn this[string columnName]
+        public TableOptionColumn this[string columnName]
         {
             get
             {

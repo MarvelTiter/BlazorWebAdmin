@@ -106,13 +106,12 @@ namespace Project.AppCore.Routers
             var routeValues = routeData.RouteValues;
             void RenderForLastValue(RenderTreeBuilder builder)
             {                //dont reference RouteData again
-                var seq = 0;
-                builder.OpenComponent(seq++, pagetype);
-                foreach (KeyValuePair<string, object> routeValue in routeValues)
+                builder.OpenComponent(0, pagetype);
+                foreach (KeyValuePair<string, object?> routeValue in routeValues)
                 {
-                    builder.AddAttribute(seq++, routeValue.Key, routeValue.Value);
+                    builder.AddAttribute(1, routeValue.Key, routeValue.Value);
                 }
-                builder.AddComponentReferenceCapture(seq++, obj =>
+                builder.AddComponentReferenceCapture(2, obj =>
                 {
                     if (route != null)
                         route.PageRef = obj;

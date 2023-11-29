@@ -4,6 +4,7 @@ using Project.Common.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
@@ -64,17 +65,34 @@ namespace BlazorWeb.Shared.Template.Tables
             return caches.GetOrAdd(self, type =>
              {
                  var props = type.GetProperties();
-                 var heads = props.Select(p => (Prop: p, Column: p.GetCustomAttribute<ColumnDefinitionAttribute>()));
+                 var heads = props.Select(p => (Prop: p, Column: GetColumnDef(p)));
                  List<TableOptionColumn> columns = new List<TableOptionColumn>();
                  foreach (var col in heads)
                  {
-                     if (col.Column == null) continue;
+                     if (col.Column == null)
+                     {
+                         continue;
+                     }
                      var column = col.Prop.GenerateColumn(col.Column);
                      columns.Add(column);
                  }
                  //columns.Sort((a, b) => a.Index - b.Index);
                  return columns;
              });
+        }
+
+        private static ColumnDefinitionAttribute? GetColumnDef(PropertyInfo p)
+        {
+            var col = p.GetCustomAttribute<ColumnDefinitionAttribute>();
+            if (col is null)
+            {
+                var dis = p.GetCustomAttribute<DisplayAttribute>();
+                if (dis is not null)
+                {
+                    col = new ColumnDefinitionAttribute(dis.Name);
+                }
+            }
+            return col;
         }
 
         public static Dictionary<string, string> ParseDictionary(Type enumType)
