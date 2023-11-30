@@ -12,6 +12,10 @@ namespace Project.Models.Permissions
         public string UserName { get; set; }
         public string Password { get; set; }
         public object? Payload { get; set; }
+        /// <summary>
+        /// 框架内Api
+        /// </summary>
+        public string ApiToken { get; set; }
         public IEnumerable<string> Roles { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime ActiveTime { get; set; }

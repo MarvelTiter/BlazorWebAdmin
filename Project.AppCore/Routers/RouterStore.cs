@@ -167,7 +167,14 @@ namespace Project.AppCore.Routers
         {
             if (userInfo != null)
             {
-                await InitRoutersAsyncByUser(userInfo);
+                try
+                {
+                    await InitRoutersAsyncByUser(userInfo);
+                }
+                catch
+                {
+
+                }
             }
             if (setting.CurrentValue.LoadUnregisteredPage)
             {

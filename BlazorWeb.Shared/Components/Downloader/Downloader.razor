@@ -23,7 +23,7 @@
             return;
         await Module.InvokeVoidAsync("download", new
         {
-            token = UserStore.UserInfo?.Payload?.ToString(),
+            token = UserStore.UserInfo?.ApiToken,
             filename = filename,
         });
     }

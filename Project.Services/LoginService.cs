@@ -31,7 +31,7 @@ namespace Project.Services
 		public async Task<IQueryResult<bool>> UpdateLastLoginTimeAsync(UserInfo info)
 		{			
 			var flag = await UpdateLoginInfo(info);
-			info.Payload = JwtTokenHelper.GetToken(info.UserId, null, info.Roles.ToArray());
+			info.ApiToken = JwtTokenHelper.GetToken(info.UserId, null, info.Roles.ToArray());
 			return (flag > 0).Result();
 		}
 

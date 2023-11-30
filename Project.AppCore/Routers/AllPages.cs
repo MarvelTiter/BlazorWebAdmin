@@ -25,7 +25,7 @@ namespace Project.AppCore.Routers
             {
                 routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).SelectMany(t => GetRouterMeta(t)));
             }
-            AllRoutes = routes.OrderBy(r => r.Sort).ToList();
+            AllRoutes = routes.Distinct().OrderBy(r => r.Sort).ToList();
 
             InitRouteMenu();
         }
@@ -42,7 +42,7 @@ namespace Project.AppCore.Routers
                 if (info == null) throw new Exception($"{nameof(PageGroupAttribute)} should used with {nameof(PageInfoAttribute)}");
                 yield return new()
                 {
-                    RouteId = groupInfo.Name,
+                    RouteId = groupInfo.Id,
                     RouteTitle = groupInfo.Name,
                     Icon = groupInfo.Icon,
                     Sort = groupInfo.Sort,
@@ -58,7 +58,7 @@ namespace Project.AppCore.Routers
                 RouteUrl = routerAttr!.Template,
                 Icon = info?.Icon ?? "",
                 Pin = info?.Pin ?? false,
-                Group = groupInfo?.Name ?? "ROOT",
+                Group = groupInfo?.Id ?? "ROOT",
                 Sort = info?.Sort ?? 0,
                 HasPageInfo = info != null,
             };

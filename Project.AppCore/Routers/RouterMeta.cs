@@ -1,8 +1,9 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.AppCore.Routers
 {
-    public class RouterMeta
+    public class RouterMeta : IEqualityComparer<RouterMeta>
     {
         public string RouteId { get; set; }
         public string RouteUrl { get; set; }
@@ -14,6 +15,16 @@ namespace Project.AppCore.Routers
         public int Sort { get; set; }
         public bool HasPageInfo { get; set; }
         public bool Cache { get; set; } = true;
+
+        public bool Equals(RouterMeta? x, RouterMeta? y)
+        {
+            return x?.RouteId == y?.RouteId;
+        }
+
+        public int GetHashCode([DisallowNull] RouterMeta obj)
+        {
+            return obj.RouteId.GetHashCode();
+        }
     }
 
     public class RouteMenu : RouterMeta

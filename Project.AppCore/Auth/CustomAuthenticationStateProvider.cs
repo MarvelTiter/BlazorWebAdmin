@@ -48,10 +48,6 @@ namespace Project.AppCore.Auth
                         return await UpdateState(result.Value);
                     }
                 }
-                //else
-                //{
-                //    return await UpdateState(result.Value ?? new UserInfo { UserId = "admin", UserName = "admin" });
-                //}
             }
             catch (Exception)
             {
