@@ -50,7 +50,7 @@
 		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.0" />
 		<PackageReference Include="MT.LightORM" Version="1.2.9" />
-		<PackageReference Include="MT.Toolkit" Version="1.0.7.5" />
+		<PackageReference Include="MT.Toolkit" Version="1.0.7.6" />
 	</ItemGroup>
 
 	<ItemGroup>
