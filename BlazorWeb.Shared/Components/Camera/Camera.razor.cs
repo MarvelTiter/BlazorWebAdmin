@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
 using Project.Models;
 using System;
+using System.ComponentModel.DataAnnotations;
 using static BlazorWeb.Shared.Components.Camera;
 
 namespace BlazorWeb.Shared.Components
@@ -12,8 +13,8 @@ namespace BlazorWeb.Shared.Components
     public interface ICameraObject
     {
         IEnumerable<DeviceInfo> Devices { get; }
-        Task SwitchCamera(string deviceId, Resolution resolution = Resolution.FullHD);
-        Task Start(Resolution resolution = Resolution.FullHD);
+        Task SwitchCamera(string deviceId, Resolution? resolution = null);
+        Task Start(Resolution? resolution);
         Task Stop();
         Task Capture();
     }
@@ -28,7 +29,7 @@ namespace BlazorWeb.Shared.Components
         [Parameter] public RenderFragment<ICameraObject> DeviceSelectorRender { get; set; }
         [Parameter] public EventCallback<CaptureInfo> OnCapture { get; set; }
         [Parameter] public bool AutoDownload { get; set; }
-        [Parameter] public Resolution? CameraResolution {  get; set; }
+        [Parameter] public Resolution? CameraResolution { get; set; }
 
         private ElementReference? videoDom;
         private ElementReference? clipDom;
@@ -47,11 +48,17 @@ namespace BlazorWeb.Shared.Components
 
         public enum Resolution
         {
+            [Display(Name = "QVGA(320×240)")]
             QVGA,
+            [Display(Name = "VGA(640×380)")]
             VGA,
+            [Display(Name = "HD(1280×720)")]
             HD,
+            [Display(Name = "FullHD(1920×1080)")]
             FullHD,
+            [Display(Name = "Television4K(3840×2160)")]
             Television4K,
+            [Display(Name = "Cinema4K(4096×2160)")]
             Cinema4K,
         }
 
@@ -106,11 +113,17 @@ namespace BlazorWeb.Shared.Components
             }
         }
         bool playButtonStatus = false;
-        public async Task Start(Resolution resolution = Resolution.FullHD)
+
+        public Task Start()
         {
-            if (CameraResolution.HasValue)
+            return Start(Resolution.FullHD);
+        }
+
+        public async Task Start(Resolution? resolution = null)
+        {
+            if (!resolution.HasValue)
             {
-                resolution = CameraResolution.Value;
+                resolution = CameraResolution ?? Resolution.FullHD;
             }
             (int Width, int Height) res = resolution switch
             {
@@ -148,7 +161,7 @@ namespace BlazorWeb.Shared.Components
             }
         }
 
-        public async Task SwitchCamera(string deviceId, Resolution resolution = Resolution.FullHD)
+        public async Task SwitchCamera(string deviceId, Resolution? resolution = null)
         {
             await Stop();
             selectedDeviceId = deviceId;
@@ -181,6 +194,12 @@ namespace BlazorWeb.Shared.Components
             {
                 _ = MsgSrv.Error(result.Message);
             }
+        }
+
+        protected override async ValueTask DisposeAsync(bool disposing)
+        {
+            await Stop();
+            await base.DisposeAsync(disposing);
         }
     }
 }
