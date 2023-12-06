@@ -8,13 +8,9 @@
         <canvas @ref=canvasDom style="display:none"></canvas>
     </div>
     <div style="width:100%;text-align:center;margin-top:10px;">
-        @*@foreach (var d in Devices.Where(d => d.Kind == "videoinput"))
-        {
-        <p @onclick=@(()=>cameraHelper.InvokeVoidAsync("loadUserMedia", videoDom, d.DeviceId, 1280,720))>@d.DeviceId : @d.Kind , @d.Label</p>
-        }*@
         @if (DeviceSelectorRender != null)
         {
-            @DeviceSelectorRender(Devices)
+            @DeviceSelectorRender(this)
         }
         else
         {

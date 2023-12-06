@@ -5,10 +5,19 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
 using Project.Models;
 using System;
+using static BlazorWeb.Shared.Components.Camera;
 
 namespace BlazorWeb.Shared.Components
 {
-    public partial class Camera : JsComponentBase
+    public interface ICameraObject
+    {
+        IEnumerable<DeviceInfo> Devices { get; }
+        Task SwitchCamera(string deviceId, Resolution resolution = Resolution.FullHD);
+        Task Start(Resolution resolution = Resolution.FullHD);
+        Task Stop();
+        Task Capture();
+    }
+    public partial class Camera : JsComponentBase, ICameraObject
     {
         [Inject] public ProtectedLocalStorage Storage { get; set; }
         [Inject] public MessageService MsgSrv { get; set; }
@@ -16,9 +25,10 @@ namespace BlazorWeb.Shared.Components
         [Parameter] public bool EnableClip { get; set; }
         [Parameter] public int Width { get; set; }
         [Parameter] public int Height { get; set; }
-        [Parameter] public RenderFragment<IEnumerable<DeviceInfo>> DeviceSelectorRender { get; set; }
+        [Parameter] public RenderFragment<ICameraObject> DeviceSelectorRender { get; set; }
         [Parameter] public EventCallback<CaptureInfo> OnCapture { get; set; }
         [Parameter] public bool AutoDownload { get; set; }
+        [Parameter] public Resolution? CameraResolution {  get; set; }
 
         private ElementReference? videoDom;
         private ElementReference? clipDom;
@@ -34,6 +44,17 @@ namespace BlazorWeb.Shared.Components
             /// </summary>
             public string Kind { get; set; }
         }
+
+        public enum Resolution
+        {
+            QVGA,
+            VGA,
+            HD,
+            FullHD,
+            Television4K,
+            Cinema4K,
+        }
+
         public struct CaptureInfo
         {
             public string Filename { get; set; }
@@ -48,14 +69,6 @@ namespace BlazorWeb.Shared.Components
             if (Width < 200) Width = 200;
             if (Height < 100) Height = 100;
         }
-
-        //protected override async Task LoadJsAsync()
-        //{
-        //    var path = IsLibrary
-        //        ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}/{ModuleName}.razor.js"
-        //        : $"./{RelativePath}/{ModuleName}/{ModuleName}.razor.js";
-        //    Module = await Js.InvokeAsync<IJSObjectReference>("import", path);
-        //}
 
         protected override async ValueTask Init()
         {
@@ -93,9 +106,23 @@ namespace BlazorWeb.Shared.Components
             }
         }
         bool playButtonStatus = false;
-        public async Task Start()
+        public async Task Start(Resolution resolution = Resolution.FullHD)
         {
-            var result = await ModuleInvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, 1920, 1080);
+            if (CameraResolution.HasValue)
+            {
+                resolution = CameraResolution.Value;
+            }
+            (int Width, int Height) res = resolution switch
+            {
+                Resolution.QVGA => (320, 240),
+                Resolution.VGA => (640, 380),
+                Resolution.HD => (1280, 720),
+                Resolution.FullHD => (1920, 1080),
+                Resolution.Television4K => (3840, 2160),
+                Resolution.Cinema4K => (4096, 2160),
+                _ => throw new ArgumentException()
+            };
+            var result = await ModuleInvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, res.Width, res.Height);
             if (result.Success && selectedDeviceId != null)
             {
                 playButtonStatus = result.Success;
@@ -121,11 +148,11 @@ namespace BlazorWeb.Shared.Components
             }
         }
 
-        public async Task SwitchCamera(string deviceId)
+        public async Task SwitchCamera(string deviceId, Resolution resolution = Resolution.FullHD)
         {
             await Stop();
             selectedDeviceId = deviceId;
-            await Start();
+            await Start(resolution);
         }
 
         public async Task Capture()
