@@ -6,18 +6,9 @@ using Microsoft.JSInterop;
 using Project.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
-using static BlazorWeb.Shared.Components.Camera;
 
 namespace BlazorWeb.Shared.Components
 {
-    public interface ICameraObject
-    {
-        IEnumerable<DeviceInfo> Devices { get; }
-        Task SwitchCamera(string deviceId, Resolution? resolution = null);
-        Task Start(Resolution? resolution);
-        Task Stop();
-        Task Capture();
-    }
     public partial class Camera : JsComponentBase, ICameraObject
     {
         [Inject] public ProtectedLocalStorage Storage { get; set; }
@@ -151,6 +142,10 @@ namespace BlazorWeb.Shared.Components
         public async Task Stop()
         {
             var result = await ModuleInvokeAsync<JsActionResult>("closeUserMedia");
+            if (result == null)
+            {
+                return;
+            }
             if (result.Success)
             {
                 playButtonStatus = !result.Success;
@@ -168,19 +163,21 @@ namespace BlazorWeb.Shared.Components
             await Start(resolution);
         }
 
-        public async Task Capture()
+        public async Task<CaptureInfo> Capture()
         {
+            CaptureInfo info = new();
             var result = await ModuleInvokeAsync<JsActionResult<string>>("capture");
             if (result.Success)
             {
                 var filename = $"CameraCapture_{DateTime.Now:yyyyMMddHHmmss}";
+                info = new CaptureInfo
+                {
+                    Filename = filename,
+                    Content = result.Payload,
+                };
                 if (OnCapture.HasDelegate)
                 {
-                    await OnCapture.InvokeAsync(new CaptureInfo
-                    {
-                        Filename = filename,
-                        Content = result.Payload,
-                    });
+                    await OnCapture.InvokeAsync(info);
                 }
                 if (AutoDownload)
                 {
@@ -194,6 +191,7 @@ namespace BlazorWeb.Shared.Components
             {
                 _ = MsgSrv.Error(result.Message);
             }
+            return info;
         }
 
         protected override async ValueTask DisposeAsync(bool disposing)

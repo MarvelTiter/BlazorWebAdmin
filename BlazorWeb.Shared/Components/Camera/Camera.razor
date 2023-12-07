@@ -7,17 +7,17 @@
         </div>
         <canvas @ref=canvasDom style="display:none"></canvas>
     </div>
-    <div style="width:100%;text-align:center;margin-top:10px;">
-        @if (DeviceSelectorRender != null)
-        {
-            @DeviceSelectorRender(this)
-        }
-        else
-        {
+    @if (DeviceSelectorRender != null)
+    {
+        @DeviceSelectorRender(this)
+    }
+    else
+    {
+        <div style="width:100%;text-align:center;margin-top:10px;">
             <CustomSelect TItem=string Options="dropdownDevices" @bind-Value=selectedDeviceId Style="width:200px;"></CustomSelect>
             <Button OnClick="Start" Type="@ButtonType.Primary" Disabled=playButtonStatus>开启</Button>
             <Button OnClick="Stop" Type="@ButtonType.Primary" Disabled=!playButtonStatus>关闭</Button>
             <Button OnClick="Capture" Type="@ButtonType.Primary" Disabled=!playButtonStatus>拍照</Button>
-        }
-    </div>
+        </div>
+    }
 </div>
