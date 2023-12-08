@@ -3,6 +3,7 @@ using BlazorWeb.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
+using OneOf.Types;
 using Project.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -21,6 +22,7 @@ namespace BlazorWeb.Shared.Components
         [Parameter] public EventCallback<CaptureInfo> OnCapture { get; set; }
         [Parameter] public bool AutoDownload { get; set; }
         [Parameter] public Resolution? CameraResolution { get; set; }
+        [Parameter] public int RetryTimes { get; set; } = 3;
 
         private ElementReference? videoDom;
         private ElementReference? clipDom;
@@ -126,7 +128,12 @@ namespace BlazorWeb.Shared.Components
                 Resolution.Cinema4K => (4096, 2160),
                 _ => throw new ArgumentException()
             };
-            var result = await ModuleInvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, res.Width, res.Height);
+            var result = await TryOpenCamera(res.Width, res.Height);
+            if (result == null)
+            {
+                _ = MsgSrv.Error("something wrong when try to open the camera");
+                return;
+            }
             if (result.Success && selectedDeviceId != null)
             {
                 playButtonStatus = result.Success;
@@ -137,6 +144,26 @@ namespace BlazorWeb.Shared.Components
             {
                 _ = MsgSrv.Error(result.Message, 0);
             }
+        }
+
+        async Task<JsActionResult?> TryOpenCamera(int width, int height)
+        {
+            int hadTried = 0;
+            JsActionResult? result = default;
+            while (hadTried < RetryTimes)
+            {
+                 result = await ModuleInvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, width, height);
+                if (result == null || !result.Success)
+                {
+                    await Task.Delay(100);
+                    hadTried++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return result;
         }
 
         public async Task Stop()
