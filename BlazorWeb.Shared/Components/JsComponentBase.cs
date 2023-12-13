@@ -80,9 +80,8 @@ namespace BlazorWeb.Shared.Components
         {
             try
             {
-                var arguments = new List<object> { Id };
-                arguments.AddRange((args ?? Array.Empty<object>())!);
-                await (Module?.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled(CancellationToken.None));
+                //await (Module?.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled(CancellationToken.None));
+                await (Module?.InvokeVoidAsync(identifier, [Id, .. args]) ?? ValueTask.FromCanceled(CancellationToken.None));
             }
             catch { }
             finally
@@ -96,9 +95,8 @@ namespace BlazorWeb.Shared.Components
             var ret = default(T);
             try
             {
-                var arguments = new List<object> { Id };
-                arguments.AddRange((args ?? Array.Empty<object>())!);
-                ret = await (Module?.InvokeAsync<T>($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled<T>(CancellationToken.None));
+                //ret = await (Module?.InvokeAsync<T>($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled<T>(CancellationToken.None));
+                ret = await (Module?.InvokeAsync<T>(identifier, [Id, .. args]) ?? ValueTask.FromCanceled<T>(CancellationToken.None));
             }
             catch { }
             finally

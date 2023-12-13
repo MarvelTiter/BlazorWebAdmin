@@ -5,6 +5,7 @@ export class BaseComponent {
     dispose() {
 
     }
+
     static dispose(id) {
         const com = getComponentById(id);
         if (com) {
@@ -12,9 +13,5 @@ export class BaseComponent {
             com.dispose();
             removeComponent(id);
         }
-    }
-
-    static init() {
-
     }
 }

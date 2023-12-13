@@ -22,10 +22,17 @@ export class JsTimer extends BaseComponent {
         }
     }
 
-    static init(id, dotNetRef, interval) {
-        var timter = getComponentById(id, () => {
-            return new JsTimer(dotNetRef, interval);
-        });
-        timter.start();
-    }
+    //static init(id, dotNetRef, interval) {
+    //    var timter = getComponentById(id, () => {
+    //        return new JsTimer(dotNetRef, interval);
+    //    });
+    //    timter.start();
+    //}
+}
+
+export function init(id, dotNetRef, interval) {
+    var timter = getComponentById(id, () => {
+        return new JsTimer(dotNetRef, interval);
+    });
+    timter.start();
 }

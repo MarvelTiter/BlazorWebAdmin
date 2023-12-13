@@ -77,29 +77,55 @@ export class ScrollBar extends BaseComponent {
         EventHandler.remove(this.resize, 'resize');
     }
 
-    static initScrollbar(id, scrollbar, wrap, resize, minSize, always) {
-        const component = getComponentById(id, () => {
-            return new ScrollBar();
-        });
-        component.root = scrollbar;
-        component.wrap = wrap;
-        component.resize = resize;
-        component.minSize = minSize;
-        component.initEvents();
-        component.update();
-        if (always) {
-            component.bar.setVisible(true);
-            component.bar.always = always;
-        }
-    }
+    //static initScrollbar(id, scrollbar, wrap, resize, minSize, always) {
+    //    const component = getComponentById(id, () => {
+    //        return new ScrollBar();
+    //    });
+    //    component.root = scrollbar;
+    //    component.wrap = wrap;
+    //    component.resize = resize;
+    //    component.minSize = minSize;
+    //    component.initEvents();
+    //    component.update();
+    //    if (always) {
+    //        component.bar.setVisible(true);
+    //        component.bar.always = always;
+    //    }
+    //}
 
-    static initBarInstance(id, position, tracker, thumb) {
-        const component = getComponentById(id, () => {
-            return new ScrollBar();
-        });
-        var o = new Thumb(component, position, tracker, thumb);
-        o.setVisible(false);
-        o.initEvents();
-        component.bar[position] = o;
+    //static initBarInstance(id, position, tracker, thumb) {
+    //    const component = getComponentById(id, () => {
+    //        return new ScrollBar();
+    //    });
+    //    var o = new Thumb(component, position, tracker, thumb);
+    //    o.setVisible(false);
+    //    o.initEvents();
+    //    component.bar[position] = o;
+    //}
+}
+
+export function initScrollbar(id, scrollbar, wrap, resize, minSize, always) {
+    const component = getComponentById(id, () => {
+        return new ScrollBar();
+    });
+    component.root = scrollbar;
+    component.wrap = wrap;
+    component.resize = resize;
+    component.minSize = minSize;
+    component.initEvents();
+    component.update();
+    if (always) {
+        component.bar.setVisible(true);
+        component.bar.always = always;
     }
+}
+
+export function initBarInstance(id, position, tracker, thumb) {
+    const component = getComponentById(id, () => {
+        return new ScrollBar();
+    });
+    var o = new Thumb(component, position, tracker, thumb);
+    o.setVisible(false);
+    o.initEvents();
+    component.bar[position] = o;
 }

@@ -97,49 +97,49 @@ export class Camera extends BaseComponent {
             this.clipBox = null
         }
     }
+}
 
-    static init(id, video, canvas, clip, width, height) {
-        var component = getComponentById(id, () => {
-            return new Camera(video, canvas)
-        })
-        if (clip) {
-            component.clipBox = new ClipBox(clip, width, height)
-            component.clipBox.initEvents()
-        }
+export function init(id, video, canvas, clip, width, height) {
+    var component = getComponentById(id, () => {
+        return new Camera(video, canvas)
+    })
+    if (clip) {
+        component.clipBox = new ClipBox(clip, width, height)
+        component.clipBox.initEvents()
     }
+}
 
 
-    static async enumerateDevices() {
-        if (navigator && navigator.mediaDevices) {
-            var devices = await navigator.mediaDevices.enumerateDevices()
-            return success('', devices)
-        }
-        return failed('获取设备失败！请检查设备连接或者浏览器配置！')
+export async function enumerateDevices() {
+    if (navigator && navigator.mediaDevices) {
+        var devices = await navigator.mediaDevices.enumerateDevices()
+        return success('', devices)
     }
+    return failed('获取设备失败！请检查设备连接或者浏览器配置！')
+}
 
-    static loadUserMedia(id, deviceId, width, height) {
-        try {
-            const camera = getComponentById(id)
-            return camera.open(deviceId, width, height)
-        } catch (e) {
-            return failed(e.message)
-        }
-    }
-
-    static closeUserMedia(id) {
-        try {
-            const camera = getComponentById(id)
-            camera.close()
-            return success()
-
-        } catch (e) {
-            return failed(e.message)
-        }
-    }
-    static capture(id) {
+export function loadUserMedia(id, deviceId, width, height) {
+    try {
         const camera = getComponentById(id)
-        return camera.capture()
+        return camera.open(deviceId, width, height)
+    } catch (e) {
+        return failed(e.message)
     }
+}
+
+export function closeUserMedia(id) {
+    try {
+        const camera = getComponentById(id)
+        camera.close()
+        return success()
+
+    } catch (e) {
+        return failed(e.message)
+    }
+}
+export function capture(id) {
+    const camera = getComponentById(id)
+    return camera.capture()
 }
 
 class ClipBox extends BaseComponent {

@@ -59,10 +59,17 @@ export class HorizontalScroll extends BaseComponent {
         EventHandler.remove(this.wrap, this.wheel, this.scroll)
     }
 
-    static init(id, element) {
-        const bar = getComponentById(id, () => {
-            return new HorizontalScroll(element)
-        })
-        bar.initEvents()
-    }
+    //static init(id, element) {
+    //    const bar = getComponentById(id, () => {
+    //        return new HorizontalScroll(element)
+    //    })
+    //    bar.initEvents()
+    //}
+}
+
+export function init(id, element) {
+    const bar = getComponentById(id, () => {
+        return new HorizontalScroll(element)
+    })
+    bar.initEvents()
 }

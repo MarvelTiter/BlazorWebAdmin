@@ -46,14 +46,25 @@ export class FullScreen extends BaseComponent {
             document.msFullScreent
     }
 
-    static init(id) {
-        getComponentById(id, () => {
-            return new FullScreen()
-        })
-    }
+    //static init(id) {
+    //    getComponentById(id, () => {
+    //        return new FullScreen()
+    //    })
+    //}
 
-    static toggle(id) {
-        const fullscreen = getComponentById(id)
-        fullscreen.toggle()
-    }
+    //static toggle(id) {
+    //    const fullscreen = getComponentById(id)
+    //    fullscreen.toggle()
+    //}
+}
+
+export function init(id) {
+    getComponentById(id, () => {
+        return new FullScreen()
+    })
+}
+
+export function toggle(id) {
+    const fullscreen = getComponentById(id)
+    fullscreen.toggle()
 }

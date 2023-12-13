@@ -48,11 +48,11 @@ export class ActionWatcher extends BaseComponent {
         window.clearTimeout(this.timer)
         this.timer = undefined
     }
+}
 
-    static init(id, dotNetRef, type, timeout, element) {
-        var watcher = getComponentById(id, () => {
-            return new ActionWatcher(dotNetRef, type, timeout, element);
-        });
-        watcher.start();
-    }
+export function init(id, dotNetRef, type, timeout, element) {
+    var watcher = getComponentById(id, () => {
+        return new ActionWatcher(dotNetRef, type, timeout, element);
+    });
+    watcher.start();
 }

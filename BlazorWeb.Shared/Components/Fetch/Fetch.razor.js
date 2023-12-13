@@ -28,27 +28,51 @@ export class Fetch extends BaseComponent {
         return response
     }
 
-    static init(id) {
-        var com = getComponentById(id, () => {
-            return new Fetch()
-        })
-    }
+    //static init(id) {
+    //    var com = getComponentById(id, () => {
+    //        return new Fetch()
+    //    })
+    //}
 
-    static async request(id, option) {
-        var com = getComponentById(id)
-        try {
-            var response = await com.request(option)
-            /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/ok) */
-            if (response.ok) {
-                /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/json) */
-                return success("", response.json())
-            } else {
-                /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/text) */
-                return failed(response.text())
-            }
-        } catch (e) {
-            return failed(`${e.name}:${e.message}`)
+    //static async request(id, option) {
+    //    var com = getComponentById(id)
+    //    try {
+    //        var response = await com.request(option)
+    //        /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/ok) */
+    //        if (response.ok) {
+    //            /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/json) */
+    //            return success("", response.json())
+    //        } else {
+    //            /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/text) */
+    //            return failed(response.text())
+    //        }
+    //    } catch (e) {
+    //        return failed(`${e.name}:${e.message}`)
+    //    }
+
+    //}
+}
+
+export function init(id) {
+    var com = getComponentById(id, () => {
+        return new Fetch()
+    })
+}
+
+export async function request(id, option) {
+    var com = getComponentById(id)
+    try {
+        var response = await com.request(option)
+        /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Response/ok) */
+        if (response.ok) {
+            /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/json) */
+            return success("", response.json())
+        } else {
+            /** [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/text) */
+            return failed(response.text())
         }
-
+    } catch (e) {
+        return failed(`${e.name}:${e.message}`)
     }
+
 }
