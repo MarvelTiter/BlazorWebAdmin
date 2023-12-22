@@ -1,0 +1,343 @@
+﻿@using AntDesign.TableModels
+@using AntDesign.Core.Helpers.MemberPath
+@using BlazorWeb.Shared.Template.Tables.Setting
+@typeparam TData
+@typeparam TQuery
+@if (TableHeader == null)
+{
+    <div class="queryarea">
+        <div class="condition">
+            <Space Style="width:100%;">
+                @if (QueryArea != null)
+                {
+                    <SpaceItem Style="width:100%;">
+                        @QueryArea(TableOptions.Query)
+                    </SpaceItem>
+                }
+                @if (TableOptions.DataLoader != null)
+                {
+                    @if (EnableGenerateQuery)
+                    {
+                        <SpaceItem>
+                            <ConditionBuilder Columns=@TableOptions.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder>
+                        </SpaceItem>
+                    }
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" OnClick="NewSearch">@TableLocalizer["TableButtons.Query"]</Button>
+                        </SpaceItem>
+                    @if (EnableGenerateQuery)
+                    {
+                        <SpaceItem>
+                            <Button OnClick=@(()=>AdvanceModalVisible = true)>@TableLocalizer["TableButtons.AdvancedQuery"]</Button>
+                            </SpaceItem>
+                    }
+                }
+                @if (TableOptions.Exportable || TableOptions.ExportDataLoader != null)
+                {
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" OnClick="Export">@TableLocalizer["TableButtons.Export"]</Button>
+                        </SpaceItem>
+                }
+                @if (TableOptions.AddHandle != null)
+                {
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" OnClick=HandleAdd>@TableLocalizer["TableButtons.Add"]</Button>
+                        </SpaceItem>
+                }
+            </Space>
+        </div>
+    </div>
+}
+else
+{
+    @TableHeader(TableOptions.Query)
+}
+
+<Card Class="layout-card mt-10">
+    <Table DataSource=@TableOptions.Datas
+           Loading=@loading
+           TItem=TData
+           Bordered
+           Resizable
+            OnRow=@TableOptions.OnRow
+            ScrollX=@TableOptions.ScrollX
+            TreeChildren="@TableOptions.TreeChildren"
+            Size="@TableSize.Small"
+            DefaultExpandAllRows=@TableOptions.DefaultExpandAllRows
+            @bind-SelectedRows=@TableOptions.Selected
+            OnRowClick=OnRowClickHandle
+           HidePagination
+            @bind-PageSize=@TableOptions.Query.PageSize>
+        <ChildContent>
+            @{
+                // 选择列
+                if (TableOptions.EnableSelection)
+                {
+                    <Selection Fixed="left" Width="50" />
+                }
+                if (TableOptions.IsDataTableSource)
+                {
+                    foreach (var col in TableOptions.Columns)
+                    {
+                        @if (!col.Visible) continue;
+                        <Column TData="object" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex=@($"['{col.PropertyOrFieldName}']") CellRender="ColumnRender<object>(col)">
+                        </Column>
+                    }
+                }
+                else
+                {
+                    foreach (var col in TableOptions.Columns)
+                    {
+                        @if (!col.Visible) continue;
+                        @if (col.IsEnum)
+                        {
+                            <Column TData="Enum" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Sortable=@col.Sortable Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Enum>(col)">
+                            </Column>
+                            continue;
+                        }
+                        @RenderColumn(col)
+                    }
+                }
+                // 按钮列
+                if (TableOptions.Buttons.Count > 0)
+                {// Width="0",根据内容适用最小宽度
+                    <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Fixed="right" Width="@TableOptions.ActionColumnWidth">
+                        @if (TableOptions.Buttons.Count(b => b.Visible(context)) <= 3)
+                        {
+                            <Space Size=@("small")>
+                                @foreach (var btn in TableOptions.Buttons.Where(b => b.Visible(context)))
+                                {
+                                    <SpaceItem>
+                                        @CreateButton(btn, context)
+                                    </SpaceItem>
+                                }
+                            </Space>
+                        }
+                        else
+                        {
+                            <Dropdown>
+                                <Overlay>
+                                    <Menu>
+                                        @foreach (var btn in TableOptions.Buttons.Where(b => b.Visible(context)))
+                                        {
+                                            <MenuItem>
+                                                @CreateButton(btn, context)
+                                            </MenuItem>
+                                        }
+                                    </Menu>
+                                </Overlay>
+                                <ChildContent>
+                                    <a @onclick:preventDefault>
+                                        @TableLocalizer["TableTips.More"] <Icon Type="down" />
+                                    </a>
+                                </ChildContent>
+                            </Dropdown>
+                        }
+                    </ActionColumn>
+                }
+            }
+        </ChildContent>
+
+    </Table>
+    @if (TableOptions.Page)
+    {
+        <Pagination Class="mt-10"
+                    Size=@PaginationSize.Small
+                    ShowSizeChanger
+                    ShowQuickJumper
+                     Current=@TableOptions.Query.PageIndex
+                     PageSize=@TableOptions.Query.PageSize
+                     Total=@TableOptions.Total
+                     ShowTotal=@totalFragment
+                     OnChange=PagingStatusChanged>
+         </Pagination>
+    }
+</Card>
+@if (EnableGenerateQuery)
+{
+    <Modal Visible="AdvanceModalVisible" OnCancel=@(()=>AdvanceModalVisible = false) Title=@TableLocalizer["TableButtons.AdvancedQuery"] Footer=null>
+        <ConditionGroup Columns=@TableOptions.Columns
+                        TData=TData
+                        Localizer="Localizer"
+                        TableLocalizer="TableLocalizer"
+                        @bind-Expression="ConditionExpression"
+                        ShowExportButton=@(TableOptions.ExportDataLoader != null || !TableOptions.Page)
+                        OnConfirmToSearch=AdvanceSearch
+                        OnConfirmToExport=AdvanceExport>
+        </ConditionGroup>
+    </Modal>
+}
+@code {
+    public RenderFragment CreateButton(ButtonDefinition<TData> definition, TData context)
+    {
+        return
+    @<Button Type=@definition.ButtonType
+                 Size=@ButtonSize.Small
+                 Danger=@definition.NeedConfirm
+                 Icon=@definition.Icon
+                 OnClickStopPropagation
+                 OnClick=@(()=>InvokeButtonAction(definition, context))>
+        @(definition.LabelFunc?.Invoke(context) ?? TableLocalizer[definition.Label])
+    </Button>
+        ;
+    }
+
+    public async Task InvokeButtonAction(ButtonDefinition<TData> definition, TData data)
+    {
+        if (definition.NeedConfirm)
+        {
+            var confirmResult = await ConfirmSrv.Show(
+        TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+    , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+            if (confirmResult == ConfirmResult.OK)
+            {
+                await CallButtonAction();
+            }
+        }
+        else
+        {
+            await CallButtonAction();
+        }
+        async Task CallButtonAction()
+        {
+            var result = await definition.Callback.Invoke(data);
+            if (result)
+            {
+                var msg = TableLocalizer["TableTips.ActionSuccess"].Value;
+                _ = MessageSrv.Success(msg);
+                if (TableOptions.AutoRefreshData)
+                    await RefreshData();
+            }
+        }
+    }
+
+    public async Task HandleAdd()
+    {
+        var result = await TableOptions.AddHandle();
+        if (result)
+        {
+            var msg = TableLocalizer["TableTips.ActionSuccess"].Value;
+            _ = MessageSrv.Success(msg);
+            if (TableOptions.AutoRefreshData)
+                await RefreshData();
+        }
+    }
+
+    Func<PaginationTotalContext, string> totalFragment => (context) => $"{TableLocalizer["TableTips.Total"]}：{context.Total}";
+    //							{
+    //								return
+    //@<span>总记录数：@context.Total</span>
+    //;
+    //							};
+
+    int currentRowIndex = -1;
+    string currentColumn = string.Empty;
+
+    RenderFragment RenderColumn(Shared.Template.Tables.Setting.TableOptionColumn col)
+    {
+        var type = (Nullable.GetUnderlyingType(col.DataType) ?? col.DataType).Name.ToLower();
+        switch (type)
+        {
+            case "string":
+                return RenderColumn<string>(col);
+            case "int64":
+                return RenderColumn<Int64?>(col);
+            case "int32":
+                return RenderColumn<Int32?>(col);
+            case "int16":
+                return RenderColumn<Int16?>(col);
+            case "single":
+                return RenderColumn<Single?>(col);
+            case "double":
+                return RenderColumn<Double?>(col);
+            case "bool":
+                return RenderColumn<Boolean?>(col);
+            case "datetime":
+                return RenderColumn<DateTime?>(col);
+            default:
+                return RenderColumn<string>(col);
+        }
+
+    }
+
+    RenderFragment RenderColumn<TColumnData>(Shared.Template.Tables.Setting.TableOptionColumn col)
+    {
+        return
+    @<Column TData="TColumnData" Ellipsis=@col.Ellipsis OnCell=@col.OnCell Width=@col.Width Sortable=@col.Sortable Title="@(RenderColumnTitle(col.Label))" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<TColumnData>(col)">
+    </Column>
+    ;
+    }
+
+    RenderFragment<CellData<T>> ColumnRender<T>(Shared.Template.Tables.Setting.TableOptionColumn col)
+    {
+        return context =>
+                                    {
+                                        string? formattedValue = null;
+                                        if (col.IsEnum || col.EnumValues != null)
+                                        {
+                                            var v = context.FieldValue;
+                                            if (v != null)
+                                            {
+                                                if (col.EnumValues?.ContainsKey($"{v}") ?? false)
+                                                {
+                                                    formattedValue = col.EnumValues?[$"{v}"];
+                                                }
+                                            }
+                                        }
+                                        if (col.ValueFormat != null && context.FieldValue != null)
+                                        {
+                                            formattedValue = col.ValueFormat.Invoke(context.FieldValue);
+                                        }
+                                        if (formattedValue != null)
+                                        {
+                                            context.FormattedValue = formattedValue;
+                                        }
+                                        if (col.IsEnum || col.UseTag)
+                                        {
+                                            return@<Tag Color="@(col.GetTagColor(context.FormattedValue))">@context.FormattedValue</Tag>;
+                                        }
+                                        else
+                                        {
+                                            return@<span>@context.FormattedValue</span>;
+                                        }
+     //	@<span>
+     //		@if (currentRowIndex == context.RowData.RowIndex
+     //			&& currentColumn == col.PropertyOrFieldName
+     //			&& col.EnableEdit)
+     //		{
+     //		// edit
+     //			<Input @bind-Value=context.FieldValue AutoFocus OnBlur="ClearEditState"></Input>
+     //		}
+     //		else
+     //		{
+     //			<span class="@(col.EnableEdit ? "enable-edit" : "")" @onclick="@(()=>SetEdit(context.RowData.RowIndex, col.PropertyOrFieldName))">@context.FormattedValue</span>
+     //		}
+     //</span>
+     ;
+                                    };
+    }
+
+
+    void SetEdit(int index, string col)
+    {
+        this.currentRowIndex = index;
+        this.currentColumn = col;
+    }
+    void ClearEditState()
+    {
+        this.currentRowIndex = -1;
+        this.currentColumn = string.Empty;
+        var data = TableOptions.Datas;
+    }
+
+    public async void PagingStatusChanged(PaginationEventArgs e)
+    {
+        if (e.Page != TableOptions.Query.PageIndex || e.PageSize != TableOptions.Query.PageSize)
+        {
+            TableOptions.Query.PageIndex = e.Page;
+            TableOptions.Query.PageSize = e.PageSize;
+            await Search();
+            StateHasChanged();
+        }
+    }
+}

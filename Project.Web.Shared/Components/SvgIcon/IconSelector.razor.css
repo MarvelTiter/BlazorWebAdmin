@@ -1,0 +1,11 @@
+﻿.icons-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 300px;
+}
+.icons-wrapper span{
+    margin:3px 5px;
+}
+    .icons-wrapper span.selected {
+        color: #1890ff;
+    }

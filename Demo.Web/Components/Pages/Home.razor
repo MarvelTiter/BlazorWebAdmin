@@ -1,0 +1,32 @@
+﻿@page "/"
+@using Project.AppCore.UI
+@using Project.Models
+@inject IUIService UI
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+@UI.BuildInput(this).Bind(() => test).Render()
+@(UI.BuildInput<int>(this).Bind(() => testn).Render())
+@(UI.BuildSelect<string>(this, dic.Convert()).Bind(() => test).Render())
+<br />
+@test
+<br />
+@testn
+
+
+@code {
+   
+
+    string test = "Hello";
+    int testn = 123;
+    Dictionary<string, string> dic = new Dictionary<string, string>()
+        {
+            ["Hello"] = "World",
+            ["Sharp"] = "C",
+        };
+
+    
+}

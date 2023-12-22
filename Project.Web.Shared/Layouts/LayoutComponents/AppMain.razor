@@ -1,0 +1,55 @@
+﻿@using BlazorWeb.Shared.Components
+@using Project.AppCore.Routers;
+@implements IDisposable
+<ScrollBar>
+    <ErrorCatcher>
+        @foreach (var item in Store.TopLinks)
+        {
+            if (item.Body == null) continue;
+            <div id=@item.RouteUrl style="@(item.RouteUrl == Store.CurrentUrl ? "display: block;":"display: none;")">
+                <!-- 在TableTemplate中获取当前页的信息 -->
+                <CascadingValue Value="item">
+                    @item.Body
+                </CascadingValue>
+            </div>
+        }
+    </ErrorCatcher>
+</ScrollBar>
+
+@code {
+    [CascadingParameter] public RouteData RouteData { get; set; }
+    [Inject] RouterStore Store { get; set; }
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue(nameof(RouteData), out RouteData? routeData))
+        {
+            if (routeData != null)
+            {
+                _ = Store.RouteDataChangedHandleAsync(routeData);
+            }
+        }
+        return base.SetParametersAsync(parameters);
+    }
+
+    private bool disposedValue;
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                // 释放托管状态(托管对象)
+            }
+
+            // 释放未托管的资源(未托管的对象)并重写终结器
+            // 将大型字段设置为 null
+            disposedValue = true;
+        }
+    }
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+}

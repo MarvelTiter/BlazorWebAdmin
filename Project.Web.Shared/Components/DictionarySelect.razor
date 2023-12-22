@@ -1,0 +1,60 @@
+﻿@using System.Diagnostics.CodeAnalysis
+<SimpleSelect Class=@Class
+              Style=@Style
+                EnableSearch
+                AllowClear
+                DefaultValue=@selected
+               DropdownMatchSelectWidth=@false
+               OnSelectedItemChanged=HandleSelectedChanged>
+     <SelectOptions>
+         @foreach (var item in Options)
+        {
+            <SimpleSelectOption Value="@item.Key" Label="@item.Value"></SimpleSelectOption>
+        }
+    </SelectOptions>
+</SimpleSelect>
+
+@code {
+    string? selected;
+    [Parameter]
+    public string Class { get; set; }
+    [Parameter]
+    public string Style { get; set; }
+    [Parameter]
+    public Dictionary<string, string> Options { get; set; } = new();
+    [Parameter]
+    public string Value { get; set; }
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+    [Parameter]
+    public EventCallback OnChange { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (!string.IsNullOrWhiteSpace(Value))
+        {
+            selected = Value;
+        }
+    }
+
+    private async void HandleSelectedChanged(string value)
+    {
+        // if (item == null)
+        // {
+        // 	await ValueChanged.InvokeAsync(null);
+        // 	if (OnChange.HasDelegate)
+        // 	{
+        // 		await OnChange.InvokeAsync(null);
+        // 	}
+        // }
+        // else
+        // {
+
+        // }
+        await ValueChanged.InvokeAsync(value);
+        if (OnChange.HasDelegate)
+            await OnChange.InvokeAsync();
+    }
+}
+

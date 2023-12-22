@@ -1,0 +1,31 @@
+﻿.nav-menu {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin-left: auto;
+    overflow: hidden;
+}
+
+    .nav-menu .nav-menu-item:hover {
+        background-color: #f5f5f5;
+    }
+
+    .nav-menu .nav-menu-item {
+        height: 100%;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .nav-menu.card {
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
+    }
+
+    .nav-menu.line {
+        background-color: #fff;
+        padding-left: 16px;
+    }

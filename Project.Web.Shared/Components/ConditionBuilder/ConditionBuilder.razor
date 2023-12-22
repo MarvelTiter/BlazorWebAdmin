@@ -1,0 +1,190 @@
+﻿@using BlazorWeb.Shared.Template.Tables.Setting
+@using System.ComponentModel.DataAnnotations
+@using System.Linq.Expressions
+@using MT.Toolkit.StringExtension;
+@using System.Diagnostics.CodeAnalysis;
+@namespace BlazorWeb.Shared.Components
+@inject MessageService MessageSrv
+<Row>
+    @if (Index > 0)
+    {
+        <Switch Checked="LinkType == ExpressionType.AndAlso" CheckedChildren=@TableLocalizer["ConditionSwitch.AndAlso"] UnCheckedChildren=@TableLocalizer["ConditionSwitch.OrElse"] OnChange=UpdateLinkType />
+    }
+</Row>
+<Row Style=@($"min-width:450px;{Style}")>
+    <Col Span=10>
+    <Select DataSource="Columns"
+            Placeholder="Select"
+            DropdownMatchSelectWidth=false
+            Style="width: 100%;"
+            @bind-Value=currentField
+            TItem=Shared.Template.Tables.Setting.TableOptionColumn
+            TItemValue=string
+            DefaultValue=@(selectedField?.PropertyOrFieldName)
+            ValueName=@(nameof(TableOptionColumn.PropertyOrFieldName))
+            LabelTemplate="GetLocalizerString"
+            OnSelectedItemChanged="UpdateField">
+        <ItemTemplate>
+                @GetLocalizerString(context)
+        </ItemTemplate>
+    </Select>
+    </Col>
+    <Col Span=4>
+    <EnumSelect TEnum="CompareType" @bind-Value=type OnSelectedItemChanged="UpdateEnum" DropdownMatchSelectWidth=false></EnumSelect>
+    </Col>
+    <Col Span=10>
+        @if (selectedField?.DataType == typeof(DateTime))
+        {
+        <DatePicker @bind-Value=dateValue Style="width:100%;" TValue="DateTime" OnChange=@UpdateDate></DatePicker>
+        }
+        else if (selectedField?.EnumValues != null || (selectedField?.IsEnum ?? false))
+        {
+        <DictionarySelect Options=selectedField.EnumValues @bind-Value=stringValue OnChange=@(async () => await NotifyChanged()) Style="width:100%;"></DictionarySelect>
+        }
+        else
+        {
+        <Input @bind-Value=stringValue TValue=string OnChange=@(async () => await NotifyChanged())></Input>
+        }
+    </Col>
+</Row>
+
+
+@code {
+    string stringValue;
+    string currentField;
+    DateTime dateValue = DateTime.Now;
+    Shared.Template.Tables.Setting.TableOptionColumn? selectedField;
+    CompareType type;
+    ExpressionType LinkType = ExpressionType.AndAlso;
+    [Parameter]
+    public List<Shared.Template.Tables.Setting.TableOptionColumn> Columns { get; set; }
+    [Parameter]
+    public ConditionInfo Info { get; set; }
+    [Parameter]
+    public EventCallback<ConditionInfo> InfoChanged { get; set; }
+    [Parameter]
+    public EventCallback<ConditionInfo> OnChanged { get; set; }
+    [Parameter]
+    public string Style { get; set; }
+    [Parameter]
+    public int Index { get; set; }
+    [Parameter]
+    public IStringLocalizer Localizer { get; set; }
+    [Parameter]
+    public IStringLocalizer TableLocalizer { get; set; }
+
+    public void InitStatus(ConditionInfo info)
+    {
+        currentField = info.Name;
+        type = info.Type;
+        selectedField = Columns.First(c => c.PropertyOrFieldName == info.Name);
+        //StateHasChanged();
+    }
+
+    RenderFragment GetLocalizerString(TableOptionColumn context)
+    {
+        return @<span class="ant-select-selection-item">@(Localizer == null ? context.Label : Localizer[context.Label])</span>;
+    }
+    object GetInnerValue(out bool legal)
+    {
+        if (selectedField?.DataType == typeof(DateTime))
+        {
+            legal = dateValue != default;
+            return dateValue;
+        }
+        else if (selectedField?.EnumValues != null && selectedField.IsEnum)
+        {
+            legal = stringValue.IsEnable();
+            return stringValue;
+        }
+        else
+        {
+            legal = stringValue.IsEnable();
+            if (legal && IsNumberOrDateTime())
+            {
+                legal = stringValue.IsNumeric<int>(out _);
+            }
+            return stringValue;
+        }
+    }
+
+    async void UpdateField(Shared.Template.Tables.Setting.TableOptionColumn item)
+    {
+        selectedField = item;
+        await NotifyChanged();
+    }
+
+    async void UpdateEnum(CompareType type)
+    {
+        this.type = type;
+        await NotifyChanged();
+    }
+
+    async void UpdateLinkType(bool check)
+    {
+        LinkType = check ? ExpressionType.AndAlso : ExpressionType.OrElse;
+        await NotifyChanged();
+    }
+    Task UpdateDate(DateTimeChangedEventArgs<DateTime> args)
+    {
+        return NotifyChanged();
+    }
+    async Task NotifyChanged()
+    {
+        
+        if (selectedField is null)
+        {
+            return;
+        }
+        var isLegal = CheckComparable();
+        if (!isLegal)
+        {
+            _ = MessageSrv.Error($"[{GetDisplay(type)}]不能应用于字段[{selectedField.Label}]");
+        }
+        var condition = new ConditionInfo(selectedField.PropertyOrFieldName, type, GetInnerValue(out bool validValue), selectedField.DataType, isLegal && validValue);
+        condition.LinkType = Index > 0 ? LinkType : null;
+        await InfoChanged.InvokeAsync(condition);
+        if (OnChanged.HasDelegate)
+        {
+            await OnChanged.InvokeAsync(condition);
+        }
+    }
+
+    string GetDisplay(CompareType t)
+    {
+        var member = typeof(CompareType).GetMember(Enum.GetName<CompareType>(t)!)[0];
+        var attr = Attribute.GetCustomAttribute(member, typeof(DisplayAttribute));
+        if (attr is DisplayAttribute display)
+        {
+            return display.Name;
+        }
+        return "";
+    }
+
+    bool CheckComparable()
+    {
+        return type switch
+        {
+            CompareType.GreaterThan => IsNumberOrDateTime(),
+            CompareType.GreaterThanOrEqual => IsNumberOrDateTime(),
+            CompareType.LessThan => IsNumberOrDateTime(),
+            CompareType.LessThanOrEqual => IsNumberOrDateTime(),
+            _ => true
+        };
+    }
+    bool IsNumberOrDateTime()
+    {
+        return selectedField!.DataType == typeof(Int16)
+        || selectedField!.DataType == typeof(Int32)
+        || selectedField!.DataType == typeof(Int64)
+        || selectedField!.DataType == typeof(Single)
+        || selectedField!.DataType == typeof(Double)
+        || selectedField!.DataType == typeof(DateTime)
+        || selectedField!.DataType == typeof(Int16?)
+        || selectedField!.DataType == typeof(Int32?)
+        || selectedField!.DataType == typeof(Int64?)
+        || selectedField!.DataType == typeof(Single?)
+        || selectedField!.DataType == typeof(Double?)
+        || selectedField!.DataType == typeof(DateTime?);
+    }
+}

@@ -1,0 +1,31 @@
+﻿.side_bar {
+    transition: background .3s,width .3s cubic-bezier(.2,0,0,1) 0s;
+    transition-property: background, width;
+    transition-duration: 0.3s, 0.3s;
+    transition-timing-function: ease, cubic-bezier(0.2, 0, 0, 1);
+    transition-delay: 0s, 0s;
+}
+
+/*经典布局*/
+.classic {
+    background: #fff;
+    height: 100vh;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
+    overflow: hidden;
+    transition: width .3s ease;
+}
+
+/*卡片式布局*/
+.card {
+    background: #fff;
+    margin: 16px 0 16px 16px;
+    height: calc(100vh - 32px);
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: width .3s ease;
+}
+
+.line {
+    flex: 1;
+}

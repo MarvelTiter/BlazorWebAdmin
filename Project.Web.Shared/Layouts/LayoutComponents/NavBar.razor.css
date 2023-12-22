@@ -1,0 +1,15 @@
+﻿.nav-bar.card {
+    display: flex;
+    height: 50px;
+    margin: 20px 16px 0 16px;
+}
+
+.nav-bar.classic {
+    display: flex;
+    height: 50px;
+    background-color: #fff;
+}
+
+.nav-bar.line {
+    flex: 1;
+}

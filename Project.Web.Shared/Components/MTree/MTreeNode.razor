@@ -1,0 +1,24 @@
+﻿@namespace BlazorWeb.Shared.Components
+@typeparam TNode
+<div class="power-tree-node" style="margin-left:@(Deepth * Root.Indent)px">
+	<span class=@NarrowClass.Class @onclick="ToggleExpand"></span>
+	<div class="power-tree-node" @onclick="OnNodeClickAsync" @onclick:preventDefault @onclick:stopPropagation>
+		<CheckBoxState State=@CheckState></CheckBoxState>
+		@if (Root.TitleTemplate != null)
+		{
+			@Root.TitleTemplate(NodeValue)
+		}
+		else
+		{
+			<span class="node-title">@Root.TitleExpression(NodeValue)</span>
+		}
+	</div>
+</div>
+<div class=@ChildrenContentClass.Class>
+	@foreach (var child in Children)
+	{
+		<CascadingValue Value="this" TValue="MTreeNode<TNode>">
+			<MTreeNode NodeValue="child" Deepth=@(Deepth + 1)></MTreeNode>
+		</CascadingValue>
+	}
+</div>

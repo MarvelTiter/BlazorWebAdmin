@@ -1,0 +1,62 @@
+﻿@using BlazorWeb.Shared.Template.Tables.Setting
+@using System.Linq.Expressions
+@namespace BlazorWeb.Shared.Components
+@typeparam TData
+<div style="text-align:right;margin-bottom:10px;">
+	<Button Type=@ButtonType.Primary OnClick="AddCondition">@TableLocalizer["TableButtons.AddCondition"]</Button>
+</div>
+@for (var i = 0; i < Conditions.Count; i++)
+{
+	int index = i;
+	<ConditionBuilder Localizer="Localizer" TableLocalizer=TableLocalizer Index=index Columns=Columns InfoChanged=@(newInfo => Conditions[index] = newInfo) Style="width:100%;"></ConditionBuilder>
+}
+<div style="text-align:right;margin-top:10px;">
+	<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToSearch">@TableLocalizer["TableButtons.Query"]</Button>
+	@if (ShowExportButton)
+	{
+		<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToExport">@TableLocalizer["TableButtons.Export"]</Button>
+	}
+</div>
+@code {
+    [Parameter]
+    public List<TableOptionColumn> Columns { get; set; }
+    [Parameter]
+	public Expression<Func<TData, bool>> Expression { get; set; }
+	[Parameter]
+	public EventCallback<Expression<Func<TData, bool>>> ExpressionChanged { get; set; }
+	[Parameter]
+	public bool ShowExportButton { get; set; }
+	[Parameter]
+	public EventCallback OnConfirmToSearch { get; set; }
+	[Parameter]
+	public EventCallback OnConfirmToExport { get; set; }
+	[Parameter]
+	public IStringLocalizer Localizer { get; set; }
+	[Parameter]
+	public IStringLocalizer TableLocalizer { get; set; }
+	private List<ConditionInfo> Conditions = new List<ConditionInfo>();
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		Conditions.Add(new ConditionInfo("", CompareType.Equal, "", typeof(string), false));
+	}
+	void AddCondition()
+	{
+		var condition = new ConditionInfo("", CompareType.Equal, "", typeof(string), false);
+		Conditions.Add(condition);
+	}
+	public async Task ConfirmConditionToSearch()
+	{
+		var exp = BuildCondition.CombineExpression<TData>(new Queue<ConditionInfo>(Conditions));
+		await ExpressionChanged.InvokeAsync(exp);
+		_ = OnConfirmToSearch.InvokeAsync();
+	}
+
+	public async Task ConfirmConditionToExport()
+	{
+		var exp = BuildCondition.CombineExpression<TData>(new Queue<ConditionInfo>(Conditions));
+		await ExpressionChanged.InvokeAsync(exp);
+		_ = OnConfirmToExport.InvokeAsync();
+	}
+
+}

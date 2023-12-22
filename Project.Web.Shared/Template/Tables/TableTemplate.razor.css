@@ -1,0 +1,15 @@
+﻿.queryarea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.condition {
+    flex: 1;
+}
+
+.enable-edit:hover {
+    cursor: pointer;
+    color: #1890ff;
+}
