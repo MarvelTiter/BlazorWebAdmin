@@ -1,16 +1,16 @@
 ﻿using AntDesign;
 using AntDesign.TableModels;
-using BlazorWeb.Shared.SystemPermission.Forms;
-using BlazorWeb.Shared.Template.Tables;
-using BlazorWeb.Shared.Template.Tables.Setting;
-using BlazorWeb.Shared.Utils;
+using Project.Web.Shared.SystemPermission.Forms;
+using Project.Web.Shared.Template.Tables;
+using Project.Web.Shared.Template.Tables.Setting;
+using Project.Web.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Project.AppCore.Services;
 using Project.Models;
 using Project.Models.Permissions;
 using Project.Models.Request;
 
-namespace BlazorWeb.Shared.SystemPermission
+namespace Project.Web.Shared.SystemPermission
 {
     public partial class RolePermission
     {

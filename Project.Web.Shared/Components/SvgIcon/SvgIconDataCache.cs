@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Collections.Concurrent;
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
     internal static class SvgIconDataCache
     {

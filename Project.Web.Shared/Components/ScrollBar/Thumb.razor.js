@@ -1,7 +1,7 @@
-﻿import { BaseComponent } from "/_content/BlazorWeb.Shared/js/jscomponentbase/base-component.js";
-import { startDrag } from "/_content/BlazorWeb.Shared/js/jscomponentbase/drag-helper.js";
-import { EventHandler } from "/_content/BlazorWeb.Shared/js/jscomponentbase/event-handler.js";
-import { GAP } from "/_content/BlazorWeb.Shared/js/jscomponentbase/utils.js";
+﻿import { BaseComponent } from "/_content/Project.Web.Shared/js/jscomponentbase/base-component.js";
+import { startDrag } from "/_content/Project.Web.Shared/js/jscomponentbase/drag-helper.js";
+import { EventHandler } from "/_content/Project.Web.Shared/js/jscomponentbase/event-handler.js";
+import { GAP } from "/_content/Project.Web.Shared/js/jscomponentbase/utils.js";
 
 const BAR_MAP = {
     vertical: {

@@ -20,11 +20,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.AppCore", "Project.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo", "Demo\Demo.csproj", "{0B0ECABA-45E0-4FE6-93B8-78AC9EB74ACE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Web", "Demo.Web\Demo.Web.csproj", "{44D74521-3BA1-48D0-BCE0-2EBA2CD60AAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Web", "Demo.Web\Demo.Web.csproj", "{44D74521-3BA1-48D0-BCE0-2EBA2CD60AAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Web.Shared", "Project.Web.Shared\Project.Web.Shared.csproj", "{75042FB8-66A4-41E4-8122-504C9595307F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Web.Shared", "Project.Web.Shared\Project.Web.Shared.csproj", "{75042FB8-66A4-41E4-8122-504C9595307F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.UI.AntBlazor", "Project.UI.AntBlazor\Project.UI.AntBlazor.csproj", "{56326C12-F00E-44EF-8CB7-A1CE76984691}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.UI.AntBlazor", "Project.UI.AntBlazor\Project.UI.AntBlazor.csproj", "{56326C12-F00E-44EF-8CB7-A1CE76984691}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

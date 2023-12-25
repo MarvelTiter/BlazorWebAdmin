@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
     /// <summary>
     /// 修改重新连接处理程序 (Blazor Server)

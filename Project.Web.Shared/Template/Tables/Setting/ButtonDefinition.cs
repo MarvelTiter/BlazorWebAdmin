@@ -1,4 +1,4 @@
-﻿namespace BlazorWeb.Shared.Template.Tables.Setting
+﻿namespace Project.Web.Shared.Template.Tables.Setting
 {
     public class ButtonDefinition<TData>
     {

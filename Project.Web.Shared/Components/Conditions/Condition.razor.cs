@@ -1,12 +1,12 @@
 ﻿using AntDesign;
-using BlazorWeb.Shared.Template.Tables.Setting;
+using Project.Web.Shared.Template.Tables.Setting;
 using Microsoft.AspNetCore.Components;
 using MT.Toolkit.DateTimeExtension;
 using MT.Toolkit.StringExtension;
 using System.Linq.Expressions;
 using System.Xml.Linq;
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
     public interface ICondition
     {

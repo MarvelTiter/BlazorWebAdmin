@@ -1,4 +1,4 @@
-﻿namespace BlazorWeb.Shared.Test
+﻿namespace Project.Web.Shared.Test
 {
     public partial class ErrorCatcherTest
     {

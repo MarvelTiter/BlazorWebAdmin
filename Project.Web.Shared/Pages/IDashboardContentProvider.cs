@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace BlazorWeb.Shared.Pages
+namespace Project.Web.Shared.Pages
 {
     public interface IDashboardContentProvider
     {

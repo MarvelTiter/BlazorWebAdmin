@@ -1,10 +1,10 @@
 ﻿using AntDesign;
-using BlazorWeb.Shared.Template.Forms;
+using Project.Web.Shared.Template.Forms;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using Project.AppCore;
 
-namespace BlazorWeb.Shared.Utils
+namespace Project.Web.Shared.Utils
 {
     public static class DialogHelper
     {

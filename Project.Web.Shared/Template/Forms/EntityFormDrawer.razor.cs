@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace BlazorWeb.Shared.Template.Forms
+namespace Project.Web.Shared.Template.Forms
 {
     public partial class EntityFormDrawer<TEntity> : EntityFormTemplate<TEntity> where TEntity : class, new()
     {

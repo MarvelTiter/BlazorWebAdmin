@@ -1,4 +1,4 @@
-﻿using BlazorWeb.Shared.Template.Tables;
+﻿using Project.Web.Shared.Template.Tables;
 using Microsoft.AspNetCore.Components;
 using Project.AppCore.PageHelper;
 using Project.AppCore.Services;
@@ -6,7 +6,7 @@ using Project.Models;
 using Project.Models.Entities;
 using Project.Models.Request;
 
-namespace BlazorWeb.Shared.SystemPermission
+namespace Project.Web.Shared.SystemPermission
 {
     public partial class OperationLog : IPageAction
     {

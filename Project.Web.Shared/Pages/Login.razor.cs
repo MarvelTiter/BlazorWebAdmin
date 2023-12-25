@@ -1,5 +1,5 @@
 ﻿using AntDesign;
-using BlazorWeb.Shared.Layouts;
+using Project.Web.Shared.Layouts;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -11,7 +11,7 @@ using Project.AppCore.Store;
 using Project.Models.Forms;
 using System.Web;
 
-namespace BlazorWeb.Shared.Pages
+namespace Project.Web.Shared.Pages
 {
     public partial class Login
     {

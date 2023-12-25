@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Common;
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
     public partial class MTreeNode<TNode>
     {

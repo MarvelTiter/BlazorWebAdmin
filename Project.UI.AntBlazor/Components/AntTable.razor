@@ -1,0 +1,51 @@
+﻿@using Microsoft.Extensions.Localization
+@using Project.AppCore.UI.Table
+@using Project.Models.Request
+@typeparam TData
+@typeparam TQuery where TQuery : IRequest, new()
+
+<Table DataSource="Options.Result?.Payload"
+       @bind-PageIndex=Options.Query.PageIndex
+       @bind-PageSize=Options.Query.PageSize
+       @bind-SelectedRows=Options.Selected
+       HidePagination=!Options.Pager>
+    <ChildContent>
+        @if (Options.EnableSelection)
+        {
+            <Selection Fixed="left" Width="50" />
+        }
+        <AntTableColumns Options="Options" RowData="context"></AntTableColumns>
+        @if (Options.Buttons?.Count > 0)
+        {
+            <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Fixed="right" Width="@Options.ActionColumnWidth">
+                @if (Options.Buttons.Count(b => b.Visible(context)) > 3)
+                {
+                    foreach (var btn in Options.Buttons.Where(b => b.Visible(context)))
+                    {
+                        
+                    }
+                }
+            </ActionColumn>
+        }
+
+    </ChildContent>
+    <PaginationTemplate>
+        <Pagination Class="@context.PaginationClass"
+                    Total="context.Total"
+                    PageSize="context.PageSize"
+                    Current="context.PageIndex"
+                    ShowTotal="totalFragment"
+                    ShowSizeChanger
+                    ShowQuickJumper
+                     OnChange="context.HandlePageChange" />
+     </PaginationTemplate>
+ </Table>
+
+ @code {
+    IEnumerable<TData> Datas => Options.Result?.Payload ?? Enumerable.Empty<TData>();
+    int Total => Options.Result?.TotalRecord ?? 0;
+    Func<PaginationTotalContext, string> totalFragment => (context) => $"{TableLocalizer["TableTips.Total"]}：{context.Total}";
+    [Parameter] public TableOptions<TData, TQuery> Options { get; set; }
+    [Inject] IStringLocalizer<TData> Localizer { get; set; }
+    [Inject] IStringLocalizer<TableOptions> TableLocalizer { get; set; }
+}

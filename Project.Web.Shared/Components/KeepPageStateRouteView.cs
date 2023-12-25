@@ -1,4 +1,4 @@
-﻿using BlazorWeb.Shared.Layouts.LayoutComponents;
+﻿using Project.Web.Shared.Layouts.LayoutComponents;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
     public class KeepPageStateRouteView : RouteView
     {

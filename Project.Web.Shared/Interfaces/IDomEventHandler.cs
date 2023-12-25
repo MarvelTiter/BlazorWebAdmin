@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 
-namespace BlazorWeb.Shared.Interfaces
+namespace Project.Web.Shared.Interfaces
 {
     public interface IDomEventHandler
     {

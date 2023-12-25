@@ -1,4 +1,4 @@
-﻿namespace BlazorWeb.Shared.Components
+﻿namespace Project.Web.Shared.Components
 {
     public partial class FullScreen : JsComponentBase
     {

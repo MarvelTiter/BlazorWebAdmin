@@ -1,4 +1,4 @@
-﻿namespace BlazorWeb.Shared.Utils
+﻿namespace Project.Web.Shared.Utils
 {
     public static class AppConst
     {

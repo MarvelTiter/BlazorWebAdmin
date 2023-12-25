@@ -1,5 +1,5 @@
-import { BaseComponent } from "/_content/BlazorWeb.Shared/js/jscomponentbase/base-component.js";
-import { getComponentById } from "/_content/BlazorWeb.Shared/js/jscomponentbase/component-store.js";
+import { BaseComponent } from "/_content/Project.Web.Shared/js/jscomponentbase/base-component.js";
+import { getComponentById } from "/_content/Project.Web.Shared/js/jscomponentbase/component-store.js";
 
 export class JsTimer extends BaseComponent {
     constructor(dotNetRef, interval) {

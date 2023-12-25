@@ -1,12 +1,13 @@
-﻿using BlazorWeb.Shared.Interfaces;
+﻿using Project.Web.Shared.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Project.Common.Attributes;
 using System.Reflection;
+using Project.Web.Shared.Basic;
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
-    public abstract class JsComponentBase : ComponentBase, IJsComponent, IAsyncDisposable
+    public abstract class JsComponentBase : BaseUIComponent, IJsComponent, IAsyncDisposable
     {
         private string? id;
         [Inject] protected IJSRuntime Js { get; set; }

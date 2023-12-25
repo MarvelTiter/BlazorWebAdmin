@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
     public class ConditionBase: ComponentBase, ICondition
     {

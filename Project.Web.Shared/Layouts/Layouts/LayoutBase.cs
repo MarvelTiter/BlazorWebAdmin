@@ -1,9 +1,9 @@
-﻿using BlazorWeb.Shared.Layouts.LayoutComponents;
+﻿using Project.Web.Shared.Layouts.LayoutComponents;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Project.AppCore.Store;
 
-namespace BlazorWeb.Shared.Layouts.Layouts
+namespace Project.Web.Shared.Layouts.Layouts
 {
     public class ContainerBase : ComponentBase
     {

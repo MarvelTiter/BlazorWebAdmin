@@ -1,4 +1,4 @@
-﻿namespace BlazorWeb.Shared
+﻿namespace Project.Web.Shared
 {
 
     public interface IDownloadServiceProvider

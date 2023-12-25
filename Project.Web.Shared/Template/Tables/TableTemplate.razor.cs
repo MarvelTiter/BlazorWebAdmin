@@ -1,9 +1,9 @@
 ﻿using AntDesign;
 using AntDesign.Core.Helpers.MemberPath;
 using AntDesign.TableModels;
-using BlazorWeb.Shared.Components;
-using BlazorWeb.Shared.Template.Tables.Setting;
-using BlazorWeb.Shared.Utils;
+using Project.Web.Shared.Components;
+using Project.Web.Shared.Template.Tables.Setting;
+using Project.Web.Shared.Utils;
 using LightExcel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -13,10 +13,10 @@ using Project.Models;
 using Project.Models.Request;
 using System.Data;
 using System.Linq.Expressions;
-using BlazorWeb.Shared.Interfaces;
+using Project.Web.Shared.Interfaces;
 using Project.AppCore.Routers;
 
-namespace BlazorWeb.Shared.Template.Tables
+namespace Project.Web.Shared.Template.Tables
 {
     public partial class TableTemplate<TData, TQuery> : IDisposable where TQuery : IRequest, new()
     {
@@ -211,7 +211,6 @@ namespace BlazorWeb.Shared.Template.Tables
     }
     public class TableOptions<TData, TQuery> where TQuery : IRequest, new()
     {
-
         public List<TableOptionColumn> Columns { get; set; }
         public List<ButtonDefinition<TData>> Buttons { get; set; }
         public Func<TData, IEnumerable<TData>> TreeChildren { get; set; } = t => Enumerable.Empty<TData>();

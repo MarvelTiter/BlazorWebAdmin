@@ -1,5 +1,5 @@
-﻿using BlazorWeb.Shared.Components;
-using BlazorWeb.Shared.Pages;
+﻿using Project.Web.Shared.Components;
+using Project.Web.Shared.Pages;
 using LightExcel;
 using Microsoft.AspNetCore.Components.Authorization;
 using Project.AppCore;
@@ -8,7 +8,7 @@ using Project.AppCore.Locales.Extensions;
 using Project.AppCore.Options;
 using Project.AppCore.Options.Extensions;
 
-namespace BlazorWeb.Shared.Extensions
+namespace Project.Web.Shared.Extensions
 {
     public static class SharedComponents
     {

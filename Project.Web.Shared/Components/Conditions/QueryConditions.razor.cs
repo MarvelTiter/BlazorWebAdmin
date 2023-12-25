@@ -1,8 +1,8 @@
-﻿using BlazorWeb.Shared.Template.Tables.Setting;
+﻿using Project.Web.Shared.Template.Tables.Setting;
 using Microsoft.AspNetCore.Components;
 using System.Linq.Expressions;
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
     public interface IQueryCondition
     {

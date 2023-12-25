@@ -1,4 +1,4 @@
-﻿@using BlazorWeb.Shared.Template.Tables
+﻿@using Project.Web.Shared.Template.Tables
 <TwoSidePage OpenTrigger=@(() => currentSelected != null) Expand=@sideExpand MainFlex="3">
 	<FirstSide>
 		<TableTemplate TableOptions=tableOptions TData=User TQuery=@(GenericRequest<User>)></TableTemplate>

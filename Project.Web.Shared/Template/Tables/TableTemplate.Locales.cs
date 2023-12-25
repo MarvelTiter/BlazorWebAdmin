@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 
-namespace BlazorWeb.Shared.Template.Tables
+namespace Project.Web.Shared.Template.Tables
 {
     public class TableTemplate { }
     public partial class TableTemplate<TData, TQuery>

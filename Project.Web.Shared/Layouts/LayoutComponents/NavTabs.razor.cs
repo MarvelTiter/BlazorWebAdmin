@@ -1,6 +1,6 @@
-﻿using BlazorWeb.Shared.Interfaces;
-using BlazorWeb.Shared.Layouts;
-using BlazorWeb.Shared.Utils;
+﻿using Project.Web.Shared.Interfaces;
+using Project.Web.Shared.Layouts;
+using Project.Web.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
@@ -10,7 +10,7 @@ using Project.AppCore.Store;
 using Project.Common;
 using System;
 
-namespace BlazorWeb.Shared.Layouts.LayoutComponents
+namespace Project.Web.Shared.Layouts.LayoutComponents
 {
     public partial class NavTabs : IDisposable
     {

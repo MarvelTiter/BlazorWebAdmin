@@ -1,9 +1,9 @@
-import { BaseComponent } from "/_content/BlazorWeb.Shared/js/jscomponentbase/base-component.js";
-import { getComponentById } from "/_content/BlazorWeb.Shared/js/jscomponentbase/component-store.js";
-import { EventHandler } from "/_content/BlazorWeb.Shared/js/jscomponentbase/event-handler.js";
-//import { Bar } from "/_content/BlazorWeb.Shared/js/scrollbar/bar.js";
-//import { Thumb } from "/_content/BlazorWeb.Shared/js/scrollbar/thumb.js";
-import { GAP } from "/_content/BlazorWeb.Shared/js/jscomponentbase/utils.js";
+import { BaseComponent } from "/_content/Project.Web.Shared/js/jscomponentbase/base-component.js";
+import { getComponentById } from "/_content/Project.Web.Shared/js/jscomponentbase/component-store.js";
+import { EventHandler } from "/_content/Project.Web.Shared/js/jscomponentbase/event-handler.js";
+//import { Bar } from "/_content/Project.Web.Shared/js/scrollbar/bar.js";
+//import { Thumb } from "/_content/Project.Web.Shared/js/scrollbar/thumb.js";
+import { GAP } from "/_content/Project.Web.Shared/js/jscomponentbase/utils.js";
 import { Bar } from "./Bar.razor.js";
 import { Thumb } from "./Thumb.razor.js";
 export class ScrollBar extends BaseComponent {

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorWeb.Shared.Utils
+namespace Project.Web.Shared.Utils
 {
     public static class ExpressionHelper
     {

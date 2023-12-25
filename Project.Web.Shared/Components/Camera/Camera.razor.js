@@ -1,8 +1,8 @@
-import { BaseComponent } from "/_content/BlazorWeb.Shared/js/jscomponentbase/base-component.js";
-import { getComponentById } from "/_content/BlazorWeb.Shared/js/jscomponentbase/component-store.js";
-import { EventHandler } from "/_content/BlazorWeb.Shared/js/jscomponentbase/event-handler.js";
-import { success, failed } from "/_content/BlazorWeb.Shared/js/jscomponentbase/utils.js";
-import { startDrag } from "/_content/BlazorWeb.Shared/js/jscomponentbase/drag-helper.js";
+import { BaseComponent } from "/_content/Project.Web.Shared/js/jscomponentbase/base-component.js";
+import { getComponentById } from "/_content/Project.Web.Shared/js/jscomponentbase/component-store.js";
+import { EventHandler } from "/_content/Project.Web.Shared/js/jscomponentbase/event-handler.js";
+import { success, failed } from "/_content/Project.Web.Shared/js/jscomponentbase/utils.js";
+import { startDrag } from "/_content/Project.Web.Shared/js/jscomponentbase/drag-helper.js";
 export class Camera extends BaseComponent {
     constructor(video, canvas) {
         super()

@@ -1,4 +1,4 @@
-﻿using BlazorWeb.Shared.Template.Tables.Setting;
+﻿using Project.Web.Shared.Template.Tables.Setting;
 using MDbEntity.Attributes;
 using Project.Common.Attributes;
 using System;
@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BlazorWeb.Shared.Template.Tables
+namespace Project.Web.Shared.Template.Tables
 {
     public static class GenerateTableColumn
     {

@@ -1,6 +1,6 @@
-﻿using static BlazorWeb.Shared.Components.Camera;
+﻿using static Project.Web.Shared.Components.Camera;
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
     public interface ICameraObject
     {

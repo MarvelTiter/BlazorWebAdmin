@@ -15,10 +15,11 @@ Welcome to your new app.
 @test
 <br />
 @testn
-
+<br />
+@UI.BuildButton(this).OnClick(HandleClick).Text("点击").Set("Type", "primary").Render()
 
 @code {
-   
+
 
     string test = "Hello";
     int testn = 123;
@@ -27,6 +28,9 @@ Welcome to your new app.
             ["Hello"] = "World",
             ["Sharp"] = "C",
         };
+    void HandleClick()
+    {
+        test = "Sharp";
+    }
 
-    
 }

@@ -8,46 +8,68 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Components\**" />
     <Compile Remove="Extensions\**" />
-    <Compile Remove="Interfaces\**" />
     <Compile Remove="Layouts\**" />
     <Compile Remove="obj\**" />
     <Compile Remove="Pages\**" />
     <Compile Remove="SystemPermission\**" />
-    <Compile Remove="Template\**" />
     <Compile Remove="Test\**" />
-    <Compile Remove="Utils\**" />
-    <Content Remove="Components\**" />
     <Content Remove="Extensions\**" />
-    <Content Remove="Interfaces\**" />
     <Content Remove="Layouts\**" />
     <Content Remove="obj\**" />
     <Content Remove="Pages\**" />
     <Content Remove="SystemPermission\**" />
-    <Content Remove="Template\**" />
     <Content Remove="Test\**" />
-    <Content Remove="Utils\**" />
-    <EmbeddedResource Remove="Components\**" />
     <EmbeddedResource Remove="Extensions\**" />
-    <EmbeddedResource Remove="Interfaces\**" />
     <EmbeddedResource Remove="Layouts\**" />
     <EmbeddedResource Remove="obj\**" />
     <EmbeddedResource Remove="Pages\**" />
     <EmbeddedResource Remove="SystemPermission\**" />
-    <EmbeddedResource Remove="Template\**" />
     <EmbeddedResource Remove="Test\**" />
-    <EmbeddedResource Remove="Utils\**" />
-    <None Remove="Components\**" />
     <None Remove="Extensions\**" />
-    <None Remove="Interfaces\**" />
     <None Remove="Layouts\**" />
     <None Remove="obj\**" />
     <None Remove="Pages\**" />
     <None Remove="SystemPermission\**" />
-    <None Remove="Template\**" />
     <None Remove="Test\**" />
-    <None Remove="Utils\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Components\ActionWatcher\ActionWatcher.razor" />
+    <None Include="Components\Camera\Camera.razor" />
+    <None Include="Components\Camera\CameraTest.razor" />
+    <None Include="Components\ConditionBuilder\ConditionBuilder.razor" />
+    <None Include="Components\ConditionBuilder\ConditionGroup.razor" />
+    <None Include="Components\Conditions\Condition.razor" />
+    <None Include="Components\Conditions\CustomCondition.razor" />
+    <None Include="Components\Conditions\QueryConditions.razor" />
+    <None Include="Components\CustomSelect.razor" />
+    <None Include="Components\DictionarySelect.razor" />
+    <None Include="Components\Downloader\Downloader.razor" />
+    <None Include="Components\Download\DownloadPage.razor" />
+    <None Include="Components\Download\DownloadTest.razor" />
+    <None Include="Components\ErrorCatcher\ErrorTest.razor" />
+    <None Include="Components\Fetch\Fetch.razor" />
+    <None Include="Components\Fetch\FetchTest.razor" />
+    <None Include="Components\FullScreen\FullScreen.razor" />
+    <None Include="Components\JsTimer\JsTimer.razor" />
+    <None Include="Components\LocalizerTest.razor" />
+    <None Include="Components\MTree\CheckBoxState.razor" />
+    <None Include="Components\MTree\MTree.razor" />
+    <None Include="Components\MTree\MTreeNode.razor" />
+    <None Include="Components\Reconnector\ReconnectorContent.razor" />
+    <None Include="Components\Reconnector\WebAdminReconnector.razor" />
+    <None Include="Components\RedirectToLogin.razor" />
+    <None Include="Components\ScrollBar\Bar.razor" />
+    <None Include="Components\ScrollBar\HorizontalScroll.razor" />
+    <None Include="Components\ScrollBar\ScrollBar.razor" />
+    <None Include="Components\ScrollBar\ScrollerBarTest.razor" />
+    <None Include="Components\ScrollBar\Thumb.razor" />
+    <None Include="Components\SvgIcon\IconSelector.razor" />
+    <None Include="Components\SvgIcon\SvgIcon.razor" />
+    <None Include="Components\TwoSidePage\TwoSidePage.razor" />
+    <None Include="Template\Forms\EntityFormDrawer.razor" />
+    <None Include="Template\Tables\TableTemplate.razor" />
   </ItemGroup>
 
   <ItemGroup>

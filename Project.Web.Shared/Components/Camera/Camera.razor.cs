@@ -1,5 +1,5 @@
 ﻿using AntDesign;
-using BlazorWeb.Shared.Utils;
+using Project.Web.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.JSInterop;
@@ -8,7 +8,7 @@ using Project.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
     public partial class Camera : JsComponentBase, ICameraObject
     {

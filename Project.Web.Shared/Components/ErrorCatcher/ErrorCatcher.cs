@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
     public class ErrorCatcher : ErrorBoundaryBase, IExceptionHandler
     {

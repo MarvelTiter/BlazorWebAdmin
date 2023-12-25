@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using MT.Toolkit.Mapper;
 
-namespace BlazorWeb.Shared.Template.Forms
+namespace Project.Web.Shared.Template.Forms
 {
     public class FormParam<TEntity>
     {

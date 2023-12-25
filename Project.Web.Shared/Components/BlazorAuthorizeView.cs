@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Components.Routing;
 
-namespace BlazorWeb.Shared.Components
+namespace Project.Web.Shared.Components
 {
     public class BlazorAuthorizeView : ComponentBase
     {

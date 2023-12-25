@@ -1,6 +1,6 @@
-import { BaseComponent } from "/_content/BlazorWeb.Shared/js/jscomponentbase/base-component.js";
-import { getComponentById } from "/_content/BlazorWeb.Shared/js/jscomponentbase/component-store.js";
-import { success, failed } from "/_content/BlazorWeb.Shared/js/jscomponentbase/utils.js"
+import { BaseComponent } from "/_content/Project.Web.Shared/js/jscomponentbase/base-component.js";
+import { getComponentById } from "/_content/Project.Web.Shared/js/jscomponentbase/component-store.js";
+import { success, failed } from "/_content/Project.Web.Shared/js/jscomponentbase/utils.js"
 export class Fetch extends BaseComponent {
     constructor() {
         super()

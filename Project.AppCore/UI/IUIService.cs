@@ -1,40 +1,46 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Project.AppCore.UI.Table;
 using Project.Models;
+using Project.Models.Request;
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Project.AppCore.UI
 {
-    public interface IInput<TItem, TValue>
+    public interface IUIComponent<TValue>
     {
-        IInput<TItem, TValue> Set<TMember>(Expression<Func<TItem, TMember>> selector, object value);
-        IInput<TItem, TValue> Set(string key, object value);
+        IUIComponent<TValue> Set(string key, object value);
         RenderFragment Render();
     }
 
-    public interface IBindableInput<TItem, TValue> : IInput<TItem, TValue>
+    public interface IBindableInput<TValue>
     {
-        new IBindableInput<TItem, TValue> Set<TMember>(Expression<Func<TItem, TMember>> selector, object value);
-        new IBindableInput<TItem, TValue> Set(string key, object value);
-        IInput<TItem, TValue> Bind(Expression<Func<TValue>> expression);
+        IBindableInput<TValue> Set(string key, object value);
+        IBindableInput<TValue> Bind(Expression<Func<TValue>> expression, string valueName = "Value");
     }
 
+    public interface IButtonAction : IUIComponent<object>
+    {
+        IButtonAction OnClick(Action callback);
+        IButtonAction OnClick(EventCallback callback);
+        IButtonAction OnClick(Action<object> callback);
+        IButtonAction OnClick(Func<Task> callback);
+        IButtonAction OnClick(Func<object, Task> callback);
+        IButtonAction OnClick(EventCallback<MouseEventArgs> callback);
+        IButtonAction OnClick(Action<MouseEventArgs> callback);
+        IButtonAction OnClick(Func<MouseEventArgs, Task> callback);
+        IButtonAction Text(string text);
+    }
 
-    public class ComponentBuilder<TComponent, TItem, TValue> : IInput<TItem, TValue> where TComponent : IComponent
+    public class ComponentBuilder<TComponent, TValue>: IUIComponent<TValue> where TComponent : IComponent
     {
         protected readonly Dictionary<string, object?> parameters = new(StringComparer.Ordinal);
 
-        public IInput<TItem, TValue> Set<TMember>(Expression<Func<TItem, TMember>> selector, object value)
+        public IUIComponent<TValue> Set(string key, object value)
         {
-            var prop = GetProperty(selector);
-            parameters.Add(prop.Name, value);
-            return this;
-        }
-
-        public IInput<TItem, TValue> Set(string key, object value)
-        {
-            parameters.Add(key, value);
+            parameters[key] = value;
             return this;
         }
 
@@ -48,27 +54,9 @@ namespace Project.AppCore.UI
                 builder.CloseComponent();
             };
         }
-
-        protected static PropertyInfo GetProperty<T, V>(Expression<Func<T, V>> selector)
-        {
-            if (selector is null)
-                throw new ArgumentNullException(nameof(selector));
-
-            if (selector.Body is not MemberExpression expression || expression.Member is not PropertyInfo propInfoCandidate)
-                throw new ArgumentException($"The parameter selector '{selector}' does not resolve to a public property on the type '{typeof(T)}'.", nameof(selector));
-            var type = typeof(T);
-            var propertyInfo = propInfoCandidate.DeclaringType != type
-                             ? type.GetProperty(propInfoCandidate.Name, propInfoCandidate.PropertyType)
-                             : propInfoCandidate;
-            if (propertyInfo is null)
-                throw new ArgumentException($"The parameter selector '{selector}' does not resolve to a public property on the type '{typeof(T)}'.", nameof(selector));
-
-            return propertyInfo;
-        }
-
     }
 
-    public class BindableComponentBuilder<TComponent, TItem, TValue> : ComponentBuilder<TComponent, TItem, TValue>, IBindableInput<TItem, TValue> where TComponent : IComponent
+    public class BindableComponentBuilder<TComponent, TValue> : ComponentBuilder<TComponent, TValue>, IBindableInput<TValue> where TComponent : IComponent
     {
         public object Reciver { get; set; }
 
@@ -76,19 +64,13 @@ namespace Project.AppCore.UI
         protected EventCallback<TValue> callback;
         protected Action<TValue> action;
 
-        public new IBindableInput<TItem, TValue> Set<TMember>(Expression<Func<TItem, TMember>> selector, object value)
-        {
-            base.Set(selector, value);
-            return this;
-        }
-
-        public new IBindableInput<TItem, TValue> Set(string key, object value)
+        public new IBindableInput<TValue> Set(string key, object value)
         {
             base.Set(key, value);
             return this;
         }
 
-        public IInput<TItem, TValue> Bind(Expression<Func<TValue>> expression)
+        public IBindableInput<TValue> Bind(Expression<Func<TValue>> expression, string valueName = "Value")
         {
             var body = expression.Body;
             var p = Expression.Parameter(typeof(TValue), "v");
@@ -97,35 +79,94 @@ namespace Project.AppCore.UI
             callback = EventCallback.Factory.Create(Reciver, action);
             var func = expression.Compile();
             value = func.Invoke();
-            parameters.Add("Value", value);
-            parameters.Add("ValueChanged", callback);
+            parameters.Add(valueName, value);
+            parameters.Add($"{valueName}Changed", callback);
             return this;
         }
     }
 
-    public class InputInfo<TValue>
+    public class ButtonBuilder<TComponent> : BindableComponentBuilder<TComponent, object>, IButtonAction where TComponent : IComponent
     {
-        public bool Disabled { get; set; }
-        public TValue Value { get; set; }
-        public EventCallback<TValue> ValueChanged { get; set; }
-    }
+        public IButtonAction OnClick(Action callback)
+        {
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            Set("OnClick", onclick);
+            return this;
+        }
 
-    public class SelectInfo<TValue>
+        public IButtonAction OnClick(EventCallback callback)
+        {
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            Set("OnClick", onclick);
+            return this;
+        }
+
+        public IButtonAction OnClick(Action<object> callback)
+        {
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            Set("OnClick", onclick);
+            return this;
+        }
+
+        public IButtonAction OnClick(Func<Task> callback)
+        {
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            Set("OnClick", onclick);
+            return this;
+        }
+
+        public IButtonAction OnClick(Func<object, Task> callback)
+        {
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            Set("OnClick", onclick);
+            return this;
+        }
+
+        public IButtonAction OnClick(EventCallback<MouseEventArgs> callback)
+        {
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            Set("OnClick", onclick);
+            return this;
+        }
+
+        public IButtonAction OnClick(Action<MouseEventArgs> callback)
+        {
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            Set("OnClick", onclick);
+            return this;
+        }
+
+        public IButtonAction OnClick(Func<MouseEventArgs, Task> callback)
+        {
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            Set("OnClick", onclick);
+            return this;
+        }
+
+        public IButtonAction Text(string text)
+        {
+            Set("ChildContent", (RenderFragment)(builder => { builder.AddContent(0, text); }));
+            return this;
+        }
+    }
+    public enum MessageType
     {
-        public object DataSource { get; set; }
-        public TValue Value { get; set; }
-        public EventCallback<TValue> ValueChanged { get; set; }
+        Success,
+        Warning,
+        Error,
+        Information,
     }
-
     public interface IUIService
     {
+        void Message(MessageType type, string message);
+
         /// <summary>
         /// 生成输入框
         /// <code>
         /// UI.BuildInput(this).Bind(() => ValueExpression).Render()
         /// </code>
         /// </summary>
-        IBindableInput<InputInfo<string>, string> BuildInput(object reciver);
+        IBindableInput<string> BuildInput(object reciver);
 
         /// <summary>
         /// 生成密码输入框
@@ -133,14 +174,14 @@ namespace Project.AppCore.UI
         /// UI.BuildInput(this).Bind(() => ValueExpression).Render()
         /// </code>
         /// </summary>
-        IBindableInput<InputInfo<string>, string> BuildPassword(object reciver);
+        IBindableInput<string> BuildPassword(object reciver);
         /// <summary>
         /// 生成数字输入框
         /// <code>
         /// UI.BuildInput&lt;TValue&gt;(this).Bind(() => ValueExpression).Render()
         /// </code>
         /// </summary>
-        IBindableInput<InputInfo<TValue>, TValue> BuildInput<TValue>(object reciver);
+        IBindableInput<TValue> BuildInput<TValue>(object reciver);
 
         /// <summary>
         /// 生成下拉选择框
@@ -148,11 +189,15 @@ namespace Project.AppCore.UI
         /// UI.BuildSelect&lt;TValue&gt;(this, options).Bind(() => ValueExpression).Render()
         /// </code>
         /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="reciver"></param>
-        /// <param name="options"></param>
         /// <returns></returns>
-        IBindableInput<SelectInfo<TValue>, TValue> BuildSelect<TValue>(object reciver, SelectItem<TValue> options);
+        IBindableInput<TValue> BuildSelect<TValue>(object reciver, SelectItem<TValue> options);
+
+        /// <summary>
+        /// 生成按钮
+        /// </summary>
+        IButtonAction BuildButton(object reciver);
+
+        RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
 
     }
 }

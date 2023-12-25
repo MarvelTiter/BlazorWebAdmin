@@ -1,4 +1,4 @@
-﻿@namespace BlazorWeb.Shared.Components
+﻿@namespace Project.Web.Shared.Components
 @inherits JsComponentBase
 <div style="width:@($"{Width}px");padding:0;">
     <div style="border:1px solid #ccc;position:relative;padding:0;margin:0;width:@($"{Width}px");height:@($"{Height}px")">
@@ -14,10 +14,14 @@
     else
     {
         <div style="width:100%;text-align:center;margin-top:10px;">
-            <CustomSelect TItem=string Options="dropdownDevices" @bind-Value=selectedDeviceId Style="width:200px;"></CustomSelect>
-            <Button OnClick="Start" Type="@ButtonType.Primary" Disabled=playButtonStatus>开启</Button>
-            <Button OnClick="Stop" Type="@ButtonType.Primary" Disabled=!playButtonStatus>关闭</Button>
-            <Button OnClick="Capture" Type="@ButtonType.Primary" Disabled=!playButtonStatus>拍照</Button>
+            @* <CustomSelect TItem=string Options="dropdownDevices" @bind-Value=selectedDeviceId Style="width:200px;"></CustomSelect>
+        <Button OnClick="Start" Type="@ButtonType.Primary" Disabled=playButtonStatus>开启</Button>
+        <Button OnClick="Stop" Type="@ButtonType.Primary" Disabled=!playButtonStatus>关闭</Button>
+        <Button OnClick="Capture" Type="@ButtonType.Primary" Disabled=!playButtonStatus>拍照</Button>*@
+            @UI.BuildSelect(this, dropdownDevices).Bind(() => selectedDeviceId).Set("Style", "width:200px;").Render()
+            @UI.BuildButton(this).OnClick(Start).Text("开启").Set("Type", "primary").Set("Disabled", playButtonStatus).Render()
+            @UI.BuildButton(this).OnClick(Stop).Text("关闭").Set("Type", "primary").Set("Disabled", !playButtonStatus).Render()
+            @UI.BuildButton(this).OnClick(Capture).Text("拍照").Set("Type", "primary").Set("Disabled", !playButtonStatus).Render()
         </div>
     }
 </div>

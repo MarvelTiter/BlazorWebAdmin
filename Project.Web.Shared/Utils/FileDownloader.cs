@@ -1,6 +1,6 @@
 ﻿using Microsoft.JSInterop;
 
-namespace BlazorWeb.Shared.Utils
+namespace Project.Web.Shared.Utils
 {
     public static class FileDownloadHelper
     {

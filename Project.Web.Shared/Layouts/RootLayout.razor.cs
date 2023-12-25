@@ -1,6 +1,6 @@
 ﻿using AntDesign;
-using BlazorWeb.Shared.Components;
-using BlazorWeb.Shared.Interfaces;
+using Project.Web.Shared.Components;
+using Project.Web.Shared.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -9,7 +9,7 @@ using Project.AppCore.Routers;
 using Project.AppCore.Store;
 using Project.Common;
 
-namespace BlazorWeb.Shared.Layouts
+namespace Project.Web.Shared.Layouts
 {
     public partial class RootLayout : IDomEventHandler, IDisposable
     {
