@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Components;
 using Project.AppCore.PageHelper;
 using Project.AppCore.Services;
+using Project.Constraints.Services;
 using Project.Models;
 using Project.Models.Entities;
 using Project.Models.Request;
 
 namespace BlazorWeb.Shared.SystemPermission
 {
-    public partial class OperationLog : IPageAction
+	public partial class OperationLog : IPageAction
     {
         [Inject]
         public IRunLogService RunLogSrv { get; set; }

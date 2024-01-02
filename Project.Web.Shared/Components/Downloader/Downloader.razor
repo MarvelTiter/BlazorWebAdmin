@@ -1,6 +1,6 @@
 ﻿@namespace Project.Web.Shared.Components
+@using Microsoft.JSInterop
 @inherits JsComponentBase
-@inject UserStore UserStore
 @implements IDownloadService
 @inject IDownloadServiceProvider DownProvider
 @code {
@@ -23,7 +23,7 @@
             return;
         await Module.InvokeVoidAsync("download", new
         {
-            token = UserStore.UserInfo?.ApiToken,
+            token = User.UserInfo?.ApiToken,
             filename = filename,
         });
     }

@@ -1,0 +1,45 @@
+﻿@using Microsoft.Extensions.Options;
+@using Project.AppCore.Options;
+@using Project.Constraints.Page
+@using Project.Web.Shared.Components
+@inherits BasicComponent
+<div class="layout-logo @Class">
+    @if (!collapse)
+    {
+        <img class="logo-img" src="/_content/Project.Web.Shared/assets/logo.png" alt="logo">
+        <div class="website-name" style="color: rgb(64, 158, 255);">@(Config.CurrentValue.AppShortName ?? "BlazorWeb")</div>
+    }
+    @if (ShowCollapseButton)
+    {
+        <SvgIcon ClassName="menu-collapse-icon" IconName="@IconName" OnClick="ToggleMenu" Style="cursor:pointer;"></SvgIcon>
+    }
+</div>
+
+@code {
+    [Parameter] public EventCallback<bool> OnToggleCollapse { get; set; }
+    [Parameter] public bool ShowCollapseButton { get; set; } = true;
+    [Parameter] public string Class { get; set; }
+    [Inject] public IOptionsMonitor<AppSetting> Config { get; set; }
+    private bool collapse = false;
+    private string IconName => collapse ? "expand_menu" : "collapse_menu";
+
+    protected override void OnInitialized()
+    {
+        collapse = App.Collapsed;
+        _ = OnToggleCollapse.InvokeAsync(collapse);
+    }
+
+    async Task ToggleMenu()
+    {
+        collapse = !collapse;
+        await OnToggleCollapse.InvokeAsync(collapse);
+    }
+
+    public async Task UpdateToggleMenu(bool state)
+    {
+        collapse = state;
+        await OnToggleCollapse.InvokeAsync(collapse);
+    }
+}
+
+

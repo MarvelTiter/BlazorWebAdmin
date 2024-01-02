@@ -1,16 +1,28 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
-using Project.AppCore.UI;
-using Project.AppCore.UI.Table;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.VisualBasic.FileIO;
+using Project.Constraints.Store;
+using Project.Constraints.UI;
+using Project.Constraints.UI.Dropdown;
+using Project.Constraints.UI.Flyout;
+using Project.Constraints.UI.Form;
+using Project.Constraints.UI.Table;
 using Project.Models;
+using Project.Models.Forms;
 using Project.Models.Request;
 using Project.UI.AntBlazor.Components;
+using System.Reflection;
 
 namespace Project.UI.AntBlazor
 {
 
-    public class UIService : IUIService
+    public class UIService(ModalService modalService, MessageService messageService) : IUIService
     {
+        private readonly ModalService modalService = modalService;
+        private readonly MessageService messageService = messageService;
+
+       
 
         public IBindableInput<string> BuildInput(object reciver)
         {
@@ -22,26 +34,66 @@ namespace Project.UI.AntBlazor
             return new BindableComponentBuilder<InputNumber<TValue>, TValue>() { Reciver = reciver };
         }
 
+        public IBindableInput<TValue> BuildDatePicker<TValue>(object reciver)
+        {
+            return new BindableComponentBuilder<DatePicker<TValue>, TValue> { Reciver = reciver };
+        }
+
         public IBindableInput<string> BuildPassword(object reciver)
         {
             return new BindableComponentBuilder<InputPassword, string>() { Reciver = reciver };
         }
 
-        public IBindableInput<TValue> BuildSelect<TValue>(object reciver, SelectItem<TValue> options)
+        public IBindableInput<TValue> BuildSelect<TValue>(object reciver, SelectItem<TValue>? options)
         {
-            return new BindableComponentBuilder<Select<TValue, Options<TValue>>, TValue>() { Reciver = reciver }
-                .Set("DataSource", options)
-                .Set("ValueName", "Value")
-                .Set("LabelName", "Label");
+            if (typeof(TValue).IsEnum && options == null)
+            {
+                return new BindableComponentBuilder<EnumSelect<TValue>, TValue>() { Reciver = reciver };
+            }
+            else
+            {
+                return new BindableComponentBuilder<Select<TValue, Options<TValue>>, TValue>() { Reciver = reciver }
+                    .Set("DataSource", options!)
+                    .Set("ValueName", "Value")
+                    .Set("LabelName", "Label");
+            }
         }
+
+        public ISelectInput<TItem, TValue> BuildSelect<TItem, TValue>(object reciver, IEnumerable<TItem> options)
+        {
+            return new SelectBuilder<Select<TValue, TItem>, TItem, TValue>() { Reciver = reciver }
+            .Set("DataSource", options);
+        }
+
+        public IBindableInput<bool> BuildSwitch(object reciver)
+        {
+            return new BindableComponentBuilder<Switch, bool>() { Reciver = reciver };
+        }
+
         public IButtonAction BuildButton(object reciver)
         {
             return new ButtonBuilder<Button>() { Reciver = reciver };
         }
 
-        public void Message(AppCore.UI.MessageType type, string message)
+        public void Message(Constraints.UI.MessageType type, string message)
         {
-            throw new NotImplementedException();
+            switch (type)
+            {
+                case Constraints.UI.MessageType.Success:
+                    messageService.Success(message);
+                    break;
+                case Constraints.UI.MessageType.Error:
+                    messageService.Error(message);
+                    break;
+                case Constraints.UI.MessageType.Warning:
+                    messageService.Warning(message);
+                    break;
+                case Constraints.UI.MessageType.Information:
+                    messageService.Info(message);
+                    break;
+                default:
+                    break;
+            }
         }
 
         public RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new()
@@ -53,5 +105,130 @@ namespace Project.UI.AntBlazor
                 builder.CloseComponent();
             };
         }
+
+        public RenderFragment BuildTableHeader<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new()
+        {
+            return builder =>
+            {
+                builder.OpenComponent<AntTableDefaultHeader<TModel, TQuery>>(0);
+                builder.AddComponentParameter(1, nameof(AntTableDefaultHeader<TModel, TQuery>.Options), options);
+                builder.CloseComponent();
+            };
+        }
+
+        public RenderFragment BuildForm<TData>(FormOptions<TData> options)
+        {
+            return builder =>
+            {
+                builder.OpenComponent<AntForm<TData>>(0);
+                builder.AddComponentParameter(1, nameof(AntForm<TData>.Options), options);
+                builder.CloseComponent();
+            };
+        }
+
+
+
+        public void Notify(Constraints.UI.MessageType type, string title, string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        public RenderFragment BuildDropdown(DropdownOptions options)
+        {
+            return builder =>
+            {
+                builder.OpenComponent<AntDropdown>(0);
+                builder.AddComponentParameter(1, nameof(AntDropdown.Options), options);
+                builder.CloseComponent();
+            };
+        }
+
+        public RenderFragment BuildMenu(IRouterStore router, bool horizontal, IAppStore app)
+        {
+            return builder =>
+            {
+                builder.OpenComponent<AntMenu>(0);
+                builder.AddComponentParameter(1, nameof(AntMenu.Router), router);
+                builder.AddComponentParameter(2, nameof(AntMenu.Horizontal), horizontal);
+                builder.AddComponentParameter(3, nameof(AntMenu.App), app);
+                builder.CloseComponent();
+            };
+        }
+
+        public RenderFragment BuildLoginForm(LoginFormModel model, Func<Task> handleLogin)
+        {
+            return builder =>
+            {
+                builder.OpenComponent<AntLogin>(0);
+                builder.AddComponentParameter(1, nameof(AntLogin.LoginModel), model);
+                builder.AddComponentParameter(2, nameof(AntLogin.HandleLogin), handleLogin);
+                builder.CloseComponent();
+            };
+        }
+
+        public async Task<TReturn> ShowDialogAsync<TReturn>(FlyoutOptions<TReturn> options)
+        {
+            TaskCompletionSource<TReturn> tcs = new();
+            var modal = new ModalOptions
+            {
+                Title = options.Title,
+                Content = options.Content,
+                DestroyOnClose = true,
+                OkText = "确定",
+                CancelText = "取消",
+                OnOk = e => options.OnOk.Invoke(),
+                OnCancel = e => options.OnClose.Invoke()
+            };
+            var modalRef = await modalService.CreateModalAsync(modal);
+            options.OnClose = async () =>
+            {
+                if (options.Feedback != null)
+                {
+                    await options.Feedback.OnCancelAsync();
+                }
+                await modalRef.CloseAsync();
+                tcs.TrySetCanceled();
+            };
+            options.OnOk = async () =>
+            {
+                if (options.Feedback != null)
+                {
+                    var result = await options.Feedback.OnOkAsync();
+                    if (result.Success)
+                    {
+                        tcs.TrySetResult(result.Value!);
+                        await modalRef.OkAsync(null);
+                    }
+                }
+                else
+                {
+                    tcs.TrySetCanceled();
+                    await modalRef.OkAsync(null);
+                }
+            };
+            return await tcs.Task;
+        }
+
+        public IUIComponent BuildCard()
+        {
+            return new ComponentBuilder<Card>();
+        }
+
+        public IUIComponent BuildRow()
+        {
+            return new ComponentBuilder<Row>();
+        }
+
+        public IUIComponent BuildCol()
+        {
+            return new ComponentBuilder<AntCol>();
+        }
+
+        public IBindableInput<bool> BuildCheckBox(object reciver)
+        {
+            return new BindableComponentBuilder<Checkbox, bool>() { Reciver = reciver };
+        }
+
+
     }
 }

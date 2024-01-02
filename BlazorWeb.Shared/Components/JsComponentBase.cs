@@ -1,7 +1,7 @@
 ﻿using BlazorWeb.Shared.Interfaces;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Project.Common.Attributes;
+using Project.Constraints.Attributes;
 using System.Reflection;
 
 namespace BlazorWeb.Shared.Components

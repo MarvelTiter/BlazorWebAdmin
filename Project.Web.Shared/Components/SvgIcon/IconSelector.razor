@@ -1,7 +1,10 @@
 ﻿@namespace Project.Web.Shared.Components
-<Popover Title="@Localizer["IconSelector.Title"]" OnVisibleChange="OnVisibleChange" Visible="visible" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Click})" ContentTemplate="content">
+@using Microsoft.Extensions.Localization
+@using Project.Constraints.Page
+@inherits BasicComponent
+@* <Popover Title="@Localizer["IconSelector.Title"]" OnVisibleChange="OnVisibleChange" Visible="visible" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Click})" ContentTemplate="content">
     <Button Type="primary">@Localizer["IconSelector.ButtonText"]</Button>
-</Popover>
+</Popover> *@
 @code {
     List<string> icons;
     bool visible;

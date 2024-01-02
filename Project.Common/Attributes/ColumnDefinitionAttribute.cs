@@ -43,6 +43,14 @@ namespace Project.Common.Attributes
     }
 
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+    public class FormAttribute : Attribute
+    {
+        public int? Row { get; set; }
+        public int? Column { get; set; }
+        public bool Hide { get; set; }
+    }
+
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class ColumnTagAttribute : Attribute
     {
         public string Value { get; set; }

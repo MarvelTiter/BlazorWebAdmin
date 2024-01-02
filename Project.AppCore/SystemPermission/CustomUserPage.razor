@@ -1,0 +1,13 @@
+﻿@inherits ModelPage<User, GenericRequest<User>>
+
+<TwoSidePage OpenTrigger=@(() => currentSelected != null) Expand=@sideExpand MainFlex="3">
+	<FirstSide>
+		@TableFragment
+	</FirstSide>
+	<SecondSide>
+		<AssignUserRoles Current="currentSelected"></AssignUserRoles>
+	</SecondSide>
+	<ClosedView>
+		<h1>用户角色</h1>
+	</ClosedView>
+</TwoSidePage>

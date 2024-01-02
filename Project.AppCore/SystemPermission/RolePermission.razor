@@ -1,0 +1,31 @@
+﻿@page "/rolepermission"
+@using AntDesign.TableModels
+@using Project.Models.Permissions
+@inherits ModelPage<Role, GenericRequest<Role>>
+<TwoSidePage OpenTrigger=@(() => CurrentRole != null) @bind-Expand=@sideExpand MainFlex="3">
+    <FirstSide>
+        @TableFragment
+    </FirstSide>
+    <SecondSide>
+        <div>
+            <h1>
+                角色权限配置
+            </h1>
+            <h2>角色名称: </h2>
+        </div>
+        <MTree DataSource="powerTreeData"
+               @bind-CheckedKeys=selectedKeys
+               IncludeIndeterminate
+                TitleExpression="x => x.Node.PowerName"
+                KeyExpression="x => x.Node.PowerId"
+                ChildrenExpression="x => x.Children"
+                TNode="PowerTreeNode">
+         </MTree>
+         <div>
+             @UI.BuildButton(this).OnClick(SaveRolePower).Set("Type","primary").Render()
+         </div>
+     </SecondSide>
+     <ClosedView>
+         <h1>权限列表</h1>
+     </ClosedView>
+ </TwoSidePage>

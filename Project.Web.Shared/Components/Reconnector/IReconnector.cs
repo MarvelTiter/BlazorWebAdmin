@@ -9,7 +9,7 @@ namespace Project.Web.Shared.Components
         void RegisterView(Action<IReconnector> action);
     }
 
-    internal class ReconnectorProvider : IReconnectorProvider
+    public class ReconnectorProvider : IReconnectorProvider
     {
         Action<IReconnector>? action;
         public void RegisterView(Action<IReconnector> action)

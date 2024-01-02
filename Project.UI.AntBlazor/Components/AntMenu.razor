@@ -1,0 +1,13 @@
+﻿<Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed=@App.Collapsed Style="flex: 1;">
+    @foreach (var item in Router.Menus.Where(m => m.Group == "ROOT"))
+    {
+        <AntMenuItem Route=item></AntMenuItem>
+    }
+</Menu>
+
+@code {
+    [Parameter] public IRouterStore Router { get; set; }
+    [Parameter] public bool Horizontal { get; set; }
+    [Parameter] public IAppStore App { get; set; }
+
+}

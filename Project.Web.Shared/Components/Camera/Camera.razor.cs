@@ -1,19 +1,15 @@
-﻿using AntDesign;
-using Project.Web.Shared.Utils;
+﻿using Project.Web.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Microsoft.JSInterop;
-using OneOf.Types;
 using Project.Models;
-using System;
 using System.ComponentModel.DataAnnotations;
+using Project.Constraints.UI;
 
 namespace Project.Web.Shared.Components
 {
     public partial class Camera : JsComponentBase, ICameraObject
     {
         [Inject] public ProtectedLocalStorage Storage { get; set; }
-        [Inject] public MessageService MsgSrv { get; set; }
         [Parameter] public bool AutoPlay { get; set; }
         [Parameter] public bool EnableClip { get; set; }
         [Parameter] public int Width { get; set; }
@@ -101,7 +97,7 @@ namespace Project.Web.Shared.Components
             }
             else
             {
-                _ = MsgSrv.Error(result.Message, 0);
+                UI.Error(result.Message);
                 return false;
             }
         }
@@ -131,7 +127,7 @@ namespace Project.Web.Shared.Components
             var result = await TryOpenCamera(res.Width, res.Height);
             if (result == null)
             {
-                _ = MsgSrv.Error("something wrong when try to open the camera");
+                UI.Error("something wrong when try to open the camera");
                 return;
             }
             if (result.Success && selectedDeviceId != null)
@@ -142,7 +138,7 @@ namespace Project.Web.Shared.Components
             }
             else
             {
-                _ = MsgSrv.Error(result.Message, 0);
+                UI.Error(result.Message);
             }
         }
 
@@ -179,7 +175,7 @@ namespace Project.Web.Shared.Components
             }
             else
             {
-                _ = MsgSrv.Error(result.Message, 0);
+                UI.Error(result.Message);
             }
         }
 
@@ -216,7 +212,7 @@ namespace Project.Web.Shared.Components
             }
             else
             {
-                _ = MsgSrv.Error(result.Message);
+                UI.Error(result.Message);
             }
             return info;
         }

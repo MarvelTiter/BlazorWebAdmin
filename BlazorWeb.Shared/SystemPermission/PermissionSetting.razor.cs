@@ -7,13 +7,14 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Project.AppCore.PageHelper;
 using Project.AppCore.Services;
+using Project.Constraints.Services;
 using Project.Models;
 using Project.Models.Permissions;
 using Project.Models.Request;
 
 namespace BlazorWeb.Shared.SystemPermission
 {
-    record PowerTreeNode(Power Node)
+	record PowerTreeNode(Power Node)
     {
         public IList<PowerTreeNode> Children { get; set; }
     }

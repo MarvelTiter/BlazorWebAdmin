@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Localization
+@using Project.Models.Forms
+<Form Model="LoginModel">
+    <FormItem>
+        <Input @bind-Value="@context.UserName" placeholder="@Localizer["Login.Placeholder.UserName"].Value" name="username" type="text" tabindex="1" AutoComplete="true">
+        <Prefix>
+            <Icon Type="user" Theme="outline" />
+        </Prefix>
+        </Input>
+    </FormItem>
+    <FormItem>
+        <InputPassword OnInput="@(e => context.Password = e.Value?.ToString() ??"")" placeholder="@Localizer["Login.Placeholder.Password"].Value" tabindex="2" AutoComplete="true">
+            <Prefix>
+                <Icon Type="lock" Theme="outline" />
+            </Prefix>
+        </InputPassword>
+    </FormItem>
+</Form>
+<Button Loading="loading" Type="@ButtonType.Primary" OnClick="@(async e=>await DoLogin())">
+    @Localizer["Login.Buttons.Login"]
+</Button>
+
+@code {
+
+    [Inject] IStringLocalizer Localizer { get; set; }
+    [Parameter] public LoginFormModel LoginModel { get; set; }
+    [Parameter] public Func<Task> HandleLogin { get; set; }
+
+    bool loading = false;
+
+    private async Task DoLogin()
+    {
+        loading = true;
+        await Task.Yield();
+        if (HandleLogin != null)
+        {
+            await HandleLogin.Invoke();
+        }
+        loading = false;
+    }
+}

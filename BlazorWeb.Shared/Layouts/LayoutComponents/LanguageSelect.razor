@@ -1,6 +1,7 @@
-﻿@using System.Globalization;
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-@using Project.AppCore.Options;
+﻿@    using System.Globalization;
+@    using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+@    using Project.AppCore.Options;
+    using Project.Constraints.Options;
 <Dropdown Trigger=@(new Trigger[]{Trigger.Click}) Style="display:unset;">
     <Overlay>
         @*<CustomSelect @bind-Value=current Options="langs" TItem=string OnChange="ToggleLang"></CustomSelect>*@

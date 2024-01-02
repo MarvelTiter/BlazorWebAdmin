@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using Project.AppCore.Options;
+using Project.Constraints.Options;
 
 namespace Project.AppCore.Middlewares
 {

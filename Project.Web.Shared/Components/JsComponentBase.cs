@@ -1,13 +1,13 @@
-﻿using Project.Web.Shared.Interfaces;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Project.Common.Attributes;
 using System.Reflection;
-using Project.Web.Shared.Basic;
+using Project.Constraints.UI;
+using Project.Constraints.Page;
+using Project.Common.Attributes;
 
 namespace Project.Web.Shared.Components
 {
-    public abstract class JsComponentBase : BaseUIComponent, IJsComponent, IAsyncDisposable
+    public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisposable
     {
         private string? id;
         [Inject] protected IJSRuntime Js { get; set; }

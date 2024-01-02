@@ -1,79 +1,79 @@
-﻿using Project.Web.Shared.Layouts.LayoutComponents;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Rendering;
-using Project.AppCore.Routers;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+﻿//using Project.Web.Shared.Layouts.LayoutComponents;
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Components;
+//using Microsoft.AspNetCore.Components.Authorization;
+//using Microsoft.AspNetCore.Components.Rendering;
+//using Project.AppCore.Routers;
+//using System.Diagnostics.CodeAnalysis;
+//using System.Reflection;
 
 
-namespace Project.Web.Shared.Components
-{
-    public class KeepPageStateRouteView : RouteView
-    {
-        [Inject]
-        [NotNull]
-        public NavigationManager Navigator { get; set; }
-        [Inject]
-        public RouterStore RouterStore { get; set; }
-        public string CurrentUrl => Fixed(Navigator.ToBaseRelativePath(Navigator.Uri));
-        static string Fixed(string url) => url == "" ? "/" : url;
-        protected override void Render(RenderTreeBuilder builder)
-        {
-            var layoutType = RouteData.PageType.GetCustomAttribute<LayoutAttribute>()?.LayoutType ?? DefaultLayout;
-            // RouterStore.SetActive(CurrentUrl);
-            var current = RouterStore.Current;
-            //if (current == null)
-            //{
-            //    RouterStore.TryAdd(CurrentUrl);
-            //    current = RouterStore.Current;
-            //}
-            builder.OpenComponent<LayoutView>(0);
-            builder.AddAttribute(1, "Layout", layoutType);
-            builder.AddAttribute(2, "ChildContent", GetCurrentBody(current));
-            builder.CloseComponent();
-        }
+//namespace Project.Web.Shared.Components
+//{
+//    public class KeepPageStateRouteView : RouteView
+//    {
+//        [Inject]
+//        [NotNull]
+//        public NavigationManager Navigator { get; set; }
+//        [Inject]
+//        public RouterStore RouterStore { get; set; }
+//        public string CurrentUrl => Fixed(Navigator.ToBaseRelativePath(Navigator.Uri));
+//        static string Fixed(string url) => url == "" ? "/" : url;
+//        protected override void Render(RenderTreeBuilder builder)
+//        {
+//            var layoutType = RouteData.PageType.GetCustomAttribute<LayoutAttribute>()?.LayoutType ?? DefaultLayout;
+//            // RouterStore.SetActive(CurrentUrl);
+//            var current = RouterStore.Current;
+//            //if (current == null)
+//            //{
+//            //    RouterStore.TryAdd(CurrentUrl);
+//            //    current = RouterStore.Current;
+//            //}
+//            builder.OpenComponent<LayoutView>(0);
+//            builder.AddAttribute(1, "Layout", layoutType);
+//            builder.AddAttribute(2, "ChildContent", GetCurrentBody(current));
+//            builder.CloseComponent();
+//        }
 
-        RenderFragment GetCurrentBody(TagRoute? route)
-        {
-            if (route == null) return CreateBody();
-            if (route.Body == null)
-            {
-                var content = CreateBody(route);
-                route.Body = builder =>
-                {
-                    builder.OpenComponent<ErrorCatcher>(0);
-                    builder.AddAttribute(1, nameof(ErrorCatcher.ChildContent), content);
-                    builder.CloseComponent();
-                };
-            }
-            return route.Body;
-        }
+//        RenderFragment GetCurrentBody(TagRoute? route)
+//        {
+//            if (route == null) return CreateBody();
+//            if (route.Body == null)
+//            {
+//                var content = CreateBody(route);
+//                route.Body = builder =>
+//                {
+//                    builder.OpenComponent<ErrorCatcher>(0);
+//                    builder.AddAttribute(1, nameof(ErrorCatcher.ChildContent), content);
+//                    builder.CloseComponent();
+//                };
+//            }
+//            return route.Body;
+//        }
 
-        private RenderFragment CreateBody(TagRoute? route = null)
-        {
-            var pagetype = RouteData.PageType;
-            var routeValues = RouteData.RouteValues;
-            void RenderForLastValue(RenderTreeBuilder builder)
-            {                //dont reference RouteData again
-                var seq = 0;
-                builder.OpenComponent(seq++, pagetype);
-                foreach (KeyValuePair<string, object> routeValue in routeValues)
-                {
-                    builder.AddAttribute(seq++, routeValue.Key, routeValue.Value);
-                }
-                builder.AddComponentReferenceCapture(seq++, obj =>
-                {
-                    if (route != null)
-                        route.PageRef = obj;
-                });
-                builder.CloseComponent();
-            }
-            return RenderForLastValue;
-        }
-    }
-}
+//        private RenderFragment CreateBody(TagRoute? route = null)
+//        {
+//            var pagetype = RouteData.PageType;
+//            var routeValues = RouteData.RouteValues;
+//            void RenderForLastValue(RenderTreeBuilder builder)
+//            {                //dont reference RouteData again
+//                var seq = 0;
+//                builder.OpenComponent(seq++, pagetype);
+//                foreach (KeyValuePair<string, object> routeValue in routeValues)
+//                {
+//                    builder.AddAttribute(seq++, routeValue.Key, routeValue.Value);
+//                }
+//                builder.AddComponentReferenceCapture(seq++, obj =>
+//                {
+//                    if (route != null)
+//                        route.PageRef = obj;
+//                });
+//                builder.CloseComponent();
+//            }
+//            return RenderForLastValue;
+//        }
+//    }
+//}
 
 //public sealed class KeepStateAuthorizeRouteView : RouteView
 //{

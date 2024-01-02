@@ -1,5 +1,7 @@
 ﻿@page "/camera/test"
 @namespace Project.Web.Shared.Components
+@using Project.Constraints.Page
+@inherits BasicComponent
 <Camera AutoPlay EnableClip Width="600" Height="300" OnCapture="handleCapture" AutoDownload @ref=camera></Camera>
  <div style="width:500px;">
      <img src="@src" style="width:100%;" />
@@ -10,9 +12,9 @@
         {
             <p>
                 <span>摄像头(@item.DeviceId[..10]...)</span>
-                <Button OnClick="@(async e=>await SwitchVideo(context,item.DeviceId))">播放</Button>
-                <Button>设置为证件照</Button>
-                <Button>设置为人头像</Button>
+                @UI.BuildButton(this).Text("播放").OnClick(async e => await SwitchVideo(context, item.DeviceId)).Render()
+                @UI.BuildButton(this).Text("设置为证件照").Render()
+                @UI.BuildButton(this).Text("设置为人头像").Render()
             </p>
         }
     </DeviceSelectorRender>

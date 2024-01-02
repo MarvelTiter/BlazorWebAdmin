@@ -1,9 +1,0 @@
-﻿@using Project.AppCore.UI.Table
-@using Project.Models.Request
-@typeparam TData
-@typeparam TQuery where TQuery : IRequest, new()
-
-@code {
-    [Parameter] public TableOptions<TData, TQuery> Options { get; set; }
-    [Parameter] public TData RowData { get; set; }
-}

@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Project.Constraints.Page;
 
 namespace Project.Web.Shared.Components
 {
-    public class ConditionBase: ComponentBase, ICondition
+    public class ConditionBase: BasicComponent, ICondition
     {
         [CascadingParameter] public IQueryCondition Parent { get; set; }
         [Parameter] public string? Label { get; set; }

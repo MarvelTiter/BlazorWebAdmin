@@ -3,6 +3,7 @@ using BlazorWeb.Shared.Template.Forms;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using Project.AppCore;
+using Project.Web.Shared.Basic;
 
 namespace BlazorWeb.Shared.Utils
 {

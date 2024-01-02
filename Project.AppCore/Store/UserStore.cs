@@ -1,13 +1,9 @@
-﻿using Project.Models.Forms;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components;
-using Project.AppCore.Services;
-using Project.AppCore.Auth;
-using Project.Models.Permissions;
+﻿using Project.Models.Permissions;
+using Project.Constraints.Store;
 
 namespace Project.AppCore.Store
 {
-    public partial class UserStore : StoreBase
+    public partial class UserStore : StoreBase, IUserStore
     {
         public UserInfo? UserInfo { get; set; }
         public IEnumerable<string> Roles => UserInfo?.Roles;

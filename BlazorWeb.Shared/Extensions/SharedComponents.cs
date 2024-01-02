@@ -7,6 +7,7 @@ using Project.AppCore.Auth;
 using Project.AppCore.Locales.Extensions;
 using Project.AppCore.Options;
 using Project.AppCore.Options.Extensions;
+using Project.Constraints.Options;
 
 namespace BlazorWeb.Shared.Extensions
 {

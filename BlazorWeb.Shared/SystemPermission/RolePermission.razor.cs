@@ -6,13 +6,14 @@ using BlazorWeb.Shared.Template.Tables.Setting;
 using BlazorWeb.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Project.AppCore.Services;
+using Project.Constraints.Services;
 using Project.Models;
 using Project.Models.Permissions;
 using Project.Models.Request;
 
 namespace BlazorWeb.Shared.SystemPermission
 {
-    public partial class RolePermission
+	public partial class RolePermission
     {
         record PowerTreeNode(Power Node)
         {

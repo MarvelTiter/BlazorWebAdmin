@@ -1,47 +1,51 @@
 ﻿@namespace Project.Web.Shared.Components
+@using Project.Web.Shared.Extensions
 @inherits ConditionBase
-<Col Span="ActualColWidth">
-<div>
-    <span class="conditions" style="@Style">
-        <span class="label" style="width:@($"{Parent.LabelWidth}px")">@Label</span>
-            @if (Field != null && ChildContent == null)
+
+@code {
+
+    RenderFragment CreateBody()
+    {
+        return builder =>
+        {
+            builder.MakeDiv(() =>
             {
-                @if (Field.DataType == typeof(DateTime))
+                builder.OpenElement(0, "span");
+                builder.AddAttribute(1, "class", "conditions");
+                builder.AddAttribute(2, "style", Style);
+                builder.OpenElement(3, "span");
+                builder.AddAttribute(4, "class", "label");
+                builder.AddAttribute(5, "style", $"{Parent.LabelWidth}px");
+                builder.AddContent(6, Label);
+                builder.CloseElement();
+                if (Field != null && ChildContent == null)
                 {
-                <DatePicker @bind-Value=dateValue Style="width:100%;" TValue=DateTime OnChange=@UpdateDate></DatePicker>
-                }
-                else if (Field?.EnumValues != null || (Field?.IsEnum ?? false))
-                {
-                <DictionarySelect Options=Field.EnumValues @bind-Value=stringValue OnChange=@(async () => await NotifyChanged()) Style="width:100%;"></DictionarySelect>
+                    if (Field.DataType == typeof(DateTime))
+                    {
+                        builder.AddContent(7, UI.BuildDatePicker<DateTime>(this).Bind(() => dateValue).Render());
+                    }
+                    else if (Field?.EnumValues != null || (Field?.IsEnum ?? false))
+                    {
+                        // builder.OpenComponent<DictionarySelect>(7);
+                        // builder.AddComponentParameter(8, "Options", Field.EnumValues);
+                        // builder.AddComponentParameter(9, "Value", stringValue);
+                        // builder.AddComponentParameter(10, "ValueChanged", EventCallback.Factory.Create<string>(this, s => stringValue = s));
+
+                        UI.BuildSelect<KeyValuePair<string, string>, string>(this, Field.EnumValues!.ToList()).LabelExpression(kv => kv.Key).ValueExpression(kv => kv.Value).Bind(() => stringValue).Render().Invoke(builder);
+                    }
+                    else
+                    {
+                        builder.AddContent(7, UI.BuildInput(this).Bind(() => stringValue).Render());
+                    }
                 }
                 else
                 {
-                <Input @bind-Value=stringValue TValue=string BindOnInput=@true OnChange=@(async () => await NotifyChanged())></Input>
+                    builder.AddContent(7, ChildContent);
                 }
-            }
-            else if (ChildContent != null)
-            {
-                @ChildContent
-            }
-    </span>
-</div>
-</Col>
 
-<style>
-    .conditions {
-        display: flex;
-        align-items: center;
-        white-space: nowrap;
+                builder.CloseElement();
+
+            });
+        };
     }
-
-        .conditions .label {
-            padding-right: 5px;
-            display: inline-block;
-            box-sizing: border-box;
-            text-align: right;
-        }
-
-            .conditions .label + * {
-                width: 100%;
-            }
-</style>
+}

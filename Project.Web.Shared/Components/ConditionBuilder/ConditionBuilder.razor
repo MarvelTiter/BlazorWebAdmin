@@ -1,63 +1,72 @@
-﻿@using Project.Web.Shared.Template.Tables.Setting
+﻿@using Microsoft.Extensions.Localization
+@using Project.Constraints.Page
+@using Project.Constraints.UI.Table
+@using Project.Web.Shared.Basic
 @using System.ComponentModel.DataAnnotations
 @using System.Linq.Expressions
 @using MT.Toolkit.StringExtension;
 @using System.Diagnostics.CodeAnalysis;
 @namespace Project.Web.Shared.Components
-@inject MessageService MessageSrv
-<Row>
+@inherits BasicComponent
+<div>
     @if (Index > 0)
     {
-        <Switch Checked="LinkType == ExpressionType.AndAlso" CheckedChildren=@TableLocalizer["ConditionSwitch.AndAlso"] UnCheckedChildren=@TableLocalizer["ConditionSwitch.OrElse"] OnChange=UpdateLinkType />
+        @UI.BuildSwitch(this).Bind(() => check, "Checked", UpdateLinkType).Set("CheckedChildren", TableLocalizer["ConditionSwitch.AndAlso"].Value).Set("UnCheckedChildren", TableLocalizer["ConditionSwitch.OrElse"].Value).Render()
+        ;
     }
-</Row>
-<Row Style=@($"min-width:450px;{Style}")>
-    <Col Span=10>
-    <Select DataSource="Columns"
-            Placeholder="Select"
-            DropdownMatchSelectWidth=false
-            Style="width: 100%;"
-            @bind-Value=currentField
-            TItem=Shared.Template.Tables.Setting.TableOptionColumn
-            TItemValue=string
-            DefaultValue=@(selectedField?.PropertyOrFieldName)
-            ValueName=@(nameof(TableOptionColumn.PropertyOrFieldName))
-            LabelTemplate="GetLocalizerString"
-            OnSelectedItemChanged="UpdateField">
-        <ItemTemplate>
-                @GetLocalizerString(context)
-        </ItemTemplate>
-    </Select>
-    </Col>
-    <Col Span=4>
-    <EnumSelect TEnum="CompareType" @bind-Value=type OnSelectedItemChanged="UpdateEnum" DropdownMatchSelectWidth=false></EnumSelect>
-    </Col>
-    <Col Span=10>
-        @if (selectedField?.DataType == typeof(DateTime))
+</div>
+<MRow Style="@($"min-width:450px;{Style}")">
+    <MCol ColSpan="10">
+        @(UI.BuildSelect<ColumnInfo, ColumnInfo>(this, Columns)
+            .ValueExpression(c => c)
+            .LabelExpression(c => Localizer == null ? c.Label : Localizer[c.Label])
+            .Bind(() => selectedField, NotifyChanged)
+            .Render())
+    </MCol>
+    <MCol ColSpan="4">
+        @(UI.BuildSelect<CompareType>(this, null).Bind(() => type, NotifyChanged).Render())
+    </MCol>
+    <MCol ColSpan="10">
+        @ValueInput()
+    </MCol>
+</MRow>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    RenderFragment ValueInput()
+    {
+        if (selectedField?.DataType == typeof(DateTime))
         {
-        <DatePicker @bind-Value=dateValue Style="width:100%;" TValue="DateTime" OnChange=@UpdateDate></DatePicker>
+            return UI.BuildDatePicker<DateTime>(this).Bind(() => dateValue).Set("Style", "width:100%;").Render();
         }
         else if (selectedField?.EnumValues != null || (selectedField?.IsEnum ?? false))
         {
-        <DictionarySelect Options=selectedField.EnumValues @bind-Value=stringValue OnChange=@(async () => await NotifyChanged()) Style="width:100%;"></DictionarySelect>
+            return UI.BuildSelect<KeyValuePair<string, string>, string>(this, selectedField.EnumValues!.ToList())
+            .LabelExpression(kv => kv.Key)
+            .ValueExpression(kv => kv.Value)
+            .Bind(() => stringValue, NotifyChanged)
+            .Render();
         }
         else
         {
-        <Input @bind-Value=stringValue TValue=string OnChange=@(async () => await NotifyChanged())></Input>
+            return UI.BuildInput(this).Bind(() => stringValue, NotifyChanged).Render();
         }
-    </Col>
-</Row>
-
-
-@code {
+    }
+    bool check = true;
     string stringValue;
     string currentField;
     DateTime dateValue = DateTime.Now;
-    Shared.Template.Tables.Setting.TableOptionColumn? selectedField;
+    ColumnInfo? selectedField;
+
     CompareType type;
     ExpressionType LinkType = ExpressionType.AndAlso;
     [Parameter]
-    public List<Shared.Template.Tables.Setting.TableOptionColumn> Columns { get; set; }
+    public List<ColumnInfo> Columns { get; set; }
     [Parameter]
     public ConditionInfo Info { get; set; }
     [Parameter]
@@ -81,10 +90,6 @@
         //StateHasChanged();
     }
 
-    RenderFragment GetLocalizerString(TableOptionColumn context)
-    {
-        return @<span class="ant-select-selection-item">@(Localizer == null ? context.Label : Localizer[context.Label])</span>;
-    }
     object GetInnerValue(out bool legal)
     {
         if (selectedField?.DataType == typeof(DateTime))
@@ -107,31 +112,15 @@
             return stringValue;
         }
     }
-
-    async void UpdateField(Shared.Template.Tables.Setting.TableOptionColumn item)
-    {
-        selectedField = item;
-        await NotifyChanged();
-    }
-
-    async void UpdateEnum(CompareType type)
-    {
-        this.type = type;
-        await NotifyChanged();
-    }
-
-    async void UpdateLinkType(bool check)
+    async Task UpdateLinkType()
     {
         LinkType = check ? ExpressionType.AndAlso : ExpressionType.OrElse;
         await NotifyChanged();
     }
-    Task UpdateDate(DateTimeChangedEventArgs<DateTime> args)
-    {
-        return NotifyChanged();
-    }
+
     async Task NotifyChanged()
     {
-        
+
         if (selectedField is null)
         {
             return;
@@ -139,7 +128,7 @@
         var isLegal = CheckComparable();
         if (!isLegal)
         {
-            _ = MessageSrv.Error($"[{GetDisplay(type)}]不能应用于字段[{selectedField.Label}]");
+            // _ = MessageSrv.Error($"[{GetDisplay(type)}]不能应用于字段[{selectedField.Label}]");
         }
         var condition = new ConditionInfo(selectedField.PropertyOrFieldName, type, GetInnerValue(out bool validValue), selectedField.DataType, isLegal && validValue);
         condition.LinkType = Index > 0 ? LinkType : null;

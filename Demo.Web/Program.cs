@@ -1,5 +1,14 @@
 using Demo.Web.Components;
-using Project.AppCore.UI;
+using MDbContext;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Data.Sqlite;
+using Project.AppCore;
+using Project.AppCore.Auth;
+using Project.AppCore.Routers;
+using Project.AppCore.Store;
+using Project.Constraints;
+using Project.Constraints.Store;
+using Project.Constraints.UI;
 using Project.UI.AntBlazor;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,9 +17,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddAntDesign();
+builder.AddProject();
 
-builder.Services.AddScoped<IUIService, UIService>();
+builder.AddDefaultLightOrm();
 
 var app = builder.Build();
 
@@ -22,8 +31,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 app.UseAntiforgery();
-
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AddAdditionalAssemblies([.. Config.Pages]);
 
 app.Run();

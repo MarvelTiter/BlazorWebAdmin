@@ -22,7 +22,7 @@ namespace Project.Models.Entities
 		[ColumnDefinition]
 		[Column(Name = "SIGN")]
 		public string Sign { get; set; }
-		[ColumnDefinition]
+        [ColumnDefinition]
 		[Column(Name = "LAST_LOGIN")]
 		public DateTime? LastLogin { get; set; }
 	}

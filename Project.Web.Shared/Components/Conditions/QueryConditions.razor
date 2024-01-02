@@ -1,8 +1,10 @@
 ﻿@namespace Project.Web.Shared.Components
 @using System.Linq.Expressions
+@using Project.Constraints.Page
 @typeparam TItem
+@inherits BasicComponent
 <CascadingValue Value="this">
-    <Row Gutter="(16,8)">
+    <MRow Gutter="@((16,16))">
         @ChildContent
-    </Row>
+    </MRow>
 </CascadingValue>

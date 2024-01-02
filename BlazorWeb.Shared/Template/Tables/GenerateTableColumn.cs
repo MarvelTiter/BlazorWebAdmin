@@ -1,6 +1,6 @@
 ﻿using BlazorWeb.Shared.Template.Tables.Setting;
 using MDbEntity.Attributes;
-using Project.Common.Attributes;
+using Project.Constraints.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

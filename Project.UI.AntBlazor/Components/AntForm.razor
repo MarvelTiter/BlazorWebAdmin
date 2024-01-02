@@ -1,0 +1,31 @@
+﻿@using Project.Constraints.UI.Form
+@typeparam TData
+<Form Model="@Options.Data" LabelColSpan="@Options.LabelSpan" WrapperColSpan="@Options.WrapperSpan">
+    @foreach (var row in Options.GetRows())
+    {
+        var colSpan = 24 / row.Count();
+        var lblSpan = GetLabelSpan(colSpan);
+        <GridRow>
+            @foreach (var col in row)
+            {
+                <GridCol Span="colSpan">
+                    <FormItem LabelColSpan="lblSpan" Label="@(Localizer[col.Label])">
+                        <InputBuilder Data="Options.Data" UI="Options.UI" Reciver="Options" Column="col"></InputBuilder>
+                    </FormItem>
+                </GridCol>
+            }
+        </GridRow>
+    }
+</Form>
+@code {
+    [Parameter] public FormOptions<TData> Options { get; set; }
+    [Inject] IStringLocalizer<TData> Localizer { get; set; }
+    private int GetLabelSpan(int colSpan)
+    {
+        if (colSpan == 24)
+            return 4;
+        else if (colSpan == 12)
+            return 8;
+        return Options.LabelSpan;
+    }
+}

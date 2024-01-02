@@ -1,9 +1,13 @@
-﻿@using Project.Web.Shared.Template.Tables.Setting
+﻿@using Microsoft.Extensions.Localization
+@using Project.Constraints.Page
 @using System.Linq.Expressions
+@using Project.Constraints.UI.Table
+@using Project.Web.Shared.Utils
 @namespace Project.Web.Shared.Components
 @typeparam TData
+@inherits BasicComponent
 <div style="text-align:right;margin-bottom:10px;">
-	<Button Type=@ButtonType.Primary OnClick="AddCondition">@TableLocalizer["TableButtons.AddCondition"]</Button>
+	@UI.BuildButton(this).Text(TableLocalizer["TableButtons.AddCondition"].Value).OnClick(AddCondition).Set("Type","primary").Render()
 </div>
 @for (var i = 0; i < Conditions.Count; i++)
 {
@@ -11,15 +15,15 @@
 	<ConditionBuilder Localizer="Localizer" TableLocalizer=TableLocalizer Index=index Columns=Columns InfoChanged=@(newInfo => Conditions[index] = newInfo) Style="width:100%;"></ConditionBuilder>
 }
 <div style="text-align:right;margin-top:10px;">
-	<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToSearch">@TableLocalizer["TableButtons.Query"]</Button>
+	@UI.BuildButton(this).Text(TableLocalizer["TableButtons.Query"].Value).OnClick(ConfirmConditionToSearch).Set("Type", "primary").Render()
 	@if (ShowExportButton)
 	{
-		<Button Type=@ButtonType.Primary OnClick="ConfirmConditionToExport">@TableLocalizer["TableButtons.Export"]</Button>
+		@UI.BuildButton(this).Text(TableLocalizer["TableButtons.Export"].Value).OnClick(ConfirmConditionToExport).Set("Type", "primary").Render()
 	}
 </div>
 @code {
     [Parameter]
-    public List<TableOptionColumn> Columns { get; set; }
+	public List<ColumnInfo> Columns { get; set; }
     [Parameter]
 	public Expression<Func<TData, bool>> Expression { get; set; }
 	[Parameter]

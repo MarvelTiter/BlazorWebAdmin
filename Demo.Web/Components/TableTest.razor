@@ -1,0 +1,15 @@
+﻿@using Project.AppCore.Layouts
+@using Project.Models
+@using Project.Models.Entities
+@using Project.Models.Request
+@using Project.Web.Shared.Basic
+@inherits ModelPage<User,GenericRequest<User>>
+
+@TableFragment
+
+@code {
+    protected override Task<IQueryCollectionResult<User>> OnQueryAsync(GenericRequest<User> query)
+    {
+        throw new NotImplementedException();
+    }
+}

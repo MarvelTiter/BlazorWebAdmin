@@ -1,15 +1,13 @@
-﻿using AntDesign;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+using Project.Constraints.UI;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Web.Shared.Components
 {
-    public class ErrorCatcher : ErrorBoundaryBase, IExceptionHandler
+	public class ErrorCatcher : ErrorBoundaryBase, IExceptionHandler
     {
         /// <summary>
         /// 
@@ -40,20 +38,18 @@ namespace Project.Web.Shared.Components
         {
             return ex => new RenderFragment(builder =>
             {
-                var index = 0;
-                builder.OpenElement(index++, "div");
-                builder.AddAttribute(index++, "style", "display:none;");
-                builder.AddContent(index++, ex.Message);
+                builder.OpenElement(0, "div");
+                builder.AddAttribute(1, "style", "display:none;");
+                builder.AddContent(2, ex.Message);
                 builder.CloseElement();
             });
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var index = 0;
-            builder.OpenComponent<CascadingValue<IExceptionHandler>>(index++);
-            builder.AddAttribute(index++, nameof(CascadingValue<IExceptionHandler>.Value), this);
-            builder.AddAttribute(index++, nameof(CascadingValue<IExceptionHandler>.IsFixed), true);
+            builder.OpenComponent<CascadingValue<IExceptionHandler>>(0);
+            builder.AddAttribute(1, nameof(CascadingValue<IExceptionHandler>.Value), this);
+            builder.AddAttribute(2, nameof(CascadingValue<IExceptionHandler>.IsFixed), true);
 
             //if (CurrentException != null)
             //{
@@ -64,7 +60,7 @@ namespace Project.Web.Shared.Components
             //    }
             //}
 
-            builder.AddAttribute(index++, nameof(CascadingValue<IExceptionHandler>.ChildContent), ChildContent);
+            builder.AddAttribute(3, nameof(CascadingValue<IExceptionHandler>.ChildContent), ChildContent);
             builder.CloseComponent();
         }
 
@@ -79,9 +75,7 @@ namespace Project.Web.Shared.Components
         }
 
         [Inject]
-        public MessageService MsgSrv { get; set; }
-        [Inject]
-        public NotificationService NotificationSrv { get; set; }
+        public IUIService UI { get; set; }
         /// <summary>
         /// OnErrorAsync 方法
         /// </summary>
@@ -99,12 +93,7 @@ namespace Project.Web.Shared.Components
             //    await handler.HandleExceptionAsync(exception);
             if (exception is not JSException)
             {
-                _ = NotificationSrv.Error(new NotificationConfig()
-                {
-                    Message = "程序异常",
-                    Description = exception.Message,
-                    Placement = NotificationPlacement.BottomRight,
-                });
+                UI.Notify(MessageType.Error, "程序异常", exception.Message);
             }
             Logger.LogError(exception, exception.Message);
             await ErrorBoundaryLogger.LogErrorAsync(exception);

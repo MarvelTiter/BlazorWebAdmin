@@ -1,6 +1,8 @@
-﻿using Project.Web.Shared.Template.Tables.Setting;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using System.Linq.Expressions;
+using Project.Constraints.Page;
+using Project.Constraints.UI;
+using Project.Web.Shared.Utils;
 
 namespace Project.Web.Shared.Components
 {
@@ -13,7 +15,7 @@ namespace Project.Web.Shared.Components
         IList<ICondition> Conditions { get; set; }
         Task UpdateCondition(int index, ConditionInfo info);
     }
-    public partial class QueryConditions<TItem> : ComponentBase, IQueryCondition
+    public partial class QueryConditions<TItem> : BasicComponent, IQueryCondition
     {
         [Parameter]
         public int ColWidth { get; set; } = 6;
@@ -27,6 +29,8 @@ namespace Project.Web.Shared.Components
         public EventCallback<Expression<Func<TItem, bool>>> ExpressionChanged { get; set; }
         public IList<ICondition> Conditions { get; set; } = new List<ICondition>();
         public int IndexFixed { get; set; }
+             
+
         public void AddCondition(ICondition condition)
         {
             if (condition == null) return;

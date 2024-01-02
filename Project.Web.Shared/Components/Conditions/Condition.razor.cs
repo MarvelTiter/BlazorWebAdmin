@@ -1,14 +1,13 @@
-﻿using AntDesign;
-using Project.Web.Shared.Template.Tables.Setting;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using MT.Toolkit.DateTimeExtension;
 using MT.Toolkit.StringExtension;
 using System.Linq.Expressions;
-using System.Xml.Linq;
+using Project.Constraints.UI.Table;
+using Project.Constraints.UI;
 
 namespace Project.Web.Shared.Components
 {
-    public interface ICondition
+	public interface ICondition
     {
 
     }
@@ -28,7 +27,7 @@ namespace Project.Web.Shared.Components
         //[Parameter] public string? Label { get; set; }
         [Parameter] public CompareType Compare { get; set; } = CompareType.Equal;
         //[Parameter] public DateType? DateConfig { get; set; }
-        [Parameter] public TableOptionColumn? Field { get; set; }
+        [Parameter] public ColumnInfo? Field { get; set; }
 
         [Parameter] public object? DefaultValue { get; set; }
         [Inject] public ILogger<Condition> Logger { get; set; }
@@ -45,6 +44,7 @@ namespace Project.Web.Shared.Components
                 Parent.IndexFixed += 1;
             }
             Parent.AddCondition(this);
+            //Parent.RowBuilder.AddCol(ActualColWidth).AddContent(CreateBody());
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -120,10 +120,7 @@ namespace Project.Web.Shared.Components
             }
         }
 
-        Task UpdateDate(DateTimeChangedEventArgs<DateTime> args)
-        {
-            return NotifyChanged();
-        }
+       
         async Task NotifyChanged()
         {
             if (Field == null) return;

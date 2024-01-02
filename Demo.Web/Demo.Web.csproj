@@ -7,7 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />
+    <ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
+    <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
+    <ProjectReference Include="..\Project.Services\Project.Services.csproj" />
+    <ProjectReference Include="..\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
     <ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
