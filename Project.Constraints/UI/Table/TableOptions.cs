@@ -2,65 +2,98 @@
 using Project.Constraints.Store;
 using Project.Models;
 using Project.Models.Request;
+using System.Linq.Expressions;
+using System.Reflection;
 
-namespace Project.Constraints.UI.Table
+namespace Project.Constraints.UI.Table;
+
+
+public class TableOptions
 {
-    public class TableOptions
+    public bool Pager { get; set; } = true;
+    public string ScrollX { get; set; } = "";
+    public Action? NotifyChanged { get; set; }
+    public bool Loading { get; set; }
+    public bool EnableSelection { get; set; }
+    public bool LoadDataOnLoaded { get; set; }
+    public bool EnabledAdvancedQuery { get; set; } = true;
+    public bool EnableRowClick { get; set; }
+    public bool ShowAddButton { get; set; }
+    public bool ShowExportButton { get; set; }
+    public string ActionColumnWidth { get; set; } = "170";
+    public bool Exportable { get; set; }
+    public bool AutoRefreshData { get; set; } = true;
+    public List<ColumnInfo> Columns { get; set; }
+}
+
+public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest, new()
+{
+    public TQuery Query { get; set; }
+    public IQueryCollectionResult<TData>? Result { get; set; }
+    public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
+    public Func<Task<bool>> OnAddItemAsync { get; set; }
+    public Func<TQuery, Task<IQueryCollectionResult<TData>>> OnQueryAsync { get; set; }
+    public Func<TQuery, Task<IQueryCollectionResult<TData>>> OnExportAsync { get; set; }
+    public Func<TData, Task> OnRowClickAsync { get; set; }
+    public Func<TData, Dictionary<string, object>?> AddRowOptions { get; set; }
+    public Func<string, IEnumerable<TData>, Task> ExportIntercept { get; set; }
+    public List<TableButton<TData>>? Buttons { get; set; }
+    public Func<TableButton<TData>, bool, Task>? OnTableButtonClickAsync { get; set; }
+    public Func<IEnumerable<TData>, Task> OnSaveExcelAsync { get; set; }
+    public ColumnInfo? this[string name]
     {
-        public bool Pager { get; set; } = true;
-        public string ScrollX { get; set; } = "";
-        public Action? NotifyChanged { get; set; }
-        public bool Loading { get; set; }
-        public bool EnableSelection { get; set; }
-        public bool LoadDataOnLoaded { get; set; }
-        public bool EnabledAdvancedQuery { get; set; } = true;
-        public bool EnableRowClick { get; set; }
-        public bool ShowAddButton { get; set; }
-        public bool ShowExportButton { get; set; }
-        public string ActionColumnWidth { get; set; } = "170";
-        public bool Exportable { get; set; }
-        public bool AutoRefreshData { get; set; } = true;
-        public List<ColumnInfo> Columns { get; set; }
+        get
+        {
+            return Columns?.FirstOrDefault(c => c.PropertyOrFieldName == name);
+        }
+    }
+    public ColumnInfo? this[Expression<Func<TData, object>> expression]
+    {
+        get
+        {
+            var prop = Extract(expression);
+            return this[prop.Name];
+        }
+    }
+    public async Task RefreshAsync()
+    {
+        Loading = true;
+        NotifyChanged?.Invoke();
+        var result = await OnQueryAsync(Query);
+        Result = result;
+        Loading = false;
+        NotifyChanged?.Invoke();
     }
 
-    public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest, new()
+    public async Task ExportAsync()
     {
-        public TQuery Query { get; set; }
-        public IQueryCollectionResult<TData>? Result { get; set; }
-        public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
-        public Func<Task<bool>> OnAddItemAsync { get; set; }
-        public Func<TQuery, Task<IQueryCollectionResult<TData>>> OnQueryAsync { get; set; }
-        public Func<TQuery, Task<IQueryCollectionResult<TData>>> OnExportAsync { get; set; }
-        public Func<TData, Task> OnRowClickAsync { get; set; }
-        public Func<TData, Dictionary<string, object>?> AddRowOptions { get; set; }
-        public Func<string, IEnumerable<TData>, Task> ExportIntercept { get; set; }
-        public List<TableButton<TData>>? Buttons { get; set; }
-        public Func<TableButton<TData>, bool, Task>? OnTableButtonClickAsync { get; set; }
-        public Func<IEnumerable<TData>, Task> OnSaveExcelAsync { get; set; }
+        Loading = true;
+        NotifyChanged?.Invoke();
+        var datas = await OnExportAsync(Query);
+        var exportDatas = (datas?.Success ?? false) ? datas.Payload : Result?.Payload ?? Enumerable.Empty<TData>();
 
-        public async Task RefreshAsync()
+        if (exportDatas.Any() && OnSaveExcelAsync != null)
         {
-            Loading = true;
-            NotifyChanged?.Invoke();
-            var result = await OnQueryAsync(Query);
-            Result = result;
-            Loading = false;
-            NotifyChanged?.Invoke();
+            await OnSaveExcelAsync.Invoke(exportDatas);
         }
+        Loading = false;
+        NotifyChanged?.Invoke();
+    }
 
-        public async Task ExportAsync()
-        {
-            Loading = true;
-            NotifyChanged?.Invoke();
-            var datas = await OnExportAsync(Query);
-            var exportDatas = (datas?.Success ?? false) ? datas.Payload : Result?.Payload ?? Enumerable.Empty<TData>();
+    public static PropertyInfo Extract<T, TValue>(Expression<Func<T, TValue>> selector)
+    {
+        if (selector is null)
+            throw new ArgumentNullException(nameof(selector));
 
-            if (exportDatas.Any() && OnSaveExcelAsync != null)
-            {
-                await OnSaveExcelAsync.Invoke(exportDatas);
-            }
-            Loading = false;
-            NotifyChanged?.Invoke();
-        }
+        if (selector.Body is not MemberExpression expression || expression.Member is not PropertyInfo propInfoCandidate)
+            throw new ArgumentException($"The parameter selector '{selector}' does not resolve to a public property on the type '{typeof(T)}'.", nameof(selector));
+
+        var type = typeof(T);
+        var propertyInfo = propInfoCandidate.DeclaringType != type
+                         ? type.GetProperty(propInfoCandidate.Name, propInfoCandidate.PropertyType)
+                         : propInfoCandidate;
+        if (propertyInfo is null)
+            throw new ArgumentException($"The parameter selector '{selector}' does not resolve to a public property on the type '{typeof(T)}'.", nameof(selector));
+        return propertyInfo;
     }
 }

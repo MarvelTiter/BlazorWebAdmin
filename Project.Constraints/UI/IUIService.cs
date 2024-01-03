@@ -26,12 +26,12 @@ public interface IUIComponent<TValue> : IUIComponent
     new IUIComponent<TValue> Set(string key, object value);
 }
 
-
 public interface IBindableInput<TValue> : IUIComponent<TValue>
 {
     new IBindableInput<TValue> Set(string key, object value);
-    IBindableInput<TValue> Bind(Expression<Func<TValue>> expression, string valueName = "Value", Func<Task>? onchange = null);
+    IBindableInput<TValue> Bind(Expression<Func<TValue>> expression);
     IBindableInput<TValue> Bind(Expression<Func<TValue>> expression, Func<Task> onchange);
+    IBindableInput<TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null);
 }
 
 public interface ISelectInput<TItem, TValue> : IBindableInput<TValue>
@@ -125,13 +125,17 @@ public class BindableComponentBuilder<TComponent, TValue> : ComponentBuilder<TCo
         base.Set(key, value);
         return this;
     }
+    public IBindableInput<TValue> Bind(Expression<Func<TValue>> expression)
+    {
+        return Bind(expression, "Value", null);
+    }
 
     public IBindableInput<TValue> Bind(Expression<Func<TValue>> expression, Func<Task> onchange)
     {
         return Bind(expression, "Value", onchange);
     }
 
-    public IBindableInput<TValue> Bind(Expression<Func<TValue>> expression, string valueName = "Value", Func<Task>? onchange = null)
+    public IBindableInput<TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null)
     {
         /*
          * () => context.Value;
@@ -226,66 +230,6 @@ public class ButtonBuilder<TComponent> : BindableComponentBuilder<TComponent, ob
 }
 
 [IgnoreAutoInject]
-public class RowLayoutComponentBuilder<TRowComponent, TColComponent> : ComponentBuilder<TRowComponent, object>, IRowComponent
-    where TRowComponent : IComponent
-    where TColComponent : IComponent
-{
-    internal class RowColumnInfo(IRowComponent parent, int span) : IColumnComponent
-    {
-        private readonly IRowComponent parent = parent;
-
-        public int Span { get; } = span;
-        public RenderFragment Content { get; set; }
-
-        public IRowComponent AddContent(RenderFragment fragment)
-        {
-            Content = fragment;
-            return parent;
-        }
-    }
-
-    List<RowColumnInfo> columns = new List<RowColumnInfo>();
-
-    IRowComponent IRowComponent.Set(string key, object value)
-    {
-        Set(key, value);
-        return this;
-    }
-    public IRowComponent ChildContent(RenderFragment fragment)
-    {
-        var col = new RowColumnInfo(this, 24);
-        col.Content = fragment;
-        return this;
-    }
-
-    public IColumnComponent AddCol(int span = 0)
-    {
-        var col = new RowColumnInfo(this, span);
-        columns.Add(col);
-        return col;
-    }
-
-    public override RenderFragment Render()
-    {
-        return builder =>
-        {
-            builder.OpenComponent<TRowComponent>(0);
-            if (parameters.Count > 0)
-                builder.AddMultipleAttributes(1, parameters!);
-
-            foreach (var col in columns)
-            {
-                builder.OpenComponent<TColComponent>(1);
-                builder.AddComponentParameter(2, "Span", col.Span);
-                builder.AddComponentParameter(3, "ChildContent", col.Content);
-                builder.CloseComponent();
-            }
-            builder.CloseComponent();
-        };
-    }
-}
-
-[IgnoreAutoInject]
 public class SelectBuilder<TComponent, TItem, TValue> : BindableComponentBuilder<TComponent, TValue>, ISelectInput<TItem, TValue> where TComponent : IComponent
 {
 
@@ -310,6 +254,7 @@ public class SelectBuilder<TComponent, TItem, TValue> : BindableComponentBuilder
     }
 }
 
+
 public enum MessageType
 {
     Success,
@@ -322,6 +267,7 @@ public interface IUIService
     void Message(MessageType type, string message);
     void Notify(MessageType type, string title, string message);
     Task<TReturn> ShowDialogAsync<TReturn>(FlyoutOptions<TReturn> options);
+
 
 
     /// <summary>
@@ -373,7 +319,7 @@ public interface IUIService
 
     RenderFragment BuildTableHeader<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
 
-    RenderFragment BuildForm<TData>(FormOptions<TData> options);
+    RenderFragment BuildForm<TData>(FormOptions<TData> options) where TData : class, new();
 
     RenderFragment BuildDropdown(DropdownOptions options);
 

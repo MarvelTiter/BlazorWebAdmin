@@ -1,5 +1,5 @@
 ﻿@using Project.Constraints.UI.Form
-@typeparam TData
+@typeparam TData where TData : class, new()
 <Form Model="@Options.Data" LabelColSpan="@Options.LabelSpan" WrapperColSpan="@Options.WrapperSpan">
     @foreach (var row in Options.GetRows())
     {

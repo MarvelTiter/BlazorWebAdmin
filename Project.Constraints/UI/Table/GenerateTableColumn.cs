@@ -8,15 +8,19 @@ namespace Project.Constraints.UI.Table
     public static class GenerateTableColumn
     {
         static readonly ConcurrentDictionary<Type, List<ColumnInfo>> caches = new();
-        public static ColumnInfo GenerateColumn(this PropertyInfo self)
-        {
-            var head = self.GetCustomAttribute<ColumnDefinitionAttribute>() ?? throw new ArgumentException();
-            return self.GenerateColumn(head);
-        }
+
         public static ColumnInfo GenerateColumn(this PropertyInfo self, ColumnDefinitionAttribute head)
         {
             //var head = self.GetCustomAttribute<ColumnDefinitionAttribute>();
-            //var dbInfo = self.GetCustomAttribute<ColumnAttribute>();
+            //if (head == null)
+            //{
+            //    var dis = self.GetCustomAttribute<DisplayAttribute>();
+            //    if (dis is not null)
+            //    {
+            //        head = new ColumnDefinitionAttribute(dis.Name);
+            //    }
+            //}
+
             if (head!.Label == null)
             {
                 head!.Label = $"{self.DeclaringType!.Name}.{self.Name}";
@@ -29,10 +33,20 @@ namespace Project.Constraints.UI.Table
                 Width = head.Width,
                 Visible = head.Visible,
                 Ellipsis = head.Ellipsis,
-                EnableEdit = head.EnableEdit,
+                Readonly = head.Readonly,
                 UseTag = head.UseTag,
                 Sortable = head.Sortable
             };
+
+            var formAttr = self.GetCustomAttribute<FormAttribute>();
+            if (formAttr != null)
+            {
+                column.Row = formAttr.Row;
+                column.Column = formAttr.Column;
+                column.ShowOnForm = !formAttr.Hide;
+                column.InputType = formAttr.InputType;
+            }
+
             if (column.IsEnum)
             {
                 column.EnumValues = ParseDictionary(column.UnderlyingType ?? column.DataType);
@@ -57,7 +71,7 @@ namespace Project.Constraints.UI.Table
             return caches.GetOrAdd(self, type =>
              {
                  var props = type.GetProperties();
-                 var heads = props.Select(p => (Prop: p, Column: p.GetColumnDefinition()));
+                 var heads = props.Select(p => (Prop:p, Column: p.GetColumnDefinition()));
                  List<ColumnInfo> columns = new List<ColumnInfo>();
                  foreach (var col in heads)
                  {
@@ -69,7 +83,7 @@ namespace Project.Constraints.UI.Table
                      columns.Add(column);
                  }
                  //columns.Sort((a, b) => a.Index - b.Index);
-                 return columns;
+                 return columns.ToList();
              });
         }
 

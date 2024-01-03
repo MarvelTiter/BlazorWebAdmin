@@ -26,10 +26,13 @@ Welcome to your new app.
 DialogReturn: @dialogReturn
 <br />
 @UI.BuildSwitch(this).Set("Checked", false).Set("CheckedChildren", "AndAlso").Set("UnCheckedChildren", "OrElse").Render()
+@(UI.BuildDatePicker<DateTime?>(this).Bind(() => now).Render())
+@now
 <TableTest></TableTest>
 @code {
     string test = "Hello";
     User u = new User();
+    DateTime? now;
     int testn = 123;
     Dictionary<string, string> dic = new Dictionary<string, string>()
         {

@@ -1,122 +1,153 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Project.Common.Attributes;
 using Project.Constraints.UI;
 using Project.Constraints.UI.Table;
+using System.Collections.Concurrent;
 using System.Linq.Expressions;
-
+using System.Reflection;
+using static Project.Web.Shared.Components.InputBuilderHelper;
 namespace Project.Web.Shared.Components
 {
+    public class InputBuilderHelper
+    {
+        public static Expression<Func<TReturn>> BinderExpressionBuilder<TReturn>(Expression body)
+        {
+            return Expression.Lambda<Func<TReturn>>(body);
+        }
+
+        
+
+        public static InputType GetInputType(Type type, ColumnInfo col)
+        {
+            if (col.InputType.HasValue)
+                return col.InputType.Value;
+            type = Nullable.GetUnderlyingType(type) ?? type;
+            if (type.IsEnum)
+            {
+                return InputType.Select;
+            }
+            return Type.GetTypeCode(type) switch
+            {
+                TypeCode.UInt16 or TypeCode.UInt32 or TypeCode.UInt64 or TypeCode.Int16 or TypeCode.Int32 or TypeCode.Int64 or TypeCode.Decimal or TypeCode.Double or TypeCode.Single => InputType.Number,
+                TypeCode.Boolean => InputType.Boolean,
+                TypeCode.DateTime => InputType.DatePicker,
+                _ => InputType.Text,
+            };
+        }
+    }
     public class InputBuilder<TData> : ComponentBase
     {
         [Parameter] public ColumnInfo Column { get; set; }
         [Parameter] public IUIService UI { get; set; }
         [Parameter] public object Reciver { get; set; }
         [Parameter] public TData Data { get; set; }
+        [CascadingParameter] public bool Edit { get; set; }
+
+        private string TempValue { get; set; }
+
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             var instance = Expression.Constant(Data);
             var propExp = Expression.Property(instance, Column.Property);
             var fragment = GetInputType(Column, propExp);
-            fragment.Render().Invoke(builder);
+            fragment.Set("disabled", Edit && Column.Readonly).Render().Invoke(builder);
         }
+
+
+        public static MethodInfo builder = typeof(InputBuilderHelper).GetMethod(nameof(BinderExpressionBuilder))!;
+
+        static readonly ConcurrentDictionary<ColumnInfo, Func<IUIService, object, Expression, IUIComponent>> builderCaches = new();
 
         public IUIComponent GetInputType(ColumnInfo column, Expression propertyExpression)
         {
-            var type = column.DataType;
-
-            if (type == typeof(bool))
+            if (column.IsEnum || column.EnumValues != null)
             {
-                var binder = Expression.Lambda<Func<bool>>(propertyExpression);
-                return UI.BuildSwitch(Reciver).Bind(binder);
+                return UI.BuildSelect<KeyValuePair<string, string>, string>(Reciver, Column.EnumValues!).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => TempValue, () => UpdateValue(column.Property));
             }
+            var func = builderCaches.GetOrAdd(column, col =>
+              {
+                  var parameterUI = Expression.Parameter(typeof(IUIService));
+                  var parameterRe = Expression.Parameter(typeof(object));
+                  var parameterEx = Expression.Parameter(typeof(Expression));
+                  MethodInfo? builderMethod = null;
+                  var propertyType = col.DataType;
 
-            if (type == typeof(short))
+
+                  switch (InputBuilderHelper.GetInputType(propertyType, col))
+                  {
+                      case InputType.Text:
+                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildInput), 0, [typeof(object)]);
+                          break;
+                      case InputType.Number:
+                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildInput), 1, [typeof(object)])?.MakeGenericMethod(propertyType);
+                          break;
+                      case InputType.Boolean:
+                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildSwitch));
+                          break;
+                      case InputType.DatePicker:
+                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildDatePicker))?.MakeGenericMethod(propertyType);
+                          break;
+                      case InputType.Password:
+                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildPassword));
+                          break;
+                  }
+                  if (builderMethod == null)
+                  {
+                      throw new ArgumentNullException(nameof(builderMethod));
+                  }
+                  /*
+                   * var expression = Expression.Lambda<Func<TReturn>>(propertyExpression);
+                   * (IUIComponent)ui.BuildXXX<TReturn>(reciver).Bind((Expression<Func<TReturn>>)expression)
+                   */
+
+                  var expType = typeof(Expression<>).MakeGenericType(typeof(Func<>).MakeGenericType(propertyType));
+                  var binder = Expression.Call(parameterUI, builderMethod, parameterRe);
+                  var funcExp = Expression.Call(null, builder.MakeGenericMethod(propertyType), parameterEx);
+                  var body = Expression.Call(binder, "Bind", null, Expression.Convert(funcExp, expType));
+                  return Expression.Lambda<Func<IUIService, object, Expression, IUIComponent>>(Expression.Convert(body, typeof(IUIComponent)), parameterUI, parameterRe, parameterEx).Compile();
+              });
+
+            return func.Invoke(UI, Reciver, propertyExpression);
+        }
+
+        private Task UpdateValue(PropertyInfo property)
+        {
+            property.SetValue(Data,ConvertTo(property.PropertyType, TempValue));
+            return Task.CompletedTask;
+        }
+
+
+        public static object ConvertTo(Type type, object value, object defaultValue = null)
+        {
+            if (value == null || value == DBNull.Value)
+                return defaultValue;
+
+            var valueString = value.ToString()!;
+            if (type == typeof(string))
+                return Convert.ChangeType(valueString, type);
+
+            valueString = valueString.Trim();
+            if (valueString.Length == 0)
+                return defaultValue;
+
+            if (type.IsEnum)
+                return Enum.Parse(type, valueString, true);
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                type = Nullable.GetUnderlyingType(type)!;
+
+            if (type == typeof(bool) || type == typeof(bool?))
+                valueString = ",是,1,Y,YES,TRUE,".Contains(valueString.ToUpper()) ? "True" : "False";
+
+            try
             {
-                var binder = Expression.Lambda<Func<short>>(propertyExpression);
-                return UI.BuildInput<short>(Reciver).Bind(binder);
+                return Convert.ChangeType(valueString, type);
             }
-
-            if (type == typeof(int))
+            catch
             {
-                var binder = Expression.Lambda<Func<int>>(propertyExpression);
-                return UI.BuildInput<int>(Reciver).Bind(binder);
+                return defaultValue;
             }
-            if (type == typeof(int?))
-            {
-                var binder = Expression.Lambda<Func<int?>>(propertyExpression);
-                return UI.BuildInput<int?>(Reciver).Bind(binder);
-            }
-
-            if (type == typeof(long))
-            {
-                var binder = Expression.Lambda<Func<long>>(propertyExpression);
-                return UI.BuildInput<long>(Reciver).Bind(binder);
-            }
-
-            if (type == typeof(float))
-            {
-                var binder = Expression.Lambda<Func<float>>(propertyExpression);
-                return UI.BuildInput<float>(Reciver).Bind(binder);
-            }
-
-            if (type == typeof(double))
-            {
-                var binder = Expression.Lambda<Func<double>>(propertyExpression);
-                return UI.BuildInput<double>(Reciver).Bind(binder);
-            }
-
-            if (type == typeof(decimal))
-            {
-                var binder = Expression.Lambda<Func<decimal>>(propertyExpression);
-                return UI.BuildInput<decimal>(Reciver).Bind(binder);
-            }
-
-            if (type == typeof(DateTime?))
-            {
-                var binder = Expression.Lambda<Func<DateTime?>>(propertyExpression);
-                return UI.BuildDatePicker<DateTime?>(Reciver).Bind(binder);
-            }
-
-            if (type == typeof(DateTime))
-            {
-                var binder = Expression.Lambda<Func<DateTime>>(propertyExpression);
-                return UI.BuildDatePicker<DateTime>(Reciver).Bind(binder);
-            }
-
-            if (type == typeof(DateTimeOffset?))
-            {
-                var binder = Expression.Lambda<Func<DateTimeOffset?>>(propertyExpression);
-                return UI.BuildDatePicker<DateTimeOffset?>(Reciver).Bind(binder);
-            }
-
-            if (type == typeof(DateTimeOffset))
-            {
-                var binder = Expression.Lambda<Func<DateTimeOffset>>(propertyExpression);
-                return UI.BuildDatePicker<DateTimeOffset>(Reciver).Bind(binder);
-            }
-
-            //if (column.IsEnum || column.EnumValues != null)
-            //{
-            //    if (column.EnumValues != null)
-            //        return UI.BuildSelect<KeyValuePair<string, string>, string>(Reciver, column.EnumValues).ValueExpression(k=>k.Key).LabelExpression(k=>k.Value).Bind();
-            //}
-
-            //if (type == typeof(string[]) || column.Type == FieldType.CheckList)
-            //    return typeof(AntCheckboxGroup);
-
-            //if (column.Type == FieldType.RadioList)
-            //    return typeof(AntRadioGroup);
-
-            //if (column.Type == FieldType.Password)
-            //    return typeof(InputPassword);
-
-            //if (column.Type == FieldType.TextArea)
-            //    return typeof(TextArea);
-
-            var binder2 = Expression.Lambda<Func<string>>(propertyExpression);
-
-
-            return UI.BuildInput(Reciver).Bind(binder2);
         }
     }
 }

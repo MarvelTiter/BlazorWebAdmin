@@ -116,7 +116,7 @@ namespace Project.UI.AntBlazor
             };
         }
 
-        public RenderFragment BuildForm<TData>(FormOptions<TData> options)
+        public RenderFragment BuildForm<TData>(FormOptions<TData> options) where TData : class, new()
         {
             return builder =>
             {

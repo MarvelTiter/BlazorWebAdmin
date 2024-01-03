@@ -2,10 +2,10 @@
 
 namespace Project.Constraints.UI.Form
 {
-    public class FormOptions<TData>(IUIService ui, TData data, List<ColumnInfo> columns)
+    public class FormOptions<TData>(IUIService ui, TData? data, List<ColumnInfo> columns) where TData : class, new()
     {
         public IUIService UI { get; } = ui;
-        public TData Data { get; } = data;
+        public TData Data { get; } = data ?? new TData();
         public List<ColumnInfo> Columns { get; } = columns;
         public int LabelSpan { get; set; }
         public int WrapperSpan { get; set; }
@@ -14,7 +14,7 @@ namespace Project.Constraints.UI.Form
         {
             var rowIndex = 0;
             var settedRow = Columns.Where(c => c.Row.HasValue).GroupBy(c => c.Row!.Value);
-            var defaultRows = Columns.Where(c => !c.Row.HasValue);
+            var defaultRows = Columns.Where(c => !c.Row.HasValue && c.ShowOnForm);
             var rowEnumerator = defaultRows.GetEnumerator();
             while (true)
             {

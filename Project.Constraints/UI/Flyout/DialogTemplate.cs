@@ -2,19 +2,15 @@
 using Microsoft.AspNetCore.Components.Rendering;
 using MT.Toolkit.Mapper;
 using Project.Constraints.Page;
+using Project.Constraints.UI.Form;
+using Project.Constraints.UI.Table;
 
 namespace Project.Constraints.UI.Flyout
 {
-    public class FormParam<TEntity>
+    public class FormParam<TEntity>(TEntity? entity, bool? edit)
     {
-        public TEntity? Value { get; set; }
-        public bool Edit { get; set; }
-        public FormParam(TEntity? entity, bool? edit)
-        {
-            Value = entity;
-            Edit = edit ?? false;
-        }
-
+        public TEntity? Value { get; set; } = entity;
+        public bool Edit { get; set; } = edit ?? entity != null;
     }
     public class DialogTemplate<TValue> : BasicComponent, IFeedback<TValue>
     {
@@ -68,8 +64,23 @@ namespace Project.Constraints.UI.Flyout
         {
             if (ChildContent != null)
             {
-                builder.AddContent(0, ChildContent);
+                builder.OpenComponent<CascadingValue<bool>>(0);
+                builder.AddAttribute(1, nameof(CascadingValue<bool>.Value), Edit);
+                builder.AddAttribute(2, nameof(CascadingValue<bool>.ChildContent), ChildContent);
+                builder.CloseComponent();
             }
+        }
+    }
+
+    public sealed class FormDialogTemplate<TValue> : DialogTemplate<TValue> where TValue : class, new()
+    {
+        [Parameter] public IEnumerable<ColumnInfo> Columns { get; set; }
+
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
+        {
+            var options = new FormOptions<TValue>(UI, Value, Columns.ToList());
+            ChildContent = UI.BuildForm(options);
+            base.BuildRenderTree(builder);
         }
     }
 }

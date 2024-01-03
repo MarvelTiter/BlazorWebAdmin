@@ -24,13 +24,10 @@ namespace Project.AppCore.SystemPermission
             base.OnInitialized();
             Options.Pager = false;
             Options.LoadDataOnLoaded = true;
-            //tableOptions.AddHandle = AddUser;
-            //tableOptions.OnRowClick = AssignRole;
-            //tableOptions[nameof(User.Password)].OnCell = cell =>
-            //{
-            //    cell.FormattedValue = "********";
-            //    return null;
-            //};
+            Options[u => u.Password]!.ValueFormat = val =>
+            {
+                return "******";
+            };
         }
 
         protected override async Task<IQueryCollectionResult<User>> OnQueryAsync(GenericRequest<User> query)
@@ -49,6 +46,8 @@ namespace Project.AppCore.SystemPermission
         protected User currentSelected;
         bool sideExpand;
 
+
+
         protected override async Task<bool> OnAddItemAsync()
         {
             var user = await UI.ShowDialogAsync<UserForm, User>(Localizer["User.DialogTitle.Add"]);
@@ -59,9 +58,10 @@ namespace Project.AppCore.SystemPermission
         [EditButton]
         public async Task<bool> EditUser(User user)
         {
-            var content = UI.BuildForm(new Constraints.UI.Form.FormOptions<User>(UI, user, Options.Columns));
-            var n = await UI.ShowDialogAsync<User>(Localizer["User.DialogTitle.Modify"], content, user);
-            await UserSrv.UpdateUserAsync(user);
+            //var content = UI.BuildForm(new Constraints.UI.Form.FormOptions<User>(UI, user, Options.Columns));
+            //var n = await UI.ShowFormDialogAsync<User>(Localizer["User.DialogTitle.Modify"], user, Options.Columns);
+            var n = await this.ShowEditFormAsync(Localizer["User.DialogTitle.Modify"], user);
+            await UserSrv.UpdateUserAsync(n);
             return true;
         }
 
