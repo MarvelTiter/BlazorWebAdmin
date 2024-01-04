@@ -44,7 +44,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AntDesign" Version="0.16.2" />
+		<PackageReference Include="AntDesign" Version="0.17.1" />
 		<PackageReference Include="LightExcel" Version="2.1.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
