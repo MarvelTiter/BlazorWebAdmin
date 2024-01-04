@@ -54,7 +54,6 @@
     [Inject] IStringLocalizer<NavMenu> Localizer { get; set; }
     [Inject] IOptionsMonitor<CultureOptions> CultureOptions { get; set; }
     [Inject] IOptionsMonitor<Token> Token { get; set; }
-    [CascadingParameter] MainLayout? Main { get; set; }
 
     async Task ToggleFullScreen()
     {

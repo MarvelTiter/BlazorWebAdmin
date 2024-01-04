@@ -121,5 +121,15 @@ namespace Project.Constraints.UI
 
             _ = await service.ShowDrawerAsync(options);
         }
+
+        public static async Task ShowDrawerAsync<Template>(this IUIService service, string title, RenderFragment content, int width = 0, Position position = Position.Right)
+        {
+            var options = new FlyoutDrawerOptions<int>();
+            options.Title = title;
+            if (width > 0) options.Width = width;
+            options.Position = position;
+            options.Content = content;
+            _ = await service.ShowDrawerAsync(options);
+        }
     }
 }
