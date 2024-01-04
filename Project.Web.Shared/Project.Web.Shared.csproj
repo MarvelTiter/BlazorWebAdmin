@@ -26,8 +26,4 @@
     <ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Template\Tables\Setting\" />
-  </ItemGroup>
-
 </Project>

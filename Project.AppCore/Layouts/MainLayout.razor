@@ -34,22 +34,17 @@
                 <h1>Loading</h1>
             </div>
         }
-        <WebSetting @ref=WebSetting></WebSetting>
+        @* <WebSetting @ref=WebSetting></WebSetting> *@
     </CascadingValue>
 </div>
 @code {
     [Inject] IAppSession AppSession { get; set; }
     public LayoutBase? LayoutBase { get; set; }
-    public WebSetting? WebSetting { get; set; }
 
-    protected override void OnAfterRender(bool firstRender)
+    protected override void OnInitialized()
     {
-        base.OnAfterRender(firstRender);
-        if (firstRender)
-        {
-            if (WebSetting != null)
-                WebSetting.SettingChanged += StateHasChanged;
-        }
+        base.OnInitialized();
+        AppSession.Update = StateHasChanged;
     }
 
     private bool disposedValue;
@@ -58,8 +53,6 @@
         if (!disposedValue)
         {
             disposedValue = true;
-            if (WebSetting != null)
-                WebSetting.SettingChanged -= StateHasChanged;
         }
     }
 

@@ -12,4 +12,5 @@ public interface IAppSession
     IRouterStore RouterStore { get; set; }
     IUserStore UserStore { get; set; }
     IUIService UI { get; set; }
+    Action? Update { get; set; }
 }

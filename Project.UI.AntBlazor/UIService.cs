@@ -1,6 +1,7 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualBasic.FileIO;
 using Project.Constraints.Store;
 using Project.Constraints.UI;
@@ -17,11 +18,11 @@ using System.Reflection;
 namespace Project.UI.AntBlazor
 {
 
-    public class UIService(ModalService modalService, MessageService messageService) : IUIService
+    public class UIService(ModalService modalService, MessageService messageService, DrawerService drawerService) : IUIService
     {
         private readonly ModalService modalService = modalService;
         private readonly MessageService messageService = messageService;
-
+        private readonly DrawerService drawerService = drawerService;
        
 
         public IBindableInput<string> BuildInput(object reciver)
@@ -179,6 +180,7 @@ namespace Project.UI.AntBlazor
                 OnOk = e => options.OnOk.Invoke(),
                 OnCancel = e => options.OnClose.Invoke()
             };
+            if (options.Width.HasValue) modal.Width = options.Width.Value;
             var modalRef = await modalService.CreateModalAsync(modal);
             options.OnClose = async () =>
             {
@@ -207,6 +209,21 @@ namespace Project.UI.AntBlazor
                 }
             };
             return await tcs.Task;
+        }
+
+        public async Task<TReturn> ShowDrawerAsync<TReturn>(FlyoutDrawerOptions<TReturn> options)
+        {
+            var modal = new DrawerOptions
+            {
+                Title = options.Title,
+                ChildContent = options.Content,
+                Placement = options.Position.ToString().ToLower(),
+            };
+            if (options.Width.HasValue) modal.Width = options.Width.Value;
+
+            _ = await drawerService.CreateAsync(modal);
+
+            return default;
         }
 
         public IUIComponent BuildCard()

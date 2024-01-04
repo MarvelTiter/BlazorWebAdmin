@@ -9,6 +9,7 @@ using Project.Constraints.UI.Table;
 using Project.Models;
 using Project.Models.Entities;
 using Project.Models.Request;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Project.Web.Shared.Basic;
@@ -20,6 +21,14 @@ public static class ModelPageExtension
         where TModel : class, new()
     {
         var n = await page.UI.ShowFormDialogAsync(title, data, page.Options.Columns);
+        return n;
+    }
+
+    public static async Task<TModel> ShowAddFormAsync<TModel, TQuery>(this ModelPage<TModel, TQuery> page, string title)
+         where TQuery : IRequest, new()
+        where TModel : class, new()
+    {
+        var n = await page.UI.ShowFormDialogAsync<TModel>(title, null, page.Options.Columns);
         return n;
     }
 }
@@ -42,6 +51,7 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
         Options.Query = new TQuery();
         Options.Columns = typeof(TModel).GenerateColumns();
         Options.AutoRefreshData = true;
+        Options.RowKey = SetRowKey;
         Options.NotifyChanged = StateHasChanged;
         Options.Buttons = CollectButtons();
         Options.OnQueryAsync = OnQueryAsync;
@@ -50,10 +60,15 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
         Options.AddRowOptions = OnAddRowOptions;
         Options.OnExportAsync = OnExportAsync;
         Options.OnSaveExcelAsync = OnSaveExcelAsync;
+        Options.OnSelectedChangedAsync = OnSelectedChangedAsync;
         // 被重写了
         Options.ShowExportButton = IsOverride(nameof(OnExportAsync));
         Options.ShowAddButton = IsOverride(nameof(OnAddItemAsync));
     }
+
+    
+
+    protected abstract object SetRowKey(TModel model);
 
     private List<TableButton<TModel>> CollectButtons()
     {
@@ -126,6 +141,12 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
         var path = Path.Combine(AppConst.TempFilePath, filename);
         Excel.WriteExcel(path, datas);
         DownloadService.DownloadAsync(filename);
+        return Task.CompletedTask;
+    }
+
+    protected virtual Task OnSelectedChangedAsync(IEnumerable<TModel> enumerable)
+    {
+        // TODO table的行选择处理
         return Task.CompletedTask;
     }
 

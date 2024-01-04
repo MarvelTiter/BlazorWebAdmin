@@ -21,6 +21,22 @@ public static class SharedComponents
 {
     public static void AddProject(this WebApplicationBuilder builder)
     {
+#if RELEASE
+            try
+            {
+                var processName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
+                bool isNewInstance;
+                Mutex mtx = new Mutex(true, processName, out isNewInstance);
+                if (!isNewInstance)
+                {
+                    var process = System.Diagnostics.Process.GetProcessesByName(processName).FirstOrDefault();
+                    process?.Kill();
+                }
+            }
+            catch
+            {
+            }
+#endif
         var services = builder.Services;
         services.AddAntDesign();
         // 多语言服务

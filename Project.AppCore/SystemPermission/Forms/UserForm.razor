@@ -1,5 +1,8 @@
 ﻿@using Project.Constraints.UI.Flyout
 @using Project.Models.Entities
-@inherits DialogTemplate<User>
 
-@ChildContent
+@FormParam?.Value?.UserName;
+
+@code {
+    [CascadingParameter] public FormParam<User> FormParam { get; set; }
+}

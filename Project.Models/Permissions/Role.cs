@@ -13,7 +13,7 @@ namespace Project.Models.Permissions
     public class Role
     {
         [PrimaryKey]
-        [ColumnDefinition]
+        [ColumnDefinition(Readonly = true)]
         [ColumnName("ROLE_ID")]
         [Column(Name = "ROLE_ID", PrimaryKey = true)]
         public string RoleId { get; set; }

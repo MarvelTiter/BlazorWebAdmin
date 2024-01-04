@@ -33,6 +33,7 @@ namespace Project.Constraints.UI.Flyout
         {
             base.OnInitialized();
             var valueType = typeof(TValue);
+            if (DialogModel == null) return;
             if (DialogModel.Value == null && valueType.IsClass && valueType != typeof(string))
             {
                 DialogModel.Value = (TValue)Activator.CreateInstance(valueType)!;

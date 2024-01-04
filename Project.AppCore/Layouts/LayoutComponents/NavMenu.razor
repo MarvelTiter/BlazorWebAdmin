@@ -55,15 +55,15 @@
     [Inject] IOptionsMonitor<CultureOptions> CultureOptions { get; set; }
     [Inject] IOptionsMonitor<Token> Token { get; set; }
     [CascadingParameter] MainLayout? Main { get; set; }
-    
+
     async Task ToggleFullScreen()
     {
         await fullscreen!.Toggle();
     }
 
-    void OpenSetting()
+    async void OpenSetting()
     {
-        Main?.WebSetting?.Open();
+        await UI.ShowDrawerAsync<WebSetting>("", 500);
     }
 
     async Task ClearLocalStorage()

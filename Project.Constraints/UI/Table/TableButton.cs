@@ -10,7 +10,7 @@ namespace Project.Constraints.UI.Table
         /// <summary>
         /// 委托签名
         /// <code>
-        /// string LabelExpressionImpl(TData data)
+        /// public string LabelExpressionImpl(TData data)
         /// </code>
         /// </summary>
         public string? LabelExpression { get; set; }
@@ -18,7 +18,7 @@ namespace Project.Constraints.UI.Table
         /// <summary>
         /// 委托签名
         /// <code>
-        /// bool VisibleExpressionImpl(TData data)
+        /// public bool VisibleExpressionImpl(TData data)
         /// </code>
         /// </summary>
         public string? VisibleExpression { get; set; }
@@ -31,7 +31,7 @@ namespace Project.Constraints.UI.Table
     /// <summary>
     /// 委托签名
     /// <code>
-    /// Task&lt;bool&gt; EditMethodImpl(TData data)
+    /// public Task&lt;bool&gt; EditMethodImpl(TData data)
     /// </code>
     /// </summary>
     public class EditButton : TableButtonAttribute
@@ -45,7 +45,7 @@ namespace Project.Constraints.UI.Table
     /// <summary>
     /// 委托签名
     /// <code>
-    /// Task&lt;bool&gt; DeleteMethodImpl(TData data)
+    /// public Task&lt;bool&gt; DeleteMethodImpl(TData data)
     /// </code>
     /// </summary>
     public class DeleteButton : TableButtonAttribute
@@ -76,7 +76,7 @@ namespace Project.Constraints.UI.Table
     /// <summary>
     /// 委托签名
     /// <code>
-    /// Task&lt;bool&gt; MethodImpl(TData data)
+    /// public Task&lt;bool&gt; MethodImpl(TData data)
     /// </code>
     /// </summary>
     public class TableButton<TData>

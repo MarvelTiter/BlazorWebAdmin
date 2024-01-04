@@ -10,6 +10,7 @@ using Project.Models;
 using Project.Models.Entities;
 using Project.Models.Request;
 using Project.Web.Shared.Basic;
+using System.Linq.Expressions;
 
 namespace Project.AppCore.SystemPermission
 {
@@ -29,6 +30,8 @@ namespace Project.AppCore.SystemPermission
                 return "******";
             };
         }
+
+        protected override object SetRowKey(User model) => model.UserId;
 
         protected override async Task<IQueryCollectionResult<User>> OnQueryAsync(GenericRequest<User> query)
         {
@@ -50,7 +53,7 @@ namespace Project.AppCore.SystemPermission
 
         protected override async Task<bool> OnAddItemAsync()
         {
-            var user = await UI.ShowDialogAsync<UserForm, User>(Localizer["User.DialogTitle.Add"]);
+            var user = await this.ShowAddFormAsync(Localizer["User.DialogTitle.Add"]);
             await UserSrv.InsertUserAsync(user);
             return true;
         }
@@ -59,7 +62,6 @@ namespace Project.AppCore.SystemPermission
         public async Task<bool> EditUser(User user)
         {
             //var content = UI.BuildForm(new Constraints.UI.Form.FormOptions<User>(UI, user, Options.Columns));
-            //var n = await UI.ShowFormDialogAsync<User>(Localizer["User.DialogTitle.Modify"], user, Options.Columns);
             var n = await this.ShowEditFormAsync(Localizer["User.DialogTitle.Modify"], user);
             await UserSrv.UpdateUserAsync(n);
             return true;
@@ -71,5 +73,6 @@ namespace Project.AppCore.SystemPermission
             var ret = await UserSrv.DeleteUserAsync(user);
             return ret.Success;
         }
+
     }
 }

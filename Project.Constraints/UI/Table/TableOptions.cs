@@ -30,6 +30,8 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
 {
     public TQuery Query { get; set; }
     public IQueryCollectionResult<TData>? Result { get; set; }
+    public Func<TData, object> RowKey { get; set; }
+    public Func<TData, IEnumerable<TData>> TreeChildren { get; set; } = t => Enumerable.Empty<TData>();
     public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
     public Func<Task<bool>> OnAddItemAsync { get; set; }
     public Func<TQuery, Task<IQueryCollectionResult<TData>>> OnQueryAsync { get; set; }
@@ -40,6 +42,7 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     public List<TableButton<TData>>? Buttons { get; set; }
     public Func<TableButton<TData>, bool, Task>? OnTableButtonClickAsync { get; set; }
     public Func<IEnumerable<TData>, Task> OnSaveExcelAsync { get; set; }
+    public Func<IEnumerable<TData>, Task> OnSelectedChangedAsync { get; set; }
     public ColumnInfo? this[string name]
     {
         get
@@ -82,18 +85,17 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
 
     public static PropertyInfo Extract<T, TValue>(Expression<Func<T, TValue>> selector)
     {
-        if (selector is null)
-            throw new ArgumentNullException(nameof(selector));
+        ArgumentNullException.ThrowIfNull(selector);
 
-        if (selector.Body is not MemberExpression expression || expression.Member is not PropertyInfo propInfoCandidate)
+        if (selector.Body is not MemberExpression body || body.Member is not PropertyInfo prop)
             throw new ArgumentException($"The parameter selector '{selector}' does not resolve to a public property on the type '{typeof(T)}'.", nameof(selector));
 
         var type = typeof(T);
-        var propertyInfo = propInfoCandidate.DeclaringType != type
-                         ? type.GetProperty(propInfoCandidate.Name, propInfoCandidate.PropertyType)
-                         : propInfoCandidate;
-        if (propertyInfo is null)
-            throw new ArgumentException($"The parameter selector '{selector}' does not resolve to a public property on the type '{typeof(T)}'.", nameof(selector));
+        var propertyInfo = prop.DeclaringType != type
+                         ? type.GetProperty(prop.Name, prop.PropertyType)
+                         : prop;
+
+        ArgumentNullException.ThrowIfNull(propertyInfo);
         return propertyInfo;
     }
 }

@@ -9,6 +9,7 @@ using Project.Models;
 using Project.Models.Permissions;
 using Project.Models.Request;
 using Project.Web.Shared.Basic;
+using System.Linq.Expressions;
 
 namespace Project.AppCore.SystemPermission
 {
@@ -34,6 +35,7 @@ namespace Project.AppCore.SystemPermission
             //roleOptions.OnRowClick = HandleRowClick;
             _ = InitPowerTree();
         }
+        protected override object SetRowKey(Role model) => model.RoleId;
 
         protected override Task<IQueryCollectionResult<Role>> OnQueryAsync(GenericRequest<Role> query)
         {
@@ -88,25 +90,31 @@ namespace Project.AppCore.SystemPermission
         }
         #endregion
 
-        async Task<bool> AddRoleAsync()
+        protected override async Task<bool> OnAddItemAsync()
         {
-            var role = await UI.ShowDialogAsync<RoleForm, Role>("新增角色");
+            var role = await this.ShowAddFormAsync("新增角色");
             await PermissionSrv.InsertRoleAsync(role);
             return true;
         }
+
+
+
         [EditButton]
-        async Task<bool> EditRole(Role role)
+        public async Task<bool> EditRole(Role role)
         {
-            var newRole = await UI.ShowDialogAsync<RoleForm, Role>("编辑角色", role);
+            //var newRole = await UI.ShowDialogAsync<RoleForm, Role>("编辑角色", role);
+            var newRole = await this.ShowEditFormAsync("编辑角色", role);
             var result = await PermissionSrv.UpdateRoleAsync(newRole);
             return result.Success;
         }
+
         [DeleteButton]
-        async Task<bool> DeleteRole(Role role)
+        public async Task<bool> DeleteRole(Role role)
         {
             var result = await PermissionSrv.DeleteRoleAsync(role);
             return result.Success;
         }
+
         async Task SaveRolePower()
         {
             if (selectedKeys is null) return;
@@ -115,11 +123,12 @@ namespace Project.AppCore.SystemPermission
             else UI.Error("保存数据异常！");
         }
 
-        async Task HandleRowClick(RowData<Role> rowData)
+
+        protected override async Task OnRowClickAsync(Role model)
         {
             powerLoading = true;
             await InitPowerTree();
-            CurrentRole = rowData.Data;
+            CurrentRole = model;
             sideExpand = true;
             StateHasChanged();
             var result = await PermissionSrv.GetPowerListByRoleIdAsync(CurrentRole.RoleId);

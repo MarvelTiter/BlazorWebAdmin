@@ -18,5 +18,6 @@ namespace Project.AppCore.Store
         public IRouterStore RouterStore { get; set; } = routerStore;
         public IUserStore UserStore { get; set; } = userStore;
         public IUIService UI { get; set; } = ui;
+        public Action? Update { get; set; }
     }
 }

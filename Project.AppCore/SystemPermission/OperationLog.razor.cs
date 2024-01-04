@@ -6,6 +6,7 @@ using Project.Models;
 using Project.Models.Entities;
 using Project.Models.Request;
 using Project.Web.Shared.Basic;
+using System.Linq.Expressions;
 
 namespace Project.AppCore.SystemPermission
 {
@@ -22,6 +23,8 @@ namespace Project.AppCore.SystemPermission
         public Task OnShowAsync() => Task.CompletedTask;
 
         public Task OnHiddenAsync() => Task.CompletedTask;
+
+        protected override object SetRowKey(RunLog model) => model.LogId;
 
         protected override Task<IQueryCollectionResult<RunLog>> OnQueryAsync(GenericRequest<RunLog> query) => RunLogSrv.GetRunLogsAsync(query);
 

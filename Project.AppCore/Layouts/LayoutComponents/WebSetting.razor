@@ -3,35 +3,32 @@
 @using Project.AppCore.Store
 @using Project.Constraints.Store.Models
 @inherits BasicComponent
-@* <Drawer Visible=showSetting OnClose="@(()=>showSetting = false)" Width="500">
-    <Card Title="页面布局">
-        <div style="display:flex;">
-            <div class="layout-type" @onclick=@(e=> Mode = LayoutMode.Classic)>
-                <div style="width: 15px;height: 100%;background: #ccc;">
-                </div>
-                <div style="display:flex;flex-direction:column;flex: 1;">
-                    <div style="width: 100%;height: 5px;background: #c0c0c0;"></div>
-                    <div></div>
-                </div>
+<MCard Title="页面布局">
+    <div style="display:flex;">
+        <div class="layout-type" @onclick=@(e=> Mode = LayoutMode.Classic)>
+            <div style="width: 15px;height: 100%;background: #ccc;">
             </div>
-            <div class="layout-type" @onclick=@(e=> Mode = LayoutMode.Card)>
-                <div style="width: 15px;height: 94%;background: #ccc;margin: 2px 0px 2px 2px;">
-                </div>
-                <div style="display:flex;flex-direction:column;flex: 1;">
-                    <div style="width: 97%;height: 5px;background: #c0c0c0;margin-top: 2px;margin-left: 2px;"></div>
-                    <div></div>
-                </div>
-            </div>
-            <div class="layout-type" @onclick=@(e=> Mode = LayoutMode.Line)>
-                <div style="display:flex;flex-direction:column;flex: 1;">
-                    <div style="width: 100%;height: 5px;background: #c0c0c0;"></div>
-                    <div></div>
-                </div>
+            <div style="display:flex;flex-direction:column;flex: 1;">
+                <div style="width: 100%;height: 5px;background: #c0c0c0;"></div>
+                <div></div>
             </div>
         </div>
-    </Card>
-</Drawer>
- *@
+        <div class="layout-type" @onclick=@(e=> Mode = LayoutMode.Card)>
+            <div style="width: 15px;height: 94%;background: #ccc;margin: 2px 0px 2px 2px;">
+            </div>
+            <div style="display:flex;flex-direction:column;flex: 1;">
+                <div style="width: 97%;height: 5px;background: #c0c0c0;margin-top: 2px;margin-left: 2px;"></div>
+                <div></div>
+            </div>
+        </div>
+        <div class="layout-type" @onclick=@(e=> Mode = LayoutMode.Line)>
+            <div style="display:flex;flex-direction:column;flex: 1;">
+                <div style="width: 100%;height: 5px;background: #c0c0c0;"></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+</MCard>
 @code {
     [Inject] ProtectedLocalStorage Storage { get; set; }
     public event Action SettingChanged;
@@ -42,7 +39,8 @@
         set
         {
             App.Mode = value;
-            SettingChanged?.Invoke();
+            // SettingChanged?.Invoke();
+            Context.Update?.Invoke();
             SaveSetting();
         }
     }

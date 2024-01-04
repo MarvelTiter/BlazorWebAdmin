@@ -8,58 +8,76 @@
            Loading=@Options.Loading
            Bordered=@true
            Resizable=@true
+           DefaultExpandAllRows="@true"
            Size="@TableSize.Small"
+           TreeChildren="@Options.TreeChildren"
            TItem="TData"
            ScrollX=@Options.ScrollX
            Total="@Total"
            @bind-PageIndex=@Options.Query.PageIndex
            @bind-PageSize=@Options.Query.PageSize
-           @bind-SelectedRows=Options.Selected
+           @bind-SelectedRows=@Options.Selected
+           RowKey="@Options.RowKey"
            OnRowClick="OnRowClick"
            OnRow="RowOptions"
            HidePagination=!Options.Pager>
         <ChildContent>
-            @if (Options.EnableSelection)
-            {
-                <Selection Fixed="left" Width="50" />
-            }
-            <AntTableColumns Options="Options" RowData="context" Localizer="Localizer"></AntTableColumns>
-            @if (Options.Buttons?.Count > 0)
-            {
-                <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Fixed="right" Align="@ColumnAlign.Center" Width="@Options.ActionColumnWidth">
-                    @if (Options.Buttons.Count(b => b.Visible(context)) <= 3)
-                    {
-                        foreach (var btn in Options.Buttons.Where(b => b.Visible(context)))
-                        {
-                            @CreateButton(btn, context)
-                        }
-                    }
-                    else
-                    {
-                        var btns = Options.Buttons.Where(b => b.Visible(context));
-                        var first = btns.First();
-                        @CreateButton(first, context)
-                        <Dropdown>
-                            <Overlay>
-                                <Menu>
-                                    @foreach (var btn in btns.Skip(1))
-                                    {
-                                        <MenuItem>
-                                            @CreateButton(btn, context)
-                                        </MenuItem>
-                                    }
-                                </Menu>
-                            </Overlay>
-                            <ChildContent>
-                                <a @onclick:preventDefault>
-                                    @TableLocalizer["TableTips.More"] <Icon Type="down" />
-                                </a>
-                            </ChildContent>
-                        </Dropdown>
-                    }
-                </ActionColumn>
-            }
+            @{
+                if (Options.EnableSelection)
+                {
+                    <Selection Fixed="left" />
+                }
 
+                // <AntTableColumns Options="Options" RowData="context" Localizer="Localizer"></AntTableColumns>
+
+                foreach (var col in Options.Columns)
+                {
+                    @if (!(col.VisibleExpression?.Invoke(context) ?? col.Visible)) continue;
+                    // @if (col.IsEnum)
+                    // {
+                    //     <Column TData="Enum" Ellipsis=@col.Ellipsis Width=@col.Width Sortable=@col.Sortable Title="@(Localizer[col.Label])" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Enum>(col)">
+                    //     </Column>
+                    //     continue;
+                    // }
+                    @RenderColumn(col)
+                }
+
+                if (Options.Buttons?.Count > 0)
+                {
+                    <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Align="@ColumnAlign.Center" Width="@Options.ActionColumnWidth">
+                        @if (Options.Buttons.Count(b => b.Visible(context)) <= 2)
+                        {
+                            foreach (var btn in Options.Buttons.Where(b => b.Visible(context)))
+                            {
+                                @CreateButton(btn, context)
+                            }
+                        }
+                        else
+                        {
+                            var btns = Options.Buttons.Where(b => b.Visible(context));
+                            var first = btns.First();
+                            @CreateButton(first, context)
+                            <Dropdown>
+                                <Overlay>
+                                    <Menu>
+                                        @foreach (var btn in btns.Skip(1))
+                                        {
+                                            <MenuItem>
+                                                @CreateButton(btn, context)
+                                            </MenuItem>
+                                        }
+                                    </Menu>
+                                </Overlay>
+                                <ChildContent>
+                                    <a @onclick:preventDefault>
+                                        @TableLocalizer["TableTips.More"] <Icon Type="down" />
+                                    </a>
+                                </ChildContent>
+                            </Dropdown>
+                        }
+                    </ActionColumn>
+                }
+            }
         </ChildContent>
         <PaginationTemplate Context="pageContext">
             <Pagination Class="@pageContext.PaginationClass"
@@ -81,7 +99,7 @@
     [Inject] MessageService MessageSrv { get; set; }
     IEnumerable<TData> Datas => Options.Result?.Payload ?? Enumerable.Empty<TData>();
     int Total => Options.Result?.TotalRecord ?? 0;
-
+    IEnumerable<TData> selected;
     /// <summary>
     /// table总数
     /// </summary>
@@ -153,5 +171,95 @@
     Dictionary<string, object>? RowOptions(RowData<TData> row)
     {
         return Options.AddRowOptions?.Invoke(row.Data);
+    }
+
+    RenderFragment RenderColumn(ColumnInfo col)
+    {
+        if (col.IsEnum)
+        {
+            return RenderColumn<Enum>(col);
+        }
+        var type = (Nullable.GetUnderlyingType(col.DataType) ?? col.DataType).Name.ToLower();
+        switch (type)
+        {
+            case "string":
+                return RenderColumn<string>(col);
+            case "int64":
+                return RenderColumn<Int64?>(col);
+            case "int32":
+                return RenderColumn<Int32?>(col);
+            case "int16":
+                return RenderColumn<Int16?>(col);
+            case "single":
+                return RenderColumn<Single?>(col);
+            case "double":
+                return RenderColumn<Double?>(col);
+            case "bool":
+                return RenderColumn<Boolean?>(col);
+            case "datetime":
+                return RenderColumn<DateTime?>(col);
+            default:
+                return RenderColumn<string>(col);
+        }
+
+    }
+
+    RenderFragment RenderColumn<TColumnData>(ColumnInfo col)
+    {
+        return
+    @<Column TData="TColumnData" Ellipsis=@col.Ellipsis Width=@col.Width Sortable=@col.Sortable Title="@(Localizer[col.Label])" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<TColumnData>(col)">
+    </Column>
+    ;
+    }
+
+    RenderFragment<CellData<T>> ColumnRender<T>(ColumnInfo col)
+    {
+        return context =>
+        {
+
+            string? formattedValue = null;
+            if (col.IsEnum || col.EnumValues != null)
+            {
+                var v = context.FieldValue;
+                if (v != null)
+                {
+                    if (col.EnumValues?.ContainsKey($"{v}") ?? false)
+                    {
+                        formattedValue = col.EnumValues?[$"{v}"];
+                    }
+                }
+            }
+
+            if (col.ValueFormat != null && context.FieldValue != null)
+            {
+                formattedValue = col.ValueFormat.Invoke(context.FieldValue);
+            }
+
+            if (formattedValue != null)
+            {
+                context.FormattedValue = formattedValue;
+            }
+            if (col.IsEnum || col.UseTag)
+            {
+                var color = col.GetTagColor(context.FormattedValue);
+                return@<Tag Color="@color">@context.FormattedValue</Tag>;
+
+            }
+            else if ((col.UnderlyingType ?? col.DataType) == typeof(bool))
+            {
+                return@<Switch Disabled Checked=@CastToBool(context.FieldValue)></Switch>;
+            }
+            else
+            {
+                return@<span>@context.FormattedValue</span>;
+            }
+        };
+    }
+
+    static bool CastToBool(object? v)
+    {
+        if (v == null) return false;
+        if (v is bool b) return b;
+        return false;
     }
 }
