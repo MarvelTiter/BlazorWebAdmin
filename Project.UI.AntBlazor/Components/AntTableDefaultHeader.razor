@@ -14,7 +14,7 @@
                 </SpaceItem>
             }
             <SpaceItem>
-                <Button Type="@ButtonType.Primary" OnClick="Search">
+                <Button Type="@AntDesign.ButtonType.Primary" OnClick="Search">
                     @TableLocalizer["TableButtons.Query"]
                 </Button>
             </SpaceItem>
@@ -29,7 +29,7 @@
             @if (Options.ShowExportButton)
             {
                 <SpaceItem>
-                    <Button Type="@ButtonType.Primary" OnClick="Export">
+                    <Button Type="@AntDesign.ButtonType.Primary" OnClick="Export">
                         @TableLocalizer["TableButtons.Export"]
                     </Button>
                 </SpaceItem>
@@ -37,7 +37,7 @@
             @if (Options.ShowAddButton)
             {
                 <SpaceItem>
-                    <Button Type="@ButtonType.Primary" OnClick=HandleAdd>
+                    <Button Type="@AntDesign.ButtonType.Primary" OnClick=HandleAdd>
                         @TableLocalizer["TableButtons.Add"]
                     </Button>
                 </SpaceItem>

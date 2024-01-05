@@ -16,7 +16,7 @@ namespace Project.Web.Shared.Components
             return Expression.Lambda<Func<TReturn>>(body);
         }
 
-        
+
 
         public static InputType GetInputType(Type type, ColumnInfo col)
         {
@@ -94,15 +94,11 @@ namespace Project.Web.Shared.Components
                           builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildPassword));
                           break;
                   }
-                  if (builderMethod == null)
-                  {
-                      throw new ArgumentNullException(nameof(builderMethod));
-                  }
+                  ArgumentNullException.ThrowIfNull(builderMethod);
                   /*
                    * var expression = Expression.Lambda<Func<TReturn>>(propertyExpression);
                    * (IUIComponent)ui.BuildXXX<TReturn>(reciver).Bind((Expression<Func<TReturn>>)expression)
                    */
-
                   var expType = typeof(Expression<>).MakeGenericType(typeof(Func<>).MakeGenericType(propertyType));
                   var binder = Expression.Call(parameterUI, builderMethod, parameterRe);
                   var funcExp = Expression.Call(null, builder.MakeGenericMethod(propertyType), parameterEx);
@@ -115,7 +111,7 @@ namespace Project.Web.Shared.Components
 
         private Task UpdateValue(PropertyInfo property)
         {
-            property.SetValue(Data,ConvertTo(property.PropertyType, TempValue));
+            property.SetValue(Data, ConvertTo(property.PropertyType, TempValue));
             return Task.CompletedTask;
         }
 

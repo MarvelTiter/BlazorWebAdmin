@@ -12,7 +12,7 @@
 Welcome to your new app.
 @UI.BuildInput(this).Bind(() => u.UserName).Render()
 @(UI.BuildInput<int>(this).Bind(() => testn).Render())
-@(UI.BuildSelect<string>(this, dic.Convert()).Bind(() => test).Render())
+@* @(UI.BuildSelect<string>(this, dic.Convert()).Bind(() => test).Render()) *@
 <br />
 @u.UserName
 <br />
@@ -28,7 +28,7 @@ DialogReturn: @dialogReturn
 @UI.BuildSwitch(this).Set("Checked", false).Set("CheckedChildren", "AndAlso").Set("UnCheckedChildren", "OrElse").Render()
 @(UI.BuildDatePicker<DateTime?>(this).Bind(() => now).Render())
 @now
-<TableTest></TableTest>
+@* <TableTest></TableTest> *@
 @code {
     string test = "Hello";
     User u = new User();
@@ -42,6 +42,7 @@ DialogReturn: @dialogReturn
     void HandleClick()
     {
         test = "Sharp";
+        u.UserName = "Sharp";
     }
     string dialogReturn;
     async Task ShowDialog()

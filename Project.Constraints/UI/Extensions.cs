@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Constraints.UI.Flyout;
 using Project.Constraints.UI.Form;
+using Project.Constraints.UI.Props;
 using Project.Constraints.UI.Table;
+using System.Linq.Expressions;
 
 namespace Project.Constraints.UI
 {
@@ -132,6 +134,42 @@ namespace Project.Constraints.UI
             options.Position = position;
             options.Content = content;
             _ = await service.ShowDrawerAsync(options);
+        }
+    }
+
+    public static class ButtonBuilderExtensions
+    {
+        public static IButtonInput Text(this IButtonInput btn, string text)
+        {
+            //btn.s
+            btn.Set("ChildContent", (RenderFragment)(builder => builder.AddContent(1, text)));
+            return btn;
+        }
+
+        public static IButtonInput Primary(this IButtonInput btn)
+        {
+            return SetButtonType(btn, ButtonType.Primary);
+        }
+
+        public static IButtonInput SetButtonType(this IButtonInput btn, ButtonType type)
+        {
+            btn.Set(p => p.ButtonType, type);
+            return btn;
+        }
+    }
+
+    public static class SelectBuilderExtensions
+    {
+        public static ISelectInput<SelectProp, TItem, TValue> LabelExpression<TItem, TValue>(this ISelectInput<SelectProp, TItem, TValue> sel, Expression<Func<TItem, string>> expression)
+        {
+            sel.Set(s => s.LabelExpression, expression);
+            return sel;
+        }
+
+        public static ISelectInput<SelectProp, TItem, TValue> ValueExpression<TItem, TValue>(this ISelectInput<SelectProp, TItem, TValue> sel, Expression<Func<TItem, TValue>> expression)
+        {
+            sel.Set(s => s.ValueExpression, expression);
+            return sel;
         }
     }
 }

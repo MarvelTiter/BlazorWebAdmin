@@ -1,4 +1,5 @@
 ﻿using Microsoft.JSInterop;
+using Project.Common;
 using Project.Constraints.Store;
 using Project.Models;
 using Project.Models.Request;
@@ -56,7 +57,7 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     {
         get
         {
-            var prop = Extract(expression);
+            var prop = (expression).ExtractProperty();
             return this[prop.Name];
         }
     }
@@ -85,19 +86,5 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
         NotifyChanged?.Invoke();
     }
 
-    public static PropertyInfo Extract<T, TValue>(Expression<Func<T, TValue>> selector)
-    {
-        ArgumentNullException.ThrowIfNull(selector);
-
-        if (selector.Body is not MemberExpression body || body.Member is not PropertyInfo prop)
-            throw new ArgumentException($"The parameter selector '{selector}' does not resolve to a public property on the type '{typeof(T)}'.", nameof(selector));
-
-        var type = typeof(T);
-        var propertyInfo = prop.DeclaringType != type
-                         ? type.GetProperty(prop.Name, prop.PropertyType)
-                         : prop;
-
-        ArgumentNullException.ThrowIfNull(propertyInfo);
-        return propertyInfo;
-    }
+    
 }

@@ -8,8 +8,8 @@
         </CascadingValue>
     </div>
     <div style="flex:0;text-align:right;">
-        @UI.BuildButton(this).OnClick(HandleOk).Text("Ok").SetButtonType(ButtonType.Primary).Render()
-        @UI.BuildButton(this).OnClick(HandleCancel).Text("Close").Render()
+        @UI.BuildButton(this).OnClick(HandleOk).Set(b => b.Text, "Ok").Set(b => b.ButtonType, ButtonType.Primary).Render()
+        @UI.BuildButton(this).OnClick(HandleCancel).Set(b => b.Text, "Close").Render()
     </div>
 </div>
 

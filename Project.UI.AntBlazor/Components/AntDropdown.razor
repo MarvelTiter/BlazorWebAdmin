@@ -6,7 +6,7 @@
                 <MenuItem OnClick="@(()=>item.OnClick.DynamicInvoke())">
                     @if (item.Content == null)
                     {
-                        <Button Type="@ButtonType.Text">@item.Label</Button>
+                        <Button Type="@AntDesign.ButtonType.Text">@item.Label</Button>
                     }
                     else
                     {

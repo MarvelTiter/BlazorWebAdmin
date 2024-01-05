@@ -1,19 +1,18 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.Options;
-using Microsoft.VisualBasic.FileIO;
 using Project.Constraints.Store;
 using Project.Constraints.UI;
+using Project.Constraints.UI.Builders;
 using Project.Constraints.UI.Dropdown;
 using Project.Constraints.UI.Flyout;
 using Project.Constraints.UI.Form;
+using Project.Constraints.UI.Props;
 using Project.Constraints.UI.Table;
 using Project.Models;
 using Project.Models.Forms;
 using Project.Models.Request;
 using Project.UI.AntBlazor.Components;
-using System.Reflection;
+using System.Linq.Expressions;
 
 namespace Project.UI.AntBlazor
 {
@@ -25,72 +24,87 @@ namespace Project.UI.AntBlazor
         private readonly DrawerService drawerService = drawerService;
 
 
-        public IBindableInput<string> BuildInput(object reciver)
+        public IBindableInputComponent<EmptyProp, string> BuildInput(object reciver)
         {
-            return new BindableComponentBuilder<Input<string>, string>() { Reciver = reciver };
+            return new BindableInputComponentBuilder<Input<string>, EmptyProp, string>() { Reciver = reciver };
         }
 
-        public IBindableInput<TValue> BuildInput<TValue>(object reciver)
+        public IBindableInputComponent<EmptyProp, TValue> BuildInput<TValue>(object reciver)
         {
-            return new BindableComponentBuilder<InputNumber<TValue>, TValue>() { Reciver = reciver };
+            return new BindableInputComponentBuilder<InputNumber<TValue>, EmptyProp, TValue>() { Reciver = reciver };
         }
 
-        public IBindableInput<TValue> BuildDatePicker<TValue>(object reciver)
+        public IBindableInputComponent<EmptyProp, TValue> BuildDatePicker<TValue>(object reciver)
         {
-            return new BindableComponentBuilder<DatePicker<TValue>, TValue> { Reciver = reciver };
+            return new BindableInputComponentBuilder<DatePicker<TValue>, EmptyProp, TValue> { Reciver = reciver };
         }
 
-        public IBindableInput<string> BuildPassword(object reciver)
+        public IBindableInputComponent<EmptyProp, string> BuildPassword(object reciver)
         {
-            return new BindableComponentBuilder<InputPassword, string>() { Reciver = reciver };
+            return new BindableInputComponentBuilder<InputPassword, EmptyProp, string>() { Reciver = reciver };
         }
 
-        public IBindableInput<TValue> BuildSelect<TValue>(object reciver, SelectItem<TValue>? options)
+        public IBindableInputComponent<SelectProp, TValue> BuildSelect<TValue>(object reciver, SelectItem<TValue>? options)
         {
             if (typeof(TValue).IsEnum && options == null)
             {
-                return new BindableComponentBuilder<EnumSelect<TValue>, TValue>() { Reciver = reciver };
+                return new BindableInputComponentBuilder<EnumSelect<TValue>, SelectProp, TValue>() { Reciver = reciver };
             }
             else
             {
-                return new BindableComponentBuilder<Select<TValue, Options<TValue>>, TValue>() { Reciver = reciver }
-                    .Set("DataSource", options!)
-                    .Set("ValueName", "Value")
-                    .Set("LabelName", "Label");
+                return new BindableInputComponentBuilder<Select<TValue, Options<TValue>>, SelectProp, TValue>(self =>
+                {
+                    self.SetComponent(s => s.DataSource, options)
+                    .SetComponent(s => s.ValueName, "Value")
+                    .SetComponent(s => s.LabelName, "Label");
+                })
+                { Reciver = reciver };
             }
         }
 
-        public ISelectInput<TItem, TValue> BuildSelect<TItem, TValue>(object reciver, IEnumerable<TItem> options)
+        public ISelectInput<SelectProp, TItem, TValue> BuildSelect<TItem, TValue>(object reciver, IEnumerable<TItem> options)
         {
-            return new SelectBuilder<Select<TValue, TItem>, TItem, TValue>() { Reciver = reciver }
-            .Set("DataSource", options);
-        }
-
-        public IBindableInput<bool> BuildSwitch(object reciver)
-        {
-            return new BindableComponentBuilder<Switch, bool>() { Reciver = reciver };
-        }
-
-        public IButtonAction BuildButton(object reciver)
-        {
-            return new ButtonBuilder<Button>((self,p) =>
+            return new SelectComponentBuilder<Select<TValue, TItem>, SelectProp, TItem, TValue>(self =>
             {
-                if (self.ButtonType == Constraints.UI.ButtonType.Default)
+                self.SetComponent(s=>s.DataSource, options);
+                if (self.Model.ValueExpression is LambdaExpression valueLambda)
+                    self.SetComponent(s => s.ValueProperty, valueLambda.Compile());
+                if (self.Model.LabelExpression is LambdaExpression labelLambda)
+                    self.SetComponent(s => s.LabelProperty, labelLambda.Compile());
+            })
+            { Reciver = reciver };
+
+        }
+
+        public IBindableInputComponent<EmptyProp, bool> BuildSwitch(object reciver)
+        {
+            return new BindableInputComponentBuilder<Switch, EmptyProp, bool>() { Reciver = reciver };
+        }
+
+        public IButtonInput BuildButton(object reciver)
+        {
+            return new ButtonComponentBuilder<Button>((self) =>
+            {
+                if (self.Model.ButtonType == Constraints.UI.ButtonType.Default)
                 {
                     return;
                 }
-                switch (self.ButtonType)
+                switch (self.Model.ButtonType)
                 {
                     case Constraints.UI.ButtonType.Primary:
-                        p.Add("Type", "primary");
+                        self.SetComponent(b => b.Type, "primary");
                         break;
                     case Constraints.UI.ButtonType.Danger:
-                        p.Add("Danger", true);
+                        self.SetComponent(b => b.Danger, true);
                         break;
                     default:
                         break;
                 }
-            }) { Reciver = reciver };
+
+                self.TrySet("ChildContent", (RenderFragment)(builder => builder.AddContent(1, self.Model.Text)));
+
+            })
+            { Reciver = reciver };
         }
 
         public void Message(Constraints.UI.MessageType type, string message)
@@ -258,9 +272,9 @@ namespace Project.UI.AntBlazor
             return new ComponentBuilder<AntCol>();
         }
 
-        public IBindableInput<bool> BuildCheckBox(object reciver)
+        public IBindableInputComponent<EmptyProp, bool> BuildCheckBox(object reciver)
         {
-            return new BindableComponentBuilder<Checkbox, bool>() { Reciver = reciver };
+            return new BindableInputComponentBuilder<Checkbox, EmptyProp, bool>() { Reciver = reciver };
         }
 
 
