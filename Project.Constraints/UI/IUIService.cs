@@ -26,12 +26,20 @@ public interface IUIComponent<TValue> : IUIComponent
     new IUIComponent<TValue> Set(string key, object value);
 }
 
-public interface IBindableInput<TValue> : IUIComponent<TValue>
+public interface IBindableInput<TValue>
 {
-    new IBindableInput<TValue> Set(string key, object value);
+    IBindableInput<TValue> Set(string key, object value);
     IBindableInput<TValue> Bind(Expression<Func<TValue>> expression);
     IBindableInput<TValue> Bind(Expression<Func<TValue>> expression, Func<Task> onchange);
     IBindableInput<TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null);
+    IBindableInput<TValue> AdditionalParameters(Dictionary<string, object> parameters);
+    RenderFragment Render();
+}
+
+public interface IBindableInput<TPropModel, TValue> : IBindableInput<TValue>
+{
+    new IBindableInput<TPropModel, TValue> Set(string key, object value);
+    IBindableInput<TPropModel, TValue> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, object value);
 }
 
 public interface ISelectInput<TItem, TValue> : IBindableInput<TValue>
@@ -55,17 +63,6 @@ public interface IButtonAction : IUIComponent
     IButtonAction SetButtonType(ButtonType type);
 }
 
-public interface IColumnComponent
-{
-    IRowComponent AddContent(RenderFragment fragment);
-}
-
-public interface IRowComponent : IUIComponent<object>
-{
-    new IRowComponent Set(string key, object value);
-    IRowComponent ChildContent(RenderFragment fragment);
-    IColumnComponent AddCol(int span = 0);
-}
 [IgnoreAutoInject]
 public class ComponentBuilder<TComponent> : IUIComponent where TComponent : IComponent
 {
