@@ -7,8 +7,11 @@
         <span class="label" style="width:@($"{Parent.LabelWidth}px");">
             @Label
         </span>
-
-        @if (typeof(TData) == typeof(DateTime))
+        @if(ChildContent != null)
+        {
+            @ChildContent
+        }
+        else if (typeof(TData) == typeof(DateTime))
         {
             @(UI.BuildDatePicker<TData>(this).Bind(() => Value).Render())
         }
