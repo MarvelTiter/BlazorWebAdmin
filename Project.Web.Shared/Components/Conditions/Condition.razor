@@ -10,7 +10,7 @@
         {
             if (Field.DataType == typeof(DateTime))
             {
-                @(UI.BuildDatePicker<DateTime>(this).Bind(() => dateValue).Render())
+                @(UI.BuildDatePicker<DateTime>(this).Bind(() => dateValue, NotifyChanged).Render())
             }
             else if (Field?.EnumValues != null || (Field?.IsEnum ?? false))
             {
@@ -19,11 +19,11 @@
                 // builder.AddComponentParameter(9, "Value", stringValue);
                 // builder.AddComponentParameter(10, "ValueChanged", EventCallback.Factory.Create<string>(this, s => stringValue = s));
 
-                @(UI.BuildSelect<KeyValuePair<string, string>, string>(this, Field.EnumValues!.ToList()).LabelExpression(kv => kv.Key).ValueExpression(kv => kv.Value).Bind(() => stringValue).Render())
+                @(UI.BuildSelect<KeyValuePair<string, string>, string>(this, Field.EnumValues!.ToList()).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => stringValue, NotifyChanged).Render())
             }
             else
             {
-                @UI.BuildInput(this).Bind(() => stringValue).Render()
+                @UI.BuildInput(this).Bind(() => stringValue, NotifyChanged).Render()
             }
         }
         else

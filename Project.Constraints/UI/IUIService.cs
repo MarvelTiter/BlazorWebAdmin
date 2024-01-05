@@ -41,7 +41,7 @@ public interface ISelectInput<TItem, TValue> : IBindableInput<TValue>
     ISelectInput<TItem, TValue> ValueExpression(Expression<Func<TItem, TValue>> expression);
 }
 
-public interface IButtonAction : IUIComponent<object>
+public interface IButtonAction : IUIComponent
 {
     IButtonAction OnClick(Action callback);
     IButtonAction OnClick(EventCallback callback);
@@ -52,6 +52,7 @@ public interface IButtonAction : IUIComponent<object>
     IButtonAction OnClick(Action<MouseEventArgs> callback);
     IButtonAction OnClick(Func<MouseEventArgs, Task> callback);
     IButtonAction Text(string text);
+    IButtonAction SetButtonType(ButtonType type);
 }
 
 public interface IColumnComponent
@@ -166,6 +167,29 @@ public class BindableComponentBuilder<TComponent, TValue> : ComponentBuilder<TCo
 [IgnoreAutoInject]
 public class ButtonBuilder<TComponent> : BindableComponentBuilder<TComponent, object>, IButtonAction where TComponent : IComponent
 {
+    readonly Func<Dictionary<string, object?>, RenderFragment>? oveerrideRender;
+    readonly Action<ButtonBuilder<TComponent>, Dictionary<string, object?>> attachParameters;
+    public ButtonBuilder(Func<Dictionary<string, object?>, RenderFragment>? oveerrideRender)
+    {
+        this.oveerrideRender = oveerrideRender;
+    }
+
+    public ButtonBuilder(Action<ButtonBuilder<TComponent>, Dictionary<string, object?>> action)
+    {
+        attachParameters = action;
+    }
+
+    public ButtonBuilder()
+    {
+
+    }
+
+    public override RenderFragment Render()
+    {
+        attachParameters?.Invoke(this, parameters);
+        return oveerrideRender?.Invoke(parameters) ?? base.Render();
+    }
+
     public IButtonAction OnClick(Action callback)
     {
         var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
@@ -221,6 +245,12 @@ public class ButtonBuilder<TComponent> : BindableComponentBuilder<TComponent, ob
         Set("OnClick", onclick);
         return this;
     }
+    public ButtonType ButtonType { get; private set; } = ButtonType.Default;
+    public IButtonAction SetButtonType(ButtonType type)
+    {
+        ButtonType = type;
+        return this;
+    }
 
     public IButtonAction Text(string text)
     {
@@ -261,6 +291,15 @@ public enum MessageType
     Warning,
     Error,
     Information,
+}
+
+public enum ButtonType
+{
+    Default,
+    Primary,
+    Secondary,
+    Danger,
+    Success,
 }
 public interface IUIService
 {

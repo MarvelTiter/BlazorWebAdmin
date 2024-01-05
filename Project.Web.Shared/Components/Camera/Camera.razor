@@ -15,9 +15,9 @@
     {
         <div style="width:100%;text-align:center;margin-top:10px;">
             @UI.BuildSelect(this, dropdownDevices).Bind(() => selectedDeviceId).Set("Style", "width:200px;").Render()
-            @UI.BuildButton(this).OnClick(Start).Text("开启").Set("Type", "primary").Set("Disabled", playButtonStatus).Render()
-            @UI.BuildButton(this).OnClick(Stop).Text("关闭").Set("Type", "primary").Set("Disabled", !playButtonStatus).Render()
-            @UI.BuildButton(this).OnClick(Capture).Text("拍照").Set("Type", "primary").Set("Disabled", !playButtonStatus).Render()
+            @UI.BuildButton(this).OnClick(Start).Text("开启").SetButtonType(ButtonType.Primary).Set("Disabled", playButtonStatus).Render()
+            @UI.BuildButton(this).OnClick(Stop).Text("关闭").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
+            @UI.BuildButton(this).OnClick(Capture).Text("拍照").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
         </div>
     }
 </div>

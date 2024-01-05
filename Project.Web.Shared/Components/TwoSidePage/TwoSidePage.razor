@@ -13,7 +13,7 @@
             @if (ShowClose)
             {
                 <div style="position:absolute;top:0px;right:0px;">
-                    @UI.BuildButton(this).OnClick(CloseSide).Set("Icon", "close").Set("Type","primary").Render()
+                    @UI.BuildButton(this).OnClick(CloseSide).SetButtonType(ButtonType.Primary).Set("Icon", "close").Render()
                 </div>
             }
         }

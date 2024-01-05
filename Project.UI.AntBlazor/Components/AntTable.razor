@@ -33,18 +33,12 @@
                 foreach (var col in Options.Columns)
                 {
                     @if (!(col.VisibleExpression?.Invoke(context) ?? col.Visible)) continue;
-                    // @if (col.IsEnum)
-                    // {
-                    //     <Column TData="Enum" Ellipsis=@col.Ellipsis Width=@col.Width Sortable=@col.Sortable Title="@(Localizer[col.Label])" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<Enum>(col)">
-                    //     </Column>
-                    //     continue;
-                    // }
                     @RenderColumn(col)
                 }
 
                 if (Options.Buttons?.Count > 0)
                 {
-                    <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Align="@ColumnAlign.Center" Width="@Options.ActionColumnWidth">
+                    <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Align="@ColumnAlign.Center" Fixed="right" Width="@Options.ActionColumnWidth">
                         @if (Options.Buttons.Count(b => b.Visible(context)) <= 2)
                         {
                             foreach (var btn in Options.Buttons.Where(b => b.Visible(context)))
@@ -207,7 +201,7 @@
     RenderFragment RenderColumn<TColumnData>(ColumnInfo col)
     {
         return
-    @<Column TData="TColumnData" Ellipsis=@col.Ellipsis Width=@col.Width Sortable=@col.Sortable Title="@(Localizer[col.Label])" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" CellRender="ColumnRender<TColumnData>(col)">
+    @<Column TData="TColumnData" Ellipsis=@col.Ellipsis Width=@col.Width Sortable=@col.Sortable Title="@(Localizer[col.Label])" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" OnCell="GetOnCell(col)" CellRender="ColumnRender<TColumnData>(col)">
     </Column>
     ;
     }
@@ -261,5 +255,17 @@
         if (v == null) return false;
         if (v is bool b) return b;
         return false;
+    }
+
+    static Func<CellData, Dictionary<string, object>> GetOnCell(ColumnInfo col)
+    {
+        if (col.AddCellOptions != null)
+        {
+            return c => col.AddCellOptions.Invoke(c.FormattedValue);
+        }
+        else
+        {
+            return c => null;
+        }
     }
 }

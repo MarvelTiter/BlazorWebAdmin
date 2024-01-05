@@ -112,29 +112,40 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
         }
     }
 
-    protected virtual Dictionary<string, object>? OnAddRowOptions(TModel model)
-    {
-        return null;
-    }
+    /// <summary>
+    /// 设置行属性
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    protected virtual Dictionary<string, object>? OnAddRowOptions(TModel model) => null;
 
-    protected virtual Task OnRowClickAsync(TModel model)
-    {
-        return Task.CompletedTask;
-    }
+    /// <summary>
+    /// 行点击处理
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    protected virtual Task OnRowClickAsync(TModel model) => Task.CompletedTask;
 
+    /// <summary>
+    /// 处理新增
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    protected virtual Task<bool> OnAddItemAsync() => throw new NotImplementedException();
 
-    protected virtual Task<bool> OnAddItemAsync()
-    {
-        throw new NotImplementedException();
-    }
-    protected virtual Task<IQueryCollectionResult<TModel>> OnExportAsync(TQuery query)
-    {
-        //IQueryCollectionResult<TModel>? result = new QueryCollectionResult<TModel>();
-        //result.Success = false;
-        //return Task.FromResult(result);
-        throw new NotImplementedException();
-    }
+    /// <summary>
+    /// 获取导出数据
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    protected virtual Task<IQueryCollectionResult<TModel>> OnExportAsync(TQuery query) => throw new NotImplementedException();
 
+    /// <summary>
+    /// 导出Excel文件
+    /// </summary>
+    /// <param name="datas"></param>
+    /// <returns></returns>
     protected virtual Task OnSaveExcelAsync(IEnumerable<TModel> datas)
     {
         var filename = $"{typeof(TModel).Name}_{DateTime.Now:yyyyMMdd-HHmmss}.xlsx";
@@ -144,12 +155,22 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="enumerable"></param>
+    /// <returns></returns>
     protected virtual Task OnSelectedChangedAsync(IEnumerable<TModel> enumerable)
     {
         // TODO table的行选择处理
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// 查询数据
+    /// </summary>
+    /// <param name="query"></param>
+    /// <returns></returns>
     protected abstract Task<IQueryCollectionResult<TModel>> OnQueryAsync(TQuery query);
 
     protected RenderFragment TableFragment => builder =>

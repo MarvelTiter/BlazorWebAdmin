@@ -19,8 +19,8 @@ Welcome to your new app.
 @testn
 <br />
 <MCard Title="测试">
-    @UI.BuildButton(this).OnClick(HandleClick).Text("点击").Set("Type", "primary").Render()
-    @UI.BuildButton(this).OnClick(ShowDialog).Text("Open").Set("Type", "primary").Render()
+    @UI.BuildButton(this).OnClick(HandleClick).Text("点击").SetButtonType(ButtonType.Primary).Render()
+    @UI.BuildButton(this).OnClick(ShowDialog).Text("Open").SetButtonType(ButtonType.Primary).Render()
 </MCard>
 <br />
 DialogReturn: @dialogReturn

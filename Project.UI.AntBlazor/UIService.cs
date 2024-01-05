@@ -73,7 +73,24 @@ namespace Project.UI.AntBlazor
 
         public IButtonAction BuildButton(object reciver)
         {
-            return new ButtonBuilder<Button>() { Reciver = reciver };
+            return new ButtonBuilder<Button>((self,p) =>
+            {
+                if (self.ButtonType == Constraints.UI.ButtonType.Default)
+                {
+                    return;
+                }
+                switch (self.ButtonType)
+                {
+                    case Constraints.UI.ButtonType.Primary:
+                        p.Add("Type", "primary");
+                        break;
+                    case Constraints.UI.ButtonType.Danger:
+                        p.Add("Danger", true);
+                        break;
+                    default:
+                        break;
+                }
+            }) { Reciver = reciver };
         }
 
         public void Message(Constraints.UI.MessageType type, string message)

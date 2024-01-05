@@ -7,7 +7,7 @@
 @typeparam TData
 @inherits BasicComponent
 <div style="text-align:right;margin-bottom:10px;">
-	@UI.BuildButton(this).Text(TableLocalizer["TableButtons.AddCondition"].Value).OnClick(AddCondition).Set("Type","primary").Render()
+	@UI.BuildButton(this).Text(TableLocalizer["TableButtons.AddCondition"].Value).OnClick(AddCondition).SetButtonType(ButtonType.Primary).Render()
 </div>
 @for (var i = 0; i < Conditions.Count; i++)
 {
@@ -15,10 +15,10 @@
 	<ConditionBuilder Localizer="Localizer" TableLocalizer=TableLocalizer Index=index Columns=Columns InfoChanged=@(newInfo => Conditions[index] = newInfo) Style="width:100%;"></ConditionBuilder>
 }
 <div style="text-align:right;margin-top:10px;">
-	@UI.BuildButton(this).Text(TableLocalizer["TableButtons.Query"].Value).OnClick(ConfirmConditionToSearch).Set("Type", "primary").Render()
+	@UI.BuildButton(this).Text(TableLocalizer["TableButtons.Query"].Value).OnClick(ConfirmConditionToSearch).SetButtonType(ButtonType.Primary).Render()
 	@if (ShowExportButton)
 	{
-		@UI.BuildButton(this).Text(TableLocalizer["TableButtons.Export"].Value).OnClick(ConfirmConditionToExport).Set("Type", "primary").Render()
+		@UI.BuildButton(this).Text(TableLocalizer["TableButtons.Export"].Value).OnClick(ConfirmConditionToExport).SetButtonType(ButtonType.Primary).Render()
 	}
 </div>
 @code {

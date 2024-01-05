@@ -28,6 +28,7 @@ public record ColumnInfo(PropertyInfo Property)
     public bool Sortable { get; set; }
     public Func<object, string>? ValueFormat { get; set; }
     public Dictionary<string, string> TagColors { get; set; }
+    public Func<string, Dictionary<string, object>>? AddCellOptions { get; set; }
     public InputType? InputType { get; set; }
     public string GetTagColor(object? val)
     {

@@ -21,6 +21,8 @@ public class TableOptions
     public bool ShowAddButton { get; set; }
     public bool ShowExportButton { get; set; }
     public string ActionColumnWidth { get; set; } = "170";
+    // TODO 表格按钮列使用grid布局
+    public int ActionButtonColumn { get; set; } = 2;
     public bool Exportable { get; set; }
     public bool AutoRefreshData { get; set; } = true;
     public List<ColumnInfo> Columns { get; set; }
