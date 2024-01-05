@@ -17,7 +17,7 @@
         }
         else if (EnumValues != null)
         {
-            @(UI.BuildSelect<KeyValuePair<string, string>, string>(this, EnumValues!.ToList()).LabelExpression(kv => kv.Key).ValueExpression(kv => kv.Value).Bind(() => stringValue).Render())
+            @(UI.BuildSelect<KeyValuePair<string, string>, string>(this, EnumValues!.ToList()).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => stringValue).Render())
         }
         else
         {
