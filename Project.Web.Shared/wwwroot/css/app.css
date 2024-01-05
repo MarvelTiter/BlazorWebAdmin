@@ -73,3 +73,22 @@ html, body {
 .top-link-icon {
     margin-right: 5px;
 }
+
+.conditions {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    margin-bottom: 5px;
+}
+
+    .conditions .label {
+        padding-right: 5px;
+        display: inline-block;
+        box-sizing: border-box;
+        text-align: right;
+    }
+
+        .conditions .label + * {
+            width: 100%;
+        }
+
