@@ -5,7 +5,7 @@ namespace Project.Constraints.UI.Flyout;
 public class FlyoutOptions
 {
     public string Title { get; set; }
-    public int? Width { get; set; }
+    public string? Width { get; set; }
     public Func<Task> OnOk { get; set; }
     public Func<Task> OnClose { get; set; }
     public RenderFragment Content { get; set; }

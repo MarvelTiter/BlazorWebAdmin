@@ -26,11 +26,11 @@ namespace Project.Constraints.UI
 
     public static class BuildExtension
     {
-        public static async Task<TData> ShowFormDialogAsync<TData>(this IUIService service, string title, TData? data, IEnumerable<ColumnInfo> columns, bool? edit = null, int width = 0) where TData : class, new()
+        public static async Task<TData> ShowFormDialogAsync<TData>(this IUIService service, string title, TData? data, IEnumerable<ColumnInfo> columns, bool? edit = null, string? width = null) where TData : class, new()
         {
             var options = new FlyoutOptions<TData>();
             options.Title = title;
-            if (width > 0) options.Width = width;
+            options.Width = width;
 
             var p = new FormParam<TData>(data, edit);
             options.Content = builder =>
@@ -49,13 +49,13 @@ namespace Project.Constraints.UI
 
     public static class DialogExtensions
     {
-        public static async Task<TData> ShowDialogAsync<Template, TData>(this IUIService service, string title, TData? param = default, bool? edit = null, int width = 0)
+        public static async Task<TData> ShowDialogAsync<Template, TData>(this IUIService service, string title, TData? param = default, bool? edit = null, string? width = null)
             where Template : DialogTemplate<TData>
         {
 
             var options = new FlyoutOptions<TData>();
             options.Title = title;
-            if (width > 0) options.Width = width;
+            options.Width = width;
 
             var p = new FormParam<TData>(param, edit);
             options.Content = builder =>
@@ -71,11 +71,11 @@ namespace Project.Constraints.UI
             return result;
         }
 
-        public static async Task<TData> ShowDialogAsync<TData>(this IUIService service, string title, RenderFragment content, TData? param = default, bool? edit = null, int width = 0)
+        public static async Task<TData> ShowDialogAsync<TData>(this IUIService service, string title, RenderFragment content, TData? param = default, bool? edit = null, string? width = null)
         {
             var options = new FlyoutOptions<TData>();
             options.Title = title;
-            if (width > 0) options.Width = width;
+            options.Width = width;
 
             var p = new FormParam<TData>(param, edit);
             options.Content = builder =>
@@ -100,7 +100,8 @@ namespace Project.Constraints.UI
         {
             var options = new FlyoutDrawerOptions<int>();
             options.Title = title;
-            if (width > 0) options.Width = width;
+            if (width > 0)
+                options.Width = width.ToString();
             options.Position = position;
             options.Content = builder =>
             {
@@ -126,7 +127,8 @@ namespace Project.Constraints.UI
         {
             var options = new FlyoutDrawerOptions<int>();
             options.Title = title;
-            if (width > 0) options.Width = width;
+            if (width > 0)
+                options.Width = width.ToString();
             options.Position = position;
             options.Content = content;
             _ = await service.ShowDrawerAsync(options);

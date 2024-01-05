@@ -10,7 +10,7 @@ namespace Project.Web.Shared.Components
     {
         int ColWidth { get; set; }
         int LabelWidth { get; set; }
-        int IndexFixed {  get; set; }
+        int IndexFixed { get; set; }
         void AddCondition(ICondition condition);
         IList<ICondition> Conditions { get; set; }
         Task UpdateCondition(int index, ConditionInfo info);
@@ -27,9 +27,11 @@ namespace Project.Web.Shared.Components
         public Expression<Func<TItem, bool>> Expression { get; set; }
         [Parameter]
         public EventCallback<Expression<Func<TItem, bool>>> ExpressionChanged { get; set; }
+
         public IList<ICondition> Conditions { get; set; } = new List<ICondition>();
+        
         public int IndexFixed { get; set; }
-             
+
 
         public void AddCondition(ICondition condition)
         {

@@ -23,7 +23,7 @@ namespace Project.UI.AntBlazor
         private readonly ModalService modalService = modalService;
         private readonly MessageService messageService = messageService;
         private readonly DrawerService drawerService = drawerService;
-       
+
 
         public IBindableInput<string> BuildInput(object reciver)
         {
@@ -180,7 +180,7 @@ namespace Project.UI.AntBlazor
                 OnOk = e => options.OnOk.Invoke(),
                 OnCancel = e => options.OnClose.Invoke()
             };
-            if (options.Width.HasValue) modal.Width = options.Width.Value;
+            if (options.Width != null) modal.Width = options.Width;
             var modalRef = await modalService.CreateModalAsync(modal);
             options.OnClose = async () =>
             {
@@ -219,7 +219,7 @@ namespace Project.UI.AntBlazor
                 ChildContent = options.Content,
                 Placement = options.Position.ToString().ToLower(),
             };
-            if (options.Width.HasValue) modal.Width = options.Width.Value;
+            if (options.Width != null) modal.Width = int.Parse(options.Width);
 
             _ = await drawerService.CreateAsync(modal);
 

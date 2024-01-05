@@ -51,7 +51,9 @@ namespace Project.Web.Shared.Components
             var instance = Expression.Constant(Data);
             var propExp = Expression.Property(instance, Column.Property);
             var fragment = GetInputType(Column, propExp);
-            fragment.Set("disabled", Edit && Column.Readonly).Render().Invoke(builder);
+            if (Edit && Column.Readonly)
+                fragment.Set("disabled", Edit && Column.Readonly);
+            fragment.Render().Invoke(builder);
         }
 
 

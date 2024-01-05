@@ -2,6 +2,27 @@
 @typeparam TData
 @inherits ConditionBase
 
+<MCol ColSpan="@ActualColWidth">
+    <span class="conditions" style="@Style">
+        <span class="label" style="width:@($"{Parent.LabelWidth}px");">
+            @Label
+        </span>
+
+        @if (typeof(TData) == typeof(DateTime))
+        {
+            @(UI.BuildDatePicker<TData>(this).Bind(() => Value).Render())
+        }
+        else if (EnumValues != null)
+        {
+            @(UI.BuildSelect<KeyValuePair<string, string>, string>(this, EnumValues!.ToList()).LabelExpression(kv => kv.Key).ValueExpression(kv => kv.Value).Bind(() => stringValue).Render())
+        }
+        else
+        {
+            @(UI.BuildInput(this).Bind(() => stringValue).Render())
+        }
+    </span>
+</MCol>
+
 @code {
     [Parameter]
     public TData? Value { get; set; }
@@ -15,12 +36,6 @@
     {
         base.OnParametersSet();
         stringValue = Value?.ToString();
+        
     }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        // Parent.RowBuilder.AddCol(ActualColWidth).AddContent(CreateBody());
-    }
-
 }

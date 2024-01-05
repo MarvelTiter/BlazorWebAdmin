@@ -15,6 +15,8 @@ using Project.Constraints.UI;
 using Project.UI.AntBlazor;
 using MDbContext;
 using Microsoft.Data.Sqlite;
+using AspectCore.Extensions.DependencyInjection;
+using Project.AppCore.Middlewares;
 namespace Project.AppCore;
 
 public static class SharedComponents
@@ -46,6 +48,9 @@ public static class SharedComponents
         //
         services.AutoInjects();
         //
+        services.AddHttpClient();
+        //
+        services.AddControllers().AddApplicationPart(typeof(AppConst).Assembly);
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
         services.AddScoped<IAppSession, AppSession>();
         services.AddScoped<IAuthenticationStateProvider>(provider =>
@@ -64,6 +69,14 @@ public static class SharedComponents
             var sp = provider.GetService<IDownloadServiceProvider>();
             return sp?.GetService();
         });
+
+
+        services.ConfigureDynamicProxy();
+        builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
+
+        services.AddSingleton<RedirectToLauchUrlMiddleware>();
+
+
         Config.AddAssembly(typeof(AppConst).Assembly);
 
         builder.ConfigureAppSettings();
@@ -107,5 +120,12 @@ public static class SharedComponents
         };
     })
             );
+    }
+
+    public static void UseProject(this WebApplication app)
+    {
+        app.UseMiddleware<RedirectToLauchUrlMiddleware>();
+
+        app.MapControllers();
     }
 }

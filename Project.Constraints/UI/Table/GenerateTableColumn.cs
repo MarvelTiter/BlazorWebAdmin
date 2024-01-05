@@ -71,7 +71,7 @@ namespace Project.Constraints.UI.Table
             return caches.GetOrAdd(self, type =>
              {
                  var props = type.GetProperties();
-                 var heads = props.Select(p => (Prop:p, Column: p.GetColumnDefinition()));
+                 var heads = props.Select(p => (Prop: p, Column: p.GetColumnDefinition()));
                  List<ColumnInfo> columns = new List<ColumnInfo>();
                  foreach (var col in heads)
                  {
@@ -83,7 +83,7 @@ namespace Project.Constraints.UI.Table
                      columns.Add(column);
                  }
                  //columns.Sort((a, b) => a.Index - b.Index);
-                 return columns.ToList();
+                 return [.. columns];
              });
         }
 
@@ -98,6 +98,14 @@ namespace Project.Constraints.UI.Table
                     col = new ColumnDefinitionAttribute(dis.Name);
                 }
             }
+
+            if (p.GetCustomAttribute<FormAttribute>() is FormAttribute form && form != null)
+            {
+                // 没有 ColumnDefinitionAttribute 和 DisplayAttribute
+                // 不在Table上显示，但是需要在表单上显示
+                col ??= new ColumnDefinitionAttribute() { Visible = false };
+            }
+
             return col;
         }
 
