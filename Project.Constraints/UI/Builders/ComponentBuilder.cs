@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Common;
 using Project.Common.Attributes;
+using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -16,6 +17,8 @@ namespace Project.Constraints.UI.Builders
         protected readonly Dictionary<string, object?> parameters = new(StringComparer.Ordinal);
         protected Func<TSelf, RenderFragment>? newRender;
         protected Action<TSelf>? tpropHandle;
+        protected readonly static ConcurrentDictionary<(Type Entity, PropertyInfo Prop), Delegate> propAssignCaches = new();
+
         public IUIComponent AdditionalParameters(Dictionary<string, object> parameters)
         {
             if (parameters != null)
@@ -67,6 +70,6 @@ namespace Project.Constraints.UI.Builders
     public class ComponentBuilder<TComponent> : ComponentBuilder<TComponent, ComponentBuilder<TComponent>>, IUIComponent
         where TComponent : IComponent
     {
-        
+
     }
 }

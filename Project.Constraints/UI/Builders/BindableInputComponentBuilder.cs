@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Common;
 using Project.Common.Attributes;
+using System.Collections.Concurrent;
 using System.Linq.Expressions;
 
 namespace Project.Constraints.UI.Builders
@@ -34,17 +35,19 @@ namespace Project.Constraints.UI.Builders
             this.tpropHandle = tpropHandle;
         }
 
-
         public IBindableInputComponent<TPropModel, TValue> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value)
         {
             /**
-             * v => model.XXX = v;
+             * (model, v) => model.XXX = v;
              */
             var prop = selector.ExtractProperty();
-            var modelExp = Expression.Constant(Model);
-            var p = Expression.Parameter(typeof(TMember));
-            var action = Expression.Lambda<Action<TMember>>(Expression.Assign(Expression.Property(modelExp, prop), p), p);
-            action.Compile().Invoke(value);
+            var action = propAssignCaches.GetOrAdd((typeof(TPropModel), prop), key =>
+            {
+                var modelExp = Expression.Parameter(key.Entity);
+                var p = Expression.Parameter(key.Prop.PropertyType);
+                return Expression.Lambda<Action<TPropModel, TMember>>(Expression.Assign(Expression.Property(modelExp, key.Prop), p), modelExp, p).Compile();
+            });
+            action.DynamicInvoke(Model, value);
             return this;
         }
         public IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression)
