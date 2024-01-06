@@ -5,12 +5,13 @@ using Microsoft.Extensions.Localization;
 using Project.Constraints.Page;
 using Project.Constraints.Services;
 using Project.Constraints.UI;
+using Project.Constraints.UI.Extensions;
 using Project.Models.Forms;
 using System.Web;
 
 namespace Project.AppCore.Pages
 {
-	public partial class Login : BasicComponent
+    public partial class Login : BasicComponent
 	{
 		private LoginFormModel model = new LoginFormModel();
 		[Inject] public ILoginService LoginSrv { get; set; }

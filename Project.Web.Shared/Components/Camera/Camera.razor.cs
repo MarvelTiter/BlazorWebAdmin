@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Project.Models;
 using System.ComponentModel.DataAnnotations;
-using Project.Constraints.UI;
+using Project.Constraints.UI.Extensions;
 
 namespace Project.Web.Shared.Components
 {

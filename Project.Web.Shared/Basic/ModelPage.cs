@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using Project.Constraints;
 using Project.Constraints.Page;
-using Project.Constraints.UI;
+using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Table;
 using Project.Models;
 using Project.Models.Entities;

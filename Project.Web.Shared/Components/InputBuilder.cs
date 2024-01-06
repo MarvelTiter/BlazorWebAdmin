@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Rendering;
 using Project.Common.Attributes;
 using Project.Constraints.UI;
+using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Table;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;

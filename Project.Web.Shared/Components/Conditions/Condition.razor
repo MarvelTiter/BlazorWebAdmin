@@ -19,7 +19,7 @@
                 // builder.AddComponentParameter(9, "Value", stringValue);
                 // builder.AddComponentParameter(10, "ValueChanged", EventCallback.Factory.Create<string>(this, s => stringValue = s));
 
-                @(UI.BuildSelect<KeyValuePair<string, string>, string>(this, Field.EnumValues!.ToList()).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => stringValue, NotifyChanged).Render())
+                @(UI.BuildDictionarySelect(this, Field.EnumValues!).Bind(() => stringValue, NotifyChanged).Render())
             }
             else
             {

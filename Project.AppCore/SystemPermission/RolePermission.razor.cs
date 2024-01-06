@@ -3,7 +3,7 @@ using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using Project.AppCore.SystemPermission.Forms;
 using Project.Constraints.Services;
-using Project.Constraints.UI;
+using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Table;
 using Project.Models;
 using Project.Models.Permissions;
