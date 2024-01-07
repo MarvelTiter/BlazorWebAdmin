@@ -7,17 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Models.Permissions
+namespace Project.Models.Entities.Permissions
 {
     public enum PowerType
     {
-        [System.ComponentModel.DataAnnotations.Display(Name = "页面")]
+        [Display(Name = "页面")]
         Page,
-        [System.ComponentModel.DataAnnotations.Display(Name = "按钮")]
+        [Display(Name = "按钮")]
         Button
     }
 
-    [TableName("POWERS")]
     [Table(Name = "POWERS")]
     public class Power
     {

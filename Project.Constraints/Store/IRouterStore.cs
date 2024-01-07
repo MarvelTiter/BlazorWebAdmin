@@ -1,5 +1,4 @@
 ﻿using Project.Constraints.Store.Models;
-using Project.Models.Permissions;
 
 namespace Project.Constraints.Store
 {
@@ -7,6 +6,8 @@ namespace Project.Constraints.Store
     {
         event Action DataChangedEvent;
     }
+
+    [AutoInject]
     public interface IRouterStore : IStore, IDisposable
     {
         List<TagRoute> TopLinks { get; }

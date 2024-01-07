@@ -1,14 +1,10 @@
 ﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
-using Project.Constraints.Services;
-using Project.Models;
-using Project.Models.Entities;
-using Project.Models.Permissions;
-using Project.Models.Request;
+using Project.Models.Entities.Permissions;
 
-namespace Project.Services
+namespace Project.AppCore.Services
 {
-	public partial class UserService : IUserService
+    public partial class UserService : IUserService
     {
         private readonly IExpressionContext context;
 

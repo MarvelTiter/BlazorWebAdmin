@@ -17,11 +17,15 @@ using MDbContext;
 using Microsoft.Data.Sqlite;
 using AspectCore.Extensions.DependencyInjection;
 using Project.AppCore.Middlewares;
+using Project.Constraints.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Project.Models.Entities;
+using Project.AppCore.Services;
 namespace Project.AppCore;
 
 public static class SharedComponents
 {
-    public static void AddProject(this WebApplicationBuilder builder)
+    public static void AddProject(this WebApplicationBuilder builder, Func<Type> customSettingProviderType)
     {
 #if RELEASE
             try
@@ -50,6 +54,8 @@ public static class SharedComponents
         //
         services.AddHttpClient();
         //
+        var settingImplType = customSettingProviderType.Invoke();
+        services.AddScoped(typeof(ICustomSettingProvider), settingImplType);
         services.AddControllers().AddApplicationPart(typeof(AppConst).Assembly);
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
         services.AddScoped<IAppSession, AppSession>();

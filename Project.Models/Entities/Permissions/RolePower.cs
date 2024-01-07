@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Models.Permissions
+namespace Project.Models.Entities.Permissions
 {
-    [Table(Name ="ROLE_POWER")]
+    [Table(Name = "ROLE_POWER")]
     [TableName("ROLE_POWER")]
     public class RolePower
     {

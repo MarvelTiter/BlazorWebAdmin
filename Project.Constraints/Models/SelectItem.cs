@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Project.Common.Attributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Models
+namespace Project.Constraints.Models
 {
     public static class SelectItemHelper
     {
@@ -48,6 +49,7 @@ namespace Project.Models
         }
     }
 
+    [IgnoreAutoInject]
     public class SelectItem<T> : IEnumerable<Options<T>>
     {
         List<Options<T>> items = new List<Options<T>>();
@@ -116,6 +118,7 @@ namespace Project.Models
         }
     }
 
+    [IgnoreAutoInject]
     public class Options<T>
     {
         public Options(string label, T value)

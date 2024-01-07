@@ -1,6 +1,7 @@
 ﻿@page "/rolepermission"
 @using AntDesign.TableModels
-@using Project.Models.Permissions
+@using Project.Models.Entities.Permissions
+@using Project.Constraints.Models.Request;
 @inherits ModelPage<Role, GenericRequest<Role>>
 <TwoSidePage OpenTrigger=@(() => CurrentRole != null) @bind-Expand=@sideExpand MainFlex="3">
     <FirstSide>

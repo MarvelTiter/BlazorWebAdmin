@@ -1,13 +1,9 @@
 ﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
-using Project.Constraints.Services;
-using Project.Models;
-using Project.Models.Entities;
-using Project.Models.Request;
 
-namespace Project.Services
+namespace Project.AppCore.Services
 {
-	public class RunLogService : IRunLogService
+    public class RunLogService : IRunLogService
     {
         private readonly IExpressionContext context;
 
@@ -18,7 +14,7 @@ namespace Project.Services
 
         public async Task<IQueryCollectionResult<RunLog>> GetRunLogsAsync(GenericRequest<RunLog> req)
         {
-            var list = await context.Repository<RunLog>().GetListAsync(req.Expression,out var total, req.PageIndex, req.PageSize, log => log.LogId, false);
+            var list = await context.Repository<RunLog>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize, log => log.LogId, false);
             return list.CollectionResult((int)total);
         }
 

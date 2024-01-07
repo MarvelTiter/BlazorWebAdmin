@@ -2,6 +2,7 @@
 
 namespace Project.Constraints.Store
 {
+    [AutoInject]
     public interface IAppStore
     {
         bool Working { get; set; }
@@ -9,8 +10,8 @@ namespace Project.Constraints.Store
         string? AppLanguage { get; set; }
         bool DarkMode { get; set; }
         bool Collapsed { get; set; }
-        int SideBarExpandWidth { get; set; } 
-        string MainThemeColor { get; set; } 
+        int SideBarExpandWidth { get; set; }
+        string MainThemeColor { get; set; }
         void ApplySetting(IAppStore? app);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Project.Models.Forms
+﻿namespace Project.Constraints.Models
 {
     public class LoginFormModel
     {

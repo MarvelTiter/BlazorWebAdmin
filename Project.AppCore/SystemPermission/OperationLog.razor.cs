@@ -1,12 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Constraints.PageHelper;
-using Project.Constraints.Services;
-using Project.Constraints.UI.Table;
-using Project.Models;
-using Project.Models.Entities;
-using Project.Models.Request;
-using Project.Web.Shared.Basic;
-using System.Linq.Expressions;
 
 namespace Project.AppCore.SystemPermission
 {

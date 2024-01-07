@@ -9,6 +9,7 @@ using Project.AppCore.Store;
 using Project.Constraints;
 using Project.Constraints.Store;
 using Project.Constraints.UI;
+using Project.Services;
 using Project.UI.AntBlazor;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.AddProject();
+builder.AddProject(() => typeof(CustomSetting));
 
 builder.AddDefaultLightOrm();
 

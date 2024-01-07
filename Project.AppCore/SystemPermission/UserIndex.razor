@@ -1,6 +1,24 @@
-﻿@using Project.Models.Entities
-@using Project.Models.Request
+﻿@using Project.Constraints.Services
+@using Project.Models.Entities
 @page "/user/index"
-<CustomUserPage></CustomUserPage>
+@inject ICustomSettingProvider SettingProvider
+
+@if (userPageType != null)
+{
+    <DynamicComponent Type="userPageType"></DynamicComponent>
+}
+else
+{
+    <h1>未提供用户页面</h1>
+}
+
+@code {
+    Type? userPageType;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        userPageType = SettingProvider.GetUserPageType();
+    }
+}
 
 

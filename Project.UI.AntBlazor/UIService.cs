@@ -1,5 +1,7 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
+using Project.Constraints.Models;
+using Project.Constraints.Models.Request;
 using Project.Constraints.Store;
 using Project.Constraints.UI;
 using Project.Constraints.UI.Builders;
@@ -8,9 +10,6 @@ using Project.Constraints.UI.Flyout;
 using Project.Constraints.UI.Form;
 using Project.Constraints.UI.Props;
 using Project.Constraints.UI.Table;
-using Project.Models;
-using Project.Models.Forms;
-using Project.Models.Request;
 using Project.UI.AntBlazor.Components;
 using System.Linq.Expressions;
 

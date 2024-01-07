@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Project.Common.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Models
+namespace Project.Constraints.Models
 {
     public interface IQueryResult
     {
@@ -23,7 +24,7 @@ namespace Project.Models
         int TotalRecord { get; set; }
         new IEnumerable<T> Payload { get; set; }
     }
-
+    [IgnoreAutoInject]
     public class QueryResult<T> : IQueryResult<T>
     {
         public bool Success { get; set; }
@@ -33,7 +34,7 @@ namespace Project.Models
         object IQueryResult.Payload { get => Payload; set => Payload = (T)value; }
     }
 
-
+    [IgnoreAutoInject]
     public class QueryCollectionResult<T> : IQueryCollectionResult<T>
     {
         public bool Success { get; set; }
@@ -44,6 +45,7 @@ namespace Project.Models
         object IQueryResult.Payload { get => Payload; set => Payload = (IEnumerable<T>)value; }
     }
 
+    [IgnoreAutoInject]
     public static class QueryResult
     {
         public static IQueryResult<T> Success<T>(string msg = "操作成功")
@@ -95,7 +97,7 @@ namespace Project.Models
 
         public static IQueryCollectionResult<T> CollectionResult<T>(this IQueryResult self, IEnumerable<T> payload)
         {
-            return CollectionResult(self, payload, payload.Count());
+            return self.CollectionResult(payload, payload.Count());
             //{
             //    Success = self.Success,
             //    Message = self.Message,

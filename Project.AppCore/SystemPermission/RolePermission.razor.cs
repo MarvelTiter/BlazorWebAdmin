@@ -1,15 +1,6 @@
-﻿using AntDesign;
-using AntDesign.TableModels;
-using Microsoft.AspNetCore.Components;
-using Project.AppCore.SystemPermission.Forms;
-using Project.Constraints.Services;
+﻿using Microsoft.AspNetCore.Components;
 using Project.Constraints.UI.Extensions;
-using Project.Constraints.UI.Table;
-using Project.Models;
-using Project.Models.Permissions;
-using Project.Models.Request;
-using Project.Web.Shared.Basic;
-using System.Linq.Expressions;
+using Project.Models.Entities.Permissions;
 
 namespace Project.AppCore.SystemPermission
 {

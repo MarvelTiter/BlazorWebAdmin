@@ -9,9 +9,11 @@
 
   <ItemGroup>
     <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.4.0" />
+    <PackageReference Include="MT.LightORM" Version="1.2.9" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
   </ItemGroup>
 

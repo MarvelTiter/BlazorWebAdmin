@@ -1,4 +1,4 @@
-﻿using Project.Models.Permissions;
+﻿using Project.Constraints.Models;
 using Project.Constraints.Store;
 
 namespace Project.AppCore.Store

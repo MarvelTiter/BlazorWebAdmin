@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Models
+namespace Project.Constraints.Models
 {
     public class JsActionResult
     {

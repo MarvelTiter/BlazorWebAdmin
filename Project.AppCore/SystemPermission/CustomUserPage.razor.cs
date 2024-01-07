@@ -1,23 +1,9 @@
-﻿using AntDesign;
-using AntDesign.TableModels;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Localization;
-using Project.AppCore.SystemPermission.Forms;
-using Project.Constraints.Services;
-using Project.Constraints.UI;
-using Project.Constraints.UI.Table;
-using Project.Models;
-using Project.Models.Entities;
-using Project.Models.Request;
-using Project.Web.Shared.Basic;
-using System.Linq.Expressions;
+﻿using Microsoft.AspNetCore.Components;
 
 namespace Project.AppCore.SystemPermission
 {
     public partial class CustomUserPage : ModelPage<User, GenericRequest<User>>
     {
-        [Inject] public ModalService ModalSrv { get; set; }
-        [Inject] public ConfirmService ConfirmSrv { get; set; }
         [Inject] public IUserService UserSrv { get; set; }
         [Inject] public IStringLocalizer<CustomUserPage> Localizer { get; set; }
         protected override void OnInitialized()

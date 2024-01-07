@@ -1,13 +1,13 @@
 ﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
+using Project.Constraints.Models;
+using Project.Constraints.Models.Request;
 using Project.Constraints.Services;
-using Project.Models;
-using Project.Models.Permissions;
-using Project.Models.Request;
+using Project.Models.Entities.Permissions;
 
-namespace Project.Services
+namespace Project.AppCore.Services
 {
-	public partial class PemissionService : IPermissionService
+    public partial class PemissionService : IPermissionService
     {
         private readonly IExpressionContext context;
 

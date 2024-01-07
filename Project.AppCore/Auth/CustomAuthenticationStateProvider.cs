@@ -4,10 +4,10 @@ using Microsoft.Extensions.Options;
 using Project.AppCore.Store;
 using Project.Common.Attributes;
 using Project.Constraints;
+using Project.Constraints.Models;
 using Project.Constraints.Options;
 using Project.Constraints.Services;
 using Project.Constraints.Store;
-using Project.Models.Permissions;
 using System.Security.Claims;
 
 namespace Project.AppCore.Auth

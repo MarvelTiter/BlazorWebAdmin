@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
 @using Microsoft.Extensions.Localization
-@using Project.Models.Forms
+@using Project.Constraints.Models
 <Form Model="LoginModel">
     <FormItem>
         <Input @bind-Value="@context.UserName" placeholder="@Localizer["Login.Placeholder.UserName"].Value" name="username" type="text" tabindex="1" AutoComplete="true">

@@ -1,8 +1,8 @@
 ﻿using Microsoft.JSInterop;
 using Project.Common;
+using Project.Constraints.Models;
+using Project.Constraints.Models.Request;
 using Project.Constraints.Store;
-using Project.Models;
-using Project.Models.Request;
 using System.Linq.Expressions;
 using System.Reflection;
 

@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Project.AppCore.Store;
+using Project.Constraints.Models;
 using Project.Constraints.Options;
 using Project.Constraints.Services;
 using Project.Constraints.Store;
 using Project.Constraints.Store.Models;
-using Project.Models.Permissions;
+using Project.Models.Entities.Permissions;
 
 namespace Project.AppCore.Routers;
 

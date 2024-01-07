@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Models.Permissions
+namespace Project.Constraints.Models
 {
     public partial class UserInfo
     {

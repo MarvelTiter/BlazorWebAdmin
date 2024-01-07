@@ -1,9 +1,9 @@
 ﻿using Project.Web.Shared.Utils;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
-using Project.Models;
 using System.ComponentModel.DataAnnotations;
 using Project.Constraints.UI.Extensions;
+using Project.Constraints.Models;
 
 namespace Project.Web.Shared.Components
 {

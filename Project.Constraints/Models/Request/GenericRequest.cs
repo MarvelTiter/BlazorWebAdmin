@@ -1,7 +1,7 @@
 ﻿using MT.Toolkit.DateTimeExtension;
 using System.Linq.Expressions;
 
-namespace Project.Models.Request
+namespace Project.Constraints.Models.Request
 {
     public interface IRequest
     {

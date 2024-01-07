@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Project.Common.Attributes;
 using Project.Constraints.Store;
 using Project.Constraints.UI;
 
 namespace Project.Constraints;
 
+[AutoInject]
 public interface IAppSession
 {
     NavigationManager Navigator { get; set; }

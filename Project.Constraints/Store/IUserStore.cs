@@ -1,7 +1,7 @@
-﻿using Project.Models.Permissions;
-
+﻿
 namespace Project.Constraints.Store;
 
+[AutoInject]
 public interface IUserStore
 {
     UserInfo? UserInfo { get; set; }
