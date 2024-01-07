@@ -3,12 +3,19 @@ using System.Reflection;
 
 namespace Project.AppCore
 {
+    public class AutoInjectFilter
+    {
+        public Func<string, bool> FileFilter { get; set; } = f => true;
+        public Func<Type, bool> TypeFilter { get; set; } = t => true;
+    }
     public static class AutoDI
     {
-        public static IServiceCollection AutoInjects(this IServiceCollection self)
+        public static IServiceCollection AutoInjects(this IServiceCollection self, Action<AutoInjectFilter>? action = null)
         {
-            var all = LoadAllAssembly();
-            var allTypes = LoadTypeFromAssembly(all.ToArray());
+            var filter = new AutoInjectFilter();
+            action?.Invoke(filter);
+            var all = LoadAllAssembly(filter);
+            var allTypes = LoadTypeFromAssembly(filter,all.ToArray());
 
             //class的程序集
             var implementTypes = allTypes.Where(x => x.IsClass).ToArray();
@@ -16,10 +23,6 @@ namespace Project.AppCore
             var interfaceTypes = allTypes.Where(x => x.IsInterface).ToArray();
 
             InjectServices(self, implementTypes, interfaceTypes);
-
-            var entities = GetDbEntities(all.First(asm => asm.FullName!.Contains("Project.Models"))).ToArray();
-
-            //InjectGeneralRepository(self, entities, typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
             return self;
         }
@@ -75,28 +78,8 @@ namespace Project.AppCore
             }
         }
 
-        private static void InjectGeneralRepository(IServiceCollection services, Type[] entities, Type baseInterface, Type baseImpl)
-        {
-            foreach (var item in entities)
-            {
-                var i = baseInterface.MakeGenericType(item);
-                var p = baseImpl.MakeGenericType(item);
-                services.AddScoped(i, p);
-            }
-        }
 
-        private static IEnumerable<Type> GetDbEntities(Assembly assembly)
-        {
-            foreach (var item in assembly.GetTypes())
-            {
-                if (item.FullName!.Contains("Entities") || item.FullName!.Contains("Permissions"))
-                {
-                    yield return item;
-                }
-            }
-        }
-
-        private static IEnumerable<Type> LoadTypeFromAssembly(params Assembly[] assembly)
+        private static IEnumerable<Type> LoadTypeFromAssembly(AutoInjectFilter filter, params Assembly[] assembly)
         {
             foreach (var asm in assembly)
             {
@@ -104,7 +87,7 @@ namespace Project.AppCore
                 var types = asm.GetExportedTypes();
                 foreach (var type in types)
                 {
-                    if (!type.FullName!.StartsWith("Project.")) continue;
+                    if (!type.FullName!.StartsWith("Project.") && !filter.TypeFilter(type)) continue;
                     if (full && type.GetCustomAttribute<IgnoreAutoInjectAttribute>(false) == null)
                     {
                         yield return type;
@@ -117,7 +100,7 @@ namespace Project.AppCore
             }
         }
 
-        private static IEnumerable<Assembly> LoadAllAssembly()
+        private static IEnumerable<Assembly> LoadAllAssembly(AutoInjectFilter filter)
         {
             var folder = AppDomain.CurrentDomain.BaseDirectory;
             var files = Directory.GetFiles(folder);
@@ -126,7 +109,7 @@ namespace Project.AppCore
             {
                 var filename = Path.GetFileName(file).Replace("\\", "/");
                 var fileext = Path.GetExtension(file);
-                if (filename.StartsWith("Project") && fileext == ".dll")
+                if ((filename.StartsWith("Project") || filter.FileFilter.Invoke(filename))&& fileext == ".dll")
                 {
                     var asm = Assembly.LoadFrom(file);
                     if (asm != null)
