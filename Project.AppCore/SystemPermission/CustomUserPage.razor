@@ -1,14 +1,7 @@
 ﻿@inherits ModelPage<User, GenericRequest<User>>
 
 <TwoSidePage OpenTrigger=@(() => currentSelected != null) Expand=@sideExpand MainFlex="3">
-	<FirstSide>
-		<QueryConditions @bind-Expression=Options.Query.Expression>
-			<SimpleCondition TData=string Label="条件1" @bind-Value=Options.Query.Keyword></SimpleCondition>
-			<SimpleCondition TData=string Label="条件1" @bind-Value=Options.Query.Keyword></SimpleCondition>
-			<SimpleCondition TData=string Label="条件1" @bind-Value=Options.Query.Keyword></SimpleCondition>
-			<SimpleCondition TData=string Label="条件1" @bind-Value=Options.Query.Keyword></SimpleCondition>
-		</QueryConditions>
-		
+	<FirstSide>		
 		@TableFragment
 	</FirstSide>
 	<SecondSide>
