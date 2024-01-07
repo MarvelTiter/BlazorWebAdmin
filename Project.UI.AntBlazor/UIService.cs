@@ -208,6 +208,7 @@ namespace Project.UI.AntBlazor
                 DestroyOnClose = true,
                 OkText = "确定",
                 CancelText = "取消",
+                Maximizable = true,
                 OnOk = e => options.OnOk.Invoke(),
                 OnCancel = e => options.OnClose.Invoke()
             };
