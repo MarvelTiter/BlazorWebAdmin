@@ -23,9 +23,15 @@ using Project.Models.Entities;
 using Project.AppCore.Services;
 namespace Project.AppCore;
 
+public class ProjectSetting
+{
+    public Type SettingProviderType { get; set; }
+    public Action<AutoInjectFilter>? AutoInjectConfig { get; set; }
+}
+
 public static class SharedComponents
 {
-    public static void AddProject(this WebApplicationBuilder builder, Func<Type> customSettingProviderType)
+    public static void AddProject(this WebApplicationBuilder builder, Action<ProjectSetting> action)
     {
 #if RELEASE
             try
@@ -44,17 +50,22 @@ public static class SharedComponents
             }
 #endif
         var services = builder.Services;
+
+        var setting = new ProjectSetting();
+
+        action.Invoke(setting);
+
         services.AddAntDesign();
         // 多语言服务
         services.AddJsonLocales();
         // excel操作
         services.AddLightExcel();
         //
-        services.AutoInjects();
+        services.AutoInjects(setting.AutoInjectConfig);
         //
         services.AddHttpClient();
         //
-        var settingImplType = customSettingProviderType.Invoke();
+        var settingImplType = setting.SettingProviderType;
         services.AddScoped(typeof(ICustomSettingProvider), settingImplType);
         services.AddControllers().AddApplicationPart(typeof(AppConst).Assembly);
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();

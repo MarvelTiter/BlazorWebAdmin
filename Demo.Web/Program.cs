@@ -18,7 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.AddProject(() => typeof(CustomSetting));
+builder.AddProject(setting =>
+{
+    setting.SettingProviderType = typeof(CustomSetting);
+});
 
 builder.AddDefaultLightOrm();
 
