@@ -116,41 +116,11 @@ namespace Project.Web.Shared.Components
 
         private Task UpdateValue(PropertyInfo property)
         {
-            property.SetValue(Data, ConvertTo(property.PropertyType, TempValue));
+            property.SetValue(Data, ObjectExtensions.ConvertTo(property.PropertyType, TempValue));
             return Task.CompletedTask;
         }
 
 
-        public static object ConvertTo(Type type, object value, object defaultValue = null)
-        {
-            if (value == null || value == DBNull.Value)
-                return defaultValue;
-
-            var valueString = value.ToString()!;
-            if (type == typeof(string))
-                return Convert.ChangeType(valueString, type);
-
-            valueString = valueString.Trim();
-            if (valueString.Length == 0)
-                return defaultValue;
-
-            if (type.IsEnum)
-                return Enum.Parse(type, valueString, true);
-
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                type = Nullable.GetUnderlyingType(type)!;
-
-            if (type == typeof(bool) || type == typeof(bool?))
-                valueString = ",是,1,Y,YES,TRUE,".Contains(valueString.ToUpper()) ? "True" : "False";
-
-            try
-            {
-                return Convert.ChangeType(valueString, type);
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
+        
     }
 }

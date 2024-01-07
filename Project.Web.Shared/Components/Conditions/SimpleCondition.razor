@@ -7,21 +7,21 @@
         <span class="label" style="width:@($"{Parent.LabelWidth}px");">
             @Label
         </span>
-        @if(ChildContent != null)
+        @if (ChildContent != null)
         {
             @ChildContent
         }
         else if (typeof(TData) == typeof(DateTime))
         {
-            @(UI.BuildDatePicker<TData>(this).Bind(() => Value).Render())
+            @(UI.BuildDatePicker<TData>(this).Bind(() => Value, NotifyChanged).Render())
         }
         else if (EnumValues != null)
         {
-            @(UI.BuildSelect<KeyValuePair<string, string>, string>(this, EnumValues!.ToList()).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => stringValue).Render())
+            @(UI.BuildDictionarySelect(this, EnumValues).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => stringValue, TryParseValue).Render())
         }
         else
         {
-            @(UI.BuildInput(this).Bind(() => stringValue).Render())
+            @(UI.BuildInput<TData>(this).Bind(() => Value, NotifyChanged).Render())
         }
     </span>
 </MCol>
@@ -39,6 +39,24 @@
     {
         base.OnParametersSet();
         stringValue = Value?.ToString();
-        
+    }
+
+    Task NotifyChanged()
+    {
+        if (ValueChanged.HasDelegate)
+        {
+            return ValueChanged.InvokeAsync(Value);
+        }
+        return Task.CompletedTask;
+    }
+
+    Task TryParseValue()
+    {
+        if (!string.IsNullOrEmpty(stringValue))
+        {
+            Value = stringValue.ConvertTo<TData>();
+            return NotifyChanged();
+        }
+        return Task.CompletedTask;
     }
 }
