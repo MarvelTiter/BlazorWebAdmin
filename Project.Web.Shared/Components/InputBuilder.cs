@@ -84,10 +84,10 @@ namespace Project.Web.Shared.Components
                   switch (InputBuilderHelper.GetInputType(propertyType, col))
                   {
                       case InputType.Text:
-                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildInput), 0, [typeof(object)]);
+                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildInput))?.MakeGenericMethod(propertyType);
                           break;
                       case InputType.Number:
-                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildInput), 1, [typeof(object)])?.MakeGenericMethod(propertyType);
+                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildNumberInput))?.MakeGenericMethod(propertyType);
                           break;
                       case InputType.Boolean:
                           builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildSwitch));

@@ -88,7 +88,7 @@ public interface IUIService
     /// UI.BuildInput(this).Bind(() => ValueExpression).Render()
     /// </code>
     /// </summary>
-    IBindableInputComponent<EmptyProp, string> BuildInput(object reciver);
+    IBindableInputComponent<EmptyProp, TValue> BuildInput<TValue>(object reciver);
 
     /// <summary>
     /// 生成密码输入框
@@ -103,7 +103,7 @@ public interface IUIService
     /// UI.BuildInput&lt;TValue&gt;(this).Bind(() => ValueExpression).Render()
     /// </code>
     /// </summary>
-    IBindableInputComponent<EmptyProp, TValue> BuildInput<TValue>(object reciver);
+    IBindableInputComponent<EmptyProp, TValue> BuildNumberInput<TValue>(object reciver);
 
     IBindableInputComponent<EmptyProp, TValue> BuildDatePicker<TValue>(object reciver);
 

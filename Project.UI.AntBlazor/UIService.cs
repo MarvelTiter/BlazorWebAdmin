@@ -24,12 +24,12 @@ namespace Project.UI.AntBlazor
         private readonly DrawerService drawerService = drawerService;
 
 
-        public IBindableInputComponent<EmptyProp, string> BuildInput(object reciver)
+        public IBindableInputComponent<EmptyProp, TValue> BuildInput<TValue>(object reciver)
         {
-            return new BindableInputComponentBuilder<Input<string>, EmptyProp, string>() { Reciver = reciver };
+            return new BindableInputComponentBuilder<Input<TValue>, EmptyProp, TValue>() { Reciver = reciver };
         }
 
-        public IBindableInputComponent<EmptyProp, TValue> BuildInput<TValue>(object reciver)
+        public IBindableInputComponent<EmptyProp, TValue> BuildNumberInput<TValue>(object reciver)
         {
             return new BindableInputComponentBuilder<InputNumber<TValue>, EmptyProp, TValue>() { Reciver = reciver };
         }

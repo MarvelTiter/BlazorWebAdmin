@@ -12,7 +12,7 @@ namespace Project.Constraints.UI.Form
 
         public IEnumerable<ColumnInfo[]> GetRows()
         {
-            var rowIndex = 0;
+            var rowIndex = 1;
             var settedRow = Columns.Where(c => c.Row.HasValue).GroupBy(c => c.Row!.Value);
             var defaultRows = Columns.Where(c => !c.Row.HasValue && c.ShowOnForm);
             var rowEnumerator = defaultRows.GetEnumerator();

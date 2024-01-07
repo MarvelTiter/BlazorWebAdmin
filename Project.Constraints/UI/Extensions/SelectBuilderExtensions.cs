@@ -28,4 +28,12 @@ namespace Project.Constraints.UI.Extensions
             return sel;
         }
     }
+
+    public static class InputBuilderExtensions
+    {
+        public static IBindableInputComponent<EmptyProp, string> BuildInput(this IUIService service, object reciver)
+        {
+            return service.BuildInput<string>(reciver);
+        }
+    }
 }
