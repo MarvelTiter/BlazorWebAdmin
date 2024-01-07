@@ -56,7 +56,8 @@ namespace Project.UI.AntBlazor
                 {
                     self.SetComponent(s => s.DataSource, options)
                     .SetComponent(s => s.ValueName, "Value")
-                    .SetComponent(s => s.LabelName, "Label");
+                    .SetComponent(s => s.LabelName, "Label")
+                    .SetComponent(s => s.AllowClear, self.Model.AllowClear);
                 })
                 { Reciver = reciver };
             }
@@ -71,6 +72,9 @@ namespace Project.UI.AntBlazor
                     self.SetComponent(s => s.ValueProperty, valueLambda.Compile());
                 if (self.Model.LabelExpression is LambdaExpression labelLambda)
                     self.SetComponent(s => s.LabelProperty, labelLambda.Compile());
+
+                self.SetComponent(s => s.AllowClear, self.Model.AllowClear);
+                
             })
             { Reciver = reciver };
 

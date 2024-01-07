@@ -5,10 +5,18 @@
 @using Project.Web.Shared.Basic
 @using System.Linq.Expressions
 @inherits ModelPage<User,GenericRequest<User>>
-
+<Project.Web.Shared.Components.QueryConditions @bind-Expression=@Options.Query.Expression>
+    <Project.Web.Shared.Components.SimpleCondition @bind-Value=Options.Query.Keyword EnumValues="dic"></Project.Web.Shared.Components.SimpleCondition>
+</Project.Web.Shared.Components.QueryConditions>
 @TableFragment
 
 @code {
+    Dictionary<string, string> dic = new Dictionary<string, string>()
+        {
+            ["Hello"] = "World",
+            ["Sharp"] = "C",
+        };
+  
     protected override object SetRowKey(User model) => model.UserId;
     protected override Task<IQueryCollectionResult<User>> OnQueryAsync(GenericRequest<User> query)
     {
