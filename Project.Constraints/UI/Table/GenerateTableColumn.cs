@@ -45,6 +45,10 @@ namespace Project.Constraints.UI.Table
                 column.Column = formAttr.Column;
                 column.ShowOnForm = !formAttr.Hide;
                 column.InputType = formAttr.InputType;
+                if (!string.IsNullOrEmpty(formAttr.Label))
+                {
+                    column.Label = formAttr.Label;
+                }
             }
 
             if (column.IsEnum)

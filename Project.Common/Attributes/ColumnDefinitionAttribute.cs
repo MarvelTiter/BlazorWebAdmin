@@ -57,6 +57,7 @@ public class FormAttribute : Attribute
     public int Row { get; set; }
     public int Column { get; set; }
     public bool Hide { get; set; }
+    public string Label { get; set; }
     public InputType? InputType { get; set; }
     public FormAttribute()
     {
