@@ -11,6 +11,7 @@
 <div>
     @if (Index > 0)
     {
+        // TODO 需要增加 SwitchProp
         @UI.BuildSwitch(this).Bind(() => check, "Checked", UpdateLinkType).Set("CheckedChildren", TableLocalizer["ConditionSwitch.AndAlso"].Value).Set("UnCheckedChildren", TableLocalizer["ConditionSwitch.OrElse"].Value).Render()
         ;
     }

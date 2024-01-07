@@ -25,7 +25,7 @@
                         @TableLocalizer["TableButtons.AdvancedQuery"]
                     </Button>
                 </SpaceItem>
-            } 
+            }
             @if (Options.ShowExportButton)
             {
                 <SpaceItem>
@@ -80,11 +80,19 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            var result = await LocalStorage.GetAsync<ConditionInfo>(cache_key);
-            if (result.Success)
+            try
             {
-                insRef?.InitStatus(result.Value!);
+                var result = await LocalStorage.GetAsync<ConditionInfo>(cache_key);
+                if (result.Success)
+                {
+                    insRef?.InitStatus(result.Value!);
+                }
             }
+            catch
+            {
+
+            }
+
         }
     }
 
@@ -92,7 +100,7 @@
     {
         _ = await Options.OnAddItemAsync();
     }
-        
+
     public async Task Search()
     {
         Options.Query.PageIndex = 1;
@@ -123,4 +131,4 @@
         AdvanceModalVisible = false;
         await Options.RefreshAsync();
     }
-} 
+}

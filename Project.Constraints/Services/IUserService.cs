@@ -18,5 +18,6 @@ namespace Project.Constraints.Services
         Task<IQueryResult> DeleteUserAsync(User user);
         [LogInfo(Action = "修改密码", Module = "权限控制")]
         Task<IQueryResult> ModifyUserPasswordAsync(string uid, string old, string pwd);
+        Task<User> GetUserAsync(string id);
     }
 }
