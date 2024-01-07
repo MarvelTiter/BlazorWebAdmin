@@ -1,0 +1,49 @@
+﻿@namespace Project.Web.Shared.Components
+@using Project.Common
+@inherits JsComponentBase
+
+<div @ref="ScrollbarRef" class="scrollbar">
+    <div @ref="WrapElementRef" class="@WrapKls.Class" style="@WrapSls.Style">
+        <div @ref="ResizeRef"
+             class="@ResizeKls.Class"
+             style="@ViewSls.Style">
+            @ChildContent
+        </div>
+    </div>
+    @if (!Native)
+    {
+        @*<Thumb />
+    <Thumb Vertical />*@
+        <div @ref="HorizontalTracker" class="scrollbar__bar is-horizontal">
+            <div @ref="HorizontalThumb" style="@BarStyle(false).Style"
+             class="scrollbar__thumb" />
+        </div>
+        <div @ref="VerticalTracker" class="scrollbar__bar is-vertical">
+            <div @ref="VerticalThumb" style="@BarStyle(true).Style"
+             class="scrollbar__thumb" />
+        </div>
+    }
+</div>
+
+@code {
+    ClassHelper WrapKls => ClassHelper.Default
+        .AddClass(WrapClass)
+        .AddClass("scrollbar_wrap")
+        .AddClass("scrollbar_wrap--hidden-default", () => !Native);
+    ClassHelper ResizeKls => ClassHelper.Default
+    .AddClass("scroll_bar_view")
+    .AddClass(ViewClass);
+
+    StyleBuilder WrapSls => StyleBuilder.Default
+    .AddStyleBase(WrapStyle, () => WrapStyle != null)
+    .AddStyle("height", () => Height > 0 ? Height.ToPixel() : "100vh", () => Height.HasValue)
+    .AddStyle("max-height", () => MaxHeight.ToPixel(), () => MaxHeight.HasValue);
+
+    StyleBuilder ViewSls => StyleBuilder.Default
+    .AddStyleBase(ViewStyle, () => ViewStyle != null);
+
+    StyleBuilder BarStyle(bool vertical) => StyleBuilder.Default
+    .AddStyle("width", () => BarWidth.ToPixel(), () => vertical)
+    .AddStyle("height", () => BarWidth.ToPixel(), () => !vertical)
+    .AddStyle("background-color", () => BarColor);
+}

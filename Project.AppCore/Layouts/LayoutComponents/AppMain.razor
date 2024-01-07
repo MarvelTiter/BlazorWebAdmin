@@ -1,0 +1,33 @@
+﻿@using Project.Web.Shared.Components
+@using Project.AppCore.Routers;
+@inherits BasicComponent
+<ScrollBar>
+    <ErrorCatcher>
+        @foreach (var item in Router.TopLinks)
+        {
+            if (item.Body == null) continue;
+            <div id=@item.RouteUrl style="@(item.RouteUrl == Router.CurrentUrl ? "display: block;":"display: none;")">
+                <!-- 在TableTemplate中获取当前页的信息 -->
+                <CascadingValue Value="item">
+                    @item.Body
+                </CascadingValue>
+            </div>
+        }
+    </ErrorCatcher>
+</ScrollBar>
+
+@code {
+    [CascadingParameter] public RouteData RouteData { get; set; }
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue(nameof(RouteData), out RouteData? routeData))
+        {
+            if (routeData != null)
+            {
+                _ = Router.RouteDataChangedHandleAsync(routeData);
+            }
+        }
+        return base.SetParametersAsync(parameters);
+    }
+}

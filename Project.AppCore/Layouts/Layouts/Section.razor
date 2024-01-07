@@ -1,0 +1,8 @@
+﻿@inherits ContainerBase
+<section class="container @(Vertical? "is-vertical":"") @Class" style="@Style">
+    @ChildContent
+</section>
+
+@code {
+    [Parameter] public bool Vertical { get; set; }
+}

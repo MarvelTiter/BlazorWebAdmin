@@ -1,0 +1,102 @@
+﻿.login-container {
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #5574ac;
+}
+
+    .login-container .login-form {
+        position: relative;
+        background-color: #797d81a4;
+        width: 570px;
+        max-width: 100%;
+        padding: 40px 20px;
+        margin: 0 auto;
+        border: 1px solid #283443;
+        border-radius: 10px;
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .login-container .ant-input,
+    .login-container .ant-input-password {
+        display: inline-block;
+        height: 47px;
+        width: 85%;
+    }
+
+    .login-container input {
+        background: transparent;
+        border: 0px;
+        -webkit-appearance: none;
+        border-radius: 0px;
+        padding: 12px 5px 12px 15px;
+        color: #fff;
+        height: 47px;
+        caret-color: #fff;
+    }
+
+
+    .login-container .ant-form-item {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        color: #454545;
+    }
+
+
+
+.svg-container {
+    padding: 6px 5px 6px 15px;
+    color: #889aa4;
+    vertical-align: middle;
+    width: 30px;
+    display: inline-block;
+}
+
+.show-pwd {
+    position: absolute;
+    right: 10px;
+    top: 7px;
+    font-size: 16px;
+    color: #889aa4;
+    cursor: pointer;
+    user-select: none;
+}
+
+.thirdparty-button {
+    position: absolute;
+    right: 0;
+    bottom: 6px;
+}
+
+@media only screen and (max-width: 470px) {
+    .thirdparty-button {
+        display: none;
+    }
+}
+
+
+.title-container {
+    position: relative;
+    text-align: center;
+    margin-top: 150px;
+    margin-bottom: 20px;
+}
+
+    .title-container .title-position {
+        display: inline-block;
+        background-repeat: no-repeat;
+        line-height: 50px;
+        height: 50px;
+    }
+
+    .title-container .title {
+        margin: 0px auto 40px auto;
+        font-size: 34px;
+        color: #fff;
+/*        margin-left: 60px;*/
+        text-align: center;
+        font-weight: bold;
+    }

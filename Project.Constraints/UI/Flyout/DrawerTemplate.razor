@@ -1,0 +1,37 @@
+﻿@typeparam TData
+@inherits DialogTemplate<TData>
+
+<div style="width:100%;height:100%;display:flex;flex-direction:column;">
+    <div style="flex:1;">
+        <CascadingValue Value="DialogModel">
+            @ChildContent
+        </CascadingValue>
+    </div>
+    <div style="flex:0;text-align:right;">
+        @UI.BuildButton(this).OnClick(HandleOk).Set(b => b.Text, "Ok").Set(b => b.ButtonType, ButtonType.Primary).Render()
+        @UI.BuildButton(this).OnClick(HandleCancel).Set(b => b.Text, "Close").Render()
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback OnOk { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    Task HandleOk()
+    {
+        if (OnOk.HasDelegate)
+        {
+            return OnOk.InvokeAsync();
+        }
+        return Task.CompletedTask;
+    }
+
+    Task HandleCancel()
+    {
+        if (OnCancel.HasDelegate)
+        {
+            return OnCancel.InvokeAsync();
+        }
+        return Task.CompletedTask;
+    }
+}

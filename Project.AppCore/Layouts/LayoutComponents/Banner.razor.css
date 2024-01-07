@@ -1,0 +1,35 @@
+﻿.layout-logo {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 10px;
+    background: #fcfcfc;
+}
+
+    .layout-logo.line {
+        width: unset;
+    }
+
+    .layout-logo .logo-img {
+        width: 28px;
+    }
+
+    .layout-logo .website-name {
+        display: block;
+        text-align: center;
+        width: 180px;
+        padding-left: 4px;
+        font-size: 20px;
+        font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .layout-logo .menu-collapse-icon {
+        font-size: 18px;
+        display: inline-block;
+    }

@@ -1,0 +1,20 @@
+﻿@using Project.AppCore.Layouts.LayoutComponents
+@inherits LayoutBase
+<Section>
+    <Aside>
+        <SideBar @ref=SideBar Class="card">
+            <TopBanner>
+                <Banner OnToggleCollapse="e=>HandleToggleCollapse(e)"></Banner>
+            </TopBanner>
+        </SideBar>
+    </Aside>
+    <Section Vertical Style="height:100vh;">
+         <Project.AppCore.Layouts.Layouts.Header>
+             <NavBar Class="card"></NavBar>
+         </Project.AppCore.Layouts.Layouts.Header>
+         <Main Style="padding:16px;height: 100%;">
+             <AppMain>
+             </AppMain>
+         </Main>
+     </Section>
+ </Section>

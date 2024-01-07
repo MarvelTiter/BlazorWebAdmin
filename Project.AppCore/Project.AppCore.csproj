@@ -8,18 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Repositories\**" />
-    <Content Remove="Repositories\**" />
-    <EmbeddedResource Remove="Repositories\**" />
-    <None Remove="Repositories\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Reporitory.cs" />
-    <Compile Remove="RepositoryBase.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
@@ -27,7 +15,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
+    <ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
+    <ProjectReference Include="..\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
+    <ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Tests\" />
+  </ItemGroup>
+
 
 </Project>

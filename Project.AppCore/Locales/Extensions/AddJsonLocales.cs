@@ -10,6 +10,7 @@ namespace Project.AppCore.Locales.Extensions
         {
             services.TryAddSingleton<IStringLocalizerFactory, JsonLocalizerFactory>();
             services.TryAddTransient(typeof(IStringLocalizer<>), typeof(StringLocalizer<>));
+            services.TryAddTransient(typeof(IStringLocalizer), typeof(StringLocalizer<object>));
             return services;
         }
     }

@@ -1,0 +1,48 @@
+﻿@using Project.AppCore.Routers;
+@using Project.AppCore.Store
+@using Project.Common
+@inherits Project.Constraints.Page.BasicComponent
+<div class="side_bar @Class" style="display: flex;flex-direction: column;width:@Width">
+    @TopBanner
+    <ScrollBar>
+        @UI.BuildMenu(Router, Horizontal, App)
+    </ScrollBar>
+</div>
+
+@code {
+    [Parameter] public RenderFragment TopBanner { get; set; }
+    [Parameter] public string Class { get; set; }
+    [Parameter] public bool Horizontal { get; set; }
+    protected override Task OnInitializedAsync()
+    {
+        Router.DataChangedEvent += StateHasChanged;
+        return base.OnInitializedAsync();
+    }
+
+    private string Width => App.Collapsed ? 80.ToPixel() : App.SideBarExpandWidth.ToPixel();
+    private bool collapse = false;
+
+    public void ToggleCollapse()
+    {
+        // collapse = newState;
+        StateHasChanged();
+    }
+
+    private bool disposedValue;
+    protected override void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                // 释放托管状态(托管对象)
+                Router.DataChangedEvent -= StateHasChanged;
+            }
+
+            // 释放未托管的资源(未托管的对象)并重写终结器
+            // 将大型字段设置为 null
+            disposedValue = true;
+        }
+    }
+}
+

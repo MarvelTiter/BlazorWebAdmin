@@ -1,0 +1,30 @@
+﻿@namespace Project.Web.Shared.Components
+@using Microsoft.JSInterop
+@inherits JsComponentBase
+@implements IDownloadService
+@inject IDownloadServiceProvider DownProvider
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        DownProvider.Register(this);
+    }
+
+    public async Task DownloadAsync(object payload)
+    {
+        if (Module == null)
+            return;
+        await Module.InvokeVoidAsync("download", payload);
+    }
+
+    public async Task DownloadAsync(string filename)
+    {
+        if (Module == null)
+            return;
+        await Module.InvokeVoidAsync("download", new
+        {
+            token = User.UserInfo?.ApiToken,
+            filename = filename,
+        });
+    }
+}

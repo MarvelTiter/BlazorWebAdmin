@@ -1,7 +1,7 @@
 ﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
 using Project.AppCore.Auth;
-using Project.AppCore.Services;
+using Project.Constraints.Services;
 using Project.Models;
 using Project.Models.Entities;
 using Project.Models.Permissions;

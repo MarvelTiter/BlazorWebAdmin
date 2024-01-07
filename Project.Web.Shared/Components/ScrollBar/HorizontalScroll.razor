@@ -1,0 +1,16 @@
+﻿@namespace Project.Web.Shared.Components
+@using Project.Common.Attributes;
+@inherits JsComponentBase
+@attribute [AutoLoadJsModule(Path = "Components/ScrollBar")]
+<div class="wrap" @ref=WrapElementRef>
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent{ get; set; }
+    ElementReference? WrapElementRef;
+    protected override ValueTask Init()
+    {
+        return ModuleInvokeVoidAsync("init", WrapElementRef);
+    }
+}

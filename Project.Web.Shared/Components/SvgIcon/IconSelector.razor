@@ -1,0 +1,49 @@
+﻿@namespace Project.Web.Shared.Components
+@using Microsoft.Extensions.Localization
+@using Project.Constraints.Page
+@inherits BasicComponent
+@* <Popover Title="@Localizer["IconSelector.Title"]" OnVisibleChange="OnVisibleChange" Visible="visible" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Click})" ContentTemplate="content">
+    <Button Type="primary">@Localizer["IconSelector.ButtonText"]</Button>
+</Popover> *@
+@code {
+    List<string> icons;
+    bool visible;
+    [Parameter]
+    public string Value { get; set; }
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+    [Inject] IStringLocalizer<IconSelector> Localizer { get; set; }
+    RenderFragment content =>
+    @<div>
+        <div class="icons-wrapper">
+            @foreach (var item in icons)
+            {
+                <span @onclick="e => HandleClickEvent(item)" class="@(Value==item? "selected":"")">
+                    <SvgIcon IconName="@item"></SvgIcon>
+                </span>
+            }
+        </div>
+        <a @onclick="_=>visible = false">@Localizer["CustomButtons.Close"]</a>
+    </div>
+    ;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        icons = SvgIconDataCache.GetIcons();
+    }
+
+    private void OnVisibleChange(bool v)
+    {
+        visible = v;
+    }
+    async Task HandleClickEvent(string iconName)
+    {
+        if (ValueChanged.HasDelegate)
+        {
+            await ValueChanged.InvokeAsync(iconName);
+        }
+        visible = false;
+        //StateHasChanged();
+    }
+}

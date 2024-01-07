@@ -1,0 +1,73 @@
+﻿@using System.Diagnostics.CodeAnalysis;
+@using Microsoft.AspNetCore.Components.Authorization
+@using Project.AppCore.Options;
+@using Project.Common.Attributes;
+@using Project.Constraints.Options;
+@inherits JsComponentBase
+@attribute [AutoLoadJsModule(Path = "Layouts/LayoutComponents")]
+<div class="nav-menu @Class">
+    @*全屏按钮*@
+    <div class="nav-menu-item" @onclick=ToggleFullScreen title="@Localizer["NavMenu.TipTitle.FullScreen"]">
+        <FullScreen @ref="fullscreen"></FullScreen>
+        <SvgIcon IconName="fullscreen"
+                 ClassName="nav-menu-icon" />
+    </div>
+    @if (CultureOptions.CurrentValue.Enabled)
+    {
+        @*语言选择*@
+        <div class="nav-menu-item" title="@Localizer["NavMenu.TipTitle.LangSelect"]">
+            <LanguageSelect Options="CultureOptions.CurrentValue"></LanguageSelect>
+        </div>
+    }
+    @*登录用户*@
+    <AuthorizeView>
+        <Authorized>
+            <div title="登录用户">
+                <Profile @ref=profile></Profile>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            @if (Token.CurrentValue.NeedAuthentication)
+            {
+                <div class="nav-menu-item" title="登录">
+                    <SvgIcon IconName="login"></SvgIcon>
+                </div>
+            }
+        </NotAuthorized>
+    </AuthorizeView>
+    @*清除LocalStorage*@
+    <div class="nav-menu-item" @onclick=ClearLocalStorage title="@Localizer["NavMenu.TipTitle.ClearStorage"]">
+        <SvgIcon IconName="clear"
+                 ClassName="nav-menu-icon" />
+    </div>
+    @*系统设置*@
+    <div class="nav-menu-item" @onclick=OpenSetting title="@Localizer["NavMenu.TipTitle.SysSetting"]">
+        <SvgIcon IconName="setting">
+        </SvgIcon>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Class { get; set; }
+    FullScreen? fullscreen;
+    Profile? profile;
+    [Inject] IStringLocalizer<NavMenu> Localizer { get; set; }
+    [Inject] IOptionsMonitor<CultureOptions> CultureOptions { get; set; }
+    [Inject] IOptionsMonitor<Token> Token { get; set; }
+
+    async Task ToggleFullScreen()
+    {
+        await fullscreen!.Toggle();
+    }
+
+    async void OpenSetting()
+    {
+        await UI.ShowDrawerAsync<WebSetting>("", 500);
+    }
+
+    async Task ClearLocalStorage()
+    {
+        await (Module?.InvokeVoidAsync("clearLocalStorage") ?? ValueTask.CompletedTask);
+        await (profile?.HandleLogout() ?? Task.CompletedTask);
+    }
+}

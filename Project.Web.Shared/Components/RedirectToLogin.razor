@@ -1,0 +1,31 @@
+﻿
+@inject IOptionsMonitor<Token> Token
+@code {
+
+    [Inject] public IAppSession Context { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        try
+        {
+            @*_ = MsgSrv.Error("登录过期！请重新登录！");*@
+            var nav = Context.Navigator;
+            var redirect = nav.ToBaseRelativePath(nav.Uri);
+            nav.NavigateTo($"/login?Redirect={HttpUtility.UrlEncode(redirect)}", true);
+        }
+        catch
+        {
+
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+        // @*_ = MsgSrv.Error("登录过期！请重新登录！");*@
+        // var redirect = Navigator.ToBaseRelativePath(Navigator.Uri);
+        // Navigator.NavigateTo($"/login?Redirect={HttpUtility.UrlEncode(redirect)}", true);
+        // Navigator.NavigateTo("/login", true);
+    }
+}

@@ -1,0 +1,60 @@
+﻿@namespace Project.Web.Shared.Components
+@typeparam TData
+@inherits ConditionBase
+
+<MCol ColSpan="@ActualColWidth">
+    <span class="conditions" style="@Style">
+        <span class="label" style="width:@($"{Parent.LabelWidth}px");">
+            @Label
+        </span>
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+        else if (typeof(TData) == typeof(DateTime))
+        {
+            @(UI.BuildDatePicker<TData>(this).Bind(() => Value, NotifyChanged).Render())
+        }
+        else if (EnumValues != null)
+        {
+            @(UI.BuildDictionarySelect(this, EnumValues).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => stringValue, TryParseValue).Render())
+        }
+        else
+        {
+            @(UI.BuildInput<TData>(this).Bind(() => Value, NotifyChanged).Render())
+        }
+    </span>
+</MCol>
+
+@code {
+    [Parameter]
+    public TData? Value { get; set; }
+    [Parameter]
+    public EventCallback<TData> ValueChanged { get; set; }
+    [Parameter]
+    public Dictionary<string, string>? EnumValues { get; set; }
+
+    string? stringValue = null;
+   
+    Task NotifyChanged()
+    {
+        if (ValueChanged.HasDelegate)
+        {
+            return ValueChanged.InvokeAsync(Value);
+        }
+        return Task.CompletedTask;
+    }
+
+    Task TryParseValue()
+    {
+        if (!string.IsNullOrEmpty(stringValue))
+        {
+            var v = stringValue.ConvertTo<TData>();
+            if (ValueChanged.HasDelegate)
+            {
+                return ValueChanged.InvokeAsync(v);
+            }
+        }
+        return Task.CompletedTask;
+    }
+}
