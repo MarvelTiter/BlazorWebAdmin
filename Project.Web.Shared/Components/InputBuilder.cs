@@ -66,7 +66,11 @@ namespace Project.Web.Shared.Components
         {
             if (column.IsEnum || column.EnumValues != null)
             {
-                return UI.BuildSelect<KeyValuePair<string, string>, string>(Reciver, Column.EnumValues!).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => TempValue, () => UpdateValue(column.Property));
+                TempValue = column.Property.GetValue(Data)?.ToString() ?? string.Empty;
+                return UI.BuildSelect<KeyValuePair<string, string>, string>(Reciver, Column.EnumValues!)
+                    .LabelExpression(kv => kv.Value)
+                    .ValueExpression(kv => kv.Key)
+                    .Bind(() => TempValue, () => UpdateValue(column.Property));
             }
             var func = builderCaches.GetOrAdd(column, col =>
               {
