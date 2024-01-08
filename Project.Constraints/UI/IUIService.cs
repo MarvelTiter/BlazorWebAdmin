@@ -38,8 +38,8 @@ public interface IClickable<TReturn>
 public interface IBindableInputComponent<TPropModel, TValue> : IUIComponent
 {
     IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression);
-    IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, Func<Task> onchange);
-    IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null);
+    IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, Func<Task>? onchange);
+    //IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null);
     IBindableInputComponent<TPropModel, TValue> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value);
 }
 
@@ -88,7 +88,7 @@ public interface IUIService
     /// UI.BuildInput(this).Bind(() => ValueExpression).Render()
     /// </code>
     /// </summary>
-    IBindableInputComponent<EmptyProp, TValue> BuildInput<TValue>(object reciver);
+    IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object reciver);
 
     /// <summary>
     /// 生成密码输入框
@@ -96,18 +96,18 @@ public interface IUIService
     /// UI.BuildInput(this).Bind(() => ValueExpression).Render()
     /// </code>
     /// </summary>
-    IBindableInputComponent<EmptyProp, string> BuildPassword(object reciver);
+    IBindableInputComponent<DefaultProp, string> BuildPassword(object reciver);
     /// <summary>
     /// 生成数字输入框
     /// <code>
     /// UI.BuildInput&lt;TValue&gt;(this).Bind(() => ValueExpression).Render()
     /// </code>
     /// </summary>
-    IBindableInputComponent<EmptyProp, TValue> BuildNumberInput<TValue>(object reciver);
+    IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object reciver);
 
-    IBindableInputComponent<EmptyProp, TValue> BuildDatePicker<TValue>(object reciver);
+    IBindableInputComponent<DefaultProp, TValue> BuildDatePicker<TValue>(object reciver);
 
-    IBindableInputComponent<EmptyProp, bool> BuildCheckBox(object reciver);
+    IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object reciver);
 
     /// <summary>
     /// 生成下拉选择框
@@ -125,7 +125,7 @@ public interface IUIService
     /// </summary>
     IButtonInput BuildButton(object reciver);
 
-    IBindableInputComponent<EmptyProp, bool> BuildSwitch(object reciver);
+    IBindableInputComponent<SwitchProp, bool> BuildSwitch(object reciver);
 
     RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
 

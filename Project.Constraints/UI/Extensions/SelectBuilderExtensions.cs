@@ -31,7 +31,7 @@ namespace Project.Constraints.UI.Extensions
 
     public static class InputBuilderExtensions
     {
-        public static IBindableInputComponent<EmptyProp, string> BuildInput(this IUIService service, object reciver)
+        public static IBindableInputComponent<DefaultProp, string> BuildInput(this IUIService service, object reciver)
         {
             return service.BuildInput<string>(reciver);
         }

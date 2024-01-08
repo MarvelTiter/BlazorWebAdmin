@@ -23,24 +23,24 @@ namespace Project.UI.AntBlazor
         private readonly DrawerService drawerService = drawerService;
 
 
-        public IBindableInputComponent<EmptyProp, TValue> BuildInput<TValue>(object reciver)
+        public IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object reciver)
         {
-            return new BindableInputComponentBuilder<Input<TValue>, EmptyProp, TValue>() { Reciver = reciver };
+            return new BindableInputComponentBuilder<Input<TValue>, DefaultProp, TValue>() { Reciver = reciver };
         }
 
-        public IBindableInputComponent<EmptyProp, TValue> BuildNumberInput<TValue>(object reciver)
+        public IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object reciver)
         {
-            return new BindableInputComponentBuilder<InputNumber<TValue>, EmptyProp, TValue>() { Reciver = reciver };
+            return new BindableInputComponentBuilder<InputNumber<TValue>, DefaultProp, TValue>() { Reciver = reciver };
         }
 
-        public IBindableInputComponent<EmptyProp, TValue> BuildDatePicker<TValue>(object reciver)
+        public IBindableInputComponent<DefaultProp, TValue> BuildDatePicker<TValue>(object reciver)
         {
-            return new BindableInputComponentBuilder<DatePicker<TValue>, EmptyProp, TValue> { Reciver = reciver };
+            return new BindableInputComponentBuilder<DatePicker<TValue>, DefaultProp, TValue> { Reciver = reciver };
         }
 
-        public IBindableInputComponent<EmptyProp, string> BuildPassword(object reciver)
+        public IBindableInputComponent<DefaultProp, string> BuildPassword(object reciver)
         {
-            return new BindableInputComponentBuilder<InputPassword, EmptyProp, string>() { Reciver = reciver };
+            return new BindableInputComponentBuilder<InputPassword, DefaultProp, string>() { Reciver = reciver };
         }
 
         public IBindableInputComponent<SelectProp, TValue> BuildSelect<TValue>(object reciver, SelectItem<TValue>? options)
@@ -66,22 +66,31 @@ namespace Project.UI.AntBlazor
         {
             return new SelectComponentBuilder<Select<TValue, TItem>, SelectProp, TItem, TValue>(self =>
             {
-                self.SetComponent(s=>s.DataSource, options);
+                self.SetComponent(s => s.DataSource, options);
                 if (self.Model.ValueExpression is LambdaExpression valueLambda)
                     self.SetComponent(s => s.ValueProperty, valueLambda.Compile());
                 if (self.Model.LabelExpression is LambdaExpression labelLambda)
                     self.SetComponent(s => s.LabelProperty, labelLambda.Compile());
 
                 self.SetComponent(s => s.AllowClear, self.Model.AllowClear);
-                
+
             })
             { Reciver = reciver };
 
         }
 
-        public IBindableInputComponent<EmptyProp, bool> BuildSwitch(object reciver)
+        public IBindableInputComponent<SwitchProp, bool> BuildSwitch(object reciver)
         {
-            return new BindableInputComponentBuilder<Switch, EmptyProp, bool>() { Reciver = reciver };
+            // "CheckedChildren", "UnCheckedChildren"
+            var binder = new BindableInputComponentBuilder<Switch, SwitchProp, bool>(self =>
+            {
+                self.SetComponent(sw => sw.CheckedChildren, self.Model.CheckedLabel)
+                .SetComponent(sw => sw.UnCheckedChildren, self.Model.UnCheckedLabel);
+            })
+            { Reciver = reciver };
+            // @bind-Check
+            binder.Model.BindValueName = "Check";
+            return binder;
         }
 
         public IButtonInput BuildButton(object reciver)
@@ -276,9 +285,11 @@ namespace Project.UI.AntBlazor
             return new ComponentBuilder<AntCol>();
         }
 
-        public IBindableInputComponent<EmptyProp, bool> BuildCheckBox(object reciver)
+        public IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object reciver)
         {
-            return new BindableInputComponentBuilder<Checkbox, EmptyProp, bool>() { Reciver = reciver };
+            var binder = new BindableInputComponentBuilder<Checkbox, DefaultProp, bool>() { Reciver = reciver };
+            binder.Model.BindValueName = "Checked";
+            return binder;
         }
 
 

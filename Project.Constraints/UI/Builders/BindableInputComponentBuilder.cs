@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Common;
 using Project.Common.Attributes;
+using Project.Constraints.UI.Props;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 
@@ -9,7 +10,7 @@ namespace Project.Constraints.UI.Builders
     [IgnoreAutoInject]
     public class BindableInputComponentBuilder<TComponent, TPropModel, TValue, TSelf> : ComponentBuilder<TComponent, TSelf>, IBindableInputComponent<TPropModel, TValue>
         where TComponent : IComponent
-        where TPropModel : new()
+        where TPropModel : DefaultProp, new()
         where TSelf : ComponentBuilder<TComponent, TSelf>
     {
 
@@ -52,20 +53,16 @@ namespace Project.Constraints.UI.Builders
         }
         public IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression)
         {
-            return Bind(expression, "Value", null);
+            return Bind(expression, null);
         }
 
-        public IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, Func<Task> onchange)
-        {
-            return Bind(expression, "Value", onchange);
-        }
-        public IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null)
+        public IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, Func<Task>? onchange)
         {
             /*
-         * () => context.Value;
-         * Action<TValue> : context.Value = v;
-         *                  await onchange.Invoke();
-         */
+        * () => context.Value;
+        * Action<TValue> : context.Value = v;
+        *                  await onchange.Invoke();
+        */
             var body = expression.Body;
             var p = Expression.Parameter(typeof(TValue), "v");
             var actionExp = Expression.Lambda<Action<TValue>>(Expression.Assign(body, p), p);
@@ -81,10 +78,14 @@ namespace Project.Constraints.UI.Builders
             callback = EventCallback.Factory.Create(Reciver, Callback);
             var func = expression.Compile();
             value = func.Invoke();
-            parameters.Add(valueName, value!);
-            parameters.Add($"{valueName}Changed", callback);
+            parameters.Add(Model.BindValueName, value!);
+            parameters.Add($"{Model.BindValueName}Changed", callback);
             return this;
         }
+        //public IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null)
+        //{
+
+        //}
 
         public override RenderFragment Render()
         {
@@ -96,7 +97,7 @@ namespace Project.Constraints.UI.Builders
     [IgnoreAutoInject]
     public class BindableInputComponentBuilder<TComponent, TPropModel, TValue> : BindableInputComponentBuilder<TComponent, TPropModel, TValue, BindableInputComponentBuilder<TComponent, TPropModel, TValue>>, IBindableInputComponent<TPropModel, TValue>
         where TComponent : IComponent
-        where TPropModel : new()
+        where TPropModel : DefaultProp, new()
     {
         public BindableInputComponentBuilder()
         {

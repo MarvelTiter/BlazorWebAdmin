@@ -3,8 +3,8 @@
 namespace Project.Constraints.UI.Props
 {
     [IgnoreAutoInject]
-    public class EmptyProp
+    public class DefaultProp
     {
-
+        public string BindValueName { get; set; } = "Value";
     }
 }
