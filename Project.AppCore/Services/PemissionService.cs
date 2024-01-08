@@ -42,7 +42,7 @@ namespace Project.AppCore.Services
 
         public async Task<IQueryCollectionResult<Power>> GetPowerListByUserIdAsync(string usrId)
         {
-            var powers = await context.Select<Power, RolePower, UserRole>()
+            var powers = await context.Select<Power, RolePower, UserRole>(w => new { w.Tb1.PowerId, w.Tb1.PowerName, w.Tb1.ParentId, w.Tb1.PowerType, w.Tb1.PowerLevel, w.Tb1.Icon, w.Tb1.Path, w.Tb1.Sort })
                                       .Distinct()
                                       .InnerJoin<RolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
                                       .InnerJoin<UserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)

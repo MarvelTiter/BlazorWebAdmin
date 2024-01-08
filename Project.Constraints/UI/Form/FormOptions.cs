@@ -9,7 +9,7 @@ namespace Project.Constraints.UI.Form
         public List<ColumnInfo> Columns { get; } = columns;
         public int LabelSpan { get; set; } = 6;
         public int WrapperSpan { get; set; }
-
+        public Func<TData, Task<bool>>? OnPostAsync {  get; set; }
         public IEnumerable<ColumnInfo[]> GetRows()
         {
             var rowIndex = 1;

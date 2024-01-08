@@ -1,6 +1,6 @@
 ﻿@using Project.Constraints.UI.Form
 @typeparam TData where TData : class, new()
-<Form Model="@Options.Data" LabelColSpan="@Options.LabelSpan" WrapperColSpan="@Options.WrapperSpan">
+<Form Model="@Options.Data" LabelColSpan="@Options.LabelSpan" OnFinish=OnFinish WrapperColSpan="@Options.WrapperSpan">
     @foreach (var row in Options.GetRows())
     {
         var colSpan = 24 / row.Count();
@@ -23,8 +23,14 @@
     private int GetLabelSpan(int colSpan)
     {
         if (colSpan == 24)
-            return 8;
+            return 6;
 
         return Options.LabelSpan;
+    }
+
+    Task OnFinish(EditContext context)
+    {
+        // context.Validate();
+        return Task.CompletedTask;
     }
 }

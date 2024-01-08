@@ -39,7 +39,7 @@ namespace Project.AppCore.SystemPermission
 
         protected override async Task<bool> OnAddItemAsync()
         {
-            var user = await this.ShowAddFormAsync(Localizer["User.DialogTitle.Add"], "60%");
+            var user = await this.ShowAddFormAsync(Localizer["User.DialogTitle.Add"], width:"60%");
             await UserSrv.InsertUserAsync(user);
             return true;
         }
@@ -48,7 +48,7 @@ namespace Project.AppCore.SystemPermission
         public async Task<bool> EditUser(User user)
         {
             //var content = UI.BuildForm(new Constraints.UI.Form.FormOptions<User>(UI, user, Options.Columns));
-            var n = await this.ShowEditFormAsync(Localizer["User.DialogTitle.Modify"], user, "60%");
+            var n = await this.ShowEditFormAsync(Localizer["User.DialogTitle.Modify"], user, width: "60%");
             await UserSrv.UpdateUserAsync(n);
             return true;
         }
