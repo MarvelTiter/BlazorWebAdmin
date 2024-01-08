@@ -1,20 +1,29 @@
-# 基于 AntDesignBlazor 的 Blazor 后台管理框架
+### . 创建新项目（启动程序），引用 Shared，AppCore，Constraints，Model 项目
 
-### . 创建新项目（启动程序），引用 Shared，AppCore，Services 项目
-
-1. 修改 Program
-
+1. 移动App.razor, Routes.razor, _Imports.razor到根目录
+2. 删除Components文件夹
+3. 修改Routes.razor
 ```CSharp
-using BlazorWeb.Shared;
-
-BlazorWeb.Shared.Program.Run("Demo", DefaultSetup.Setup, DefaultSetup.SetupCustomAppUsage, null, args);
+<Project.AppCore.Layouts.AppRoot AppAssembly="typeof(App).Assembly"></Project.AppCore.Layouts.AppRoot>
 ```
-
-2. 修改 App.Razor
-
+4. 修改Program.cs
 ```CSharp
-@using BlazorWeb.Shared.Layouts
-<AppRoot AppAssembly="@typeof(App).Assembly"></AppRoot>
-```
+using Project.AppCore;
 
-3. 拷贝 Demo 项目中的 Pages、appsettings.json
+builder.AddProject(setting =>
+{
+    // ICustomSettingProvider的实现
+    setting.SettingProviderType = typeof(SettingImpl);
+    setting.AutoInjectConfig = filter =>
+    {
+
+    };
+});
+
+app.UseProject();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode()
+    .AddAdditionalAssemblies([.. Config.Pages]);
+
+```

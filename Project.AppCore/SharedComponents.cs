@@ -6,7 +6,6 @@ using Project.Web.Shared;
 using Project.AppCore.Locales.Extensions;
 using Project.AppCore.Auth;
 using Project.Constraints;
-using Project.AppCore.Options;
 using Project.Constraints.Options;
 using Project.AppCore.Routers;
 using Project.AppCore.Store;
@@ -17,16 +16,14 @@ using MDbContext;
 using Microsoft.Data.Sqlite;
 using AspectCore.Extensions.DependencyInjection;
 using Project.AppCore.Middlewares;
-using Project.Constraints.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Project.Models.Entities;
-using Project.AppCore.Services;
+using MT.Toolkit.LogTool.LogExtension;
 namespace Project.AppCore;
 
 public class ProjectSetting
 {
     public Type SettingProviderType { get; set; }
     public Action<AutoInjectFilter>? AutoInjectConfig { get; set; }
+    public bool AddDefaultLogger { get; set; }
 }
 
 public static class SharedComponents
@@ -86,6 +83,16 @@ public static class SharedComponents
             var sp = provider.GetService<IDownloadServiceProvider>();
             return sp?.GetService();
         });
+
+        if (setting.AddDefaultLogger)
+        {
+            builder.Logging.AddSimpleLogger(config =>
+            {
+                config.EnabledLogType = MT.Toolkit.LogTool.LogType.Console | MT.Toolkit.LogTool.LogType.File;
+                config.RedirectLogTarget(MT.Toolkit.LogTool.SimpleLogLevel.Information, MT.Toolkit.LogTool.LogType.File);
+                config.LogDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            });
+        }
 
 
         services.ConfigureDynamicProxy();
