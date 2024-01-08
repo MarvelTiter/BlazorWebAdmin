@@ -46,14 +46,14 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     public Func<TableButton<TData>, bool, Task>? OnTableButtonClickAsync { get; set; }
     public Func<IEnumerable<TData>, Task> OnSaveExcelAsync { get; set; }
     public Func<IEnumerable<TData>, Task> OnSelectedChangedAsync { get; set; }
-    public ColumnInfo? this[string name]
+    public ColumnInfo this[string name]
     {
         get
         {
-            return Columns?.FirstOrDefault(c => c.PropertyOrFieldName == name);
+            return Columns.FirstOrDefault(c => c.PropertyOrFieldName == name) ?? throw new ArgumentException($"属性[{name}]未配置[ColumnDefinitionAttribute]或[DisplayAttribute]或[FormAttribute], 因此未被收集到TableOptions.Columns中");
         }
     }
-    public ColumnInfo? this[Expression<Func<TData, object>> expression]
+    public ColumnInfo this[Expression<Func<TData, object>> expression]
     {
         get
         {
