@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.Extensions.Localization;
 using MT.Toolkit.Mapper;
 using Project.Constraints.Page;
 using Project.Constraints.UI.Form;
@@ -16,6 +17,10 @@ namespace Project.Constraints.UI.Flyout
     {
         [Parameter] public FormParam<TValue> DialogModel { get; set; }
         [Parameter] public RenderFragment ChildContent { get; set; }
+        [Inject] protected IStringLocalizer<TValue> Localizer { get; set; }
+
+        protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TValue).Name}.{prop}"];
+
         protected TValue? Value
         {
             get
