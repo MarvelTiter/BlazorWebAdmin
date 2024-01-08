@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Project.Constraints.UI.Extensions;
 
 namespace Project.AppCore.SystemPermission
 {
@@ -59,6 +60,5 @@ namespace Project.AppCore.SystemPermission
             var ret = await UserSrv.DeleteUserAsync(user);
             return ret.Success;
         }
-
     }
 }

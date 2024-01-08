@@ -5,7 +5,7 @@ namespace Project.AppCore
 {
     public class AutoInjectFilter
     {
-        public Func<string, bool> FileFilter { get; set; } = f => true;
+        public Func<string, bool> FileFilter { get; set; } = f => false;
         public Func<Type, bool> TypeFilter { get; set; } = t => true;
     }
     public static class AutoDI

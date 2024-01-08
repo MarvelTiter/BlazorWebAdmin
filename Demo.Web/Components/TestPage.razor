@@ -1,0 +1,31 @@
+﻿@page "/test"
+@using Project.Common.Attributes
+@using Project.Web.Shared.Components.Layouts
+@attribute [PageInfo(Title = "测试")]
+
+<MGrid MinWidth="300" Gap="10px">
+    <MGridContent ColSpan="(1,3)" RowSpan="(1,3)">
+        <div class="item" style="height:100%">123</div>
+    </MGridContent>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+</MGrid>
+
+@code {
+
+}
+
+<style>
+    .item {
+        border: solid 1px black;
+        height: 300px;
+    }
+</style>
