@@ -11,18 +11,18 @@ using Project.Constraints.UI.Form;
 using Project.Constraints.UI.Props;
 using Project.Constraints.UI.Table;
 using Project.UI.AntBlazor.Components;
+using System;
 using System.Linq.Expressions;
 
 namespace Project.UI.AntBlazor
 {
 
-    public class UIService(ModalService modalService, MessageService messageService, DrawerService drawerService) : IUIService
+    public class UIService(ModalService modalService, MessageService messageService, DrawerService drawerService, NotificationService notificationService) : IUIService
     {
         private readonly ModalService modalService = modalService;
         private readonly MessageService messageService = messageService;
         private readonly DrawerService drawerService = drawerService;
-
-
+        private readonly NotificationService notificationService = notificationService;
         public IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object reciver)
         {
             return new BindableInputComponentBuilder<Input<TValue>, DefaultProp, TValue>() { Reciver = reciver };
@@ -174,7 +174,12 @@ namespace Project.UI.AntBlazor
 
         public void Notify(Constraints.UI.MessageType type, string title, string message)
         {
-            throw new NotImplementedException();
+            _ = notificationService.Error(new NotificationConfig()
+            {
+                Message = title,
+                Description = message,
+                Placement = NotificationPlacement.BottomRight,
+            });
         }
 
         public RenderFragment BuildDropdown(DropdownOptions options)
