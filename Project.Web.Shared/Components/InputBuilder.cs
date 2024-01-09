@@ -80,7 +80,6 @@ namespace Project.Web.Shared.Components
                   MethodInfo? builderMethod = null;
                   var propertyType = col.DataType;
 
-
                   switch (InputBuilderHelper.GetInputType(propertyType, col))
                   {
                       case InputType.Text:

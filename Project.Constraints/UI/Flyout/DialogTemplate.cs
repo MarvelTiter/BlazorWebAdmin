@@ -21,7 +21,7 @@ namespace Project.Constraints.UI.Flyout
 
         protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TValue).Name}.{prop}"];
 
-        protected TValue? Value
+        protected TValue Value
         {
             get
             {
@@ -81,10 +81,19 @@ namespace Project.Constraints.UI.Flyout
     public sealed class FormDialogTemplate<TValue> : DialogTemplate<TValue> where TValue : class, new()
     {
         [Parameter] public IEnumerable<ColumnInfo> Columns { get; set; }
+        FormOptions<TValue>? options;
+        public override Task<bool> OnPostAsync()
+        {
+            if (options != null && options.Validate != null)
+            {
+                return Task.FromResult(options.Validate());
+            }
+            return base.OnPostAsync();
+        }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var options = new FormOptions<TValue>(UI, Value, Columns.ToList());
+            options = new FormOptions<TValue>(UI, Value, Columns.ToList());
             ChildContent = UI.BuildForm(options);
             base.BuildRenderTree(builder);
         }

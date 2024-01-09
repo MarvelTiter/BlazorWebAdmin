@@ -59,10 +59,10 @@ namespace Project.Constraints.UI.Builders
         public IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, Func<Task>? onchange)
         {
             /*
-        * () => context.Value;
-        * Action<TValue> : context.Value = v;
-        *                  await onchange.Invoke();
-        */
+             * () => context.Value;
+             * Action<TValue> : context.Value = v;
+             *                  await onchange.Invoke();
+             */
             var body = expression.Body;
             var p = Expression.Parameter(typeof(TValue), "v");
             var actionExp = Expression.Lambda<Action<TValue>>(Expression.Assign(body, p), p);
@@ -80,6 +80,7 @@ namespace Project.Constraints.UI.Builders
             value = func.Invoke();
             parameters.Add(Model.BindValueName, value!);
             parameters.Add($"{Model.BindValueName}Changed", callback);
+            parameters.Add("ValueExpression", expression);
             return this;
         }
         //public IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null)

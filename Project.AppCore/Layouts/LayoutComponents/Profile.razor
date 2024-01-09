@@ -1,6 +1,7 @@
 ﻿@using Project.Constraints.Page
 @using Project.Constraints.Services
 @using Project.Constraints.UI.Dropdown
+@using Project.Models.Entities.Permissions
 @using Project.Web.Shared.Utils;
 @using Project.AppCore.Auth
 @using Project.Common
@@ -31,10 +32,10 @@
                 {
                     OnClick = HandlePwdModify,
                     Content = @<div class="menu-item green-tag">@Localizer["NavMenu.UserAction.ModifyPassword"]</div>,
-        });
+            });
 
         options.Actions.Add(new ActionInfo
-        {
+                {
                     OnClick = HandleLogout,
                     Content = @<div class="menu-item red-tag">@Localizer["NavMenu.UserAction.Logout"]</div>,
         });
@@ -47,10 +48,12 @@
         await AuthenticationStateProvider.ClearState();
     }
 
-    Task HandlePwdModify()
+    async Task HandlePwdModify()
     {
-        // TODO 打开dialog修改密码
-        return Task.CompletedTask;
+        if (User.UserInfo == null)
+            return;
+        var pwd = await UI.ShowDialogAsync<ModifyUserPassword, UserPwd>(Localizer["UserPwd.Title"]);
+        await UserSrv.ModifyUserPasswordAsync(User.UserInfo.UserId, pwd.OldPassword, pwd.Password);
     }
 }
 <style>

@@ -1,6 +1,7 @@
-﻿@using Project.Constraints.UI.Form
+﻿@using AntDesign.Internal
+@using Project.Constraints.UI.Form
 @typeparam TData where TData : class, new()
-<Form Model="@Options.Data" LabelColSpan="@Options.LabelSpan" OnFinish=OnFinish WrapperColSpan="@Options.WrapperSpan">
+<Form Model="@Options.Data" LabelAlign=@AntLabelAlignType.Right LabelColSpan="@Options.LabelSpan" OnFinish=OnFinish @ref=form WrapperColSpan="@Options.WrapperSpan">
     @foreach (var row in Options.GetRows())
     {
         var colSpan = 24 / row.Count();
@@ -20,6 +21,15 @@
 @code {
     [Parameter] public FormOptions<TData> Options { get; set; }
     [Inject] IStringLocalizer<TData> Localizer { get; set; }
+    IForm form;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+            Options.Validate = form.Validate;
+    }
+
     private int GetLabelSpan(int colSpan)
     {
         if (colSpan == 24)
