@@ -7,16 +7,14 @@ using Project.AppCore.Locales.Extensions;
 using Project.AppCore.Auth;
 using Project.Constraints;
 using Project.Constraints.Options;
-using Project.AppCore.Routers;
-using Project.AppCore.Store;
-using Project.Constraints.Store;
-using Project.Constraints.UI;
 using Project.UI.AntBlazor;
 using MDbContext;
 using Microsoft.Data.Sqlite;
 using AspectCore.Extensions.DependencyInjection;
 using Project.AppCore.Middlewares;
 using MT.Toolkit.LogTool.LogExtension;
+using Microsoft.AspNetCore.DataProtection;
+using System.Reflection;
 namespace Project.AppCore;
 
 public class ProjectSetting
@@ -24,6 +22,7 @@ public class ProjectSetting
     public Type SettingProviderType { get; set; }
     public Action<AutoInjectFilter>? AutoInjectConfig { get; set; }
     public bool AddDefaultLogger { get; set; }
+    public AppInfo App => Config.App;
 }
 
 public static class SharedComponents
@@ -52,7 +51,18 @@ public static class SharedComponents
 
         action.Invoke(setting);
 
-        services.AddAntDesign();
+        Config.SetFooter($@"
+        <footer style=""text-align:center"">
+             <span>{Config.App.Id} ©2023-{DateTime.Now:yyyy} Powered By </span>
+             <a href=""#"" target="""" _blank"""">{Config.App.Company}</a>
+             <span>{Config.App.Version}</span>
+         </footer>
+");
+
+        var name = Assembly.GetEntryAssembly()?.GetName().Name!;
+        services.AddDataProtection().SetApplicationName(name);
+        //
+        services.AddAntDesignUI();
         // 多语言服务
         services.AddJsonLocales();
         // excel操作
@@ -66,14 +76,11 @@ public static class SharedComponents
         services.AddScoped(typeof(ICustomSettingProvider), settingImplType);
         services.AddControllers().AddApplicationPart(typeof(AppConst).Assembly);
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-        services.AddScoped<IAppSession, AppSession>();
         services.AddScoped<IAuthenticationStateProvider>(provider =>
         {
             var auth = provider.GetService<AuthenticationStateProvider>() as CustomAuthenticationStateProvider;
             return auth;
         });
-        services.AddScoped<IRouterStore, RouterStore>();
-        services.AddScoped<IUIService, UIService>();
 
         services.AddScoped<IReconnectorProvider, ReconnectorProvider>();
         services.AddScoped<IDownloadServiceProvider, DownloadServiceProvider>();
