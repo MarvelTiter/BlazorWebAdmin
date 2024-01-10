@@ -1,5 +1,7 @@
 ﻿@page "/test"
 @using Project.Common.Attributes
+@using Project.Constraints.Services
+@using Project.Models.Entities
 @using Project.Web.Shared.Components.Layouts
 @attribute [PageInfo(Title = "测试")]
 
@@ -19,8 +21,29 @@
     <div class="item"></div>
 </MGrid>
 
-@code {
+<AntDesign.Table DataSource="users">
+    <AntDesign.PropertyColumn Property="u=>u.UserId"></AntDesign.PropertyColumn>
+    <AntDesign.PropertyColumn Property="u=>u.UserName"></AntDesign.PropertyColumn>
+    <AntDesign.PropertyColumn Property="u=>u.Password"></AntDesign.PropertyColumn>
+    <AntDesign.PropertyColumn Property="u=>u.Age"></AntDesign.PropertyColumn>
+    <AntDesign.PropertyColumn Property="u=>u.LastLogin"></AntDesign.PropertyColumn>
+    <AntDesign.ActionColumn Title="操作">
+        @{
+            System.Diagnostics.Debug.WriteLine("Test");
+            <AntDesign.Button>查看</AntDesign.Button>
+        }
+    </AntDesign.ActionColumn>
+</AntDesign.Table>
 
+@code {
+    [Inject] IUserService UserService { get; set; }
+    IEnumerable<User> users = Enumerable.Empty<User>();
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var result = await UserService.GetUserListAsync(new Project.Constraints.Models.Request.GenericRequest<User>());
+        users = result.Payload;
+    }
 }
 
 <style>
