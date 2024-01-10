@@ -3,6 +3,12 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Project.Constraints.UI.Table
 {
+    /// <summary>
+    /// 委托签名
+    /// <code>
+    /// public Task&lt;bool&gt; ButtonMethodImpl(TData data)
+    /// </code>
+    /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class TableButtonAttribute : Attribute
     {
@@ -22,7 +28,10 @@ namespace Project.Constraints.UI.Table
         /// </code>
         /// </summary>
         public string? VisibleExpression { get; set; }
-        public string? AdditionalVisibleParameter { get; set; }
+        /// <summary>
+        /// 为<see cref="LabelExpression"/>或者<see cref="VisibleExpression"/>的委托提供的额外的参数
+        /// </summary>
+        public string? AdditionalParameter { get; set; }
         public string Type { get; set; } = "primary";
         public bool Danger { get; set; }
         public string? ConfirmContent { get; set; }
@@ -62,7 +71,7 @@ namespace Project.Constraints.UI.Table
     public class TableButtonContext<T>
     {
         public T Data { get; set; }
-        public TableButton<T> ButtonDefinition { get; set; }
+        //public TableButton<T> ButtonDefinition { get; set; }
         public string? AdditionalParameter { get; set; }
     }
 
@@ -86,26 +95,33 @@ namespace Project.Constraints.UI.Table
             Danger = options.Danger;
             ConfirmContent = options.ConfirmContent;
             ConfirmTitle = options.ConfirmTitle;
-            AdditionalVisibleParameter = options.AdditionalVisibleParameter;
+            AdditionalParameter = options.AdditionalParameter;
         }
         public string Label { get; set; }
-        public Func<TData, string>? LabelExpression { get; set; }
         public bool Danger { get; set; }
         public string Icon { get; set; }
         public string ButtonType { get; set; }
         public string? ConfirmContent { get; set; }
         public string? ConfirmTitle { get; set; }
-        public string? AdditionalVisibleParameter { get; set; }
+        public string? AdditionalParameter { get; set; }
         public Func<TData, Task<bool>> Callback { get; set; }
 
         private Func<TableButtonContext<TData>, bool>? visible;
+        private Func<TableButtonContext<TData>, string>? label;
+        public Func<TableButtonContext<TData>, string>? LabelExpression { set => label = value; }
 
-        public Func<TableButtonContext<TData>, bool> Visible { set => visible = value; }
+        public Func<TableButtonContext<TData>, bool>? VisibleExpression { set => visible = value; }
         public bool CheckVisible(TData data)
         {
-            var context = new TableButtonContext<TData>() { Data = data, ButtonDefinition = this, AdditionalParameter = AdditionalVisibleParameter };
+            var context = new TableButtonContext<TData>() { Data = data, AdditionalParameter = AdditionalParameter };
             return visible?.Invoke(context) ?? true;
         }
+        public string? GetLabel(TData data)
+        {
+            var context = new TableButtonContext<TData>() { Data = data, AdditionalParameter = AdditionalParameter };
+            return label?.Invoke(context);
+        }
+
         public static TableButton<TData> Edit(Func<TData, Task<bool>> action)
         {
             return new TableButton<TData>

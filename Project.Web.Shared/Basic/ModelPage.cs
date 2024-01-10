@@ -24,7 +24,7 @@ public static class ModelPageExtension
         return n;
     }
 
-    public static async Task<TModel> ShowAddFormAsync<TModel, TQuery>(this ModelPage<TModel, TQuery> page, string title,string? width = null)
+    public static async Task<TModel> ShowAddFormAsync<TModel, TQuery>(this ModelPage<TModel, TQuery> page, string title, string? width = null)
          where TQuery : IRequest, new()
         where TModel : class, new()
     {
@@ -65,8 +65,6 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
         Options.ShowAddButton = IsOverride(nameof(OnAddItemAsync));
     }
 
-
-
     protected abstract object SetRowKey(TModel model);
 
     private List<TableButton<TModel>> CollectButtons()
@@ -85,13 +83,13 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
             if (btnOptions.LabelExpression != null)
             {
                 var le = type.GetMethod(btnOptions.LabelExpression);
-                btn.LabelExpression = le?.CreateDelegate<Func<TModel, string>>(this);
+                btn.LabelExpression = le?.CreateDelegate<Func<TableButtonContext<TModel>, string>>(this);
             }
 
             if (btnOptions.VisibleExpression != null)
             {
                 var ve = type.GetMethod(btnOptions.VisibleExpression);
-                btn.Visible = ve?.CreateDelegate<Func<TableButtonContext<TModel>, bool>>(this) ?? (t => true);
+                btn.VisibleExpression = ve?.CreateDelegate<Func<TableButtonContext<TModel>, bool>>(this);
             }
 
             buttons.Add(btn);

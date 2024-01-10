@@ -148,7 +148,7 @@
                  Icon=@definition.Icon
                  OnClickStopPropagation
                  OnClick=@(()=>InvokeButtonAction(definition, context))>
-        @(definition.LabelExpression?.Invoke(context) ?? TableLocalizer[definition.Label])
+        @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
     </Button>
         ;
     }
