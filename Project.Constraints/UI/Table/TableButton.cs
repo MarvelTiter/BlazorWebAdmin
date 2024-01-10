@@ -18,7 +18,7 @@ namespace Project.Constraints.UI.Table
         /// <summary>
         /// 委托签名
         /// <code>
-        /// public bool VisibleExpressionImpl(TableButtonContext&lt;TData&gt; data)
+        /// public bool VisibleExpressionImpl(TableButtonContext&lt;TData&gt; ctx)
         /// </code>
         /// </summary>
         public string? VisibleExpression { get; set; }

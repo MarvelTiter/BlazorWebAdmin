@@ -63,10 +63,9 @@ namespace Project.AppCore.SystemPermission
 
         string[] defaultPageButtons = new[] { "Add", "Modify", "Delete" };
 
-        public string GetAddLabel(Power p) => Localizer["PermissionSetting.AddChild"].Value;
-        public bool CanShow(Power p) => p.PowerType == PowerType.Page;
+        public bool CanShow(TableButtonContext<Power> context) => context.Data.PowerType == PowerType.Page;
 
-        [TableButton(LabelExpression = nameof(GetAddLabel), VisibleExpression = nameof(CanShow))]
+        [TableButton(Label = "PermissionSetting.AddChild", VisibleExpression = nameof(CanShow))]
         public async Task<bool> AddPower(Power parent)
         {
             var power = await this.ShowAddFormAsync("新增权限");
