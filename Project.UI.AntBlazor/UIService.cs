@@ -142,6 +142,32 @@ namespace Project.UI.AntBlazor
             }
         }
 
+        public void Alert(Constraints.UI.MessageType type, string title, string message)
+        {
+            var option = new ConfirmOptions
+            {
+                Title = title,
+                Content = message
+            };
+            switch (type)
+            {
+                case Constraints.UI.MessageType.Success:
+                    modalService.Success(option);
+                    break;
+                case Constraints.UI.MessageType.Error:
+                    modalService.Error(option);
+                    break;
+                case Constraints.UI.MessageType.Warning:
+                    modalService.Warning(option);
+                    break;
+                case Constraints.UI.MessageType.Information:
+                    modalService.Info(option);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new()
         {
             return builder =>
@@ -173,7 +199,7 @@ namespace Project.UI.AntBlazor
         }
 
 
-
+        // TODO Notify
         public void Notify(Constraints.UI.MessageType type, string title, string message)
         {
             _ = notificationService.Error(new NotificationConfig()
@@ -299,6 +325,6 @@ namespace Project.UI.AntBlazor
             return binder;
         }
 
-
+        
     }
 }

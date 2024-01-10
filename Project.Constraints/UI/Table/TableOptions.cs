@@ -54,14 +54,13 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
             return Columns.FirstOrDefault(c => c.PropertyOrFieldName == name) ?? throw new ArgumentException($"属性[{name}]未配置[ColumnDefinitionAttribute]或[DisplayAttribute]或[FormAttribute], 因此未被收集到TableOptions.Columns中");
         }
     }
-    public ColumnInfo this[Expression<Func<TData, object>> expression]
+
+    public ColumnInfo GetColumn<TMember>(Expression<Func<TData, TMember>> expression)
     {
-        get
-        {
-            var prop = (expression).ExtractProperty();
-            return this[prop.Name];
-        }
+        var prop = (expression).ExtractProperty();
+        return this[prop.Name];
     }
+
     public async Task RefreshAsync()
     {
         Loading = true;
