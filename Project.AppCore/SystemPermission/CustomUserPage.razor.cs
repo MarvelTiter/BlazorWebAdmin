@@ -61,16 +61,6 @@ namespace Project.AppCore.SystemPermission
             var ret = await UserSrv.DeleteUserAsync(user);
             return ret.Success;
         }
-        int row;
-        public bool TestVisible(TableButtonContext<User> context)
-        {
-            return context.AdditionalParameter == "123";
-        }
-        [TableButton(Label = "测试", VisibleExpression = nameof(TestVisible), AdditionalVisibleParameter = "1234")]
-        public Task<bool> TestButton(User user)
-        {
-            UI.Info(nameof(TestButton));
-            return Task.FromResult(false);
-        }
+        
     }
 }
