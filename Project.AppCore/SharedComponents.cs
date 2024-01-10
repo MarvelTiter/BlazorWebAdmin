@@ -1,5 +1,4 @@
 ﻿using Project.Web.Shared.Components;
-using Project.Web.Shared.Pages;
 using LightExcel;
 using Microsoft.AspNetCore.Components.Authorization;
 using Project.Web.Shared;
@@ -84,7 +83,6 @@ public static class SharedComponents
 
         services.AddScoped<IReconnectorProvider, ReconnectorProvider>();
         services.AddScoped<IDownloadServiceProvider, DownloadServiceProvider>();
-        services.AddSingleton<IDashboardContentProvider, DashboardContentProvider>();
         services.AddScoped<IDownloadService>(provider =>
         {
             var sp = provider.GetService<IDownloadServiceProvider>();

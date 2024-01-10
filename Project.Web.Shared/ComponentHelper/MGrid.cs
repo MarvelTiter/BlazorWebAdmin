@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace Project.Web.Shared.Components.Layouts
+namespace Project.Web.Shared.ComponentHelper
 {
     public static class GridHelper
     {
@@ -61,9 +61,9 @@ namespace Project.Web.Shared.Components.Layouts
             var style = "";
             builder.OpenElement(0, "div");
             if (ColSpan.Start * ColSpan.End > 0)
-                style += ($"grid-column:{ColSpan.Start}/{ColSpan.End};");
+                style += $"grid-column:{ColSpan.Start}/{ColSpan.End};";
             if (RowSpan.Start * RowSpan.End > 0)
-                style += ($"grid-row:{RowSpan.Start}/{RowSpan.End};");
+                style += $"grid-row:{RowSpan.Start}/{RowSpan.End};";
             builder.AddAttribute(1, "style", style);
             builder.AddContent(2, ChildContent);
             builder.CloseElement();

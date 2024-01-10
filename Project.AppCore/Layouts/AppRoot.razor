@@ -2,7 +2,6 @@
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
 @using Project.Constraints
-@using Project.Web.Shared.Pages
 @using Project.AppCore;
 @using System.Reflection;
 @using Project.Web.Shared.Components;
@@ -26,12 +25,4 @@
 @code {
     [Parameter]
     public Assembly AppAssembly { get; set; }
-    [Parameter]
-    public Type? DashBoardType { get; set; }
-    [Inject] IDashboardContentProvider ContentProvider { get; set; }
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        ContentProvider.SetComponentType(DashBoardType);
-    }
 }

@@ -43,12 +43,12 @@
                         var btns = Options.Buttons.Where(b => b.CheckVisible(context)).ToList();
                         if (Options.ActionButtonColumn.HasValue)
                         {
-                            <Project.Web.Shared.Components.Layouts.MGrid GridColumns="@Options.ActionButtonColumn.Value" Gap="5px">
+                            <Project.Web.Shared.ComponentHelper.MGrid GridColumns="@Options.ActionButtonColumn.Value" Gap="5px">
                                 @foreach (var btn in btns)
                                 {
                                     @CreateButton(btn, context)
                                 }
-                            </Project.Web.Shared.Components.Layouts.MGrid>
+                            </Project.Web.Shared.ComponentHelper.MGrid>
                         }
                         else if (btns.Count <= 2)
                         {

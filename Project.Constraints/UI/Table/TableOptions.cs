@@ -22,7 +22,9 @@ public class TableOptions
     public bool ShowAddButton { get; set; }
     public bool ShowExportButton { get; set; }
     public string ActionColumnWidth { get; set; } = "170";
-    // TODO 表格按钮列使用grid布局
+    /// <summary>
+    /// 启用grid布局
+    /// </summary>
     public int? ActionButtonColumn { get; set; }
     public bool Exportable { get; set; }
     public bool AutoRefreshData { get; set; } = true;

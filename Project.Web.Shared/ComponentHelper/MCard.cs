@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Rendering;
 using Project.Constraints.Page;
 
-namespace Project.Web.Shared.Components
+namespace Project.Web.Shared.ComponentHelper
 {
     public class MCard : BasicComponent
     {
