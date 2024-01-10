@@ -23,7 +23,5 @@ namespace Project.AppCore.SystemPermission
 
         protected override Task<IQueryCollectionResult<RunLog>> OnExportAsync(GenericRequest<RunLog> query) => base.OnExportAsync(query);
 
-        [TableButton]
-        Task Detial(RunLog log) => Task.CompletedTask;
     }
 }

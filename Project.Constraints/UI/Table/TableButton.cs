@@ -18,10 +18,11 @@ namespace Project.Constraints.UI.Table
         /// <summary>
         /// 委托签名
         /// <code>
-        /// public bool VisibleExpressionImpl(TData data)
+        /// public bool VisibleExpressionImpl(TableButtonContext&lt;TData&gt; data)
         /// </code>
         /// </summary>
         public string? VisibleExpression { get; set; }
+        public string? AdditionalVisibleParameter { get; set; }
         public string Type { get; set; } = "primary";
         public bool Danger { get; set; }
         public string? ConfirmContent { get; set; }
@@ -58,19 +59,11 @@ namespace Project.Constraints.UI.Table
         }
     }
 
-    /// <summary>
-    /// 委托签名
-    /// <code>
-    /// Task&lt;bool&gt; AddMethodImpl()
-    /// </code>
-    /// </summary>
-    public class AddButton : TableButtonAttribute
+    public class TableButtonContext<T>
     {
-        public AddButton()
-        {
-            Label = "TableButtons.Add";
-            Icon = "plus";
-        }
+        public T Data { get; set; }
+        public TableButton<T> ButtonDefinition { get; set; }
+        public string? AdditionalParameter { get; set; }
     }
 
     /// <summary>
@@ -93,6 +86,7 @@ namespace Project.Constraints.UI.Table
             Danger = options.Danger;
             ConfirmContent = options.ConfirmContent;
             ConfirmTitle = options.ConfirmTitle;
+            AdditionalVisibleParameter = options.AdditionalVisibleParameter;
         }
         public string Label { get; set; }
         public Func<TData, string>? LabelExpression { get; set; }
@@ -101,9 +95,17 @@ namespace Project.Constraints.UI.Table
         public string ButtonType { get; set; }
         public string? ConfirmContent { get; set; }
         public string? ConfirmTitle { get; set; }
+        public string? AdditionalVisibleParameter { get; set; }
         public Func<TData, Task<bool>> Callback { get; set; }
-        public Func<TData, bool> Visible { get; set; } = t => true;
 
+        private Func<TableButtonContext<TData>, bool>? visible;
+
+        public Func<TableButtonContext<TData>, bool> Visible { set => visible = value; }
+        public bool CheckVisible(TData data)
+        {
+            var context = new TableButtonContext<TData>() { Data = data, ButtonDefinition = this, AdditionalParameter = AdditionalVisibleParameter };
+            return visible?.Invoke(context) ?? true;
+        }
         public static TableButton<TData> Edit(Func<TData, Task<bool>> action)
         {
             return new TableButton<TData>

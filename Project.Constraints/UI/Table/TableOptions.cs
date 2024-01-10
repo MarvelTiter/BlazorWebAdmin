@@ -46,6 +46,7 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     public Func<TableButton<TData>, bool, Task>? OnTableButtonClickAsync { get; set; }
     public Func<IEnumerable<TData>, Task> OnSaveExcelAsync { get; set; }
     public Func<IEnumerable<TData>, Task> OnSelectedChangedAsync { get; set; }
+    //public Func<Task> RefreshAsync { get; set; }
     public ColumnInfo this[string name]
     {
         get

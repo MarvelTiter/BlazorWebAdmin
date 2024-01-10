@@ -52,7 +52,6 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
         Options.Columns = typeof(TModel).GenerateColumns();
         Options.AutoRefreshData = true;
         Options.RowKey = SetRowKey;
-        Options.NotifyChanged = StateHasChanged;
         Options.Buttons = CollectButtons();
         Options.OnQueryAsync = OnQueryAsync;
         Options.OnAddItemAsync = OnAddItemAsync;
@@ -80,6 +79,7 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
         foreach (var method in methods)
         {
             var btnOptions = method.GetCustomAttribute<TableButtonAttribute>()!;
+            ArgumentNullException.ThrowIfNull(btnOptions.Label ?? btnOptions.LabelExpression);
             var btn = new TableButton<TModel>(btnOptions);
             btn.Callback = method.CreateDelegate<Func<TModel, Task<bool>>>(this);
             if (btnOptions.LabelExpression != null)
@@ -91,7 +91,7 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
             if (btnOptions.VisibleExpression != null)
             {
                 var ve = type.GetMethod(btnOptions.VisibleExpression);
-                btn.Visible = ve?.CreateDelegate<Func<TModel, bool>>(this) ?? (t => true);
+                btn.Visible = ve?.CreateDelegate<Func<TableButtonContext<TModel>, bool>>(this) ?? (t => true);
             }
 
             buttons.Add(btn);
@@ -107,7 +107,6 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
             if (Options.LoadDataOnLoaded)
             {
                 await Options.RefreshAsync();
-                await InvokeAsync(StateHasChanged);
             }
         }
     }
