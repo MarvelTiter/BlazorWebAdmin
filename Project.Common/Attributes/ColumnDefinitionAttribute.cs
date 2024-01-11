@@ -82,10 +82,10 @@ public class ColumnTagAttribute : Attribute
         {
             Value = str;
         }
-        else if (formattedValue is Enum e)
-        {
-            Value = formattedValue.GetType().GetField(e.ToString()!)?.GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString();
-        }
+        //else if (formattedValue is Enum e)
+        //{
+        //    Value = formattedValue.GetType().GetField(e.ToString()!)?.GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString();
+        //}
         else
         {
             Value = formattedValue?.ToString() ?? "";

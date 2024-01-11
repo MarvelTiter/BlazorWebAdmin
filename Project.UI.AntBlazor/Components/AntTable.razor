@@ -261,7 +261,7 @@
             }
             if (col.IsEnum || col.UseTag)
             {
-                var color = col.GetTagColor(context.FormattedValue);
+                var color = col.GetTagColor(context.FieldValue);
                 return@<Tag Color="@color">@context.FormattedValue</Tag>;
 
             }
