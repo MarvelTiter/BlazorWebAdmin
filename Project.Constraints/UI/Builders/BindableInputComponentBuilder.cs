@@ -80,7 +80,10 @@ namespace Project.Constraints.UI.Builders
             value = func.Invoke();
             parameters.Add(Model.BindValueName, value!);
             parameters.Add($"{Model.BindValueName}Changed", callback);
-            parameters.Add("ValueExpression", expression);
+            if (Model.EnableValueExpression)
+            {
+                parameters.Add("ValueExpression", expression);
+            }
             return this;
         }
         //public IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null)

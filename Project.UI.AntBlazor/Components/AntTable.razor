@@ -38,7 +38,7 @@
 
             @if (Options.Buttons?.Count > 0)
             {
-                <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Align="@ColumnAlign.Center" Fixed="true" Width="@Options.ActionColumnWidth">
+                <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Align="@ColumnAlign.Center" Fixed="right" Width="@Options.ActionColumnWidth">
                     @{
                         var btns = Options.Buttons.Where(b => b.CheckVisible(context)).ToList();
                         if (Options.ActionButtonColumn.HasValue)

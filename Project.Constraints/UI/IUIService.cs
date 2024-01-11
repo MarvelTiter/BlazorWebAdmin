@@ -10,6 +10,7 @@ using Project.Constraints.UI.Flyout;
 using Project.Constraints.UI.Form;
 using Project.Constraints.UI.Props;
 using Project.Constraints.UI.Table;
+using Project.Constraints.UI.Tree;
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -138,6 +139,9 @@ public interface IUIService
     RenderFragment BuildMenu(IRouterStore router, bool horizontal, IAppStore app);
 
     RenderFragment BuildLoginForm(LoginFormModel model, Func<Task> handleLogin);
+
+    //TODO BuildTree需要优化和完善
+    IBindableInputComponent<DefaultProp, string[]> BuildTree<TData>(object revicer, TreeOptions<TData> options);
 
     IUIComponent BuildRow();
     IUIComponent BuildCard();

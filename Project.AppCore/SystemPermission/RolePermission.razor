@@ -1,5 +1,6 @@
 ﻿@page "/rolepermission"
 @using AntDesign.TableModels
+@using Project.Constraints.UI.Tree
 @using Project.Models.Entities.Permissions
 @using Project.Constraints.Models.Request;
 @inherits ModelPage<Role, GenericRequest<Role>>
@@ -14,19 +15,20 @@
             </h1>
             <h2>角色名称: </h2>
         </div>
-        <MTree DataSource="powerTreeData"
+        <MTree DataSource="options.Datas"
                @bind-CheckedKeys=selectedKeys
                IncludeIndeterminate
-                TitleExpression="x => x.Node.PowerName"
-                KeyExpression="x => x.Node.PowerId"
+                TitleExpression="x => x.Data.PowerName"
+                KeyExpression="x => x.Data.PowerId"
                 ChildrenExpression="x => x.Children"
-                TNode="PowerTreeNode">
+                TNode="TreeData<Power>">
          </MTree>
-         <div>
-             @UI.BuildButton(this).OnClick(SaveRolePower).Text("保存").SetButtonType(ButtonType.Primary).Render()
-         </div>
-     </SecondSide>
-     <ClosedView>
-         <h1>权限列表</h1>
-     </ClosedView>
- </TwoSidePage>
+         @UI.BuildTree(this, options).Bind(() => selectedKeys).Render()
+        <div>
+            @UI.BuildButton(this).OnClick(SaveRolePower).Text("保存").SetButtonType(ButtonType.Primary).Render()
+        </div>
+    </SecondSide>
+    <ClosedView>
+        <h1>权限列表</h1>
+    </ClosedView>
+</TwoSidePage>

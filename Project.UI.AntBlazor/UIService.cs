@@ -10,6 +10,7 @@ using Project.Constraints.UI.Flyout;
 using Project.Constraints.UI.Form;
 using Project.Constraints.UI.Props;
 using Project.Constraints.UI.Table;
+using Project.Constraints.UI.Tree;
 using Project.UI.AntBlazor.Components;
 using System;
 using System.Linq.Expressions;
@@ -325,6 +326,22 @@ namespace Project.UI.AntBlazor
             return binder;
         }
 
-        
+        public IBindableInputComponent<DefaultProp, string[]> BuildTree<TData>(object reciver, TreeOptions<TData> options)
+        {
+            //return builder =>
+            //{
+            //    builder.OpenComponent<AntTree<TData>>(0);
+            //    builder.AddAttribute(1, nameof(AntTree<TData>.Options), options);
+            //    builder.CloseComponent();
+            //};
+            var builder = new BindableInputComponentBuilder<AntTree<TData>, DefaultProp, string[]>()
+            {
+                Reciver = reciver
+            };
+            builder.SetComponent(t => t.Options, options);
+            builder.Model.BindValueName = "CheckedKeys";
+            builder.Model.EnableValueExpression = false;
+            return builder;
+        }
     }
 }

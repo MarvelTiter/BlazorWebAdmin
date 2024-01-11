@@ -1,30 +1,29 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
+using Project.Constraints.Options;
 using Project.Constraints.UI.Extensions;
+using Project.Constraints.UI.Tree;
 using Project.Models.Entities.Permissions;
 
 namespace Project.AppCore.SystemPermission
 {
     public partial class RolePermission : ModelPage<Role, GenericRequest<Role>>
     {
-        record PowerTreeNode(Power Node)
-        {
-            public IList<PowerTreeNode> Children { get; set; }
-        }
+
         bool powerLoading = false;
         Role? CurrentRole;
-        IEnumerable<PowerTreeNode> powerTreeData;
         IEnumerable<Power> allPower;
         string[]? selectedKeys;
         bool sideExpand;
         [Inject] public IPermissionService PermissionSrv { get; set; }
-        protected override void OnInitialized()
+        [Inject] public IStringLocalizer<Power> Localizer { get; set; }
+        [Inject] public IOptionsMonitor<CultureOptions> CultureSetting { get; set; }
+        TreeOptions<Power> options;
+        protected override async Task OnInitializedAsync()
         {
-            base.OnInitialized();
+            await base.OnInitializedAsync();
             Options.LoadDataOnLoaded = true;
-            //roleOptions.DataLoader = GetRolesAsync;
-            //roleOptions.AddHandle = AddRoleAsync;
-            //roleOptions.OnRowClick = HandleRowClick;
-            _ = InitPowerTree();
+            await InitPowerTree();
         }
         protected override object SetRowKey(Role model) => model.RoleId;
 
@@ -55,25 +54,38 @@ namespace Project.AppCore.SystemPermission
         /// <returns></returns>
         Task GeneratePowerTreeDataAsync()
         {
-            List<PowerTreeNode> powerTreeNodes = new();
+            List<TreeData<Power>> powerTreeNodes = new();
             var rootNodes = allPower.Where(p => p.PowerId == "ROOT");
             foreach (var item in rootNodes)
             {
-                var n = new PowerTreeNode(item);
-                n.Children = FindChildren(allPower, item);
+                var n = new TreeData<Power>(item)
+                {
+                    Children = FindChildren(allPower, item)
+                };
                 powerTreeNodes.Add(n);
             }
-            powerTreeData = powerTreeNodes;
+            options = new TreeOptions<Power>(powerTreeNodes);
+            options.KeyExpression = p => p.PowerId;
+            //if (CultureSetting.CurrentValue.Enabled)
+            //{
+            //    options.TitleExpression = p => Localizer[p.PowerId].Value;
+            //}
+            //else
+            //{
+            //}
+            options.TitleExpression = p => p.PowerName;
             return Task.CompletedTask;
 
-            List<PowerTreeNode> FindChildren(IEnumerable<Power> all, Power parent)
+            List<TreeData<Power>> FindChildren(IEnumerable<Power> all, Power parent)
             {
                 var children = all.Where(p => p.ParentId == parent.PowerId);
-                List<PowerTreeNode> childNodes = new();
+                List<TreeData<Power>> childNodes = new();
                 foreach (var child in children)
                 {
-                    var n1 = new PowerTreeNode(child);
-                    n1.Children = FindChildren(all, child);
+                    var n1 = new TreeData<Power>(child)
+                    {
+                        Children = FindChildren(all, child)
+                    };
                     childNodes.Add(n1);
                 }
                 return childNodes;
@@ -109,7 +121,7 @@ namespace Project.AppCore.SystemPermission
         async Task SaveRolePower()
         {
             if (selectedKeys is null) return;
-            var flag = await PermissionSrv.SaveRolePower(CurrentRole!.RoleId, selectedKeys.ToArray());
+            var flag = await PermissionSrv.SaveRolePower(CurrentRole!.RoleId,  selectedKeys);
             if (flag.Success) UI.Success("保存成功");
             else UI.Error("保存数据异常！");
         }
