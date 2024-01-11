@@ -1,7 +1,7 @@
 ﻿@namespace Project.Web.Shared.Components
 @using Project.Web.Shared.Extensions
 @inherits ConditionBase
-<MCol ColSpan="@ActualColWidth">
+<MGridContent ColSpan="@ColSpan" RowSpan="@RowSpan">
     <span class="conditions" style="@Style">
         <span class="label" style="width:@($"{Parent.LabelWidth}px");">
             @Label
@@ -14,11 +14,6 @@
             }
             else if (Field?.EnumValues != null || (Field?.IsEnum ?? false))
             {
-                // builder.OpenComponent<DictionarySelect>(7);
-                // builder.AddComponentParameter(8, "Options", Field.EnumValues);
-                // builder.AddComponentParameter(9, "Value", stringValue);
-                // builder.AddComponentParameter(10, "ValueChanged", EventCallback.Factory.Create<string>(this, s => stringValue = s));
-
                 @(UI.BuildDictionarySelect(this, Field.EnumValues!).Bind(() => stringValue, NotifyChanged).Render())
             }
             else
@@ -31,4 +26,4 @@
             @ChildContent
         }
     </span>
-</MCol>
+</MGridContent>

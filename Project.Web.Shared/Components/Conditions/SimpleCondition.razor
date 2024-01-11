@@ -2,7 +2,7 @@
 @typeparam TData
 @inherits ConditionBase
 
-<MCol ColSpan="@ActualColWidth">
+<MGridContent ColSpan="@ColSpan" RowSpan="@RowSpan">
     <span class="conditions" style="@Style">
         <span class="label" style="width:@($"{Parent.LabelWidth}px");">
             @Label
@@ -24,7 +24,7 @@
             @(UI.BuildInput<TData>(this).Bind(() => Value, NotifyChanged).Render())
         }
     </span>
-</MCol>
+</MGridContent>
 
 @code {
     [Parameter]

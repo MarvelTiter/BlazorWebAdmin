@@ -23,12 +23,8 @@ namespace Project.Web.Shared.Components
 
     public partial class Condition : ConditionBase
     {
-        //[CascadingParameter] public IQueryCondition Parent { get; set; }
-        //[Parameter] public string? Label { get; set; }
         [Parameter] public CompareType Compare { get; set; } = CompareType.Equal;
-        //[Parameter] public DateType? DateConfig { get; set; }
         [Parameter] public ColumnInfo? Field { get; set; }
-
         [Parameter] public object? DefaultValue { get; set; }
         [Inject] public ILogger<Condition> Logger { get; set; }
         public int Index { get; set; }
@@ -61,7 +57,7 @@ namespace Project.Web.Shared.Components
             }
         }
 
-        (object?, CompareType)[] CreateTuple(params (object?, CompareType)[] values) => values;
+        static (object?, CompareType)[] CreateTuple(params (object?, CompareType)[] values) => values;
 
         (object?, CompareType)[] GetInnerValue(out bool legal)
         {

@@ -10,8 +10,7 @@ namespace Project.Web.Shared.Components
         [Parameter] public DateType? DateConfig { get; set; }
         [Parameter] public string? Style { get; set; }
         [Parameter] public RenderFragment? ChildContent { get; set; }
-        [Parameter] public int? ColWidth { get; set; }
-
-        protected int ActualColWidth => ColWidth ?? Parent.ColWidth;
+        [Parameter] public (int Start, int End) ColSpan { get; set; }
+        [Parameter] public (int Start, int End) RowSpan { get; set; }
     }
 }

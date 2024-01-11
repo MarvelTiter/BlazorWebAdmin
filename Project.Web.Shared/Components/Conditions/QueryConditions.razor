@@ -4,7 +4,7 @@
 @typeparam TItem
 @inherits BasicComponent
 <CascadingValue Value="this">
-    <MRow>
+    <MGrid MinWidth=@ColumnMinWidth GridColumns="@Column" Gap="@Gap">
         @ChildContent
-    </MRow>
+    </MGrid>
 </CascadingValue>

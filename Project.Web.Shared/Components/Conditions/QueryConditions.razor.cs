@@ -8,7 +8,7 @@ namespace Project.Web.Shared.Components
 {
     public interface IQueryCondition
     {
-        int ColWidth { get; set; }
+        int Column { get; set; }
         int LabelWidth { get; set; }
         int IndexFixed { get; set; }
         void AddCondition(ICondition condition);
@@ -18,9 +18,13 @@ namespace Project.Web.Shared.Components
     public partial class QueryConditions<TItem> : BasicComponent, IQueryCondition
     {
         [Parameter]
-        public int ColWidth { get; set; } = 6;
+        public int Column { get; set; } = 5;
+        [Parameter]
+        public int? ColumnMinWidth { get; set; }
         [Parameter]
         public int LabelWidth { get; set; } = 100;
+        [Parameter]
+        public string Gap { get; set; } = "5px";
         [Parameter]
         public RenderFragment ChildContent { get; set; }
         [Parameter]
