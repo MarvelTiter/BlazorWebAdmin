@@ -13,7 +13,6 @@ namespace Project.AppCore.SystemPermission
             base.OnInitialized();
             Options.Pager = false;
             Options.LoadDataOnLoaded = true;
-            Options.GetColumn(u=>u.Age).Sortable = true;
             Options.GetColumn(u => u.Password).ValueFormat = val =>
             {
                 return "******";

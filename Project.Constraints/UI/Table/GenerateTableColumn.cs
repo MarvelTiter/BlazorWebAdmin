@@ -55,20 +55,19 @@ namespace Project.Constraints.UI.Table
             {
                 column.EnumValues = ParseDictionary(column.UnderlyingType ?? column.DataType);
             }
-            if (column.UseTag)
-            {
-                var colors = self.GetCustomAttributes<ColumnTagAttribute>();
-                if (colors?.Count() > 0)
-                {
-                    column.TagColors = new();
-                    foreach (var c in colors)
-                    {
-                        if (c == null) continue;
-                        column.TagColors.TryAdd(c.Value, c.Color);
-                    }
-                }
-            }
-            return column;
+
+			var colors = self.GetCustomAttributes<ColumnTagAttribute>();
+			if (colors?.Any() ?? false)
+			{
+				column.UseTag = true;
+				column.TagColors = [];
+				foreach (var c in colors)
+				{
+					if (c == null) continue;
+					column.TagColors.TryAdd(c.Value, c.Color);
+				}
+			}
+			return column;
         }
         public static List<ColumnInfo> GenerateColumns(this Type self)
         {

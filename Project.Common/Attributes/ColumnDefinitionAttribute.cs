@@ -75,20 +75,20 @@ public class ColumnTagAttribute : Attribute
 {
     public string Value { get; set; }
     public string Color { get; set; }
-    public ColumnTagAttribute(object value, string color)
+    public ColumnTagAttribute(object formattedValue, string color)
     {
         Color = color;
-        if (value is string str)
+        if (formattedValue is string str)
         {
             Value = str;
         }
-        else if (value is Enum e)
+        else if (formattedValue is Enum e)
         {
-            Value = value.GetType().GetField(e.ToString()!)?.GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString();
+            Value = formattedValue.GetType().GetField(e.ToString()!)?.GetCustomAttribute<DisplayAttribute>()?.Name ?? e.ToString();
         }
         else
         {
-            Value = value?.ToString() ?? "";
+            Value = formattedValue?.ToString() ?? "";
         }
     }
 }
