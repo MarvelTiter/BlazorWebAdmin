@@ -1,4 +1,5 @@
-﻿using Project.Constraints.UI.Props;
+﻿using Project.Constraints.UI.Builders;
+using Project.Constraints.UI.Props;
 using System.Linq.Expressions;
 
 namespace Project.Constraints.UI.Extensions
@@ -27,6 +28,18 @@ namespace Project.Constraints.UI.Extensions
             sel.Set(s => s.ValueExpression, expression);
             return sel;
         }
+
+        public static ISelectInput<SelectProp, TItem, TValue[]> LabelExpression<TItem, TValue>(this ISelectInput<SelectProp, TItem, TValue[]> sel, Expression<Func<TItem, string>> expression)
+        {
+            sel.Set(s => s.LabelExpression, expression);
+            return sel;
+        }
+
+        public static ISelectInput<SelectProp, TItem, TValue[]> ValueExpression<TItem, TValue>(this ISelectInput<SelectProp, TItem, TValue[]> sel, Expression<Func<TItem, TValue>> expression)
+        {
+            sel.Set(s => s.ValueExpression, expression);
+            return sel;
+        }
     }
 
     public static class InputBuilderExtensions
@@ -36,4 +49,22 @@ namespace Project.Constraints.UI.Extensions
             return service.BuildInput<string>(reciver);
         }
     }
+
+    //public static class SelectPropExtensions
+    //{
+    //    public static IBindableInputComponent<SelectProp, string[]> LabelExpression<TItem>(this IBindableInputComponent<SelectProp, string[]> builder, Expression<Func<TItem, string>> expression)
+    //    {
+    //        return builder.Set(p => p.LabelExpression, expression);
+    //    }
+
+    //    public static IBindableInputComponent<SelectProp, string[]> ValueExpression<TItem, TValue>(this IBindableInputComponent<SelectProp, string[]> builder, Expression<Func<TItem, TValue>> expression)
+    //    {
+    //        return builder.Set(p => p.ValueExpression, expression);
+    //    }
+
+    //    public static IBindableInputComponent<SelectProp, TValue> ValueExpression<TItem, TValue>(this IBindableInputComponent<SelectProp, TValue> builder, Expression<Func<TItem, TValue>> expression)
+    //    {
+    //        return builder.Set(p => p.ValueExpression, expression);
+    //    }
+    //}
 }

@@ -1,5 +1,6 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
+using OneOf;
 using Project.Constraints.Models;
 using Project.Constraints.Models.Request;
 using Project.Constraints.Store;
@@ -342,6 +343,36 @@ namespace Project.UI.AntBlazor
             builder.Model.BindValueName = "CheckedKeys";
             builder.Model.EnableValueExpression = false;
             return builder;
+        }
+
+        // TODO 绑定有BUG
+        public ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options)
+        {
+            return new SelectComponentBuilder<CheckboxGroup, SelectProp, TItem, TValue[]>(self =>
+            {
+                // (OneOf<CheckboxOption[], string[]>)
+                if (self.Model.LabelExpression is LambdaExpression labelLambda && self.Model.ValueExpression is LambdaExpression valueLambda)
+                {
+                    var label = (Func<TItem, string>)labelLambda.Compile();
+                    var value = (Func<TItem, TValue>)valueLambda.Compile();
+                    self.SetComponent(cbg => cbg.Options, options.ConvertToCheckBoxOptions(label, value));
+                }
+            })
+            { Reciver = reciver };
+        }
+
+        public ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options)
+        {
+            return new SelectComponentBuilder<RadioGroup<TValue>, SelectProp, TItem, TValue>(self =>
+            {
+                if (self.Model.LabelExpression is LambdaExpression labelLambda && self.Model.ValueExpression is LambdaExpression valueLambda)
+                {
+                    var label = (Func<TItem, string>)labelLambda.Compile();
+                    var value = (Func<TItem, TValue>)valueLambda.Compile();
+                    self.SetComponent(rg => rg.Options, options.ConvertToRadioOptions(label, value));
+                }
+            })
+            { Reciver = reciver };
         }
     }
 }

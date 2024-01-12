@@ -23,7 +23,7 @@
                 ChildrenExpression="x => x.Children"
                 TNode="TreeData<Power>">
          </MTree>
-         @UI.BuildTree(this, options).Bind(() => selectedKeys).Render()
+         @* @UI.BuildTree(this, options).Bind(() => selectedKeys).Render() *@
         <div>
             @UI.BuildButton(this).OnClick(SaveRolePower).Text("保存").SetButtonType(ButtonType.Primary).Render()
         </div>

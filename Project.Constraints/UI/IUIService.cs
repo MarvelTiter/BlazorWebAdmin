@@ -143,6 +143,8 @@ public interface IUIService
     //TODO BuildTree需要优化和完善
     IBindableInputComponent<DefaultProp, string[]> BuildTree<TData>(object revicer, TreeOptions<TData> options);
 
+    ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options);
+    ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options);
     IUIComponent BuildRow();
     IUIComponent BuildCard();
     IUIComponent BuildCol();
