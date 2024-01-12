@@ -17,8 +17,6 @@ namespace Project.Web.Shared.Components
             return Expression.Lambda<Func<TReturn>>(body);
         }
 
-
-
         public static InputType GetInputType(Type type, ColumnInfo col)
         {
             if (col.InputType.HasValue)
@@ -49,6 +47,11 @@ namespace Project.Web.Shared.Components
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
+            if (Column.FormTemplate != null)
+            {
+                Column.FormTemplate.Invoke(builder);
+                return;
+            }
             var instance = Expression.Constant(Data);
             var propExp = Expression.Property(instance, Column.Property);
             var fragment = GetInputType(Column, propExp);

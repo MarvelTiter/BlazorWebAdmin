@@ -1,32 +1,12 @@
 ﻿@page "/permission"
 @using Project.Models.Entities.Permissions
 @inherits ModelPage<Power, GenericRequest<Power>>
-
 @TableFragment
 
-@*<Table DataSource="powerTree" TreeChildren="t=>t.Children" DefaultExpandAllRows Loading=loading>
-    <PropertyColumn Title=@Localizer["Power.PowerId"] Property="c=>c.Node.PowerId"></PropertyColumn>
-    <PropertyColumn Title=@Localizer["Power.PowerName"] Property="c=>c.Node.PowerName"></PropertyColumn>
-    <PropertyColumn Title=@Localizer["Power.ParentId"] Property="c=>c.Node.ParentId"></PropertyColumn>
-    <PropertyColumn Title=@Localizer["Power.PowerType"] Property="c=>c.Node.PowerType"></PropertyColumn>
-    <PropertyColumn Title=@Localizer["Power.Level"] Property="c=>c.Node.PowerLevel"></PropertyColumn>
-    <PropertyColumn Title=@Localizer["Power.Icon"] Property="c=>c.Node.Icon"></PropertyColumn>
-    <PropertyColumn Title=@Localizer["Power.Path"] Property="c=>c.Node.Path"></PropertyColumn>
-    <ActionColumn>
-        @RenderButtons(context)
-    </ActionColumn>
-</Table>*@
+
 @code {
-    //RenderFragment RenderButtons(PowerTreeNode node)
-    //{
-    //    return
-    //@<span>
-    //    @if (node.Node.PowerType == PowerType.Page)
-    //    {
-    //        <Button Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="() => EditPower(node)">@Localizer["CustomButtons.Edit"]</Button>
-    //        <Button Size="@ButtonSize.Small" Type="@ButtonType.Primary" OnClick="() => AddPower(node)">@Localizer["PermissionSetting.AddChild"]</Button>
-    //    }
-    //    <Button Size="@ButtonSize.Small" Danger OnClick="()=> DeletePower(node)">@Localizer["CustomButtons.Delete"]</Button>
-    //</span>;
-    //}
+    RenderFragment IconSelect()
+    {
+        return@<span>@("图标选择器(待完成)")</span>;
+    }
 }

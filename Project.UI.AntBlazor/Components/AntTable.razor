@@ -150,7 +150,7 @@
                  OnClick=@(()=>InvokeButtonAction(definition, context))>
         @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
     </Button>
-        ;
+    ;
     }
 
     public async Task InvokeButtonAction(TableButton<TData> definition, TData data)
@@ -195,7 +195,7 @@
 
     RenderFragment RenderColumn(ColumnInfo col)
     {
-        if (col.IsEnum)
+                if (col.IsEnum)
         {
             return RenderColumn<Enum>(col);
         }
@@ -236,7 +236,10 @@
     {
         return context =>
         {
-
+            if (col.CellTemplate != null)
+            {
+                return col.CellTemplate.Invoke(context.FieldValue);
+            }
             string? formattedValue = null;
             if (col.IsEnum || col.EnumValues != null)
             {

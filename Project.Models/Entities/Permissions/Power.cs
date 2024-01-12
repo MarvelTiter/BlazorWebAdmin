@@ -21,20 +21,25 @@ namespace Project.Models.Entities.Permissions
     public class Power
     {
         [ColumnDefinition]
+        [Required]
         [Column(Name = "POWER_ID", PrimaryKey = true)]
         public string PowerId { get; set; }
         [ColumnDefinition]
+        [Required]
         [Column(Name = "POWER_NAME")]
         public string PowerName { get; set; }
         [ColumnDefinition]
+        [Required]
         [Column(Name = "PARENT_ID")]
         public string ParentId { get; set; }
         [ColumnDefinition]
+        [Required]
         [Column(Name = "POWER_TYPE")]
         public PowerType PowerType { get; set; }
 
         [ColumnDefinition]
         [Column(Name = "POWER_LEVEL")]
+        [Form(Hide = true)]
         public int PowerLevel { get; set; }
 
         [ColumnDefinition]
@@ -51,6 +56,7 @@ namespace Project.Models.Entities.Permissions
         public IEnumerable<Power> Children { get; set; }
 
         [Ignore]
+        [Form]
         public bool GenerateCRUDButton { get; set; }
     }
 }

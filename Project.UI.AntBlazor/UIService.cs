@@ -93,7 +93,7 @@ namespace Project.UI.AntBlazor
             })
             { Reciver = reciver };
             // @bind-Check
-            binder.Model.BindValueName = "Check";
+            binder.Model.BindValueName = "Checked";
             return binder;
         }
 

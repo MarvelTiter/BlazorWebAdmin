@@ -16,6 +16,7 @@ namespace Project.AppCore.SystemPermission
             Options.Pager = false;
             Options.LoadDataOnLoaded = true;
             Options.TreeChildren = p => p.Children;
+            Options.GetColumn(p => p.Icon).FormTemplate = IconSelect();
 
         }
         protected override object SetRowKey(Power model) => model.PowerId;
@@ -62,13 +63,15 @@ namespace Project.AppCore.SystemPermission
         #endregion
 
         string[] defaultPageButtons = new[] { "Add", "Modify", "Delete" };
-
+        bool test;
         public bool CanShow(TableButtonContext<Power> context) => context.Data.PowerType == PowerType.Page;
 
         [TableButton(Label = "PermissionSetting.AddChild", VisibleExpression = nameof(CanShow))]
         public async Task<bool> AddPower(Power parent)
         {
             var power = await this.ShowAddFormAsync("新增权限");
+            Console.WriteLine(power.GenerateCRUDButton);
+            return false;
             power.ParentId = parent.PowerId;
             power.PowerLevel = parent.PowerLevel + 1;
             power.Sort = parent.Children.Count() + 1;

@@ -145,6 +145,7 @@ public interface IUIService
 
     ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options);
     ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options);
+
     IUIComponent BuildRow();
     IUIComponent BuildCard();
     IUIComponent BuildCol();

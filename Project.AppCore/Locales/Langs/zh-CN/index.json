@@ -72,7 +72,8 @@
     "PowerLevel": "权限等级",
     "Icon": "图标",
     "Path": "路径",
-    "Sort": "排序序号"
+    "Sort": "排序序号",
+    "GenerateCRUDButton": "生成按钮"
   },
   "PermissionSetting": {
     "AddChild": "新增子项"

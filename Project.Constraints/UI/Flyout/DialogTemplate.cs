@@ -91,11 +91,19 @@ namespace Project.Constraints.UI.Flyout
             return base.OnPostAsync();
         }
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            options = new FormOptions<TValue>(UI, Value, Columns.ToList());
+        }
+
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            options = new FormOptions<TValue>(UI, Value, Columns.ToList());
-            ChildContent = UI.BuildForm(options);
-            base.BuildRenderTree(builder);
+            if (options == null) return;
+            builder.OpenComponent<CascadingValue<bool>>(0);
+            builder.AddAttribute(1, nameof(CascadingValue<bool>.Value), Edit);
+            builder.AddAttribute(2, nameof(CascadingValue<bool>.ChildContent), UI.BuildForm(options));
+            builder.CloseComponent();
         }
     }
 }

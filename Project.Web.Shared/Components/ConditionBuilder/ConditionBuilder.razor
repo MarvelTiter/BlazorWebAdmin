@@ -12,7 +12,6 @@
     @if (Index > 0)
     {
         @UI.BuildSwitch(this).Bind(() => check, UpdateLinkType).Set(p => p.CheckedLabel, TableLocalizer["ConditionSwitch.AndAlso"].Value).Set(p => p.UnCheckedLabel, TableLocalizer["ConditionSwitch.OrElse"].Value).Render()
-        ;
     }
 </div>
 <MRow Style="@($"min-width:450px;{Style}")">

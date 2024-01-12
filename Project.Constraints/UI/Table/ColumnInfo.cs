@@ -1,4 +1,5 @@
-﻿using Project.Common.Attributes;
+﻿using Microsoft.AspNetCore.Components;
+using Project.Common.Attributes;
 using System.Reflection;
 
 namespace Project.Constraints.UI.Table;
@@ -7,6 +8,7 @@ namespace Project.Constraints.UI.Table;
 [IgnoreAutoInject]
 public record ColumnInfo(PropertyInfo Property)
 {
+
     public string Label { get; set; }
     public string PropertyOrFieldName => Property.Name;
     public int Index { get; set; }
@@ -30,6 +32,8 @@ public record ColumnInfo(PropertyInfo Property)
     public Dictionary<string, string> TagColors { get; set; }
     public Func<string, Dictionary<string, object>>? AddCellOptions { get; set; }
     public InputType? InputType { get; set; }
+    public RenderFragment<object?>? CellTemplate { get; set; }
+    public RenderFragment? FormTemplate { get; set; }
     public string GetTagColor(object? val)
     {
         if (TagColors?.TryGetValue(val?.ToString() ?? "", out var color) ?? false)
