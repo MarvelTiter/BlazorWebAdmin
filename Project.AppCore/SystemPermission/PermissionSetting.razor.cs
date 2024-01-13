@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AntDesign;
+using Microsoft.AspNetCore.Components;
+using Project.Constraints.UI.Flyout;
 using Project.Models.Entities.Permissions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Project.AppCore.SystemPermission
 {
@@ -7,7 +10,7 @@ namespace Project.AppCore.SystemPermission
     {
         [Inject] public IPermissionService PermissionSrv { get; set; }
         [Inject] IStringLocalizer<Power> Localizer { get; set; }
-
+        [Inject] ModalService ModalService { get; set; }
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -70,8 +73,6 @@ namespace Project.AppCore.SystemPermission
         public async Task<bool> AddPower(Power parent)
         {
             var power = await this.ShowAddFormAsync("新增权限");
-            Console.WriteLine(power.GenerateCRUDButton);
-            return false;
             power.ParentId = parent.PowerId;
             power.PowerLevel = parent.PowerLevel + 1;
             power.Sort = parent.Children.Count() + 1;
@@ -102,7 +103,33 @@ namespace Project.AppCore.SystemPermission
         [EditButton]
         public async Task<bool> EditPower(Power node)
         {
+            //var p = new FormParam<Power>(node, true);
+            //RenderFragment Content = builder =>
+            //{
+            //    Console.WriteLine("Building");
+            //    //builder.OpenComponent<FormDialogTemplate<Power>>(0);
+            //    //builder.AddComponentParameter(1, nameof(FormDialogTemplate<Power>.DialogModel), p);
+            //    //builder.AddComponentParameter(2, nameof(FormDialogTemplate<Power>.Columns), Options.Columns);
+            //    //builder.CloseComponent();
+            //    builder.AddContent(1, "测试窗口");
+            //};
+
+            //var options = new ModalOptions
+            //{
+            //    Title = "测试",
+            //    Content = Content,
+            //    DestroyOnClose = true,
+            //    OkText = "确定",
+            //    CancelText = "取消",
+            //    Maximizable = true,
+            //};
+            //await ModalService.CreateModalAsync(options);
+            //return false;
             var p = await this.ShowEditFormAsync("编辑权限", node);
+            if (p.Icon != selectedIcon && !string.IsNullOrEmpty(selectedIcon))
+            {
+                p.Icon = selectedIcon;
+            }
             var result = await PermissionSrv.UpdatePowerAsync(p);
             //await InitPowerTree();
             return result.Success;

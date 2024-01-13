@@ -3,10 +3,16 @@
 @inherits ModelPage<Power, GenericRequest<Power>>
 @TableFragment
 
-
 @code {
-    RenderFragment IconSelect()
+    string? selectedIcon;
+    RenderFragment<object?> IconSelect()
     {
-        return@<span>@("图标选择器(待完成)")</span>;
+        return data =>
+        {
+            var p = data as Power;
+            selectedIcon = p?.Icon;
+            return@<Project.AppCore.SystemPermission.Component.PowerIconSelector @bind-Value=selectedIcon></Project.AppCore.SystemPermission.Component.PowerIconSelector>
+    ;
+        };
     }
 }

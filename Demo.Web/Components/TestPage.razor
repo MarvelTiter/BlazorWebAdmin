@@ -53,6 +53,8 @@ UI.BuildCheckBoxGroup:
     .Bind(() => selectedUser, Changed)
     .Render())
 &nbsp; selected: @selectedUser
+
+<Project.Web.Shared.Components.IconSelector @bind-Value=selectedUser></Project.Web.Shared.Components.IconSelector>
 @code {
     [Inject] IUserService UserService { get; set; }
     string[] checkedUsers;

@@ -374,5 +374,15 @@ namespace Project.UI.AntBlazor
             })
             { Reciver = reciver };
         }
+
+        public RenderFragment BuildPopover(PopoverOptions options)
+        {
+            return builder =>
+            {
+                builder.OpenComponent<AntPopover>(0);
+                builder.AddAttribute(1, nameof(AntPopover.Options), options);
+                builder.CloseComponent();
+            };
+        }
     }
 }

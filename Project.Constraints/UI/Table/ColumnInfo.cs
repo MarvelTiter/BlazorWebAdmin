@@ -33,7 +33,7 @@ public record ColumnInfo(PropertyInfo Property)
     public Func<string, Dictionary<string, object>>? AddCellOptions { get; set; }
     public InputType? InputType { get; set; }
     public RenderFragment<object?>? CellTemplate { get; set; }
-    public RenderFragment? FormTemplate { get; set; }
+    public RenderFragment<object?>? FormTemplate { get; set; }
     public string GetTagColor(object? val)
     {
         if (TagColors?.TryGetValue(val?.ToString() ?? "", out var color) ?? false)

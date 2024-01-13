@@ -12,6 +12,14 @@ public class FlyoutOptions
     public RenderFragment Footer { get; set; }
 }
 
+public class PopoverOptions
+{
+    public string Title { get; set; }
+    public RenderFragment Content { get; set; }
+    public RenderFragment Trigger { get; set;}
+    public Func<Task>? CloseAsync { get; set;}
+}
+
 public class FlyoutOptions<TReturn> : FlyoutOptions
 {
     public IFeedback<TReturn>? Feedback { get; set; }

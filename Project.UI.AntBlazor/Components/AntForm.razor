@@ -27,7 +27,10 @@
     {
         base.OnAfterRender(firstRender);
         if (firstRender)
+        {
             Options.Validate = form.Validate;
+            Options.Update = StateHasChanged;
+        }
     }
 
     private int GetLabelSpan(int colSpan)

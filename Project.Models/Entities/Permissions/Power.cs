@@ -50,6 +50,7 @@ namespace Project.Models.Entities.Permissions
         public string Path { get; set; }
         [ColumnDefinition]
         [Column(Name = "SORT")]
+        [Form(Hide = true)]
         public int Sort { get; set; }
 
         [Ignore]

@@ -49,7 +49,7 @@ namespace Project.Web.Shared.Components
         {
             if (Column.FormTemplate != null)
             {
-                Column.FormTemplate.Invoke(builder);
+                Column.FormTemplate.Invoke(Data).Invoke(builder);
                 return;
             }
             var instance = Expression.Constant(Data);
@@ -123,6 +123,6 @@ namespace Project.Web.Shared.Components
         }
 
 
-        
+
     }
 }

@@ -11,6 +11,7 @@ namespace Project.Constraints.UI.Form
         public int WrapperSpan { get; set; }
         public Func<TData, Task<bool>>? OnPostAsync {  get; set; }
         public Func<bool> Validate { get; set; }
+        public Action? Update { get; set; }
         public IEnumerable<ColumnInfo[]> GetRows()
         {
             var rowIndex = 1;

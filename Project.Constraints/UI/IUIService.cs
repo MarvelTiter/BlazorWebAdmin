@@ -135,6 +135,7 @@ public interface IUIService
     RenderFragment BuildForm<TData>(FormOptions<TData> options) where TData : class, new();
 
     RenderFragment BuildDropdown(DropdownOptions options);
+    RenderFragment BuildPopover(PopoverOptions options);
 
     RenderFragment BuildMenu(IRouterStore router, bool horizontal, IAppStore app);
 
@@ -145,6 +146,7 @@ public interface IUIService
 
     ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options);
     ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options);
+
 
     IUIComponent BuildRow();
     IUIComponent BuildCard();

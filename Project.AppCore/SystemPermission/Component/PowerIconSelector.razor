@@ -1,0 +1,20 @@
+﻿<div style="display:flex;align-items:center;">
+    <SvgIcon IconName="@Value" ClassName="svg-icon"></SvgIcon>
+    &nbsp;
+    <IconSelector Value="@Value" ValueChanged="Notify"></IconSelector>
+</div>
+
+@code {
+    [Parameter] public string Value { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+
+    Task Notify(string nv)
+    {
+        Value = nv;
+        if (ValueChanged.HasDelegate)
+        {
+            return ValueChanged.InvokeAsync(nv);
+        }
+        return Task.CompletedTask;
+    }
+}

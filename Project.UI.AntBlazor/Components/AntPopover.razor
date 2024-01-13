@@ -1,0 +1,16 @@
+﻿<Popover Title="@Options.Title" @ref=popover Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Click})" ContentTemplate="@Options.Content">
+    @Options.Trigger
+</Popover>
+@code {
+    [Parameter] public PopoverOptions Options { get; set; }
+    Popover? popover;
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender && popover != null)
+        {
+            Options.CloseAsync = popover.Close;
+        }
+
+    }
+}

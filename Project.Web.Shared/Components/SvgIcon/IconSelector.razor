@@ -2,40 +2,44 @@
 @using Microsoft.Extensions.Localization
 @using Project.Constraints.Page
 @inherits BasicComponent
-@* <Popover Title="@Localizer["IconSelector.Title"]" OnVisibleChange="OnVisibleChange" Visible="visible" Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Click})" ContentTemplate="content">
-    <Button Type="primary">@Localizer["IconSelector.ButtonText"]</Button>
-</Popover> *@
+@UI.BuildPopover(options)
 @code {
     List<string> icons;
     bool visible;
-    [Parameter]
-    public string Value { get; set; }
-    [Parameter]
-    public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public string Value { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public EventCallback OnChanged { get; set; }
     [Inject] IStringLocalizer<IconSelector> Localizer { get; set; }
+    Project.Constraints.UI.Flyout.PopoverOptions options;
     RenderFragment content =>
     @<div>
         <div class="icons-wrapper">
             @foreach (var item in icons)
-            {
-                <span @onclick="e => HandleClickEvent(item)" class="@(Value==item? "selected":"")">
-                    <SvgIcon IconName="@item"></SvgIcon>
-                </span>
-            }
+        {
+            <span @onclick="e => HandleClickEvent(item)" class="@(Value==item? "selected":"")">
+                <SvgIcon IconName="@item"></SvgIcon>
+            </span>
+        }
         </div>
-        <a @onclick="_=>visible = false">@Localizer["CustomButtons.Close"]</a>
     </div>
     ;
+    // <a @onclick="Close">@Localizer["CustomButtons.Close"]</a>
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         icons = SvgIconDataCache.GetIcons();
+        options = new Constraints.UI.Flyout.PopoverOptions
+            {
+                Title = Localizer["IconSelector.Title"],
+                Content = content,
+                Trigger = UI.BuildButton(this).Text(Localizer["IconSelector.ButtonText"]).Primary().Render(),
+            };
     }
 
-    private void OnVisibleChange(bool v)
+    private void Close()
     {
-        visible = v;
+        options?.CloseAsync?.Invoke();
     }
     async Task HandleClickEvent(string iconName)
     {
@@ -43,7 +47,11 @@
         {
             await ValueChanged.InvokeAsync(iconName);
         }
-        visible = false;
+        if (OnChanged.HasDelegate)
+        {
+            await OnChanged.InvokeAsync();
+        }
+        Close();
         //StateHasChanged();
     }
 }
