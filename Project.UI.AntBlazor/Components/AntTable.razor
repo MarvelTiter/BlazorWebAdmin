@@ -270,7 +270,7 @@
             }
             else if ((col.UnderlyingType ?? col.DataType) == typeof(bool))
             {
-                return@<Switch Disabled Checked=@CastToBool(context.FieldValue)></Switch>;
+                return@<Switch Disabled Checked="@CastToBool(context.FieldValue)"></Switch>;
             }
             else
             {
