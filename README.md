@@ -3,11 +3,11 @@
 1. 移动 App.razor, Routes.razor, \_Imports.razor 到根目录
 2. 删除 Components 文件夹
 3. 修改 Routes.razor
-4. 拷贝appsettings.json
-
 ```CSharp
 <Project.AppCore.Layouts.AppRoot AppAssembly="typeof(App).Assembly"></Project.AppCore.Layouts.AppRoot>
 ```
+4. 拷贝appsettings.json
+
 
 5. 修改 Program.cs
 
@@ -39,4 +39,8 @@ app.MapRazorComponents<App>()
 <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
 <link  href="_content/Project.Web.Shared/css/app.css"  rel="stylesheet"/>
 <link  href="_content/Project.Web.Shared/css/echarts.css"  rel="stylesheet"/>
+```
+```CSharp 
+// 可选，配置重连样式
+<Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@InteractiveServer"></Project.Web.Shared.Components.ReconnectorOutlet>
 ```
