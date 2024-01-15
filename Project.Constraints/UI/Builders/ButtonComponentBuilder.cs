@@ -34,56 +34,56 @@ namespace Project.Constraints.UI.Builders
         #region OnClick
         public IButtonInput OnClick(Action callback)
         {
-            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Receiver, callback);
             Set("OnClick", onclick);
             return this;
         }
 
         public IButtonInput OnClick(EventCallback callback)
         {
-            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Receiver, callback);
             Set("OnClick", onclick);
             return this;
         }
 
         public IButtonInput OnClick(Action<object> callback)
         {
-            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Receiver, callback);
             Set("OnClick", onclick);
             return this;
         }
 
         public IButtonInput OnClick(Func<Task> callback)
         {
-            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Receiver, callback);
             Set("OnClick", onclick);
             return this;
         }
 
         public IButtonInput OnClick(Func<object, Task> callback)
         {
-            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Reciver, callback);
+            var onclick = EventCallback.Factory.Create<MouseEventArgs>(Receiver, callback);
             Set("OnClick", onclick);
             return this;
         }
 
         public IButtonInput OnClick(EventCallback<MouseEventArgs> callback)
         {
-            var onclick = EventCallback.Factory.Create(Reciver, callback);
+            var onclick = EventCallback.Factory.Create(Receiver, callback);
             Set("OnClick", onclick);
             return this;
         }
 
         public IButtonInput OnClick(Action<MouseEventArgs> callback)
         {
-            var onclick = EventCallback.Factory.Create(Reciver, callback);
+            var onclick = EventCallback.Factory.Create(Receiver, callback);
             Set("OnClick", onclick);
             return this;
         }
 
         public IButtonInput OnClick(Func<MouseEventArgs, Task> callback)
         {
-            var onclick = EventCallback.Factory.Create(Reciver, callback);
+            var onclick = EventCallback.Factory.Create(Receiver, callback);
             Set("OnClick", onclick);
             return this;
         }

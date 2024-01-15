@@ -75,7 +75,7 @@ namespace Project.Constraints.UI.Builders
                 return Task.CompletedTask;
             };
 
-            callback = EventCallback.Factory.Create(Reciver, Callback);
+            callback = EventCallback.Factory.Create(Receiver, Callback);
             var func = expression.Compile();
             value = func.Invoke();
             parameters.Add(Model.BindValueName, value!);

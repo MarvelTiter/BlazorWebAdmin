@@ -7,14 +7,14 @@ namespace Project.Constraints.UI.Extensions
     public static class SelectBuilderExtensions
     {
 
-        public static ISelectInput<SelectProp, KeyValuePair<string, string>, string> BuildDictionarySelect(this IUIService service, object reciver, Dictionary<string, string> options)
+        public static ISelectInput<SelectProp, KeyValuePair<string, string>, string> BuildDictionarySelect(this IUIService service, object receiver, Dictionary<string, string> options)
         {
-            return service.BuildSelect<KeyValuePair<string, string>, string>(reciver, options.ToList()).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key);
+            return service.BuildSelect<KeyValuePair<string, string>, string>(receiver, options.ToList()).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key);
         }
 
-        public static ISelectInput<SelectProp, KeyValuePair<TValue, string>, TValue> BuildDictionarySelect<TValue>(this IUIService service, object reciver, Dictionary<TValue, string> options)
+        public static ISelectInput<SelectProp, KeyValuePair<TValue, string>, TValue> BuildDictionarySelect<TValue>(this IUIService service, object receiver, Dictionary<TValue, string> options)
         {
-            return service.BuildSelect<KeyValuePair<TValue, string>, TValue>(reciver, options.ToList()).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key);
+            return service.BuildSelect<KeyValuePair<TValue, string>, TValue>(receiver, options.ToList()).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key);
         }
 
         public static ISelectInput<SelectProp, TItem, TValue> LabelExpression<TItem, TValue>(this ISelectInput<SelectProp, TItem, TValue> sel, Expression<Func<TItem, string>> expression)
@@ -44,9 +44,9 @@ namespace Project.Constraints.UI.Extensions
 
     public static class InputBuilderExtensions
     {
-        public static IBindableInputComponent<DefaultProp, string> BuildInput(this IUIService service, object reciver)
+        public static IBindableInputComponent<DefaultProp, string> BuildInput(this IUIService service, object receiver)
         {
-            return service.BuildInput<string>(reciver);
+            return service.BuildInput<string>(receiver);
         }
     }
 

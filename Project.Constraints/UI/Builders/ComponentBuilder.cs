@@ -13,7 +13,7 @@ namespace Project.Constraints.UI.Builders
         where TComponent : IComponent
         where TSelf : ComponentBuilder<TComponent, TSelf>
     {
-        public object Reciver { get; set; }
+        public object Receiver { get; set; }
 
         protected readonly Dictionary<string, object?> parameters = new(StringComparer.Ordinal);
         protected Func<TSelf, RenderFragment>? newRender;

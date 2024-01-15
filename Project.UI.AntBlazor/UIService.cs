@@ -27,29 +27,29 @@ namespace Project.UI.AntBlazor
         private readonly NotificationService notificationService = notificationService;
         public IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object reciver)
         {
-            return new BindableInputComponentBuilder<Input<TValue>, DefaultProp, TValue>() { Reciver = reciver };
+            return new BindableInputComponentBuilder<Input<TValue>, DefaultProp, TValue>() { Receiver = reciver };
         }
 
         public IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object reciver)
         {
-            return new BindableInputComponentBuilder<InputNumber<TValue>, DefaultProp, TValue>() { Reciver = reciver };
+            return new BindableInputComponentBuilder<InputNumber<TValue>, DefaultProp, TValue>() { Receiver = reciver };
         }
 
         public IBindableInputComponent<DefaultProp, TValue> BuildDatePicker<TValue>(object reciver)
         {
-            return new BindableInputComponentBuilder<DatePicker<TValue>, DefaultProp, TValue> { Reciver = reciver };
+            return new BindableInputComponentBuilder<DatePicker<TValue>, DefaultProp, TValue> { Receiver = reciver };
         }
 
         public IBindableInputComponent<DefaultProp, string> BuildPassword(object reciver)
         {
-            return new BindableInputComponentBuilder<InputPassword, DefaultProp, string>() { Reciver = reciver };
+            return new BindableInputComponentBuilder<InputPassword, DefaultProp, string>() { Receiver = reciver };
         }
 
         public IBindableInputComponent<SelectProp, TValue> BuildSelect<TValue>(object reciver, SelectItem<TValue>? options)
         {
             if (typeof(TValue).IsEnum && options == null)
             {
-                return new BindableInputComponentBuilder<EnumSelect<TValue>, SelectProp, TValue>() { Reciver = reciver };
+                return new BindableInputComponentBuilder<EnumSelect<TValue>, SelectProp, TValue>() { Receiver = reciver };
             }
             else
             {
@@ -61,7 +61,7 @@ namespace Project.UI.AntBlazor
                     .SetComponent(s => s.AllowClear, self.Model.AllowClear)
                     .SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
                 })
-                { Reciver = reciver };
+                { Receiver = reciver };
             }
         }
 
@@ -79,7 +79,7 @@ namespace Project.UI.AntBlazor
                 self.SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
 
             })
-            { Reciver = reciver };
+            { Receiver = reciver };
 
         }
 
@@ -91,7 +91,7 @@ namespace Project.UI.AntBlazor
                 self.SetComponent(sw => sw.CheckedChildren, self.Model.CheckedLabel)
                 .SetComponent(sw => sw.UnCheckedChildren, self.Model.UnCheckedLabel);
             })
-            { Reciver = reciver };
+            { Receiver = reciver };
             // @bind-Check
             binder.Model.BindValueName = "Checked";
             return binder;
@@ -120,7 +120,7 @@ namespace Project.UI.AntBlazor
                 self.TrySet("ChildContent", (RenderFragment)(builder => builder.AddContent(1, self.Model.Text)));
 
             })
-            { Reciver = reciver };
+            { Receiver = reciver };
         }
 
         public void Message(Constraints.UI.MessageType type, string message)
@@ -322,7 +322,7 @@ namespace Project.UI.AntBlazor
 
         public IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object reciver)
         {
-            var binder = new BindableInputComponentBuilder<Checkbox, DefaultProp, bool>() { Reciver = reciver };
+            var binder = new BindableInputComponentBuilder<Checkbox, DefaultProp, bool>() { Receiver = reciver };
             binder.Model.BindValueName = "Checked";
             return binder;
         }
@@ -337,7 +337,7 @@ namespace Project.UI.AntBlazor
             //};
             var builder = new BindableInputComponentBuilder<AntTree<TData>, DefaultProp, string[]>()
             {
-                Reciver = reciver
+                Receiver = reciver
             };
             builder.SetComponent(t => t.Options, options);
             builder.Model.BindValueName = "CheckedKeys";
@@ -358,7 +358,7 @@ namespace Project.UI.AntBlazor
                     self.SetComponent(cbg => cbg.Options, options.ConvertToCheckBoxOptions(label, value));
                 }
             })
-            { Reciver = reciver };
+            { Receiver = reciver };
         }
 
         public ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options)
@@ -372,7 +372,7 @@ namespace Project.UI.AntBlazor
                     self.SetComponent(rg => rg.Options, options.ConvertToRadioOptions(label, value));
                 }
             })
-            { Reciver = reciver };
+            { Receiver = reciver };
         }
 
         public RenderFragment BuildPopover(PopoverOptions options)

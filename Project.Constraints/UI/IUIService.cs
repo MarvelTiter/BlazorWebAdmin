@@ -89,7 +89,7 @@ public interface IUIService
     /// UI.BuildInput(this).Bind(() => ValueExpression).Render()
     /// </code>
     /// </summary>
-    IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object reciver);
+    IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object receiver);
 
     /// <summary>
     /// 生成密码输入框
@@ -97,18 +97,18 @@ public interface IUIService
     /// UI.BuildInput(this).Bind(() => ValueExpression).Render()
     /// </code>
     /// </summary>
-    IBindableInputComponent<DefaultProp, string> BuildPassword(object reciver);
+    IBindableInputComponent<DefaultProp, string> BuildPassword(object receiver);
     /// <summary>
     /// 生成数字输入框
     /// <code>
     /// UI.BuildInput&lt;TValue&gt;(this).Bind(() => ValueExpression).Render()
     /// </code>
     /// </summary>
-    IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object reciver);
+    IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver);
 
-    IBindableInputComponent<DefaultProp, TValue> BuildDatePicker<TValue>(object reciver);
+    IBindableInputComponent<DefaultProp, TValue> BuildDatePicker<TValue>(object receiver);
 
-    IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object reciver);
+    IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object receiver);
 
     /// <summary>
     /// 生成下拉选择框
@@ -117,16 +117,16 @@ public interface IUIService
     /// </code>
     /// </summary>
     /// <returns></returns>
-    IBindableInputComponent<SelectProp, TValue> BuildSelect<TValue>(object reciver, SelectItem<TValue>? options);
+    IBindableInputComponent<SelectProp, TValue> BuildSelect<TValue>(object receiver, SelectItem<TValue>? options);
 
-    ISelectInput<SelectProp, TItem, TValue> BuildSelect<TItem, TValue>(object reciver, IEnumerable<TItem> options);
+    ISelectInput<SelectProp, TItem, TValue> BuildSelect<TItem, TValue>(object receiver, IEnumerable<TItem> options);
 
     /// <summary>
     /// 生成按钮
     /// </summary>
-    IButtonInput BuildButton(object reciver);
+    IButtonInput BuildButton(object receiver);
 
-    IBindableInputComponent<SwitchProp, bool> BuildSwitch(object reciver);
+    IBindableInputComponent<SwitchProp, bool> BuildSwitch(object receiver);
 
     RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
 
@@ -144,8 +144,8 @@ public interface IUIService
     //TODO BuildTree需要优化和完善
     IBindableInputComponent<DefaultProp, string[]> BuildTree<TData>(object revicer, TreeOptions<TData> options);
 
-    ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options);
-    ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options);
+    ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object receiver, IEnumerable<TItem> options);
+    ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object receiver, IEnumerable<TItem> options);
 
 
     IUIComponent BuildRow();
