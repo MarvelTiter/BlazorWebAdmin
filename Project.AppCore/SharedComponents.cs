@@ -19,6 +19,10 @@ namespace Project.AppCore;
 public class ProjectSetting
 {
     public Type SettingProviderType { get; set; }
+    public void ConfigureSettingProviderType<T>() where T : ICustomSettingProvider
+    {
+        SettingProviderType = typeof(T);
+    }
     public Action<AutoInjectFilter>? AutoInjectConfig { get; set; }
     public bool AddDefaultLogger { get; set; }
     public AppInfo App => Config.App;
@@ -74,6 +78,7 @@ public static class SharedComponents
         var settingImplType = setting.SettingProviderType;
         services.AddScoped(typeof(ICustomSettingProvider), settingImplType);
         services.AddControllers().AddApplicationPart(typeof(AppConst).Assembly);
+        // 配置 IAuthenticationStateProvider
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
         services.AddScoped<IAuthenticationStateProvider>(provider =>
         {
@@ -83,10 +88,10 @@ public static class SharedComponents
 
         services.AddScoped<IReconnectorProvider, ReconnectorProvider>();
         services.AddScoped<IDownloadServiceProvider, DownloadServiceProvider>();
-        services.AddScoped<IDownloadService>(provider =>
+        services.AddScoped(provider =>
         {
-            var sp = provider.GetService<IDownloadServiceProvider>();
-            return sp?.GetService();
+            var sp = provider.GetService<IDownloadServiceProvider>()!;
+            return sp.GetService()!;
         });
 
         if (setting.AddDefaultLogger)
@@ -154,7 +159,6 @@ public static class SharedComponents
     public static void UseProject(this WebApplication app)
     {
         app.UseMiddleware<RedirectToLauchUrlMiddleware>();
-
         app.MapControllers();
     }
 }

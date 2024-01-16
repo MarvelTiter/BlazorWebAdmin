@@ -82,6 +82,7 @@ public interface IUIService
     void Alert(MessageType type, string title, string message);
     Task<TReturn> ShowDialogAsync<TReturn>(FlyoutOptions<TReturn> options);
     Task<TReturn> ShowDrawerAsync<TReturn>(FlyoutDrawerOptions<TReturn> options);
+    IServiceProvider ServiceProvider { get; }
 
     /// <summary>
     /// 生成输入框

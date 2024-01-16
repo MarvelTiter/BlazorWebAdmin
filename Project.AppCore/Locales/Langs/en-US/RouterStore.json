@@ -1,17 +1,9 @@
 {
-  "TableButtons": {
-    "Query": "Search",
-    "AdvancedQuery": "Advanced",
-    "AddCondition": "More",
-    "Export": "Export",
-    "Add": "New",
-    "Edit": "Edit",
-    "Delete": "Delete"
-  },
-  "TableTips": {
-    "Total": "Total",
-    "ActionColumn": "Action",
-    "ActionSuccess": "Successfully",
-    "More": "More"
-  }
+  "Home": "Home",
+  "BasicSetting": "Setting",
+  "Setting": "SysSetting",
+  "User": "Users",
+  "RolePermission": "RolePermission",
+  "Permission": "Permission",
+  "OperationLog": "OperationLog"
 }

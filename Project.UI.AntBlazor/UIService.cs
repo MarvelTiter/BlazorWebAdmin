@@ -1,5 +1,6 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using OneOf;
 using Project.Constraints.Models;
 using Project.Constraints.Models.Request;
@@ -19,12 +20,21 @@ using System.Linq.Expressions;
 namespace Project.UI.AntBlazor
 {
 
-    public class UIService(ModalService modalService, MessageService messageService, DrawerService drawerService, NotificationService notificationService) : IUIService
+    public class UIService(
+        ModalService modalService
+        , MessageService messageService
+        , DrawerService drawerService
+        , NotificationService notificationService
+        , IServiceProvider services) : IUIService
     {
         private readonly ModalService modalService = modalService;
         private readonly MessageService messageService = messageService;
         private readonly DrawerService drawerService = drawerService;
         private readonly NotificationService notificationService = notificationService;
+        private readonly IServiceProvider services = services;
+
+        public IServiceProvider ServiceProvider => services;
+
         public IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object reciver)
         {
             return new BindableInputComponentBuilder<Input<TValue>, DefaultProp, TValue>() { Receiver = reciver };
@@ -247,14 +257,15 @@ namespace Project.UI.AntBlazor
 
         public async Task<TReturn> ShowDialogAsync<TReturn>(FlyoutOptions<TReturn> options)
         {
+            var localizer = ServiceProvider.GetRequiredService<IStringLocalizer<TReturn>>();
             TaskCompletionSource<TReturn> tcs = new();
             var modal = new ModalOptions
             {
                 Title = options.Title,
                 Content = options.Content,
                 DestroyOnClose = true,
-                OkText = "确定",
-                CancelText = "取消",
+                OkText = localizer["CustomButtons.Ok"].Value,
+                CancelText = localizer["CustomButtons.Cancel"].Value,
                 Maximizable = true,
                 OnOk = e => options.OnOk.Invoke(),
                 OnCancel = e => options.OnClose.Invoke()

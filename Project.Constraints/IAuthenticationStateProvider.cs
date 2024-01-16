@@ -2,7 +2,6 @@
 using Project.Constraints.Models;
 namespace Project.Constraints;
 
-[AutoInject]
 public interface IAuthenticationStateProvider
 {
     UserInfo? Current {  get; }
