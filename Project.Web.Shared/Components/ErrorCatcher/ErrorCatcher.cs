@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Web.Shared.Components
 {
-	public class ErrorCatcher : ErrorBoundaryBase, IExceptionHandler
+    public class ErrorCatcher : ErrorBoundaryBase, IExceptionHandler
     {
         /// <summary>
         /// 
@@ -20,6 +20,11 @@ namespace Project.Web.Shared.Components
         [Inject]
         [NotNull]
         private IErrorBoundaryLogger? ErrorBoundaryLogger { get; set; }
+
+        [Inject, NotNull] NavigationManager Navigator { get; set; }
+
+        [Parameter] public bool NavigateToErrorPage { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -50,16 +55,6 @@ namespace Project.Web.Shared.Components
             builder.OpenComponent<CascadingValue<IExceptionHandler>>(0);
             builder.AddAttribute(1, nameof(CascadingValue<IExceptionHandler>.Value), this);
             builder.AddAttribute(2, nameof(CascadingValue<IExceptionHandler>.IsFixed), true);
-
-            //if (CurrentException != null)
-            //{
-            //    if (Caches.Any())
-            //    {
-            //        var handler = Caches.Last();
-            //        handler?.HandleExceptionAsync(CurrentException);
-            //    }
-            //}
-
             builder.AddAttribute(3, nameof(CascadingValue<IExceptionHandler>.ChildContent), ChildContent);
             builder.CloseComponent();
         }
@@ -82,21 +77,16 @@ namespace Project.Web.Shared.Components
         /// <param name="exception"></param>
         protected override async Task OnErrorAsync(Exception exception)
         {
-            //OnHandleExcetion?.Invoke(exception);
-            //if (OnHandleExcetionAsync != null)
-            //{
-            //    await OnHandleExcetionAsync.Invoke(exception);
-            //}
-
-            //var handler = Caches.Last();
-            //if (handler != null)
-            //    await handler.HandleExceptionAsync(exception);
             if (exception is not JSException)
             {
                 UI.Notify(MessageType.Error, "程序异常", exception.Message);
             }
             Logger.LogError(exception, exception.Message);
             await ErrorBoundaryLogger.LogErrorAsync(exception);
+            if (NavigateToErrorPage)
+            {
+                Navigator.NavigateTo("/blazor/web/error");
+            }
         }
 
         public Task HandleExceptionAsync(Exception exception)

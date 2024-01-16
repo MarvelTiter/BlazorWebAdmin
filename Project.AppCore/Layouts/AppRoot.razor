@@ -5,7 +5,7 @@
 @using Project.AppCore;
 @using System.Reflection;
 @using Project.Web.Shared.Components;
-<ErrorCatcher>
+<ErrorCatcher NavigateToErrorPage>
     <CascadingValue Value="this" IsFixed="true">
         <CascadingAuthenticationState>
             <Router AppAssembly="AppAssembly" AdditionalAssemblies="Config.Pages">
@@ -17,11 +17,11 @@
             </Router>
         </CascadingAuthenticationState>
     </CascadingValue>
-    <WebAdminReconnector></WebAdminReconnector>
 </ErrorCatcher>
 
+<WebAdminReconnector></WebAdminReconnector>
 <AntContainer />
-<Downloader/>
+<Downloader />
 @code {
     [Parameter]
     public Assembly AppAssembly { get; set; }

@@ -22,17 +22,6 @@
     <div class="item"></div>
     <div class="item"></div>
 </MGrid>
-
-<AntDesign.Table DataSource="users">
-    <AntDesign.PropertyColumn Property="u=>u.UserId"></AntDesign.PropertyColumn>
-    <AntDesign.PropertyColumn Property="u=>u.UserName"></AntDesign.PropertyColumn>
-    <AntDesign.PropertyColumn Property="u=>u.Password"></AntDesign.PropertyColumn>
-    <AntDesign.PropertyColumn Property="u=>u.Age"></AntDesign.PropertyColumn>
-    <AntDesign.PropertyColumn Property="u=>u.LastLogin"></AntDesign.PropertyColumn>
-    <AntDesign.ActionColumn Title="操作">
-        <AntDesign.Button>查看</AntDesign.Button>
-    </AntDesign.ActionColumn>
-</AntDesign.Table>
 UI.BuildCheckBoxGroup:
 @(UI.BuildCheckBoxGroup<User, string>(this, users)
     .LabelExpression(u => u.UserName)
@@ -55,6 +44,8 @@ UI.BuildCheckBoxGroup:
 &nbsp; selected: @selectedUser
 
 <Project.Web.Shared.Components.IconSelector @bind-Value=selectedUser></Project.Web.Shared.Components.IconSelector>
+@UI.BuildButton(this).Text("异常测试").Primary().OnClick(ThrowException).Render()
+@UI.BuildButton(this).Text("404测试").Primary().OnClick(Nav).Render()
 @code {
     [Inject] IUserService UserService { get; set; }
     string[] checkedUsers;
@@ -65,6 +56,7 @@ UI.BuildCheckBoxGroup:
         await base.OnInitializedAsync();
         var result = await UserService.GetUserListAsync(new Project.Constraints.Models.Request.GenericRequest<User>());
         users = result.Payload;
+        // ArgumentNullException.ThrowIfNull(selectedUser);
     }
     Task Changed2(string[] values)
     {
@@ -77,6 +69,16 @@ UI.BuildCheckBoxGroup:
         return Task.CompletedTask;
     }
 
+    void ThrowException()
+    {
+        var div = 0;
+        Console.WriteLine(1 / div);
+    }
+
+    void Nav()
+    {
+        Navigator.NavigateTo("/helloworld");
+    }
 }
 
 <style>

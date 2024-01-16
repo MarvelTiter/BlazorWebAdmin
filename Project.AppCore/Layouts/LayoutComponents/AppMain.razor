@@ -2,18 +2,18 @@
 @using Project.AppCore.Routers;
 @inherits BasicComponent
 <ScrollBar>
-    <ErrorCatcher>
-        @foreach (var item in Router.TopLinks)
-        {
-            if (item.Body == null) continue;
+    @foreach (var item in Router.TopLinks)
+    {
+        if (item.Body == null) continue;
+        <ErrorCatcher NavigateToErrorPage>
             <div id=@item.RouteUrl style="@(item.RouteUrl == Router.CurrentUrl ? "display: block;":"display: none;")">
                 <!-- 在TableTemplate中获取当前页的信息 -->
                 <CascadingValue Value="item">
                     @item.Body
                 </CascadingValue>
             </div>
-        }
-    </ErrorCatcher>
+        </ErrorCatcher>
+    }
 </ScrollBar>
 
 @code {

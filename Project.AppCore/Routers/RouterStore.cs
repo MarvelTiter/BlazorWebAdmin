@@ -69,6 +69,8 @@ public class RouterStore : StoreBase, IRouterStore
             if (meta == null)
             {
                 meta = AllPages.AllRoutes.FirstOrDefault(r => r.RouteUrl == CurrentUrl);
+                if (meta != null)
+                    meta.Cache = false;
             }
             tag = new TagRoute
             {

@@ -111,7 +111,7 @@ public static class SharedComponents
         services.AddSingleton<RedirectToLauchUrlMiddleware>();
 
 
-        Config.AddAssembly(typeof(AppConst).Assembly);
+        Config.AddAssembly(typeof(AppConst).Assembly, typeof(Web.Shared._Imports).Assembly);
 
         builder.ConfigureAppSettings();
     }
