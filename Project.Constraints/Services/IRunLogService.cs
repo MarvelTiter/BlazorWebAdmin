@@ -1,6 +1,6 @@
 ﻿using Project.Constraints.Models;
+using Project.Constraints.Models.Permissions;
 using Project.Constraints.Models.Request;
-using Project.Models.Entities;
 
 namespace Project.Constraints.Services
 {

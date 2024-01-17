@@ -1,9 +1,9 @@
 ﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
 using Project.Constraints.Models;
+using Project.Constraints.Models.Permissions;
 using Project.Constraints.Models.Request;
 using Project.Constraints.Services;
-using Project.Models.Permissions;
 
 namespace Project.AppCore.Services
 {

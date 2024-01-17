@@ -1,6 +1,4 @@
-﻿using Project.Common.Attributes;
-using Project.Constraints.Models;
-namespace Project.Constraints;
+﻿namespace Project.Constraints;
 
 public interface IAuthenticationStateProvider
 {

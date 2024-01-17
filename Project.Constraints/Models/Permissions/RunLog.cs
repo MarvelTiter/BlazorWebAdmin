@@ -1,0 +1,37 @@
+﻿using MDbEntity.Attributes;
+
+namespace Project.Constraints.Models.Permissions;
+
+[Table(Name = "RUN_LOG")]
+public class RunLog
+{
+    [Column(Name = "LOG_ID")]
+    [PrimaryKey]
+    public int? LogId { get; set; }
+
+    [Column(Name = "USER_ID")]
+    [ColumnDefinition]
+    public string UserId { get; set; }
+
+    [Column(Name = "ACTION_MODULE")]
+    [ColumnDefinition(UseTag = true)]
+    public string ActionModule { get; set; }
+
+    [Column(Name = "ACTION_NAME")]
+    [ColumnDefinition]
+    public string ActionName { get; set; }
+
+    [Column(Name = "ACTION_TIME")]
+    [ColumnDefinition]
+    public DateTime ActionTime { get; init; } = DateTime.Now;
+
+    [Column(Name = "ACTION_RESULT")]
+    [ColumnDefinition(UseTag = true)]
+    [ColumnTag("成功", "Green")]
+    [ColumnTag("失败", "Red")]
+    public string ActionResult { get; set; }
+
+    [Column(Name = "ACTION_MESSAGE")]
+    [ColumnDefinition]
+    public string ActionMessage { get; set; }
+}

@@ -1,157 +1,127 @@
-﻿using Project.Common.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Project.Constraints.Models;
 
-namespace Project.Constraints.Models
+public interface IQueryResult
 {
-    public interface IQueryResult
+    bool Success { get; set; }
+    public int Code { get; set; }
+    string Message { get; set; }
+    object Payload { get; set; }
+}
+public interface IQueryResult<T> : IQueryResult
+{
+    new T Payload { get; set; }
+}
+
+public interface IQueryCollectionResult<T> : IQueryResult
+{
+    int TotalRecord { get; set; }
+    new IEnumerable<T> Payload { get; set; }
+}
+[IgnoreAutoInject]
+public class QueryResult<T> : IQueryResult<T>
+{
+    public bool Success { get; set; }
+    public int Code { get; set; }
+    public string Message { get; set; }
+    public T Payload { get; set; }
+    object IQueryResult.Payload { get => Payload; set => Payload = (T)value; }
+}
+
+[IgnoreAutoInject]
+public class QueryCollectionResult<T> : IQueryCollectionResult<T>
+{
+    public bool Success { get; set; }
+    public int Code { get; set; }
+    public string Message { get; set; }
+    public int TotalRecord { get; set; }
+    public IEnumerable<T> Payload { get; set; }
+    object IQueryResult.Payload { get => Payload; set => Payload = (IEnumerable<T>)value; }
+}
+
+[IgnoreAutoInject]
+public static class QueryResult
+{
+    public static IQueryResult<T> Success<T>(string msg = "操作成功")
     {
-        bool Success { get; set; }
-        public int Code { get; set; }
-        string Message { get; set; }
-        object Payload { get; set; }
+        return new QueryResult<T>()
+        {
+            Success = true,
+            Message = msg,
+        };
     }
-    public interface IQueryResult<T> : IQueryResult
+    public static IQueryResult<T> Fail<T>(string msg = "操作失败")
     {
-        new T Payload { get; set; }
-    }
-
-    public interface IQueryCollectionResult<T> : IQueryResult
-    {
-        int TotalRecord { get; set; }
-        new IEnumerable<T> Payload { get; set; }
-    }
-    [IgnoreAutoInject]
-    public class QueryResult<T> : IQueryResult<T>
-    {
-        public bool Success { get; set; }
-        public int Code { get; set; }
-        public string Message { get; set; }
-        public T Payload { get; set; }
-        object IQueryResult.Payload { get => Payload; set => Payload = (T)value; }
-    }
-
-    [IgnoreAutoInject]
-    public class QueryCollectionResult<T> : IQueryCollectionResult<T>
-    {
-        public bool Success { get; set; }
-        public int Code { get; set; }
-        public string Message { get; set; }
-        public int TotalRecord { get; set; }
-        public IEnumerable<T> Payload { get; set; }
-        object IQueryResult.Payload { get => Payload; set => Payload = (IEnumerable<T>)value; }
-    }
-
-    [IgnoreAutoInject]
-    public static class QueryResult
-    {
-        public static IQueryResult<T> Success<T>(string msg = "操作成功")
+        return new QueryResult<T>()
         {
-            return new QueryResult<T>()
-            {
-                Success = true,
-                Message = msg,
-            };
-        }
-        public static IQueryResult<T> Fail<T>(string msg = "操作失败")
-        {
-            return new QueryResult<T>()
-            {
-                Success = false,
-                Message = msg,
-            };
-        }
-        //public static IQueryResult<object> Success(string msg = "操作成功")
-        //{
-        //    return new QueryResult<object>()
-        //    {
-        //        Success = true,
-        //        Message = msg,
-        //    };
-        //}
-        //public static IQueryResult<object> Fail(string msg = "操作失败")
-        //{
-        //    return new QueryResult<object>()
-        //    {
-        //        Success = false,
-        //        Message = msg,
-        //    };
-        //}
-
-        public static IQueryResult<T> Return<T>(bool success)
-        {
-            if (success)
-                return Success<T>();
-            else
-                return Fail<T>();
-        }
-
-        public static IQueryResult<T> SetPayload<T>(this IQueryResult<T> self, T payload)
-        {
-            self.Payload = payload!;
-            return self;
-        }
-
-        public static IQueryCollectionResult<T> CollectionResult<T>(this IQueryResult self, IEnumerable<T> payload)
-        {
-            return self.CollectionResult(payload, payload.Count());
-            //{
-            //    Success = self.Success,
-            //    Message = self.Message,
-            //    TotalRecord = payload.Count(),
-            //    Payload = payload
-            //};
-        }
-
-        public static IQueryCollectionResult<T> CollectionResult<T>(this IQueryResult self, IEnumerable<T> payload, int total)
-        {
-            return new QueryCollectionResult<T>
-            {
-                Success = self.Success,
-                Message = self.Message,
-                TotalRecord = total,
-                Payload = payload
-            };
-        }
+            Success = false,
+            Message = msg,
+        };
     }
 
-    public static class BooleanExtensionForQueryResult
+    public static IQueryResult<T> Return<T>(bool success)
     {
-        public static IQueryResult<bool> Result(this bool value)
-        {
-            return QueryResult.Return<bool>(value);
-        }
-
+        if (success)
+            return Success<T>();
+        else
+            return Fail<T>();
     }
 
-    public static class TypedResultExtensionForQueryResult
+    public static IQueryResult<T> SetPayload<T>(this IQueryResult<T> self, T payload)
     {
-        public static IQueryResult<T> Result<T>(this T payload, bool? success = null)
-        {
-            var s = success ?? payload != null;
-            return QueryResult.Return<T>(s).SetPayload(payload);
-        }
-        public static IQueryResult<T> SetMessage<T>(this IQueryResult<T> self, string message)
-        {
-            self.Message = message;
-            return self;
-        }
+        self.Payload = payload!;
+        return self;
     }
 
-    public static class EnumerableExtensionForQueryResult
+    public static IQueryCollectionResult<T> CollectionResult<T>(this IQueryResult self, IEnumerable<T> payload)
     {
-        public static IQueryCollectionResult<T> CollectionResult<T>(this IEnumerable<T> values, int total = 0)
+        return self.CollectionResult(payload, payload.Count());
+    }
+
+    public static IQueryCollectionResult<T> CollectionResult<T>(this IQueryResult self, IEnumerable<T> payload, int total)
+    {
+        return new QueryCollectionResult<T>
         {
-            if (total == 0) total = values.Count();
-            return QueryResult.Success<T>().CollectionResult(values, total);
-        }
-        public static IQueryCollectionResult<T> SetMessage<T>(this IQueryCollectionResult<T> self, string message)
-        {
-            self.Message = message;
-            return self;
-        }
+            Success = self.Success,
+            Message = self.Message,
+            TotalRecord = total,
+            Payload = payload
+        };
+    }
+}
+
+public static class BooleanExtensionForQueryResult
+{
+    public static IQueryResult<bool> Result(this bool value)
+    {
+        return QueryResult.Return<bool>(value);
+    }
+
+}
+
+public static class TypedResultExtensionForQueryResult
+{
+    public static IQueryResult<T> Result<T>(this T payload, bool? success = null)
+    {
+        var s = success ?? payload != null;
+        return QueryResult.Return<T>(s).SetPayload(payload);
+    }
+    public static IQueryResult<T> SetMessage<T>(this IQueryResult<T> self, string message)
+    {
+        self.Message = message;
+        return self;
+    }
+}
+
+public static class EnumerableExtensionForQueryResult
+{
+    public static IQueryCollectionResult<T> CollectionResult<T>(this IEnumerable<T> values, int total = 0)
+    {
+        if (total == 0) total = values.Count();
+        return QueryResult.Success<T>().CollectionResult(values, total);
+    }
+    public static IQueryCollectionResult<T> SetMessage<T>(this IQueryCollectionResult<T> self, string message)
+    {
+        self.Message = message;
+        return self;
     }
 }

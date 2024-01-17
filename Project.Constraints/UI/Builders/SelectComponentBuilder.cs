@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Project.Common.Attributes;
 using Project.Constraints.UI.Props;
 
 namespace Project.Constraints.UI.Builders

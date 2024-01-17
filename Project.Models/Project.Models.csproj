@@ -11,8 +11,4 @@
     <PackageReference Include="MT.Toolkit" Version="2.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
-  </ItemGroup>
-
 </Project>

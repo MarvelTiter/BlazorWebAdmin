@@ -1,5 +1,4 @@
-﻿using Project.Common.Attributes;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace Project.Constraints.UI.Props
 {

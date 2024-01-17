@@ -12,12 +12,19 @@ using AspectCore.Extensions.DependencyInjection;
 using Project.AppCore.Middlewares;
 using MT.Toolkit.LogTool.LogExtension;
 using Microsoft.AspNetCore.DataProtection;
+using Project.Constraints.Models.Permissions;
 namespace Project.AppCore;
 
 public class ProjectSetting
 {
     public Type SettingProviderType { get; set; }
-    public Type UserModelType {  get; set; } = typeof(Project.Models.Entities.User);
+    public Type UserType { get; set; } = typeof(User);
+
+    //public Type RoleType { get; set; } = typeof(Role);
+    //public Type PowerType { get; set; } = typeof(Power);
+    //public Type RolePowerType { get; set; } = typeof(RolePower);
+    //public Type UserRoleType { get; set; } = typeof(UserRole);
+    //public Type RunlogType { get; set; } = typeof(RunLog);
     public void ConfigureSettingProviderType<T>() where T : ICustomSettingProvider
     {
         SettingProviderType = typeof(T);
@@ -91,12 +98,9 @@ public static class SharedComponents
             var sp = provider.GetService<IDownloadServiceProvider>()!;
             return sp.GetService()!;
         });
-        services.AddScoped(typeof(IUserService<>), typeof(Services.UserService<>));
-        services.AddScoped<IUserService>(provider =>
-        {
-            var srv = provider.GetService(typeof(IUserService<>).MakeGenericType(setting.UserModelType));
-           return srv as IUserService;
-        });
+
+        builder.AddProjectDbServices(setting);
+        
         if (setting.AddDefaultLogger)
         {
             builder.Logging.AddSimpleLogger(config =>
@@ -107,7 +111,6 @@ public static class SharedComponents
             });
         }
 
-
         services.ConfigureDynamicProxy();
         builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
 
@@ -117,6 +120,17 @@ public static class SharedComponents
         Config.AddAssembly(typeof(AppConst).Assembly, typeof(Web.Shared._Imports).Assembly);
 
         builder.ConfigureAppSettings();
+    }
+
+    public static void AddProjectDbServices(this WebApplicationBuilder builder, ProjectSetting setting)
+    {
+        var services = builder.Services;
+        services.AddScoped(typeof(IUserService<>), typeof(Services.UserService<>));
+        services.AddScoped<IUserService>(provider =>
+        {
+            var srv = provider.GetService(typeof(IUserService<>).MakeGenericType(setting.UserType));
+            return srv as IUserService;
+        });
     }
 
     public static IServiceCollection ConfigureAppSettings(this WebApplicationBuilder builder)

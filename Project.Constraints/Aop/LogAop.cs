@@ -1,8 +1,7 @@
 ﻿using AspectCore.DynamicProxy;
-using Project.Constraints.Models;
+using Project.Constraints.Models.Permissions;
 using Project.Constraints.Services;
 using Project.Constraints.Store;
-using Project.Models.Entities;
 using System.Reflection;
 
 namespace Project.Constraints.Aop;

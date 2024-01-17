@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
+using Project.Constraints.Models.Permissions;
 using Project.Constraints.Options;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Tree;
-using Project.Models.Permissions;
 
 namespace Project.AppCore.SystemPermission
 {
     public partial class RolePermission : ModelPage<Role, GenericRequest<Role>>
     {
-
         bool powerLoading = false;
         Role? CurrentRole;
         IEnumerable<Power> allPower;
@@ -105,7 +104,6 @@ namespace Project.AppCore.SystemPermission
         [EditButton]
         public async Task<bool> EditRole(Role role)
         {
-            //var newRole = await UI.ShowDialogAsync<RoleForm, Role>("编辑角色", role);
             var newRole = await this.ShowEditFormAsync("编辑角色", role);
             var result = await PermissionSrv.UpdateRoleAsync(newRole);
             return result.Success;

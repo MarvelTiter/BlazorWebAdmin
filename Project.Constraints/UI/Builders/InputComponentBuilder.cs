@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Project.Common;
-using Project.Common.Attributes;
+using Project.Constraints.Common;
 using System.Linq.Expressions;
 
 namespace Project.Constraints.UI.Builders

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
-using Project.Common;
+using Project.Constraints.Common;
 using Project.Constraints.Store.Models;
 using Project.Constraints.UI;
 

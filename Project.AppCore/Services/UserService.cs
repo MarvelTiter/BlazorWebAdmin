@@ -1,6 +1,6 @@
 ﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
-using Project.Models.Permissions;
+using Project.Constraints.Models.Permissions;
 
 namespace Project.AppCore.Services
 {

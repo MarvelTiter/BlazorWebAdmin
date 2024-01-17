@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Project.Constraints.Models.Permissions;
 using Project.Constraints.UI.Extensions;
-using Project.Models.Permissions;
 using Project.Web.Shared.Components;
 using System.Diagnostics;
 

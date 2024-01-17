@@ -1,6 +1,4 @@
-﻿using Project.Common.Attributes;
-
-namespace Project.Constraints.UI.Props
+﻿namespace Project.Constraints.UI.Props
 {
     [IgnoreAutoInject]
     public class DefaultProp

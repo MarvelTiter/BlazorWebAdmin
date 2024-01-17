@@ -1,7 +1,6 @@
 ﻿using Project.Constraints.Aop;
+using Project.Constraints.Models.Permissions;
 using Project.Constraints.Models.Request;
-using Project.Models.Entities;
-using Project.Models.Permissions;
 
 namespace Project.Constraints.Services
 {

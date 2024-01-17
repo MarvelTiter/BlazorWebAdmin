@@ -1,5 +1,4 @@
 ﻿@using Project.Constraints.Services
-@using Project.Models.Entities
 @page "/user/index"
 @inject ICustomSettingProvider SettingProvider
 
@@ -9,7 +8,7 @@
 }
 else
 {
-    
+    <h1>未提供用户管理页</h1>
 }
 
 @code {
