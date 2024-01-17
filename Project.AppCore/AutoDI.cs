@@ -102,8 +102,9 @@ namespace Project.AppCore
 
         private static IEnumerable<Assembly> LoadAllAssembly(AutoInjectFilter filter)
         {
-            var asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var asm in asms)
+            var entry = Assembly.GetEntryAssembly();
+            var asms = entry?.GetReferencedAssemblies().Select(Assembly.Load);
+            foreach (var asm in asms ?? Enumerable.Empty<Assembly>())
             {
                 var filename = asm.FullName;
                 if ((filename!.StartsWith("Project") || filter.FileFilter.Invoke(filename)))
