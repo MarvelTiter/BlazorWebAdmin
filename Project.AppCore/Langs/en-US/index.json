@@ -73,9 +73,41 @@
     "Icon": "Icon",
     "Path": "Path",
     "Sort": "Sort",
-    "GenerateCRUDButton": "Crud"
+    "GenerateCRUDButton": "Crud",
+    "PermissionSetting": {
+      "AddChild": "AddChild"
+    }
   },
-  "PermissionSetting": {
-    "AddChild": "AddChild"
+  "RouterStore": {
+    "Home": "Home",
+    "BasicSetting": "Setting",
+    "Setting": "SysSetting",
+    "User": "Users",
+    "RolePermission": "RolePermission",
+    "Permission": "Permission",
+    "OperationLog": "OperationLog"
+  },
+  "TableOptions": {
+    "TableButtons": {
+      "Query": "Search",
+      "AdvancedQuery": "Advanced",
+      "AddCondition": "More",
+      "Export": "Export",
+      "Add": "New",
+      "Edit": "Edit",
+      "Delete": "Delete"
+    },
+    "TableTips": {
+      "Total": "Total",
+      "ActionColumn": "Action",
+      "ActionSuccess": "Successfully",
+      "More": "More",
+      "DangerActionConfirmTitle": "this operation cannot be resumed!",
+      "DangerActionConfirmContent": "confirm operation?"
+    },
+    "ConditionSwitch": {
+      "AndAlso": "AndAlso",
+      "OrElse": "OrElse"
+    }
   }
 }

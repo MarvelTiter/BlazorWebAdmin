@@ -15,7 +15,7 @@ namespace Project.AppCore
             var filter = new AutoInjectFilter();
             action?.Invoke(filter);
             var all = LoadAllAssembly(filter);
-            var allTypes = LoadTypeFromAssembly(filter,all.ToArray());
+            var allTypes = LoadTypeFromAssembly(filter, all.ToArray());
 
             //class的程序集
             var implementTypes = allTypes.Where(x => x.IsClass).ToArray();
@@ -102,18 +102,13 @@ namespace Project.AppCore
 
         private static IEnumerable<Assembly> LoadAllAssembly(AutoInjectFilter filter)
         {
-            var folder = AppDomain.CurrentDomain.BaseDirectory;
-            var files = Directory.GetFiles(folder);
-            //var asms = AppDomain.CurrentDomain.GetAssemblies().Where(asm => asm.FullName!.StartsWith("BlazorWebAdmin")|| asm.FullName!.StartsWith("Project"));
-            foreach (var file in files)
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var asm in asms)
             {
-                var filename = Path.GetFileName(file).Replace("\\", "/");
-                var fileext = Path.GetExtension(file);
-                if ((filename.StartsWith("Project") || filter.FileFilter.Invoke(filename))&& fileext == ".dll")
+                var filename = asm.FullName;
+                if ((filename!.StartsWith("Project") || filter.FileFilter.Invoke(filename)))
                 {
-                    var asm = Assembly.LoadFrom(file);
-                    if (asm != null)
-                        yield return asm;
+                    yield return asm;
                 }
             }
         }

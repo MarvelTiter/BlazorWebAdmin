@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using Project.Constraints.Options;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Tree;
-using Project.Models.Entities.Permissions;
+using Project.Models.Permissions;
 
 namespace Project.AppCore.SystemPermission
 {

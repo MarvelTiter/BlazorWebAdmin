@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Models.Entities.Permissions
+namespace Project.Models.Permissions
 {
     [TableName("ROLE")]
     [Table(Name = "ROLE")]

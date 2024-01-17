@@ -3,7 +3,7 @@ using MDbContext.Repository;
 using Project.Constraints.Models;
 using Project.Constraints.Models.Request;
 using Project.Constraints.Services;
-using Project.Models.Entities.Permissions;
+using Project.Models.Permissions;
 
 namespace Project.AppCore.Services
 {

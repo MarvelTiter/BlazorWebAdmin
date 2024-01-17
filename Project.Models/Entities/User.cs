@@ -1,6 +1,6 @@
 ﻿using MDbEntity.Attributes;
 using Project.Common.Attributes;
-using Project.Models.Entities.Permissions;
+using Project.Models.Permissions;
 
 namespace Project.Models.Entities
 {

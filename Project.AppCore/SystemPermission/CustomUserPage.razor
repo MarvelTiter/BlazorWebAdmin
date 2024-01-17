@@ -1,14 +1,15 @@
-﻿@inherits ModelPage<User, GenericRequest<User>>
+﻿@typeparam TUser where TUser : class, IUser, new()
+@inherits ModelPage<TUser, GenericRequest<TUser>>
 
 <TwoSidePage OpenTrigger=@(() => currentSelected != null) Expand=@sideExpand MainFlex="3">
-	<FirstSide>		
-		@TableFragment
-	</FirstSide>
-	<SecondSide>
-		<AssignUserRoles Current="currentSelected"></AssignUserRoles>
-	</SecondSide>
-	<ClosedView>
-		<AntDesign.Flex></AntDesign.Flex>
-		<h1>用户角色</h1>
-	</ClosedView>
+    <FirstSide>
+        @TableFragment
+    </FirstSide>
+    <SecondSide>
+        <AssignUserRoles Current="currentSelected"></AssignUserRoles>
+    </SecondSide>
+    <ClosedView>
+        <AntDesign.Flex></AntDesign.Flex>
+        <h1>用户角色</h1>
+    </ClosedView>
 </TwoSidePage>

@@ -8,7 +8,7 @@ using Project.Constraints.Options;
 using Project.Constraints.Services;
 using Project.Constraints.Store;
 using Project.Constraints.Store.Models;
-using Project.Models.Entities.Permissions;
+using Project.Models.Permissions;
 
 namespace Project.AppCore.Routers;
 

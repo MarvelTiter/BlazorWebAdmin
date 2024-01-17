@@ -1,7 +1,7 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
 using Project.Constraints.UI.Flyout;
-using Project.Models.Entities.Permissions;
+using Project.Models.Permissions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Project.AppCore.SystemPermission
@@ -68,8 +68,9 @@ namespace Project.AppCore.SystemPermission
         string[] defaultPageButtons = new[] { "Add", "Modify", "Delete" };
         bool test;
         public bool CanShow(TableButtonContext<Power> context) => context.Data.PowerType == PowerType.Page;
+        public string AddPowerLabel(TableButtonContext<Power> _) => Localizer["PermissionSetting.AddChild"];
 
-        [TableButton(Label = "PermissionSetting.AddChild", VisibleExpression = nameof(CanShow))]
+        [TableButton(LabelExpression =nameof(AddPowerLabel), VisibleExpression = nameof(CanShow))]
         public async Task<bool> AddPower(Power parent)
         {
             var power = await this.ShowAddFormAsync("新增权限");

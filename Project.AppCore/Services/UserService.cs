@@ -1,10 +1,10 @@
 ﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
-using Project.Models.Entities.Permissions;
+using Project.Models.Permissions;
 
 namespace Project.AppCore.Services
 {
-    public partial class UserService : IUserService
+    public partial class UserService<TUser> : IUserService<TUser> where TUser : IUser
     {
         private readonly IExpressionContext context;
 
@@ -13,45 +13,45 @@ namespace Project.AppCore.Services
             this.context = context;
         }
 
-        public async Task<IQueryResult> DeleteUserAsync(User user)
+        public async Task<IQueryResult> DeleteUserAsync(TUser user)
         {
             var trans = context.BeginTransaction();
-            trans.Delete<User>().Where(u => u.UserId == user.UserId).AttachTransaction();
+            trans.Delete<TUser>().Where(u => u.UserId == user.UserId).AttachTransaction();
             trans.Delete<UserRole>().Where(ur => ur.UserId == user.UserId).AttachTransaction();
             var result = await trans.CommitTransactionAsync();
             return result.Result();
         }
 
-        public async Task<IQueryCollectionResult<User>> GetUserListAsync(GenericRequest<User> req)
+        public async Task<IQueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req)
         {
-            var list = await context.Repository<User>().GetListAsync(req.Expression, out var count, req.PageIndex, req.PageSize);
+            var list = await context.Repository<TUser>().GetListAsync(req.Expression, out var count, req.PageIndex, req.PageSize);
             return list.CollectionResult((int)count);
         }
 
-        public async Task<IQueryResult> InsertUserAsync(User user)
+        public async Task<IQueryResult> InsertUserAsync(TUser user)
         {
-            var u = await context.Repository<User>().InsertAsync(user);
+            var u = await context.Repository<TUser>().InsertAsync(user);
             return u.Result();
         }
 
         public async Task<IQueryResult> ModifyUserPasswordAsync(string uid, string old, string pwd)
         {
-            var flag = await context.Update<User>()
+            var flag = await context.Update<TUser>()
                 .Set(u => u.Password, pwd)
                 .Where(u => u.UserId == uid && u.Password == old)
                 .ExecuteAsync();
             return flag.Result();
         }
 
-        public async Task<IQueryResult> UpdateUserAsync(User user)
+        public async Task<IQueryResult> UpdateUserAsync(TUser user)
         {
-            var flag = await context.Repository<User>().UpdateAsync(user, u => u.UserId == user.UserId);
+            var flag = await context.Repository<TUser>().UpdateAsync(user, u => u.UserId == user.UserId);
             return flag.Result();
         }
-        public async Task<User> GetUserAsync(string id)
+        public async Task<TUser> GetUserAsync(string id)
         {
-            var u = await context.Repository<User>().GetSingleAsync(u => u.UserId == id);
-            return u ?? null;
+            var u = await context.Repository<TUser>().GetSingleAsync(u => u.UserId == id);
+            return u;
         }
     }
 }

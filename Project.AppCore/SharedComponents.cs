@@ -19,6 +19,7 @@ namespace Project.AppCore;
 public class ProjectSetting
 {
     public Type SettingProviderType { get; set; }
+    public Type UserModelType {  get; set; } = typeof(Project.Models.Entities.User);
     public void ConfigureSettingProviderType<T>() where T : ICustomSettingProvider
     {
         SettingProviderType = typeof(T);
@@ -54,6 +55,8 @@ public static class SharedComponents
 
         action.Invoke(setting);
 
+        ArgumentNullException.ThrowIfNull(Config.App.Name);
+
         Config.SetFooter($@"
         <footer style=""text-align:center"">
              <span>{Config.App.Id} ©2023-{DateTime.Now:yyyy} Powered By </span>
@@ -61,9 +64,7 @@ public static class SharedComponents
              <span>{Config.App.Version}</span>
          </footer>
 ");
-
-        var name = Assembly.GetEntryAssembly()?.GetName().Name!;
-        services.AddDataProtection().SetApplicationName(name);
+        services.AddDataProtection().SetApplicationName(Config.App.Name);
         //
         services.AddAntDesignUI();
         // 多语言服务
@@ -93,7 +94,12 @@ public static class SharedComponents
             var sp = provider.GetService<IDownloadServiceProvider>()!;
             return sp.GetService()!;
         });
-
+        services.AddScoped(typeof(IUserService<>), typeof(Services.UserService<>));
+        services.AddScoped<IUserService>(provider =>
+        {
+            var srv = provider.GetService(typeof(IUserService<>).MakeGenericType(setting.UserModelType));
+           return srv as IUserService;
+        });
         if (setting.AddDefaultLogger)
         {
             builder.Logging.AddSimpleLogger(config =>

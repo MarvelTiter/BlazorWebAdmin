@@ -20,13 +20,24 @@ namespace Project.AppCore.Locales.Services
                 return false;
             }
             var node = root.Value;
+            if (UseTypedName && node.TryGetProperty(typedName, out var n1))
+            {
+                node = n1;
+            }
             if (key.IndexOf('.') > -1)
             {
                 var paths = new Queue<string>(key.Split('.'));
                 while (paths.Count > 0)
                 {
                     var p = paths.Dequeue();
-                    if (p == typedName && UseTypedName) continue;
+                    if (p == typedName && UseTypedName)
+                    {
+                        if (node.TryGetProperty(p, out var n2))
+                        {
+                            node = n2;
+                        }
+                        continue;
+                    }
                     if (!node.TryGetProperty(p, out node))
                     {
                         value = null;
@@ -53,7 +64,7 @@ namespace Project.AppCore.Locales.Services
             return TryGetValue(Main?.RootElement, key, typedName, out value);
         }
 
-        public bool TryGetValueFromFallback(string key , string typedName, out string? value)
+        public bool TryGetValueFromFallback(string key, string typedName, out string? value)
         {
             return TryGetValue(Fallback?.RootElement, key, typedName, out value);
         }
@@ -75,6 +86,7 @@ namespace Project.AppCore.Locales.Services
         }
         public JsonLocalizer(JsonLocalizationOptions options, string resourceName, ILogger logger)
         {
+            Console.WriteLine($"IStringLocalizer: {resourceName}");
             this.typedName = resourceName;
             this.logger = logger ?? NullLogger.Instance;
         }
@@ -82,11 +94,7 @@ namespace Project.AppCore.Locales.Services
         {
             get
             {
-                if (name == null)
-                {
-                    throw new ArgumentNullException(nameof(name));
-                }
-
+                ArgumentNullException.ThrowIfNull(name);
                 var value = GetStringSafely(name);
                 return new LocalizedString(name, value ?? name, resourceNotFound: value == null, searchedLocation: searchedLocation);
             }
@@ -96,11 +104,7 @@ namespace Project.AppCore.Locales.Services
         {
             get
             {
-                if (name == null)
-                {
-                    throw new ArgumentNullException(nameof(name));
-                }
-
+                ArgumentNullException.ThrowIfNull(name);
                 var format = GetStringSafely(name);
                 var value = string.Format(format ?? name, arguments);
                 return new LocalizedString(name, value ?? name, resourceNotFound: format == null, searchedLocation: searchedLocation);
@@ -109,20 +113,7 @@ namespace Project.AppCore.Locales.Services
 
         private string? GetStringSafely(string name)
         {
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            //var doc = GetJsonDocument(CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "zh-CN");
             var info = GetJsonDocument(CultureInfo.CurrentUICulture.Name);
-            //if (info.Main == null && info.Fallback == null) return null;
-            //string? value = null;
-            //if (info.Main != null)
-            //    value = SolveJsonPath(info.Main.RootElement, name);
-            //if (value == null && info.Fallback != null)
-            //    value = SolveJsonPath(info.Fallback.RootElement, name);
-            //return value;
             if (!info.TryGetValueFromMain(name, typedName, out var value))
             {
                 info.TryGetValueFromFallback(name, typedName, out value);
@@ -168,22 +159,22 @@ namespace Project.AppCore.Locales.Services
                 var doc = documentCache.GetOrAdd(culture, lang =>
                 {
                     JsonDocument? value = null;
-                    // Locales/Langs/zh-CN/resourceName/index.json
+                    // Langs/zh-CN/resourceName/index.json
                     if (CheckFileExits(true, true, true, lang, out var path))
                     {
                         LoadJsonDocumentFromPath(path, out value);
                     }
-                    // Locales/Langs/zh-CN/resourceName.json
+                    // Langs/zh-CN/resourceName.json
                     else if (CheckFileExits(true, false, true, lang, out path))
                     {
                         LoadJsonDocumentFromPath(path, out value);
                     }
-                    // Locales/Langs/resourceName/zh-CN.json
+                    // Langs/resourceName/zh-CN.json
                     else if (CheckFileExits(false, true, true, lang, out path))
                     {
                         LoadJsonDocumentFromPath(path, out value);
                     }
-                    // Locales/Langs/resourceName.zh-CN.json
+                    // Langs/resourceName.zh-CN.json
                     else if (CheckFileExits(false, false, true, lang, out path))
                     {
                         LoadJsonDocumentFromPath(path, out value);
@@ -195,7 +186,7 @@ namespace Project.AppCore.Locales.Services
                 {
                     Fallback = fallback,
                     Main = doc,
-                    UseTypedName = doc != null,
+                    UseTypedName = typedName != "Object",
                     SearchedLocation = searchedLocation ?? ""
                 };
                 infos[culture] = info;
@@ -205,7 +196,7 @@ namespace Project.AppCore.Locales.Services
 
         private string ConstructJsonFilePath(bool useCultureFolder, bool useTypedFolder, bool useTypedName, string culture)
         {
-            var paths = new List<string>() { AppDomain.CurrentDomain.BaseDirectory, "Locales", "Langs" };
+            var paths = new List<string>() { AppDomain.CurrentDomain.BaseDirectory, "Langs" };
             if (useCultureFolder)
                 paths.Add(culture);
             if (useTypedFolder)
@@ -285,12 +276,12 @@ namespace Project.AppCore.Locales.Services
         {
             if (!fallbackJsonFiles.TryGetValue(culture, out var fallback))
             {
-                // Locales/Langs/zh-CN/index.json
+                // Langs/zh-CN/index.json
                 if (CheckFileExits(true, false, false, culture, out var path))
                 {
                     LoadJsonDocumentFromPath(path, out fallback);
                 }
-                // Locales/Langs/zh-CN.json
+                // Langs/zh-CN.json
                 else if (CheckFileExits(false, false, false, culture, out path))
                 {
                     LoadJsonDocumentFromPath(path, out fallback);

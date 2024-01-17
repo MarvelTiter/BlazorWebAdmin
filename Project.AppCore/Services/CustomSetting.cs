@@ -1,7 +1,7 @@
 ﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
 using Project.AppCore.SystemPermission;
-using Project.Models.Entities.Permissions;
+using Project.Models.Permissions;
 
 namespace Project.Services
 {
@@ -13,9 +13,8 @@ namespace Project.Services
         {
             this.context = context;
         }
-
         public Type? GetDashboardType() => null;
-        public Type GetUserPageType() => typeof(CustomUserPage);
+        public Type? GetUserPageType() => typeof(CustomUserPage<User>);
 
         public async Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password)
         {

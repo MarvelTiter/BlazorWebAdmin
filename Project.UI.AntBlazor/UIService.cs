@@ -257,7 +257,7 @@ namespace Project.UI.AntBlazor
 
         public async Task<TReturn> ShowDialogAsync<TReturn>(FlyoutOptions<TReturn> options)
         {
-            var localizer = ServiceProvider.GetRequiredService<IStringLocalizer<TReturn>>();
+            var localizer = ServiceProvider.GetRequiredService<IStringLocalizer<object>>();
             TaskCompletionSource<TReturn> tcs = new();
             var modal = new ModalOptions
             {

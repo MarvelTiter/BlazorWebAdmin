@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Project.Models.Entities.Permissions
+namespace Project.Models.Permissions
 {
     public interface IUser
     {

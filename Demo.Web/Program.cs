@@ -20,6 +20,7 @@ builder.Services.AddRazorComponents()
 
 builder.AddProject(setting =>
 {
+    setting.App.Name = "Demo";
     setting.App.Id = "Test";
     setting.App.Company = "Marvel";
     setting.ConfigureSettingProviderType<CustomSetting>();

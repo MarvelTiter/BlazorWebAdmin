@@ -5,7 +5,15 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <OutputType>Library</OutputType>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Pages\Tests\**" />
+    <Content Remove="Pages\Tests\**" />
+    <EmbeddedResource Remove="Pages\Tests\**" />
+    <None Remove="Pages\Tests\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.4.0" />
@@ -19,10 +27,6 @@
     <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
     <ProjectReference Include="..\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
     <ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\Tests\" />
   </ItemGroup>
 
 

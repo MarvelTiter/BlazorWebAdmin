@@ -9,12 +9,6 @@ namespace Project.AppCore.Controllers
     [Route("api/{controller}")]
     public class DownloadController : ControllerBase
     {
-        private readonly IUserService userService;
-
-        public DownloadController(IUserService userService)
-        {
-            this.userService = userService;
-        }
         public class DownloadRequest
         {
             public string Filename { get; set; }

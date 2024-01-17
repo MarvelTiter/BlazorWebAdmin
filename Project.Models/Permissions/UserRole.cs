@@ -1,6 +1,6 @@
 ﻿using MDbEntity.Attributes;
 
-namespace Project.Models.Entities.Permissions
+namespace Project.Models.Permissions
 {
     [TableName("USER_ROLE")]
     [Table(Name = "USER_ROLE")]
