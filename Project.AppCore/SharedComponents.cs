@@ -6,14 +6,12 @@ using Project.AppCore.Locales.Extensions;
 using Project.AppCore.Auth;
 using Project.Constraints;
 using Project.Constraints.Options;
-using Project.UI.AntBlazor;
 using MDbContext;
 using Microsoft.Data.Sqlite;
 using AspectCore.Extensions.DependencyInjection;
 using Project.AppCore.Middlewares;
 using MT.Toolkit.LogTool.LogExtension;
 using Microsoft.AspNetCore.DataProtection;
-using System.Reflection;
 namespace Project.AppCore;
 
 public class ProjectSetting
@@ -66,7 +64,6 @@ public static class SharedComponents
 ");
         services.AddDataProtection().SetApplicationName(Config.App.Name);
         //
-        services.AddAntDesignUI();
         // 多语言服务
         services.AddJsonLocales();
         // excel操作

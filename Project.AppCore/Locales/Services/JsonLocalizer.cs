@@ -86,7 +86,6 @@ namespace Project.AppCore.Locales.Services
         }
         public JsonLocalizer(JsonLocalizationOptions options, string resourceName, ILogger logger)
         {
-            Console.WriteLine($"IStringLocalizer: {resourceName}");
             this.typedName = resourceName;
             this.logger = logger ?? NullLogger.Instance;
         }

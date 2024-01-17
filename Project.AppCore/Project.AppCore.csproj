@@ -1,33 +1,27 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <OutputType>Library</OutputType>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<OutputType>Library</OutputType>
+		<IsPackable>true</IsPackable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	</PropertyGroup>
+		
 
-  <ItemGroup>
-    <Compile Remove="Pages\Tests\**" />
-    <Content Remove="Pages\Tests\**" />
-    <EmbeddedResource Remove="Pages\Tests\**" />
-    <None Remove="Pages\Tests\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.4.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
+	</ItemGroup>
+		
 
-  <ItemGroup>
-    <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Project.Common\Project.Common.csproj" />
-    <ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
-    <ProjectReference Include="..\Project.Models\Project.Models.csproj" />
-    <ProjectReference Include="..\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
-    <ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
+	  <ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
+	</ItemGroup>
 
 
 </Project>
+

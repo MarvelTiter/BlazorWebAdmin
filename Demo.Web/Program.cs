@@ -18,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddAntDesignUI();
 builder.AddProject(setting =>
 {
     setting.App.Name = "Demo";
