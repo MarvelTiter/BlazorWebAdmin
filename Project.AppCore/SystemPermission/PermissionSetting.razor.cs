@@ -1,8 +1,5 @@
-﻿using AntDesign;
-using Microsoft.AspNetCore.Components;
-using Project.Constraints.UI.Flyout;
+﻿using Microsoft.AspNetCore.Components;
 using Project.Models.Permissions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Project.AppCore.SystemPermission
 {
@@ -10,7 +7,6 @@ namespace Project.AppCore.SystemPermission
     {
         [Inject] public IPermissionService PermissionSrv { get; set; }
         [Inject] IStringLocalizer<Power> Localizer { get; set; }
-        [Inject] ModalService ModalService { get; set; }
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
