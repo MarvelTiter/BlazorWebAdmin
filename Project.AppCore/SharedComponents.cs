@@ -12,27 +12,7 @@ using AspectCore.Extensions.DependencyInjection;
 using Project.AppCore.Middlewares;
 using MT.Toolkit.LogTool.LogExtension;
 using Microsoft.AspNetCore.DataProtection;
-using Project.Constraints.Models.Permissions;
 namespace Project.AppCore;
-
-public class ProjectSetting
-{
-    public Type SettingProviderType { get; set; }
-    public Type UserType { get; set; } = typeof(User);
-
-    //public Type RoleType { get; set; } = typeof(Role);
-    //public Type PowerType { get; set; } = typeof(Power);
-    //public Type RolePowerType { get; set; } = typeof(RolePower);
-    //public Type UserRoleType { get; set; } = typeof(UserRole);
-    //public Type RunlogType { get; set; } = typeof(RunLog);
-    public void ConfigureSettingProviderType<T>() where T : ICustomSettingProvider
-    {
-        SettingProviderType = typeof(T);
-    }
-    public Action<AutoInjectFilter>? AutoInjectConfig { get; set; }
-    public bool AddDefaultLogger { get; set; }
-    public AppInfo App => Config.App;
-}
 
 public static class SharedComponents
 {
@@ -62,6 +42,8 @@ public static class SharedComponents
 
         ArgumentNullException.ThrowIfNull(Config.App.Name);
 
+        services.AddSingleton(setting);
+
         Config.SetFooter($@"
         <footer style=""text-align:center"">
              <span>{Config.App.Id} ©2023-{DateTime.Now:yyyy} Powered By </span>
@@ -80,8 +62,7 @@ public static class SharedComponents
         //
         services.AddHttpClient();
         //
-        var settingImplType = setting.SettingProviderType;
-        services.AddScoped(typeof(ICustomSettingProvider), settingImplType);
+
         services.AddControllers().AddApplicationPart(typeof(AppConst).Assembly);
         // 配置 IAuthenticationStateProvider
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
@@ -100,7 +81,7 @@ public static class SharedComponents
         });
 
         builder.AddProjectDbServices(setting);
-        
+
         if (setting.AddDefaultLogger)
         {
             builder.Logging.AddSimpleLogger(config =>
@@ -125,11 +106,29 @@ public static class SharedComponents
     public static void AddProjectDbServices(this WebApplicationBuilder builder, ProjectSetting setting)
     {
         var services = builder.Services;
+        // 
+        var settingImplType = setting.SettingProviderType;
+        services.AddScoped(typeof(ICustomSettingProvider), settingImplType);
+        // user
         services.AddScoped(typeof(IUserService<>), typeof(Services.UserService<>));
         services.AddScoped<IUserService>(provider =>
         {
             var srv = provider.GetService(typeof(IUserService<>).MakeGenericType(setting.UserType));
             return srv as IUserService;
+        });
+        // permission
+        services.AddScoped(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType), typeof(Services.PemissionService<,,,>).MakeGenericType(setting.PowerType, setting.RoleType, setting.RolePowerType, setting.UserRoleType));
+        services.AddScoped<IPermissionService>(provider =>
+        {
+            var srv = provider.GetService(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType));
+            return srv as IPermissionService;
+        });
+        // runlog
+        services.AddScoped(typeof(IRunLogService<>), typeof(Services.RunLogService<>));
+        services.AddScoped<IRunLogService>(provider =>
+        {
+            var srv = provider.GetService(typeof(IRunLogService<>).MakeGenericType(setting.RunlogType));
+            return srv as IRunLogService;
         });
     }
 

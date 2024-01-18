@@ -20,11 +20,11 @@ public class LogAopAttribute : AbstractInterceptorAttribute
         var store = context.ServiceProvider.GetService<IUserStore>();
         var logService = context.ServiceProvider.GetService<IRunLogService>();
         var userId = store?.UserId ?? GetUserIdFromContext(context);
-        if (infoAttr!.Module == "BasicService")
-        {
-            var type = context.ServiceMethod.DeclaringType!.GetGenericArguments().First();
-            infoAttr!.Action = $"[{type.Name}]{infoAttr!.Action}";
-        }
+        //if (infoAttr!.Module == "BasicService")
+        //{
+        //    var type = context.ServiceMethod.DeclaringType!.GetGenericArguments().First();
+        //    infoAttr!.Action = $"[{type.Name}]{infoAttr!.Action}";
+        //}
         var l = new RunLog()
         {
             UserId = userId,

@@ -2,9 +2,15 @@
 
 namespace Project.Constraints.Models.Permissions
 {
+    public interface IRole
+    {
+        string RoleId { get; set; }
+        string RoleName { get; set; }
+    }
+
     [TableName("ROLE")]
     [Table(Name = "ROLE")]
-    public class Role
+    public class Role: IRole
     {
         [PrimaryKey]
         [ColumnDefinition(Readonly = true)]

@@ -1,6 +1,8 @@
 ﻿@using Project.Constraints.Services
 @using Project.Web.Shared.ComponentHelper
-@inject IPermissionService PermissionSrv
+@typeparam TPower where TPower : class, IPower, new()
+@typeparam TRole where TRole : class, IRole, new()
+@inject IPermissionService<TPower, TRole> PermissionSrv
 @inherits BasicComponent
 <MCard>
     用户: @Current?.UserName
@@ -21,19 +23,19 @@
 @code {
     class RoleDef
     {
-        public RoleDef(Role Role, bool Check)
+        public RoleDef(TRole Role, bool Check)
         {
             this.Role = Role;
             this.Check = Check;
         }
 
-        public Role Role { get; set; }
+        public TRole Role { get; set; }
         public bool Check { get; set; }
     }
     [Parameter]
     public IUser Current { get; set; }
     List<RoleDef> roleDefs = new List<RoleDef>();
-    IEnumerable<Role> roles = Enumerable.Empty<Role>();
+    IEnumerable<TRole> roles = Enumerable.Empty<TRole>();
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();

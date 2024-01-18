@@ -2,14 +2,17 @@
 
 namespace Project.Constraints.Models.Permissions
 {
-    [TableName("USER_ROLE")]
-    [Table(Name = "USER_ROLE")]
-    public class UserRole
+    public interface IUserRole
     {
-        [ColumnName("USER_ID")]
+        string UserId { get; set; }
+        string RoleId { get; set; }
+    }
+
+    [Table(Name = "USER_ROLE")]
+    public class UserRole: IUserRole
+    {
         [Column(Name = "USER_ID", PrimaryKey = true)]
         public string UserId { get; set; }
-        [ColumnName("ROLE_ID")]
         [Column(Name = "ROLE_ID", PrimaryKey = true)]
         public string RoleId { get; set; }
     }

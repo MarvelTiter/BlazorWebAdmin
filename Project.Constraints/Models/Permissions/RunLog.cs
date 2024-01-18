@@ -2,8 +2,19 @@
 
 namespace Project.Constraints.Models.Permissions;
 
+public interface IRunLog
+{
+    int? LogId { get; set; }
+    string UserId { get; set; }
+    string ActionModule { get; set; }
+    string ActionName { get; set; }
+    DateTime ActionTime { get; init; }
+    string ActionResult { get; set; }
+    string ActionMessage { get; set; }
+}
+
 [Table(Name = "RUN_LOG")]
-public class RunLog
+public class RunLog : IRunLog
 {
     [Column(Name = "LOG_ID")]
     [PrimaryKey]

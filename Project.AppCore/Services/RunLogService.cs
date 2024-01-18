@@ -1,10 +1,12 @@
 ﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Project.Constraints.Models.Permissions;
 
 namespace Project.AppCore.Services
 {
-    public class RunLogService : IRunLogService
+    [IgnoreAutoInject]
+    public class RunLogService<TRunLog> : IRunLogService<TRunLog> where TRunLog : class, IRunLog, new()
     {
         private readonly IExpressionContext context;
 
@@ -13,15 +15,29 @@ namespace Project.AppCore.Services
             this.context = context;
         }
 
-        public async Task<IQueryCollectionResult<RunLog>> GetRunLogsAsync(GenericRequest<RunLog> req)
+        public async Task<IQueryCollectionResult<TRunLog>> GetRunLogsAsync(GenericRequest<TRunLog> req)
         {
-            var list = await context.Repository<RunLog>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize, log => log.LogId, false);
+            var list = await context.Repository<TRunLog>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize, log => log.LogId, false);
             return list.CollectionResult((int)total);
         }
 
-        public async Task Log(RunLog log)
+        public async Task WriteLog(TRunLog log)
         {
-            await context.Repository<RunLog>().InsertAsync(log);
+            await context.Repository<TRunLog>().InsertAsync(log);
+        }
+
+        public Task Log(IRunLog log)
+        {
+            var tlog = new TRunLog
+            {
+                UserId = log.UserId,
+                ActionModule = log.ActionModule,
+                ActionName = log.ActionName,
+                ActionResult = log.ActionResult,
+                ActionMessage = log.ActionMessage,
+                ActionTime = log.ActionTime,
+            };
+            return WriteLog(tlog);
         }
     }
 }

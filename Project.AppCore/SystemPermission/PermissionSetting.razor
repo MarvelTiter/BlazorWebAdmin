@@ -1,5 +1,6 @@
-﻿@page "/permission"
-@inherits ModelPage<Power, GenericRequest<Power>>
+﻿@typeparam TPower where TPower : class, IPower, new()
+@typeparam TRole where TRole : class, IRole, new()
+@inherits ModelPage<TPower, GenericRequest<TPower>>
 @TableFragment
 
 @code {
@@ -8,7 +9,7 @@
     {
         return data =>
         {
-            var p = data as Power;
+            TPower? p = data as TPower;
             selectedIcon = p?.Icon;
             return@<Project.AppCore.SystemPermission.Component.PowerIconSelector @bind-Value="@selectedIcon"></Project.AppCore.SystemPermission.Component.PowerIconSelector>
     ;

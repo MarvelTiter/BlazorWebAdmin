@@ -4,33 +4,41 @@ using Project.Constraints.Models.Request;
 
 namespace Project.Constraints.Services
 {
+    public interface IPermissionService
+    {
+        Task<IQueryCollectionResult<IPower>> GetPowerListByUserIdAsync(string usrId);
+    }
     //[Aspectable(AspectHandleType = typeof(LogAop))]
     [LogAop]
     [AutoInject]
-    public partial interface IPermissionService
+    public partial interface IPermissionService<TPower, TRole> : IPermissionService
+        where TPower : IPower
+        where TRole : IRole
     {
-        Task<IQueryCollectionResult<Power>> GetPowerListAsync(GenericRequest<Power> req);
-        Task<IQueryCollectionResult<Power>> GetPowerListAsync();
-        Task<IQueryCollectionResult<Role>> GetRoleListAsync(GenericRequest<Role> req);
-        Task<IQueryCollectionResult<Role>> GetRoleListAsync();
-        Task<IQueryCollectionResult<Power>> GetPowerListByUserIdAsync(string usrId);
-        Task<IQueryCollectionResult<Power>> GetPowerListByRoleIdAsync(string roleId);
-        Task<IQueryCollectionResult<Role>> GetUserRolesAsync(string usrId);
+        Task<IQueryCollectionResult<TPower>> GetPowerListAsync(GenericRequest<TPower> req);
+        Task<IQueryCollectionResult<TPower>> GetPowerListAsync();
+        Task<IQueryCollectionResult<TRole>> GetRoleListAsync(GenericRequest<TRole> req);
+        Task<IQueryCollectionResult<TRole>> GetRoleListAsync();
+        new Task<IQueryCollectionResult<TPower>> GetPowerListByUserIdAsync(string usrId);
+        Task<IQueryCollectionResult<TPower>> GetPowerListByRoleIdAsync(string roleId);
+        Task<IQueryCollectionResult<TRole>> GetUserRolesAsync(string usrId);
         [LogInfo(Action = "修改用户角色", Module = "权限控制")]
         Task<IQueryResult<bool>> SaveUserRole(string usrId, params string[] roles);
         [LogInfo(Action = "修改角色权限", Module = "权限控制")]
         Task<IQueryResult<bool>> SaveRolePower(string roleId, params string[] powers);
         [LogInfo(Action = "更新权限信息", Module = "权限控制")]
-        Task<IQueryResult<bool>> UpdatePowerAsync(Power power);
+        Task<IQueryResult<bool>> UpdatePowerAsync(TPower power);
         [LogInfo(Action = "新增权限信息", Module = "权限控制")]
-        Task<IQueryResult<bool>> InsertPowerAsync(Power power);
+        Task<IQueryResult<bool>> InsertPowerAsync(TPower power);
         [LogInfo(Action = "删除权限信息", Module = "权限控制")]
-        Task<IQueryResult<bool>> DeletePowerAsync(Power power);
+        Task<IQueryResult<bool>> DeletePowerAsync(TPower power);
         [LogInfo(Action = "修改角色信息", Module = "权限控制")]
-        Task<IQueryResult<bool>> UpdateRoleAsync(Role role);
+        Task<IQueryResult<bool>> UpdateRoleAsync(TRole role);
         [LogInfo(Action = "新增角色", Module = "权限控制")]
-        Task<IQueryResult<bool>> InsertRoleAsync(Role role);
+        Task<IQueryResult<bool>> InsertRoleAsync(TRole role);
         [LogInfo(Action = "删除角色", Module = "权限控制")]
-        Task<IQueryResult<bool>> DeleteRoleAsync(Role role);
+        Task<IQueryResult<bool>> DeleteRoleAsync(TRole role);
     }
+
+    
 }

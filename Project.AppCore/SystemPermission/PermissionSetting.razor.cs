@@ -3,10 +3,12 @@ using Project.Constraints.Models.Permissions;
 
 namespace Project.AppCore.SystemPermission
 {
-    public partial class PermissionSetting : ModelPage<Power, GenericRequest<Power>>
+    public partial class PermissionSetting<TPower, TRole> : ModelPage<TPower, GenericRequest<TPower>>
+        where TPower : class, IPower, new()
+        where TRole : class, IRole, new()
     {
-        [Inject] public IPermissionService PermissionSrv { get; set; }
-        [Inject] IStringLocalizer<Power> Localizer { get; set; }
+        [Inject] public IPermissionService<TPower, TRole> PermissionSrv { get; set; }
+        [Inject] IStringLocalizer<TPower> Localizer { get; set; }
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -14,12 +16,12 @@ namespace Project.AppCore.SystemPermission
             HideDefaultTableHeader = true;
             Options.Pager = false;
             Options.LoadDataOnLoaded = true;
-            Options.TreeChildren = p => p.Children;
+            Options.TreeChildren = p => p.Children.Cast<TPower>();
             Options.GetColumn(p => p.Icon).FormTemplate = IconSelect();
 
         }
-        protected override object SetRowKey(Power model) => model.PowerId;
-        protected override async Task<IQueryCollectionResult<Power>> OnQueryAsync(GenericRequest<Power> query)
+        protected override object SetRowKey(TPower model) => model.PowerId;
+        protected override async Task<IQueryCollectionResult<TPower>> OnQueryAsync(GenericRequest<TPower> query)
         {
             var result = await PermissionSrv.GetPowerListAsync();
             var powers = result.Payload;
@@ -32,9 +34,9 @@ namespace Project.AppCore.SystemPermission
         /// 构建权限树
         /// </summary>
         /// <returns></returns>
-        static List<Power> GeneratePowerTreeDataAsync(IEnumerable<Power> all)
+        static List<TPower> GeneratePowerTreeDataAsync(IEnumerable<TPower> all)
         {
-            List<Power> powers = new();
+            List<TPower> powers = new();
             var topLevel = all.Min(p => p.PowerLevel);
             var rootNodes = all.Where(p => p.PowerLevel == topLevel);
             foreach (var item in rootNodes)
@@ -45,10 +47,10 @@ namespace Project.AppCore.SystemPermission
 
             return powers;
 
-            List<Power> FindChildren(IEnumerable<Power> all, Power parent)
+            List<TPower> FindChildren(IEnumerable<TPower> all, TPower parent)
             {
                 var children = all.Where(p => p.ParentId == parent.PowerId);
-                List<Power> childNodes = new();
+                List<TPower> childNodes = new();
                 foreach (var child in children)
                 {
                     child.Children = FindChildren(all, child);
@@ -61,11 +63,11 @@ namespace Project.AppCore.SystemPermission
 
         string[] defaultPageButtons = new[] { "Add", "Modify", "Delete" };
         bool test;
-        public bool CanShow(TableButtonContext<Power> context) => context.Data.PowerType == PowerType.Page;
-        public string AddPowerLabel(TableButtonContext<Power> _) => Localizer["PermissionSetting.AddChild"];
+        public bool CanShow(TableButtonContext<TPower> context) => context.Data.PowerType == PowerType.Page;
+        public string AddPowerLabel(TableButtonContext<TPower> _) => Localizer["PermissionSetting.AddChild"];
 
-        [TableButton(LabelExpression =nameof(AddPowerLabel), VisibleExpression = nameof(CanShow))]
-        public async Task<bool> AddPower(Power parent)
+        [TableButton(LabelExpression = nameof(AddPowerLabel), VisibleExpression = nameof(CanShow))]
+        public async Task<bool> AddPower(TPower parent)
         {
             var power = await this.ShowAddFormAsync("新增权限");
             power.ParentId = parent.PowerId;
@@ -78,7 +80,7 @@ namespace Project.AppCore.SystemPermission
                 {
                     foreach (var item in defaultPageButtons)
                     {
-                        var p = new Power
+                        var p = new TPower
                         {
                             PowerId = $"{power.PowerId}:{item}",
                             ParentId = power.PowerId,
@@ -95,7 +97,7 @@ namespace Project.AppCore.SystemPermission
         }
 
         [EditButton]
-        public async Task<bool> EditPower(Power node)
+        public async Task<bool> EditPower(TPower node)
         {
             var p = await this.ShowEditFormAsync("编辑权限", node);
             if (p.Icon != selectedIcon && !string.IsNullOrEmpty(selectedIcon))
@@ -107,7 +109,7 @@ namespace Project.AppCore.SystemPermission
         }
 
         [DeleteButton]
-        public async Task<bool> DeletePower(Power node)
+        public async Task<bool> DeletePower(TPower node)
         {
             var result = await PermissionSrv.DeletePowerAsync(node);
             return result.Success;
