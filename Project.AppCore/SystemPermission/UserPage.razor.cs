@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Project.Constraints.Models.Permissions;
 using Project.Constraints.UI.Extensions;
-using Project.Models.Permissions;
 using Project.Web.Shared.Components;
 using System.Diagnostics;
 
 namespace Project.AppCore.SystemPermission
 {
-    public partial class CustomUserPage<TUser> : ModelPage<TUser, GenericRequest<TUser>> where TUser : class, IUser, new()
+    public partial class UserPage<TUser, TPower, TRole> : ModelPage<TUser, GenericRequest<TUser>>
+        where TUser : class, IUser, new()
+        where TPower : class, IPower, new()
+        where TRole : class, IRole, new()
     {
         [Inject] public IUserService<TUser> UserSrv { get; set; }
         [Inject] public IStringLocalizer Localizer { get; set; }

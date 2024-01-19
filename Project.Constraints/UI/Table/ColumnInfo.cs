@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Project.Common.Attributes;
+using Project.Constraints.Common.Attributes;
 using System.Reflection;
 
 namespace Project.Constraints.UI.Table;

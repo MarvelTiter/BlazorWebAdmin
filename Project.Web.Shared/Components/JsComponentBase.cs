@@ -3,7 +3,7 @@ using Microsoft.JSInterop;
 using System.Reflection;
 using Project.Constraints.UI;
 using Project.Constraints.Page;
-using Project.Common.Attributes;
+using Project.Constraints.Common.Attributes;
 
 namespace Project.Web.Shared.Components
 {

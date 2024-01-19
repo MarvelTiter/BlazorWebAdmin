@@ -1,33 +1,34 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
+using Project.Constraints.Models.Permissions;
 using Project.Constraints.Options;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Tree;
-using Project.Models.Permissions;
 
 namespace Project.AppCore.SystemPermission
 {
-    public partial class RolePermission : ModelPage<Role, GenericRequest<Role>>
+    public partial class RolePermission<TPower,TRole> : ModelPage<TRole, GenericRequest<TRole>>
+        where TPower : class, IPower, new()
+        where TRole : class, IRole, new()
     {
-
         bool powerLoading = false;
-        Role? CurrentRole;
-        IEnumerable<Power> allPower;
+        TRole? CurrentRole;
+        IEnumerable<TPower> allPower;
         string[]? selectedKeys;
         bool sideExpand;
-        [Inject] public IPermissionService PermissionSrv { get; set; }
-        [Inject] public IStringLocalizer<Power> Localizer { get; set; }
+        [Inject] public IPermissionService<TPower, TRole> PermissionSrv { get; set; }
+        [Inject] public IStringLocalizer<TPower> Localizer { get; set; }
         [Inject] public IOptionsMonitor<CultureOptions> CultureSetting { get; set; }
-        TreeOptions<Power> options;
+        TreeOptions<TPower> options;
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
             Options.LoadDataOnLoaded = true;
             await InitPowerTree();
         }
-        protected override object SetRowKey(Role model) => model.RoleId;
+        protected override object SetRowKey(TRole model) => model.RoleId;
 
-        protected override Task<IQueryCollectionResult<Role>> OnQueryAsync(GenericRequest<Role> query)
+        protected override Task<IQueryCollectionResult<TRole>> OnQueryAsync(GenericRequest<TRole> query)
         {
             return PermissionSrv.GetRoleListAsync(query);
 
@@ -54,17 +55,17 @@ namespace Project.AppCore.SystemPermission
         /// <returns></returns>
         Task GeneratePowerTreeDataAsync()
         {
-            List<TreeData<Power>> powerTreeNodes = new();
+            List<TreeData<TPower>> powerTreeNodes = new();
             var rootNodes = allPower.Where(p => p.PowerId == "ROOT");
             foreach (var item in rootNodes)
             {
-                var n = new TreeData<Power>(item)
+                var n = new TreeData<TPower>(item)
                 {
                     Children = FindChildren(allPower, item)
                 };
                 powerTreeNodes.Add(n);
             }
-            options = new TreeOptions<Power>(powerTreeNodes);
+            options = new TreeOptions<TPower>(powerTreeNodes);
             options.KeyExpression = p => p.PowerId;
             //if (CultureSetting.CurrentValue.Enabled)
             //{
@@ -76,13 +77,13 @@ namespace Project.AppCore.SystemPermission
             options.TitleExpression = p => p.PowerName;
             return Task.CompletedTask;
 
-            List<TreeData<Power>> FindChildren(IEnumerable<Power> all, Power parent)
+            List<TreeData<TPower>> FindChildren(IEnumerable<TPower> all, TPower parent)
             {
                 var children = all.Where(p => p.ParentId == parent.PowerId);
-                List<TreeData<Power>> childNodes = new();
+                List<TreeData<TPower>> childNodes = new();
                 foreach (var child in children)
                 {
-                    var n1 = new TreeData<Power>(child)
+                    var n1 = new TreeData<TPower>(child)
                     {
                         Children = FindChildren(all, child)
                     };
@@ -103,16 +104,15 @@ namespace Project.AppCore.SystemPermission
 
 
         [EditButton]
-        public async Task<bool> EditRole(Role role)
+        public async Task<bool> EditRole(TRole role)
         {
-            //var newRole = await UI.ShowDialogAsync<RoleForm, Role>("编辑角色", role);
             var newRole = await this.ShowEditFormAsync("编辑角色", role);
             var result = await PermissionSrv.UpdateRoleAsync(newRole);
             return result.Success;
         }
 
         [DeleteButton]
-        public async Task<bool> DeleteRole(Role role)
+        public async Task<bool> DeleteRole(TRole role)
         {
             var result = await PermissionSrv.DeleteRoleAsync(role);
             return result.Success;
@@ -121,13 +121,13 @@ namespace Project.AppCore.SystemPermission
         async Task SaveRolePower()
         {
             if (selectedKeys is null) return;
-            var flag = await PermissionSrv.SaveRolePower(CurrentRole!.RoleId,  selectedKeys);
+            var flag = await PermissionSrv.SaveRolePower(CurrentRole!.RoleId, selectedKeys);
             if (flag.Success) UI.Success("保存成功");
             else UI.Error("保存数据异常！");
         }
 
 
-        protected override async Task OnRowClickAsync(Role model)
+        protected override async Task OnRowClickAsync(TRole model)
         {
             powerLoading = true;
             await InitPowerTree();

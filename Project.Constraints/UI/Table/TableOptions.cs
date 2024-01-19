@@ -1,5 +1,5 @@
 ﻿using Microsoft.JSInterop;
-using Project.Common;
+using Project.Constraints.Common;
 using Project.Constraints.Models;
 using Project.Constraints.Models.Request;
 using Project.Constraints.Store;

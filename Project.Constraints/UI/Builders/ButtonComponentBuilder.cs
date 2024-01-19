@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Project.Common.Attributes;
 using Project.Constraints.UI.Props;
 
 namespace Project.Constraints.UI.Builders

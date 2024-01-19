@@ -1,8 +1,7 @@
 ﻿using AspectCore.DynamicProxy;
-using Project.Constraints.Models;
+using Project.Constraints.Models.Permissions;
 using Project.Constraints.Services;
 using Project.Constraints.Store;
-using Project.Models.Entities;
 using System.Reflection;
 
 namespace Project.Constraints.Aop;
@@ -21,11 +20,11 @@ public class LogAopAttribute : AbstractInterceptorAttribute
         var store = context.ServiceProvider.GetService<IUserStore>();
         var logService = context.ServiceProvider.GetService<IRunLogService>();
         var userId = store?.UserId ?? GetUserIdFromContext(context);
-        if (infoAttr!.Module == "BasicService")
-        {
-            var type = context.ServiceMethod.DeclaringType!.GetGenericArguments().First();
-            infoAttr!.Action = $"[{type.Name}]{infoAttr!.Action}";
-        }
+        //if (infoAttr!.Module == "BasicService")
+        //{
+        //    var type = context.ServiceMethod.DeclaringType!.GetGenericArguments().First();
+        //    infoAttr!.Action = $"[{type.Name}]{infoAttr!.Action}";
+        //}
         var l = new RunLog()
         {
             UserId = userId,

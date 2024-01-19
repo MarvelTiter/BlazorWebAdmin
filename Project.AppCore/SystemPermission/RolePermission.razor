@@ -1,7 +1,7 @@
-﻿@page "/rolepermission"
-@using Project.Constraints.UI.Tree
-@using Project.Constraints.Models.Request;
-@inherits ModelPage<Role, GenericRequest<Role>>
+﻿@using Project.Constraints.UI.Tree
+@typeparam TPower where TPower : class, IPower, new()
+@typeparam TRole where TRole : class, IRole, new()
+@inherits ModelPage<TRole, GenericRequest<TRole>>
 <TwoSidePage OpenTrigger=@(() => CurrentRole != null) @bind-Expand=@sideExpand MainFlex="3">
     <FirstSide>
         @TableFragment
@@ -19,7 +19,7 @@
                 TitleExpression="x => x.Data.PowerName"
                 KeyExpression="x => x.Data.PowerId"
                 ChildrenExpression="x => x.Children"
-                TNode="TreeData<Power>">
+                TNode="TreeData<TPower>">
          </MTree>
          @* @UI.BuildTree(this, options).Bind(() => selectedKeys).Render() *@
         <div>

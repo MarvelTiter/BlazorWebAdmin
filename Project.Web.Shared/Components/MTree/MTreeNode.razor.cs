@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Project.Common;
+using Project.Constraints.Common;
 
 namespace Project.Web.Shared.Components
 {

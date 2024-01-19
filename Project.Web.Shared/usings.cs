@@ -1,1 +1,1 @@
-﻿global using Project.Common;
+﻿global using Project.Constraints.Common;

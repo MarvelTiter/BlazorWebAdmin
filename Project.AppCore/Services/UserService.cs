@@ -1,9 +1,10 @@
 ﻿using MDbContext.ExpressionSql;
 using MDbContext.Repository;
-using Project.Models.Permissions;
+using Project.Constraints.Models.Permissions;
 
 namespace Project.AppCore.Services
 {
+    [IgnoreAutoInject]
     public partial class UserService<TUser> : IUserService<TUser> where TUser : IUser
     {
         private readonly IExpressionContext context;

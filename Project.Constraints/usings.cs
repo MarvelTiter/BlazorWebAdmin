@@ -1,2 +1,4 @@
 ﻿global using Project.Constraints.Models;
-global using Project.Common.Attributes;
+global using Project.Constraints.Common.Attributes;
+
+//[assembly: AutoInject]

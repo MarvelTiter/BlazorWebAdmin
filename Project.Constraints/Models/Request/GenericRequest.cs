@@ -17,6 +17,7 @@ namespace Project.Constraints.Models.Request
         public bool FixTime { get; set; }
         public Expression? Expression { get; set; }
     }
+
     public interface IRequest<T> : IRequest
     {
         public new Expression<Func<T, bool>>? Expression { get; set; }
