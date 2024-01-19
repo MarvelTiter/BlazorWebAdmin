@@ -42,11 +42,9 @@ namespace Project.AppCore.SystemPermission
         protected TUser currentSelected;
         bool sideExpand;
 
-
-
         protected override async Task<bool> OnAddItemAsync()
         {
-            var user = await this.ShowAddFormAsync(Localizer["User.DialogTitle.Add"], width: "60%");
+            var user = await this.ShowAddFormAsync(Localizer["User.DialogTitle.Add"]);
             await UserSrv.InsertUserAsync(user);
             return true;
         }
@@ -54,8 +52,7 @@ namespace Project.AppCore.SystemPermission
         [EditButton]
         public async Task<bool> EditUser(TUser user)
         {
-            //var content = UI.BuildForm(new Constraints.UI.Form.FormOptions<User>(UI, user, Options.Columns));
-            var n = await this.ShowEditFormAsync(Localizer["User.DialogTitle.Modify"], user, width: "60%");
+            var n = await this.ShowEditFormAsync(Localizer["User.DialogTitle.Modify"], user);
             await UserSrv.UpdateUserAsync(n);
             return true;
         }

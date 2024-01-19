@@ -5,12 +5,10 @@ namespace Project.Services
 {
     public partial class LoginService : ILoginService
 	{
-		private readonly IExpressionContext context;
         private readonly ICustomSettingProvider settingProvider;
 
-        public LoginService(IExpressionContext context, ICustomSettingProvider settingProvider)
+        public LoginService(ICustomSettingProvider settingProvider)
 		{
-			this.context = context;
             this.settingProvider = settingProvider;
         }
 		public Task<bool> CheckUser(UserInfo info)

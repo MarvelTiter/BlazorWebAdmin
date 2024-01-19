@@ -1,9 +1,10 @@
 ﻿@page "/blazor/web/error"
 @namespace Project.Web.Shared.Components
+@inherits BasicComponent
 <div class="error-page-wrapper">
     <div class="content-container">
         <div class="head-line">
-            <img src="/static/error.svg" alt="" width="120">
+            <SvgIcon IconName="@svgName" Style="height:100%;width:100%;"></SvgIcon>
         </div>
         <div class="subheader">
             HTTP 500- 服务器异常
@@ -19,3 +20,14 @@
         </div>
     </div>
 </div>
+
+@code {
+    string svgName = "p500_01";
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var i = Random.Shared.Next(0, 100);
+        var index = i % 2 == 0 ? "01" : "02";
+        svgName = $"p500_{index}";
+    }
+}

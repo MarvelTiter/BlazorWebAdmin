@@ -1,10 +1,11 @@
-### . 创建新项目（启动程序），引用 Shared，AppCore，Constraints，Model 项目
+### . 创建新项目（启动程序），引用 AppCore和UI 项目
 
 1. 移动 App.razor, Routes.razor, \_Imports.razor 到根目录
 2. 删除 Components 文件夹
 3. 修改 Routes.razor
 ```CSharp
 <Project.AppCore.Layouts.AppRoot AppAssembly="typeof(App).Assembly"></Project.AppCore.Layouts.AppRoot>
+<AntContainer/>
 ```
 4. 拷贝appsettings.json
 
@@ -13,16 +14,21 @@
 
 ```CSharp
 using Project.AppCore;
-
+builder.Services.AddAntDesignUI();
 builder.AddProject(setting =>
 {
     // ICustomSettingProvider的实现
-    setting.SettingProviderType = typeof(SettingImpl);
+    setting.App.Name = "Demo";
+    setting.App.Id = "Test";
+    setting.App.Company = "Marvel";
+    setting.ConfigureSettingProviderType<CustomSetting>();
     setting.AutoInjectConfig = filter =>
     {
 
     };
 });
+
+builder.AddDefaultLightOrm();
 
 app.UseProject();
 
