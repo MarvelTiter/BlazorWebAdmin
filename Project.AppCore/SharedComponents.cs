@@ -12,6 +12,7 @@ using AspectCore.Extensions.DependencyInjection;
 using Project.AppCore.Middlewares;
 using MT.Toolkit.LogTool.LogExtension;
 using Microsoft.AspNetCore.DataProtection;
+using MDbContext.ExpressionSql;
 namespace Project.AppCore;
 
 public static class SharedComponents
@@ -151,25 +152,26 @@ public static class SharedComponents
         return services;
     }
 
-    public static void AddDefaultLightOrm(this WebApplicationBuilder builder)
+    public static void AddDefaultLightOrm(this WebApplicationBuilder builder, Action<ExpressionSqlOptions>? action = null)
     {
-
         builder.Services.AddLightOrm(option =>
+        {
             option.SetDatabase(DbBaseType.Sqlite, () =>
             {
                 var connStr = builder.Configuration.GetConnectionString("Sqlite");
                 return new SqliteConnection(connStr);
-            })
-    .SetWatcher(sql =>
-    {
-        sql.BeforeExecute = e =>
-        {
+            }).SetWatcher(sql =>
+            {
+                sql.BeforeExecute = e =>
+                {
 #if DEBUG
-            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{e.Sql}\n");
+                    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{e.Sql}\n");
 #endif
-        };
-    })
-            );
+                };
+            });
+
+            action?.Invoke(option);
+        });
     }
 
     public static void UseProject(this WebApplication app)
