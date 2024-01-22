@@ -65,6 +65,8 @@ public class RouterStore : StoreBase, IRouterStore
     {
         if (!pages.TryGetValue(CurrentUrl, out var tag))
         {
+            // TODO 可能有BUG，先观察观察
+            if (Menus.Count == 0) return Task.CompletedTask;
             RouterMeta? meta = Menus.FirstOrDefault(r => r.RouteUrl == CurrentUrl);
             if (meta == null)
             {
