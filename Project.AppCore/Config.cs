@@ -6,6 +6,8 @@ namespace Project.AppCore;
 public class Config
 {
     public static AppInfo App {  get; set; } = new AppInfo();
+    public static DbTableType TypeInfo { get; set; } = new DbTableType();
+
     static List<Assembly> PageAssemblies = new List<Assembly>();
 
     public static RenderFragment Footer { get; set; }

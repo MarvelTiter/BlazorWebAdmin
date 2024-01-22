@@ -1,7 +1,8 @@
-﻿using Project.Services;
+﻿using Project.Constraints.Models.Permissions;
+using Project.Services;
 namespace Project.AppCore;
 
-public class ProjectSetting : DbTableType
+public class ProjectSetting
 {
     Type settingProviderType = typeof(CustomSetting);
     public Type SettingProviderType => settingProviderType;
@@ -13,10 +14,19 @@ public class ProjectSetting : DbTableType
 
     public void OverrideTableEntity(Action<DbTableType> config)
     {
-        config.Invoke(this);
+        config.Invoke(TypeInfo);
     }
 
     public Action<AutoInjectFilter>? AutoInjectConfig { get; set; }
     public bool AddDefaultLogger { get; set; }
     public AppInfo App => Config.App;
+    public DbTableType TypeInfo => Config.TypeInfo;
+
+    public Type UserType => TypeInfo.UserType;
+    public Type RoleType => TypeInfo.RoleType;
+    public Type PowerType => TypeInfo.PowerType;
+    public Type RolePowerType => TypeInfo.RolePowerType;
+    public Type UserRoleType => TypeInfo.UserRoleType;
+    public Type RunlogType => TypeInfo.RunlogType;
+
 }
