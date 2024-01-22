@@ -4,6 +4,8 @@ using Project.Constraints;
 using Project.Constraints.Models;
 using Project.Constraints.Models.Request;
 using Project.Constraints.Page;
+using Project.Constraints.Store.Models;
+using Project.Constraints.UI;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Table;
 using System.Reflection;
@@ -34,6 +36,8 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
 {
     [Inject] protected IExcelHelper Excel { get; set; }
     [Inject] IDownloadService DownloadService { get; set; }
+    [CascadingParameter] IDomEventHandler DomEvent { get; set; }
+    [CascadingParameter] TagRoute? RouteInfo { get; set; }
     public TableOptions<TModel, TQuery> Options { get; set; } = new();
     protected bool HideDefaultTableHeader { get; set; }
     bool IsOverride(string methodName)
@@ -59,7 +63,24 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
         // 被重写了
         Options.ShowExportButton = IsOverride(nameof(OnExportAsync));
         Options.ShowAddButton = IsOverride(nameof(OnAddItemAsync));
+
+        //DomEvent.OnKeyDown += DomEvent_OnKeyDown;
     }
+
+    //protected override void OnDispose()
+    //{
+    //    DomEvent.OnKeyDown -= DomEvent_OnKeyDown;
+    //}
+
+    //private Task DomEvent_OnKeyDown(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs arg)
+    //{
+    //    Console.WriteLine($"{RouteInfo?.RouteUrl} {arg.Key} down");
+    //    if (RouteInfo?.IsActive ?? false)
+    //    {
+    //        return Options.RefreshAsync();
+    //    }
+    //    return Task.CompletedTask;
+    //}
 
     protected abstract object SetRowKey(TModel model);
 
@@ -170,7 +191,12 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
     {
         if (!HideDefaultTableHeader)
         {
-            builder.AddContent(0, UI.BuildTableHeader(Options));
+            builder.AddContent(0, builder =>
+            {
+                builder.OpenComponent<DefaultTableHeader<TModel, TQuery>>(0);
+                builder.AddAttribute(1, nameof(DefaultTableHeader<TModel, TQuery>.Options), Options);
+                builder.CloseComponent();
+            });
         }
         builder.AddContent(1, UI.BuildTable(Options));
     };

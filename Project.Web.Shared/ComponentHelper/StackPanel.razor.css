@@ -1,0 +1,8 @@
+﻿.stack-panel-wrapper {
+    display: flex;
+    justify-content: flex-start;
+}
+
+/*    .stack-panel-wrapper ::deep *:nth-child(n+2) {
+        margin-left: var(--stack-panel-gap);
+    }*/

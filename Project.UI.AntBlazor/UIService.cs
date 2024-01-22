@@ -190,15 +190,15 @@ namespace Project.UI.AntBlazor
             };
         }
 
-        public RenderFragment BuildTableHeader<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new()
-        {
-            return builder =>
-            {
-                builder.OpenComponent<AntTableDefaultHeader<TModel, TQuery>>(0);
-                builder.AddComponentParameter(1, nameof(AntTableDefaultHeader<TModel, TQuery>.Options), options);
-                builder.CloseComponent();
-            };
-        }
+        //public RenderFragment BuildTableHeader<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new()
+        //{
+        //    return builder =>
+        //    {
+        //        builder.OpenComponent<AntTableDefaultHeader<TModel, TQuery>>(0);
+        //        builder.AddComponentParameter(1, nameof(AntTableDefaultHeader<TModel, TQuery>.Options), options);
+        //        builder.CloseComponent();
+        //    };
+        //}
 
         public RenderFragment BuildForm<TData>(FormOptions<TData> options) where TData : class, new()
         {
@@ -394,6 +394,25 @@ namespace Project.UI.AntBlazor
                 builder.AddAttribute(1, nameof(AntPopover.Options), options);
                 builder.CloseComponent();
             };
+        }
+
+        public IUIComponent<ModalProp> BuildModal()
+        {
+            return new UIComponentBuilder<Modal, ModalProp>(self =>
+            {
+                self.SetComponent(m => m.Title, self.Model.Title)
+                .SetComponent(m => m.Visible, self.Model.Visible)
+                .SetComponent(m => m.VisibleChanged, self.Model.VisibleChanged)
+                .SetComponent(m => m.ChildContent, self.Model.ChildContent);
+                if (self.Model.HideDefaultFooter)
+                {
+                    self.SetComponent(m => m.Footer, null);
+                }
+                if (!string.IsNullOrEmpty(self.Model.Width))
+                {
+                    self.SetComponent(m => m.Width, self.Model.Width);
+                }
+            });
         }
     }
 }

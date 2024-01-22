@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 namespace Project.Constraints.UI.Builders
 {
     [IgnoreAutoInject]
-    public class InputComponentBuilder<TComponent, TPropModel, TSelf> : ComponentBuilder<TComponent, TSelf>, IInputComponent<TPropModel>
+    public class InputComponentBuilder<TComponent, TPropModel, TSelf> : ComponentBuilder<TComponent, TSelf>, IUIComponent<TPropModel>
         where TPropModel : new()
         where TComponent : IComponent
         where TSelf : ComponentBuilder<TComponent, TSelf>
@@ -13,7 +13,7 @@ namespace Project.Constraints.UI.Builders
     {
         public TPropModel Model { get; set; } = new();
 
-        public IInputComponent<TPropModel> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value)
+        public IUIComponent<TPropModel> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value)
         {
             /**
             * v => model.XXX = v;

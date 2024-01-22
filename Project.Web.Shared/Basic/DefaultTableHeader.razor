@@ -1,0 +1,120 @@
+﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using Project.Constraints.Models.Request
+@using Project.Constraints.UI.Table
+@using Project.Web.Shared.Utils
+@using System.Linq.Expressions
+@inherits BasicComponent
+@typeparam TData
+@typeparam TQuery where TQuery : IRequest, new()
+
+<div class="queryarea">
+    <div class="condition">
+        <StackPanel>
+            @if (Options.EnabledAdvancedQuery)
+            {
+                <ConditionBuilder Columns=@Options.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder>
+            }
+            @UI.BuildButton(this).OnClick(Search).Text(TableLocalizer["TableButtons.Query"]).Primary().Render()
+            @if (Options.EnabledAdvancedQuery)
+            {
+                @UI.BuildButton(this).OnClick(() => AdvanceModalVisible = true).Text(TableLocalizer["TableButtons.AdvancedQuery"]).Render()
+            }
+            @if (Options.ShowAddButton)
+            {
+                @UI.BuildButton(this).OnClick(HandleAdd).Text(TableLocalizer["TableButtons.Add"]).Primary().Render()
+            }
+            @if (Options.ShowExportButton)
+            {
+                @UI.BuildButton(this).OnClick(Export).Text(TableLocalizer["TableButtons.Export"]).Primary().Render()
+            }
+        </StackPanel>
+    </div>
+</div>
+@if (Options.EnabledAdvancedQuery)
+{
+    <MModal @bind-Visible="AdvanceModalVisible" Title=@TableLocalizer["TableButtons.AdvancedQuery"] HideDefaultFooter>
+     <ConditionGroup Columns=@Options.Columns
+                     TData=TData
+                     Localizer="Localizer"
+                     TableLocalizer="TableLocalizer"
+                     @bind-Expression="ConditionExpression"
+                     ShowExportButton=@(Options.ShowExportButton)
+                     OnConfirmToSearch=AdvanceSearch
+                     OnConfirmToExport=AdvanceExport>
+     </ConditionGroup>
+ </MModal>
+}
+@code {
+    [Parameter] public TableOptions<TData, TQuery> Options { get; set; }
+    [Inject] IStringLocalizer<TData> Localizer { get; set; }
+    [Inject] IStringLocalizer<TableOptions> TableLocalizer { get; set; }
+    [Inject] ProtectedLocalStorage LocalStorage { get; set; }
+    private bool AdvanceModalVisible = false;
+    private ConditionInfo? conditionInfo;
+    private Expression<Func<TData, bool>>? ConditionExpression = e => true;
+    ConditionBuilder insRef;
+
+    readonly string cache_key = $"TableOptions_{typeof(TData).Name}_ConditionAction";
+    async Task CacheInfo(ConditionInfo info)
+    {
+        await LocalStorage.SetAsync(cache_key, info);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            try
+            {
+                var result = await LocalStorage.GetAsync<ConditionInfo>(cache_key);
+                if (result.Success)
+                {
+                    insRef?.InitStatus(result.Value!);
+                }
+            }
+            catch
+            {
+
+            }
+
+        }
+    }
+
+    async Task HandleAdd()
+    {
+        _ = await Options.OnAddItemAsync();
+    }
+
+    public async Task Search()
+    {
+        Options.Query.PageIndex = 1;
+        if (conditionInfo != null)
+            Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
+        await Options.RefreshAsync();
+    }
+
+    public async Task Export()
+    {
+        if (conditionInfo != null)
+            Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
+        await Options.ExportAsync();
+    }
+
+
+    public async void AdvanceExport()
+    {
+        Options.Query.Expression = ConditionExpression;
+        AdvanceModalVisible = false;
+        await Options.ExportAsync();
+    }
+
+    public async Task AdvanceSearch()
+    {
+        Options.Query.PageIndex = 1;
+        Options.Query.Expression = ConditionExpression;
+        AdvanceModalVisible = false;
+        await Options.RefreshAsync();
+    }
+}
+

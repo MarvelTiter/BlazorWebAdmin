@@ -1,0 +1,7 @@
+﻿<div class="stack-panel-wrapper" style="gap:@(Gap)px;margin-left:-@(Gap)px;">
+    @ChildContent
+</div>
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public int Gap { get; set; } = 10;
+}

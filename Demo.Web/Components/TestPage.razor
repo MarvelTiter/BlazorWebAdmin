@@ -45,11 +45,27 @@ UI.BuildCheckBoxGroup:
 
 <Project.Web.Shared.Components.IconSelector @bind-Value=selectedUser></Project.Web.Shared.Components.IconSelector>
 @UI.BuildButton(this).Text("异常测试").Primary().OnClick(ThrowException).Render()
-@UI.BuildButton(this).Text("404测试").Primary().OnClick(Nav).Render()
+@UI.BuildButton(this).Text("ModalTest").Primary().OnClick(ShowModal).Render()
+<StackPanel>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+</StackPanel>
+<MModal @bind-Visible=visible Title="测试">
+    <h1>Modal Content</h1>
+</MModal>
 @code {
     [Inject] IUserService<User> UserService { get; set; }
     string[] checkedUsers;
     string selectedUser;
+    bool visible;
     IEnumerable<User> users = Enumerable.Empty<User>();
     protected override async Task OnInitializedAsync()
     {
@@ -75,9 +91,9 @@ UI.BuildCheckBoxGroup:
         Console.WriteLine(1 / div);
     }
 
-    void Nav()
+    void ShowModal()
     {
-        Navigator.NavigateTo("/helloworld");
+        visible = true;
     }
 }
 

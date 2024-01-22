@@ -8,12 +8,6 @@ namespace Project.Constraints.UI.Builders
     public class ButtonComponentBuilder<TComponent> : InputComponentBuilder<TComponent, ButtonProp, ButtonComponentBuilder<TComponent>>, IButtonInput
          where TComponent : IComponent
     {
-
-        public ButtonComponentBuilder()
-        {
-
-        }
-
         public ButtonComponentBuilder(Func<ButtonComponentBuilder<TComponent>, RenderFragment> newRender)
         {
             this.newRender = newRender;
@@ -91,6 +85,4 @@ namespace Project.Constraints.UI.Builders
         #endregion
 
     }
-
-    
 }

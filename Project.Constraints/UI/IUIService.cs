@@ -39,11 +39,11 @@ public interface IBindableInputComponent<TPropModel, TValue> : IUIComponent
     IBindableInputComponent<TPropModel, TValue> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value);
 }
 
-public interface IInputComponent<TPropModel> : IUIComponent
+public interface IUIComponent<TPropModel> : IUIComponent
 {
-    IInputComponent<TPropModel> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value);
+    IUIComponent<TPropModel> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value);
 }
-public interface IButtonInput : IInputComponent<ButtonProp>, IClickable<IButtonInput>
+public interface IButtonInput : IUIComponent<ButtonProp>, IClickable<IButtonInput>
 {
 
 }
@@ -126,7 +126,7 @@ public interface IUIService
 
     RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
 
-    RenderFragment BuildTableHeader<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
+    //RenderFragment BuildTableHeader<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
 
     RenderFragment BuildForm<TData>(FormOptions<TData> options) where TData : class, new();
 
@@ -142,8 +142,7 @@ public interface IUIService
 
     ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object receiver, IEnumerable<TItem> options);
     ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object receiver, IEnumerable<TItem> options);
-
-
+    IUIComponent<ModalProp> BuildModal();
     IUIComponent BuildRow();
     IUIComponent BuildCard();
     IUIComponent BuildCol();
