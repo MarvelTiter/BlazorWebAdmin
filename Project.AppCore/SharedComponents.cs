@@ -63,6 +63,8 @@ public static class SharedComponents
         //
         services.AddHttpClient();
         //
+        var settingImplType = setting.SettingProviderType;
+        services.AddScoped(typeof(ICustomSettingProvider), settingImplType);
 
         services.AddControllers().AddApplicationPart(typeof(AppConst).Assembly);
         // 配置 IAuthenticationStateProvider
@@ -81,7 +83,10 @@ public static class SharedComponents
             return sp.GetService()!;
         });
 
-        builder.AddProjectDbServices(setting);
+        if (setting.AddDefaultProjectServices)
+        {
+            builder.AddProjectDbServices(setting);
+        }
 
         if (setting.AddDefaultLogger)
         {
@@ -107,9 +112,6 @@ public static class SharedComponents
     public static void AddProjectDbServices(this WebApplicationBuilder builder, ProjectSetting setting)
     {
         var services = builder.Services;
-        // 
-        var settingImplType = setting.SettingProviderType;
-        services.AddScoped(typeof(ICustomSettingProvider), settingImplType);
         // user
         services.AddScoped(typeof(IUserService<>), typeof(Services.UserService<>));
         services.AddScoped<IUserService>(provider =>
