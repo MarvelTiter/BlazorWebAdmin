@@ -13,12 +13,12 @@ namespace Project.Services
         static Type? PermissionPageType;
         static Type? RolePermissionPageType;
         static Type? RunLogPageType;
-        public BasicCustomSetting(ProjectSetting setting)
+        public BasicCustomSetting()
         {
-            UserPageType ??= typeof(UserPage<,,>).MakeGenericType(setting.UserType, setting.PowerType, setting.RoleType);
-            PermissionPageType ??= typeof(PermissionSetting<,>).MakeGenericType(setting.PowerType, setting.RoleType);
-            RolePermissionPageType ??= typeof(RolePermission<,>).MakeGenericType(setting.PowerType, setting.RoleType);
-            RunLogPageType ??= typeof(OperationLog<>).MakeGenericType(setting.RunlogType);
+            UserPageType ??= typeof(UserPage<,,>).MakeGenericType(Config.TypeInfo.UserType, Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
+            PermissionPageType ??= typeof(PermissionSetting<,>).MakeGenericType(Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
+            RolePermissionPageType ??= typeof(RolePermission<,>).MakeGenericType(Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
+            RunLogPageType ??= typeof(OperationLog<>).MakeGenericType(Config.TypeInfo.RunlogType);
         }
         public virtual Type? GetDashboardType() => null;
         public virtual Type? GetUserPageType() => UserPageType;
@@ -34,7 +34,7 @@ namespace Project.Services
     {
         private readonly IExpressionContext context;
 
-        public CustomSetting(IExpressionContext context, ProjectSetting setting) : base(setting)
+        public CustomSetting(IExpressionContext context) 
         {
             this.context = context;
         }

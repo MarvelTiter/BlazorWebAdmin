@@ -40,7 +40,6 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
 }
 
-app.UseStaticFiles();
 app.UseProject();
 app.UseAntiforgery();
 app.MapRazorComponents<App>()

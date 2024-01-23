@@ -43,8 +43,6 @@ public static class SharedComponents
 
         ArgumentNullException.ThrowIfNull(Config.App.Name);
 
-        services.AddSingleton(setting);
-
         Config.SetFooter($@"
         <footer style=""text-align:center"">
              <span>{Config.App.Id} ©2023-{DateTime.Now:yyyy} Powered By </span>
@@ -53,7 +51,6 @@ public static class SharedComponents
          </footer>
 ");
         services.AddDataProtection().SetApplicationName(Config.App.Name);
-        //
         // 多语言服务
         services.AddJsonLocales();
         // excel操作
@@ -102,6 +99,7 @@ public static class SharedComponents
         builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
 
         services.AddSingleton<RedirectToLauchUrlMiddleware>();
+        services.AddSingleton<CheckBrowserEnabledMiddleware>();
 
 
         Config.AddAssembly(typeof(AppConst).Assembly, typeof(Web.Shared._Imports).Assembly);
@@ -178,6 +176,8 @@ public static class SharedComponents
 
     public static void UseProject(this WebApplication app)
     {
+        app.UseMiddleware<CheckBrowserEnabledMiddleware>();
+        app.UseStaticFiles();
         app.UseMiddleware<RedirectToLauchUrlMiddleware>();
         app.MapControllers();
     }
