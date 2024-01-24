@@ -5,24 +5,25 @@ using Project.Constraints.UI.Props;
 namespace Project.Constraints.UI.Builders
 {
     [IgnoreAutoInject]
-    public class ButtonComponentBuilder<TComponent> : InputComponentBuilder<TComponent, ButtonProp, ButtonComponentBuilder<TComponent>>, IButtonInput
+    public class ButtonComponentBuilder<TComponent> : PropComponentBuilder<TComponent, ButtonProp>, IButtonInput
          where TComponent : IComponent
     {
-        public ButtonComponentBuilder(Func<ButtonComponentBuilder<TComponent>, RenderFragment> newRender)
+
+        public ButtonComponentBuilder(Func<PropComponentBuilder<TComponent, ButtonProp>, RenderFragment> newRender)
         {
             this.newRender = newRender;
         }
 
-        public ButtonComponentBuilder(Action<ButtonComponentBuilder<TComponent>> tpropHandle)
+        public ButtonComponentBuilder(Action<PropComponentBuilder<TComponent, ButtonProp>> tpropHandle)
         {
             this.tpropHandle = tpropHandle;
         }
 
-        public override RenderFragment Render()
-        {
-            tpropHandle?.Invoke(this);
-            return newRender?.Invoke(this) ?? base.Render();
-        }
+        //public override RenderFragment Render()
+        //{
+        //    tpropHandle?.Invoke(this);
+        //    return newRender?.Invoke(this) ?? base.Render();
+        //}
 
         #region OnClick
         public IButtonInput OnClick(Action callback)

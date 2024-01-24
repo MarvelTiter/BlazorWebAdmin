@@ -4,7 +4,7 @@ using Project.Constraints.UI.Props;
 namespace Project.Constraints.UI.Builders
 {
     [IgnoreAutoInject]
-    public class SelectComponentBuilder<TComponent, TPropModel, TItem, TValue> : BindableInputComponentBuilder<TComponent, TPropModel, TValue, SelectComponentBuilder<TComponent, TPropModel, TItem, TValue>>, IBindableInputComponent<TPropModel, TValue>, ISelectInput<TPropModel, TItem, TValue>
+    public class SelectComponentBuilder<TComponent, TPropModel, TItem, TValue> : BindableComponentBuilder<TComponent, TPropModel, TValue>, IBindableInputComponent<TPropModel, TValue>, ISelectInput<TPropModel, TItem, TValue>
         where TComponent : IComponent
         where TPropModel : DefaultProp, new()
     {
@@ -13,12 +13,12 @@ namespace Project.Constraints.UI.Builders
 
         }
 
-        public SelectComponentBuilder(Func<SelectComponentBuilder<TComponent, TPropModel, TItem, TValue>, RenderFragment> newRender)
+        public SelectComponentBuilder(Func<PropComponentBuilder<TComponent, TPropModel>, RenderFragment> newRender)
         {
             this.newRender = newRender;
         }
 
-        public SelectComponentBuilder(Action<SelectComponentBuilder<TComponent, TPropModel, TItem, TValue>> tpropHandle)
+        public SelectComponentBuilder(Action<PropComponentBuilder<TComponent, TPropModel>> tpropHandle)
         {
             this.tpropHandle = tpropHandle;
         }

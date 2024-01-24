@@ -5,13 +5,26 @@ using System.Linq.Expressions;
 namespace Project.Constraints.UI.Builders
 {
     [IgnoreAutoInject]
-    public class InputComponentBuilder<TComponent, TPropModel, TSelf> : ComponentBuilder<TComponent, TSelf>, IUIComponent<TPropModel>
+    public class PropComponentBuilder<TComponent, TPropModel> : ComponentBuilderBasic<TComponent, PropComponentBuilder<TComponent, TPropModel>>, IUIComponent<TPropModel>
         where TPropModel : new()
         where TComponent : IComponent
-        where TSelf : ComponentBuilder<TComponent, TSelf>
-
     {
         public TPropModel Model { get; set; } = new();
+
+        public PropComponentBuilder()
+        {
+
+        }
+
+        public PropComponentBuilder(Func<PropComponentBuilder<TComponent, TPropModel>, RenderFragment> newRender)
+        {
+            this.newRender = newRender;
+        }
+
+        public PropComponentBuilder(Action<PropComponentBuilder<TComponent, TPropModel>> tpropHandle)
+        {
+            this.tpropHandle = tpropHandle;
+        }
 
         public IUIComponent<TPropModel> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value)
         {
@@ -25,7 +38,7 @@ namespace Project.Constraints.UI.Builders
             //action.Compile().Invoke(value);
             //return this;
             var prop = selector.ExtractProperty();
-            var action = propAssignCaches.GetOrAdd((typeof(TPropModel), prop), key =>
+            var action = propAssignCaches.GetOrAdd((typeof(TPropModel), prop), static key =>
             {
                 var modelExp = Expression.Parameter(key.Entity);
                 var p = Expression.Parameter(key.Prop.PropertyType);
@@ -37,8 +50,8 @@ namespace Project.Constraints.UI.Builders
 
         public override RenderFragment Render()
         {
-            tpropHandle?.Invoke((this as TSelf)!);
-            return newRender?.Invoke((this as TSelf)!) ?? base.Render();
+            tpropHandle?.Invoke(this);
+            return newRender?.Invoke(this) ?? base.Render();
         }
     }
 }

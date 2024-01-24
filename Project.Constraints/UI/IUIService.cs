@@ -18,7 +18,10 @@ public interface IUIComponent
     IUIComponent AdditionalParameters(Dictionary<string, object> parameters);
     RenderFragment Render();
 }
-
+public interface IUIComponent<TPropModel> : IUIComponent
+{
+    IUIComponent<TPropModel> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value);
+}
 public interface IClickable<TReturn>
 {
     TReturn OnClick(Action callback);
@@ -31,18 +34,14 @@ public interface IClickable<TReturn>
     TReturn OnClick(Func<MouseEventArgs, Task> callback);
 }
 
-public interface IBindableInputComponent<TPropModel, TValue> : IUIComponent
+public interface IBindableInputComponent<TPropModel, TValue> : IUIComponent<TPropModel>
 {
     IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression);
     IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, Func<Task>? onchange);
     //IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null);
-    IBindableInputComponent<TPropModel, TValue> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value);
 }
 
-public interface IUIComponent<TPropModel> : IUIComponent
-{
-    IUIComponent<TPropModel> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value);
-}
+
 public interface IButtonInput : IUIComponent<ButtonProp>, IClickable<IButtonInput>
 {
 

@@ -37,33 +37,33 @@ namespace Project.UI.AntBlazor
 
         public IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object reciver)
         {
-            return new BindableInputComponentBuilder<Input<TValue>, DefaultProp, TValue>() { Receiver = reciver };
+            return new BindableComponentBuilder<Input<TValue>, DefaultProp, TValue>() { Receiver = reciver };
         }
 
         public IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object reciver)
         {
-            return new BindableInputComponentBuilder<InputNumber<TValue>, DefaultProp, TValue>() { Receiver = reciver };
+            return new BindableComponentBuilder<InputNumber<TValue>, DefaultProp, TValue>() { Receiver = reciver };
         }
 
         public IBindableInputComponent<DefaultProp, TValue> BuildDatePicker<TValue>(object reciver)
         {
-            return new BindableInputComponentBuilder<DatePicker<TValue>, DefaultProp, TValue> { Receiver = reciver };
+            return new BindableComponentBuilder<DatePicker<TValue>, DefaultProp, TValue> { Receiver = reciver };
         }
 
         public IBindableInputComponent<DefaultProp, string> BuildPassword(object reciver)
         {
-            return new BindableInputComponentBuilder<InputPassword, DefaultProp, string>() { Receiver = reciver };
+            return new BindableComponentBuilder<InputPassword, DefaultProp, string>() { Receiver = reciver };
         }
 
         public IBindableInputComponent<SelectProp, TValue> BuildSelect<TValue>(object reciver, SelectItem<TValue>? options)
         {
             if (typeof(TValue).IsEnum && options == null)
             {
-                return new BindableInputComponentBuilder<EnumSelect<TValue>, SelectProp, TValue>() { Receiver = reciver };
+                return new BindableComponentBuilder<EnumSelect<TValue>, SelectProp, TValue>() { Receiver = reciver };
             }
             else
             {
-                return new BindableInputComponentBuilder<Select<TValue, Options<TValue>>, SelectProp, TValue>(self =>
+                return new BindableComponentBuilder<Select<TValue, Options<TValue>>, SelectProp, TValue>(self =>
                 {
                     self.SetComponent(s => s.DataSource, options)
                     .SetComponent(s => s.ValueName, "Value")
@@ -96,7 +96,7 @@ namespace Project.UI.AntBlazor
         public IBindableInputComponent<SwitchProp, bool> BuildSwitch(object reciver)
         {
             // "CheckedChildren", "UnCheckedChildren"
-            var binder = new BindableInputComponentBuilder<Switch, SwitchProp, bool>(self =>
+            var binder = new BindableComponentBuilder<Switch, SwitchProp, bool>(self =>
             {
                 self.SetComponent(sw => sw.CheckedChildren, self.Model.CheckedLabel)
                 .SetComponent(sw => sw.UnCheckedChildren, self.Model.UnCheckedLabel);
@@ -333,7 +333,7 @@ namespace Project.UI.AntBlazor
 
         public IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object reciver)
         {
-            var binder = new BindableInputComponentBuilder<Checkbox, DefaultProp, bool>() { Receiver = reciver };
+            var binder = new BindableComponentBuilder<Checkbox, DefaultProp, bool>() { Receiver = reciver };
             binder.Model.BindValueName = "Checked";
             return binder;
         }
@@ -346,7 +346,7 @@ namespace Project.UI.AntBlazor
             //    builder.AddAttribute(1, nameof(AntTree<TData>.Options), options);
             //    builder.CloseComponent();
             //};
-            var builder = new BindableInputComponentBuilder<AntTree<TData>, DefaultProp, string[]>()
+            var builder = new BindableComponentBuilder<AntTree<TData>, DefaultProp, string[]>()
             {
                 Receiver = reciver
             };
@@ -398,7 +398,7 @@ namespace Project.UI.AntBlazor
 
         public IUIComponent<ModalProp> BuildModal()
         {
-            return new UIComponentBuilder<Modal, ModalProp>(self =>
+            return new PropComponentBuilder<Modal, ModalProp>(self =>
             {
                 self.SetComponent(m => m.Title, self.Model.Title)
                 .SetComponent(m => m.Visible, self.Model.Visible)
