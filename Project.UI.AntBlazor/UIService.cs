@@ -258,8 +258,8 @@ namespace Project.UI.AntBlazor
                 Title = options.Title,
                 Content = options.Content,
                 DestroyOnClose = true,
-                OkText = localizer["CustomButtons.Ok"].Value,
-                CancelText = localizer["CustomButtons.Cancel"].Value,
+                OkText = localizer[options.OkText ?? "CustomButtons.Ok"].Value,
+                CancelText = localizer[options.CancelText ?? "CustomButtons.Cancel"].Value,
                 Maximizable = true,
                 OnOk = e => options.OnOk.Invoke(),
                 OnCancel = e => options.OnClose.Invoke()
