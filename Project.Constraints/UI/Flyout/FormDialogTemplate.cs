@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Form;
 using Project.Constraints.UI.Table;
 
@@ -27,10 +28,10 @@ namespace Project.Constraints.UI.Flyout
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             if (options == null) return;
-            builder.OpenComponent<CascadingValue<bool>>(0);
-            builder.AddAttribute(1, nameof(CascadingValue<bool>.Value), Edit);
-            builder.AddAttribute(2, nameof(CascadingValue<bool>.ChildContent), UI.BuildForm(options));
-            builder.CloseComponent();
+            builder.Component<CascadingValue<bool>>()
+                    .SetComponent(c => c.Value, Edit)
+                    .SetComponent(c => c.ChildContent, UI.BuildForm(options))
+                    .Build();
         }
     }
 }

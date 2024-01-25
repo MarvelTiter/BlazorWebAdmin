@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Localization;
 using MT.Toolkit.Mapper;
 using Project.Constraints.Page;
+using Project.Constraints.UI.Extensions;
 
 namespace Project.Constraints.UI.Flyout
 {
@@ -68,10 +69,10 @@ namespace Project.Constraints.UI.Flyout
         {
             if (ChildContent != null)
             {
-                builder.OpenComponent<CascadingValue<bool>>(0);
-                builder.AddAttribute(1, nameof(CascadingValue<bool>.Value), Edit);
-                builder.AddAttribute(2, nameof(CascadingValue<bool>.ChildContent), ChildContent);
-                builder.CloseComponent();
+                builder.Component<CascadingValue<bool>>()
+                    .SetComponent(c => c.Value, Edit)
+                    .SetComponent(c => c.ChildContent, ChildContent)
+                    .Build();
             }
         }
     }

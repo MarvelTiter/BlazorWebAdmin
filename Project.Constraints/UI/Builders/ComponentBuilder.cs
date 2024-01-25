@@ -12,7 +12,6 @@ namespace Project.Constraints.UI.Builders
     {
 
     }
-
     [IgnoreAutoInject]
     public class CustomComponentBuilder<TComponent> where TComponent : IComponent
     {
@@ -50,4 +49,6 @@ namespace Project.Constraints.UI.Builders
             builder.CloseComponent();
         }
     }
+
+    
 }

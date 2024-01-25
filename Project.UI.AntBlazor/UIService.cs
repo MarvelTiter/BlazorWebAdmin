@@ -1,5 +1,6 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.Localization;
 using OneOf;
 using Project.Constraints.Models;
@@ -8,12 +9,14 @@ using Project.Constraints.Store;
 using Project.Constraints.UI;
 using Project.Constraints.UI.Builders;
 using Project.Constraints.UI.Dropdown;
+using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Flyout;
 using Project.Constraints.UI.Form;
 using Project.Constraints.UI.Props;
 using Project.Constraints.UI.Table;
 using Project.Constraints.UI.Tree;
 using Project.UI.AntBlazor.Components;
+using Project.Web.Shared.ComponentHelper;
 using System;
 using System.Linq.Expressions;
 
@@ -184,29 +187,19 @@ namespace Project.UI.AntBlazor
         {
             return builder =>
             {
-                builder.OpenComponent<AntTable<TModel, TQuery>>(0);
-                builder.AddComponentParameter(1, nameof(AntTable<TModel, TQuery>.Options), options);
-                builder.CloseComponent();
+                builder.Component<AntTable<TModel, TQuery>>()
+                .SetComponent(c => c.Options, options)
+                .Build();
             };
         }
-
-        //public RenderFragment BuildTableHeader<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new()
-        //{
-        //    return builder =>
-        //    {
-        //        builder.OpenComponent<AntTableDefaultHeader<TModel, TQuery>>(0);
-        //        builder.AddComponentParameter(1, nameof(AntTableDefaultHeader<TModel, TQuery>.Options), options);
-        //        builder.CloseComponent();
-        //    };
-        //}
 
         public RenderFragment BuildForm<TData>(FormOptions<TData> options) where TData : class, new()
         {
             return builder =>
             {
-                builder.OpenComponent<AntForm<TData>>(0);
-                builder.AddComponentParameter(1, nameof(AntForm<TData>.Options), options);
-                builder.CloseComponent();
+                builder.Component<AntForm<TData>>()
+                .SetComponent(c => c.Options, options)
+                .Build();
             };
         }
 
@@ -226,9 +219,9 @@ namespace Project.UI.AntBlazor
         {
             return builder =>
             {
-                builder.OpenComponent<AntDropdown>(0);
-                builder.AddComponentParameter(1, nameof(AntDropdown.Options), options);
-                builder.CloseComponent();
+                builder.Component<AntDropdown>()
+                .SetComponent(c => c.Options, options)
+                .Build();
             };
         }
 
@@ -236,11 +229,12 @@ namespace Project.UI.AntBlazor
         {
             return builder =>
             {
-                builder.OpenComponent<AntMenu>(0);
-                builder.AddComponentParameter(1, nameof(AntMenu.Router), router);
-                builder.AddComponentParameter(2, nameof(AntMenu.Horizontal), horizontal);
-                builder.AddComponentParameter(3, nameof(AntMenu.App), app);
-                builder.CloseComponent();
+                builder.Component<AntMenu>()
+                .SetComponent(c => c.Router, router)
+                .SetComponent(c => c.Horizontal, horizontal)
+                .SetComponent(c => c.App, app)
+                .Build();
+
             };
         }
 
@@ -248,10 +242,10 @@ namespace Project.UI.AntBlazor
         {
             return builder =>
             {
-                builder.OpenComponent<AntLogin>(0);
-                builder.AddComponentParameter(1, nameof(AntLogin.LoginModel), model);
-                builder.AddComponentParameter(2, nameof(AntLogin.HandleLogin), handleLogin);
-                builder.CloseComponent();
+                builder.Component<AntLogin>()
+               .SetComponent(c => c.LoginModel, model)
+               .SetComponent(c => c.HandleLogin, handleLogin)
+               .Build();
             };
         }
 
@@ -340,12 +334,6 @@ namespace Project.UI.AntBlazor
 
         public IBindableInputComponent<DefaultProp, string[]> BuildTree<TData>(object reciver, TreeOptions<TData> options)
         {
-            //return builder =>
-            //{
-            //    builder.OpenComponent<AntTree<TData>>(0);
-            //    builder.AddAttribute(1, nameof(AntTree<TData>.Options), options);
-            //    builder.CloseComponent();
-            //};
             var builder = new BindableComponentBuilder<AntTree<TData>, DefaultProp, string[]>()
             {
                 Receiver = reciver
@@ -390,9 +378,7 @@ namespace Project.UI.AntBlazor
         {
             return builder =>
             {
-                builder.OpenComponent<AntPopover>(0);
-                builder.AddAttribute(1, nameof(AntPopover.Options), options);
-                builder.CloseComponent();
+                builder.Component<AntPopover>().SetComponent(c => c.Options, options).Build();
             };
         }
 

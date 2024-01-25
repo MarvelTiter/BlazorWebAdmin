@@ -191,11 +191,11 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
     {
         if (!HideDefaultTableHeader)
         {
-            builder.AddContent(0, builder =>
+            builder.AddContent(0, b =>
             {
-                builder.OpenComponent<DefaultTableHeader<TModel, TQuery>>(0);
-                builder.AddAttribute(1, nameof(DefaultTableHeader<TModel, TQuery>.Options), Options);
-                builder.CloseComponent();
+                b.Component<DefaultTableHeader<TModel, TQuery>>()
+                    .SetComponent(c => c.Options, Options)
+                    .Build();
             });
         }
         builder.AddContent(1, UI.BuildTable(Options));

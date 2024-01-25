@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Project.Constraints.UI.Extensions;
 using System.Reflection;
 
 namespace Project.AppCore;
 
 public class Config
 {
-    public static AppInfo App {  get; set; } = new AppInfo();
+    public static AppInfo App { get; set; } = new AppInfo();
     public static DbTableType TypeInfo { get; set; } = new DbTableType();
 
     static List<Assembly> PageAssemblies = new List<Assembly>();
@@ -14,7 +15,7 @@ public class Config
     public static List<Assembly> Pages => PageAssemblies;
     public static void SetFooter(string html)
     {
-        Footer = builder=>builder.AddContent(1, new MarkupString(html));
+        Footer = html.AsMarkupString();
     }
     public static void AddAssembly(params Type[] types)
     {

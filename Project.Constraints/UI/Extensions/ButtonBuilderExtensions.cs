@@ -7,7 +7,7 @@ namespace Project.Constraints.UI.Extensions
         public static IButtonInput Text(this IButtonInput btn, string text)
         {
             //btn.s
-            btn.Set("ChildContent", (RenderFragment)(builder => builder.AddContent(1, text)));
+            btn.Set("ChildContent", text.AsContent());
             return btn;
         }
 

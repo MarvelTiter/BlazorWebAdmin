@@ -7,9 +7,9 @@ using System.Linq.Expressions;
 using AntDesign.TableModels;
 using Project.Constraints.UI.Table;
 using System.Reflection;
-using Project.Web.Shared.Extensions;
 using System.Collections.Concurrent;
 using Project.Constraints.Models.Request;
+using Project.Constraints.UI.Extensions;
 
 namespace Project.UI.AntBlazor.Components
 {

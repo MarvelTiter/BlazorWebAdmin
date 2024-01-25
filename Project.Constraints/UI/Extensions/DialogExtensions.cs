@@ -16,10 +16,9 @@ namespace Project.Constraints.UI.Extensions
             var p = new FormParam<TData>(param, edit);
             options.Content = builder =>
             {
-                builder.OpenComponent<Template>(0);
-                builder.AddComponentParameter(1, nameof(DialogTemplate<TData>.DialogModel), p);
-                builder.AddComponentReferenceCapture(2, obj => options.Feedback = (IFeedback<TData>)obj);
-                builder.CloseComponent();
+                builder.Component<Template>()
+                .SetComponent(c => c.DialogModel, p)
+                .Build(obj => options.Feedback = (IFeedback<TData>)obj);
             };
 
             var result = await service.ShowDialogAsync(options);
@@ -36,11 +35,10 @@ namespace Project.Constraints.UI.Extensions
             var p = new FormParam<TData>(param, edit);
             options.Content = builder =>
             {
-                builder.OpenComponent<DialogTemplate<TData>>(0);
-                builder.AddComponentParameter(1, nameof(DialogTemplate<TData>.DialogModel), p);
-                builder.AddComponentParameter(2, nameof(DialogTemplate<TData>.ChildContent), (RenderFragment)(builder => builder.AddContent(0, content)));
-                builder.AddComponentReferenceCapture(3, obj => options.Feedback = (IFeedback<TData>)obj);
-                builder.CloseComponent();
+                builder.Component<DialogTemplate<TData>>()
+                .SetComponent(c => c.DialogModel, p)
+                .SetComponent(c => c.ChildContent, content)
+                .Build(obj => options.Feedback = (IFeedback<TData>)obj);
             };
 
             var result = await service.ShowDialogAsync(options);

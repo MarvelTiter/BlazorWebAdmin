@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Project.Constraints.UI.Extensions;
 
 namespace Project.Web.Shared.ComponentHelper
 {
@@ -38,16 +39,16 @@ namespace Project.Web.Shared.ComponentHelper
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            builder.OpenComponent<CascadingValue<MGrid>>(0);
-            builder.AddAttribute(1, nameof(CascadingValue<MGrid>.Value), this);
-            builder.AddAttribute(2, nameof(CascadingValue<MGrid>.ChildContent), (RenderFragment)(builder =>
-            {
-                builder.OpenElement(0, "div");
-                builder.AddAttribute(1, "style", $"display:grid; grid-template-columns:{ColumnTemplate()}; gap:{Gap ?? "normal"}");
-                builder.AddContent(2, ChildContent);
-                builder.CloseElement();
-            }));
-            builder.CloseComponent();
+            builder.Component<CascadingValue<MGrid>>()
+                .SetComponent(c => c.Value, this)
+                .SetComponent(c => c.ChildContent, b =>
+                {
+                    b.Div()
+                    .Set("style", $"display:grid; grid-template-columns:{ColumnTemplate()}; gap:{Gap ?? "normal"}")
+                    .AddContent(ChildContent)
+                    .Build();
+                })
+                .Build();
         }
     }
 
@@ -59,14 +60,15 @@ namespace Project.Web.Shared.ComponentHelper
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             var style = "";
-            builder.OpenElement(0, "div");
             if (ColSpan.Start * ColSpan.End > 0)
                 style += $"grid-column:{ColSpan.Start}/{ColSpan.End};";
             if (RowSpan.Start * RowSpan.End > 0)
                 style += $"grid-row:{RowSpan.Start}/{RowSpan.End};";
-            builder.AddAttribute(1, "style", style);
-            builder.AddContent(2, ChildContent);
-            builder.CloseElement();
+
+            builder.Div()
+                .Set("style", style)
+                .AddContent(ChildContent)
+                .Build();
         }
     }
 }

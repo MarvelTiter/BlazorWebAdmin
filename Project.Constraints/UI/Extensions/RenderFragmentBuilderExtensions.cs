@@ -10,5 +10,20 @@ namespace Project.Constraints.UI.Extensions
         {
             return new CustomComponentBuilder<TComponent>(builder);
         }
+
+        public static ElementBuilder Div(this RenderTreeBuilder builder)
+        {
+            return new ElementBuilder(builder, "div");
+        }
+
+        public static RenderFragment AsContent(this string content)
+        {
+            return builder => builder.AddContent(1, content);
+        }
+
+        public static RenderFragment AsMarkupString(this string content)
+        {
+            return builder => builder.AddContent(1, new MarkupString(content));
+        }
     }
 }

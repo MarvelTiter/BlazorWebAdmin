@@ -15,12 +15,6 @@ namespace Project.Constraints.UI.Extensions
             var p = new FormParam<TData>(data, edit);
             options.Content = builder =>
             {
-                //Console.WriteLine("Building");
-                //builder.OpenComponent<FormDialogTemplate<TData>>(0);
-                //builder.AddComponentParameter(1, nameof(FormDialogTemplate<TData>.DialogModel), p);
-                //builder.AddComponentParameter(2, nameof(FormDialogTemplate<TData>.Columns), columns);
-                //builder.AddComponentReferenceCapture(3, obj => options.Feedback = (IFeedback<TData>)obj);
-                //builder.CloseComponent();
                 builder.Component<FormDialogTemplate<TData>>()
                 .SetComponent(c => c.DialogModel, p)
                 .SetComponent(c => c.Columns, columns)

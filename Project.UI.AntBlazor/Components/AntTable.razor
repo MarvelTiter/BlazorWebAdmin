@@ -15,8 +15,8 @@
            ScrollX=@Options.ScrollX
            Total="@Total"
            @bind-PageIndex=@Options.Query.PageIndex
-           @bind-PageSize=@Options.Query.PageSize
-           @bind-SelectedRows=@Options.Selected
+                       @bind-PageSize=@Options.Query.PageSize
+                       @bind-SelectedRows=@Options.Selected
            RowKey="@Options.RowKey"
            OnRowClick="OnRowClick"
            OnRow="RowOptions"
@@ -25,7 +25,7 @@
 
             @if (Options.EnableSelection)
             {
-                <Selection Fixed="left" />
+                <Selection Fixed="left"/>
             }
 
             @* <AntTableColumns Options="Options" RowData="context" Localizer="Localizer"></AntTableColumns> *@
@@ -75,7 +75,7 @@
                                 </Overlay>
                                 <ChildContent>
                                     <a @onclick:preventDefault>
-                                        @TableLocalizer["TableTips.More"] <Icon Type="down" />
+                                        @TableLocalizer["TableTips.More"] <Icon Type="down"/>
                                     </a>
                                 </ChildContent>
                             </Dropdown>
@@ -92,10 +92,11 @@
                         ShowTotal="TotalFragment"
                         ShowSizeChanger=true
                         ShowQuickJumper=true
-                        OnChange="PaginationChanged" />
+                        OnChange="PaginationChanged"/>
         </PaginationTemplate>
     </Table>
 </Card>
+
 @code {
     [Parameter] public TableOptions<TData, TQuery> Options { get; set; }
     [Inject] IStringLocalizer<TData> Localizer { get; set; }
@@ -106,6 +107,7 @@
     int Total => Options.Result?.TotalRecord ?? 0;
     IEnumerable<TData> selected;
     bool loading;
+
     /// <summary>
     /// table总数
     /// </summary>
@@ -119,7 +121,7 @@
 
     // string GetLocalizerString()
     // {
-        
+
     // }
 
     async Task PaginationChanged(PaginationEventArgs e)
@@ -138,15 +140,15 @@
     public RenderFragment CreateButton(TableButton<TData> definition, TData context)
     {
         return
-    @<Button Type=@definition.ButtonType
-                 Size=@ButtonSize.Small
-                 Danger=@definition.Danger
-                 Icon=@definition.Icon
-                 OnClickStopPropagation
-                 OnClick=@(()=>InvokeButtonAction(definition, context))>
-        @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
-    </Button>
-    ;
+            @<Button Type=@definition.ButtonType
+                     Size=@ButtonSize.Small
+                     Danger=@definition.Danger
+                     Icon=@definition.Icon
+                     OnClickStopPropagation
+                     OnClick=@(() => InvokeButtonAction(definition, context))>
+                @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
+            </Button>
+            ;
     }
 
     public async Task InvokeButtonAction(TableButton<TData> definition, TData data)
@@ -154,8 +156,8 @@
         if (definition.Danger)
         {
             var confirmResult = await ConfirmSrv.Show(
-        TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
-    , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+                TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+                , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
             if (confirmResult == ConfirmResult.OK)
             {
                 await CallButtonAction();
@@ -165,6 +167,7 @@
         {
             await CallButtonAction();
         }
+
         async Task CallButtonAction()
         {
             var result = await definition.Callback.Invoke(data);
@@ -191,10 +194,11 @@
 
     RenderFragment RenderColumn(ColumnInfo col)
     {
-                if (col.IsEnum)
+        if (col.IsEnum)
         {
             return RenderColumn<Enum>(col);
         }
+
         var type = (Nullable.GetUnderlyingType(col.DataType) ?? col.DataType).Name.ToLower();
         switch (type)
         {
@@ -217,15 +221,14 @@
             default:
                 return RenderColumn<string>(col);
         }
-
     }
 
     RenderFragment RenderColumn<TColumnData>(ColumnInfo col)
     {
         return
-    @<Column TData="TColumnData" Ellipsis=@col.Ellipsis Width=@col.Width Sortable=@col.Sortable Title="@(Localizer[col.Label])" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" OnCell="GetOnCell(col)" CellRender="ColumnRender<TColumnData>(col)">
-    </Column>
-    ;
+            @<Column TData="TColumnData" Ellipsis=@col.Ellipsis Width=@col.Width Sortable=@col.Sortable Title="@(Localizer[col.Label])" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" OnCell="GetOnCell(col)" CellRender="ColumnRender<TColumnData>(col)">
+            </Column>
+            ;
     }
 
     RenderFragment<CellData<T>> ColumnRender<T>(ColumnInfo col)
@@ -236,11 +239,12 @@
             {
                 return col.CellTemplate.Invoke(context.FieldValue);
             }
+
             string? formattedValue = null;
             if (col.IsEnum || col.EnumValues != null)
             {
                 var v = context.FieldValue;
-                if (v != null)
+                if (v is not null)
                 {
                     if (col.EnumValues?.ContainsKey($"{v}") ?? false)
                     {
@@ -258,20 +262,17 @@
             {
                 context.FormattedValue = formattedValue;
             }
+
             if (col.IsEnum || col.UseTag)
             {
                 var color = col.GetTagColor(context.FieldValue);
                 return@<Tag Color="@color">@context.FormattedValue</Tag>;
-
             }
             else if ((col.UnderlyingType ?? col.DataType) == typeof(bool))
             {
                 return@<Switch Disabled Checked="@CastToBool(context.FieldValue)"></Switch>;
             }
-            else
-            {
-                return@<span>@context.FormattedValue</span>;
-            }
+            return@<span>@context.FormattedValue</span>;
         };
     }
 
@@ -293,4 +294,5 @@
             return c => null;
         }
     }
+
 }
