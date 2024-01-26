@@ -61,7 +61,7 @@ public static class SharedComponents
         services.AddHttpClient();
         //
         var settingImplType = setting.SettingProviderType;
-        services.AddScoped(typeof(ICustomSettingProvider), settingImplType);
+        services.AddScoped(typeof(ICustomSettingService), settingImplType);
 
         services.AddControllers().AddApplicationPart(typeof(AppConst).Assembly);
         // 配置 IAuthenticationStateProvider

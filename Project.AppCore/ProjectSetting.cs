@@ -7,7 +7,7 @@ public class ProjectSetting
     Type settingProviderType = typeof(CustomSetting);
     public Type SettingProviderType => settingProviderType;
 
-    public void ConfigureSettingProviderType<T>() where T : BasicCustomSetting, ICustomSettingProvider
+    public void ConfigureSettingProviderType<T>() where T : BasicCustomSetting, ICustomSettingService
     {
         settingProviderType = typeof(T);
     }

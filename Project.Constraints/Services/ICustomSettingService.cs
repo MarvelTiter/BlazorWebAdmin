@@ -1,8 +1,7 @@
-﻿using Project.Constraints.Models;
-namespace Project.Constraints.Services
+﻿namespace Project.Constraints.Services
 {
     [AutoInject]
-    public interface ICustomSettingProvider
+    public interface ICustomSettingService
     {
         Type? GetUserPageType();
         Type? GetDashboardType();
@@ -11,5 +10,6 @@ namespace Project.Constraints.Services
         Type? GetRunLogPageType();
         Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
         Task<int> UpdateLoginInfo(UserInfo info);
+        Task<bool> OnLoginSuccessAsync(IQueryResult<UserInfo> result);
     }
 }
