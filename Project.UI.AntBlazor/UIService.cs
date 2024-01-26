@@ -162,7 +162,8 @@ namespace Project.UI.AntBlazor
             var option = new ConfirmOptions
             {
                 Title = title,
-                Content = message
+                Content = message,
+                Centered = true,
             };
             switch (type)
             {
