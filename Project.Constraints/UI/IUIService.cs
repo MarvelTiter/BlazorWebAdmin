@@ -42,15 +42,9 @@ public interface IBindableInputComponent<TPropModel, TValue> : IUIComponent<TPro
 }
 
 
-public interface IButtonInput : IUIComponent<ButtonProp>, IClickable<IButtonInput>
-{
+public interface IButtonInput : IUIComponent<ButtonProp>, IClickable<IButtonInput>;
 
-}
-
-public interface ISelectInput<TPropModel, TItem, TValue> : IBindableInputComponent<TPropModel, TValue>
-{
-
-}
+public interface ISelectInput<TPropModel, TItem, TValue> : IBindableInputComponent<TPropModel, TValue>;
 
 public enum MessageType
 {

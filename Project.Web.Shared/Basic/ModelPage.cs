@@ -9,6 +9,7 @@ using Project.Constraints.UI;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Table;
 using System.Reflection;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Project.Web.Shared.Basic;
 
@@ -200,4 +201,9 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
         }
         builder.AddContent(1, UI.BuildTable(Options));
     };
+
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        builder.AddContent(0, TableFragment);
+    }
 }

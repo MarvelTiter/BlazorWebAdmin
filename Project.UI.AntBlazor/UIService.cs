@@ -1,8 +1,6 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.Localization;
-using OneOf;
 using Project.Constraints.Models;
 using Project.Constraints.Models.Request;
 using Project.Constraints.Store;
@@ -16,8 +14,6 @@ using Project.Constraints.UI.Props;
 using Project.Constraints.UI.Table;
 using Project.Constraints.UI.Tree;
 using Project.UI.AntBlazor.Components;
-using Project.Web.Shared.ComponentHelper;
-using System;
 using System.Linq.Expressions;
 
 namespace Project.UI.AntBlazor
@@ -34,9 +30,8 @@ namespace Project.UI.AntBlazor
         private readonly MessageService messageService = messageService;
         private readonly DrawerService drawerService = drawerService;
         private readonly NotificationService notificationService = notificationService;
-        private readonly IServiceProvider services = services;
 
-        public IServiceProvider ServiceProvider => services;
+        public IServiceProvider ServiceProvider { get; } = services;
 
         public IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object reciver)
         {
@@ -118,15 +113,13 @@ namespace Project.UI.AntBlazor
                 {
                     return;
                 }
-                switch (self.Model.ButtonType)
+                switch (self)
                 {
-                    case Constraints.UI.ButtonType.Primary:
+                    case { Model: { ButtonType: Constraints.UI.ButtonType.Primary } }:
                         self.SetComponent(b => b.Type, "primary");
                         break;
-                    case Constraints.UI.ButtonType.Danger:
+                    case { Model: { ButtonType: Constraints.UI.ButtonType.Danger } }:
                         self.SetComponent(b => b.Danger, true);
-                        break;
-                    default:
                         break;
                 }
 
@@ -153,7 +146,7 @@ namespace Project.UI.AntBlazor
                     messageService.Info(message);
                     break;
                 default:
-                    break;
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
 
@@ -180,7 +173,7 @@ namespace Project.UI.AntBlazor
                     modalService.Info(option);
                     break;
                 default:
-                    break;
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
 

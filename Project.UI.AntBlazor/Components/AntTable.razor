@@ -1,26 +1,25 @@
 ﻿@using AntDesign.TableModels
-@using Microsoft.Extensions.Localization
 @using Project.Constraints.Models.Request
 @typeparam TData
 @typeparam TQuery where TQuery : IRequest, new()
 <Card>
     <Table DataSource="Datas"
-           Loading=@Options.Loading
-           Bordered=@true
-           Resizable=@true
+           Loading="@Options.Loading"
+           Bordered="@true"
+           Resizable="@true"
            DefaultExpandAllRows="@true"
            Size="@TableSize.Small"
            TreeChildren="@Options.TreeChildren"
            TItem="TData"
-           ScrollX=@Options.ScrollX
+           ScrollX="@Options.ScrollX"
            Total="@Total"
-           @bind-PageIndex=@Options.Query.PageIndex
-                       @bind-PageSize=@Options.Query.PageSize
-                       @bind-SelectedRows=@Options.Selected
+           @bind-PageIndex="@Options.Query.PageIndex"
+           @bind-PageSize="@Options.Query.PageSize"
+           @bind-SelectedRows="@Options.Selected"
            RowKey="@Options.RowKey"
            OnRowClick="OnRowClick"
            OnRow="RowOptions"
-           HidePagination=!Options.Pager>
+           HidePagination="!Options.Pager">
         <ChildContent>
 
             @if (Options.EnableSelection)
@@ -90,9 +89,9 @@
                         PageSize="@pageContext.PageSize"
                         Current="@pageContext.PageIndex"
                         ShowTotal="TotalFragment"
-                        ShowSizeChanger=true
-                        ShowQuickJumper=true
-                        OnChange="PaginationChanged"/>
+                        ShowSizeChanger="@true"
+                        ShowQuickJumper="@true"
+                        OnChange="@PaginationChanged"/>
         </PaginationTemplate>
     </Table>
 </Card>
@@ -105,8 +104,6 @@
     [Inject] MessageService MessageSrv { get; set; }
     IEnumerable<TData> Datas => Options.Result?.Payload ?? Enumerable.Empty<TData>();
     int Total => Options.Result?.TotalRecord ?? 0;
-    IEnumerable<TData> selected;
-    bool loading;
 
     /// <summary>
     /// table总数
@@ -137,21 +134,21 @@
     /// <param name="definition"></param>
     /// <param name="context"></param>
     /// <returns></returns>
-    public RenderFragment CreateButton(TableButton<TData> definition, TData context)
+    private RenderFragment CreateButton(TableButton<TData> definition, TData context)
     {
         return
-            @<Button Type=@definition.ButtonType
-                     Size=@ButtonSize.Small
-                     Danger=@definition.Danger
-                     Icon=@definition.Icon
+            @<Button Type="@definition.ButtonType"
+                     Size="@ButtonSize.Small"
+                     Danger="@definition.Danger"
+                     Icon="@definition.Icon"
                      OnClickStopPropagation
-                     OnClick=@(() => InvokeButtonAction(definition, context))>
+                     OnClick="@(() => InvokeButtonAction(definition, context))">
                 @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
             </Button>
             ;
     }
 
-    public async Task InvokeButtonAction(TableButton<TData> definition, TData data)
+    private async Task InvokeButtonAction(TableButton<TData> definition, TData data)
     {
         if (definition.Danger)
         {
@@ -167,6 +164,8 @@
         {
             await CallButtonAction();
         }
+
+        return;
 
         async Task CallButtonAction()
         {
@@ -200,99 +199,25 @@
         }
 
         var type = (Nullable.GetUnderlyingType(col.DataType) ?? col.DataType).Name.ToLower();
-        switch (type)
+        return type switch
         {
-            case "string":
-                return RenderColumn<string>(col);
-            case "int64":
-                return RenderColumn<Int64?>(col);
-            case "int32":
-                return RenderColumn<Int32?>(col);
-            case "int16":
-                return RenderColumn<Int16?>(col);
-            case "single":
-                return RenderColumn<Single?>(col);
-            case "double":
-                return RenderColumn<Double?>(col);
-            case "bool":
-                return RenderColumn<Boolean?>(col);
-            case "datetime":
-                return RenderColumn<DateTime?>(col);
-            default:
-                return RenderColumn<string>(col);
-        }
+            "string" => RenderColumn<string>(col),
+            "int64" => RenderColumn<Int64?>(col),
+            "int32" => RenderColumn<Int32?>(col),
+            "int16" => RenderColumn<Int16?>(col),
+            "single" => RenderColumn<Single?>(col),
+            "double" => RenderColumn<Double?>(col),
+            "bool" => RenderColumn<Boolean?>(col),
+            "datetime" => RenderColumn<DateTime?>(col),
+            _ => RenderColumn<string>(col)
+        };
     }
 
     RenderFragment RenderColumn<TColumnData>(ColumnInfo col)
     {
         return
-            @<Column TData="TColumnData" Ellipsis=@col.Ellipsis Width=@col.Width Sortable=@col.Sortable Title="@(Localizer[col.Label])" Fixed=@col.Fixed DataIndex="@col.PropertyOrFieldName" OnCell="GetOnCell(col)" CellRender="ColumnRender<TColumnData>(col)">
+            @<Column TData="TColumnData" Ellipsis="@col.Ellipsis" Width="@col.Width" Sortable="@col.Sortable" Title="@(Localizer[col.Label])" Fixed="@col.Fixed" DataIndex="@col.PropertyOrFieldName" OnCell="GetOnCell(col)" CellRender="ColumnRender<TColumnData>(col)">
             </Column>
             ;
     }
-
-    RenderFragment<CellData<T>> ColumnRender<T>(ColumnInfo col)
-    {
-        return context =>
-        {
-            if (col.CellTemplate != null)
-            {
-                return col.CellTemplate.Invoke(context.FieldValue);
-            }
-
-            string? formattedValue = null;
-            if (col.IsEnum || col.EnumValues != null)
-            {
-                var v = context.FieldValue;
-                if (v is not null)
-                {
-                    if (col.EnumValues?.ContainsKey($"{v}") ?? false)
-                    {
-                        formattedValue = col.EnumValues?[$"{v}"];
-                    }
-                }
-            }
-
-            if (col.ValueFormat != null && context.FieldValue != null)
-            {
-                formattedValue = col.ValueFormat.Invoke(context.FieldValue);
-            }
-
-            if (formattedValue != null)
-            {
-                context.FormattedValue = formattedValue;
-            }
-
-            if (col.IsEnum || col.UseTag)
-            {
-                var color = col.GetTagColor(context.FieldValue);
-                return@<Tag Color="@color">@context.FormattedValue</Tag>;
-            }
-            else if ((col.UnderlyingType ?? col.DataType) == typeof(bool))
-            {
-                return@<Switch Disabled Checked="@CastToBool(context.FieldValue)"></Switch>;
-            }
-            return@<span>@context.FormattedValue</span>;
-        };
-    }
-
-    static bool CastToBool(object? v)
-    {
-        if (v == null) return false;
-        if (v is bool b) return b;
-        return false;
-    }
-
-    static Func<CellData, Dictionary<string, object>> GetOnCell(ColumnInfo col)
-    {
-        if (col.AddCellOptions != null)
-        {
-            return c => col.AddCellOptions.Invoke(c.FormattedValue);
-        }
-        else
-        {
-            return c => null;
-        }
-    }
-
 }
