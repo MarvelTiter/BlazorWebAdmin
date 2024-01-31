@@ -15,16 +15,16 @@ using Project.Constraints.UI.Table;
 using Project.Constraints.UI.Tree;
 using Project.UI.AntBlazor.Components;
 using System.Linq.Expressions;
+using OneOf;
 
 namespace Project.UI.AntBlazor
 {
-
     public class UIService(
-        ModalService modalService
-        , MessageService messageService
-        , DrawerService drawerService
-        , NotificationService notificationService
-        , IServiceProvider services) : IUIService
+        ModalService modalService,
+        MessageService messageService,
+        DrawerService drawerService,
+        NotificationService notificationService,
+        IServiceProvider services) : IUIService
     {
         private readonly ModalService modalService = modalService;
         private readonly MessageService messageService = messageService;
@@ -53,7 +53,8 @@ namespace Project.UI.AntBlazor
             return new BindableComponentBuilder<InputPassword, DefaultProp, string>() { Receiver = reciver };
         }
 
-        public IBindableInputComponent<SelectProp, TValue> BuildSelect<TValue>(object reciver, SelectItem<TValue>? options)
+        public IBindableInputComponent<SelectProp, TValue> BuildSelect<TValue>(object reciver,
+            SelectItem<TValue>? options)
         {
             if (typeof(TValue).IsEnum && options == null)
             {
@@ -62,44 +63,43 @@ namespace Project.UI.AntBlazor
             else
             {
                 return new BindableComponentBuilder<Select<TValue, Options<TValue>>, SelectProp, TValue>(self =>
-                {
-                    self.SetComponent(s => s.DataSource, options)
-                    .SetComponent(s => s.ValueName, "Value")
-                    .SetComponent(s => s.LabelName, "Label")
-                    .SetComponent(s => s.AllowClear, self.Model.AllowClear)
-                    .SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
-                })
-                { Receiver = reciver };
+                    {
+                        self.SetComponent(s => s.DataSource, options)
+                            .SetComponent(s => s.ValueName, "Value")
+                            .SetComponent(s => s.LabelName, "Label")
+                            .SetComponent(s => s.AllowClear, self.Model.AllowClear)
+                            .SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
+                    })
+                    { Receiver = reciver };
             }
         }
 
-        public ISelectInput<SelectProp, TItem, TValue> BuildSelect<TItem, TValue>(object reciver, IEnumerable<TItem> options)
+        public ISelectInput<SelectProp, TItem, TValue> BuildSelect<TItem, TValue>(object reciver,
+            IEnumerable<TItem> options)
         {
             return new SelectComponentBuilder<Select<TValue, TItem>, SelectProp, TItem, TValue>(self =>
-            {
-                self.SetComponent(s => s.DataSource, options);
-                if (self.Model.ValueExpression is LambdaExpression valueLambda)
-                    self.SetComponent(s => s.ValueProperty, valueLambda.Compile());
-                if (self.Model.LabelExpression is LambdaExpression labelLambda)
-                    self.SetComponent(s => s.LabelProperty, labelLambda.Compile());
+                {
+                    self.SetComponent(s => s.DataSource, options);
+                    if (self.Model.ValueExpression is LambdaExpression valueLambda)
+                        self.SetComponent(s => s.ValueProperty, valueLambda.Compile());
+                    if (self.Model.LabelExpression is LambdaExpression labelLambda)
+                        self.SetComponent(s => s.LabelProperty, labelLambda.Compile());
 
-                self.SetComponent(s => s.AllowClear, self.Model.AllowClear);
-                self.SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
-
-            })
-            { Receiver = reciver };
-
+                    self.SetComponent(s => s.AllowClear, self.Model.AllowClear);
+                    self.SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
+                })
+                { Receiver = reciver };
         }
 
         public IBindableInputComponent<SwitchProp, bool> BuildSwitch(object reciver)
         {
             // "CheckedChildren", "UnCheckedChildren"
             var binder = new BindableComponentBuilder<Switch, SwitchProp, bool>(self =>
-            {
-                self.SetComponent(sw => sw.CheckedChildren, self.Model.CheckedLabel)
-                .SetComponent(sw => sw.UnCheckedChildren, self.Model.UnCheckedLabel);
-            })
-            { Receiver = reciver };
+                {
+                    self.SetComponent(sw => sw.CheckedChildren, self.Model.CheckedLabel)
+                        .SetComponent(sw => sw.UnCheckedChildren, self.Model.UnCheckedLabel);
+                })
+                { Receiver = reciver };
             // @bind-Check
             binder.Model.BindValueName = "Checked";
             return binder;
@@ -108,25 +108,25 @@ namespace Project.UI.AntBlazor
         public IButtonInput BuildButton(object reciver)
         {
             return new ButtonComponentBuilder<Button>((self) =>
-            {
-                if (self.Model.ButtonType == Constraints.UI.ButtonType.Default)
                 {
-                    return;
-                }
-                switch (self)
-                {
-                    case { Model: { ButtonType: Constraints.UI.ButtonType.Primary } }:
-                        self.SetComponent(b => b.Type, "primary");
-                        break;
-                    case { Model: { ButtonType: Constraints.UI.ButtonType.Danger } }:
-                        self.SetComponent(b => b.Danger, true);
-                        break;
-                }
+                    if (self.Model.ButtonType == Constraints.UI.ButtonType.Default)
+                    {
+                        return;
+                    }
 
-                self.TrySet("ChildContent", (RenderFragment)(builder => builder.AddContent(1, self.Model.Text)));
+                    switch (self)
+                    {
+                        case { Model: { ButtonType: Constraints.UI.ButtonType.Primary } }:
+                            self.SetComponent(b => b.Type, "primary");
+                            break;
+                        case { Model: { ButtonType: Constraints.UI.ButtonType.Danger } }:
+                            self.SetComponent(b => b.Danger, true);
+                            break;
+                    }
 
-            })
-            { Receiver = reciver };
+                    self.TrySet("ChildContent", (RenderFragment)(builder => builder.AddContent(1, self.Model.Text)));
+                })
+                { Receiver = reciver };
         }
 
         public void Message(Constraints.UI.MessageType type, string message)
@@ -177,13 +177,14 @@ namespace Project.UI.AntBlazor
             }
         }
 
-        public RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new()
+        public RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options)
+            where TQuery : IRequest, new()
         {
             return builder =>
             {
                 builder.Component<AntTable<TModel, TQuery>>()
-                .SetComponent(c => c.Options, options)
-                .Build();
+                    .SetComponent(c => c.Options, options)
+                    .Build();
             };
         }
 
@@ -192,8 +193,8 @@ namespace Project.UI.AntBlazor
             return builder =>
             {
                 builder.Component<AntForm<TData>>()
-                .SetComponent(c => c.Options, options)
-                .Build();
+                    .SetComponent(c => c.Options, options)
+                    .Build();
             };
         }
 
@@ -211,25 +212,23 @@ namespace Project.UI.AntBlazor
 
         public RenderFragment BuildDropdown(DropdownOptions options)
         {
-            return builder =>
-            {
-                builder.Component<AntDropdown>()
-                .SetComponent(c => c.Options, options)
-                .Build();
-            };
+            return builder => builder.Component<AntDropdown>()
+                    .SetComponent(c => c.Options, options)
+                    .Build();
+        }
+
+        public RenderFragment BuildProfile(ProfileInfo info)
+        {
+            return builder => builder.Component<AntProfile>().SetComponent(c => c.Options, info).Build();
         }
 
         public RenderFragment BuildMenu(IRouterStore router, bool horizontal, IAppStore app)
         {
-            return builder =>
-            {
-                builder.Component<AntMenu>()
-                .SetComponent(c => c.Router, router)
-                .SetComponent(c => c.Horizontal, horizontal)
-                .SetComponent(c => c.App, app)
-                .Build();
-
-            };
+            return builder => builder.Component<AntMenu>()
+                    .SetComponent(c => c.Router, router)
+                    .SetComponent(c => c.Horizontal, horizontal)
+                    .SetComponent(c => c.App, app)
+                    .Build();
         }
 
         public RenderFragment BuildLoginForm(LoginFormModel model, Func<Task> handleLogin)
@@ -237,9 +236,9 @@ namespace Project.UI.AntBlazor
             return builder =>
             {
                 builder.Component<AntLogin>()
-               .SetComponent(c => c.LoginModel, model)
-               .SetComponent(c => c.HandleLogin, handleLogin)
-               .Build();
+                    .SetComponent(c => c.LoginModel, model)
+                    .SetComponent(c => c.HandleLogin, handleLogin)
+                    .Build();
             };
         }
 
@@ -266,6 +265,7 @@ namespace Project.UI.AntBlazor
                 {
                     await options.Feedback.OnCancelAsync();
                 }
+
                 await modalRef.CloseAsync();
                 tcs.TrySetCanceled();
             };
@@ -309,14 +309,21 @@ namespace Project.UI.AntBlazor
             return new ComponentBuilder<Card>();
         }
 
-        public IUIComponent BuildRow()
+        public IUIComponent<GridProp> BuildRow()
         {
-            return new ComponentBuilder<Row>();
+            return new PropComponentBuilder<Row, GridProp>(row =>
+            {
+                row.SetComponent(c => c.ChildContent, row.Model.ChildContent);
+            });
         }
 
-        public IUIComponent BuildCol()
+        public IUIComponent<GridProp> BuildCol()
         {
-            return new ComponentBuilder<AntCol>();
+            return new PropComponentBuilder<Col, GridProp>(col =>
+            {
+                col.SetComponent(c => c.ChildContent, col.Model.ChildContent)
+                    .SetComponent(c => c.Span, (OneOf<string, int>)col.Model.ColSpan);
+            });
         }
 
         public IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object reciver)
@@ -326,7 +333,8 @@ namespace Project.UI.AntBlazor
             return binder;
         }
 
-        public IBindableInputComponent<DefaultProp, string[]> BuildTree<TData>(object reciver, TreeOptions<TData> options)
+        public IBindableInputComponent<DefaultProp, string[]> BuildTree<TData>(object reciver,
+            TreeOptions<TData> options)
         {
             var builder = new BindableComponentBuilder<AntTree<TData>, DefaultProp, string[]>()
             {
@@ -339,41 +347,42 @@ namespace Project.UI.AntBlazor
         }
 
         // TODO 绑定有BUG
-        public ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options)
+        public ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object reciver,
+            IEnumerable<TItem> options)
         {
             return new SelectComponentBuilder<CheckboxGroup, SelectProp, TItem, TValue[]>(self =>
-            {
-                // (OneOf<CheckboxOption[], string[]>)
-                if (self.Model.LabelExpression is LambdaExpression labelLambda && self.Model.ValueExpression is LambdaExpression valueLambda)
                 {
-                    var label = (Func<TItem, string>)labelLambda.Compile();
-                    var value = (Func<TItem, TValue>)valueLambda.Compile();
-                    self.SetComponent(cbg => cbg.Options, options.ConvertToCheckBoxOptions(label, value));
-                }
-            })
-            { Receiver = reciver };
+                    // (OneOf<CheckboxOption[], string[]>)
+                    if (self.Model.LabelExpression is LambdaExpression labelLambda &&
+                        self.Model.ValueExpression is LambdaExpression valueLambda)
+                    {
+                        var label = (Func<TItem, string>)labelLambda.Compile();
+                        var value = (Func<TItem, TValue>)valueLambda.Compile();
+                        self.SetComponent(cbg => cbg.Options, options.ConvertToCheckBoxOptions(label, value));
+                    }
+                })
+                { Receiver = reciver };
         }
 
-        public ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object reciver, IEnumerable<TItem> options)
+        public ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object reciver,
+            IEnumerable<TItem> options)
         {
             return new SelectComponentBuilder<RadioGroup<TValue>, SelectProp, TItem, TValue>(self =>
-            {
-                if (self.Model.LabelExpression is LambdaExpression labelLambda && self.Model.ValueExpression is LambdaExpression valueLambda)
                 {
-                    var label = (Func<TItem, string>)labelLambda.Compile();
-                    var value = (Func<TItem, TValue>)valueLambda.Compile();
-                    self.SetComponent(rg => rg.Options, options.ConvertToRadioOptions(label, value));
-                }
-            })
-            { Receiver = reciver };
+                    if (self.Model.LabelExpression is LambdaExpression labelLambda &&
+                        self.Model.ValueExpression is LambdaExpression valueLambda)
+                    {
+                        var label = (Func<TItem, string>)labelLambda.Compile();
+                        var value = (Func<TItem, TValue>)valueLambda.Compile();
+                        self.SetComponent(rg => rg.Options, options.ConvertToRadioOptions(label, value));
+                    }
+                })
+                { Receiver = reciver };
         }
 
         public RenderFragment BuildPopover(PopoverOptions options)
         {
-            return builder =>
-            {
-                builder.Component<AntPopover>().SetComponent(c => c.Options, options).Build();
-            };
+            return builder => { builder.Component<AntPopover>().SetComponent(c => c.Options, options).Build(); };
         }
 
         public IUIComponent<ModalProp> BuildModal()
@@ -381,13 +390,14 @@ namespace Project.UI.AntBlazor
             return new PropComponentBuilder<Modal, ModalProp>(self =>
             {
                 self.SetComponent(m => m.Title, self.Model.Title)
-                .SetComponent(m => m.Visible, self.Model.Visible)
-                .SetComponent(m => m.VisibleChanged, self.Model.VisibleChanged)
-                .SetComponent(m => m.ChildContent, self.Model.ChildContent);
+                    .SetComponent(m => m.Visible, self.Model.Visible)
+                    .SetComponent(m => m.VisibleChanged, self.Model.VisibleChanged)
+                    .SetComponent(m => m.ChildContent, self.Model.ChildContent);
                 if (self.Model.HideDefaultFooter)
                 {
                     self.SetComponent(m => m.Footer, null);
                 }
+
                 if (!string.IsNullOrEmpty(self.Model.Width))
                 {
                     self.SetComponent(m => m.Width, self.Model.Width);

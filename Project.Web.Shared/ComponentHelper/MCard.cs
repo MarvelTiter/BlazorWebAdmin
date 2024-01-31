@@ -25,7 +25,7 @@ namespace Project.Web.Shared.ComponentHelper
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             UI.BuildRow()
-                .Set("ChildContent", ChildContent)
+                .Set(c=>c.ChildContent, ChildContent)
                 .AdditionalParameters(AdditionalParameters)
                 .Render()
                 .Invoke(builder);
@@ -39,8 +39,8 @@ namespace Project.Web.Shared.ComponentHelper
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             UI.BuildCol()
-                .Set("ChildContent", ChildContent)
-                .Set("ColSpan", ColSpan)
+                .Set(p=>p.ChildContent, ChildContent)
+                .Set(p=>p.ColSpan, ColSpan)
                 .AdditionalParameters(AdditionalParameters)
                 .Render()
                 .Invoke(builder);

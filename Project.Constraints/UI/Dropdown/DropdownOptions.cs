@@ -16,4 +16,5 @@ namespace Project.Constraints.UI.Dropdown
 
         public List<ActionInfo> Actions { get; set; }
     }
+    
 }

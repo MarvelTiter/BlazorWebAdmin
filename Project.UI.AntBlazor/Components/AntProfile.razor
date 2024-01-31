@@ -1,0 +1,31 @@
+<Dropdown Trigger="@(new Trigger[]{Trigger.Click})" Style="display:unset;" HiddenMode="@true">
+    <Overlay>
+        <Menu>
+            @foreach (var item in Options.Actions)
+            {
+                <MenuItem OnClick="@(()=>item.OnClick.DynamicInvoke())">
+                    @if (item.Content == null)
+                    {
+                        <Button Type="@AntDesign.ButtonType.Text">@item.Label</Button>
+                    }
+                    else
+                    {
+                        @item.Content
+                    }
+                </MenuItem>
+            }
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        @Options.Content
+    </ChildContent>
+</Dropdown>
+
+@code {
+    [Parameter] public ProfileInfo Options { get; set; }
+}
+<style>
+    .ant-menu-title-content {
+        flex: 1;
+    }
+</style>

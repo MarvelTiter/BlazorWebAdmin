@@ -10,17 +10,25 @@ namespace Project.Constraints.UI.Builders
     public class ComponentBuilder<TComponent> : ComponentBuilderBasic<TComponent, ComponentBuilder<TComponent>>, IUIComponent
         where TComponent : IComponent
     {
+        public ComponentBuilder()
+        {
+            
+        }
 
+        public ComponentBuilder(Action<ComponentBuilder<TComponent>> action)
+        {
+            this.tpropHandle = action;
+        }
+
+        public ComponentBuilder(Func<ComponentBuilder<TComponent>, RenderFragment> func)
+        {
+            this.newRender = func;
+        }
     }
     [IgnoreAutoInject]
-    public class CustomComponentBuilder<TComponent> where TComponent : IComponent
+    public class CustomComponentBuilder<TComponent>(RenderTreeBuilder builder)
+        where TComponent : IComponent
     {
-        private readonly RenderTreeBuilder builder;
-
-        public CustomComponentBuilder(RenderTreeBuilder builder)
-        {
-            this.builder = builder;
-        }
         protected readonly Dictionary<string, object?> parameters = new(StringComparer.Ordinal);
 
         public CustomComponentBuilder<TComponent> SetComponent<TProp>(Expression<Func<TComponent, TProp>> selector, TProp value)
