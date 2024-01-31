@@ -33,6 +33,11 @@ public class TableOptions
 
 public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest, new()
 {
+    public TableOptions()
+    {
+        Query = new TQuery();
+        Columns = typeof(TData).GenerateColumns();
+    }
     public TQuery Query { get; set; }
     public IQueryCollectionResult<TData>? Result { get; set; }
     public Func<TData, object> RowKey { get; set; }

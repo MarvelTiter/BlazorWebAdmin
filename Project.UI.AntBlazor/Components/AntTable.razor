@@ -183,7 +183,7 @@
 
     Task OnRowClick(RowData<TData> row)
     {
-        return Options.OnRowClickAsync(row.Data);
+        return Options.OnRowClickAsync is not null ? Options.OnRowClickAsync(row.Data) : Task.CompletedTask;
     }
 
     Dictionary<string, object>? RowOptions(RowData<TData> row)
