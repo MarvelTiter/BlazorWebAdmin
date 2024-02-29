@@ -96,20 +96,22 @@ public static class SharedComponents
                 config.LogDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
             });
         }
-
-        services.ConfigureDynamicProxy();
-        builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
+        var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
+        if (useProxy)
+        {
+            services.ConfigureDynamicProxy();
+            builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
+        }
 
         services.AddSingleton<RedirectToLauchUrlMiddleware>();
         services.AddSingleton<CheckBrowserEnabledMiddleware>();
-
 
         Config.AddAssembly(typeof(AppConst).Assembly, typeof(Web.Shared._Imports).Assembly);
 
         builder.ConfigureAppSettings();
     }
 
-    public static void AddProjectDbServices(this WebApplicationBuilder builder, ProjectSetting setting)
+    public static void AddProjectDbServices(this IHostApplicationBuilder builder, ProjectSetting setting)
     {
         var services = builder.Services;
         // user
@@ -135,7 +137,7 @@ public static class SharedComponents
         });
     }
 
-    public static IServiceCollection ConfigureAppSettings(this WebApplicationBuilder builder)
+    public static IServiceCollection ConfigureAppSettings(this IHostApplicationBuilder builder)
     {
         var services = builder.Services;
         services.AddOptions();
@@ -154,7 +156,7 @@ public static class SharedComponents
         return services;
     }
 
-    public static void AddDefaultLightOrm(this WebApplicationBuilder builder, Action<ExpressionSqlOptions>? action = null)
+    public static void AddDefaultLightOrm(this IHostApplicationBuilder builder, Action<ExpressionSqlOptions>? action = null)
     {
         builder.Services.AddLightOrm(option =>
         {

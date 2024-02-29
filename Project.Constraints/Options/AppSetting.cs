@@ -11,4 +11,5 @@ public sealed class AppSetting
     public string? LauchUrl { get; set; }
     public bool LoadUnregisteredPage { get; set; }
     public bool LoadPageFromDatabase { get; set; } = true;
+    public bool UseAspectProxy { get; set; }
 }
