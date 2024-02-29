@@ -168,20 +168,20 @@ public class RouterStore : StoreBase, IRouterStore
     //TODO 获取权限列表
     public async Task InitRoutersAsync(UserInfo? userInfo)
     {
-        if (userInfo != null)
+        try
         {
-            try
+            if (userInfo != null && setting.CurrentValue.LoadPageFromDatabase)
             {
                 await InitRoutersAsyncByUser(userInfo);
             }
-            catch
+            if (setting.CurrentValue.LoadUnregisteredPage)
             {
-
+                InitRoutersByDefault();
             }
         }
-        if (setting.CurrentValue.LoadUnregisteredPage)
+        catch(Exception ex) 
         {
-            InitRoutersByDefault();
+            logger.LogError(ex, ex.Message);
         }
     }
 

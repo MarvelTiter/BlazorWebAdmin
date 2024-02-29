@@ -10,4 +10,5 @@ public sealed class AppSetting
     public string? AppLanguage { get; set; }
     public string? LauchUrl { get; set; }
     public bool LoadUnregisteredPage { get; set; }
+    public bool LoadPageFromDatabase { get; set; } = true;
 }
