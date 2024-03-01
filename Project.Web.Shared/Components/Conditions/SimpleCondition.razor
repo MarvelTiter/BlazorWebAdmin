@@ -35,7 +35,7 @@
     public Dictionary<string, string>? EnumValues { get; set; }
 
     string? stringValue = null;
-   
+
     Task NotifyChanged()
     {
         if (ValueChanged.HasDelegate)
@@ -55,6 +55,6 @@
                 return ValueChanged.InvokeAsync(v);
             }
         }
-        return Task.CompletedTask;
+        return ValueChanged.InvokeAsync(default);
     }
 }
