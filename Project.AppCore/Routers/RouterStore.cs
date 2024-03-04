@@ -170,6 +170,7 @@ public class RouterStore : StoreBase, IRouterStore
     {
         try
         {
+            await Reset();
             if (userInfo != null && setting.CurrentValue.LoadPageFromDatabase)
             {
                 await InitRoutersAsyncByUser(userInfo);
@@ -179,7 +180,7 @@ public class RouterStore : StoreBase, IRouterStore
                 InitRoutersByDefault();
             }
         }
-        catch(Exception ex) 
+        catch (Exception ex)
         {
             logger.LogError(ex, ex.Message);
         }
@@ -204,7 +205,6 @@ public class RouterStore : StoreBase, IRouterStore
     private async Task InitRoutersAsyncByUser(UserInfo? userInfo)
     {
         if (userInfo == null) return;
-        await Reset();
         var result = await permissionService.GetPowerListByUserIdAsync(userInfo.UserId);
         var powers = result.Payload.Where(p => p.PowerType == PowerType.Page);
         Menus.Clear();
