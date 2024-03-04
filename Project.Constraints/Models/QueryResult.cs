@@ -66,6 +66,17 @@ public static class QueryResult
             return Fail<T>();
     }
 
+    public static IQueryCollectionResult<T> EmptyResult<T>(string? msg = null)
+    {
+        return new QueryCollectionResult<T>()
+        {
+            Success = false,
+            Message = msg ?? "列表为空",
+            TotalRecord = 0,
+            Payload = Enumerable.Empty<T>()
+        };
+    }
+
     public static IQueryResult<T> SetPayload<T>(this IQueryResult<T> self, T payload)
     {
         self.Payload = payload!;
