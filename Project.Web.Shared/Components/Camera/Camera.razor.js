@@ -25,7 +25,7 @@ export class Camera extends BaseComponent {
                     },
                 })
                     .then((stream) => {
-                        /* Ê¹ÓÃÕâ¸ö stream stream */
+                        /* ä½¿ç”¨è¿™ä¸ª stream stream */
                         this.width = width;
                         this.height = height;
                         this.currentId = deviceId;
@@ -36,18 +36,18 @@ export class Camera extends BaseComponent {
                                 this.video.play();
                                 if (this.clipBox)
                                     this.clipBox.setVisible(true);
-                                resolve(success('¿ªÊ¼²¥·Å'));
+                                resolve(success('å¼€å§‹æ’­æ”¾'));
                             };
                         } catch (e) {
                             resolve(failed(e.message));
                         }
                     })
                     .catch(function (err) {
-                        /* ´¦Àí error */
+                        /* å¤„ç† error */
                         resolve(failed(err.message));
                     });
             } else {
-                resolve(failed('ä¯ÀÀÆ÷²»Ö§³Ö'))
+                resolve(failed('æµè§ˆå™¨ä¸æ”¯æŒ'))
             }
         })
     }
@@ -115,7 +115,7 @@ export async function enumerateDevices() {
         var devices = await navigator.mediaDevices.enumerateDevices()
         return success('', devices)
     }
-    return failed('»ñÈ¡Éè±¸Ê§°Ü£¡Çë¼ì²éÉè±¸Á¬½Ó»òÕßä¯ÀÀÆ÷ÅäÖÃ£¡')
+    return failed('è·å–è®¾å¤‡å¤±è´¥ï¼è¯·æ£€æŸ¥è®¾å¤‡è¿æ¥æˆ–è€…æµè§ˆå™¨é…ç½®ï¼')
 }
 
 export function loadUserMedia(id, deviceId, width, height) {
@@ -174,7 +174,7 @@ class ClipBox extends BaseComponent {
             this.h = this.el.offsetHeight;
         this.el.style.top = this.y + 'px';
         this.el.style.left = this.x + 'px';
-        // ÓÃÓÚËõ·ÅµÄ×î´óÏŞÖÆ
+        // ç”¨äºç¼©æ”¾çš„æœ€å¤§é™åˆ¶
         this.el.style["max-width"] = (this.videoWindowWidth - this.x) + 'px';
         this.el.style["max-height"] = (this.videoWindowHeight - this.y) + 'px';
     }

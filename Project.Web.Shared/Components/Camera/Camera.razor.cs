@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.ComponentModel.DataAnnotations;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.Models;
+using System.Web;
 
 namespace Project.Web.Shared.Components
 {
@@ -49,6 +50,18 @@ namespace Project.Web.Shared.Components
             Television4K,
             [Display(Name = "Cinema4K(4096×2160)")]
             Cinema4K,
+            [Display(Name = "QVGA(240×320)")]
+            RevQVGA,
+            [Display(Name = "VGA(380×640)")]
+            RevVGA,
+            [Display(Name = "HD(720×1280)")]
+            RevHD,
+            [Display(Name = "FullHD(1080×1920)")]
+            RevFullHD,
+            [Display(Name = "Television4K(2160×3840)")]
+            RevTelevision4K,
+            [Display(Name = "Cinema4K(2160×4096)")]
+            RevCinema4K,
         }
 
         public struct CaptureInfo
@@ -122,6 +135,12 @@ namespace Project.Web.Shared.Components
                 Resolution.FullHD => (1920, 1080),
                 Resolution.Television4K => (3840, 2160),
                 Resolution.Cinema4K => (4096, 2160),
+                Resolution.RevQVGA => (240, 320),
+                Resolution.RevVGA => (380, 640),
+                Resolution.RevHD => (720, 1280),
+                Resolution.RevFullHD => (1080, 1920),
+                Resolution.RevTelevision4K => (2160, 3840),
+                Resolution.RevCinema4K => (2160, 4096),
                 _ => throw new ArgumentException()
             };
             var result = await TryOpenCamera(res.Width, res.Height);
@@ -148,7 +167,7 @@ namespace Project.Web.Shared.Components
             JsActionResult? result = default;
             while (hadTried < RetryTimes)
             {
-                 result = await ModuleInvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, width, height);
+                result = await ModuleInvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, width, height);
                 if (result == null || !result.Success)
                 {
                     await Task.Delay(100);
@@ -219,8 +238,15 @@ namespace Project.Web.Shared.Components
 
         protected override async ValueTask DisposeAsync(bool disposing)
         {
-            await Stop();
-            await base.DisposeAsync(disposing);
+            try
+            {
+                await Stop();
+            }
+            finally
+            {
+                await base.DisposeAsync(disposing);
+            }
+
         }
     }
 }
