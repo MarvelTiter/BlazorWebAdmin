@@ -4,7 +4,7 @@ import { EventHandler } from "/_content/Project.Web.Shared/js/jscomponentbase/ev
 import { success, failed } from "/_content/Project.Web.Shared/js/jscomponentbase/utils.js";
 import { startDrag } from "/_content/Project.Web.Shared/js/jscomponentbase/drag-helper.js";
 export class Camera extends BaseComponent {
-    constructor(video, canvas) {
+    constructor(video, canvas, quality) {
         super()
         this.currentId = '';
         this.width = 0;
@@ -13,6 +13,7 @@ export class Camera extends BaseComponent {
         this.canvas = canvas;
         this.tracks = [];
         this.clipBox = null;
+        this.quality = quality;
     }
     open(deviceId, width, height) {
         return new Promise(resolve => {
@@ -79,7 +80,7 @@ export class Camera extends BaseComponent {
                 this.canvas.height = h
                 ctx.drawImage(this.video, x, y, w, h, 0, 0, w, h);
 
-                var dataURL = this.canvas.toDataURL("image/jpeg", 1);
+                var dataURL = this.canvas.toDataURL("image/jpeg", this.quality);
                 //window.document.getElementById('test').src = dataURL
                 if (dataURL.split(',').length > 1)
                     data = dataURL.split(',')[1];
@@ -99,9 +100,9 @@ export class Camera extends BaseComponent {
     }
 }
 
-export function init(id, video, canvas, clip, width, height) {
+export function init(id, video, canvas, quality, clip, width, height) {
     var component = getComponentById(id, () => {
-        return new Camera(video, canvas)
+        return new Camera(video, canvas, quality)
     })
     if (clip) {
         component.clipBox = new ClipBox(clip, width, height)

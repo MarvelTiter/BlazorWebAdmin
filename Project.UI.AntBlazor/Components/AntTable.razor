@@ -24,7 +24,7 @@
 
             @if (Options.EnableSelection)
             {
-                <Selection Fixed="left"/>
+                <Selection Fixed="left" />
             }
 
             @* <AntTableColumns Options="Options" RowData="context" Localizer="Localizer"></AntTableColumns> *@
@@ -74,7 +74,7 @@
                                 </Overlay>
                                 <ChildContent>
                                     <a @onclick:preventDefault>
-                                        @TableLocalizer["TableTips.More"] <Icon Type="down"/>
+                                        @TableLocalizer["TableTips.More"] <Icon Type="down" />
                                     </a>
                                 </ChildContent>
                             </Dropdown>
@@ -91,7 +91,7 @@
                         ShowTotal="TotalFragment"
                         ShowSizeChanger="@true"
                         ShowQuickJumper="@true"
-                        OnChange="@PaginationChanged"/>
+                        OnChange="@PaginationChanged" />
         </PaginationTemplate>
     </Table>
 </Card>
@@ -137,15 +137,15 @@
     private RenderFragment CreateButton(TableButton<TData> definition, TData context)
     {
         return
-            @<Button Type="@definition.ButtonType"
-                     Size="@ButtonSize.Small"
-                     Danger="@definition.Danger"
-                     Icon="@definition.Icon"
-                     OnClickStopPropagation
-                     OnClick="@(() => InvokeButtonAction(definition, context))">
-                @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
-            </Button>
-            ;
+    @<Button Type="@definition.ButtonType"
+                         Size="@ButtonSize.Small"
+                         Danger="@definition.Danger"
+                         Icon="@definition.Icon"
+                         OnClickStopPropagation
+                         OnClick="@(() => InvokeButtonAction(definition, context))">
+        @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
+    </Button>
+        ;
     }
 
     private async Task InvokeButtonAction(TableButton<TData> definition, TData data)
@@ -153,8 +153,8 @@
         if (definition.Danger)
         {
             var confirmResult = await ConfirmSrv.Show(
-                TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
-                , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+            TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+            , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
             if (confirmResult == ConfirmResult.OK)
             {
                 await CallButtonAction();
@@ -216,8 +216,8 @@
     RenderFragment RenderColumn<TColumnData>(ColumnInfo col)
     {
         return
-            @<Column TData="TColumnData" Ellipsis="@col.Ellipsis" Width="@col.Width" Sortable="@col.Sortable" Title="@(Localizer[col.Label])" Fixed="@col.Fixed" DataIndex="@col.PropertyOrFieldName" OnCell="GetOnCell(col)" CellRender="ColumnRender<TColumnData>(col)">
-            </Column>
-            ;
+    @<Column TData="TColumnData" Ellipsis="@col.Ellipsis" Width="@col.Width" Sortable="@col.Sortable" Title="@(Localizer[col.Label])" Fixed="@col.Fixed" DataIndex="@col.PropertyOrFieldName" Grouping="@col.Grouping" GroupBy="data => col.GroupByExpression(data)" OnCell="GetOnCell(col)" CellRender="ColumnRender<TColumnData>(col)">
+    </Column>
+    ;
     }
 }

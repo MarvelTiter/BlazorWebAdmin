@@ -20,6 +20,7 @@ namespace Project.Web.Shared.Components
         [Parameter] public bool AutoDownload { get; set; }
         [Parameter] public Resolution? CameraResolution { get; set; }
         [Parameter] public int RetryTimes { get; set; } = 3;
+        [Parameter] public double Quality { get; set; } = 1;
 
         private ElementReference? videoDom;
         private ElementReference? clipDom;
@@ -84,7 +85,7 @@ namespace Project.Web.Shared.Components
             if (!await InitDevices())
                 return;
             if (EnableClip)
-                await ModuleInvokeVoidAsync("init", videoDom, canvasDom, clipDom, Width, Height);
+                await ModuleInvokeVoidAsync("init", videoDom, canvasDom, Quality, clipDom, Width, Height);
             else
                 await ModuleInvokeVoidAsync("init", videoDom, canvasDom);
             var result = await Storage.GetAsync<string>("previousSelectedDevice");

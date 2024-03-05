@@ -2,11 +2,11 @@
 @namespace Project.Web.Shared.Components
 @using Project.Constraints.Page
 @inherits BasicComponent
-<Camera AutoPlay EnableClip Width="600" Height="300" OnCapture="handleCapture" AutoDownload @ref=camera></Camera>
+<Camera AutoPlay EnableClip Width="600" Height="300" Quality="0.3" OnCapture="handleCapture" AutoDownload @ref=camera></Camera>
  <div style="width:500px;">
      <img src="@src" style="width:100%;" />
  </div>
- <Camera Width="600" Height="400">
+ <Camera Width="600" Height="400" Quality="0.3">
      <DeviceSelectorRender>
          @foreach (var item in context.Devices.Where(d => d.Kind == "videoinput"))
         {

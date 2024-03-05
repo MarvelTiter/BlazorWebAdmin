@@ -34,6 +34,17 @@ public record ColumnInfo(PropertyInfo Property)
     public InputType? InputType { get; set; }
     public RenderFragment<object?>? CellTemplate { get; set; }
     public RenderFragment<object?>? FormTemplate { get; set; }
+    public bool Grouping { get; set; }
+    private Func<object, object> groupByExpression = static obj => 0;
+    public Func<object, object> GroupByExpression
+    {
+        get => groupByExpression;
+        set
+        {
+            groupByExpression = value;
+            Grouping = true;
+        }
+    }
     public string GetTagColor(object? val)
     {
         if (TagColors?.TryGetValue(val?.ToString() ?? "", out var color) ?? false)
