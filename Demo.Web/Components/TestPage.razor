@@ -92,10 +92,14 @@ UI.BuildCheckBoxGroup:
         Console.WriteLine(1 / div);
     }
 
-    void ShowModal()
+    async Task ShowModal()
     {
-        UI.AlertError("Test", "Content");
-        visible = true;
+        var b = await UI.ConfirmAsync("测试", "ConfirmTest");
+        if (b)
+        {
+            UI.AlertError("Test", "Content");
+            visible = true;
+        }
     }
 }
 

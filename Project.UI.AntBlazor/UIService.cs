@@ -70,7 +70,7 @@ namespace Project.UI.AntBlazor
                             .SetComponent(s => s.AllowClear, self.Model.AllowClear)
                             .SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
                     })
-                    { Receiver = reciver };
+                { Receiver = reciver };
             }
         }
 
@@ -88,7 +88,7 @@ namespace Project.UI.AntBlazor
                     self.SetComponent(s => s.AllowClear, self.Model.AllowClear);
                     self.SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
                 })
-                { Receiver = reciver };
+            { Receiver = reciver };
         }
 
         public IBindableInputComponent<SwitchProp, bool> BuildSwitch(object reciver)
@@ -99,7 +99,7 @@ namespace Project.UI.AntBlazor
                     self.SetComponent(sw => sw.CheckedChildren, self.Model.CheckedLabel)
                         .SetComponent(sw => sw.UnCheckedChildren, self.Model.UnCheckedLabel);
                 })
-                { Receiver = reciver };
+            { Receiver = reciver };
             // @bind-Check
             binder.Model.BindValueName = "Checked";
             return binder;
@@ -126,7 +126,7 @@ namespace Project.UI.AntBlazor
 
                     self.TrySet("ChildContent", (RenderFragment)(builder => builder.AddContent(1, self.Model.Text)));
                 })
-                { Receiver = reciver };
+            { Receiver = reciver };
         }
 
         public void Message(Constraints.UI.MessageType type, string message)
@@ -175,6 +175,17 @@ namespace Project.UI.AntBlazor
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+        }
+
+        public Task<bool> ConfirmAsync(string title, string message)
+        {
+            var option = new ConfirmOptions
+            {
+                Title = title,
+                Content = message,
+                Centered = true,
+            };
+            return modalService.ConfirmAsync(option);
         }
 
         public RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options)
@@ -361,7 +372,7 @@ namespace Project.UI.AntBlazor
                         self.SetComponent(cbg => cbg.Options, options.ConvertToCheckBoxOptions(label, value));
                     }
                 })
-                { Receiver = reciver };
+            { Receiver = reciver };
         }
 
         public ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object reciver,
@@ -377,7 +388,7 @@ namespace Project.UI.AntBlazor
                         self.SetComponent(rg => rg.Options, options.ConvertToRadioOptions(label, value));
                     }
                 })
-                { Receiver = reciver };
+            { Receiver = reciver };
         }
 
         public RenderFragment BuildPopover(PopoverOptions options)
