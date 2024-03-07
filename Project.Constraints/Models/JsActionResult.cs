@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace Project.Constraints.Models
 {
-    public class JsActionResult
+    public class JsActionResult : IQueryResult
     {
         public bool Success { get; set; }
         public string Message { get; set; }
         public object Payload { get; set; }
+        public int Code { get; set; }
     }
-    public class JsActionResult<T> : JsActionResult
+    public class JsActionResult<T> : JsActionResult, IQueryResult<T>
     {
         public new T Payload { get; set; }
     }

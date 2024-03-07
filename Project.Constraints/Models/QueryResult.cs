@@ -3,7 +3,7 @@
 public interface IQueryResult
 {
     bool Success { get; set; }
-    public int Code { get; set; }
+    int Code { get; set; }
     string Message { get; set; }
     object Payload { get; set; }
 }
