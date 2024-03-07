@@ -46,8 +46,8 @@
         else if (selectedField?.EnumValues != null || (selectedField?.IsEnum ?? false))
         {
             return UI.BuildSelect<KeyValuePair<string, string>, string>(this, selectedField.EnumValues!.ToList())
-            .LabelExpression(kv => kv.Key)
-            .ValueExpression(kv => kv.Value)
+            .LabelExpression(kv => kv.Value)
+            .ValueExpression(kv => kv.Key)
             .Bind(() => stringValue, NotifyChanged)
             .Render();
         }
