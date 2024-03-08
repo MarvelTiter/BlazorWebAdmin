@@ -1,4 +1,6 @@
-﻿namespace Project.Constraints.Services
+﻿using Project.Constraints.Store.Models;
+
+namespace Project.Constraints.Services
 {
     [AutoInject]
     public interface ICustomSettingService
@@ -11,5 +13,7 @@
         Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
         Task<int> UpdateLoginInfo(UserInfo info);
         Task<bool> OnLoginSuccessAsync(IQueryResult<UserInfo> result);
+        Task RouterChangedAsync(TagRoute route);
+        Task AfterWebApplicationAccessed();
     }
 }

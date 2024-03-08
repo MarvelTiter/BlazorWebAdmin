@@ -3,6 +3,9 @@ using MDbContext.Repository;
 using Microsoft.AspNetCore.Components;
 using Project.AppCore;
 using Project.Constraints.Models.Permissions;
+using Project.Constraints.Store;
+using Project.Constraints.Store.Models;
+using Project.Web.Shared.Components;
 
 namespace Project.Services
 {
@@ -10,11 +13,15 @@ namespace Project.Services
     {
         private readonly IExpressionContext context;
         private readonly NavigationManager navigation;
+        private readonly IUserStore userStore;
+        private readonly IWatermarkServiceFactory watermarkServiceFactory;
 
-        public CustomSetting(IExpressionContext context, NavigationManager navigation)
+        public CustomSetting(IExpressionContext context, NavigationManager navigation, IUserStore userStore, IWatermarkServiceFactory watermarkServiceFactory)
         {
             this.context = context;
             this.navigation = navigation;
+            this.userStore = userStore;
+            this.watermarkServiceFactory = watermarkServiceFactory;
         }
 
         public override async Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password)
@@ -51,5 +58,19 @@ namespace Project.Services
                                     .Set(u => u.LastLogin, DateTime.Now)
                                     .Where(u => u.UserId == info.UserId).ExecuteAsync();
         }
+
+        //public override Task AfterWebApplicationAccessed()
+        //{
+        //    var service = watermarkServiceFactory.GetWatermarkService();
+        //    service.UpdateWaterMarkAsync(userStore.UserInfo?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+        //    return Task.CompletedTask;
+        //}
+
+        //public override Task RouterChangedAsync(TagRoute route)
+        //{
+        //    var service = watermarkServiceFactory.GetWatermarkService();
+        //    service.UpdateWaterMarkAsync(userStore.UserInfo?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), route.RouteTitle);
+        //    return Task.CompletedTask;
+        //}
     }
 }

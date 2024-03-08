@@ -9,20 +9,20 @@
 @inject IOptionsMonitor<Token> Token
 @inject IOptionsMonitor<AppSetting> Setting
 <div @onclick="HandleRootClick"
-@onkeydown=HandleKeyAction
+     @onkeydown=HandleKeyAction
      tabindex="0"
-@ref="RootWrapper">
+     @ref="RootWrapper">
     <CascadingValue Value="this">
         <AuthorizeView>
             <Authorized>
                 <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
                      <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken">
                          @Body
-                     </ActionWatcher>
-                 </ActionWatcher>
-             </Authorized>
-             <NotAuthorized>
-                 @if (Token.CurrentValue.NeedAuthentication)
+                    </ActionWatcher>
+                </ActionWatcher>
+            </Authorized>
+            <NotAuthorized>
+                @if (Token.CurrentValue.NeedAuthentication)
                 {
                     <RedirectToLogin></RedirectToLogin>
                 }
@@ -43,6 +43,7 @@
     [Inject]
     public ILogger<AuthorizedLayout> Logger { get; set; }
     [Inject] IAppSession AppSession { get; set; }
+    [Inject] ICustomSettingService AppService { get; set; }
     string? LauchUrl => Setting.CurrentValue.LauchUrl;
 
     protected override async Task OnInitializedAsync()
@@ -68,6 +69,16 @@
     {
         base.OnAfterRender(firstRender);
         rendered = true;
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await AppService.AfterWebApplicationAccessed();
+        }
     }
 
     async Task UpdateUserToken()

@@ -1,0 +1,83 @@
+﻿@namespace Project.Web.Shared.Components
+@using Project.Constraints.Services
+@inherits JsComponentBase
+@implements IWatermarkService
+@if (ChildContent != null)
+{
+    <div style="position:relative;overflow:hidden;" @ref="wrapper">
+        @ChildContent
+    </div>
+}
+@code {
+    [Inject] ICustomSettingService SettingSrv { get; set; }
+    [Inject] IWatermarkServiceFactory WatermarkFactory { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public string[] Contents { get; set; }
+    [Parameter] public int Top { get; set; } = 20;
+    [Parameter] public (int X, int Y) Gap { get; set; } = (100, 100);
+    [Parameter] public int Width { get; set; } = 120;
+    [Parameter] public int Height { get; set; } = 64;
+    [Parameter] public int Rotate { get; set; } = -22;
+    [Parameter] public float Alpha { get; set; } = 1f;
+    [Parameter] public int FontSize { get; set; } = 14;
+    [Parameter] public string FontColor { get; set; } = "rgba(0,0,0,.15)";
+    [Parameter] public int LineSpace { get; set; } = 16;
+    [Parameter] public bool ProvideService { get; set; }
+    [Parameter] public string? ServiceKey { get; set; }
+    ElementReference? wrapper;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (ProvideService)
+        {
+            if (string.IsNullOrEmpty(ServiceKey))
+                WatermarkFactory.RegisterWatermarkService(this);
+            else
+                WatermarkFactory.RegisterKeyedWatermarkService(ServiceKey, this);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            if (Contents?.Length > 0)
+            {
+                DrawMask(Contents);
+            }
+        }
+    }
+
+    public Task UpdateWaterMarkAsync(params string[] contents)
+    {
+        DrawMask(contents);
+        return Task.CompletedTask;
+    }
+
+    public Task UpdateWaterMarkAsync(WaterMarkOptions? options, params string[] contents)
+    {
+        DrawMask(contents, options);
+        return Task.CompletedTask;
+    }
+
+    void DrawMask(string[] contents, WaterMarkOptions? options = null)
+    {
+        _ = ModuleInvokeVoidAsync("setWatermark", wrapper, new
+        {
+            top = options?.Top ?? Top,
+            width = options?.Width ?? Width,
+            height = options?.Height ?? Height,
+            gapX = options?.Gap.X ?? Gap.X,
+            gapY = options?.Gap.Y ?? Gap.Y,
+            rotate = options?.Rotate ?? Rotate,
+            alpha = options?.Alpha ?? Alpha,
+            lineSpace = options?.LineSpace ?? LineSpace,
+            fontSize = options?.FontSize ?? FontSize,
+            fontColor = options?.FontColor ?? FontColor,
+            contents
+        });
+    }
+
+}

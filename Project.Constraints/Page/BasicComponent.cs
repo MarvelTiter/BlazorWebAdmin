@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Project.Constraints.Services;
 using Project.Constraints.Store;
 using Project.Constraints.UI;
 
@@ -9,6 +10,7 @@ public class BasicComponent : ComponentBase, IDisposable
     private bool disposedValue;
 
     [Inject] public IAppSession Context { get; set; }
+    [Inject] public ICustomSettingService AppSettingService { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalParameters { get; set; }
     public IUIService UI => Context?.UI;
     public IAppStore App => Context?.AppStore;

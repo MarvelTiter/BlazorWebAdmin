@@ -11,7 +11,7 @@
          @foreach (var item in context.Devices.Where(d => d.Kind == "videoinput"))
         {
             <p>
-                <span>摄像头(@item.DeviceId[..10]...)</span>
+                <span>摄像头(@(item.DeviceId?.Length > 10 ? item.DeviceId?[..10] : item.DeviceId)...)</span>
                 @UI.BuildButton(this).Text("播放").OnClick(async e => await SwitchVideo(context, item.DeviceId)).Render()
                 @UI.BuildButton(this).Text("设置为证件照").Render()
                 @UI.BuildButton(this).Text("设置为人头像").Render()

@@ -82,6 +82,8 @@ public static class SharedComponents
             return sp.GetService()!;
         });
 
+        services.AddScoped<IWatermarkServiceFactory, WatermarkServiceFactory>();
+
         if (setting.AddDefaultProjectServices)
         {
             builder.AddProjectDbServices(setting);

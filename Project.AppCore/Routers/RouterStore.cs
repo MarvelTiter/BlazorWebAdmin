@@ -20,6 +20,7 @@ public class RouterStore : StoreBase, IRouterStore
     private readonly IStringLocalizer<RouterStore> localizer;
     private readonly IOptionsMonitor<CultureOptions> options;
     private readonly ILogger<RouterStore> logger;
+    private readonly ICustomSettingService customSettingService;
     private readonly IOptionsMonitor<AppSetting> setting;
 
     public RouterStore(IPermissionService permissionService
@@ -28,6 +29,7 @@ public class RouterStore : StoreBase, IRouterStore
         , IStringLocalizer<RouterStore> localizer
         , IOptionsMonitor<CultureOptions> options
         , ILogger<RouterStore> logger
+        , ICustomSettingService customSettingService
         , IOptionsMonitor<AppSetting> setting)
     {
         this.permissionService = permissionService;
@@ -36,6 +38,7 @@ public class RouterStore : StoreBase, IRouterStore
         this.localizer = localizer;
         this.options = options;
         this.logger = logger;
+        this.customSettingService = customSettingService;
         this.setting = setting;
     }
 
@@ -100,6 +103,7 @@ public class RouterStore : StoreBase, IRouterStore
         tag.SetActive(true);
         preview = tag;
         NotifyChanged();
+        customSettingService.RouterChangedAsync(tag);
         return Task.CompletedTask;
     }
 

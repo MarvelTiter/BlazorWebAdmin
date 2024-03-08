@@ -1,4 +1,5 @@
 ﻿using Project.AppCore.SystemPermission;
+using Project.Constraints.Store.Models;
 
 namespace Project.AppCore
 {
@@ -28,6 +29,16 @@ namespace Project.AppCore
         public virtual Task<bool> OnLoginSuccessAsync(IQueryResult<UserInfo> result)
         {
             return Task.FromResult(true);
+        }
+
+        public virtual Task AfterWebApplicationAccessed()
+        {
+            return Task.CompletedTask;
+        }
+
+        public virtual Task RouterChangedAsync(TagRoute route)
+        {
+            return Task.CompletedTask;
         }
     }
 }
