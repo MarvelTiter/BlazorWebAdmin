@@ -205,11 +205,11 @@ namespace Project.Web.Shared.Components
             selectedDeviceId = deviceId;
             await Start(resolution);
         }
-
-        public async Task<CaptureInfo> Capture()
+        int rotate = 0;
+        public async Task<CaptureInfo> Capture(int rotate = 0)
         {
             CaptureInfo info = new();
-            var result = await ModuleInvokeAsync<JsActionResult<string>>("capture");
+            var result = await ModuleInvokeAsync<JsActionResult<string>>("capture", rotate);
             if (result.Success)
             {
                 var filename = $"CameraCapture_{DateTime.Now:yyyyMMddHHmmss}";

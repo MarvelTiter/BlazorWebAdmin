@@ -16,7 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents()
+    .AddHubOptions(option =>
+    {
+        option.MaximumReceiveMessageSize = 1024 * 1024 * 5;
+    });
 
 builder.Services.AddAntDesignUI();
 builder.AddProject(setting =>

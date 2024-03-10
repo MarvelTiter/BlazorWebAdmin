@@ -2,23 +2,9 @@
 @namespace Project.Web.Shared.Components
 @using Project.Constraints.Page
 @inherits BasicComponent
-<Camera AutoPlay EnableClip Width="600" Height="300" Quality="0.3" OnCapture="handleCapture" AutoDownload @ref=camera></Camera>
- <div style="width:500px;">
-     <img src="@src" style="width:100%;" />
- </div>
- <Camera Width="600" Height="400" Quality="0.3">
-     <DeviceSelectorRender>
-         @foreach (var item in context.Devices.Where(d => d.Kind == "videoinput"))
-        {
-            <p>
-                <span>摄像头(@(item.DeviceId?.Length > 10 ? item.DeviceId?[..10] : item.DeviceId)...)</span>
-                @UI.BuildButton(this).Text("播放").OnClick(async e => await SwitchVideo(context, item.DeviceId)).Render()
-                @UI.BuildButton(this).Text("设置为证件照").Render()
-                @UI.BuildButton(this).Text("设置为人头像").Render()
-            </p>
-        }
-    </DeviceSelectorRender>
-</Camera>
+@attribute [PageInfo(Title = "Camera测试")]
+<Camera EnableClip Width="600" Height="300" Quality="0.3" OnCapture="handleCapture" @ref=camera></Camera>
+<img src="@src" />
 @code {
     Camera? camera;
     public async Task SwitchCamera(IEnumerable<Camera.DeviceInfo> devices, int type)

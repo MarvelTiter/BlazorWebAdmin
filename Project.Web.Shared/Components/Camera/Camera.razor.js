@@ -61,7 +61,7 @@ export class Camera extends BaseComponent {
             this.clipBox.setVisible(false);
     }
 
-    capture() {
+    capture(rotate) {
         try {
             var data = ''
             if (this.video && this.canvas) {
@@ -76,9 +76,32 @@ export class Camera extends BaseComponent {
                     w = this.clipBox.w * scaleX
                     h = this.clipBox.h * scaleY
                 }
-                this.canvas.width = w
-                this.canvas.height = h
+                rotate = rotate % 4
+                let tx = 0, ty = 0
+                if (rotate == 0 || rotate == 2) {
+                    this.canvas.width = w
+                    this.canvas.height = h
+                    if (rotate == 2) {
+                        tx = w
+                        ty = h
+                    }
+                } else {
+                    // 竖屏
+                    this.canvas.width = h
+                    this.canvas.height = w
+                    if (rotate == 1) {
+                        tx = h
+                    } else {
+                        ty = w
+                    }
+                }
+                let angle = rotate * 90 * Math.PI / 180
+                ctx.translate(tx, ty)
+                ctx.rotate(angle)
                 ctx.drawImage(this.video, x, y, w, h, 0, 0, w, h);
+                ctx.rotate(-angle)
+                ctx.translate(-tx, -ty)
+
 
                 var dataURL = this.canvas.toDataURL("image/jpeg", this.quality);
                 //window.document.getElementById('test').src = dataURL
@@ -138,9 +161,9 @@ export function closeUserMedia(id) {
         return failed(e.message)
     }
 }
-export function capture(id) {
+export function capture(id, rotate) {
     const camera = getComponentById(id)
-    return camera.capture()
+    return camera.capture(rotate)
 }
 
 class ClipBox extends BaseComponent {
