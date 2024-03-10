@@ -21,7 +21,13 @@ namespace Project.Web.Shared.Components
         [Parameter] public Resolution? CameraResolution { get; set; }
         [Parameter] public int RetryTimes { get; set; } = 3;
         [Parameter] public double Quality { get; set; } = 1;
-
+        [Parameter] public int Rotate { get; set; }
+        [Parameter] public bool PreviewRotate { get; set; }
+        int InternalRotate => Rotate % 4;
+        int WrapHeight => PreviewRotate ? (Rotate % 2 == 0 ? Height : Width) : Height;
+        int WrapWidth => PreviewRotate ? (Rotate % 2 == 0 && PreviewRotate ? Width : Height) : Width;
+        int ComWidth => Math.Max(Width, Height);
+        int RotateDeg => PreviewRotate ? InternalRotate * 90 : 0;
         private ElementReference? videoDom;
         private ElementReference? clipDom;
         private ElementReference? canvasDom;
@@ -205,11 +211,10 @@ namespace Project.Web.Shared.Components
             selectedDeviceId = deviceId;
             await Start(resolution);
         }
-        int rotate = 0;
-        public async Task<CaptureInfo> Capture(int rotate = 0)
+        public async Task<CaptureInfo> Capture()
         {
             CaptureInfo info = new();
-            var result = await ModuleInvokeAsync<JsActionResult<string>>("capture", rotate);
+            var result = await ModuleInvokeAsync<JsActionResult<string>>("capture", InternalRotate);
             if (result.Success)
             {
                 var filename = $"CameraCapture_{DateTime.Now:yyyyMMddHHmmss}";

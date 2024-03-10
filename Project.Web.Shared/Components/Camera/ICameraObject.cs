@@ -8,6 +8,6 @@ namespace Project.Web.Shared.Components
         Task SwitchCamera(string deviceId, Resolution? resolution = null);
         Task Start(Resolution? resolution);
         Task Stop();
-        Task<CaptureInfo> Capture(int rotate = 0);
+        Task<CaptureInfo> Capture();
     }
 }

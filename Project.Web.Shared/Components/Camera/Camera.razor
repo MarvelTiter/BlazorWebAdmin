@@ -1,11 +1,12 @@
 ﻿@namespace Project.Web.Shared.Components
 @inherits JsComponentBase
-<div style="width:@($"{Width}px");padding:0;">
-    <div style="border:1px solid #ccc;position:relative;padding:0;margin:0;width:@($"{Width}px");height:@($"{Height}px")">
-        <video @ref=videoDom style="width:100%;height:100%;object-fit:fill;"></video>
-        <div @ref=clipDom style="position:absolute;border:1px solid red;display:none;resize: both;overflow: hidden;min-width:200px;min-height:100px;cursor:move;">
+<div style="display: flex;flex-direction: column;align-items: center;width:@(ComWidth)px">
+    <div style="display: flex;align-items: center;justify-content: center;position:relative; width:@($"{WrapWidth}px");height:@($"{WrapHeight}px")">
+        <div style="border:1px solid #ccc;position:absolute;padding:0;margin:0;width:@($"{Width}px");height:@($"{Height}px");transform:rotate(@(RotateDeg)deg)">
+            <video @ref=videoDom style="width:100%;height:100%;object-fit:fill;"></video>
+            <div @ref=clipDom style="position:absolute;border:1px solid red;display:none;resize: both;overflow: hidden;min-width:200px;min-height:100px;cursor:move;">
+            </div>
         </div>
-        <canvas @ref=canvasDom style="display:none"></canvas>
     </div>
     @if (DeviceSelectorRender != null)
     {
@@ -20,10 +21,11 @@
                 @UI.BuildButton(this).OnClick(Stop).Text("关闭").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
             </div>
             <div style="margin-top:10px;">
-                @UI.BuildButton(this).OnClick(() => rotate++).Text("+90°").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
-                @UI.BuildButton(this).OnClick(() => rotate--).Text("-90°").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
-                @UI.BuildButton(this).OnClick(() => Capture(rotate)).Text("拍照").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
+                @UI.BuildButton(this).OnClick(() => Rotate++).Text("+90°").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
+                @UI.BuildButton(this).OnClick(() => Rotate--).Text("-90°").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
+                @UI.BuildButton(this).OnClick(Capture).Text("拍照").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
             </div>
         </div>
     }
 </div>
+<canvas @ref=canvasDom style="display:none"></canvas>
