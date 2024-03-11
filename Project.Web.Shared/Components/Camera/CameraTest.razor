@@ -2,8 +2,8 @@
 @namespace Project.Web.Shared.Components
 @using Project.Constraints.Page
 @inherits BasicComponent
-@attribute [PageInfo(Title = "Camera测试")]
-<Camera EnableClip Width="600" Height="300" Quality="0.3" OnCapture="handleCapture" @ref=camera PreviewRotate></Camera>
+@* @attribute [PageInfo(Title = "Camera测试")] *@
+<Camera Width="400" Height="300" OnCapture="handleCapture" @ref=camera PreviewRotate></Camera>
 <img src="@src" />
 @code {
     Camera? camera;

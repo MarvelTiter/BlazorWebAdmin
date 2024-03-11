@@ -19,6 +19,8 @@ namespace Project.Web.Shared.Components
         [Parameter] public EventCallback<CaptureInfo> OnCapture { get; set; }
         [Parameter] public bool AutoDownload { get; set; }
         [Parameter] public Resolution? CameraResolution { get; set; }
+        [Parameter] public int? CameraWidth { get; set; }
+        [Parameter] public int? CameraHeight { get; set; }
         [Parameter] public int RetryTimes { get; set; } = 3;
         [Parameter] public double Quality { get; set; } = 1;
         [Parameter] public int Rotate { get; set; }
@@ -57,18 +59,20 @@ namespace Project.Web.Shared.Components
             Television4K,
             [Display(Name = "Cinema4K(4096×2160)")]
             Cinema4K,
-            [Display(Name = "QVGA(240×320)")]
-            RevQVGA,
-            [Display(Name = "VGA(380×640)")]
-            RevVGA,
-            [Display(Name = "HD(720×1280)")]
-            RevHD,
-            [Display(Name = "FullHD(1080×1920)")]
-            RevFullHD,
-            [Display(Name = "Television4K(2160×3840)")]
-            RevTelevision4K,
-            [Display(Name = "Cinema4K(2160×4096)")]
-            RevCinema4K,
+            [Display(Name = "A4(1123×794)")]
+            A4,
+            //[Display(Name = "QVGA(240×320)")]
+            //RevQVGA,
+            //[Display(Name = "VGA(380×640)")]
+            //RevVGA,
+            //[Display(Name = "HD(720×1280)")]
+            //RevHD,
+            //[Display(Name = "FullHD(1080×1920)")]
+            //RevFullHD,
+            //[Display(Name = "Television4K(2160×3840)")]
+            //RevTelevision4K,
+            //[Display(Name = "Cinema4K(2160×4096)")]
+            //RevCinema4K,
         }
 
         public struct CaptureInfo
@@ -77,6 +81,7 @@ namespace Project.Web.Shared.Components
             public string Content { get; set; }
         }
         private SelectItem<string> dropdownDevices = new SelectItem<string>();
+        private SelectItem<Resolution> resolutions = new SelectItem<Resolution>();
         public IEnumerable<DeviceInfo> Devices { get; set; } = Enumerable.Empty<DeviceInfo>();
 
         protected override void OnParametersSet()
@@ -106,6 +111,13 @@ namespace Project.Web.Shared.Components
 
         private async Task<bool> InitDevices()
         {
+            resolutions.Add("QVGA(320×240)", Resolution.QVGA);
+            resolutions.Add("VGA(640×380)", Resolution.VGA);
+            resolutions.Add("HD(1280×720)", Resolution.HD);
+            resolutions.Add("FullHD(1920×1080)", Resolution.FullHD);
+            resolutions.Add("Television4K(3840×2160)", Resolution.Television4K);
+            resolutions.Add("Cinema4K(4096×2160)", Resolution.Cinema4K);
+            resolutions.Add("A4(1123×794)", Resolution.A4);
             var result = await ModuleInvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");
             if (result.Success)
             {
@@ -122,19 +134,20 @@ namespace Project.Web.Shared.Components
             }
         }
         bool playButtonStatus = false;
+        Resolution resolution = Resolution.FullHD;
 
-        public Task Start()
+        (int Width, int Height) GetSize(Resolution? resolution)
         {
-            return Start(Resolution.FullHD);
-        }
-
-        public async Task Start(Resolution? resolution = null)
-        {
-            if (!resolution.HasValue)
+            if (CameraWidth.HasValue && CameraHeight.HasValue)
             {
-                resolution = CameraResolution ?? Resolution.FullHD;
+                return (CameraWidth.Value, CameraHeight.Value);
             }
-            (int Width, int Height) res = resolution switch
+            if (CameraResolution.HasValue)
+            {
+                resolution = CameraResolution.Value;
+            }
+            resolution ??= Resolution.FullHD;
+            return resolution switch
             {
                 Resolution.QVGA => (320, 240),
                 Resolution.VGA => (640, 380),
@@ -142,14 +155,26 @@ namespace Project.Web.Shared.Components
                 Resolution.FullHD => (1920, 1080),
                 Resolution.Television4K => (3840, 2160),
                 Resolution.Cinema4K => (4096, 2160),
-                Resolution.RevQVGA => (240, 320),
-                Resolution.RevVGA => (380, 640),
-                Resolution.RevHD => (720, 1280),
-                Resolution.RevFullHD => (1080, 1920),
-                Resolution.RevTelevision4K => (2160, 3840),
-                Resolution.RevCinema4K => (2160, 4096),
+                Resolution.A4 => (1123, 794),
+                //Resolution.RevQVGA => (240, 320),
+                //Resolution.RevVGA => (380, 640),
+                //Resolution.RevHD => (720, 1280),
+                //Resolution.RevFullHD => (1080, 1920),
+                //Resolution.RevTelevision4K => (2160, 3840),
+                //Resolution.RevCinema4K => (2160, 4096),
                 _ => throw new ArgumentException()
             };
+        }
+
+        public Task Start()
+        {
+            return Start(resolution);
+        }
+
+        public async Task Start(Resolution? resolution = null)
+        {
+            (int Width, int Height) res = GetSize(resolution);
+
             var result = await TryOpenCamera(res.Width, res.Height);
             if (result == null)
             {
