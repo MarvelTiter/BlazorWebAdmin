@@ -64,12 +64,12 @@ public class RouterStore : StoreBase, IRouterStore
         get => "/" + navigationManager.ToBaseRelativePath(navigationManager.Uri);
     }
     TagRoute? preview;
-    public Task RouteDataChangedHandleAsync(Microsoft.AspNetCore.Components.RouteData routeData)
+    public async Task RouteDataChangedHandleAsync(Microsoft.AspNetCore.Components.RouteData routeData)
     {
         if (!pages.TryGetValue(CurrentUrl, out var tag))
         {
             // TODO 可能有BUG，先观察观察
-            if (Menus.Count == 0) return Task.CompletedTask;
+            if (Menus.Count == 0) return;
             RouterMeta? meta = Menus.FirstOrDefault(r => r.RouteUrl == CurrentUrl);
             if (meta == null)
             {
@@ -87,7 +87,17 @@ public class RouterStore : StoreBase, IRouterStore
             };
             pages[CurrentUrl] = tag;
         }
-        tag.Body ??= CreateBody(tag, routeData);
+
+        var enable = await customSettingService.RouterChangingAsync(tag);
+        if (enable)
+        {
+            tag.Body ??= CreateBody(tag, routeData);
+        }
+        else
+        {
+            //TODO 不允许导航到此页面
+            //tag.Body ??=
+        }
         if (preview != null)
         {
             if (!preview.Cache)
@@ -103,8 +113,6 @@ public class RouterStore : StoreBase, IRouterStore
         tag.SetActive(true);
         preview = tag;
         NotifyChanged();
-        customSettingService.RouterChangedAsync(tag);
-        return Task.CompletedTask;
     }
 
     private RenderFragment CreateBody(TagRoute? route, Microsoft.AspNetCore.Components.RouteData routeData)
@@ -181,7 +189,7 @@ public class RouterStore : StoreBase, IRouterStore
             }
             if (setting.CurrentValue.LoadUnregisteredPage)
             {
-                InitRoutersByDefault();
+                await InitRoutersByDefault();
             }
         }
         catch (Exception ex)
@@ -190,19 +198,22 @@ public class RouterStore : StoreBase, IRouterStore
         }
     }
 
-    private void InitRoutersByDefault()
+    private async Task InitRoutersByDefault()
     {
-        foreach (var item in AllPages.AllRoutes.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
+        foreach (var meta in AllPages.AllRoutes.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
         {
-            if (Menus.Any(m => m.RouteUrl == item.RouteUrl && m.RouteId == item.RouteId))
+            if (Menus.Any(m => m.RouteUrl == meta.RouteUrl && m.RouteId == meta.RouteId))
             {
                 continue;
             }
-            var title = GetLocalizerString(item.RouteId, item.RouteTitle);
-            if (title == item.RouteId)
-                title = item.RouteTitle;
-            item.RouteTitle = title;
-            Menus.Add(new RouteMenu(item));
+            var enable = await customSettingService.RouteMetaFilterAsync(meta);
+            if (!enable)
+                continue;
+            var title = GetLocalizerString(meta.RouteId, meta.RouteTitle);
+            if (title == meta.RouteId)
+                title = meta.RouteTitle;
+            meta.RouteTitle = title;
+            Menus.Add(new RouteMenu(meta));
         }
     }
 
@@ -225,6 +236,9 @@ public class RouterStore : StoreBase, IRouterStore
         {
             var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteUrl == "/" + pow.Path);
             if (meta == null)
+                continue;
+            var enable = await customSettingService.RouteMetaFilterAsync(meta);
+            if (!enable)
                 continue;
             meta.RouteTitle = GetLocalizerString(pow.PowerId, pow.PowerName);
             meta.RouteId = pow.PowerId;

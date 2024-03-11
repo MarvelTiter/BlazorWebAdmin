@@ -36,9 +36,14 @@ namespace Project.AppCore
             return Task.CompletedTask;
         }
 
-        public virtual Task RouterChangedAsync(TagRoute route)
+        public virtual Task<bool> RouterChangingAsync(TagRoute route)
         {
-            return Task.CompletedTask;
+            return Task.FromResult(true);
+        }
+
+        public virtual Task<bool> RouteMetaFilterAsync(RouterMeta meta)
+        {
+            return Task.FromResult(true);
         }
     }
 }
