@@ -67,6 +67,7 @@ namespace Project.UI.AntBlazor
                         self.SetComponent(s => s.DataSource, options)
                             .SetComponent(s => s.ValueName, "Value")
                             .SetComponent(s => s.LabelName, "Label")
+                            .SetComponent(s => s.DropdownMatchSelectWidth, false)
                             .SetComponent(s => s.AllowClear, self.Model.AllowClear)
                             .SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
                     })
@@ -87,6 +88,7 @@ namespace Project.UI.AntBlazor
 
                     self.SetComponent(s => s.AllowClear, self.Model.AllowClear);
                     self.SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
+                    self.SetComponent(s => s.DropdownMatchSelectWidth, false);
                 })
             { Receiver = reciver };
         }
