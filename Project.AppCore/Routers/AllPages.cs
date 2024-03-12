@@ -2,6 +2,7 @@
 using Project.Constraints.Common.Attributes;
 using Project.Constraints.Store.Models;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Project.AppCore.Routers
 {
@@ -10,7 +11,7 @@ namespace Project.AppCore.Routers
         public static IList<Assembly> Assemblies { get; }
         public static IList<RouterMeta> AllRoutes { get; }
         public static IEnumerable<RouteMenu> RouteMenu { get; } = new List<RouteMenu>();
-
+        static IList<RouterMeta> Groups { get; }
         static AllPages()
         {
             var entryAssembly = Assembly.GetEntryAssembly();
@@ -22,13 +23,12 @@ namespace Project.AppCore.Routers
             var referencedAssemblies = entryAssembly.GetReferencedAssemblies().Select(Assembly.Load);
             Assemblies = new List<Assembly> { entryAssembly }.Union(referencedAssemblies).ToList();
             List<RouterMeta> routes = new();
+            Groups = new List<RouterMeta>();
             foreach (var assembly in Assemblies)
             {
-                routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).SelectMany(t => GetRouterMeta(t)));
+                routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).SelectMany(GetRouterMeta));
             }
-            AllRoutes = routes.Distinct().OrderBy(r => r.Sort).ToList();
-
-            InitRouteMenu();
+            AllRoutes = routes.Concat(Groups).OrderBy(r => r.Sort).ToList();
         }
 
         private static IEnumerable<RouterMeta> GetRouterMeta(Type t)
@@ -36,21 +36,13 @@ namespace Project.AppCore.Routers
             var routerAttr = t.GetCustomAttribute<RouteAttribute>();
             var info = t.GetCustomAttribute<PageInfoAttribute>();
             var groupInfo = t.GetCustomAttribute<PageGroupAttribute>();
-            //var template = routerAttr!.Template;
 
             if (groupInfo != null)
             {
-                if (info == null) throw new Exception($"{nameof(PageGroupAttribute)} should used with {nameof(PageInfoAttribute)}");
-                yield return new()
-                {
-                    RouteId = groupInfo.Id,
-                    RouteTitle = groupInfo.Name,
-                    Icon = groupInfo.Icon,
-                    Sort = groupInfo.Sort,
-                    Group = "ROOT",
-                    HasPageInfo = true
-                };
+                ArgumentNullException.ThrowIfNull(info, $"{nameof(PageGroupAttribute)} should used with {nameof(PageInfoAttribute)}");
+                TryAddGroup(groupInfo);
             }
+            //ArgumentOutOfRangeException.ThrowIfEqual(false, HasGroup(info), $"invalid groupId ({info!.GroupId})");
 
             yield return new()
             {
@@ -59,23 +51,41 @@ namespace Project.AppCore.Routers
                 RouteUrl = routerAttr!.Template,
                 Icon = info?.Icon ?? "",
                 Pin = info?.Pin ?? false,
-                Group = groupInfo?.Id ?? "ROOT",
+                Group = info?.GroupId ?? groupInfo?.Id ?? "ROOT",
                 Sort = info?.Sort ?? 0,
                 HasPageInfo = info != null,
             };
         }
-
-        private static void InitRouteMenu()
+        static bool HasGroup(PageInfoAttribute? pageInfo)
         {
-            //var roots = AllRoutes.Where(meta => meta.Group == null);
-            //var groups = AllRoutes.Where(meta => meta.Group != null).GroupBy(meta => meta.Group).Select(g =>
-            // {
-            //     return new RouterMeta
-            //     {
-            //         RouteLink = g.Key!,
-            //         RouteName = 
-            //     };
-            // });
+            if (pageInfo == null || pageInfo.GroupId == null)
+            {
+                return true;
+            }
+            return Groups.Any(g => g.RouteId == pageInfo.GroupId);
+        }
+        private static void TryAddGroup(PageGroupAttribute groupInfo)
+        {
+            var g = Groups.FirstOrDefault(g => g.RouteId == groupInfo.Id);
+            if (g == null)
+            {
+                g = new RouterMeta();
+                g.RouteId = groupInfo.Id;
+                g.RouteTitle = groupInfo.Name;
+                if (groupInfo.Icon != null)
+                    g.Icon = groupInfo.Icon;
+                g.Sort = groupInfo.Sort;
+                g.Group = "ROOT";
+                g.HasPageInfo = true;
+                Groups.Add(g);
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(g.Icon) && groupInfo.Icon != null)
+                {
+                    g.Icon = groupInfo.Icon;
+                }
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 @using System.Linq
 @using Project.Constraints.Store.Models
 @using Project.Web.Shared.Components
-@if (!HasChildren || onlyOneChildren)
+@if (!HasChildren)
 {
     <MenuItem RouterLink="@Current.RouteUrl" RouterMatch="NavLinkMatch.All" Title=@Current.RouteTitle>
         <IconTemplate>
@@ -38,9 +38,10 @@ else
 
     [Inject] IRouterStore RouterStore { get; set; }
 
-    public RouteMenu Current => onlyOneChildren ? Children.First() : Route;
+    public RouteMenu Current => Route;
+    // public RouteMenu Current => onlyOneChildren ? Children.First() : Route;
 
-    private bool onlyOneChildren => Children.Count() == 1;
+    // private bool onlyOneChildren => Children.Count() == 1;
 
     private bool HasChildren => Children.Any();
 
