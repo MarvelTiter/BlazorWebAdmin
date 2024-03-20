@@ -10,6 +10,12 @@ namespace Project.AppCore
         static Type? PermissionPageType;
         static Type? RolePermissionPageType;
         static Type? RunLogPageType;
+
+        List<IAddtionalTnterceptor> initActions = [];
+
+        public event Func<IQueryResult<UserInfo>, Task> OnLoginSuccessAsync;
+
+        public event Func<TagRoute, Task> OnRouterChangingAsync;
         public BasicCustomSetting()
         {
             UserPageType ??= typeof(UserPage<,,>).MakeGenericType(Config.TypeInfo.UserType, Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
@@ -17,6 +23,14 @@ namespace Project.AppCore
             RolePermissionPageType ??= typeof(RolePermission<,>).MakeGenericType(Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
             RunLogPageType ??= typeof(OperationLog<>).MakeGenericType(Config.TypeInfo.RunlogType);
         }
+        
+        public void AddService(IAddtionalTnterceptor additional)
+        {
+            initActions.Add(additional);
+            OnLoginSuccessAsync += additional.LoginSuccessAsync;
+            OnRouterChangingAsync += additional.RouterChangingAsync;
+        }
+
         public virtual Type? GetDashboardType() => null;
         public virtual Type? GetUserPageType() => UserPageType;
         public virtual Type? GetPermissionPageType() => PermissionPageType;
@@ -26,8 +40,9 @@ namespace Project.AppCore
 
         public abstract Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
         public abstract Task<int> UpdateLoginInfo(UserInfo info);
-        public virtual Task<bool> OnLoginSuccessAsync(IQueryResult<UserInfo> result)
+        public virtual Task<bool> LoginSuccessAsync(IQueryResult<UserInfo> result)
         {
+            OnLoginSuccessAsync?.Invoke(result);
             return Task.FromResult(true);
         }
 
@@ -38,6 +53,7 @@ namespace Project.AppCore
 
         public virtual Task<bool> RouterChangingAsync(TagRoute route)
         {
+            OnRouterChangingAsync?.Invoke(route);
             return Task.FromResult(true);
         }
 

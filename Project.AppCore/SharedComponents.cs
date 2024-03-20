@@ -62,8 +62,7 @@ public static class SharedComponents
         //
         services.AddHttpClient();
         //
-        var settingImplType = setting.SettingProviderType;
-        services.AddScoped(typeof(ICustomSettingService), settingImplType);
+        InterceptorsInit(services, setting);
 
         services.AddControllers().AddApplicationPart(typeof(AppConst).Assembly);
         // 配置 IAuthenticationStateProvider
@@ -111,6 +110,26 @@ public static class SharedComponents
         Config.AddAssembly(typeof(AppConst).Assembly, typeof(Web.Shared._Imports).Assembly);
 
         builder.ConfigureAppSettings();
+    }
+
+    private static void InterceptorsInit(IServiceCollection services, ProjectSetting setting)
+    {
+        var settingImplType = setting.SettingProviderType;
+        services.AddScoped(settingImplType);
+        foreach (var item in setting.interceptorTypes)
+        {
+            services.AddScoped(typeof(IAddtionalTnterceptor), item);
+        }
+        services.AddScoped(typeof(ICustomSettingService), provider =>
+        {
+            var i = provider.GetService(settingImplType) as BasicCustomSetting;
+            var interceptors = provider.GetServices(typeof(IAddtionalTnterceptor)) ?? Enumerable.Empty<IAddtionalTnterceptor>();
+            foreach (var item in interceptors.Cast<IAddtionalTnterceptor>())
+            {
+                i!.AddService(item);
+            }
+            return i;
+        });
     }
 
     public static void AddProjectDbServices(this IHostApplicationBuilder builder, ProjectSetting setting)

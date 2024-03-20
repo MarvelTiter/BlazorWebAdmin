@@ -54,7 +54,7 @@ namespace Project.AppCore.Pages
                 await Router.InitRoutersAsync(result.Payload);
                 UI.Success(Localizer["Login.SuccessTips"].Value);
                 Root.OnKeyDown -= OnPressEnter;
-                var goon = await CustomSetting.OnLoginSuccessAsync(result);
+                var goon = await CustomSetting.LoginSuccessAsync(result);
                 if (goon)
                 {
                     if (string.IsNullOrEmpty(Redirect))

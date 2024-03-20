@@ -11,6 +11,11 @@ public class ProjectSetting
     {
         settingProviderType = typeof(T);
     }
+    public List<Type> interceptorTypes = [];
+    public void AddInterceotor<T>() where T : IAddtionalTnterceptor
+    {
+        interceptorTypes.Add(typeof(T));
+    }
 
     public void OverrideTableEntity(Action<DbTableType> config)
     {

@@ -17,7 +17,7 @@ namespace Project.Constraints.Services
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>
-        Task<bool> OnLoginSuccessAsync(IQueryResult<UserInfo> result);
+        Task<bool> LoginSuccessAsync(IQueryResult<UserInfo> result);
         /// <summary>
         /// 导航钩子
         /// </summary>

@@ -11,6 +11,7 @@ using Project.Constraints.Store;
 using Project.Constraints.UI;
 using Project.Services;
 using Project.UI.AntBlazor;
+using Test;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,7 @@ builder.AddProject(setting =>
     setting.App.Id = "Test";
     setting.App.Company = "Marvel";
     setting.ConfigureSettingProviderType<CustomSetting>();
+    setting.AddInterceotor<Class1>();
 });
 
 builder.AddDefaultLightOrm(option =>
