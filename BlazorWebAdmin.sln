@@ -18,8 +18,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.UI.AntBlazor", "Pro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Constraints", "Project.Constraints\Project.Constraints.csproj", "{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{40E0B573-E874-4135-B673-3752C0961282}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,10 +44,6 @@ Global
 		{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40E0B573-E874-4135-B673-3752C0961282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{40E0B573-E874-4135-B673-3752C0961282}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{40E0B573-E874-4135-B673-3752C0961282}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{40E0B573-E874-4135-B673-3752C0961282}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

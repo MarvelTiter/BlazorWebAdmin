@@ -17,7 +17,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />
 		<ProjectReference Include="..\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
-		<ProjectReference Include="..\Test\Test.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
