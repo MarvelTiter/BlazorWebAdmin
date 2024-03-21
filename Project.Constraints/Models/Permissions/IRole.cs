@@ -1,5 +1,4 @@
-﻿using MDbEntity.Attributes;
-
+﻿
 namespace Project.Constraints.Models.Permissions
 {
     public interface IRole
@@ -8,18 +7,14 @@ namespace Project.Constraints.Models.Permissions
         string RoleName { get; set; }
     }
 
-    [TableName("ROLE")]
-    [Table(Name = "ROLE")]
+    [LightTable(Name = "ROLE")]
     public class Role: IRole
     {
-        [PrimaryKey]
         [ColumnDefinition(Readonly = true)]
-        [ColumnName("ROLE_ID")]
-        [Column(Name = "ROLE_ID", PrimaryKey = true)]
+        [LightColumn(Name = "ROLE_ID", PrimaryKey = true)]
         public string RoleId { get; set; }
         [ColumnDefinition]
-        [ColumnName("ROLE_NAME")]
-        [Column(Name = "ROLE_NAME")]
+        [LightColumn(Name = "ROLE_NAME")]
         public string RoleName { get; set; }
     }
 }

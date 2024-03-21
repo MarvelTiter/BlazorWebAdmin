@@ -6,7 +6,7 @@ namespace Project.Web.Shared.Utils
 {
     public class BuildCondition
     {
-        private static readonly MethodInfo LikeMethod = typeof(DExpSql.SqlFn).GetMethod("Like")!;
+        private static readonly MethodInfo ContainMethod = typeof(string).GetMethod(nameof(string.Contains))!;
         /// <summary>
         /// 根据条件信息构建单个表达式
         /// </summary>
@@ -43,7 +43,7 @@ namespace Project.Web.Shared.Utils
             }
             else
             {
-                exp = Expression.Call(LikeMethod, propExp, Expression.Constant(info.Value, typeof(string)));
+                exp = Expression.Call(propExp, ContainMethod, Expression.Constant(info.Value, typeof(string)));
             }
             return exp;
         }

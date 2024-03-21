@@ -1,5 +1,4 @@
-﻿using MDbContext;
-using MDbContext.ExpressionSql.Interface;
+﻿using LightORM;
 using Project.Constraints.Models.Permissions;
 
 namespace Project.AppCore

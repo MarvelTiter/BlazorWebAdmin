@@ -1,14 +1,5 @@
 using Demo.Web.Components;
-using MDbContext;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Data.Sqlite;
 using Project.AppCore;
-using Project.AppCore.Auth;
-using Project.AppCore.Routers;
-using Project.AppCore.Store;
-using Project.Constraints;
-using Project.Constraints.Store;
-using Project.Constraints.UI;
 using Project.Services;
 using Project.UI.AntBlazor;
 

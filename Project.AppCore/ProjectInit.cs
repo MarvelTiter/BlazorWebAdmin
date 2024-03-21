@@ -7,17 +7,14 @@ using Project.AppCore.Auth;
 using Project.Constraints;
 using Project.Constraints.Options;
 using MDbContext;
-using Microsoft.Data.Sqlite;
 using AspectCore.Extensions.DependencyInjection;
 using Project.AppCore.Middlewares;
 using MT.Toolkit.LogTool.LogExtension;
 using Microsoft.AspNetCore.DataProtection;
-using MDbContext.ExpressionSql;
-using AspectCore.Configuration;
-using Project.Constraints.Aop;
+using System.Data.SQLite;
 namespace Project.AppCore;
 
-public static class SharedComponents
+public static class ProjectInit
 {
     public static void AddProject(this WebApplicationBuilder builder, Action<ProjectSetting> action)
     {
@@ -179,18 +176,15 @@ public static class SharedComponents
 
     public static void AddDefaultLightOrm(this IHostApplicationBuilder builder, Action<ExpressionSqlOptions>? action = null)
     {
+        var connStr = builder.Configuration.GetConnectionString("Sqlite")!;
         builder.Services.AddLightOrm(option =>
         {
-            option.SetDatabase(DbBaseType.Sqlite, () =>
+            option.SetDatabase(DbBaseType.Sqlite, connStr, SQLiteFactory.Instance).SetWatcher(sql =>
             {
-                var connStr = builder.Configuration.GetConnectionString("Sqlite");
-                return new SqliteConnection(connStr);
-            }).SetWatcher(sql =>
-            {
-                sql.BeforeExecute = e =>
+                sql.DbLog = (s,p) =>
                 {
 #if DEBUG
-                    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{e.Sql}\n");
+                    Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{s}\n");
 #endif
                 };
             });

@@ -1,6 +1,4 @@
-﻿using MDbContext.ExpressionSql;
-using MDbContext.Repository;
-using Project.Constraints.Models.Permissions;
+﻿using Project.Constraints.Models.Permissions;
 
 namespace Project.AppCore.Services
 {
@@ -16,11 +14,11 @@ namespace Project.AppCore.Services
 
         public async Task<IQueryResult> DeleteUserAsync(TUser user)
         {
-            var trans = context.BeginTransaction();
-            trans.Delete<TUser>().Where(u => u.UserId == user.UserId).AttachTransaction();
-            trans.Delete<UserRole>().Where(ur => ur.UserId == user.UserId).AttachTransaction();
-            var result = await trans.CommitTransactionAsync();
-            return result.Result();
+            await context.BeginTranAsync();
+            await context.Delete<TUser>().Where(u => u.UserId == user.UserId).ExecuteAsync();
+            await context.Delete<UserRole>().Where(ur => ur.UserId == user.UserId).ExecuteAsync();
+            await context.CommitTranAsync();
+            return true.Result();
         }
 
         public async Task<IQueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req)

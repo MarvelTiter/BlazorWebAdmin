@@ -1,5 +1,4 @@
-﻿using MDbEntity.Attributes;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Project.Constraints.Models.Permissions
 {
@@ -24,27 +23,27 @@ namespace Project.Constraints.Models.Permissions
         public string ConfirmPassword { get; set; }
     }
 
-    [Table(Name = "USER")]
+    [LightTable(Name = "USER")]
     public class User : IUser
     {
         [ColumnDefinition(Readonly = true)]
-        [Column(Name = "USER_ID")]
+        [LightColumn(Name = "USER_ID", PrimaryKey = true)]
         public string UserId { get; set; }
         [ColumnDefinition]
-        [Column(Name = "USER_NAME")]
+        [LightColumn(Name = "USER_NAME")]
         public string UserName { get; set; }
         [ColumnDefinition]
-        [Column(Name = "PASSWORD")]
+        [LightColumn(Name = "PASSWORD")]
         [Form(InputType.Password)]
         public string Password { get; set; }
         [ColumnDefinition]
-        [Column(Name = "AGE")]
+        [LightColumn(Name = "AGE")]
         public int? Age { get; set; }
         [ColumnDefinition]
-        [Column(Name = "SIGN")]
+        [LightColumn(Name = "SIGN")]
         public string Sign { get; set; }
         [ColumnDefinition]
-        [Column(Name = "LAST_LOGIN")]
+        [LightColumn(Name = "LAST_LOGIN")]
         [Form(Hide = true)]
         public DateTime? LastLogin { get; set; }
     }

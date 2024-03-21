@@ -1,10 +1,5 @@
-﻿using MDbContext.ExpressionSql;
-using MDbContext.Repository;
-using Project.Constraints.Models;
-using Project.Constraints.Models.Permissions;
-using Project.Constraints.Models.Request;
-using Project.Constraints.Services;
-
+﻿using Project.Constraints.Models.Permissions;
+using LightORM.Extension;
 namespace Project.AppCore.Services
 {
     [IgnoreAutoInject]
@@ -29,7 +24,7 @@ namespace Project.AppCore.Services
 
         public async Task<IQueryCollectionResult<TPower>> GetPowerListAsync()
         {
-            var list = await context.Repository<TPower>().GetListAsync(e => true, e => e.Sort);
+            var list = await context.Select<TPower>().OrderBy(e => e.Sort).ToListAsync();
             return list.CollectionResult();
         }
 
@@ -77,28 +72,45 @@ namespace Project.AppCore.Services
 
         public async Task<IQueryResult<bool>> SaveUserRole(string usrId, params string[] roles)
         {
-            var db = context.BeginTransaction();
-            db.Delete<TUserRole>().Where(u => u.UserId == usrId).AttachTransaction();
-            foreach (var r in roles)
+            try
             {
-                var ur = new TUserRole() { UserId = usrId, RoleId = r };
-                db.Insert<TUserRole>().AppendData(ur).AttachTransaction();
+                await context.BeginTranAsync();
+                await context.Delete<TUserRole>().Where(u => u.UserId == usrId).ExecuteAsync();
+                foreach (var r in roles)
+                {
+                    var ur = new TUserRole() { UserId = usrId, RoleId = r };
+                    await context.Insert(ur).ExecuteAsync();
+                }
+                await context.CommitTranAsync();
+                return true.Result();
             }
-            var n = await db.CommitTransactionAsync();
-            return n.Result();
+            catch (Exception ex)
+            {
+                await context.RollbackTranAsync();
+                return false.Result().SetMessage(ex.Message);
+            }
         }
 
         public async Task<IQueryResult<bool>> SaveRolePower(string roleId, params string[] powers)
         {
-            var db = context.BeginTransaction();
-            db.Delete<TRolePower>().Where(r => r.RoleId == roleId).AttachTransaction();
-            foreach (var p in powers)
+            try
             {
-                var rp = new TRolePower() { RoleId = roleId, PowerId = p };
-                db.Insert<TRolePower>().AppendData(rp).AttachTransaction();
+                await context.BeginTranAsync();
+                var n = await context.Delete<TRolePower>().Where(r => r.RoleId == roleId).ExecuteAsync();
+                foreach (var p in powers)
+                {
+                    var rp = new TRolePower() { RoleId = roleId, PowerId = p };
+                    var ef = await context.Insert<TRolePower>(rp).ExecuteAsync();
+                    n += ef;
+                }
+                await context.CommitTranAsync();
+                return true.Result();
             }
-            var n = await db.CommitTransactionAsync();
-            return n.Result();
+            catch (Exception ex)
+            {
+                await context.RollbackTranAsync();
+                return false.Result().SetMessage(ex.Message);
+            }
         }
 
         public async Task<IQueryResult<bool>> UpdatePowerAsync(TPower power)
@@ -127,21 +139,39 @@ namespace Project.AppCore.Services
 
         public async Task<IQueryResult<bool>> DeleteRoleAsync(TRole role)
         {
-            var trans = context.BeginTransaction();
-            trans.Delete<TRole>().Where(r => r.RoleId == role.RoleId).AttachTransaction();
-            trans.Delete<TUserRole>().Where(ur => ur.RoleId == role.RoleId).AttachTransaction();
-            trans.Delete<TRolePower>().Where(rp => rp.RoleId == role.RoleId).AttachTransaction();
-            var flag = await trans.CommitTransactionAsync();
-            return flag.Result();
+            try
+            {
+                await context.BeginTranAsync();
+                await context.Delete<TRole>().Where(r => r.RoleId == role.RoleId).ExecuteAsync();
+                await context.Delete<TUserRole>().Where(ur => ur.RoleId == role.RoleId).ExecuteAsync();
+                await context.Delete<TRolePower>().Where(rp => rp.RoleId == role.RoleId).ExecuteAsync();
+                await context.CommitTranAsync();
+                return true.Result();
+            }
+            catch (Exception ex)
+            {
+                await context.RollbackTranAsync();
+                return false.Result().SetMessage(ex.Message);
+            }
+
         }
 
         public async Task<IQueryResult<bool>> DeletePowerAsync(TPower power)
         {
-            var trans = context.BeginTransaction();
-            trans.Delete<TPower>().Where(p => p.PowerId == power.PowerId || p.ParentId == power.PowerId).AttachTransaction();
-            trans.Delete<TRolePower>().Where(p => p.PowerId == power.PowerId).AttachTransaction();
-            var flag = await trans.CommitTransactionAsync();
-            return flag.Result();
+            try
+            {
+                await context.BeginTranAsync();
+                await context.Delete<TPower>().Where(p => p.PowerId == power.PowerId || p.ParentId == power.PowerId).ExecuteAsync();
+                await context.Delete<TRolePower>().Where(p => p.PowerId == power.PowerId).ExecuteAsync();
+                await context.CommitTranAsync();
+                return true.Result();
+            }
+            catch (Exception ex)
+            {
+                await context.RollbackTranAsync();
+                return false.Result().SetMessage(ex.Message);
+            }
+
         }
 
         async Task<IQueryCollectionResult<IPower>> IPermissionService.GetPowerListByUserIdAsync(string usrId)

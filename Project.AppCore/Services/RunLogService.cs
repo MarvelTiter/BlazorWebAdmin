@@ -1,7 +1,4 @@
-﻿using MDbContext.ExpressionSql;
-using MDbContext.Repository;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Project.Constraints.Models.Permissions;
+﻿using Project.Constraints.Models.Permissions;
 
 namespace Project.AppCore.Services
 {
