@@ -9,7 +9,7 @@
 
   
   <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.17.3.1" />
+    <PackageReference Include="AntDesign" Version="0.18.1" />
   </ItemGroup>
 
   
