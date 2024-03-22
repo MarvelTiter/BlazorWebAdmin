@@ -6,7 +6,7 @@ namespace Project.Web.Shared.Utils
 {
     public class BuildCondition
     {
-        private static readonly MethodInfo ContainMethod = typeof(string).GetMethod(nameof(string.Contains))!;
+        private static readonly MethodInfo ContainMethod = typeof(string).GetMethod(nameof(string.Contains), [typeof(string)])!;
         /// <summary>
         /// 根据条件信息构建单个表达式
         /// </summary>
