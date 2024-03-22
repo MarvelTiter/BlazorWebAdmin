@@ -12,7 +12,7 @@ namespace Project.Constraints.UI.Flyout
         public TEntity? Value { get; set; } = entity;
         public bool Edit { get; set; } = edit ?? entity != null;
     }
-    public class DialogTemplate<TValue> : BasicComponent, IFeedback<TValue>
+    public class DialogTemplate<TValue> : JsComponentBase, IFeedback<TValue>
     {
         [Parameter] public FormParam<TValue> DialogModel { get; set; }
         [Parameter] public RenderFragment ChildContent { get; set; }
@@ -36,6 +36,7 @@ namespace Project.Constraints.UI.Flyout
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            LoadJs = false;
             var valueType = typeof(TValue);
             if (DialogModel == null) return;
             if (DialogModel.Value == null && valueType.IsClass && valueType != typeof(string))

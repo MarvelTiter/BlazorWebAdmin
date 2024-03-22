@@ -2,10 +2,8 @@
 using Microsoft.JSInterop;
 using System.Reflection;
 using Project.Constraints.UI;
-using Project.Constraints.Page;
-using Project.Constraints.Common.Attributes;
 
-namespace Project.Web.Shared.Components
+namespace Project.Constraints.Page
 {
     public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisposable
     {
@@ -21,6 +19,7 @@ namespace Project.Web.Shared.Components
                 return id;
             }
         }
+        protected bool LoadJs { get; set; } = true;
 
         protected string ModuleName => GetModuleName();
         protected bool IsLibrary { get; set; } = true;
@@ -40,19 +39,20 @@ namespace Project.Web.Shared.Components
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
-            RelativePath = attr?.Path ?? $"Components/{ModuleName}";
-            if (attr?.IsLibrary == false)
-            {
-                IsLibrary = false;
-            }
+            
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
-            if (firstRender)
+            if (firstRender && LoadJs)
             {
+                var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
+                RelativePath = attr?.Path ?? $"Components/{ModuleName}";
+                if (attr?.IsLibrary == false)
+                {
+                    IsLibrary = false;
+                }
                 //var path = 
                 await LoadJsAsync();
                 await Init();
@@ -61,11 +61,6 @@ namespace Project.Web.Shared.Components
 
         protected virtual async Task LoadJsAsync()
         {
-            //var path = IsLibrary
-            //    ? $"./_content/{ProjectName}/js/{ModuleName}/{ModuleName}.js".ToLower()
-            //    : $"./js/{ModuleName}/{ModuleName}.js".ToLower();
-            //Module = await Js.InvokeAsync<IJSObjectReference>("import", path);
-
             var path = IsLibrary
                ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}.razor.js"
                : $"./{RelativePath}/{ModuleName}.razor.js";
