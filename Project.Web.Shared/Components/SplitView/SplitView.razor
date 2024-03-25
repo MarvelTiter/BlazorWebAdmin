@@ -1,0 +1,16 @@
+﻿@namespace Project.Web.Shared.Components
+
+<div class="split-view">
+    <div class="view-content-first">
+        @FirstContent
+    </div>
+    <div class="split-view-sperator"></div>
+    <div class="view-content-second">
+        @SecondContent
+    </div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment FirstContent { get; set; }
+    [Parameter] public RenderFragment SecondContent { get; set; }
+}
