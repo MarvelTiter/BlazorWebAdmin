@@ -43,7 +43,6 @@
     [Inject]
     public ILogger<AuthorizedLayout> Logger { get; set; }
     [Inject] IAppSession AppSession { get; set; }
-    [Inject] ICustomSettingService AppService { get; set; }
     string? LauchUrl => Setting.CurrentValue.LauchUrl;
 
     protected override async Task OnInitializedAsync()
@@ -72,15 +71,7 @@
 
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-        if (firstRender)
-        {
-            await AppService.AfterWebApplicationAccessed();
-        }
-    }
-
+    
     async Task UpdateUserToken()
     {
         var current = AppSession.AuthenticationStateProvider?.Current;

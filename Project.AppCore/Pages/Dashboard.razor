@@ -29,7 +29,10 @@ else
 @code {
     async Task Update()
     {
-        User!.UserInfo!.ActiveTime = DateTime.Now;
+        if (User?.UserInfo != null)
+        {
+            User.UserInfo.ActiveTime = DateTime.Now;
+        }
         await InvokeAsync(StateHasChanged);
     }
     Type? homeType;

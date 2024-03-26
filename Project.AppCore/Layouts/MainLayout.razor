@@ -39,6 +39,7 @@
 </div>
 @code {
     [Inject] IAppSession AppSession { get; set; }
+    [Inject] ICustomSettingService AppService { get; set; }
     public LayoutBase? LayoutBase { get; set; }
 
     protected override void OnInitialized()
@@ -46,6 +47,15 @@
         base.OnInitialized();
         // WebSetting更新页面
         AppSession.Update = StateHasChanged;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            await AppService.AfterWebApplicationAccessed();
+        }
     }
 
     private bool disposedValue;
