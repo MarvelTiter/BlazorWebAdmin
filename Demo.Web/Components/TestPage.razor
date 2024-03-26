@@ -33,8 +33,8 @@
 
 UI.BuildCheckBoxGroup:
 @(UI.BuildCheckBoxGroup<User, string>(this, users)
-    .LabelExpression(u => u.UserName)
-    .ValueExpression(u => u.UserId)
+    .LabelsExpression(u => u.UserName)
+    .ValuesExpression(u => u.UserId)
     .Bind(() => checkedUsers, Changed)
     .Render())
 <br />AntDesign.CheckboxGroup:

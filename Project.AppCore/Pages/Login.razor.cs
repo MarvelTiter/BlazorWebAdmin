@@ -46,6 +46,7 @@ namespace Project.AppCore.Pages
         private async Task HandleLogin()
         {
             Loading = true;
+            await InvokeAsync(StateHasChanged);
             var result = await LoginSrv.LoginAsync(model.UserName, model.Password);
             if (result.Success)
             {

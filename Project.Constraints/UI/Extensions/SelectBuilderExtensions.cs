@@ -29,13 +29,13 @@ namespace Project.Constraints.UI.Extensions
             return sel;
         }
 
-        public static ISelectInput<SelectProp, TItem, TValue[]> LabelExpression<TItem, TValue>(this ISelectInput<SelectProp, TItem, TValue[]> sel, Expression<Func<TItem, string>> expression)
+        public static ISelectInput<SelectProp, TItem, TValue[]> LabelsExpression<TItem, TValue>(this ISelectInput<SelectProp, TItem, TValue[]> sel, Expression<Func<TItem, string>> expression)
         {
             sel.Set(s => s.LabelExpression, expression);
             return sel;
         }
 
-        public static ISelectInput<SelectProp, TItem, TValue[]> ValueExpression<TItem, TValue>(this ISelectInput<SelectProp, TItem, TValue[]> sel, Expression<Func<TItem, TValue>> expression)
+        public static ISelectInput<SelectProp, TItem, TValue[]> ValuesExpression<TItem, TValue>(this ISelectInput<SelectProp, TItem, TValue[]> sel, Expression<Func<TItem, TValue>> expression)
         {
             sel.Set(s => s.ValueExpression, expression);
             return sel;

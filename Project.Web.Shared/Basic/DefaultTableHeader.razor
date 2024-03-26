@@ -33,16 +33,16 @@
 @if (Options.EnabledAdvancedQuery)
 {
     <MModal @bind-Visible="AdvanceModalVisible" Title=@TableLocalizer["TableButtons.AdvancedQuery"] HideDefaultFooter>
-     <ConditionGroup Columns=@Options.Columns
-                     TData=TData
-                     Localizer="Localizer"
-                     TableLocalizer="TableLocalizer"
-                     @bind-Expression="ConditionExpression"
-                     ShowExportButton=@(Options.ShowExportButton)
-                     OnConfirmToSearch=AdvanceSearch
-                     OnConfirmToExport=AdvanceExport>
-     </ConditionGroup>
- </MModal>
+        <ConditionGroup Columns=@Options.Columns
+                        TData=TData
+                        Localizer="Localizer"
+                        TableLocalizer="TableLocalizer"
+                        @bind-Expression="ConditionExpression"
+                        ShowExportButton=@(Options.ShowExportButton)
+                        OnConfirmToSearch=AdvanceSearch
+                        OnConfirmToExport=AdvanceExport>
+        </ConditionGroup>
+    </MModal>
 }
 @code {
     [Parameter] public TableOptions<TData, TQuery> Options { get; set; }
@@ -83,7 +83,11 @@
 
     async Task HandleAdd()
     {
-        _ = await Options.OnAddItemAsync();
+        var success = await Options.OnAddItemAsync();
+        if (success)
+        {
+            await Options.RefreshAsync();
+        }
     }
 
     public async Task Search()
