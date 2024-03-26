@@ -13,5 +13,7 @@ namespace Project.Constraints.Services
         {
             return Task.CompletedTask;
         }
+
+        public Task AfterWebApplicationAccessedAsync() => Task.CompletedTask;
     }
 }

@@ -11,11 +11,12 @@ namespace Project.AppCore
         static Type? RolePermissionPageType;
         static Type? RunLogPageType;
 
-        List<IAddtionalTnterceptor> initActions = [];
+        readonly List<IAddtionalTnterceptor> initActions = [];
 
         public event Func<IQueryResult<UserInfo>, Task> OnLoginSuccessAsync;
-
         public event Func<TagRoute, Task> OnRouterChangingAsync;
+        public event Func<Task> OnAfterWebApplicationAccessedAsync;
+
         public BasicCustomSetting()
         {
             UserPageType ??= typeof(UserPage<,,>).MakeGenericType(Config.TypeInfo.UserType, Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
@@ -29,6 +30,7 @@ namespace Project.AppCore
             initActions.Add(additional);
             OnLoginSuccessAsync += additional.LoginSuccessAsync;
             OnRouterChangingAsync += additional.RouterChangingAsync;
+            OnAfterWebApplicationAccessedAsync += additional.AfterWebApplicationAccessedAsync;
         }
 
         public virtual Type? GetDashboardType() => null;
@@ -48,6 +50,7 @@ namespace Project.AppCore
 
         public virtual Task AfterWebApplicationAccessed()
         {
+            OnAfterWebApplicationAccessedAsync?.Invoke();
             return Task.CompletedTask;
         }
 
