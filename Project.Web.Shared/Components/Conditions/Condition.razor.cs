@@ -52,6 +52,7 @@ namespace Project.Web.Shared.Components
                 {
                     if (DefaultValue is DateTime d) dateValue = d;
                     else stringValue = $"{DefaultValue}";
+                    await InvokeAsync(StateHasChanged);
                 }
                 await NotifyChanged();
             }
