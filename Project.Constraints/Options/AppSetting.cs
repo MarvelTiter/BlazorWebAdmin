@@ -12,4 +12,5 @@ public sealed class AppSetting
     public bool LoadUnregisteredPage { get; set; }
     public bool LoadPageFromDatabase { get; set; } = true;
     public bool UseAspectProxy { get; set; }
+    public int SupportedMajorVersion { get; set; } = 85;
 }

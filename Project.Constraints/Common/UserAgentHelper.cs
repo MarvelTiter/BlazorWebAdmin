@@ -75,10 +75,10 @@ public static class UserAgentHelper
             { CreateDefaultBrowserRegex("KHTML/"), "KHTML" },
         };
 
-    public static bool IsSupport(this BrowserInfo info)
+    public static bool IsSupport(this BrowserInfo info, int majorVersion)
     {
         var clientTypeEnable = SupportedCores.Any(s => s == info.Core) || SupportedBrowsers.Any(s => s == info.Name);
-        var versionEnable = info.Core == "WebKit" ? info.GreaterThen(85) : true;
+        var versionEnable = info.Core == "WebKit" ? info.GreaterThen(majorVersion) : true;
 
         return clientTypeEnable && versionEnable;
     }
