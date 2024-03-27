@@ -36,6 +36,15 @@
 
     string? stringValue = null;
 
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            stringValue = Value?.ToString();
+        }
+    }
+
     Task NotifyChanged()
     {
         if (ValueChanged.HasDelegate)
