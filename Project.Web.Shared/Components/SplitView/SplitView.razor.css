@@ -1,0 +1,38 @@
+﻿.split-view {
+    display: flex;
+    height: 100%;
+}
+
+.view-content {
+    padding: 10px;
+}
+
+.split-view.row .view-content-first {
+    width: 50%;
+    height: 100%;
+}
+
+.split-view-separator {
+    box-shadow: rgba(0,0,0,.1) 0px 0px 12px 0px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+}
+
+.split-view.column .split-view-separator:hover {
+    cursor: row-resize;
+}
+
+.split-view.row .split-view-separator:hover {
+    cursor: col-resize;
+}
+
+.view-content-second {
+    flex: 1;
+    height: 100%;
+}
+
+.split-view.column .view-content-first {
+    width: 100%;
+    height: 50%;
+}

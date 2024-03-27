@@ -1,8 +1,23 @@
 ﻿@page "/test2"
 @using Project.Constraints.Common.Attributes
-@attribute [PageInfo(Id = "TestPage2", Title = "测试2", GroupId = "test22")]
-<h3>TestPage2</h3>
+@using Project.Web.Shared.Components
+@attribute [PageInfo(Id = "TestPage2", Title = "测试2", GroupId = "test")]
+<SplitView>
+    <FirstContent>
+        <h1>FFFFFFF</h1>
+    </FirstContent>
+    <SecondContent>
+        <h1>SSSSSSS</h1>
+    </SecondContent>
+</SplitView>
 
-@code {
-
-}
+<div style="height:600px;">
+    <SplitView Direction="column">
+        <FirstContent>
+            <h1>FFFFFFF</h1>
+        </FirstContent>
+        <SecondContent>
+            <h1>SSSSSSS</h1>
+        </SecondContent>
+    </SplitView>
+</div>

@@ -1,11 +1,11 @@
 ﻿@namespace Project.Web.Shared.Components
-
-<div class="split-view">
-    <div class="view-content-first">
+@inherits JsComponentBase
+<div class="split-view @(Direction)" style="display:flex; flex-direction: @Direction">
+    <div class="view-content view-content-first" @ref="panel1">
         @FirstContent
     </div>
-    <div class="split-view-sperator"></div>
-    <div class="view-content-second">
+    <div class="split-view-separator" style="@SeparatorStyle.Style" @ref="separator"></div>
+    <div class="view-content view-content-second" style="flex:1;" @ref="panel2">
         @SecondContent
     </div>
 </div>
@@ -13,4 +13,21 @@
 @code {
     [Parameter] public RenderFragment FirstContent { get; set; }
     [Parameter] public RenderFragment SecondContent { get; set; }
+    /// <summary>
+    /// column / row
+    /// </summary>
+    [Parameter] public string Direction { get; set; } = "row";
+    [Parameter] public int SeparatorWidth { get; set; } = 10;
+
+    StyleBuilder SeparatorStyle => StyleBuilder.Default.AddStyle("width", () => $"{SeparatorWidth}px", () => Direction == "row")
+    .AddStyle("height", () => $"{SeparatorWidth}px", () => Direction == "column");
+
+    ElementReference? separator;
+    ElementReference? panel1;
+    ElementReference? panel2;
+
+    protected override async ValueTask Init()
+    {
+        await ModuleInvokeVoidAsync("init", panel1, panel2, separator, Direction);
+    }
 }
