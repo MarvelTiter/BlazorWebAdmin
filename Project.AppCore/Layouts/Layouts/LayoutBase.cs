@@ -21,11 +21,11 @@ public class LayoutBase : BasicComponent
     public Banner? Banner { get; set; }
     public SideBar? SideBar { get; set; }
     public WebSetting? WebSetting { get; set; }
-    public void HandleToggleCollapse(bool newState)
+    public async Task HandleToggleCollapse(bool newState)
     {
         App.Collapsed = newState;
         SideBar?.ToggleCollapse();
-        //await Storage.SetAsync(AppStore.KEY, App);
+        await Storage.SetAsync(AppStore.KEY, App);
     }
 
     //public void UpdateCollapse(bool state)

@@ -22,10 +22,10 @@
 		<None Remove="obj\**" />
 		<None Remove="SystemPermission\**" />
 		<None Remove="Test\**" />
+		<None Include="Components\ErrorCatcher\CrashPage.razor" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
+	  <ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
 	</ItemGroup>
-
 </Project>

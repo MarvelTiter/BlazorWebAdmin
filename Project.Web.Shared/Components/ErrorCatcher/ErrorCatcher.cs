@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
+using Project.Constraints.Store;
 using Project.Constraints.UI;
 using System.Diagnostics.CodeAnalysis;
 
@@ -16,15 +17,12 @@ namespace Project.Web.Shared.Components
         [NotNull]
         private ILogger<ErrorCatcher>? Logger { get; set; }
 
-
         [Inject]
         [NotNull]
         private IErrorBoundaryLogger? ErrorBoundaryLogger { get; set; }
 
-        [Inject, NotNull] NavigationManager Navigator { get; set; }
-
         [Parameter] public bool NavigateToErrorPage { get; set; }
-
+        [Inject] IRouterStore Router { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -43,10 +41,9 @@ namespace Project.Web.Shared.Components
         {
             return ex => new RenderFragment(builder =>
             {
-                builder.OpenElement(0, "div");
-                builder.AddAttribute(1, "style", "display:none;");
-                builder.AddContent(2, ex.Message);
-                builder.CloseElement();
+                builder.OpenComponent<CrashPage>(0);
+                builder.AddAttribute(1, nameof(CrashPage.Exception), ex);
+                builder.CloseComponent();
             });
         }
 
@@ -55,7 +52,17 @@ namespace Project.Web.Shared.Components
             builder.OpenComponent<CascadingValue<IExceptionHandler>>(0);
             builder.AddAttribute(1, nameof(CascadingValue<IExceptionHandler>.Value), this);
             builder.AddAttribute(2, nameof(CascadingValue<IExceptionHandler>.IsFixed), true);
-            builder.AddAttribute(3, nameof(CascadingValue<IExceptionHandler>.ChildContent), ChildContent);
+            var content = ChildContent;
+            if (CurrentException != null)
+            {
+                if (Router.Current != null)
+                {
+                    //不保存状态
+                    Router.Current.Cache = false;
+                }
+                content = ErrorContent!.Invoke(CurrentException);
+            }
+            builder.AddAttribute(3, nameof(CascadingValue<IExceptionHandler>.ChildContent), content);
             builder.CloseComponent();
         }
 
@@ -83,10 +90,6 @@ namespace Project.Web.Shared.Components
             }
             Logger.LogError(exception, exception.Message);
             await ErrorBoundaryLogger.LogErrorAsync(exception);
-            if (NavigateToErrorPage)
-            {
-                Navigator.NavigateTo("/blazor/web/error");
-            }
         }
 
         public Task HandleExceptionAsync(Exception exception)

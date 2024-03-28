@@ -8,6 +8,12 @@
         </div>
         <div class="subheader">
             HTTP 500- 服务器异常
+            @if (ChildContent != null)
+            {
+                <div class="exception-content">
+                    @ChildContent
+                </div>
+            }
         </div>
         <div class="hr"></div>
         <div class="context">
@@ -16,18 +22,24 @@
             </p>
         </div>
         <div class="buttons-container">
-            <a href="/">去首页</a>
+            <a href="#" @onclick="e => NavigatorToIndex()">去首页</a>
         </div>
     </div>
 </div>
 
 @code {
     string svgName = "p500_01";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();
         var i = Random.Shared.Next(0, 100);
         var index = i % 2 == 0 ? "01" : "02";
         svgName = $"p500_{index}";
+    }
+
+    void NavigatorToIndex()
+    {
+        Navigator.NavigateTo("/");
     }
 }

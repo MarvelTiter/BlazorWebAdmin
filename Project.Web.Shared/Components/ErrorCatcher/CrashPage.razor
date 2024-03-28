@@ -1,0 +1,14 @@
+﻿@page "/crash"
+@namespace Project.Web.Shared.Components
+@inject IUIService UI
+<ErrorPage>
+    <p>未处理的异常：</p>
+    <p>@Exception?.Message</p>
+</ErrorPage>
+<div style="text-align:center;">
+
+</div>
+
+@code {
+    [Parameter] public Exception? Exception{ get; set; }
+}
