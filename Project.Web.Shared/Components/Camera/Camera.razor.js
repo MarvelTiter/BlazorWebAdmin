@@ -218,7 +218,9 @@ class ClipBox extends BaseComponent {
     handleMouseDown(e) {
         e.stopPropagation()
         if (e.ctrlKey || [1, 2].indexOf(e.button) > -1) return;
-        window.getSelection()?.removeAllRanges();
+        if (window.getSelection()) {
+            window.getSelection().removeAllRanges();
+        }
         var x = e.offsetX;
         var y = e.offsetY;
         if (this.canMove(x, y)) {

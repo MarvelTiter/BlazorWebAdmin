@@ -5,7 +5,7 @@
     @foreach (var item in Router.TopLinks)
     {
         if (item.Body == null) continue;
-        <ErrorCatcher NavigateToErrorPage>
+        <ErrorCatcher ShowMessage>
             <div id=@item.RouteUrl style="@(item.RouteUrl == Router.CurrentUrl ? "display: block;":"display: none;")">
                 <!-- 在路由页面中获取当前页的信息 -->
                 <CascadingValue Value="item">

@@ -11,7 +11,7 @@ public struct BrowserInfo(string? name, string? version, string? core)
     {
         if (Version == null) return false;
         var firstDot = Version.IndexOf('.');
-        return int.TryParse(Version[..firstDot], out var majorVersion) && majorVersion > major;
+        return int.TryParse(Version[..firstDot], out var majorVersion) && majorVersion >= major;
     }
 }
 /// <summary>

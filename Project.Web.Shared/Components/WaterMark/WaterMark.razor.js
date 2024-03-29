@@ -69,7 +69,7 @@ export class Watermark extends BaseComponent {
     constructor(wrapper) {
         super()
         this.options = undefined;
-        this.container = wrapper ?? window.document.body;
+        this.container = wrapper || window.document.body;
         this.mask = null;
         this.ob = new MutationObserver((entries) => {
             for (const entry of entries) {

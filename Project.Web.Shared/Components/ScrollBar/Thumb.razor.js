@@ -69,7 +69,9 @@ export class Thumb extends BaseComponent {
     clickThumbHandler(e) {
         e.stopPropagation();
         if (e.ctrlKey || [1, 2].indexOf(e.button) > -1) return;
-        window.getSelection()?.removeAllRanges();
+        if (window.getSelection()) {
+            window.getSelection().removeAllRanges();
+        }
         this.cursorDown = true
         startDrag(e, this.mouseMoveDocumentHandler.bind(this), () => {
             this.cursorDown = false

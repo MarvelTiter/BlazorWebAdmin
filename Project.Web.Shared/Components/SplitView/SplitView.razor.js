@@ -10,7 +10,6 @@ export class SplitView extends BaseComponent {
         this.panel1 = panel1;
         this.panel2 = panel2;
         this.separator = separator;
-        this.wrapRect = this.panel1.parentNode.getBoundingClientRect();
         this.direction = direction;
         this.setup();
     }
@@ -21,25 +20,26 @@ export class SplitView extends BaseComponent {
 
     handleMouseDown(e) {
         e.stopPropagation()
+        const wrapRect = this.panel1.parentNode.getBoundingClientRect();
         const separatorRect = this.separator.getBoundingClientRect();
         const separatorOffset = this.direction === 'row' ? e.pageX - separatorRect.left : e.pageY - separatorRect.top;
         const handler = this.direction === 'row' ? this.modeRow : this.modeColumn;
         startDrag(e, event => {
-            handler.call(this, event, separatorRect, separatorOffset)
+            handler.call(this, event, wrapRect, separatorRect, separatorOffset)
         })
     }
 
-    modeRow(e, spRect, spOffset) {
+    modeRow(e, wrapRect, spRect, spOffset) {
         const clientRect = this.panel1.getBoundingClientRect()
         const offset = e.pageX - clientRect.left - spOffset + spRect.width / 2;
-        const paneLengthPercent = ((offset / this.wrapRect.width) * 100).toFixed(2);
+        const paneLengthPercent = ((offset / wrapRect.width) * 100).toFixed(2);
         this.panel1.style.width = `calc(${paneLengthPercent}% - ${spRect.width / 2}px)`;
     }
 
-    modeColumn(e, spRect, spOffset) {
+    modeColumn(e, wrapRect, spRect, spOffset) {
         const clientRect = this.panel1.getBoundingClientRect()
         const offset = e.pageY - clientRect.top - spOffset + spRect.height / 2;
-        const paneLengthPercent = ((offset / this.wrapRect.height) * 100).toFixed(2);
+        const paneLengthPercent = ((offset / wrapRect.height) * 100).toFixed(2);
         this.panel1.style.height = `calc(${paneLengthPercent}% - ${spRect.height / 2}px)`;
     }
 

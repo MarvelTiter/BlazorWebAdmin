@@ -21,7 +21,7 @@ namespace Project.Web.Shared.Components
         [NotNull]
         private IErrorBoundaryLogger? ErrorBoundaryLogger { get; set; }
 
-        [Parameter] public bool NavigateToErrorPage { get; set; }
+        [Parameter] public bool ShowMessage { get; set; }
         [Inject] IRouterStore Router { get; set; }
         /// <summary>
         /// 
@@ -84,7 +84,7 @@ namespace Project.Web.Shared.Components
         /// <param name="exception"></param>
         protected override async Task OnErrorAsync(Exception exception)
         {
-            if (exception is not JSException)
+            if (exception is not JSException && ShowMessage)
             {
                 UI.Notify(MessageType.Error, "程序异常", exception.Message);
             }

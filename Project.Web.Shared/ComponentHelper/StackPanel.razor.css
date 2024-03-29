@@ -4,6 +4,6 @@
     align-items: center;
 }
 
-/*    .stack-panel-wrapper ::deep *:nth-child(n+2) {
+    .stack-panel-wrapper ::deep > :nth-child(n+3 ) {
         margin-left: var(--stack-panel-gap);
-    }*/
+    }

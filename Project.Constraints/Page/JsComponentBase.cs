@@ -64,7 +64,7 @@ namespace Project.Constraints.Page
             var path = IsLibrary
                ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}.razor.js"
                : $"./{RelativePath}/{ModuleName}.razor.js";
-            Module = await Js.InvokeAsync<IJSObjectReference>("import", path);
+            Module = await Js.InvokeAsync<IJSObjectReference>("import", $"{path}?r={Random.Shared.NextDouble()}");
         }
 
         protected virtual ValueTask Init()
