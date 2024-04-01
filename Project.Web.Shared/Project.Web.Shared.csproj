@@ -8,23 +8,7 @@
 		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<Compile Remove="obj\**" />
-		<Compile Remove="SystemPermission\**" />
-		<Compile Remove="Test\**" />
-		<Content Remove="obj\**" />
-		<Content Remove="SystemPermission\**" />
-		<Content Remove="Test\**" />
-		<EmbeddedResource Remove="obj\**" />
-		<EmbeddedResource Remove="SystemPermission\**" />
-		<EmbeddedResource Remove="Test\**" />
-		<None Remove="obj\**" />
-		<None Remove="SystemPermission\**" />
-		<None Remove="Test\**" />
-		<None Include="Components\ErrorCatcher\CrashPage.razor" />
-	</ItemGroup>
-
+	
 	<ItemGroup>
 	  <ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
 	</ItemGroup>
