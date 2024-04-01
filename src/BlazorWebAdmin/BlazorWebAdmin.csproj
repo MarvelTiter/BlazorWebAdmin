@@ -7,11 +7,8 @@
 		<OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
 		<OutputType Condition="'$(Configuration)'!='Debug'">WinExe</OutputType>
 		<DisableWinExeOutputInference>true</DisableWinExeOutputInference>
+		<IsPackable>true</IsPackable>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<Content Remove="TestPages\TableTest.razor" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Project.AppCore\Project.AppCore.csproj" />

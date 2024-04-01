@@ -1,20 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <OutputType>Library</OutputType>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<OutputType>Library</OutputType>
+		<IsPackable>true</IsPackable>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<PackageOutputPath>../../localnuget</PackageOutputPath>
+	</PropertyGroup>
 
-  
-  <ItemGroup>
-    <PackageReference Include="AntDesign" Version="0.18.1" />
-  </ItemGroup>
 
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AntDesign" Version="0.18.1" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
+	</ItemGroup>
 
 </Project>

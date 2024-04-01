@@ -11,6 +11,11 @@
         "language": "C#",
         "type": "project"
     },
-    "sourceName": "MtBlazorWeb",
-    "preferNameDirectory": true
+    "sourceName": "BlazorWebAdmin",
+    "preferNameDirectory": true,
+    "sources":[
+        {
+            "source": "./src/BlazorWebAdmin"
+        }
+    ]
 }

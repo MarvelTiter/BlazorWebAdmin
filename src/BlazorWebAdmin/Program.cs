@@ -1,4 +1,4 @@
-using BlazorWeb;
+using BlazorWebAdmin;
 using Project.AppCore;
 using Project.Services;
 using Project.UI.AntBlazor;
