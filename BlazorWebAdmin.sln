@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.AppCore", "Project.AppCore\Project.AppCore.csproj", "{166DBCC9-D1FC-45F8-A934-A01051B86008}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Web", "Demo.Web\Demo.Web.csproj", "{44D74521-3BA1-48D0-BCE0-2EBA2CD60AAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWeb", "BlazorWeb\BlazorWeb.csproj", "{44D74521-3BA1-48D0-BCE0-2EBA2CD60AAA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Web.Shared", "Project.Web.Shared\Project.Web.Shared.csproj", "{75042FB8-66A4-41E4-8122-504C9595307F}"
 EndProject

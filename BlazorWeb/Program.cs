@@ -1,5 +1,4 @@
-using Demo.Web;
-using Demo.Web.Components;
+using BlazorWeb;
 using Project.AppCore;
 using Project.Services;
 using Project.UI.AntBlazor;

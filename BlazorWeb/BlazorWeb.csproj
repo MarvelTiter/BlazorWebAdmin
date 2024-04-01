@@ -10,8 +10,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Remove="Components\Pages\Home.razor" />
-		<Content Remove="Components\TableTest.razor" />
+		<Content Remove="TestPages\TableTest.razor" />
 	</ItemGroup>
 
 	<ItemGroup>
