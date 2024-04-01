@@ -8,16 +8,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.AppCore", "Project.AppCore\Project.AppCore.csproj", "{166DBCC9-D1FC-45F8-A934-A01051B86008}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.AppCore", "src\Project.AppCore\Project.AppCore.csproj", "{166DBCC9-D1FC-45F8-A934-A01051B86008}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWeb", "BlazorWeb\BlazorWeb.csproj", "{44D74521-3BA1-48D0-BCE0-2EBA2CD60AAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWeb", "src\BlazorWeb\BlazorWeb.csproj", "{44D74521-3BA1-48D0-BCE0-2EBA2CD60AAA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Web.Shared", "Project.Web.Shared\Project.Web.Shared.csproj", "{75042FB8-66A4-41E4-8122-504C9595307F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Web.Shared", "src\Project.Web.Shared\Project.Web.Shared.csproj", "{75042FB8-66A4-41E4-8122-504C9595307F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.UI.AntBlazor", "Project.UI.AntBlazor\Project.UI.AntBlazor.csproj", "{56326C12-F00E-44EF-8CB7-A1CE76984691}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.UI.AntBlazor", "src\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj", "{56326C12-F00E-44EF-8CB7-A1CE76984691}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Constraints", "Project.Constraints\Project.Constraints.csproj", "{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Constraints", "src\Project.Constraints\Project.Constraints.csproj", "{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B745898E-27BF-476E-A908-15981A1243CB}"
+EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,9 +47,21 @@ Global
 		{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC90530E-D35B-4150-9311-1E22875B781E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC90530E-D35B-4150-9311-1E22875B781E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC90530E-D35B-4150-9311-1E22875B781E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC90530E-D35B-4150-9311-1E22875B781E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{166DBCC9-D1FC-45F8-A934-A01051B86008} = {B745898E-27BF-476E-A908-15981A1243CB}
+		{44D74521-3BA1-48D0-BCE0-2EBA2CD60AAA} = {B745898E-27BF-476E-A908-15981A1243CB}
+		{75042FB8-66A4-41E4-8122-504C9595307F} = {B745898E-27BF-476E-A908-15981A1243CB}
+		{56326C12-F00E-44EF-8CB7-A1CE76984691} = {B745898E-27BF-476E-A908-15981A1243CB}
+		{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E} = {B745898E-27BF-476E-A908-15981A1243CB}
+		{CC90530E-D35B-4150-9311-1E22875B781E} = {B745898E-27BF-476E-A908-15981A1243CB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0371ABB4-6400-487C-9031-25B119AB8B9E}
