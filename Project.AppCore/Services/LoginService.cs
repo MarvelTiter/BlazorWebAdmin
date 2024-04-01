@@ -4,9 +4,9 @@ namespace Project.Services
 {
     public partial class LoginService : ILoginService
 	{
-        private readonly ICustomSettingService settingProvider;
+        private readonly IProjectSettingService settingProvider;
 
-        public LoginService(ICustomSettingService settingProvider)
+        public LoginService(IProjectSettingService settingProvider)
 		{
             this.settingProvider = settingProvider;
         }

@@ -3,7 +3,7 @@
 namespace Project.Constraints.Services
 {
     [AutoInject]
-    public interface ICustomSettingService
+    public interface IProjectSettingService
     {
         Type? GetUserPageType();
         Type? GetDashboardType();
@@ -12,12 +12,16 @@ namespace Project.Constraints.Services
         Type? GetRunLogPageType();
         Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
         Task<int> UpdateLoginInfo(UserInfo info);
+
         /// <summary>
         /// 登录成功钩子
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>
-        Task<bool> LoginSuccessAsync(IQueryResult<UserInfo> result);
+        Task LoginSuccessAsync(UserInfo result);
+
+        Task<bool> LoginInterceptorAsync(UserInfo result);
+
         /// <summary>
         /// 导航钩子
         /// </summary>

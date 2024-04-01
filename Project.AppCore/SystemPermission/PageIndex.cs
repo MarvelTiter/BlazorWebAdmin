@@ -5,7 +5,7 @@ namespace Project.AppCore.SystemPermission
 {
     public abstract class PageIndex : ComponentBase
     {
-        [Inject] ICustomSettingService SettingProvider { get; set; }
+        [Inject] IProjectSettingService SettingProvider { get; set; }
 
         protected Type? PageType { get; set; }
         protected override void OnInitialized()
@@ -13,7 +13,7 @@ namespace Project.AppCore.SystemPermission
             base.OnInitialized();
             PageType = GetPageType(SettingProvider);
         }
-        public abstract Type? GetPageType(ICustomSettingService customSetting);
+        public abstract Type? GetPageType(IProjectSettingService customSetting);
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
@@ -28,7 +28,7 @@ namespace Project.AppCore.SystemPermission
     [Route("/user/index")]
     public class UserIndex : PageIndex
     {
-        public override Type? GetPageType(ICustomSettingService customSetting)
+        public override Type? GetPageType(IProjectSettingService customSetting)
         {
             return customSetting.GetUserPageType();
         }
@@ -37,7 +37,7 @@ namespace Project.AppCore.SystemPermission
     [Route("/operationlog")]
     public class RunLogIndex : PageIndex
     {
-        public override Type? GetPageType(ICustomSettingService customSetting)
+        public override Type? GetPageType(IProjectSettingService customSetting)
         {
             return customSetting.GetRunLogPageType();
         }
@@ -46,7 +46,7 @@ namespace Project.AppCore.SystemPermission
     [Route("/permission")]
     public class PermissionIndex : PageIndex
     {
-        public override Type? GetPageType(ICustomSettingService customSetting)
+        public override Type? GetPageType(IProjectSettingService customSetting)
         {
             return customSetting.GetPermissionPageType();
         }
@@ -55,7 +55,7 @@ namespace Project.AppCore.SystemPermission
     [Route("/rolepermission")]
     public class RolePermissionIndex : PageIndex
     {
-        public override Type? GetPageType(ICustomSettingService customSetting)
+        public override Type? GetPageType(IProjectSettingService customSetting)
         {
             return customSetting.GetRolePermissionPageType();
         }

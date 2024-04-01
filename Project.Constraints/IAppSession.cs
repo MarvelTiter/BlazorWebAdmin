@@ -7,11 +7,13 @@ namespace Project.Constraints;
 [AutoInject]
 public interface IAppSession
 {
-    NavigationManager Navigator { get; set; }
-    IAppStore AppStore {  get; set; }
-    IAuthenticationStateProvider AuthenticationStateProvider { get; set; }
-    IRouterStore RouterStore { get; set; }
-    IUserStore UserStore { get; set; }
-    IUIService UI { get; set; }
+    event Func<Task> WebApplicationAccessedEvent;
+    NavigationManager Navigator { get; }
+    IAppStore AppStore { get; }
+    //IAuthenticationStateProvider AuthenticationStateProvider { get; }
+    IRouterStore RouterStore { get; }
+    IUserStore UserStore { get; }
+    IUIService UI { get; }
     Action? Update { get; set; }
+    Task OnWebApplicationAccessedAsync();
 }

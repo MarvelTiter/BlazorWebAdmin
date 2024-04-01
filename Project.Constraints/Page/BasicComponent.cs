@@ -10,13 +10,13 @@ public class BasicComponent : ComponentBase, IDisposable
     private bool disposedValue;
 
     [Inject] public IAppSession Context { get; set; }
-    [Inject] public ICustomSettingService AppSettingService { get; set; }
+    [Inject] public IProjectSettingService AppSettingService { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalParameters { get; set; }
     public IUIService UI => Context?.UI;
     public IAppStore App => Context?.AppStore;
     public IRouterStore Router => Context?.RouterStore;
     public IUserStore User => Context?.UserStore;
-    public IAuthenticationStateProvider AuthenticationStateProvider => Context?.AuthenticationStateProvider;
+    [Inject] public IAuthenticationStateProvider AuthenticationStateProvider { get; set; }
     public NavigationManager Navigator => Context?.Navigator;
 
     protected virtual void OnDispose()

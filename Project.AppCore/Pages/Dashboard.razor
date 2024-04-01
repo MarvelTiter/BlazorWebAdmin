@@ -5,7 +5,7 @@
 @using Project.Constraints.Services
 @using Project.Web.Shared.ComponentHelper
 @inherits BasicComponent
-@inject ICustomSettingService SettingProvider
+@inject IProjectSettingService SettingProvider
 @attribute [PageInfo(Icon = "home", Id = "Dashboard", Pin = true, Sort = 0, Title = "主页")]
 
 <JsTimer Interval="1000" Callback="Update"></JsTimer>

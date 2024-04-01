@@ -20,7 +20,8 @@ namespace Project.AppCore.Layouts
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                _ = RootWrapper?.FocusAsync();
+                if (RootWrapper.HasValue)
+                    await RootWrapper.Value.FocusAsync();
             }
         }
 

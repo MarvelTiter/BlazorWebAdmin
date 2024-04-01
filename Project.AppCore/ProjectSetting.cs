@@ -7,12 +7,12 @@ public class ProjectSetting
     Type settingProviderType = typeof(CustomSetting);
     public Type SettingProviderType => settingProviderType;
 
-    public void ConfigureSettingProviderType<T>() where T : BasicCustomSetting, ICustomSettingService
+    public void ConfigureSettingProviderType<T>() where T : BasicSetting, IProjectSettingService
     {
         settingProviderType = typeof(T);
     }
     public List<Type> interceptorTypes = [];
-    public void AddInterceotor<T>() where T : IAddtionalTnterceptor
+    public void AddInterceotor<T>() where T : IAddtionalInterceptor
     {
         interceptorTypes.Add(typeof(T));
     }

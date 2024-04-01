@@ -10,6 +10,8 @@ namespace Project.Constraints.Store
     [AutoInject]
     public interface IRouterStore : IStore, IDisposable
     {
+        event Func<TagRoute, Task<bool>> RouterChangingEvent;
+        event Func<RouterMeta, Task<bool>> RouteMetaFilterEvent;
         List<TagRoute> TopLinks { get; }
         List<RouteMenu> Menus { get; set; }
         TagRoute? Current { get; }

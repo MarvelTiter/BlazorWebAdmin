@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
+using MT.Toolkit.ReflectionExtension;
 using Project.AppCore.Store;
 using Project.Constraints.Models;
 using Project.Constraints.Models.Permissions;
@@ -20,7 +21,6 @@ public class RouterStore : StoreBase, IRouterStore
     private readonly IStringLocalizer<RouterStore> localizer;
     private readonly IOptionsMonitor<CultureOptions> options;
     private readonly ILogger<RouterStore> logger;
-    private readonly ICustomSettingService customSettingService;
     private readonly IOptionsMonitor<AppSetting> setting;
 
     public RouterStore(IPermissionService permissionService
@@ -29,7 +29,6 @@ public class RouterStore : StoreBase, IRouterStore
         , IStringLocalizer<RouterStore> localizer
         , IOptionsMonitor<CultureOptions> options
         , ILogger<RouterStore> logger
-        , ICustomSettingService customSettingService
         , IOptionsMonitor<AppSetting> setting)
     {
         this.permissionService = permissionService;
@@ -38,7 +37,6 @@ public class RouterStore : StoreBase, IRouterStore
         this.localizer = localizer;
         this.options = options;
         this.logger = logger;
-        this.customSettingService = customSettingService;
         this.setting = setting;
     }
 
@@ -88,7 +86,7 @@ public class RouterStore : StoreBase, IRouterStore
             pages[CurrentUrl] = tag;
         }
 
-        var enable = await customSettingService.RouterChangingAsync(tag);
+        var enable = await OnRouterChangingAsync(tag);
         if (enable)
         {
             tag.Body ??= CreateBody(tag, routeData);
@@ -206,7 +204,7 @@ public class RouterStore : StoreBase, IRouterStore
             {
                 continue;
             }
-            var enable = await customSettingService.RouteMetaFilterAsync(meta);
+            var enable = await OnRouteMetaFilterAsync(meta);
             if (!enable)
                 continue;
             var title = GetLocalizerString(meta.RouteId, meta.RouteTitle);
@@ -237,7 +235,7 @@ public class RouterStore : StoreBase, IRouterStore
             var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteUrl == "/" + pow.Path);
             if (meta == null)
                 continue;
-            var enable = await customSettingService.RouteMetaFilterAsync(meta);
+            var enable = await OnRouteMetaFilterAsync(meta);
             if (!enable)
                 continue;
             meta.RouteTitle = GetLocalizerString(pow.PowerId, pow.PowerName);
@@ -248,5 +246,23 @@ public class RouterStore : StoreBase, IRouterStore
             meta.Cache = true;
             Menus.Add(new(meta));
         }
+    }
+
+
+    public event Func<TagRoute, Task<bool>> RouterChangingEvent;
+
+    private Task<bool> OnRouterChangingAsync(TagRoute tag)
+    {
+        if (RouterChangingEvent != null)
+            return RouterChangingEvent.Invoke(tag);
+        return Task.FromResult(true);
+    }
+
+    public event Func<RouterMeta, Task<bool>> RouteMetaFilterEvent;
+    private Task<bool> OnRouteMetaFilterAsync(RouterMeta meta)
+    {
+        if (RouteMetaFilterEvent != null)
+            return RouteMetaFilterEvent.Invoke(meta);
+        return Task.FromResult(true);
     }
 }

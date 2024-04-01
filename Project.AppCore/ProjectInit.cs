@@ -115,13 +115,13 @@ public static class ProjectInit
         services.AddScoped(settingImplType);
         foreach (var item in setting.interceptorTypes)
         {
-            services.AddScoped(typeof(IAddtionalTnterceptor), item);
+            services.AddScoped(typeof(IAddtionalInterceptor), item);
         }
-        services.AddScoped(typeof(ICustomSettingService), provider =>
+        services.AddScoped(typeof(IProjectSettingService), provider =>
         {
-            var i = provider.GetService(settingImplType) as BasicCustomSetting;
-            var interceptors = provider.GetServices(typeof(IAddtionalTnterceptor)) ?? Enumerable.Empty<IAddtionalTnterceptor>();
-            foreach (var item in interceptors.Cast<IAddtionalTnterceptor>())
+            var i = provider.GetService(settingImplType) as BasicSetting;
+            var interceptors = provider.GetServices(typeof(IAddtionalInterceptor)) ?? Enumerable.Empty<IAddtionalInterceptor>();
+            foreach (var item in interceptors.Cast<IAddtionalInterceptor>())
             {
                 i!.AddService(item);
             }

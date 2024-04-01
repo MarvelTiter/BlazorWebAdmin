@@ -9,7 +9,6 @@
     </div>
 }
 @code {
-    [Inject] ICustomSettingService SettingSrv { get; set; }
     [Inject] IWatermarkServiceFactory WatermarkFactory { get; set; }
     [Parameter] public RenderFragment ChildContent { get; set; }
     [Parameter] public string[] Contents { get; set; }

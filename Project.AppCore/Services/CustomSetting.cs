@@ -1,23 +1,23 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.AppCore;
+using Project.Constraints;
 using Project.Constraints.Models.Permissions;
 using Project.Constraints.Store;
+using Project.Constraints.Store.Models;
 using Project.Web.Shared.Components;
 
 namespace Project.Services
 {
-    public class CustomSetting : BasicCustomSetting, ICustomSettingService
+    public class CustomSetting : BasicSetting, IProjectSettingService
     {
         private readonly IExpressionContext context;
-        private readonly NavigationManager navigation;
-        private readonly IUserStore userStore;
+        private  IUserStore UserStore => appSession.UserStore;
+
         private readonly IWatermarkServiceFactory watermarkServiceFactory;
 
-        public CustomSetting(IExpressionContext context, NavigationManager navigation, IUserStore userStore, IWatermarkServiceFactory watermarkServiceFactory)
+        public CustomSetting(IExpressionContext context, IWatermarkServiceFactory watermarkServiceFactory, IAppSession appSession):base(appSession)
         {
             this.context = context;
-            this.navigation = navigation;
-            this.userStore = userStore;
             this.watermarkServiceFactory = watermarkServiceFactory;
         }
 
@@ -56,18 +56,18 @@ namespace Project.Services
                                     .Where(u => u.UserId == info.UserId).ExecuteAsync();
         }
 
-        //public override Task AfterWebApplicationAccessed()
-        //{
-        //    var service = watermarkServiceFactory.GetWatermarkService();
-        //    service.UpdateWaterMarkAsync(userStore.UserInfo?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-        //    return Task.CompletedTask;
-        //}
+        public override Task AfterWebApplicationAccessed()
+        {
+            var service = watermarkServiceFactory.GetWatermarkService();
+            service.UpdateWaterMarkAsync(UserStore.UserInfo?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            return Task.CompletedTask;
+        }
 
-        //public override Task RouterChangingAsync(TagRoute route)
-        //{
-        //    var service = watermarkServiceFactory.GetWatermarkService();
-        //    service.UpdateWaterMarkAsync(userStore.UserInfo?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), route.RouteTitle);
-        //    return Task.CompletedTask;
-        //}
+        public override Task<bool> RouterChangingAsync(Constraints.Store.Models.TagRoute route)
+        {
+            var service = watermarkServiceFactory.GetWatermarkService();
+            service.UpdateWaterMarkAsync(UserStore.UserInfo?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), route.RouteTitle);
+            return Task.FromResult(true);
+        }
     }
 }

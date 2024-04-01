@@ -18,7 +18,7 @@ namespace Project.AppCore.Pages
         [Inject] public AuthenticationStateProvider Auth { get; set; }
         [Inject] NavigationManager NavigationManager { get; set; }
         [Inject] IStringLocalizer<Login> Localizer { get; set; }
-        [Inject] ICustomSettingService CustomSetting { get; set; }
+        [Inject] IProjectSettingService CustomSetting { get; set; }
         [CascadingParameter] IDomEventHandler Root { get; set; }
         public bool Loading { get; set; } = false;
         public string? Redirect { get; set; }
@@ -50,12 +50,12 @@ namespace Project.AppCore.Pages
             var result = await LoginSrv.LoginAsync(model.UserName, model.Password);
             if (result.Success)
             {
-                User.SetUser(result.Payload);
+                await User.SetUserAsync(result.Payload);
                 await AuthenticationStateProvider.IdentifyUser(result.Payload);
                 await Router.InitRoutersAsync(result.Payload);
                 UI.Success(Localizer["Login.SuccessTips"].Value);
                 Root.OnKeyDown -= OnPressEnter;
-                var goon = await CustomSetting.LoginSuccessAsync(result);
+                var goon = await CustomSetting.LoginInterceptorAsync(result.Payload);
                 if (goon)
                 {
                     if (string.IsNullOrEmpty(Redirect))

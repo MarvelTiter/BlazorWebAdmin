@@ -1,36 +1,39 @@
 ﻿using Project.AppCore.SystemPermission;
+using Project.Constraints;
 using Project.Constraints.Store.Models;
 
 namespace Project.AppCore
 {
     [IgnoreAutoInject]
-    public abstract class BasicCustomSetting : ICustomSettingService
+    public abstract class BasicSetting : IProjectSettingService, IDisposable
     {
         static Type? UserPageType;
         static Type? PermissionPageType;
         static Type? RolePermissionPageType;
         static Type? RunLogPageType;
+        readonly List<IAddtionalInterceptor> initActions = [];
+        protected readonly IAppSession appSession;
 
-        readonly List<IAddtionalTnterceptor> initActions = [];
-
-        public event Func<IQueryResult<UserInfo>, Task> OnLoginSuccessAsync;
-        public event Func<TagRoute, Task> OnRouterChangingAsync;
-        public event Func<Task> OnAfterWebApplicationAccessedAsync;
-
-        public BasicCustomSetting()
+        public BasicSetting(IAppSession appSession)
         {
             UserPageType ??= typeof(UserPage<,,>).MakeGenericType(Config.TypeInfo.UserType, Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
             PermissionPageType ??= typeof(PermissionSetting<,>).MakeGenericType(Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
             RolePermissionPageType ??= typeof(RolePermission<,>).MakeGenericType(Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
             RunLogPageType ??= typeof(OperationLog<>).MakeGenericType(Config.TypeInfo.RunlogType);
+            this.appSession = appSession;
+            this.appSession.RouterStore.RouterChangingEvent += RouterChangingAsync;
+            this.appSession.RouterStore.RouteMetaFilterEvent += RouteMetaFilterAsync;
+            this.appSession.UserStore.LoginSuccessEvent += LoginSuccessAsync;
+            this.appSession.WebApplicationAccessedEvent += AfterWebApplicationAccessed;
         }
         
-        public void AddService(IAddtionalTnterceptor additional)
+        public void AddService(IAddtionalInterceptor additional)
         {
             initActions.Add(additional);
-            OnLoginSuccessAsync += additional.LoginSuccessAsync;
-            OnRouterChangingAsync += additional.RouterChangingAsync;
-            OnAfterWebApplicationAccessedAsync += additional.AfterWebApplicationAccessedAsync;
+            appSession.RouterStore.RouterChangingEvent += additional.RouterChangingAsync;
+            appSession.RouterStore.RouteMetaFilterEvent += additional.RouteMetaFilterAsync;
+            appSession.UserStore.LoginSuccessEvent += additional.LoginSuccessAsync;
+            appSession.WebApplicationAccessedEvent += additional.AfterWebApplicationAccessedAsync;
         }
 
         public virtual Type? GetDashboardType() => null;
@@ -39,24 +42,25 @@ namespace Project.AppCore
         public virtual Type? GetRolePermissionPageType() => RolePermissionPageType;
         public virtual Type? GetRunLogPageType() => RunLogPageType;
 
-
         public abstract Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
         public abstract Task<int> UpdateLoginInfo(UserInfo info);
-        public virtual Task<bool> LoginSuccessAsync(IQueryResult<UserInfo> result)
+        public virtual Task LoginSuccessAsync(UserInfo result)
         {
-            OnLoginSuccessAsync?.Invoke(result);
+            return Task.CompletedTask;
+        }
+
+        public virtual Task<bool> LoginInterceptorAsync(UserInfo result)
+        {
             return Task.FromResult(true);
         }
 
         public virtual Task AfterWebApplicationAccessed()
         {
-            OnAfterWebApplicationAccessedAsync?.Invoke();
             return Task.CompletedTask;
         }
 
         public virtual Task<bool> RouterChangingAsync(TagRoute route)
         {
-            OnRouterChangingAsync?.Invoke(route);
             return Task.FromResult(true);
         }
 
@@ -64,5 +68,40 @@ namespace Project.AppCore
         {
             return Task.FromResult(true);
         }
+
+
+        #region Dispose
+        private bool disposedValue;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    appSession.RouterStore.RouterChangingEvent -= RouterChangingAsync;
+                    appSession.RouterStore.RouteMetaFilterEvent -= RouteMetaFilterAsync;
+                    appSession.UserStore.LoginSuccessEvent -= LoginSuccessAsync;
+                    appSession.WebApplicationAccessedEvent -= AfterWebApplicationAccessed;
+
+                    foreach (var additional in initActions)
+                    {
+                        appSession.UserStore.LoginSuccessEvent -= additional.LoginSuccessAsync;
+                        appSession.RouterStore.RouterChangingEvent -= additional.RouterChangingAsync;
+                        appSession.WebApplicationAccessedEvent -= additional.AfterWebApplicationAccessedAsync;
+                    }
+                }
+                disposedValue = true;
+            }
+        }
+             
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion 
     }
 }

@@ -16,8 +16,8 @@
         <AuthorizeView>
             <Authorized>
                 <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
-                     <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken">
-                         @Body
+                    <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken">
+                        @Body
                     </ActionWatcher>
                 </ActionWatcher>
             </Authorized>
@@ -43,6 +43,7 @@
     [Inject]
     public ILogger<AuthorizedLayout> Logger { get; set; }
     [Inject] IAppSession AppSession { get; set; }
+    [Inject] IAuthenticationStateProvider AuthenticationStateProvider { get; set; }
     string? LauchUrl => Setting.CurrentValue.LauchUrl;
 
     protected override async Task OnInitializedAsync()
@@ -53,7 +54,7 @@
             var state = await authenticationStateTask;
             if (state.User.Identity!.IsAuthenticated)
             {
-                await AppSession.RouterStore.InitRoutersAsync(AppSession.AuthenticationStateProvider?.Current);
+                await AppSession.RouterStore.InitRoutersAsync(AuthenticationStateProvider?.Current);
                 var url = AppSession.Navigator.ToBaseRelativePath(AppSession.Navigator.Uri);
                 AppSession.Navigator.NavigateTo(url);
             }
@@ -71,10 +72,10 @@
 
     }
 
-    
+
     async Task UpdateUserToken()
     {
-        var current = AppSession.AuthenticationStateProvider?.Current;
+        var current = AuthenticationStateProvider?.Current;
         if (rendered && current != null)
         {
             current.ActiveTime = DateTime.Now;
@@ -87,6 +88,6 @@
         {
             return UpdateUserToken();
         }
-        return AppSession.AuthenticationStateProvider?.ClearState();
+        return AuthenticationStateProvider?.ClearState();
     }
 }

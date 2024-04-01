@@ -15,28 +15,28 @@ namespace Project.AppCore.Auth
     {
         private readonly ProtectedLocalStorage storageService;
         private readonly ILoginService loginService;
-        private readonly IUserStore store;
-        private readonly IAppStore appStore;
+        private readonly IAppSession appSession;
+        private IUserStore Store => appSession.UserStore;
+        private IAppStore AppStore => appSession.AppStore;
+
         private readonly IOptionsMonitor<Token> token;
 
         public CustomAuthenticationStateProvider(ProtectedLocalStorage storageService
             , ILoginService loginService
-            , IUserStore store
-            , IAppStore appStore
+            , IAppSession appSession
             , IOptionsMonitor<Token> token)
         {
             this.storageService = storageService;
             this.loginService = loginService;
-            this.store = store;
-            this.appStore = appStore;
+            this.appSession = appSession;
             this.token = token;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
             {
-                var app = await storageService.GetAsync<AppStore>(AppStore.KEY);
-                appStore.ApplySetting(app.Value);
+                var app = await storageService.GetAsync<AppStore>(AppCore.Store.AppStore.KEY);
+                AppStore.ApplySetting(app.Value);
                 if (token.CurrentValue.NeedAuthentication)
                 {
                     var result = await storageService.GetAsync<UserInfo>("UID");
@@ -67,7 +67,7 @@ namespace Project.AppCore.Auth
             {
                 identity = new ClaimsIdentity();
             }
-            store.SetUser(info);
+            await Store.SetUserAsync(info);
             var user = new ClaimsPrincipal(identity);
             return new AuthenticationState(user);
         }
@@ -87,7 +87,7 @@ namespace Project.AppCore.Auth
             NotifyAuthenticationStateChanged(UpdateState());
         }
 
-        public UserInfo? Current => store.UserInfo;
+        public UserInfo? Current => Store.UserInfo;
         private static ClaimsIdentity Build(UserInfo info)
         {
             var claims = new List<Claim>
