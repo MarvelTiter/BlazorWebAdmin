@@ -18,9 +18,6 @@ namespace Project.Constraints.Store.Models
         public async void SetActive(bool active)
         {
             if (active) ActiveTime = DateTime.Now;
-#if DEBUG
-            Console.WriteLine($"{RouteUrl} {PageRef?.GetType().Name} [Update Active Status ({active})] {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
-#endif
             if (isActive != active && PageRef is IPageAction page)
             {
                 if (active)

@@ -43,10 +43,7 @@ namespace Project.Web.Shared.Components
         {
             if (loaded) return;
             var path = AppDomain.CurrentDomain.BaseDirectory;
-#if DEBUG
-            path = new DirectoryInfo(path).Parent!.Parent!.Parent!.Parent!.FullName;
-#endif
-            var files = Directory.EnumerateFiles(path, "*.svg", SearchOption.AllDirectories).Where(f => f.Contains("wwwroot") && !f.Contains("Release"));
+            var files = Directory.EnumerateFiles(path, "*.svg", SearchOption.AllDirectories).Where(f => f.Contains("SvgAssets", StringComparison.CurrentCultureIgnoreCase));
             foreach (var f in files)
             {
                 var name = Path.GetFileNameWithoutExtension(f);

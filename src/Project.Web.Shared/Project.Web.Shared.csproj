@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
@@ -8,6 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Content Include="SvgAssets\**">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>			
+		</Content>
+	</ItemGroup>
+	
+	<ItemGroup>
 		<ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
 	</ItemGroup>
+
 </Project>
