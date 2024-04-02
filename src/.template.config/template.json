@@ -13,9 +13,12 @@
     },
     "sourceName": "BlazorWebAdmin",
     "preferNameDirectory": true,
-    "sources":[
-        {
-            "source": "./src/BlazorWebAdmin"
+    "symbols": {
+        "DEBUG": {
+            "type": "parameter",
+            "datatype": "bool",
+            "defaultValue": "true",
+            "description": "keep DEBUG code"
         }
-    ]
+    }
 }

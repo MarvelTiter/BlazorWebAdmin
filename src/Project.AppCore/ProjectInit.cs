@@ -183,9 +183,7 @@ public static class ProjectInit
             {
                 sql.DbLog = (s,p) =>
                 {
-#if DEBUG
                     Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{s}\n");
-#endif
                 };
             });
 

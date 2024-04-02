@@ -5,9 +5,6 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<OutputType>Library</OutputType>
-		<IsPackable>true</IsPackable>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<PackageOutputPath>../../localnuget</PackageOutputPath>
 	</PropertyGroup>
 
 

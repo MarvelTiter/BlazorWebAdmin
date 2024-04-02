@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.UI.AntBlazor", "Pro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Constraints", "Project.Constraints\Project.Constraints.csproj", "{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{166DBCC9-D1FC-45F8-A934-A01051B86008} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
+		{75042FB8-66A4-41E4-8122-504C9595307F} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
+		{56326C12-F00E-44EF-8CB7-A1CE76984691} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
+		{9BCE1380-F2F2-4321-BA26-FA40D02E0D3E} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0371ABB4-6400-487C-9031-25B119AB8B9E}
