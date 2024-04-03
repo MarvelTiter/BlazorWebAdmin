@@ -1,7 +1,7 @@
 ﻿@namespace Project.Web.Shared.Components
 @inherits JsComponentBase
 <div class="split-view @(Direction)" style="display:flex; flex-direction: @Direction">
-    <div class="view-content view-content-first" @ref="panel1">
+    <div class="view-content view-content-first" style="width: @(InitWidth.HasValue? $"{InitWidth.Value}px":"unset");" @ref="panel1">
         @FirstContent
     </div>
     <div class="split-view-separator" style="@SeparatorStyle.Style" @ref="separator"></div>
@@ -18,7 +18,7 @@
     /// </summary>
     [Parameter] public string Direction { get; set; } = "row";
     [Parameter] public int SeparatorWidth { get; set; } = 10;
-
+    [Parameter] public int? InitWidth { get; set; }
     StyleBuilder SeparatorStyle => StyleBuilder.Default.AddStyle("width", () => $"{SeparatorWidth}px", () => Direction == "row")
     .AddStyle("height", () => $"{SeparatorWidth}px", () => Direction == "column");
 
