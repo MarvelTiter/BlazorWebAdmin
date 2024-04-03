@@ -1,7 +1,7 @@
 ﻿@namespace Project.Web.Shared.Components
 @inherits JsComponentBase
 <div class="split-view @(Direction)" style="display:flex; flex-direction: @Direction">
-    <div class="view-content view-content-first" style="width: @(InitWidth.HasValue? $"{InitWidth.Value}px":"unset");" @ref="panel1">
+    <div class="view-content view-content-first" style="width: @(InitWidth.HasValue? $"{InitWidth.Value}px":"50%");" @ref="panel1">
         @FirstContent
     </div>
     <div class="split-view-separator" style="@SeparatorStyle.Style" @ref="separator"></div>
@@ -11,14 +11,22 @@
 </div>
 
 @code {
-    [Parameter] public RenderFragment FirstContent { get; set; }
-    [Parameter] public RenderFragment SecondContent { get; set; }
+    [Parameter] public RenderFragment? FirstContent { get; set; }
+    [Parameter] public RenderFragment? SecondContent { get; set; }
     /// <summary>
     /// column / row
     /// </summary>
     [Parameter] public string Direction { get; set; } = "row";
     [Parameter] public int SeparatorWidth { get; set; } = 10;
     [Parameter] public int? InitWidth { get; set; }
+    /// <summary>
+    /// % or px
+    /// </summary>
+    [Parameter] public string Min { get; set; } = "30%";
+    /// <summary>
+    /// % or px
+    /// </summary>
+    [Parameter] public string Max { get; set; } = "70%";
     StyleBuilder SeparatorStyle => StyleBuilder.Default.AddStyle("width", () => $"{SeparatorWidth}px", () => Direction == "row")
     .AddStyle("height", () => $"{SeparatorWidth}px", () => Direction == "column");
 
@@ -28,6 +36,16 @@
 
     protected override async ValueTask Init()
     {
-        await ModuleInvokeVoidAsync("init", panel1, panel2, separator, Direction);
+        await ModuleInvokeVoidAsync("init", new
+        {
+            panel1,
+            panel2,
+            separator
+        }, new
+        {
+            Direction,
+            Max,
+            Min
+        });
     }
 }

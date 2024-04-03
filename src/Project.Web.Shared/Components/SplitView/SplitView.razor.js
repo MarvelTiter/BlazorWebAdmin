@@ -5,17 +5,26 @@ import { success, failed } from "/_content/Project.Web.Shared/js/jscomponentbase
 import { startDrag } from "/_content/Project.Web.Shared/js/jscomponentbase/drag-helper.js";
 
 export class SplitView extends BaseComponent {
-    constructor(panel1, panel2, separator, direction) {
+    constructor(doms, options) {
         super()
-        this.panel1 = panel1;
-        this.panel2 = panel2;
-        this.separator = separator;
-        this.direction = direction;
+        this.panel1 = doms.panel1;
+        this.panel2 = doms.panel2;
+        this.separator = doms.separator;
+        this.direction = options.direction;
+        this.max = options.max;
+        this.min = options.min;
         this.setup();
     }
 
+
+
     setup() {
-        EventHandler.listen(this.separator, 'mousedown', this.handleMouseDown.bind(this))
+        EventHandler.listen(this.separator, 'mousedown', this.handleMouseDown.bind(this));
+        EventHandler.listen(this.panel1.parentNode, "resize", this.refresh.bind(this));
+    }
+
+    refresh() {
+        this.panel1.style.width = "50%";
     }
 
     handleMouseDown(e) {
@@ -32,29 +41,52 @@ export class SplitView extends BaseComponent {
     modeRow(e, wrapRect, spRect, spOffset) {
         const clientRect = this.panel1.getBoundingClientRect()
         const offset = e.pageX - clientRect.left - spOffset + spRect.width / 2;
-        const paneLengthPercent = ((offset / wrapRect.width) * 100).toFixed(2);
+        const offsetPercent = getFinalPercent(offset, wrapRect.width, this.max, this.min); //(offset / wrapRect.width) * 100;
+        const paneLengthPercent = (offsetPercent).toFixed(2);
         this.panel1.style.width = `calc(${paneLengthPercent}% - ${spRect.width / 2}px)`;
     }
 
     modeColumn(e, wrapRect, spRect, spOffset) {
         const clientRect = this.panel1.getBoundingClientRect()
         const offset = e.pageY - clientRect.top - spOffset + spRect.height / 2;
-        const paneLengthPercent = ((offset / wrapRect.height) * 100).toFixed(2);
+        const offsetPercent = getFinalPercent(offset, wrapRect.height, this.max, this.min);
+        const paneLengthPercent = (offsetPercent).toFixed(2);
         this.panel1.style.height = `calc(${paneLengthPercent}% - ${spRect.height / 2}px)`;
     }
 
     dispose() {
         EventHandler.remove(this.separator, 'mousedown');
+        EventHandler.remove(this.panel1.parentNode, 'resize');
     }
 }
 
-export function init(id, panel1, panel2, separator, direction) {
-    getComponentById(id, () => {
-        return new SplitView(panel1, panel2, separator, direction);
-    });
+function getFinalPercent(offset, total, max, min) {
+    let p = offset / total * 100;
+    if (max.endsWith("%")) {
+        const l = Number(max.replace("%", ""));
+        if (p > l) p = l;
+    } else if (max.endsWith("px")) {
+        const l = Number(max.replace("px", ""));
+        if (offset > l) {
+            p = l / total * 100;
+        }
+    }
+
+    if (min.endsWith("%")) {
+        const l = Number(min.replace("%", ""));
+        if (p < l) p = l;
+    } else if (min.endsWith("px")) {
+        const l = Number(min.replace("px", ""));
+        if (offset < l) {
+            p = l / total * 100;
+        }
+    }
+
+    return p;
 }
 
-export function dispose(id) {
-    let com = getComponentById(id);
-    com.dispose();
+export function init(id, doms, options) {
+    getComponentById(id, () => {
+        return new SplitView(doms, options);
+    });
 }

@@ -3,13 +3,12 @@
 export class BaseComponent {
 
     dispose() {
-
     }
 
     static dispose(id) {
         const com = getComponentById(id);
         if (com) {
-            //console.log(id, com)
+            console.debug("dispose: ", id, com);
             com.dispose();
             removeComponent(id);
         }

@@ -3,14 +3,13 @@
 @typeparam TRole where TRole : class, IRole, new()
 @inherits ModelPage<TUser, GenericRequest<TUser>>
 
-<TwoSidePage OpenTrigger=@(() => currentSelected != null) Expand=@sideExpand MainFlex="3">
-    <FirstSide>
+<SplitView>
+    <FirstContent>
         @TableFragment
-    </FirstSide>
-    <SecondSide>
-        <AssignUserRoles TPower=TPower TRole=TRole Current="currentSelected"></AssignUserRoles>
-    </SecondSide>
-    <ClosedView>
-        <h1>用户角色</h1>
-    </ClosedView>
-</TwoSidePage>
+    </FirstContent>
+    <SecondContent>
+        <Project.Web.Shared.ComponentHelper.MCard Title="用户角色">
+            <AssignUserRoles TPower=TPower TRole=TRole Current="currentSelected"></AssignUserRoles>
+        </Project.Web.Shared.ComponentHelper.MCard>
+    </SecondContent>
+</SplitView>

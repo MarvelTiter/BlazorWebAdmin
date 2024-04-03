@@ -17,5 +17,6 @@ namespace Project.Constraints.Common.Attributes
         /// 组件所在是否在类库中 
         /// </summary>
         public bool IsLibrary { get; set; } = true;
+        public string? Version { get; set; }
     }
 }

@@ -1,7 +1,11 @@
-﻿<div class="stack-panel-wrapper" style="--stack-panel-gap:@(Gap)px;">
+﻿<div class="stack-panel-wrapper @Direction" style="--stack-panel-gap:@(Gap)px;">
     @ChildContent
 </div>
 @code {
     [Parameter] public RenderFragment ChildContent { get; set; }
     [Parameter] public int Gap { get; set; } = 10;
+    /// <summary>
+    /// row / column
+    /// </summary>
+    [Parameter] public string Direction { get; set; } = "row";
 }

@@ -8,12 +8,12 @@
 @using System.Diagnostics.CodeAnalysis;
 @namespace Project.Web.Shared.Components
 @inherits BasicComponent
-<div>
-    @if (Index > 0)
-    {
+@if (Index > 0)
+{
+    <div>
         @UI.BuildSwitch(this).Bind(() => check, UpdateLinkType).Set(p => p.CheckedLabel, TableLocalizer["ConditionSwitch.AndAlso"].Value).Set(p => p.UnCheckedLabel, TableLocalizer["ConditionSwitch.OrElse"].Value).Render()
-    }
-</div>
+    </div>
+}
 <MRow Style="@($"min-width:450px;{Style}")">
     <MCol ColSpan="10">
         @(UI.BuildSelect<ColumnInfo, ColumnInfo>(this, Columns)

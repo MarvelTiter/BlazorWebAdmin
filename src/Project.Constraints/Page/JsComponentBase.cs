@@ -39,9 +39,9 @@ namespace Project.Constraints.Page
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            
-        }
 
+        }
+        string? version;
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -49,6 +49,7 @@ namespace Project.Constraints.Page
             {
                 var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
                 RelativePath = attr?.Path ?? $"Components/{ModuleName}";
+                version = attr?.Version;
                 if (attr?.IsLibrary == false)
                 {
                     IsLibrary = false;
@@ -64,12 +65,26 @@ namespace Project.Constraints.Page
             var path = IsLibrary
                ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}.razor.js"
                : $"./{RelativePath}/{ModuleName}.razor.js";
-            Module = await Js.InvokeAsync<IJSObjectReference>("import", $"{path}?r={Random.Shared.NextDouble()}");
+            Module = await Js.InvokeAsync<IJSObjectReference>("import", $"{path}?r={version}");
         }
 
         protected virtual ValueTask Init()
         {
             return ValueTask.CompletedTask;
+        }
+
+        protected async ValueTask InvokeInit(params object?[]? args)
+        {
+            try
+            {
+                //await (Module?.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled(CancellationToken.None));
+                await (Module?.InvokeVoidAsync("init", [Id, .. args]) ?? ValueTask.FromCanceled(CancellationToken.None));
+            }
+            catch { }
+            finally
+            {
+
+            }
         }
 
         protected async ValueTask ModuleInvokeVoidAsync(string identifier, params object?[]? args)

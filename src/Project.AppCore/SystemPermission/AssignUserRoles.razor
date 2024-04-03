@@ -4,9 +4,9 @@
 @typeparam TRole where TRole : class, IRole, new()
 @inject IPermissionService<TPower, TRole> PermissionSrv
 @inherits BasicComponent
-<MCard>
+<h1>
     用户: @Current?.UserName
-</MCard>
+</h1>
 <div style="margin:10px 0;">
     @for (var i = 0; i < roleDefs.Count; i++)
     {
@@ -45,6 +45,7 @@
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
+        if (Current == null) return;
         var userRoles = await PermissionSrv.GetUserRolesAsync(Current.UserId);
         roleDefs = roles.Select(r => new RoleDef(r, userRoles?.Payload?.Any(ur => ur.RoleId == r.RoleId) ?? false)).ToList();
     }

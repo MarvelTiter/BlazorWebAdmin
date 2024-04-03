@@ -6,8 +6,12 @@ using System.Reflection;
 
 namespace Project.Constraints.UI.Table
 {
-    public static class GenerateTableColumn
+    public static class TableColumnContext
     {
+        public static List<ColumnInfo> GetColumnInfos<T>()
+        {
+            return typeof(T).GenerateColumns();
+        }
         public static List<ColumnInfo> GenerateColumns(this Type type)
         {
             return StaticCache<List<ColumnInfo>>.GetOrAdd($"{type.FullName}_{type.GUID}", () =>
