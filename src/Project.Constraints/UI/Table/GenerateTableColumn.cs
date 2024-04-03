@@ -1,4 +1,5 @@
-﻿using Project.Constraints.Common.Attributes;
+﻿using Project.Constraints.Common;
+using Project.Constraints.Common.Attributes;
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
@@ -7,20 +8,29 @@ namespace Project.Constraints.UI.Table
 {
     public static class GenerateTableColumn
     {
-        static readonly ConcurrentDictionary<Type, List<ColumnInfo>> caches = new();
-
-        public static ColumnInfo GenerateColumn(this PropertyInfo self, ColumnDefinitionAttribute head)
+        public static List<ColumnInfo> GenerateColumns(this Type type)
         {
-            //var head = self.GetCustomAttribute<ColumnDefinitionAttribute>();
-            //if (head == null)
-            //{
-            //    var dis = self.GetCustomAttribute<DisplayAttribute>();
-            //    if (dis is not null)
-            //    {
-            //        head = new ColumnDefinitionAttribute(dis.Name);
-            //    }
-            //}
+            return StaticCache<List<ColumnInfo>>.GetOrAdd($"{type.FullName}_{type.GUID}", () =>
+            {
+                var props = type.GetProperties();
+                var heads = props.Select(p => (Prop: p, Column: p.GetColumnDefinition()));
+                List<ColumnInfo> columns = new List<ColumnInfo>();
+                foreach (var col in heads)
+                {
+                    if (col.Column == null)
+                    {
+                        continue;
+                    }
+                    var column = col.Prop.GenerateColumn(col.Column);
+                    columns.Add(column);
+                }
+                //columns.Sort((a, b) => a.Index - b.Index);
+                return [.. columns];
+            });
+        }
 
+        private static ColumnInfo GenerateColumn(this PropertyInfo self, ColumnDefinitionAttribute head)
+        {
             if (head!.Label == null)
             {
                 head!.Label = $"{self.DeclaringType!.Name}.{self.Name}";
@@ -56,38 +66,18 @@ namespace Project.Constraints.UI.Table
                 column.EnumValues = ParseDictionary(column.UnderlyingType ?? column.DataType);
             }
 
-			var colors = self.GetCustomAttributes<ColumnTagAttribute>();
-			if (colors?.Any() ?? false)
-			{
-				column.UseTag = true;
-				column.TagColors = [];
-				foreach (var c in colors)
-				{
-					if (c == null) continue;
-					column.TagColors.TryAdd(c.Value, c.Color);
-				}
-			}
-			return column;
-        }
-        public static List<ColumnInfo> GenerateColumns(this Type self)
-        {
-            return caches.GetOrAdd(self, type =>
-             {
-                 var props = type.GetProperties();
-                 var heads = props.Select(p => (Prop: p, Column: p.GetColumnDefinition()));
-                 List<ColumnInfo> columns = new List<ColumnInfo>();
-                 foreach (var col in heads)
-                 {
-                     if (col.Column == null)
-                     {
-                         continue;
-                     }
-                     var column = col.Prop.GenerateColumn(col.Column);
-                     columns.Add(column);
-                 }
-                 //columns.Sort((a, b) => a.Index - b.Index);
-                 return [.. columns];
-             });
+            var colors = self.GetCustomAttributes<ColumnTagAttribute>();
+            if (colors?.Any() ?? false)
+            {
+                column.UseTag = true;
+                column.TagColors = [];
+                foreach (var c in colors)
+                {
+                    if (c == null) continue;
+                    column.TagColors.TryAdd(c.Value, c.Color);
+                }
+            }
+            return column;
         }
 
         public static ColumnDefinitionAttribute? GetColumnDefinition(this PropertyInfo p)
