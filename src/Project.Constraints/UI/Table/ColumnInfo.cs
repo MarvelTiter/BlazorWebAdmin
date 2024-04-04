@@ -8,7 +8,6 @@ namespace Project.Constraints.UI.Table;
 [IgnoreAutoInject]
 public record ColumnInfo(PropertyInfo Property)
 {
-
     public string Label { get; set; }
     public string PropertyOrFieldName => Property.Name;
     public int Index { get; set; }
@@ -33,9 +32,12 @@ public record ColumnInfo(PropertyInfo Property)
     public Func<string, Dictionary<string, object>>? AddCellOptions { get; set; }
     public InputType? InputType { get; set; }
     public RenderFragment<object?>? CellTemplate { get; set; }
-    public RenderFragment<object?>? FormTemplate { get; set; }
+    public RenderFragment<FormItemContext>? FormTemplate { get; set; }
     public bool Grouping { get; set; }
+
     private Func<object, object> groupByExpression = static obj => 0;
+    internal Action<object, object>? ValueSetter { get; set; }
+    internal Func<object, object>? ValueGetter { get; set; }
     public Func<object, object> GroupByExpression
     {
         get => groupByExpression;
@@ -53,4 +55,14 @@ public record ColumnInfo(PropertyInfo Property)
         }
         return "Blue";
     }
+}
+
+public class FormItemContext(object instance, ColumnInfo col)
+{
+    public object Instance { get; set; } = instance;
+    public ColumnInfo Column { get; set; } = col;
+
+    public object? GetValue() => Column.ValueGetter?.Invoke(Instance);
+
+    public void SetValue(object val) => Column.ValueSetter?.Invoke(Instance, val);
 }

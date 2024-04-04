@@ -100,10 +100,6 @@ namespace Project.AppCore.SystemPermission
         public async Task<bool> EditPower(TPower node)
         {
             var p = await this.ShowEditFormAsync("编辑权限", node);
-            if (p.Icon != selectedIcon && !string.IsNullOrEmpty(selectedIcon))
-            {
-                p.Icon = selectedIcon;
-            }
             var result = await PermissionSrv.UpdatePowerAsync(p);
             return result.Success;
         }

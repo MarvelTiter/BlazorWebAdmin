@@ -2,6 +2,7 @@
 using Project.Constraints.Common.Attributes;
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Project.Constraints.UI.Table
@@ -26,11 +27,41 @@ namespace Project.Constraints.UI.Table
                         continue;
                     }
                     var column = col.Prop.GenerateColumn(col.Column);
+                    column.ValueGetter = CreateGetter(col.Prop);
+                    column.ValueSetter = CreateSetter(col.Prop);
                     columns.Add(column);
                 }
                 //columns.Sort((a, b) => a.Index - b.Index);
                 return [.. columns];
             });
+        }
+
+        private static Func<object, object>? CreateGetter(PropertyInfo prop)
+        {
+            /*
+             * p => (object)p.XXX;
+             */
+            if (prop.DeclaringType == null || !prop.CanRead) return null;
+            var p = Expression.Parameter(typeof(object), "p");
+            var cp = Expression.Convert(p, prop.DeclaringType);
+            var propExp = Expression.Property(cp, prop);
+            var lambda = Expression.Lambda<Func<object, object>>(Expression.Convert(propExp, typeof(object)),p);
+            return lambda.Compile();
+        }
+
+        private static Action<object, object>? CreateSetter(PropertyInfo prop)
+        {
+            /*
+             * (p, v) => ((T)p).XXX = (TProp)v; 
+             */
+            if (prop.DeclaringType == null || !prop.CanWrite) return null;
+            var p = Expression.Parameter(typeof(object), "p");
+            var val = Expression.Parameter(typeof(object), "v");
+            var cp = Expression.Convert(p, prop.DeclaringType);
+            var setMethod = prop.SetMethod!;
+            var set = Expression.Call(cp, setMethod, Expression.Convert(val, prop.PropertyType));
+            var lambda = Expression.Lambda<Action<object, object>>(set, p, val);
+            return lambda.Compile();
         }
 
         private static ColumnInfo GenerateColumn(this PropertyInfo self, ColumnDefinitionAttribute head)

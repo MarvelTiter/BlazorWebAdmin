@@ -118,8 +118,3 @@ export function setWatermark(id, wrapper, options) {
     com.setWatermark(options);
 }
 
-export function dispose(id) {
-    let com = getComponentById(id);
-    com.dispose();
-}
-

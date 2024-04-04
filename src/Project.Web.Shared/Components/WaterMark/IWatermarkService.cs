@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
-
+﻿
 namespace Project.Web.Shared.Components;
 
 public sealed class WatermarkServiceFactory : IWatermarkServiceFactory
 {
     private const string KEY = "DEFAULT";
-    Dictionary<string, IWatermarkService> services = [];
+    readonly Dictionary<string, IWatermarkService> services = [];
     public IWatermarkService GetKeyedWatermarkService(string key)
     {
         return services[key];

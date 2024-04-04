@@ -1,20 +1,22 @@
 ﻿<div style="display:flex;align-items:center;">
-    <SvgIcon IconName="@Value" ClassName="svg-icon"></SvgIcon>
+    <SvgIcon IconName="@iconName" ClassName="svg-icon"></SvgIcon>
     &nbsp;
-    <IconSelector Value="@Value" ValueChanged="Notify"></IconSelector>
+    <IconSelector @bind-Value="@iconName" OnChanged="Notify"></IconSelector>
 </div>
 
 @code {
-    [Parameter] public string Value { get; set; }
-    [Parameter] public EventCallback<string> ValueChanged { get; set; }
-
-    Task Notify(string nv)
+    [Parameter] public FormItemContext Context { get; set; }
+    string? iconName;
+    protected override void OnInitialized()
     {
-        Value = nv;
-        if (ValueChanged.HasDelegate)
-        {
-            return ValueChanged.InvokeAsync(nv);
-        }
+        base.OnInitialized();
+        iconName = Context.GetValue() as string;
+    }
+
+    Task Notify()
+    {
+        if (iconName != null)
+            Context.SetValue(iconName);
         return Task.CompletedTask;
     }
 }

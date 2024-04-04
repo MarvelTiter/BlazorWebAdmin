@@ -6,6 +6,7 @@ using Project.Constraints.UI;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Table;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using static Project.Web.Shared.Components.InputBuilderHelper;
@@ -41,7 +42,7 @@ namespace Project.Web.Shared.Components
         [Parameter] public ColumnInfo Column { get; set; }
         [Parameter] public IUIService UI { get; set; }
         [Parameter] public object Reciver { get; set; }
-        [Parameter] public TData Data { get; set; }
+        [Parameter, NotNull] public TData Data { get; set; }
         [CascadingParameter] public bool Edit { get; set; }
 
         private string TempValue { get; set; }
@@ -50,7 +51,7 @@ namespace Project.Web.Shared.Components
         {
             if (Column.FormTemplate != null)
             {
-                Column.FormTemplate.Invoke(Data).Invoke(builder);
+                Column.FormTemplate.Invoke(new FormItemContext(Data, Column)).Invoke(builder);
                 return;
             }
             var instance = Expression.Constant(Data);

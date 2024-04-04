@@ -10,7 +10,7 @@
 }
 @code {
     [Inject] IWatermarkServiceFactory WatermarkFactory { get; set; }
-    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string[] Contents { get; set; }
     [Parameter] public int Top { get; set; } = 20;
     [Parameter] public (int X, int Y) Gap { get; set; } = (100, 100);
