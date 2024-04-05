@@ -1,4 +1,5 @@
-﻿@using Project.Constraints.Common.Attributes
+﻿@using BlazorWebAdmin.TestPages.Components
+@using Project.Constraints.Common.Attributes
 @using Project.Constraints.Models.Permissions
 @using Project.Constraints.Page
 @using Project.Constraints.Services
@@ -17,7 +18,9 @@
         <div class="item"></div>
         <div class="item"></div>
         <div class="item"></div>
-        <div class="item"></div>
+        <div class="item">
+            @UI.BuildButton(this).Text("Modal自定义Close").Primary().OnClick(OpenDialog).Render()
+        </div>
         <div class="item"></div>
         <div class="item"></div>
         <div class="item">
@@ -114,6 +117,15 @@ UI.BuildCheckBoxGroup:
             UI.AlertError("Test", "Content");
             visible = true;
         }
+    }
+
+    async Task OpenDialog()
+    {
+        await UI.ShowDialogAsync<DialogTest, int>(config: config =>
+        {
+            config.Title = "测试";
+            config.ShowFooter = false;
+        });
     }
 }
 

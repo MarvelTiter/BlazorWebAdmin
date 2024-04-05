@@ -268,9 +268,13 @@ namespace Project.UI.AntBlazor
                 CancelText = localizer[options.CancelText ?? "CustomButtons.Cancel"].Value,
                 Maximizable = true,
                 OnOk = e => options.OnOk.Invoke(),
-                OnCancel = e => options.OnClose.Invoke()
+                OnCancel = e => options.OnClose.Invoke(),
             };
+
             if (options.Width != null) modal.Width = options.Width;
+            if (options.ShowFooter && options.Footer != null) modal.Footer = options.Footer;
+            else if (!options.ShowFooter) modal.Footer = null;
+
             var modalRef = await modalService.CreateModalAsync(modal);
             options.OnClose = async () =>
             {

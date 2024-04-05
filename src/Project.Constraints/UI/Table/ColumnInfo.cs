@@ -38,6 +38,8 @@ public record ColumnInfo(PropertyInfo Property)
     private Func<object, object> groupByExpression = static obj => 0;
     internal Action<object, object>? ValueSetter { get; set; }
     internal Func<object, object>? ValueGetter { get; set; }
+    public object? GetValue(object target) => ValueGetter?.Invoke(target);
+    public void SetValue(object target, object val) => ValueSetter?.Invoke(target, val);
     public Func<object, object> GroupByExpression
     {
         get => groupByExpression;
@@ -62,7 +64,7 @@ public class FormItemContext(object instance, ColumnInfo col)
     public object Instance { get; set; } = instance;
     public ColumnInfo Column { get; set; } = col;
 
-    public object? GetValue() => Column.ValueGetter?.Invoke(Instance);
+    public object? GetValue() => Column.GetValue(Instance);
 
-    public void SetValue(object val) => Column.ValueSetter?.Invoke(Instance, val);
+    public void SetValue(object val) => Column.SetValue(Instance, val);
 }

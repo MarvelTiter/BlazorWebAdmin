@@ -4,6 +4,7 @@ using Microsoft.Extensions.Localization;
 using MT.Toolkit.Mapper;
 using Project.Constraints.Page;
 using Project.Constraints.UI.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Constraints.UI.Flyout
 {
@@ -14,10 +15,10 @@ namespace Project.Constraints.UI.Flyout
     }
     public class DialogTemplate<TValue> : JsComponentBase, IFeedback<TValue>
     {
-        [Parameter] public FormParam<TValue> DialogModel { get; set; }
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter, NotNull] public FormParam<TValue> DialogModel { get; set; }
+        [Parameter, NotNull] public RenderFragment ChildContent { get; set; }
+        [Parameter, NotNull] public FlyoutOptions<TValue> Options { get; set; }
         [Inject] protected IStringLocalizer<TValue> Localizer { get; set; }
-
         protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TValue).Name}.{prop}"];
 
         protected TValue Value
@@ -45,7 +46,7 @@ namespace Project.Constraints.UI.Flyout
             }
             else
             {
-                if (DialogModel.Value != null)
+                if (valueType.IsClass && valueType != typeof(string) && DialogModel.Value != null)
                     DialogModel.Value = Mapper.Map<TValue, TValue>(DialogModel.Value);
             }
         }
@@ -53,6 +54,16 @@ namespace Project.Constraints.UI.Flyout
         public virtual Task<bool> OnPostAsync()
         {
             return Task.FromResult(true);
+        }
+
+        protected Task CloseAsync()
+        {
+            return Options.OnClose();
+        }
+
+        protected Task OkAsync()
+        {
+            return Options.OnOk();
         }
 
         public Task OnCancelAsync()

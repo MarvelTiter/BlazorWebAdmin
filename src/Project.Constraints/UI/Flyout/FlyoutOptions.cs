@@ -11,7 +11,8 @@ public class FlyoutOptions
     public Func<Task> OnOk { get; set; }
     public Func<Task> OnClose { get; set; }
     public RenderFragment Content { get; set; }
-    public RenderFragment Footer { get; set; }
+    public RenderFragment? Footer { get; set; }
+    public bool ShowFooter { get; set; } = true;
 }
 
 public class PopoverOptions

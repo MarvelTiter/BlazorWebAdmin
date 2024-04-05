@@ -17,6 +17,7 @@ namespace Project.Constraints.UI.Extensions
             {
                 builder.Component<FormDialogTemplate<TData>>()
                 .SetComponent(c => c.DialogModel, p)
+                .SetComponent(c => c.Options, options)
                 .SetComponent(c => c.Columns, columns)
                 .Build(obj => options.Feedback = (IFeedback<TData>)obj);
             };

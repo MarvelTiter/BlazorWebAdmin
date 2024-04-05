@@ -75,7 +75,7 @@ namespace Project.Web.Shared.Components
                 return UI.BuildSelect<KeyValuePair<string, string>, string>(Reciver, Column.EnumValues!)
                     .LabelExpression(kv => kv.Value)
                     .ValueExpression(kv => kv.Key)
-                    .Bind(() => TempValue, () => UpdateValue(column.Property));
+                    .Bind(() => TempValue, () => UpdateValue(column));
             }
             var func = builderCaches.GetOrAdd(column, col =>
               {
@@ -118,9 +118,10 @@ namespace Project.Web.Shared.Components
             return func.Invoke(UI, Reciver, propertyExpression);
         }
 
-        private Task UpdateValue(PropertyInfo property)
+        private Task UpdateValue(ColumnInfo col)
         {
-            property.SetValue(Data, ObjectExtensions.ConvertTo(property.PropertyType, TempValue));
+            //property.SetValue(Data, ObjectExtensions.ConvertTo(property.PropertyType, TempValue));
+            col.SetValue(Data, ObjectExtensions.ConvertTo(col.DataType, TempValue));
             return Task.CompletedTask;
         }
 
