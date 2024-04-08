@@ -32,12 +32,13 @@
         dt.Columns.Add("年龄");
         dt.Columns.Add("生日");
 
-        foreach (var i in Enumerable.Range(1, 10))
+        foreach (var i in Enumerable.Range(1, 20))
         {
             var row = dt.NewRow();
             row["姓名"] = "测试";
             row["年龄"] = 10 + i;
             row["生日"] = "测试";
+            dt.Rows.Add(row);
         }
     }
 }

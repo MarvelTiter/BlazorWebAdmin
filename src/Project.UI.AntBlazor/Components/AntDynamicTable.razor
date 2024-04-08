@@ -53,6 +53,7 @@
     {
         await base.OnInitializedAsync();
         await Options.RefreshAsync();
+        StateHasChanged();
     }
 
     /// <summary>

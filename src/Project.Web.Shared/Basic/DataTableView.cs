@@ -13,7 +13,7 @@ namespace Project.Web.Shared.Basic
     public class DataTableView : BasicComponent
     {
         [Parameter] public DataTable? Data { get; set; }
-                [Inject] protected IExcelHelper Excel { get; set; }
+        [Inject] protected IExcelHelper Excel { get; set; }
         [Inject] IDownloadService DownloadService { get; set; }
 
         public TableOptions<DataRow, GenericRequest> Options { get; set; } = new();
