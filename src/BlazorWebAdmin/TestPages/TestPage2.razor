@@ -1,8 +1,10 @@
 ﻿@using Project.Constraints.Common.Attributes
 @using Project.Web.Shared.Components
+@using System.Data
 <SplitView>
     <FirstContent>
-        <h1>FFFFFFF</h1>
+        @* @UI.BuildDynamicTable(dt) *@
+        <Project.Web.Shared.Basic.DataTableView Data="dt"></Project.Web.Shared.Basic.DataTableView>
     </FirstContent>
     <SecondContent>
         <h1>SSSSSSS</h1>
@@ -19,3 +21,23 @@
         </SecondContent>
     </SplitView>
 </div>
+
+@code {
+    DataTable dt = new DataTable();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        dt.Columns.Add("姓名");
+        dt.Columns.Add("年龄");
+        dt.Columns.Add("生日");
+
+        foreach (var i in Enumerable.Range(1, 10))
+        {
+            var row = dt.NewRow();
+            row["姓名"] = "测试";
+            row["年龄"] = 10 + i;
+            row["生日"] = "测试";
+        }
+    }
+}

@@ -1,0 +1,69 @@
+﻿@using Project.Constraints.Models.Request
+@using System.Collections
+@using System.Data
+@typeparam TData
+@typeparam TRowData
+@typeparam TQuery where TQuery : IRequest, new()
+<Card>
+    <Table DataSource="Datas"
+           Loading="@Options.Loading"
+           Bordered="@true"
+           Resizable="@true"
+           DefaultExpandAllRows="@true"
+           Size="@TableSize.Small"
+           ScrollX="@Options.ScrollX"
+           Total="@Total"
+           @bind-PageIndex="@Options.Query.PageIndex"
+           @bind-PageSize="@Options.Query.PageSize"
+           HidePagination="!Options.Pager">
+        <ChildContent>
+
+            <AntTableColumns Source="DataSource" RowData="context"></AntTableColumns>
+
+        </ChildContent>
+        <PaginationTemplate Context="pageContext">
+            <Pagination Class="@pageContext.PaginationClass"
+                        Total="@pageContext.Total"
+                        PageSize="@pageContext.PageSize"
+                        Current="@pageContext.PageIndex"
+                        ShowTotal="TotalFragment"
+                        ShowSizeChanger="@true"
+                        ShowQuickJumper="@true"
+                        OnChange="@PaginationChanged" />
+        </PaginationTemplate>
+    </Table>
+</Card>
+
+@code {
+    [Parameter] public TData DataSource { get; set; }
+    [Parameter] public TableOptions<TRowData, TQuery> Options { get; set; }
+
+    [Inject] IStringLocalizer<TableOptions> TableLocalizer { get; set; }
+
+    IEnumerable<TRowData> Datas => Options.Result?.Payload ?? Enumerable.Empty<TRowData>();
+    int Total => Options.Result?.TotalRecord ?? 0;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Options.NotifyChanged = StateHasChanged;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await Options.RefreshAsync();
+    }
+
+    /// <summary>
+    /// table总数
+    /// </summary>
+    Func<PaginationTotalContext, string> TotalFragment => (context) => $"{TableLocalizer["TableTips.Total"]}：{context.Total}";
+
+    async Task PaginationChanged(PaginationEventArgs e)
+    {
+        Options.Query.PageIndex = e.Page;
+        Options.Query.PageSize = e.PageSize;
+        await Options.RefreshAsync();
+    }
+}

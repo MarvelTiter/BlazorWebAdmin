@@ -8,6 +8,7 @@ using Project.Constraints.UI.Form;
 using Project.Constraints.UI.Props;
 using Project.Constraints.UI.Table;
 using Project.Constraints.UI.Tree;
+using System.Data;
 using System.Linq.Expressions;
 
 namespace Project.Constraints.UI;
@@ -91,7 +92,7 @@ public interface IUIService
     /// <summary>
     /// 生成数字输入框
     /// <code>
-    /// UI.BuildInput&lt;TValue&gt;(this).Bind(() => ValueExpression).Render()
+    /// <![CDATA[UI.BuildInput<TValue>(this).Bind(() => ValueExpression).Render()]]>
     /// </code>
     /// </summary>
     IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver);
@@ -103,7 +104,7 @@ public interface IUIService
     /// <summary>
     /// 生成下拉选择框
     /// <code>
-    /// UI.BuildSelect&lt;TValue&gt;(this, options).Bind(() => ValueExpression).Render()
+    /// <![CDATA[UI.BuildSelect<TValue>(this, options).Bind(() => ValueExpression).Render()]]>
     /// </code>
     /// </summary>
     /// <returns></returns>
@@ -119,6 +120,14 @@ public interface IUIService
     IBindableInputComponent<SwitchProp, bool> BuildSwitch(object receiver);
 
     RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
+    /// <summary>
+    /// DataTable 或者 <![CDATA[Dictionary<string, object>]]> 
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
+    /// <typeparam name="TQuery"></typeparam>
+    /// <param name="dataSource"></param>
+    /// <returns></returns>
+    RenderFragment BuildDynamicTable<TData, TRowData, TQuery>(TableOptions<TRowData, TQuery> options, TData source) where TQuery : IRequest, new();
 
     //RenderFragment BuildTableHeader<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
 

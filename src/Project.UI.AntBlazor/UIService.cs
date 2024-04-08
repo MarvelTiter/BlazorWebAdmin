@@ -16,6 +16,9 @@ using Project.Constraints.UI.Tree;
 using Project.UI.AntBlazor.Components;
 using System.Linq.Expressions;
 using OneOf;
+using Project.Web.Shared.ComponentHelper;
+using System.Data;
+using Project.Constraints.Common;
 
 namespace Project.UI.AntBlazor
 {
@@ -197,7 +200,19 @@ namespace Project.UI.AntBlazor
             {
                 builder.Component<AntTable<TModel, TQuery>>()
                     .SetComponent(c => c.Options, options)
-                    .Build();
+                .Build();
+            };
+        }
+
+        public RenderFragment BuildDynamicTable<TData, TRowData, TQuery>(TableOptions<TRowData, TQuery> options, TData source)
+            where TQuery : IRequest, new()
+        {
+            return builder =>
+            {
+                builder.Component<AntDynamicTable<TData, TRowData, TQuery>>()
+                .SetComponent(c => c.Options, options)
+                .SetComponent(c => c.DataSource, source)
+                .Build();
             };
         }
 

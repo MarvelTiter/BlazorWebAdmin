@@ -1,4 +1,6 @@
-﻿namespace Project.Constraints.Common
+﻿using System.Data;
+
+namespace Project.Constraints.Common
 {
     public static class ObjectExtensions
     {
@@ -33,6 +35,14 @@
             catch
             {
                 return defaultValue;
+            }
+        }
+
+        public static IEnumerable<DataRow> ToEnumerable(this DataTable table)
+        {
+            foreach (DataRow row in table.Rows)
+            {
+                yield return row;
             }
         }
     }
