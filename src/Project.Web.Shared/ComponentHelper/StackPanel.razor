@@ -1,4 +1,4 @@
-﻿<div class="stack-panel-wrapper @Direction" style="--stack-panel-gap:@(Gap)px;">
+﻿<div class="stack-panel-wrapper  @(IsVertial ? "column":"row") @VertialAlign @HorizontalAlign" style="gap:@(Gap)px;">
     @ChildContent
 </div>
 @code {
@@ -8,4 +8,14 @@
     /// row / column
     /// </summary>
     [Parameter] public string Direction { get; set; } = "row";
+    [Parameter] public bool IsVertial { get; set; }
+
+    /// <summary>
+    /// top / middle / bottom
+    /// </summary>
+    [Parameter] public string VertialAlign { get; set; } = "middle";
+    /// <summary>
+    /// left / center / right
+    /// </summary>
+    [Parameter] public string HorizontalAlign { get; set; } = "center";
 }

@@ -5,10 +5,10 @@ using Project.Constraints.UI;
 namespace BlazorWebAdmin.TestPages
 {
 #if DEBUG
-    [Route("/test2")]
-    [PageInfo(Id = "TestPage2", Title = "测试2", GroupId = "test")]
+    [Route("/test3")]
+    [PageInfo(Id = "TestPage3", Title = "测试3", GroupId = "test")]
 #endif
-    public partial class TestPage2
+    public partial class TestPage3
     {
         [Inject] IUIService UI { get; set; }
     }
