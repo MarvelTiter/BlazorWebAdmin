@@ -18,22 +18,22 @@ public static class ProjectInit
 {
     public static void AddProject(this WebApplicationBuilder builder, Action<ProjectSetting> action)
     {
-#if RELEASE
-            try
+
+        try
+        {
+            var processName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
+            bool isNewInstance;
+            Mutex mtx = new Mutex(true, processName, out isNewInstance);
+            if (!isNewInstance)
             {
-                var processName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
-                bool isNewInstance;
-                Mutex mtx = new Mutex(true, processName, out isNewInstance);
-                if (!isNewInstance)
-                {
-                    var process = System.Diagnostics.Process.GetProcessesByName(processName).FirstOrDefault();
-                    process?.Kill();
-                }
+                var process = System.Diagnostics.Process.GetProcessesByName(processName).FirstOrDefault();
+                process?.Kill();
             }
-            catch
-            {
-            }
-#endif
+        }
+        catch
+        {
+        }
+
         var services = builder.Services;
 
         var setting = new ProjectSetting();
@@ -181,7 +181,7 @@ public static class ProjectInit
         {
             option.SetDatabase(DbBaseType.Sqlite, connStr, SQLiteFactory.Instance).SetWatcher(sql =>
             {
-                sql.DbLog = (s,p) =>
+                sql.DbLog = (s, p) =>
                 {
                     Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{s}\n");
                 };
