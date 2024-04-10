@@ -31,7 +31,10 @@ namespace Project.Constraints.UI.Table
                     column.ValueSetter = CreateSetter(col.Prop);
                     columns.Add(column);
                 }
-                //columns.Sort((a, b) => a.Index - b.Index);
+                if (columns.Any(c => c.Index != 0))
+                {
+                    columns.Sort((a, b) => a.Index - b.Index);
+                }
                 return [.. columns];
             });
         }
@@ -45,7 +48,7 @@ namespace Project.Constraints.UI.Table
             var p = Expression.Parameter(typeof(object), "p");
             var cp = Expression.Convert(p, prop.DeclaringType);
             var propExp = Expression.Property(cp, prop);
-            var lambda = Expression.Lambda<Func<object, object>>(Expression.Convert(propExp, typeof(object)),p);
+            var lambda = Expression.Lambda<Func<object, object>>(Expression.Convert(propExp, typeof(object)), p);
             return lambda.Compile();
         }
 

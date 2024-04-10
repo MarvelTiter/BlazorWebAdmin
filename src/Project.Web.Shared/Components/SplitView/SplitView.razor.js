@@ -13,10 +13,10 @@ export class SplitView extends BaseComponent {
         this.direction = options.direction;
         this.max = options.max;
         this.min = options.min;
+        this.init = options.initWidth;
+        this.drag = false;
         this.setup();
     }
-
-
 
     setup() {
         EventHandler.listen(this.separator, 'mousedown', this.handleMouseDown.bind(this));
@@ -24,7 +24,8 @@ export class SplitView extends BaseComponent {
     }
 
     refresh() {
-        this.panel1.style.width = "50%";
+        if (this.drag) return;
+        this.panel1.style.width = this.init;
     }
 
     handleMouseDown(e) {
@@ -33,8 +34,11 @@ export class SplitView extends BaseComponent {
         const separatorRect = this.separator.getBoundingClientRect();
         const separatorOffset = this.direction === 'row' ? e.pageX - separatorRect.left : e.pageY - separatorRect.top;
         const handler = this.direction === 'row' ? this.modeRow : this.modeColumn;
+        this.drag = true;
         startDrag(e, event => {
             handler.call(this, event, wrapRect, separatorRect, separatorOffset)
+        }, () => {
+            this.drag = false
         })
     }
 
