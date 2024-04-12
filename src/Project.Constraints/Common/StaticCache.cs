@@ -12,9 +12,10 @@ public static class StaticCache<T>
         return default!;
     }
 
-    public static void AddCache(string key, T value)
+    public static void AddOrUpdate(string key, T value, Func<string, T, T>? update = null)
     {
-        caches.GetOrAdd(key, value);
+        update ??= (k, v) => value;
+        caches.AddOrUpdate(key, value, update);
     }
 
     public static T GetOrAdd(string key, Func<T> func)
