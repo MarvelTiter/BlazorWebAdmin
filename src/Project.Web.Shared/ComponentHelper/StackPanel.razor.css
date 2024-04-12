@@ -6,66 +6,73 @@
         flex-direction: row;
     }
 
-        .stack-panel-wrapper.row.top {
-            align-items: flex-start;
-        }
-
-        .stack-panel-wrapper.row.middle {
-            align-items: center;
-        }
-
-        .stack-panel-wrapper.row.bottom {
-            align-items: flex-end;
-        }
-
-        .stack-panel-wrapper.row.left {
-            justify-content: flex-start;
-        }
-
-        .stack-panel-wrapper.row.center {
-            justify-content: center;
-        }
-
-        .stack-panel-wrapper.row.right {
-            justify-content: flex-end;
-        }
-
-   
-
-
-
-    /*.stack-panel-wrapper.row ::deep > :nth-child(n+2 ) {
-            margin-left: var(--stack-panel-gap);
-        }*/
-
     .stack-panel-wrapper.column {
         flex-direction: column;
     }
+/* 
+https://stackoverflow.com/questions/55387748/how-to-check-for-gap-support-in-flexbox-layout 
+*/
+@supports (inset: 0) {
+    .stack-panel-wrapper {
+        gap: var(--stack-panel-gap);
+    }
+}
 
-        .stack-panel-wrapper.column.left {
-            align-items: flex-start;
-        }
+@supports not (inset: 0) {
+    .stack-panel-wrapper.row ::deep > :nth-child(n+2 ) {
+        margin-left: var(--stack-panel-gap);
+    }
 
-        .stack-panel-wrapper.column.center {
-            align-items: center;
-        }
+    .stack-panel-wrapper.column ::deep > :nth-child(n+2 ) {
+        margin-top: var(--stack-panel-gap);
+    }
+}
 
-        .stack-panel-wrapper.column.right {
-            align-items: flex-end;
-        }
+.stack-panel-wrapper.row.top {
+    align-items: flex-start;
+}
 
-        .stack-panel-wrapper.column.top {
-            justify-content: flex-start;
-        }
+.stack-panel-wrapper.row.middle {
+    align-items: center;
+}
 
-        .stack-panel-wrapper.column.middle {
-            justify-content: center;
-        }
+.stack-panel-wrapper.row.bottom {
+    align-items: flex-end;
+}
 
-        .stack-panel-wrapper.column.bottom {
-            justify-content: flex-end;
-        }
+.stack-panel-wrapper.row.left {
+    justify-content: flex-start;
+}
 
-/*.stack-panel-wrapper.column ::deep > :nth-child(n+2 ) {
-            margin-top: var(--stack-panel-gap);
-        }*/
+.stack-panel-wrapper.row.center {
+    justify-content: center;
+}
+
+.stack-panel-wrapper.row.right {
+    justify-content: flex-end;
+}
+
+
+.stack-panel-wrapper.column.left {
+    align-items: flex-start;
+}
+
+.stack-panel-wrapper.column.center {
+    align-items: center;
+}
+
+.stack-panel-wrapper.column.right {
+    align-items: flex-end;
+}
+
+.stack-panel-wrapper.column.top {
+    justify-content: flex-start;
+}
+
+.stack-panel-wrapper.column.middle {
+    justify-content: center;
+}
+
+.stack-panel-wrapper.column.bottom {
+    justify-content: flex-end;
+}
