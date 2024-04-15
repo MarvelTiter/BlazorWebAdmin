@@ -87,8 +87,8 @@ namespace Project.Web.Shared.Components
             if (exception is not JSException && ShowMessage)
             {
                 UI.Notify(MessageType.Error, "程序异常", exception.Message);
+                Logger.LogError(exception, exception.Message);
             }
-            Logger.LogError(exception, exception.Message);
             await ErrorBoundaryLogger.LogErrorAsync(exception);
         }
 
