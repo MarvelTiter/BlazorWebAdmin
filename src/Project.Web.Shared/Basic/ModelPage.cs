@@ -62,7 +62,7 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
     //    return Task.CompletedTask;
     //}
 
-    protected abstract object SetRowKey(TModel model);
+    protected virtual object SetRowKey(TModel model) => model;
 
     private List<TableButton<TModel>> CollectButtons()
     {

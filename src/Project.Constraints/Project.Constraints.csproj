@@ -9,7 +9,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.4.0" />
-		<PackageReference Include="MT.LightORM" Version="2.0.0.7-alpha" />
+		<PackageReference Include="MT.LightORM" Version="2.0.0.8-alpha" />
 		<PackageReference Include="MT.Toolkit" Version="2.0.2" />
 		<PackageReference Include="LightExcel" Version="2.1.0.4" />
 	</ItemGroup>
