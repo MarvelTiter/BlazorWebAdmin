@@ -90,7 +90,6 @@ public static class ProjectInit
             builder.Logging.AddSimpleLogger(config =>
             {
                 config.EnabledLogType = MT.Toolkit.LogTool.LogType.Console | MT.Toolkit.LogTool.LogType.File;
-                config.RedirectLogTarget(MT.Toolkit.LogTool.SimpleLogLevel.Information, MT.Toolkit.LogTool.LogType.File);
                 config.LogDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
             });
         }

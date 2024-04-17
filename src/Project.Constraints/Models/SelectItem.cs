@@ -9,7 +9,7 @@ namespace Project.Constraints.Models
             Dictionary<string, string> result = new Dictionary<string, string>();
             foreach (var item in self)
             {
-                _ = result.TryAdd(item.Value.ToString()!, item.Label);
+                _ = result.TryAdd(item.Value!.ToString()!, item.Label);
             }
             return result;
         }
