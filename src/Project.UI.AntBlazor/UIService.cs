@@ -360,7 +360,12 @@ namespace Project.UI.AntBlazor
 
         public IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object reciver)
         {
-            var binder = new BindableComponentBuilder<Checkbox, DefaultProp, bool>() { Receiver = reciver };
+            var binder = new BindableComponentBuilder<Checkbox, DefaultProp, bool>(self =>
+            {
+                if (self.Model.Label != null)
+                    self.SetComponent(cb => cb.ChildContent, self.Model.Label.AsContent());
+            })
+            { Receiver = reciver };
             binder.Model.BindValueName = "Checked";
             return binder;
         }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Project.Constraints.UI.Props;
 
 namespace Project.Constraints.UI.Extensions
 {
@@ -20,6 +21,15 @@ namespace Project.Constraints.UI.Extensions
         {
             btn.Set(p => p.ButtonType, type);
             return btn;
+        }
+    }
+
+    public static class CheckboxBuilderExtensions
+    {
+        public static IBindableInputComponent<DefaultProp, bool> Text(this IBindableInputComponent<DefaultProp, bool> component, string label)
+        {
+            component.Set(p => p.Label, label);
+            return component;
         }
     }
 }
