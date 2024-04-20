@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
+using AspectCore.Extensions.DependencyInjection;
 namespace Project.AppCore;
 
 public static class ProjectInit
@@ -100,12 +101,12 @@ public static class ProjectInit
         }
 
 
-        //var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
-        //if (useProxy)
-        //{
-        //    services.ConfigureDynamicProxy();
-        //    builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
-        //}
+        var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
+        if (useProxy)
+        {
+            services.ConfigureDynamicProxy();
+            builder.ConfigureContainer(new DynamicProxyServiceProviderFactory());
+        }
 
 
 

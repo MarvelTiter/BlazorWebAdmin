@@ -20,6 +20,7 @@ namespace BlazorWpfAdmin
         public Task StartAsync(CancellationToken cancellationToken)
         {
             application.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            application.MainWindow.WindowState = WindowState.Maximized;
             application.Run(mainWindow);
             return Task.CompletedTask;
         }
