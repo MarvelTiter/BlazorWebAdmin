@@ -12,13 +12,5 @@
         "type": "project"
     },
     "sourceName": "BlazorWebAdmin",
-    "preferNameDirectory": true,
-    "symbols": {
-        "DEBUG": {
-            "type": "parameter",
-            "datatype": "bool",
-            "defaultValue": "true",
-            "description": "keep DEBUG code"
-        }
-    }
+    "preferNameDirectory": true
 }
