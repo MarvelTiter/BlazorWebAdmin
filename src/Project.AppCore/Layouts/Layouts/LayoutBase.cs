@@ -17,7 +17,7 @@ public class ContainerBase : BasicComponent
 public class LayoutBase : BasicComponent
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Inject] public ProtectedLocalStorage Storage { get; set; }
+    [Inject] public IProtectedLocalStorage Storage { get; set; }
     public Banner? Banner { get; set; }
     public SideBar? SideBar { get; set; }
     public WebSetting? WebSetting { get; set; }

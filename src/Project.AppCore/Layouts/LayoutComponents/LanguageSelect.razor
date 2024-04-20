@@ -1,14 +1,13 @@
 ﻿@using System.Globalization;
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 @using Project.AppCore.Store
-
 @inherits BasicComponent
 
 @UI.BuildDropdown(options)
 
 @code {
     string current = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "";
-    [Inject] ProtectedLocalStorage Storage { get; set; }
+    [Inject] IProtectedLocalStorage Storage { get; set; }
     [Parameter] public CultureOptions Options { get; set; }
 
     DropdownOptions options = new();

@@ -31,7 +31,7 @@
     </div>
 </MCard>
 @code {
-    [Inject] ProtectedLocalStorage Storage { get; set; }
+    [Inject] IProtectedLocalStorage Storage { get; set; }
     public event Action SettingChanged;
     private bool showSetting;
     LayoutMode Mode

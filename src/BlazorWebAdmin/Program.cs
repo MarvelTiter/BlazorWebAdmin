@@ -22,10 +22,7 @@ builder.AddProject(setting =>
     setting.ConfigureSettingProviderType<CustomSetting>();
 });
 
-builder.AddDefaultLightOrm(option =>
-{
-    //option.InitializedContext<DbInitializer>();
-});
+builder.AddDefaultLightOrm();
 
 var app = builder.Build();
 

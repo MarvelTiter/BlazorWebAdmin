@@ -48,7 +48,7 @@
     [Parameter] public TableOptions<TData, TQuery> Options { get; set; }
     [Inject] IStringLocalizer<TData> Localizer { get; set; }
     [Inject] IStringLocalizer<TableOptions> TableLocalizer { get; set; }
-    [Inject] ProtectedLocalStorage LocalStorage { get; set; }
+    [Inject] IProtectedLocalStorage LocalStorage { get; set; }
     private bool AdvanceModalVisible = false;
     private ConditionInfo? conditionInfo;
     private Expression<Func<TData, bool>>? ConditionExpression = e => true;

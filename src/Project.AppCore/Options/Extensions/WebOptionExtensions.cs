@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
-
+﻿
 namespace Project.AppCore.Options.Extensions
 {
     public static class WebOptionExtensions

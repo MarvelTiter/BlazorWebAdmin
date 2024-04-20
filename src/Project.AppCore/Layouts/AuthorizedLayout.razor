@@ -5,7 +5,7 @@
 @using Project.AppCore.Routers;
 @using Project.Constraints
 @inherits RootLayout
-@inject ProtectedLocalStorage LocalStorage
+@inject IProtectedLocalStorage LocalStorage
 @inject IOptionsMonitor<Token> Token
 @inject IOptionsMonitor<AppSetting> Setting
 <div @onclick="HandleRootClick"

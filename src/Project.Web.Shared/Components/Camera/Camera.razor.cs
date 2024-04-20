@@ -1,16 +1,16 @@
 ﻿using Project.Web.Shared.Utils;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using System.ComponentModel.DataAnnotations;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.Models;
 using System.Web;
+using Project.Constraints.Store;
 
 namespace Project.Web.Shared.Components
 {
     public partial class Camera : JsComponentBase, ICameraObject
     {
-        [Inject] public ProtectedLocalStorage Storage { get; set; }
+        [Inject] public IProtectedLocalStorage Storage { get; set; }
         [Parameter] public bool AutoPlay { get; set; }
         [Parameter] public bool EnableClip { get; set; }
         [Parameter] public int Width { get; set; }

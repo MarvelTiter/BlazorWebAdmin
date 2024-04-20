@@ -1,4 +1,5 @@
-﻿using Project.Constraints.Common.Attributes;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project.Constraints.Common.Attributes;
 using System.Reflection;
 
 namespace Project.AppCore

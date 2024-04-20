@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Localization;
-
+using Microsoft.Extensions.DependencyInjection;
 namespace Project.Web.Shared.Basic
 {
     public static class ServiceLocator

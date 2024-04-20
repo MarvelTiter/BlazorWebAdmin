@@ -7,18 +7,20 @@ using Project.AppCore.Auth;
 using Project.Constraints;
 using Project.Constraints.Options;
 using MDbContext;
-using AspectCore.Extensions.DependencyInjection;
 using Project.AppCore.Middlewares;
 using MT.Toolkit.LogTool.LogExtension;
 using Microsoft.AspNetCore.DataProtection;
 using System.Data.SQLite;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Builder;
 namespace Project.AppCore;
 
 public static class ProjectInit
 {
-    public static void AddProject(this WebApplicationBuilder builder, Action<ProjectSetting> action)
+    public static void AddProject(this IHostApplicationBuilder builder, Action<ProjectSetting> action)
     {
-
         try
         {
             var processName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
@@ -34,14 +36,11 @@ public static class ProjectInit
         {
         }
 
-        var services = builder.Services;
-
         var setting = new ProjectSetting();
 
         action.Invoke(setting);
 
         ArgumentNullException.ThrowIfNull(Config.App.Name);
-
         Config.SetFooter($@"
         <footer style=""text-align:center"">
              <span>{Config.App.Id} ©2023-{DateTime.Now:yyyy} Powered By </span>
@@ -49,6 +48,9 @@ public static class ProjectInit
              <span>{Config.App.Version}</span>
          </footer>
 ");
+
+        var services = builder.Services;
+
         services.AddDataProtection().SetApplicationName(Config.App.Name);
         // 多语言服务
         services.AddJsonLocales();
@@ -58,7 +60,7 @@ public static class ProjectInit
         services.AutoInjects(setting.AutoInjectConfig);
         //
         services.AddHttpClient();
-        //
+
         InterceptorsInit(services, setting);
 
         services.AddControllers().AddApplicationPart(typeof(AppConst).Assembly);
@@ -79,11 +81,14 @@ public static class ProjectInit
         });
 
         services.AddScoped<IWatermarkServiceFactory, WatermarkServiceFactory>();
-
         if (setting.AddDefaultProjectServices)
         {
-            builder.AddProjectDbServices(setting);
+            services.AddProjectDbServices(setting);
         }
+
+        services.AddSingleton<RedirectToLauchUrlMiddleware>();
+        services.AddSingleton<CheckBrowserEnabledMiddleware>();
+
 
         if (setting.AddDefaultLogger)
         {
@@ -93,15 +98,16 @@ public static class ProjectInit
                 config.LogDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
             });
         }
-        var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
-        if (useProxy)
-        {
-            services.ConfigureDynamicProxy();
-            builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
-        }
 
-        services.AddSingleton<RedirectToLauchUrlMiddleware>();
-        services.AddSingleton<CheckBrowserEnabledMiddleware>();
+
+        //var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
+        //if (useProxy)
+        //{
+        //    services.ConfigureDynamicProxy();
+        //    builder.Host.UseServiceProviderFactory(new DynamicProxyServiceProviderFactory());
+        //}
+
+
 
         Config.AddAssembly(typeof(AppConst).Assembly, typeof(Web.Shared._Imports).Assembly);
 
@@ -128,9 +134,8 @@ public static class ProjectInit
         });
     }
 
-    public static void AddProjectDbServices(this IHostApplicationBuilder builder, ProjectSetting setting)
+    public static void AddProjectDbServices(this IServiceCollection services, ProjectSetting setting)
     {
-        var services = builder.Services;
         // user
         services.AddScoped(typeof(IUserService<>), typeof(Services.UserService<>));
         services.AddScoped<IUserService>(provider =>
@@ -154,7 +159,7 @@ public static class ProjectInit
         });
     }
 
-    public static IServiceCollection ConfigureAppSettings(this IHostApplicationBuilder builder)
+    public static void ConfigureAppSettings(this IHostApplicationBuilder builder)
     {
         var services = builder.Services;
         services.AddOptions();
@@ -170,12 +175,12 @@ public static class ProjectInit
         {
             builder.Configuration.GetSection(nameof(Token)).Bind(opt);
         });
-        return services;
     }
 
     public static void AddDefaultLightOrm(this IHostApplicationBuilder builder, Action<ExpressionSqlOptions>? action = null)
     {
         var connStr = builder.Configuration.GetConnectionString("Sqlite")!;
+        var p = Path.GetFullPath(connStr);
         builder.Services.AddLightOrm(option =>
         {
             option.SetDatabase(DbBaseType.Sqlite, connStr, SQLiteFactory.Instance).SetWatcher(sql =>

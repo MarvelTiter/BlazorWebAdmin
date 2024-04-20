@@ -62,7 +62,7 @@ public class RouterStore : StoreBase, IRouterStore
         get => "/" + navigationManager.ToBaseRelativePath(navigationManager.Uri);
     }
     TagRoute? preview;
-    public async Task RouteDataChangedHandleAsync(Microsoft.AspNetCore.Components.RouteData routeData)
+    public async Task RouteDataChangedHandleAsync(RouteData routeData)
     {
         if (!pages.TryGetValue(CurrentUrl, out var tag))
         {

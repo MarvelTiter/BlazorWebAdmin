@@ -13,7 +13,7 @@ namespace Project.AppCore.Auth
     [IgnoreAutoInject]
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider, IAuthenticationStateProvider
     {
-        private readonly ProtectedLocalStorage storageService;
+        private readonly IProtectedLocalStorage storageService;
         private readonly ILoginService loginService;
         private readonly IAppSession appSession;
         private IUserStore Store => appSession.UserStore;
@@ -21,7 +21,7 @@ namespace Project.AppCore.Auth
 
         private readonly IOptionsMonitor<Token> token;
 
-        public CustomAuthenticationStateProvider(ProtectedLocalStorage storageService
+        public CustomAuthenticationStateProvider(IProtectedLocalStorage storageService
             , ILoginService loginService
             , IAppSession appSession
             , IOptionsMonitor<Token> token)
