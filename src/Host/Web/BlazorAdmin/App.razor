@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
+    <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
+    <link href="_content/Project.Web.Shared/css/app.css" rel="stylesheet" />
+    <link href="_content/Project.Web.Shared/css/echarts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="BlazorAdmin.styles.css" />
+    <HeadOutlet @rendermode="@InteractiveServer" />
+</head>
+
+<body>
+    <Routes @rendermode="@InteractiveServer" />
+
+    <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@InteractiveServer"></Project.Web.Shared.Components.ReconnectorOutlet>
+
+    <script src="_framework/blazor.web.js"></script>
+</body>
+
+</html>

@@ -2,23 +2,75 @@
     "$schema": "http://json.schemastore.org/template",
     "author": "MarvelTiter",
     "classifications": [
-        "BlazorWeb"
+        "BlazorAdmin",
+        "Web",
+        "WPF",
+        "WinForms"
     ],
-    "name": "BlazorWebAdmin",
-    "identity": "BlazorWebAdmin",
-    "shortName": "bwa",
+    "name": "MtBlazorAdminTemplate",
+    "identity": "MtBlazorAdminTemplate",
+    "shortName": "mtblazor",
     "tags": {
         "language": "C#",
         "type": "project"
     },
-    "sourceName": "BlazorWebAdmin",
+    "sourceName": "BlazorAdmin",
     "preferNameDirectory": true,
+    "symbols": {
+        "host": {
+            "type": "parameter",
+            "datatype": "choice",
+            "defaultValue": "web",
+            "choices": [
+                {
+                    "choice": "web",
+                    "description": "blazor server web app"
+                },
+                {
+                    "choice": "wpf",
+                    "description": "WPF"
+                },
+                {
+                    "choice": "winforms",
+                    "description": "WinForms"
+                }
+            ]
+        }
+    },
     "sources": [
         {
-            "exclude": [
-                "**/BlazorWinFormsAdmin/**",
-                "**/BlazorWpfAdmin/**"
-            ]
+            "source": "./Shared",
+            "target": "./Shared"
+        },
+        {
+            "condition": "(host == 'web')",
+            "source": "./Host/Web",
+            "target": "./"
+        },
+        {
+            "condition": "(host == 'web')",
+            "source": "./.template.config/templates/web",
+            "target": "./"
+        },
+        {
+            "condition": "(host == 'wpf')",
+            "source": "./Host/Wpf",
+            "target": "./"
+        },
+        {
+            "condition": "(host == 'wpf')",
+            "source": "./.template.config/templates/wpf",
+            "target": "./"
+        },
+        {
+            "condition": "(host == 'winforms')",
+            "source": "./Host/WinForms",
+            "target": "./"
+        },
+        {
+            "condition": "(host == 'winforms')",
+            "source": "./.template.config/templates/winforms",
+            "target": "./"
         }
     ]
 }

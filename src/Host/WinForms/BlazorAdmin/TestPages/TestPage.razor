@@ -1,0 +1,137 @@
+﻿@using BlazorAdmin.TestPages.Components
+@using Project.Constraints.Common.Attributes
+@using Project.Constraints.Models.Permissions
+@using Project.Constraints.Page
+@using Project.Constraints.Services
+@using Project.UI.AntBlazor
+@using Project.Web.Shared.ComponentHelper
+@using Project.Web.Shared.Components
+@inherits BasicComponent
+<WaterMark Contents="@(["123","123"])">
+    <MGrid MinWidth="300" Gap="10px">
+        <MGridContent ColSpan="(1,3)" RowSpan="(1,3)">
+            <div class="item" style="height:100%">123</div>
+        </MGridContent>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item">
+            @UI.BuildButton(this).Text("Modal自定义Close").Primary().OnClick(OpenDialog).Render()
+        </div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item">
+            @UI.BuildButton(this).Text("异常测试").Primary().OnClick(ThrowException).Render()
+            @UI.BuildButton(this).Text("水印测试").Primary().OnClick(WaterMarkTest).Render()
+            @UI.BuildButton(this).Text("ModalTest").Primary().OnClick(ShowModal).Render()
+        </div>
+    </MGrid>
+</WaterMark>
+
+UI.BuildCheckBoxGroup:
+@(UI.BuildCheckBoxGroup<User, string>(this, users)
+    .LabelsExpression(u => u.UserName)
+    .ValuesExpression(u => u.UserId)
+    .Bind(() => checkedUsers, Changed)
+    .Render())
+<br />AntDesign.CheckboxGroup:
+<AntDesign.CheckboxGroup @bind-Value=checkedUsers
+                         OnChange="Changed2"
+                         Options="users.ConvertToCheckBoxOptions(u=>u.UserName, u=>u.UserId)">
+</AntDesign.CheckboxGroup>
+<br />
+@(string.Join(",", checkedUsers ?? []))
+<br />UI.BuildRadioGroup
+@(UI.BuildRadioGroup<User, string>(this, users)
+    .LabelExpression(u => u.UserName)
+    .ValueExpression(u => u.UserId)
+    .Bind(() => selectedUser, Changed)
+    .Render())
+&nbsp; selected: @selectedUser
+
+<Project.Web.Shared.Components.IconSelector @bind-Value=selectedUser></Project.Web.Shared.Components.IconSelector>
+
+<StackPanel IsVertial HorizontalAlign="left">
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+    <span>测试</span>
+</StackPanel>
+
+
+
+<MModal @bind-Visible=visible Title="测试">
+    <h1>Modal Content</h1>
+</MModal>
+@code {
+    [Inject] IUserService<User> UserService { get; set; }
+    [Inject] IWatermarkServiceFactory WatermarkServiceFactory { get; set; }
+    string[] checkedUsers;
+    string selectedUser;
+    bool visible;
+    IEnumerable<User> users = Enumerable.Empty<User>();
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var result = await UserService.GetUserListAsync(new Project.Constraints.Models.Request.GenericRequest<User>());
+        users = result.Payload;
+        // ArgumentNullException.ThrowIfNull(selectedUser);
+    }
+    Task Changed2(string[] values)
+    {
+        Console.WriteLine(string.Join(",", values ?? []));
+        return Task.CompletedTask;
+    }
+    Task Changed()
+    {
+        Console.WriteLine(string.Join(",", checkedUsers ?? []));
+        return Task.CompletedTask;
+    }
+
+    void ThrowException()
+    {
+        var div = 0;
+        Console.WriteLine(1 / div);
+    }
+
+    void WaterMarkTest()
+    {
+        var service = WatermarkServiceFactory.GetWatermarkService();
+        service.UpdateWaterMarkAsync(DateTime.Now.ToString("yyyy-MM-dd"), "测试");
+    }
+
+    async Task ShowModal()
+    {
+        var b = await UI.ConfirmAsync("测试", "ConfirmTest");
+        if (b)
+        {
+            UI.AlertError("Test", "Content");
+            visible = true;
+        }
+    }
+
+    async Task OpenDialog()
+    {
+        await UI.ShowDialogAsync<DialogTest, int>(config: config =>
+        {
+            config.Title = "测试";
+            config.ShowFooter = false;
+        });
+    }
+}
+
+<style>
+    .item {
+        border: solid 1px black;
+        height: 300px;
+    }
+</style>
