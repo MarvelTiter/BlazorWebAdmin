@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{41F05D31-2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWpfAdmin", "BlazorWpfAdmin\BlazorWpfAdmin.csproj", "{EF479F54-490C-43F6-8020-CC436C6F02C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWinFormsAdmin", "BlazorWinFormsAdmin\BlazorWinFormsAdmin.csproj", "{51783492-8A16-491D-9C82-5ECF0873F41E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{EF479F54-490C-43F6-8020-CC436C6F02C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF479F54-490C-43F6-8020-CC436C6F02C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF479F54-490C-43F6-8020-CC436C6F02C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51783492-8A16-491D-9C82-5ECF0873F41E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51783492-8A16-491D-9C82-5ECF0873F41E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51783492-8A16-491D-9C82-5ECF0873F41E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51783492-8A16-491D-9C82-5ECF0873F41E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

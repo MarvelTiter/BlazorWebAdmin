@@ -12,5 +12,13 @@
         "type": "project"
     },
     "sourceName": "BlazorWebAdmin",
-    "preferNameDirectory": true
+    "preferNameDirectory": true,
+    "sources": [
+        {
+            "exclude": [
+                "**/BlazorWinFormsAdmin/**",
+                "**/BlazorWpfAdmin/**"
+            ]
+        }
+    ]
 }

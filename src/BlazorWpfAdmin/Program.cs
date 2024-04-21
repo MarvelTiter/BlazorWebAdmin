@@ -33,7 +33,7 @@ namespace BlazorWpfAdmin
             builder.Services.AddHostedService<WpfHostedService<App, MainWindow>>();
             builder.Services.AddWpfBlazorWebView();
             builder.Services.AddAntDesignUI();
-
+            Config.AddAssembly(typeof(App).Assembly);
             Console.WriteLine(Project.Constraints.AppConst.TempFilePath);
 
             builder.Build().Run();

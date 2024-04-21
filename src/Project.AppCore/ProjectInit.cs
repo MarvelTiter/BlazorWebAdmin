@@ -181,7 +181,6 @@ public static class ProjectInit
     public static void AddDefaultLightOrm(this IHostApplicationBuilder builder, Action<ExpressionSqlOptions>? action = null)
     {
         var connStr = builder.Configuration.GetConnectionString("Sqlite")!;
-        var p = Path.GetFullPath(connStr);
         builder.Services.AddLightOrm(option =>
         {
             option.SetDatabase(DbBaseType.Sqlite, connStr, SQLiteFactory.Instance).SetWatcher(sql =>

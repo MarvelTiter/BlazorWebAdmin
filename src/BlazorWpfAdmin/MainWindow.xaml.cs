@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using Microsoft.AspNetCore.Components.WebView;
 using Project.UI.AntBlazor;
 using Microsoft.Extensions.Hosting;
+using System.ComponentModel;
 
 namespace BlazorWpfAdmin
 {
@@ -32,6 +33,16 @@ namespace BlazorWpfAdmin
             root.Selector = "#app";
             root.ComponentType = typeof(WpfApp);
             webview.RootComponents.Add(root);
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            var result = MessageBox.Show("确定退出系统?", "", MessageBoxButton.OKCancel);
+            if (result == MessageBoxResult.Cancel)
+            {
+                e.Cancel = true;
+            }
+            base.OnClosing(e);
         }
 
         protected override void OnClosed(EventArgs e)
