@@ -17,7 +17,7 @@ namespace BlazorWpfAdmin
         public static void Main(string[] args)
         {
             var builder = Host.CreateApplicationBuilder(args);
-
+            
             builder.AddProject(setting =>
             {
                 setting.App.Name = "Demo";

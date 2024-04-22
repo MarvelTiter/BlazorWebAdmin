@@ -135,7 +135,7 @@ public static class ProjectInit
         });
     }
 
-    public static void AddProjectDbServices(this IServiceCollection services, ProjectSetting setting)
+    internal static void AddProjectDbServices(this IServiceCollection services, ProjectSetting setting)
     {
         // user
         services.AddScoped(typeof(IUserService<>), typeof(Services.UserService<>));
@@ -160,7 +160,7 @@ public static class ProjectInit
         });
     }
 
-    public static void ConfigureAppSettings(this IHostApplicationBuilder builder)
+    internal static void ConfigureAppSettings(this IHostApplicationBuilder builder)
     {
         var services = builder.Services;
         services.AddOptions();

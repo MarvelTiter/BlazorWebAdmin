@@ -6,11 +6,11 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App"/>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.4.0" />
-		<PackageReference Include="MT.LightORM" Version="2.0.3" />
+		<PackageReference Include="MT.LightORM" Version="2.0.5" />
 		<PackageReference Include="MT.Toolkit" Version="2.0.4" />
 		<PackageReference Include="LightExcel" Version="2.1.0.4" />
 	</ItemGroup>

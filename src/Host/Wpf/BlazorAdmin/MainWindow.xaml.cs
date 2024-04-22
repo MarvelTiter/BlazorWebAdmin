@@ -27,12 +27,18 @@ namespace BlazorWpfAdmin
         {
             InitializeComponent();
             this.hostApplicationLifetime = hostApplicationLifetime;
-            webview.HostPage = "index.html";
             webview.Services = provider;
+            webview.HostPage = "index.html";
             var root = new Microsoft.AspNetCore.Components.WebView.Wpf.RootComponent();
             root.Selector = "#app";
             root.ComponentType = typeof(WpfApp);
             webview.RootComponents.Add(root);
+            webview.BlazorWebViewInitialized = BlazorWebViewInitialized;
+        }
+
+        private void BlazorWebViewInitialized(object? sender, BlazorWebViewInitializedEventArgs e)
+        {
+
         }
 
         protected override void OnClosing(CancelEventArgs e)
