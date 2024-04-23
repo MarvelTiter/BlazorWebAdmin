@@ -15,8 +15,6 @@ namespace Project.AppCore.Pages
     {
         private LoginFormModel model = new LoginFormModel();
         [Inject] public ILoginService LoginSrv { get; set; }
-        [Inject] public AuthenticationStateProvider Auth { get; set; }
-        [Inject] NavigationManager NavigationManager { get; set; }
         [Inject] IStringLocalizer<Login> Localizer { get; set; }
         [Inject] IProjectSettingService CustomSetting { get; set; }
         [CascadingParameter] IDomEventHandler Root { get; set; }
@@ -25,7 +23,7 @@ namespace Project.AppCore.Pages
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            var full = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+            var full = Navigator.ToAbsoluteUri(Navigator.Uri);
             Redirect = HttpUtility.ParseQueryString(full.Query).Get(nameof(Redirect));
             Root.OnKeyDown += OnPressEnter;
         }
@@ -59,9 +57,9 @@ namespace Project.AppCore.Pages
                 if (goon)
                 {
                     if (string.IsNullOrEmpty(Redirect))
-                        NavigationManager.NavigateTo("/");
+                        Navigator.NavigateTo("/");
                     else
-                        NavigationManager.NavigateTo(Redirect);
+                        Navigator.NavigateTo(Redirect);
                 }
             }
             else

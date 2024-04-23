@@ -14,8 +14,7 @@ namespace Project.Constraints.Page
         {
             get
             {
-                if (id == null)
-                    id = $"{GetType().Name}_{Guid.NewGuid():N}";
+                id ??= $"{GetType().Name}_{Guid.NewGuid():N}";
                 return id;
             }
         }

@@ -1,20 +1,23 @@
 ﻿@using Project.Web.Shared.Components
 @using Project.AppCore.Routers;
 @inherits BasicComponent
-<ScrollBar>
-    @foreach (var item in Router.TopLinks)
-    {
-        if (item.Body == null) continue;
-        <ErrorCatcher ShowMessage>
-            <div id=@item.RouteUrl style="@(item.RouteUrl == Router.CurrentUrl ? "display: block;":"display: none;")">
-                <!-- 在路由页面中获取当前页的信息 -->
-                <CascadingValue Value="item">
-                    @item.Body
-                </CascadingValue>
-            </div>
-        </ErrorCatcher>
-    }
-</ScrollBar>
+@if (Context != null)
+{
+    <ScrollBar>
+        @foreach (var item in Router.TopLinks)
+        {
+            if (item.Body == null) continue;
+            <ErrorCatcher ShowMessage>
+                <div id=@item.RouteUrl style="@(item.RouteUrl == Router.CurrentUrl ? "display: block;":"display: none;")">
+                    <!-- 在路由页面中获取当前页的信息 -->
+                    <CascadingValue Value="item">
+                        @item.Body
+                    </CascadingValue>
+                </div>
+            </ErrorCatcher>
+        }
+    </ScrollBar>
+}
 
 @code {
     [CascadingParameter] public RouteData RouteData { get; set; }
@@ -23,7 +26,7 @@
     {
         if (parameters.TryGetValue(nameof(RouteData), out RouteData? routeData))
         {
-            if (routeData != null)
+            if (routeData != null && Context != null)
             {
                 _ = Router.RouteDataChangedHandleAsync(routeData);
             }

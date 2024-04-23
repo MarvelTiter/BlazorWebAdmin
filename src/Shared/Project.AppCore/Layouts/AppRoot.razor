@@ -4,23 +4,31 @@
 @using Project.AppCore;
 @using System.Reflection;
 @using Project.Web.Shared.Components;
-<ErrorCatcher>
-    <CascadingValue Value="this" IsFixed="true">
-        <CascadingAuthenticationState>
-            <Router AppAssembly="AppAssembly" AdditionalAssemblies="Config.Pages">
-                <Found Context="routeData">
-                    <CascadingValue Value="@routeData">
-                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-                    </CascadingValue>
-                </Found>
-            </Router>
-        </CascadingAuthenticationState>
-    </CascadingValue>
-</ErrorCatcher>
-<WaterMark ProvideService></WaterMark>
-<WebAdminReconnector></WebAdminReconnector>
-<Downloader />
+<CascadingValue Value="Context">
+    <ErrorCatcher>
+        <CascadingValue Value="this" IsFixed="true">
+            <CascadingAuthenticationState>
+                <Router AppAssembly="AppAssembly" AdditionalAssemblies="Config.Pages">
+                    <Found Context="routeData">
+                        <CascadingValue Value="@routeData">
+                            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                        </CascadingValue>
+                    </Found>
+                </Router>
+            </CascadingAuthenticationState>
+        </CascadingValue>
+    </ErrorCatcher>
+    <WaterMark ProvideService></WaterMark>
+    <WebAdminReconnector></WebAdminReconnector>
+    <Downloader />
+    @if (ChildContent != null)
+    {
+        @ChildContent
+    }
+</CascadingValue>
 @code {
     [Parameter]
     public Assembly AppAssembly { get; set; }
+    [Inject] IAppSession Context { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 }

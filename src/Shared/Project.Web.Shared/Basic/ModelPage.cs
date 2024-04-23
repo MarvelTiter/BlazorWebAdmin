@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Project.Web.Shared.Basic;
 
-public abstract class ModelPage<TModel, TQuery> : BasicComponent
+public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     where TQuery : IRequest, new()
 {
     [Inject] protected IExcelHelper Excel { get; set; }
@@ -30,6 +30,7 @@ public abstract class ModelPage<TModel, TQuery> : BasicComponent
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        LoadJs = false;
         Options.AutoRefreshData = true;
         Options.RowKey = SetRowKey;
         Options.Buttons = CollectButtons();
