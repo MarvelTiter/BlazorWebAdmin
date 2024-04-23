@@ -17,5 +17,10 @@
     <ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
     <ProjectReference Include="..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
   </ItemGroup>
+	<ItemGroup>
+	  <None Update="simple.db">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 
 </Project>

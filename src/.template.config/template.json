@@ -43,10 +43,6 @@
             "target": "./Shared"
         },
         {
-            "source": "./simple.db",
-            "target": "./"
-        },
-        {
             "condition": "(host == 'web')",
             "source": "./Host/Web",
             "target": "./"
