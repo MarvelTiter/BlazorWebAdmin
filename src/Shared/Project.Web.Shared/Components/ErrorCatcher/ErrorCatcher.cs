@@ -83,14 +83,14 @@ namespace Project.Web.Shared.Components
         /// OnErrorAsync 方法
         /// </summary>
         /// <param name="exception"></param>
-        protected override async Task OnErrorAsync(Exception exception)
+        protected override Task OnErrorAsync(Exception exception)
         {
             if (exception is not JSException && ShowMessage)
             {
                 UI.Notify(MessageType.Error, "程序异常", exception.Message);
                 Logger.LogError(exception, exception.Message);
             }
-            await ErrorBoundaryLogger.LogErrorAsync(exception);
+            return Task.CompletedTask;
         }
 
         public Task HandleExceptionAsync(Exception exception)

@@ -9,7 +9,7 @@ namespace Project.Constraints.Store
     /// <summary>
     /// https://source.dot.net/#Microsoft.AspNetCore.Components.Server/ProtectedBrowserStorage/ProtectedLocalStorage.cs,2ced327c1fc4a5f4
     /// </summary>
-    public class ProtectedLocalStorage : IProtectedLocalStorage
+    public class MyProtectedLocalStorage : IProtectedLocalStorage
     {
 
         public static readonly JsonSerializerOptions Options = new()
@@ -29,7 +29,7 @@ namespace Project.Constraints.Store
         /// <param name="storeName">The name of the store in which the data should be stored.</param>
         /// <param name="jsRuntime">The <see cref="IJSRuntime"/>.</param>
         /// <param name="dataProtectionProvider">The <see cref="IDataProtectionProvider"/>.</param>
-        public ProtectedLocalStorage(IJSRuntime jsRuntime, IDataProtectionProvider dataProtectionProvider)
+        public MyProtectedLocalStorage(IJSRuntime jsRuntime, IDataProtectionProvider dataProtectionProvider)
         {
             // Performing data protection on the client would give users a false sense of security, so we'll prevent this.
             if (OperatingSystem.IsBrowser())
