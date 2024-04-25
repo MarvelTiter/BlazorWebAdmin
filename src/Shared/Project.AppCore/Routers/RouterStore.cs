@@ -265,4 +265,9 @@ public class RouterStore : StoreBase, IRouterStore
             return RouteMetaFilterEvent.Invoke(meta);
         return Task.FromResult(true);
     }
+
+    public Type? GetRouteType(string routeUrl)
+    {
+        return AllPages.AllRoutes.FirstOrDefault(meta => meta.RouteUrl == routeUrl)?.RouteType;
+    }
 }

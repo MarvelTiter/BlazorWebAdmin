@@ -6,12 +6,12 @@ using System.Text.RegularExpressions;
 
 namespace Project.AppCore.Routers
 {
-    public static class AllPages
+    internal static class AllPages
     {
         public static IList<Assembly> Assemblies { get; }
         public static IList<RouterMeta> AllRoutes { get; }
         public static IEnumerable<RouteMenu> RouteMenu { get; } = new List<RouteMenu>();
-        static IList<RouterMeta> Groups { get; }
+        static List<RouterMeta> Groups { get; }
         static AllPages()
         {
             var entryAssembly = Assembly.GetEntryAssembly();
@@ -54,6 +54,7 @@ namespace Project.AppCore.Routers
                 Group = info?.GroupId ?? groupInfo?.Id ?? "ROOT",
                 Sort = info?.Sort ?? 0,
                 HasPageInfo = info != null,
+                RouteType = t,
             };
         }
         static bool HasGroup(PageInfoAttribute? pageInfo)

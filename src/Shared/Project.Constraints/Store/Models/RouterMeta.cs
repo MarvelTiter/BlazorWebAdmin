@@ -14,7 +14,7 @@ namespace Project.Constraints.Store.Models
         public int Sort { get; set; }
         public bool HasPageInfo { get; set; }
         public bool Cache { get; set; } = true;
-
+        public Type RouteType { get; set; }
         public bool Equals(RouterMeta? x, RouterMeta? y)
         {
             return x?.RouteId == y?.RouteId;
