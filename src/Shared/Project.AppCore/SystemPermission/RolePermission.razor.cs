@@ -19,7 +19,8 @@ namespace Project.AppCore.SystemPermission
         [Inject] public IPermissionService<TPower, TRole> PermissionSrv { get; set; }
         [Inject] public IStringLocalizer<TPower> Localizer { get; set; }
         [Inject] public IOptionsMonitor<CultureOptions> CultureSetting { get; set; }
-        TreeOptions<TPower> options;
+
+        TreeOptions<TPower>? options;
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();

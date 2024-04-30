@@ -11,7 +11,7 @@
             <div>
                 <h2>角色名称: </h2>
             </div>
-            <MTree DataSource="options.Datas"
+            <MTree DataSource="options?.Datas ?? []"
                    @bind-CheckedKeys=selectedKeys
                    IncludeIndeterminate
                    TitleExpression="x => x.Data.PowerName"
