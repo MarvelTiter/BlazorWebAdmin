@@ -4,10 +4,10 @@
 @using Project.AppCore;
 @using System.Reflection;
 @using Project.Web.Shared.Components;
-<CascadingValue Value="Context">
-    <ErrorCatcher>
-        <CascadingValue Value="this" IsFixed="true">
-            <CascadingAuthenticationState>
+<CascadingAuthenticationState>
+    <CascadingValue Value="Context">
+        <ErrorCatcher>
+            <CascadingValue Value="this" IsFixed="true">
                 <Router AppAssembly="AppAssembly" AdditionalAssemblies="Config.Pages">
                     <Found Context="routeData">
                         <CascadingValue Value="@routeData">
@@ -15,17 +15,17 @@
                         </CascadingValue>
                     </Found>
                 </Router>
-            </CascadingAuthenticationState>
-        </CascadingValue>
-    </ErrorCatcher>
-    <WaterMark ProvideService></WaterMark>
-    <WebAdminReconnector></WebAdminReconnector>
-    <Downloader />
-    @if (ChildContent != null)
-    {
-        @ChildContent
-    }
-</CascadingValue>
+            </CascadingValue>
+        </ErrorCatcher>
+        <WaterMark ProvideService></WaterMark>
+        <WebAdminReconnector></WebAdminReconnector>
+        <Downloader />
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+    </CascadingValue>
+</CascadingAuthenticationState>
 @code {
     [Parameter]
     public Assembly AppAssembly { get; set; }

@@ -16,6 +16,8 @@
     [Parameter]
     public EventCallback OnClick { get; set; }
 
+    [Parameter] public string? FontSize { get; set; }
+
     private async Task handleClick()
     {
         await OnClick.InvokeAsync();
@@ -37,8 +39,9 @@
         }
         else
         {
+            var style = Style ?? $"font-size: {FontSize ?? "18px"}";
             var insertIndex = svgContent.IndexOf("<svg") + 4;
-            svgContent = svgContent.Insert(insertIndex, $" class='svg-icon {ClassName}' style='font-size:18px; {Style}'");
+            svgContent = svgContent.Insert(insertIndex, $" class='svg-icon {ClassName}' style='{style}'");
             IconMarkuString = new MarkupString(svgContent);
         }
     }

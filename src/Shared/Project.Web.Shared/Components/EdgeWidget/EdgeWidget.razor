@@ -1,0 +1,15 @@
+@namespace Project.Web.Shared.Components
+@inherits JsComponentBase
+<div class="mark" @ref="maskDiv">
+</div>
+<div class="container" @ref="containerDiv" style="left:-1000px;">
+    <div class="content">
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+        <div class="trigger" @ref="triggerDiv">
+            <SvgIcon IconName="switch" Style="font-size:48px;color:white;"></SvgIcon>
+        </div>
+    </div>
+</div>

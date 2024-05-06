@@ -11,8 +11,12 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>			
 		</Content>
 	</ItemGroup>
+
 	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App"/>
+	  <None Remove="SvgAssets\switch.svg" />
+	</ItemGroup>
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
