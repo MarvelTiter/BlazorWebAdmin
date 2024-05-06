@@ -32,8 +32,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAdmin", "Host\WinForm
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAdmin", "Host\Wpf\BlazorAdmin\BlazorAdmin.csproj", "{3756E9B7-2EBC-4902-A2CE-13A785111FEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MT.LightTask", "Shared\MT.LightTask\MT.LightTask.csproj", "{18261C43-95DB-403D-80E7-2FE34FC33F47}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,10 +66,6 @@ Global
 		{3756E9B7-2EBC-4902-A2CE-13A785111FEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3756E9B7-2EBC-4902-A2CE-13A785111FEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3756E9B7-2EBC-4902-A2CE-13A785111FEC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{18261C43-95DB-403D-80E7-2FE34FC33F47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{18261C43-95DB-403D-80E7-2FE34FC33F47}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{18261C43-95DB-403D-80E7-2FE34FC33F47}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{18261C43-95DB-403D-80E7-2FE34FC33F47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,7 +81,6 @@ Global
 		{7E18F9BD-26D7-4071-8B5A-70143639C10A} = {8BD4599C-5109-46E1-8DE6-ACFD7ABA1F5D}
 		{632FC67A-D18F-4914-AA59-77A938AE950B} = {8D8A16FF-51A6-42B4-8B75-7F286A54170A}
 		{3756E9B7-2EBC-4902-A2CE-13A785111FEC} = {C28DC31B-0F36-49FA-8170-126970D5CA87}
-		{18261C43-95DB-403D-80E7-2FE34FC33F47} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0371ABB4-6400-487C-9031-25B119AB8B9E}
