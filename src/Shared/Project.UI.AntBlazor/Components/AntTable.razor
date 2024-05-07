@@ -37,50 +37,53 @@
 
             @if (Options.Buttons?.Count > 0)
             {
-                <ActionColumn Title=@(TableLocalizer["TableTips.ActionColumn"]) Align="@ColumnAlign.Center" Fixed="right" Width="@Options.ActionColumnWidth">
-                    @{
-                        var btns = Options.Buttons.Where(b => b.CheckVisible(context)).ToList();
-                        if (Options.ActionButtonColumn.HasValue)
-                        {
-                            <Project.Web.Shared.ComponentHelper.MGrid GridColumns="@Options.ActionButtonColumn.Value" Gap="5px">
-                                @foreach (var btn in btns)
+                @foreach(var btnGroup in Options.Buttons.GroupBy(btn => btn.Group))
+                {
+                    <ActionColumn Title=@(TableLocalizer[btnGroup.Key]) Align="@ColumnAlign.Center" Fixed="right" Width="@Options.ActionColumnWidth">
+                        @{
+                            var btns = btnGroup.Where(b => b.CheckVisible(context)).ToList();
+                            if (Options.ActionButtonColumn.HasValue)
+                            {
+                                <Project.Web.Shared.ComponentHelper.MGrid GridColumns="@Options.ActionButtonColumn.Value" Gap="5px">
+                                    @foreach (var btn in btns)
+                                    {
+                                        @CreateButton(btn, context)
+                                    }
+                                </Project.Web.Shared.ComponentHelper.MGrid>
+                            }
+                            else if (btns.Count <= 2)
+                            {
+                                foreach (var btn in btns)
                                 {
                                     @CreateButton(btn, context)
                                 }
-                            </Project.Web.Shared.ComponentHelper.MGrid>
-                        }
-                        else if (btns.Count <= 2)
-                        {
-                            foreach (var btn in btns)
+                            }
+                            else
                             {
-                                @CreateButton(btn, context)
+                                var first = btns[0];
+                                @CreateButton(first, context)
+                                <Dropdown>
+                                    <Overlay>
+                                        <Menu>
+                                            @for (var i = 1; i < btns.Count; i++)
+                                            {
+                                                var btn = btns[i];
+                                                <MenuItem>
+                                                    @CreateButton(btn, context)
+                                                </MenuItem>
+                                            }
+                                        </Menu>
+                                    </Overlay>
+                                    <ChildContent>
+                                        <a @onclick:preventDefault>
+                                            @TableLocalizer["TableTips.More"] <Icon Type="down" />
+                                        </a>
+                                    </ChildContent>
+                                </Dropdown>
                             }
                         }
-                        else
-                        {
-                            var first = btns[0];
-                            @CreateButton(first, context)
-                            <Dropdown>
-                                <Overlay>
-                                    <Menu>
-                                        @for (var i = 1; i < btns.Count; i++)
-                                        {
-                                            var btn = btns[i];
-                                            <MenuItem>
-                                                @CreateButton(btn, context)
-                                            </MenuItem>
-                                        }
-                                    </Menu>
-                                </Overlay>
-                                <ChildContent>
-                                    <a @onclick:preventDefault>
-                                        @TableLocalizer["TableTips.More"] <Icon Type="down" />
-                                    </a>
-                                </ChildContent>
-                            </Dropdown>
-                        }
-                    }
-                </ActionColumn>
+                    </ActionColumn>
+                }
             }
         </ChildContent>
         <PaginationTemplate Context="pageContext">

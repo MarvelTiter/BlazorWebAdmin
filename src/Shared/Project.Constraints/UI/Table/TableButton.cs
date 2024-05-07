@@ -36,6 +36,7 @@ namespace Project.Constraints.UI.Table
         public bool Danger { get; set; }
         public string? ConfirmContent { get; set; }
         public string? ConfirmTitle { get; set; }
+        public string? Group { get; set; }
     }
 
     /// <summary>
@@ -96,6 +97,7 @@ namespace Project.Constraints.UI.Table
             ConfirmContent = options.ConfirmContent;
             ConfirmTitle = options.ConfirmTitle;
             AdditionalParameter = options.AdditionalParameter;
+            Group = options.Group ?? "TableTips.ActionColumn";
         }
         public string Label { get; set; }
         public bool Danger { get; set; }
@@ -104,6 +106,7 @@ namespace Project.Constraints.UI.Table
         public string? ConfirmContent { get; set; }
         public string? ConfirmTitle { get; set; }
         public string? AdditionalParameter { get; set; }
+        public string Group { get; set; }
         public Func<TData, Task<bool>> Callback { get; set; }
 
         private Func<TableButtonContext<TData>, bool>? visible;
