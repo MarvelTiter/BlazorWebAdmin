@@ -20,7 +20,7 @@ namespace Project.Constraints.Models
         /// <summary>
         /// 存储用户额外信息
         /// </summary>
-        Dictionary<string, object?> AdditionalValue { get; set; } = [];
+        public Dictionary<string, object?> AdditionalValue { get; } = [];
         public DateTime CreatedTime { get; set; }
         public DateTime ActiveTime { get; set; }
         public UserInfo()
