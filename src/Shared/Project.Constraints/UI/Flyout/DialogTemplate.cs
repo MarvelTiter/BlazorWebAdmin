@@ -16,7 +16,7 @@ namespace Project.Constraints.UI.Flyout
     public class DialogTemplate<TValue> : JsComponentBase, IFeedback<TValue>
     {
         [Parameter, NotNull] public FormParam<TValue> DialogModel { get; set; }
-        [Parameter, NotNull] public RenderFragment ChildContent { get; set; }
+        [Parameter, NotNull] public RenderFragment<TValue> ChildContent { get; set; }
         [Parameter, NotNull] public FlyoutOptions<TValue> Options { get; set; }
         [Inject] protected IStringLocalizer<TValue> Localizer { get; set; }
         protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TValue).Name}.{prop}"];
@@ -53,7 +53,8 @@ namespace Project.Constraints.UI.Flyout
 
         public virtual Task<bool> OnPostAsync()
         {
-            return Task.FromResult(true);
+            var flag = Options.PostCheck?.Invoke(Value, static () => true) ?? true;
+            return Task.FromResult(flag);
         }
 
         protected Task CloseAsync()
@@ -83,8 +84,10 @@ namespace Project.Constraints.UI.Flyout
             {
                 builder.Component<CascadingValue<bool>>()
                     .SetComponent(c => c.Value, Edit)
-                    .SetComponent(c => c.ChildContent, ChildContent)
-                    .Build();
+                    .SetComponent(c => c.ChildContent, b =>
+                    {
+                        ChildContent.Invoke(Value).Invoke(b);
+                    }).Build();
             }
         }
     }

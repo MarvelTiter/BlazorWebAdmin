@@ -26,6 +26,7 @@ public class PopoverOptions
 public class FlyoutOptions<TReturn> : FlyoutOptions
 {
     public IFeedback<TReturn>? Feedback { get; set; }
+    public Func<TReturn, Func<bool>, bool>? PostCheck { get; set; }
 }
 
 public enum Position

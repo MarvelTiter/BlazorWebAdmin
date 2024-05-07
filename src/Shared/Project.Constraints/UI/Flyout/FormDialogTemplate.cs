@@ -14,7 +14,8 @@ namespace Project.Constraints.UI.Flyout
         {
             if (options != null && options.Validate != null)
             {
-                return Task.FromResult(options.Validate());
+               var flag = Options.PostCheck?.Invoke(Value, options.Validate) ?? options.Validate.Invoke();
+                return Task.FromResult(flag);
             }
             return base.OnPostAsync();
         }

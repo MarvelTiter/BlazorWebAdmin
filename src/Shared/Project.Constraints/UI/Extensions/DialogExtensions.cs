@@ -37,6 +37,7 @@ namespace Project.Constraints.UI.Extensions
         {
             var options = new FlyoutOptions<TData>();
             var p = new FormParam<TData>(param, edit);
+            config?.Invoke(options);
             options.Content = builder =>
             {
                 builder.Component<Template>()
@@ -45,18 +46,24 @@ namespace Project.Constraints.UI.Extensions
                 .Build(obj => options.Feedback = (IFeedback<TData>)obj);
             };
 
-            config?.Invoke(options);
-
             var result = await service.ShowDialogAsync(options);
 
             return result;
         }
 
-        public static async Task<TData> ShowDialogAsync<TData>(this IUIService service, string title, RenderFragment content, TData? param = default, bool? edit = null, string? width = null)
+        public static async Task<TData> ShowDialogAsync<TData>(this IUIService service, string title, RenderFragment<TData> content, TData? param = default, bool? edit = null, string? width = null)
+        {
+            return await ShowDialogAsync(service, content, param, edit, config =>
+            {
+                config.Title = title;
+                config.Width = width;
+            });
+        }
+
+        public static async Task<TData> ShowDialogAsync<TData>(this IUIService service, RenderFragment<TData> content, TData? param = default, bool? edit = null, Action<FlyoutOptions<TData>>? config = null)
         {
             var options = new FlyoutOptions<TData>();
-            options.Title = title;
-            options.Width = width;
+            config?.Invoke(options);
 
             var p = new FormParam<TData>(param, edit);
             options.Content = builder =>
