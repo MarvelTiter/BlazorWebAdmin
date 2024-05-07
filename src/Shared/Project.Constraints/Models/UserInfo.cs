@@ -17,6 +17,10 @@ namespace Project.Constraints.Models
         /// </summary>
         public string ApiToken { get; set; }
         public IEnumerable<string> Roles { get; set; }
+        /// <summary>
+        /// 存储用户额外信息
+        /// </summary>
+        Dictionary<string, object?> AdditionalValue { get; set; } = [];
         public DateTime CreatedTime { get; set; }
         public DateTime ActiveTime { get; set; }
         public UserInfo()

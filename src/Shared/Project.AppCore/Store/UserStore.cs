@@ -10,7 +10,6 @@ namespace Project.AppCore.Store
         public string? UserId => UserInfo?.UserId;
         public string UserDisplayName => GetUserName();
 
-
         private string GetUserName()
         {
             return UserInfo?.UserName ?? "Unknow";
