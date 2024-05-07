@@ -150,13 +150,15 @@ public static class TypedResultExtensionForQueryResult
         return self;
     }
 
-    public static IDataTableResult Result(this DataTable payload, bool? success = null)
+    public static IDataTableResult TableResult(this DataTable payload, bool? success = null, long? total = 0)
     {
         var s = success ?? payload != null;
+        total ??= payload?.Rows.Count ?? 0;
         return new DataTableResult
         {
             Success = s,
-            Payload = payload
+            Payload = payload,
+            TotalRecord = (int)total
         };
     }
 
