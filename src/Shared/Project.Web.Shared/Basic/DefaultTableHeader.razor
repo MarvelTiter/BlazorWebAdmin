@@ -27,6 +27,10 @@
             {
                 @UI.BuildButton(this).OnClick(Export).Text(TableLocalizer["TableButtons.Export"]).Primary().Render()
             }
+            @if (ChildContent != null)
+            {
+                @ChildContent
+            }
         </StackPanel>
     </div>
 </div>
@@ -46,6 +50,7 @@
 }
 @code {
     [Parameter] public TableOptions<TData, TQuery> Options { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
     [Inject] IStringLocalizer<TData> Localizer { get; set; }
     [Inject] IStringLocalizer<TableOptions> TableLocalizer { get; set; }
     [Inject] IProtectedLocalStorage LocalStorage { get; set; }

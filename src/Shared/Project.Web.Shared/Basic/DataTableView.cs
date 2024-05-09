@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 using Project.Constraints;
 using Project.Constraints.Models;
 using Project.Constraints.Models.Request;
+using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Table;
 using Project.Web.Shared.ComponentHelper;
 using System.Data;
@@ -13,6 +14,8 @@ namespace Project.Web.Shared.Basic
     public class DataTableView : BasicComponent
     {
         [Parameter] public DataTable? Data { get; set; }
+        [Parameter] public EventCallback<DataRow> OnRowClick { get; set; }
+        [Parameter] public List<TableButton<DataRow>> Buttons { get; set; } = [];
         [Inject] protected IExcelHelper Excel { get; set; }
         [Inject] IDownloadService DownloadService { get; set; }
 
@@ -23,10 +26,12 @@ namespace Project.Web.Shared.Basic
             base.OnInitialized();
             Options.AutoRefreshData = true;
             Options.RowKey = r => r;
+            Options.Buttons = Buttons;
             Options.OnQueryAsync = OnQueryAsync;
             Options.OnExportAsync = OnExportAsync;
             Options.OnSaveExcelAsync = OnSaveExcelAsync;
             Options.ShowExportButton = true;
+            Options.OnRowClickAsync = OnRowClickAsync;
         }
 
         protected virtual async Task<IQueryCollectionResult<DataRow>> OnQueryAsync(GenericRequest query)
@@ -66,6 +71,15 @@ namespace Project.Web.Shared.Basic
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             builder.AddContent(1, UI.BuildDynamicTable(Options, Data));
+        }
+
+        private Task OnRowClickAsync(DataRow row)
+        {
+            if (OnRowClick.HasDelegate)
+            {
+                return OnRowClick.InvokeAsync(row);
+            }
+            return Task.CompletedTask;
         }
     }
 }

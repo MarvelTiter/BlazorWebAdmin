@@ -33,7 +33,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         LoadJs = false;
         Options.AutoRefreshData = true;
         Options.RowKey = SetRowKey;
-        Options.Buttons = CollectButtons();
+        Options.Buttons = this.CollectButtons<TModel>();
         Options.OnQueryAsync = OnQueryAsync;
         Options.OnAddItemAsync = OnAddItemAsync;
         Options.OnRowClickAsync = OnRowClickAsync;
@@ -65,35 +65,35 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
 
     protected virtual object SetRowKey(TModel model) => model;
 
-    private List<TableButton<TModel>> CollectButtons()
-    {
-        List<TableButton<TModel>> buttons = new List<TableButton<TModel>>();
+    //private List<TableButton<TModel>> CollectButtons()
+    //{
+    //    List<TableButton<TModel>> buttons = new List<TableButton<TModel>>();
 
-        var type = GetType();
-        var methods = type.GetMethods().Where(m => m.GetCustomAttribute<TableButtonAttribute>() != null);
+    //    var type = GetType();
+    //    var methods = type.GetMethods().Where(m => m.GetCustomAttribute<TableButtonAttribute>() != null);
 
-        foreach (var method in methods)
-        {
-            var btnOptions = method.GetCustomAttribute<TableButtonAttribute>()!;
-            ArgumentNullException.ThrowIfNull(btnOptions.Label ?? btnOptions.LabelExpression);
-            var btn = new TableButton<TModel>(btnOptions);
-            btn.Callback = method.CreateDelegate<Func<TModel, Task<bool>>>(this);
-            if (btnOptions.LabelExpression != null)
-            {
-                var le = type.GetMethod(btnOptions.LabelExpression);
-                btn.LabelExpression = le?.CreateDelegate<Func<TableButtonContext<TModel>, string>>(this);
-            }
+    //    foreach (var method in methods)
+    //    {
+    //        var btnOptions = method.GetCustomAttribute<TableButtonAttribute>()!;
+    //        ArgumentNullException.ThrowIfNull(btnOptions.Label ?? btnOptions.LabelExpression);
+    //        var btn = new TableButton<TModel>(btnOptions);
+    //        btn.Callback = method.CreateDelegate<Func<TModel, Task<bool>>>(this);
+    //        if (btnOptions.LabelExpression != null)
+    //        {
+    //            var le = type.GetMethod(btnOptions.LabelExpression);
+    //            btn.LabelExpression = le?.CreateDelegate<Func<TableButtonContext<TModel>, string>>(this);
+    //        }
 
-            if (btnOptions.VisibleExpression != null)
-            {
-                var ve = type.GetMethod(btnOptions.VisibleExpression);
-                btn.VisibleExpression = ve?.CreateDelegate<Func<TableButtonContext<TModel>, bool>>(this);
-            }
+    //        if (btnOptions.VisibleExpression != null)
+    //        {
+    //            var ve = type.GetMethod(btnOptions.VisibleExpression);
+    //            btn.VisibleExpression = ve?.CreateDelegate<Func<TableButtonContext<TModel>, bool>>(this);
+    //        }
 
-            buttons.Add(btn);
-        }
-        return buttons;
-    }
+    //        buttons.Add(btn);
+    //    }
+    //    return buttons;
+    //}
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
