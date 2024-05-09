@@ -46,7 +46,17 @@ namespace Project.Constraints.Models
     [IgnoreAutoInject]
     public class SelectItem<T> : IEnumerable<Options<T>>
     {
-        List<Options<T>> items = new List<Options<T>>();
+        private readonly List<Options<T>> items = new();
+        private readonly Lazy<Dictionary<string, string>> lazyDictionary;
+
+        public SelectItem()
+        {
+            lazyDictionary = new Lazy<Dictionary<string, string>>(() =>
+            {
+                return this.ParseEnumValues();
+            });
+        }
+
         public SelectItem<T> Add(string label, T value)
         {
             items.Add(new Options<T>(label, value));
@@ -59,18 +69,7 @@ namespace Project.Constraints.Models
             return this;
         }
 
-        private Dictionary<string, string> _enumValues;
-        public Dictionary<string, string> EnumValues
-        {
-            get
-            {
-                if (_enumValues == null)
-                {
-                    _enumValues = this.ParseEnumValues();
-                }
-                return _enumValues;
-            }
-        }
+        public Dictionary<string, string> EnumValues => lazyDictionary.Value;
         public void Clear() => items.Clear();
 
         private class Enumerator : IEnumerator<Options<T>>
