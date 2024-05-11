@@ -8,41 +8,50 @@ using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Table;
 using Project.Web.Shared.ComponentHelper;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Web.Shared.Basic
 {
-    public class DataTableView : BasicComponent
+    public class DataTableView<TRequest> : BasicComponent where TRequest : IRequest, new()
     {
         [Parameter] public DataTable? Data { get; set; }
-        [Parameter] public EventCallback<DataRow> OnRowClick { get; set; }
+        [Parameter] public int Total { get; set; }
         [Parameter] public List<TableButton<DataRow>> Buttons { get; set; } = [];
-        [Inject] protected IExcelHelper Excel { get; set; }
-        [Inject] IDownloadService DownloadService { get; set; }
+        [Inject, NotNull] protected IExcelHelper? Excel { get; set; }
+        [Inject, NotNull] protected IDownloadService? DownloadService { get; set; }
 
-        public TableOptions<DataRow, GenericRequest> Options { get; set; } = new();
+        public TableOptions<DataRow, TRequest> Options { get; set; } = new();
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
             Options.AutoRefreshData = true;
             Options.RowKey = r => r;
-            Options.Buttons = Buttons;
-            Options.OnQueryAsync = OnQueryAsync;
+            Options.Buttons = [.. this.CollectButtons<DataRow>(), .. Buttons];
+            Options.OnQueryAsync = InternalQueryAsync;
             Options.OnExportAsync = OnExportAsync;
             Options.OnSaveExcelAsync = OnSaveExcelAsync;
             Options.ShowExportButton = true;
             Options.OnRowClickAsync = OnRowClickAsync;
         }
 
-        protected virtual async Task<IQueryCollectionResult<DataRow>> OnQueryAsync(GenericRequest query)
+        protected async Task<IQueryCollectionResult<DataRow>> InternalQueryAsync(TRequest query)
         {
-            await Task.Delay(1);
+            var result = await OnQueryAsync(query);
+            Total = 0;
+            if (result != null)
+            {
+                Data = result.Payload;
+                Total = result.TotalRecord;
+            }
             if (Data != null)
             {
-                return Data.ToEnumerable().CollectionResult();
+                return Data.ToEnumerable().CollectionResult(Total);
             }
             return QueryResult.EmptyResult<DataRow>();
         }
+
+        protected virtual Task<IDataTableResult> OnQueryAsync(TRequest query) => Task.FromResult<IDataTableResult>(null!);
 
         /// <summary>
         /// 获取导出数据
@@ -50,7 +59,7 @@ namespace Project.Web.Shared.Basic
         /// <param name="query"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        protected virtual Task<IQueryCollectionResult<DataRow>> OnExportAsync(GenericRequest query) => OnQueryAsync(query);
+        protected virtual Task<IQueryCollectionResult<DataRow>> OnExportAsync(TRequest query) => InternalQueryAsync(query);
 
         /// <summary>
         /// 导出Excel文件
@@ -70,16 +79,11 @@ namespace Project.Web.Shared.Basic
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            builder.AddContent(1, UI.BuildDynamicTable(Options, Data));
+            builder.AddContent(1, TableFragment);
         }
 
-        private Task OnRowClickAsync(DataRow row)
-        {
-            if (OnRowClick.HasDelegate)
-            {
-                return OnRowClick.InvokeAsync(row);
-            }
-            return Task.CompletedTask;
-        }
+        public virtual Task OnRowClickAsync(DataRow row) => Task.CompletedTask;
+
+        protected RenderFragment TableFragment => UI.BuildDynamicTable(Options, Data);
     }
 }
