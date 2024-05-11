@@ -14,7 +14,7 @@ public class TableOptions
 {
     public bool Pager { get; set; } = true;
     public string ScrollX { get; set; } = "";
-    public Action? NotifyChanged { get; set; }
+    public Func<Task> NotifyChanged { get; set; } = () => Task.CompletedTask;
     public bool Loading { get; set; }
     public bool EnableSelection { get; set; }
     public bool LoadDataOnLoaded { get; set; }
@@ -74,11 +74,12 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     public async Task RefreshAsync()
     {
         Loading = true;
-        NotifyChanged?.Invoke();
+        await NotifyChanged.Invoke();
+        await Task.Yield();
         var result = await OnQueryAsync(Query);
         Result = result;
         Loading = false;
-        NotifyChanged?.Invoke();
+        await NotifyChanged.Invoke();
     }
 
     public async Task ExportAsync()

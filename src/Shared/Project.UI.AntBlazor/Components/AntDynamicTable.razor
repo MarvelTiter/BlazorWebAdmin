@@ -46,16 +46,10 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Options.NotifyChanged = StateHasChanged;
+        Options.NotifyChanged = () => InvokeAsync(StateHasChanged);
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        await Options.RefreshAsync();
-        StateHasChanged();
-    }
-
+    
     /// <summary>
     /// table总数
     /// </summary>

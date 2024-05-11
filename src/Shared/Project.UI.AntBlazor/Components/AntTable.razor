@@ -37,7 +37,7 @@
 
             @if (Options.Buttons?.Count > 0)
             {
-                @foreach(var btnGroup in Options.Buttons.GroupBy(btn => btn.Group))
+                @foreach (var btnGroup in Options.Buttons.GroupBy(btn => btn.Group))
                 {
                     <ActionColumn Title=@(TableLocalizer[btnGroup.Key]) Align="@ColumnAlign.Center" Fixed="right" Width="@Options.ActionColumnWidth">
                         @{
@@ -116,7 +116,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Options.NotifyChanged = StateHasChanged;
+        Options.NotifyChanged = () => InvokeAsync(StateHasChanged);
     }
 
     // string GetLocalizerString()
@@ -141,14 +141,14 @@
     {
         return
     @<Button Type="@definition.ButtonType"
-                         Size="@ButtonSize.Small"
-                         Danger="@definition.Danger"
-                         Icon="@definition.Icon"
-                         OnClickStopPropagation
-                         OnClick="@(() => InvokeButtonAction(definition, context))">
+                 Size="@ButtonSize.Small"
+                 Danger="@definition.Danger"
+                 Icon="@definition.Icon"
+                 OnClickStopPropagation
+                 OnClick="@(() => InvokeButtonAction(definition, context))">
         @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
     </Button>
-        ;
+    ;
     }
 
     private async Task InvokeButtonAction(TableButton<TData> definition, TData data)
@@ -156,8 +156,8 @@
         if (definition.Danger)
         {
             var confirmResult = await ConfirmSrv.Show(
-            TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
-            , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+        TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+        , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
             if (confirmResult == ConfirmResult.OK)
             {
                 await CallButtonAction();
