@@ -11,16 +11,18 @@ namespace Project.Services
     public class CustomSetting : BasicSetting, IProjectSettingService
     {
         private readonly IExpressionContext context;
-        private  IUserStore UserStore => appSession.UserStore;
 
         private readonly IWatermarkServiceFactory watermarkServiceFactory;
+        private readonly IPermissionService permissionService;
 
-        public CustomSetting(IExpressionContext context, IWatermarkServiceFactory watermarkServiceFactory, IAppSession appSession):base(appSession)
+        public CustomSetting(IExpressionContext context
+            , IWatermarkServiceFactory watermarkServiceFactory
+            , IPermissionService permissionService) 
         {
             this.context = context;
             this.watermarkServiceFactory = watermarkServiceFactory;
+            this.permissionService = permissionService;
         }
-
         public override async Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password)
         {
             var u = await context.Repository<User>().GetSingleAsync(u => u.UserId == username);
@@ -45,7 +47,6 @@ namespace Project.Services
             var roles = await context.Repository<UserRole>().GetListAsync(ur => ur.UserId == username);
 
             userInfo.Roles = roles.Select(ur => ur.RoleId).ToList();
-
             return result;
         }
 
@@ -59,15 +60,21 @@ namespace Project.Services
         public override Task AfterWebApplicationAccessed()
         {
             var service = watermarkServiceFactory.GetWatermarkService();
-            service.UpdateWaterMarkAsync(UserStore.UserInfo?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            service.UpdateWaterMarkAsync(CurrentUser?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             return Task.CompletedTask;
         }
 
         public override Task<bool> RouterChangingAsync(Constraints.Store.Models.TagRoute route)
         {
             var service = watermarkServiceFactory.GetWatermarkService();
-            service.UpdateWaterMarkAsync(UserStore.UserInfo?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), route.RouteTitle);
+            service.UpdateWaterMarkAsync(CurrentUser?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), route.RouteTitle);
             return Task.FromResult(true);
+        }
+
+        public override async Task<IEnumerable<IPower>> GetUserPowersAsync(UserInfo info)
+        {
+            var result = await permissionService.GetPowerListByUserIdAsync(info.UserId);
+            return result.Payload;
         }
     }
 }

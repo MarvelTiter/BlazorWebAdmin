@@ -10,7 +10,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddHubOptions(option =>
     {
-        option.MaximumReceiveMessageSize = 1024 * 1024 * 5;
+        option.MaximumReceiveMessageSize = 1024 * 1024 * 2;
     });
 
 builder.Services.AddAntDesignUI();
@@ -20,6 +20,7 @@ builder.AddProject(setting =>
     setting.App.Id = "Test";
     setting.App.Company = "Marvel";
     setting.ConfigureSettingProviderType<CustomSetting>();
+    setting.AddInterceotor<AdditionalTest>();
 });
 
 builder.AddDefaultLightOrm();

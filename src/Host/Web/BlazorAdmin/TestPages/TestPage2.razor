@@ -1,10 +1,11 @@
 ﻿@using Project.Constraints.Common.Attributes
+@using Project.Constraints.Models.Request
 @using Project.Web.Shared.Components
 @using System.Data
 <SplitView>
     <FirstContent>
         @* @UI.BuildDynamicTable(dt) *@
-        <Project.Web.Shared.Basic.DataTableView Data="dt"></Project.Web.Shared.Basic.DataTableView>
+        <Project.Web.Shared.Basic.DataTableView TRequest="GenericRequest" Data="dt"></Project.Web.Shared.Basic.DataTableView>
     </FirstContent>
     <SecondContent>
         <h1>SSSSSSS</h1>

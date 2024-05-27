@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Constraints.UI.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Project.AppCore;

@@ -26,9 +26,3 @@
         }
     </CascadingValue>
 </CascadingAuthenticationState>
-@code {
-    [Parameter]
-    public Assembly AppAssembly { get; set; }
-    [Inject] IAppSession Context { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-}

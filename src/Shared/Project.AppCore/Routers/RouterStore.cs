@@ -15,7 +15,7 @@ namespace Project.AppCore.Routers;
 
 public class RouterStore : StoreBase, IRouterStore
 {
-    private readonly IPermissionService permissionService;
+    private readonly IProjectSettingService settingService;
     private readonly NavigationManager navigationManager;
     private readonly IUserStore userStore;
     private readonly IStringLocalizer<RouterStore> localizer;
@@ -23,7 +23,7 @@ public class RouterStore : StoreBase, IRouterStore
     private readonly ILogger<RouterStore> logger;
     private readonly IOptionsMonitor<AppSetting> setting;
 
-    public RouterStore(IPermissionService permissionService
+    public RouterStore(IProjectSettingService settingService
         , NavigationManager navigationManager
         , IUserStore userStore
         , IStringLocalizer<RouterStore> localizer
@@ -31,7 +31,7 @@ public class RouterStore : StoreBase, IRouterStore
         , ILogger<RouterStore> logger
         , IOptionsMonitor<AppSetting> setting)
     {
-        this.permissionService = permissionService;
+        this.settingService = settingService;
         this.navigationManager = navigationManager;
         this.userStore = userStore;
         this.localizer = localizer;
@@ -218,8 +218,8 @@ public class RouterStore : StoreBase, IRouterStore
     private async Task InitRoutersAsyncByUser(UserInfo? userInfo)
     {
         if (userInfo == null) return;
-        var result = await permissionService.GetPowerListByUserIdAsync(userInfo.UserId);
-        var powers = result.Payload.Where(p => p.PowerType == PowerType.Page);
+        var result = await settingService.GetUserPowersAsync(userInfo);
+        var powers = result.Where(p => p.PowerType == PowerType.Page);
         Menus.Clear();
         Menus.Add(new()
         {
@@ -247,7 +247,6 @@ public class RouterStore : StoreBase, IRouterStore
             Menus.Add(new(meta));
         }
     }
-
 
     public event Func<TagRoute, Task<bool>> RouterChangingEvent;
 

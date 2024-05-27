@@ -13,6 +13,7 @@ using System.Data.SQLite;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using AspectCore.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Routing;
 namespace Project.AppCore;
 
 public static class ProjectInit
@@ -58,6 +59,8 @@ public static class ProjectInit
         services.AutoInjects(setting.AutoInjectConfig);
         //
         services.AddHttpClient();
+        //
+        services.AddHttpContextAccessor();
 
         InterceptorsInit(services, setting);
 
@@ -87,7 +90,6 @@ public static class ProjectInit
         services.AddSingleton<RedirectToLauchUrlMiddleware>();
         services.AddSingleton<CheckBrowserEnabledMiddleware>();
 
-
         if (setting.AddDefaultLogger)
         {
             builder.Logging.AddSimpleLogger(config =>
@@ -105,8 +107,6 @@ public static class ProjectInit
             builder.ConfigureContainer(new DynamicProxyServiceProviderFactory());
         }
 
-
-
         Config.AddAssembly(typeof(AppConst).Assembly, typeof(Web.Shared._Imports).Assembly);
 
         builder.ConfigureAppSettings();
@@ -114,22 +114,21 @@ public static class ProjectInit
 
     private static void InterceptorsInit(IServiceCollection services, ProjectSetting setting)
     {
-        var settingImplType = setting.SettingProviderType;
-        services.AddScoped(settingImplType);
+        services.AddScoped(typeof(IProjectSettingService), setting.SettingProviderType);
         foreach (var item in setting.interceptorTypes)
         {
             services.AddScoped(typeof(IAddtionalInterceptor), item);
         }
-        services.AddScoped(typeof(IProjectSettingService), provider =>
-        {
-            var i = provider.GetService(settingImplType) as BasicSetting;
-            var interceptors = provider.GetServices(typeof(IAddtionalInterceptor)) ?? Enumerable.Empty<IAddtionalInterceptor>();
-            foreach (var item in interceptors.Cast<IAddtionalInterceptor>())
-            {
-                i!.AddService(item);
-            }
-            return i;
-        });
+        //services.AddScoped(typeof(IProjectSettingService), provider =>
+        //{
+        //    var i = provider.GetService(settingImplType) as BasicSetting;
+        //    var interceptors = provider.GetServices(typeof(IAddtionalInterceptor)) ?? Enumerable.Empty<IAddtionalInterceptor>();
+        //    foreach (var item in interceptors.Cast<IAddtionalInterceptor>())
+        //    {
+        //        i!.AddService(item);
+        //    }
+        //    return i;
+        //});
     }
 
     internal static void AddProjectDbServices(this IServiceCollection services, ProjectSetting setting)
@@ -192,11 +191,15 @@ public static class ProjectInit
         });
     }
 
-    public static void UseProject(this WebApplication app)
+    public static void UseProject(this IApplicationBuilder app)
     {
         app.UseMiddleware<CheckBrowserEnabledMiddleware>();
         app.UseStaticFiles();
         app.UseMiddleware<RedirectToLauchUrlMiddleware>();
-        app.MapControllers();
+        if (app is IEndpointRouteBuilder route)
+        {
+            route.MapControllers();
+        }
     }
+
 }

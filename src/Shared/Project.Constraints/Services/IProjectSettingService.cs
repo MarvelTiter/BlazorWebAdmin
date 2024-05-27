@@ -1,4 +1,5 @@
-﻿using Project.Constraints.Store.Models;
+﻿using Project.Constraints.Models.Permissions;
+using Project.Constraints.Store.Models;
 
 namespace Project.Constraints.Services
 {
@@ -10,17 +11,40 @@ namespace Project.Constraints.Services
         Type? GetPermissionPageType();
         Type? GetRolePermissionPageType();
         Type? GetRunLogPageType();
+        /// <summary>
+        /// 用户登录逻辑
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
+        /// <summary>
+        /// 更新登录信息
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
         Task<int> UpdateLoginInfo(UserInfo info);
 
         /// <summary>
         /// 登录成功钩子
         /// </summary>
-        /// <param name="result"></param>
+        /// <param name="info"></param>
         /// <returns></returns>
-        Task LoginSuccessAsync(UserInfo result);
+        Task LoginSuccessAsync(UserInfo info);
 
-        Task<bool> LoginInterceptorAsync(UserInfo result);
+        /// <summary>
+        /// 用户登录成功后与主页显示前
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        Task<bool> LoginInterceptorAsync(UserInfo info);
+
+        /// <summary>
+        /// 初始化用户可用菜单
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        Task<IEnumerable<IPower>> GetUserPowersAsync(UserInfo info);
 
         /// <summary>
         /// 导航钩子
@@ -28,12 +52,14 @@ namespace Project.Constraints.Services
         /// <param name="route"></param>
         /// <returns></returns>
         Task<bool> RouterChangingAsync(TagRoute route);
+
         /// <summary>
         /// 初始化菜单钩子
         /// </summary>
         /// <param name="meta"></param>
         /// <returns></returns>
         Task<bool> RouteMetaFilterAsync(RouterMeta meta);
+
         /// <summary>
         /// 初次显示主页
         /// </summary>
