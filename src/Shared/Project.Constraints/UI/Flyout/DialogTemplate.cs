@@ -13,15 +13,15 @@ namespace Project.Constraints.UI.Flyout
         public TEntity? Value { get; set; } = entity;
         public bool Edit { get; set; } = edit ?? entity != null;
     }
-    public class DialogTemplate<TValue> : JsComponentBase, IFeedback<TValue>
+    public class DialogTemplate<TInput, TReturn> : JsComponentBase, IFeedback<TReturn>
     {
-        [Parameter, NotNull] public FormParam<TValue> DialogModel { get; set; }
-        [Parameter, NotNull] public RenderFragment<TValue> ChildContent { get; set; }
-        [Parameter, NotNull] public FlyoutOptions<TValue> Options { get; set; }
-        [Inject] protected IStringLocalizer<TValue> Localizer { get; set; }
-        protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TValue).Name}.{prop}"];
+        [Parameter, NotNull] public FormParam<TInput> DialogModel { get; set; }
+        [Parameter, NotNull] public RenderFragment<TInput> ChildContent { get; set; }
+        [Parameter, NotNull] public FlyoutOptions<TReturn> Options { get; set; }
+        [Inject] protected IStringLocalizer<TInput> Localizer { get; set; }
+        protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TInput).Name}.{prop}"];
 
-        protected TValue Value
+        protected TInput Value
         {
             get
             {
@@ -33,27 +33,29 @@ namespace Project.Constraints.UI.Flyout
             }
         }
 
+        protected virtual TReturn ReturnValue { get; set; }
+
         protected bool Edit => DialogModel.Edit;
         protected override void OnInitialized()
         {
             base.OnInitialized();
             LoadJs = false;
-            var valueType = typeof(TValue);
+            var valueType = typeof(TInput);
             if (DialogModel == null) return;
             if (DialogModel.Value == null && valueType.IsClass && valueType != typeof(string))
             {
-                DialogModel.Value = (TValue)Activator.CreateInstance(valueType)!;
+                DialogModel.Value = (TInput)Activator.CreateInstance(valueType)!;
             }
             else
             {
                 if (valueType.IsClass && valueType != typeof(string) && DialogModel.Value != null)
-                    DialogModel.Value = Mapper.Map<TValue, TValue>(DialogModel.Value);
+                    DialogModel.Value = Mapper.Map<TInput, TInput>(DialogModel.Value);
             }
         }
 
         public virtual Task<bool> OnPostAsync()
         {
-            var flag = Options.PostCheck?.Invoke(Value, static () => true) ?? true;
+            var flag = Options.PostCheck?.Invoke(ReturnValue, static () => true) ?? true;
             return Task.FromResult(flag);
         }
 
@@ -72,10 +74,10 @@ namespace Project.Constraints.UI.Flyout
             return Task.CompletedTask;
         }
 
-        public async Task<FeedBackValue<TValue>> OnOkAsync()
+        public async Task<FeedBackValue<TReturn>> OnOkAsync()
         {
             var flag = await OnPostAsync();
-            return new FeedBackValue<TValue> { Value = Value, Success = flag };
+            return new FeedBackValue<TReturn> { Value = ReturnValue, Success = flag };
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -90,5 +92,10 @@ namespace Project.Constraints.UI.Flyout
                     }).Build();
             }
         }
+    }
+
+    public class DialogTemplate<TValue> : DialogTemplate<TValue, TValue>
+    {
+        protected override TValue ReturnValue { get => Value; set => Value = value; }
     }
 }

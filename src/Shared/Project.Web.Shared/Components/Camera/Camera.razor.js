@@ -154,9 +154,9 @@ export function loadUserMedia(id, deviceId, width, height) {
 export function closeUserMedia(id) {
     try {
         const camera = getComponentById(id)
-        camera.close()
+        if (camera)
+            camera.close()
         return success()
-
     } catch (e) {
         return failed(e.message)
     }
