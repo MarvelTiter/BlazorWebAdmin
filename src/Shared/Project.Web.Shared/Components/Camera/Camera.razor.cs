@@ -1,17 +1,17 @@
 ﻿using Project.Web.Shared.Utils;
 using Microsoft.AspNetCore.Components;
-using System.ComponentModel.DataAnnotations;
 using Project.Constraints.UI.Extensions;
-using Project.Constraints.Models;
-using System.Web;
 using Project.Constraints.Store;
 using Project.Constraints;
+using Microsoft.Extensions.Options;
+using Project.Constraints.Options;
 
 namespace Project.Web.Shared.Components
 {
     public partial class Camera : JsComponentBase, ICameraObject
     {
         [Inject] public IProtectedLocalStorage Storage { get; set; }
+        [Inject] public IOptionsMonitor<AppSetting> AppOptions { get; set; }
         [Parameter] public bool AutoPlay { get; set; }
         [Parameter] public bool EnableClip { get; set; }
         [Parameter] public int Width { get; set; }
@@ -46,36 +46,6 @@ namespace Project.Web.Shared.Components
             public string Kind { get; set; }
         }
 
-        public enum Resolution
-        {
-            [Display(Name = "QVGA(320×240)")]
-            QVGA,
-            [Display(Name = "VGA(640×380)")]
-            VGA,
-            [Display(Name = "HD(1280×720)")]
-            HD,
-            [Display(Name = "FullHD(1920×1080)")]
-            FullHD,
-            [Display(Name = "Television4K(3840×2160)")]
-            Television4K,
-            [Display(Name = "Cinema4K(4096×2160)")]
-            Cinema4K,
-            [Display(Name = "A4(1123×794)")]
-            A4,
-            //[Display(Name = "QVGA(240×320)")]
-            //RevQVGA,
-            //[Display(Name = "VGA(380×640)")]
-            //RevVGA,
-            //[Display(Name = "HD(720×1280)")]
-            //RevHD,
-            //[Display(Name = "FullHD(1080×1920)")]
-            //RevFullHD,
-            //[Display(Name = "Television4K(2160×3840)")]
-            //RevTelevision4K,
-            //[Display(Name = "Cinema4K(2160×4096)")]
-            //RevCinema4K,
-        }
-
         public struct CaptureInfo
         {
             public string Filename { get; set; }
@@ -85,12 +55,30 @@ namespace Project.Web.Shared.Components
         private SelectItem<Resolution> resolutions = new SelectItem<Resolution>();
         public IEnumerable<DeviceInfo> Devices { get; set; } = Enumerable.Empty<DeviceInfo>();
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            AddResolution(resolutions, Resolution.QVGA);
+            AddResolution(resolutions, Resolution.VGA);
+            AddResolution(resolutions, Resolution.HD);
+            AddResolution(resolutions, Resolution.FullHD);
+            AddResolution(resolutions, Resolution.Television4K);
+            AddResolution(resolutions, Resolution.Cinema4K);
+            AddResolution(resolutions, Resolution.A4);
+
+            foreach (var item in AppOptions.CurrentValue.CameraResolutions)
+            {
+                AddResolution(resolutions, item);
+            }
+        }
+
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
             if (Width < 200) Width = 200;
             if (Height < 100) Height = 100;
         }
+
 
         protected override async ValueTask Init()
         {
@@ -110,15 +98,13 @@ namespace Project.Web.Shared.Components
             }
         }
 
+        static void AddResolution(SelectItem<Resolution> items, Resolution item)
+        {
+            items.Add(item.Name, item);
+        }
+
         private async Task<bool> InitDevices()
         {
-            resolutions.Add("QVGA(320×240)", Resolution.QVGA);
-            resolutions.Add("VGA(640×380)", Resolution.VGA);
-            resolutions.Add("HD(1280×720)", Resolution.HD);
-            resolutions.Add("FullHD(1920×1080)", Resolution.FullHD);
-            resolutions.Add("Television4K(3840×2160)", Resolution.Television4K);
-            resolutions.Add("Cinema4K(4096×2160)", Resolution.Cinema4K);
-            resolutions.Add("A4(1123×794)", Resolution.A4);
             var result = await ModuleInvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");
             if (result.Success)
             {
@@ -148,23 +134,7 @@ namespace Project.Web.Shared.Components
                 resolution = CameraResolution.Value;
             }
             resolution ??= Resolution.FullHD;
-            return resolution switch
-            {
-                Resolution.QVGA => (320, 240),
-                Resolution.VGA => (640, 380),
-                Resolution.HD => (1280, 720),
-                Resolution.FullHD => (1920, 1080),
-                Resolution.Television4K => (3840, 2160),
-                Resolution.Cinema4K => (4096, 2160),
-                Resolution.A4 => (1123, 794),
-                //Resolution.RevQVGA => (240, 320),
-                //Resolution.RevVGA => (380, 640),
-                //Resolution.RevHD => (720, 1280),
-                //Resolution.RevFullHD => (1080, 1920),
-                //Resolution.RevTelevision4K => (2160, 3840),
-                //Resolution.RevCinema4K => (2160, 4096),
-                _ => throw new ArgumentException()
-            };
+            return (resolution.Value.Width, resolution.Value.Height);
         }
 
         public Task Start()

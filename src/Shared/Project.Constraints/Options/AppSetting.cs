@@ -2,6 +2,12 @@
 
 namespace Project.Constraints.Options;
 
+public record CameraResolution
+{
+    public string? Name { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
+}
 public sealed class AppSetting
 {
     public string AppTitle { get; set; }
@@ -13,4 +19,6 @@ public sealed class AppSetting
     public bool LoadPageFromDatabase { get; set; } = true;
     public bool UseAspectProxy { get; set; }
     public int SupportedMajorVersion { get; set; } = 85;
+    public List<CameraResolution> CameraResolutions { get; set; }
+
 }

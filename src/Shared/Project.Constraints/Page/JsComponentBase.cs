@@ -35,11 +35,7 @@ namespace Project.Constraints.Page
 
         protected string ProjectName => GetType().Assembly.GetName().Name;
         protected string RelativePath { get; set; }
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-
-        }
+        
         string? version;
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
