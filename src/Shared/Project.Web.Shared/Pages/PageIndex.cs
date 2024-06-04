@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Project.Constraints.PageHelper;
 
-namespace Project.AppCore.SystemPermission
+namespace Project.Web.Shared.Pages
 {
-    public abstract class PageIndex : ComponentBase
+    public abstract class PageIndex : ComponentBase, IPageAction
     {
         [Inject] IProjectSettingService SettingProvider { get; set; }
 
@@ -14,14 +15,30 @@ namespace Project.AppCore.SystemPermission
             PageType = GetPageType(SettingProvider);
         }
         public abstract Type? GetPageType(IProjectSettingService customSetting);
-
+        IPageAction? page;
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             if (PageType != null)
             {
                 builder.OpenComponent(0, PageType);
+                builder.AddComponentReferenceCapture(1, obj =>
+                {
+                    page = obj as IPageAction;
+                });
                 builder.CloseComponent();
             }
+        }
+
+        public async Task OnShowAsync()
+        {
+            if (page != null)
+                await page.OnShowAsync();
+        }
+
+        public async Task OnHiddenAsync()
+        {
+            if (page != null)
+                await page.OnHiddenAsync();
         }
     }
 

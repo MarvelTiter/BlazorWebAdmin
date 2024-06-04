@@ -24,7 +24,7 @@ namespace BlazorAdmin
                 setting.App.Name = "Demo";
                 setting.App.Id = "Test";
                 setting.App.Company = "Marvel";
-                setting.AddDefaultLogger = true;
+                setting.AddFileLogger = true;
                 setting.ConfigureSettingProviderType<CustomSetting>();
             });
             builder.Services.AddAntDesignUI();

@@ -7,6 +7,7 @@ namespace Project.Constraints.Models.Permissions
         public string UserId { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
+        public IEnumerable<string> Roles { get; set; }
         public void OnUserSave(SaveActionType type)
         {
 
@@ -46,5 +47,9 @@ namespace Project.Constraints.Models.Permissions
         [LightColumn(Name = "LAST_LOGIN")]
         [Form(Hide = true)]
         public DateTime? LastLogin { get; set; }
+
+        [Ignore]
+        [ColumnDefinition(Visible = false)]
+        public IEnumerable<string> Roles { get; set; } = [];
     }
 }

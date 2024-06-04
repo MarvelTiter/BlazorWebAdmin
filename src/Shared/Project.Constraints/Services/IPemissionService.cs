@@ -23,9 +23,9 @@ namespace Project.Constraints.Services
         Task<IQueryCollectionResult<TPower>> GetPowerListByRoleIdAsync(string roleId);
         Task<IQueryCollectionResult<TRole>> GetUserRolesAsync(string usrId);
         [LogInfo(Action = "修改用户角色", Module = "权限控制")]
-        Task<IQueryResult<bool>> SaveUserRole(string usrId, params string[] roles);
+        Task<IQueryResult<bool>> SaveUserRoleAsync(string usrId, params string[] roles);
         [LogInfo(Action = "修改角色权限", Module = "权限控制")]
-        Task<IQueryResult<bool>> SaveRolePower(string roleId, params string[] powers);
+        Task<IQueryResult<bool>> SaveRolePowerAsync(string roleId, params string[] powers);
         [LogInfo(Action = "更新权限信息", Module = "权限控制")]
         Task<IQueryResult<bool>> UpdatePowerAsync(TPower power);
         [LogInfo(Action = "新增权限信息", Module = "权限控制")]

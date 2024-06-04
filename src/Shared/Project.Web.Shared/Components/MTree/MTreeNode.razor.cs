@@ -37,7 +37,7 @@ namespace Project.Web.Shared.Components
         protected override void OnInitialized()
         {
             Root.AddNode(this);
-            collapse = Deepth > 0;
+            collapse = Deepth > 0 && Root.CollapseAll;
             ResetState(Root.CheckedKeys);
             base.OnInitialized();
         }

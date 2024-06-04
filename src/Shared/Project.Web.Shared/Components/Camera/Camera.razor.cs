@@ -5,6 +5,7 @@ using Project.Constraints.UI.Extensions;
 using Project.Constraints.Models;
 using System.Web;
 using Project.Constraints.Store;
+using Project.Constraints;
 
 namespace Project.Web.Shared.Components
 {

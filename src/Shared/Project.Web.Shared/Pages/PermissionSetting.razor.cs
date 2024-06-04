@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Localization;
 using Project.Constraints.Models.Permissions;
 
-namespace Project.AppCore.SystemPermission
+namespace Project.Web.Shared.Pages
 {
     public partial class PermissionSetting<TPower, TRole> : ModelPage<TPower, GenericRequest<TPower>>
         where TPower : class, IPower, new()

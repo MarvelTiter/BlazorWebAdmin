@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Hosting;
+using Project.Constraints;
 using System.Collections.Concurrent;
 
 namespace Project.Web.Shared.Components
@@ -43,7 +45,16 @@ namespace Project.Web.Shared.Components
         {
             if (loaded) return;
             var path = AppDomain.CurrentDomain.BaseDirectory;
-            var files = Directory.EnumerateFiles(path, "*.svg", SearchOption.AllDirectories).Where(f => f.Contains("SvgAssets", StringComparison.CurrentCultureIgnoreCase));
+            if (AppConst.Environment?.IsDevelopment() == true)
+            {
+#if DEBUG
+                path = new DirectoryInfo(path).Parent!.Parent!.Parent!.Parent!.Parent!.Parent!.FullName;
+#else
+                path = new DirectoryInfo(path).Parent!.Parent!.Parent!.Parent!.FullName;
+#endif
+            }
+            var files = Directory.EnumerateFiles(path, "*.svg", SearchOption.AllDirectories).Where(f => f.Contains("wwwroot"));
+            //var files = Directory.EnumerateFiles(path, "*.svg", SearchOption.AllDirectories).Where(f => f.Contains("SvgAssets", StringComparison.CurrentCultureIgnoreCase));
             foreach (var f in files)
             {
                 var name = Path.GetFileNameWithoutExtension(f);

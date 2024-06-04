@@ -28,6 +28,7 @@ builder.AddDefaultLightOrm();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+Project.Constraints.AppConst.Environment = app.Environment;
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);

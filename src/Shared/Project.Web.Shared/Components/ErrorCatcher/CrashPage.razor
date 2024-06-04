@@ -4,8 +4,9 @@
 <ErrorPage>
     <p>未处理的异常：请联系管理员</p>
 </ErrorPage>
-<div style="text-align:center;">
-
+<div style="text-align:center;display:none;">
+    <p>@Exception?.Message</p>
+    <p>@Exception?.StackTrace</p>
 </div>
 
 @code {

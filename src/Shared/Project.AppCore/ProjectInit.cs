@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using AspectCore.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
+using MT.Toolkit.LogTool;
 namespace Project.AppCore;
 
 public static class ProjectInit
@@ -90,15 +91,10 @@ public static class ProjectInit
         services.AddSingleton<RedirectToLauchUrlMiddleware>();
         services.AddSingleton<CheckBrowserEnabledMiddleware>();
 
-        if (setting.AddDefaultLogger)
+        if (setting.AddFileLogger)
         {
-            builder.Logging.AddSimpleLogger(config =>
-            {
-                config.EnabledLogType = MT.Toolkit.LogTool.LogType.Console | MT.Toolkit.LogTool.LogType.File;
-                config.LogDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
-            });
+            builder.Logging.AddLocalFileLogger();
         }
-
 
         var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
         if (useProxy)
@@ -201,5 +197,4 @@ public static class ProjectInit
             route.MapControllers();
         }
     }
-
 }

@@ -5,21 +5,8 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<Content Include="SvgAssets\**">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>			
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="SvgAssets\switch.svg" />
-	</ItemGroup>
-	<ItemGroup>
-		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
+	
 	<ItemGroup>
 		<ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
 	</ItemGroup>
-
 </Project>

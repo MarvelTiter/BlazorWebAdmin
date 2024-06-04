@@ -1,0 +1,30 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using Project.Constraints.UI.Tree
+@typeparam TPower where TPower : class, IPower, new()
+<MTree DataSource="Options?.Datas ?? []"
+       CheckedKeys="selectedKeys"
+       CheckedKeysChanged="UpdateSelected"
+       IncludeIndeterminate
+       TitleExpression="x => x.Data.PowerName"
+       KeyExpression="x => x.Data.PowerId"
+       ChildrenExpression="x => x.Children"
+       TNode="TreeData<TPower>">
+</MTree>
+@code {
+    [Parameter, NotNull] public TreeOptions<TPower>? Options { get; set; }
+    [Parameter, NotNull] public FormItemContext? Context { get; set; }
+    string[]? selectedKeys;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var powers = Context.GetValue() as IEnumerable<string>;
+        selectedKeys = powers?.ToArray() ?? [];
+    }
+
+    Task UpdateSelected(string[] news)
+    {
+        selectedKeys = news;
+        Context.SetValue(news);
+        return Task.CompletedTask;
+    }
+}

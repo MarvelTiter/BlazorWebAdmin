@@ -20,7 +20,14 @@ namespace BlazorAdmin.TestPages
         {
             var refInt = new RefInt();
             refInt.Value = 1;
-            await UI.ShowDialogAsync(val => UI.BuildInput<int>(this).Bind(() => val.Value).Render()
+            await UI.ShowDialogAsync(val => builder =>
+            {
+                builder.Div().AddContent(b =>
+                {
+                    b.AddContent(0,"要大于10");
+                    b.AddContent(1, UI.BuildInput<int>(this).Bind(() => val.Value).Render());
+                }).Build();
+            }
                , refInt, false, config =>
                {
                    config.Title = "测试PostCheck";

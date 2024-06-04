@@ -1,21 +1,17 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
-using Project.Constraints.Models.Permissions;
 using Project.Constraints.Options;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Tree;
+using Project.Web.Shared.Pages.Component;
 
-namespace Project.AppCore.SystemPermission
+namespace Project.Web.Shared.Pages
 {
-    public partial class RolePermission<TPower,TRole> : ModelPage<TRole, GenericRequest<TRole>>
+    public class RolePermission<TPower, TRole> : ModelPage<TRole, GenericRequest<TRole>>
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
     {
-        bool powerLoading = false;
-        TRole? CurrentRole;
         IEnumerable<TPower> allPower;
-        string[]? selectedKeys;
-        bool sideExpand;
         [Inject] public IPermissionService<TPower, TRole> PermissionSrv { get; set; }
         [Inject] public IStringLocalizer<TPower> Localizer { get; set; }
         [Inject] public IOptionsMonitor<CultureOptions> CultureSetting { get; set; }
@@ -25,6 +21,11 @@ namespace Project.AppCore.SystemPermission
         {
             await base.OnInitializedAsync();
             Options.LoadDataOnLoaded = true;
+            Options.GetColumn(p => p.Powers).FormTemplate = ctx => b =>
+                b.Component<AssignRolePowers<TPower>>()
+                .SetComponent(c => c.Context, ctx)
+                .SetComponent(c => c.Options, options)
+                .Build();
             await InitPowerTree();
         }
         protected override object SetRowKey(TRole model) => model.RoleId;
@@ -102,13 +103,14 @@ namespace Project.AppCore.SystemPermission
             return true;
         }
 
-
-
         [EditButton]
         public async Task<bool> EditRole(TRole role)
         {
+            var powers = await PermissionSrv.GetPowerListByRoleIdAsync(role.RoleId);
+            role.Powers = powers.Payload.Select(p => p.PowerId).ToList();
             var newRole = await this.ShowEditFormAsync("编辑角色", role);
             var result = await PermissionSrv.UpdateRoleAsync(newRole);
+            await PermissionSrv.SaveRolePowerAsync(newRole.RoleId, [.. newRole.Powers]);
             return result.Success;
         }
 
@@ -117,29 +119,6 @@ namespace Project.AppCore.SystemPermission
         {
             var result = await PermissionSrv.DeleteRoleAsync(role);
             return result.Success;
-        }
-
-        async Task SaveRolePower()
-        {
-            if (selectedKeys is null) return;
-            var flag = await PermissionSrv.SaveRolePower(CurrentRole!.RoleId, selectedKeys);
-            if (flag.Success) UI.Success("保存成功");
-            else UI.Error("保存数据异常！");
-        }
-
-
-        protected override async Task OnRowClickAsync(TRole model)
-        {
-            powerLoading = true;
-            await InitPowerTree();
-            CurrentRole = model;
-            sideExpand = true;
-            StateHasChanged();
-            var result = await PermissionSrv.GetPowerListByRoleIdAsync(CurrentRole.RoleId);
-            var keys = result.Payload.Select(p => p.PowerId);
-            selectedKeys = keys.ToArray();
-            powerLoading = false;
-            StateHasChanged();
         }
     }
 }

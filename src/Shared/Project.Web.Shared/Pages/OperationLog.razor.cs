@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Project.Constraints.Models.Permissions;
 using Project.Constraints.PageHelper;
 
-namespace Project.AppCore.SystemPermission
+namespace Project.Web.Shared.Pages
 {
     public partial class OperationLog<TRunLog> : ModelPage<TRunLog, GenericRequest<TRunLog>>, IPageAction
         where TRunLog : class, IRunLog, new()

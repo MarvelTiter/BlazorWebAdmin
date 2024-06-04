@@ -5,6 +5,7 @@ namespace Project.Constraints.Models.Permissions
     {
         string RoleId { get; set; }
         string RoleName { get; set; }
+        IEnumerable<string> Powers { get; set; }
     }
 
     [LightTable(Name = "ROLE")]
@@ -16,5 +17,9 @@ namespace Project.Constraints.Models.Permissions
         [ColumnDefinition]
         [LightColumn(Name = "ROLE_NAME")]
         public string RoleName { get; set; }
+
+        [ColumnDefinition(Visible = false)]
+        [Ignore]
+        public IEnumerable<string> Powers { get; set; }
     }
 }

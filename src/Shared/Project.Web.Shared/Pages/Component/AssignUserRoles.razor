@@ -1,0 +1,58 @@
+﻿@using Project.Web.Shared.ComponentHelper
+@using System.Diagnostics.CodeAnalysis
+@typeparam TRole where TRole : class, IRole, new()
+@inherits BasicComponent
+<div style="margin:10px 0;">
+    @foreach (var item in roleDefs)
+    {
+        <div class="role-item @(item.Check?"check":"")">
+            <label>
+                @(UI.BuildCheckBox(this).Bind(() => item.Check, SaveUserRole).Render())
+                <span>@($"{item.Role.RoleId} - {item.Role.RoleName}")</span>
+            </label>
+        </div>
+    }
+</div>
+@code {
+    class RoleDef
+    {
+        public RoleDef(TRole Role, bool Check)
+        {
+            this.Role = Role;
+            this.Check = Check;
+        }
+
+        public TRole Role { get; set; }
+        public bool Check { get; set; }
+    }
+    [Parameter, NotNull] public FormItemContext? Ctx { get; set; }
+    [Parameter] public IEnumerable<TRole> Roles { get; set; } = [];
+    List<RoleDef> roleDefs = new List<RoleDef>();
+    IEnumerable<TRole> roles = Enumerable.Empty<TRole>();
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var userRoles = Ctx.GetValue() as IEnumerable<string>;
+        roleDefs = Roles.Select(r => new RoleDef(r, userRoles!.Contains(r.RoleId))).ToList();
+    }
+
+    Task SaveUserRole()
+    {
+        var selectedRoles = roleDefs.Where(rd => rd.Check).Select(rd => rd.Role.RoleId).ToArray();
+        Ctx.SetValue(selectedRoles);
+        return Task.CompletedTask;
+    }
+}
+
+<style>
+    .role-item {
+        padding: 5px 10px;
+        box-sizing: border-box;
+        border: solid 1px #d9d9d9;
+        margin: 10px 0;
+    }
+
+        .role-item.check {
+            border-color: #1890ff;
+        }
+</style>

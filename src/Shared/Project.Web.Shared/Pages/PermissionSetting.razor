@@ -1,0 +1,17 @@
+﻿@using Project.Web.Shared.Pages.Component
+@typeparam TPower where TPower : class, IPower, new()
+@typeparam TRole where TRole : class, IRole, new()
+@inherits ModelPage<TPower, GenericRequest<TPower>>
+@TableFragment
+
+@code {
+
+    RenderFragment<FormItemContext> IconSelect()
+    {
+        return ctx =>
+        {
+            return @<PowerIconSelector Context="ctx"></PowerIconSelector>;
+        };
+    }
+
+}

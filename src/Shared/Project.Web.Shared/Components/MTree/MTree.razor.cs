@@ -24,6 +24,7 @@ namespace Project.Web.Shared.Components
         public bool IncludeIndeterminate { get; set; }
         [Parameter]
         public RenderFragment<TNode> TitleTemplate { get; set; }
+        [Parameter] public bool CollapseAll { get; set; }
 
         private List<MTreeNode<TNode>> nodes = new List<MTreeNode<TNode>>();
 

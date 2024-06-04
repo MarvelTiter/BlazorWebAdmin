@@ -134,7 +134,14 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     /// <param name="query"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    protected virtual Task<IQueryCollectionResult<TModel>> OnExportAsync(TQuery query) => throw new NotImplementedException();
+    protected virtual async Task<IQueryCollectionResult<TModel>> OnExportAsync(TQuery query)
+    {
+        if (Options.Result == null)
+        {
+            await Options.RefreshAsync();
+        }
+        return Options.Result;
+    }
 
     /// <summary>
     /// 导出Excel文件

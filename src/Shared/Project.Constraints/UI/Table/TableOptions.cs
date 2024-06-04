@@ -1,11 +1,7 @@
-﻿using Microsoft.JSInterop;
-using Project.Constraints.Common;
-using Project.Constraints.Models;
+﻿using Project.Constraints.Common;
 using Project.Constraints.Models.Request;
-using Project.Constraints.Store;
 using System.Data;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Project.Constraints.UI.Table;
 

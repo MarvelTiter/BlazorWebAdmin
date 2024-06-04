@@ -23,7 +23,7 @@ public class ProjectSetting
     }
 
     public Action<AutoInjectFilter>? AutoInjectConfig { get; set; }
-    public bool AddDefaultLogger { get; set; }
+    public bool AddFileLogger { get; set; }
     public bool AddDefaultProjectServices { get; set; } = true;
     public AppInfo App => Config.App;
     public DbTableType TypeInfo => Config.TypeInfo;

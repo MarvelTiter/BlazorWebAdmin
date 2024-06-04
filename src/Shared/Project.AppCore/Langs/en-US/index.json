@@ -39,6 +39,7 @@
     "Age": "Age",
     "Sign": "Sign",
     "LastLogin": "LastLogin",
+    "Roles": "User Roles",
     "DialogTitle": {
       "Add": "Add",
       "Modify": "Modify"
@@ -62,7 +63,8 @@
   },
   "Role": {
     "RoleId": "RoleId",
-    "RoleName": "RoleName"
+    "RoleName": "RoleName",
+    "Powers": "Role Powers"
   },
   "Power": {
     "PowerId": "PowerId",

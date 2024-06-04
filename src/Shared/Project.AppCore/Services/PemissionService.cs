@@ -70,7 +70,7 @@ namespace Project.AppCore.Services
             return roles.CollectionResult();
         }
 
-        public async Task<IQueryResult<bool>> SaveUserRole(string usrId, params string[] roles)
+        public async Task<IQueryResult<bool>> SaveUserRoleAsync(string usrId, params string[] roles)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace Project.AppCore.Services
             }
         }
 
-        public async Task<IQueryResult<bool>> SaveRolePower(string roleId, params string[] powers)
+        public async Task<IQueryResult<bool>> SaveRolePowerAsync(string roleId, params string[] powers)
         {
             try
             {
