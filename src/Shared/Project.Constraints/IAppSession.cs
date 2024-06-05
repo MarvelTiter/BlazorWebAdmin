@@ -15,5 +15,5 @@ public interface IAppSession
     IUserStore UserStore { get; }
     IUIService UI { get; }
     Action? Update { get; set; }
-    Task OnWebApplicationAccessedAsync();
+    Task NotifyWebApplicationAccessedAsync();
 }

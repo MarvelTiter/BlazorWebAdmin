@@ -21,7 +21,7 @@ namespace Project.AppCore.Store
         public Action? Update { get; set; }
 
         public event Func<Task> WebApplicationAccessedEvent;
-        public Task OnWebApplicationAccessedAsync()
+        public Task NotifyWebApplicationAccessedAsync()
         {
             if (WebApplicationAccessedEvent != null)
             {

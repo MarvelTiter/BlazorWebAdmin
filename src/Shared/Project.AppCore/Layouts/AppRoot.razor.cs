@@ -46,6 +46,7 @@ namespace Project.AppCore.Layouts
             foreach (var additional in initActions)
             {
                 Context.UserStore.LoginSuccessEvent -= additional.LoginSuccessAsync;
+                Context.RouterStore.RouteMetaFilterEvent -= additional.RouteMetaFilterAsync;
                 Context.RouterStore.RouterChangingEvent -= additional.RouterChangingAsync;
                 Context.WebApplicationAccessedEvent -= additional.AfterWebApplicationAccessedAsync;
             }
