@@ -3,21 +3,46 @@
 @using Project.Constraints.Page
 @inherits BasicComponent
 @* @attribute [PageInfo(Title = "Camera测试")] *@
-<Camera Width="400" Height="300" OnCapture="handleCapture" @ref=camera PreviewRotate></Camera>
+<Camera Width="400" Height="300" OnCapture="handleCapture" @ref=camera PreviewRotate CameraResolution="resolution">
+    <DeviceSelectorRender>
+        @UI.BuildSelect(this, context.Resolutions).Bind(() => resolution, SaveToLocal).Render()
+        @UI.BuildButton(this).OnClick(context.Start).Text("打开").Render()
+        @UI.BuildButton(this).OnClick(context.Capture).Text("拍照").Render()
+    </DeviceSelectorRender>
+</Camera>
 <img src="@src" />
 @code {
     Camera? camera;
+    [Inject] IProtectedLocalStorage LocalStorage { get; set; }
     public async Task SwitchCamera(IEnumerable<Camera.DeviceInfo> devices, int type)
     {
         await camera!.SwitchCamera(devices.First(d => d.Kind == "videoinput").DeviceId);
     }
-
+    Camera.Resolution resolution;
     string src;
 
     public void handleCapture(Camera.CaptureInfo info)
     {
         src = $"data:image/jpeg;base64,{info.Content}";
         StateHasChanged();
+    }
+
+    async Task SaveToLocal()
+    {
+        await LocalStorage.SetAsync("Test", resolution);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            var result = await LocalStorage.GetAsync<Camera.Resolution>("Test");
+            if (result.Success)
+            {
+                resolution = result.Value;
+            }
+        }
     }
 
     Task SwitchVideo(ICameraObject camera, string deviceId)

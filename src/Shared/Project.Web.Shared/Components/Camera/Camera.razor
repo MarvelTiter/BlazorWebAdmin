@@ -19,14 +19,14 @@
         <div style="text-align:center;margin-top:10px;">
             <div>
                 @UI.BuildSelect(this, dropdownDevices).Bind(() => selectedDeviceId).Set("Style", "width:200px;").Render()
-                @UI.BuildButton(this).OnClick(Start).Text("开启").SetButtonType(ButtonType.Primary).Set("Disabled", playButtonStatus).Render()
-                @UI.BuildButton(this).OnClick(Stop).Text("关闭").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
+                @UI.BuildButton(this).OnClick(Start).Text("开启").Primary().Set("Disabled", playButtonStatus).Render()
+                @UI.BuildButton(this).OnClick(Stop).Text("关闭").Primary().Set("Disabled", !playButtonStatus).Render()
             </div>
             <div style="margin-top:10px;">
-                @UI.BuildSelect(this, resolutions).Bind(() => resolution).Set("Style", "width:200px;").Render()
-                @UI.BuildButton(this).OnClick(() => Rotate++).Text("+90°").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
-                @UI.BuildButton(this).OnClick(() => Rotate--).Text("-90°").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
-                @UI.BuildButton(this).OnClick(Capture).Text("拍照").SetButtonType(ButtonType.Primary).Set("Disabled", !playButtonStatus).Render()
+                @UI.BuildSelect(this, Resolutions).Bind(() => resolution).Set("Style", "width:200px;").Render()
+                @UI.BuildButton(this).OnClick(() => Rotate++).Text("+90°").Primary().Set("Disabled", !playButtonStatus).Render()
+                @UI.BuildButton(this).OnClick(() => Rotate--).Text("-90°").Primary().Set("Disabled", !playButtonStatus).Render()
+                @UI.BuildButton(this).OnClick(Capture).Text("拍照").Primary().Set("Disabled", !playButtonStatus).Render()
             </div>
         </div>
     }

@@ -18,12 +18,14 @@ namespace Project.Web.Shared.Components
             public int Width { get; set; }
             public int Height { get; set; }
             public string Name { get; set; }
+            public Resolution() { }
             public Resolution(string name, int width, int height)
             {
                 Name = name;
                 Width = width;
                 Height = height;
             }
+
 
             public static implicit operator Resolution((int width, int height) size) => new($"自定义({size.width}×{size.height})", size.width, size.height);
 

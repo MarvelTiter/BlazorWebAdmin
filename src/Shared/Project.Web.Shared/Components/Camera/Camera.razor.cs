@@ -52,23 +52,28 @@ namespace Project.Web.Shared.Components
             public string Content { get; set; }
         }
         private SelectItem<string> dropdownDevices = new SelectItem<string>();
-        private SelectItem<Resolution> resolutions = new SelectItem<Resolution>();
+        public SelectItem<Resolution> Resolutions { get; } = new SelectItem<Resolution>();
         public IEnumerable<DeviceInfo> Devices { get; set; } = Enumerable.Empty<DeviceInfo>();
+
+        static void AddResolution(SelectItem<Resolution> items, Resolution item)
+        {
+            items.Add(item.Name, item);
+        }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            AddResolution(resolutions, Resolution.QVGA);
-            AddResolution(resolutions, Resolution.VGA);
-            AddResolution(resolutions, Resolution.HD);
-            AddResolution(resolutions, Resolution.FullHD);
-            AddResolution(resolutions, Resolution.Television4K);
-            AddResolution(resolutions, Resolution.Cinema4K);
-            AddResolution(resolutions, Resolution.A4);
+            AddResolution(Resolutions, Resolution.QVGA);
+            AddResolution(Resolutions, Resolution.VGA);
+            AddResolution(Resolutions, Resolution.HD);
+            AddResolution(Resolutions, Resolution.FullHD);
+            AddResolution(Resolutions, Resolution.Television4K);
+            AddResolution(Resolutions, Resolution.Cinema4K);
+            AddResolution(Resolutions, Resolution.A4);
 
             foreach (var item in AppOptions.CurrentValue.CameraResolutions)
             {
-                AddResolution(resolutions, item);
+                AddResolution(Resolutions, item);
             }
         }
 
@@ -96,11 +101,6 @@ namespace Project.Web.Shared.Components
                 if (AutoPlay)
                     await Start();
             }
-        }
-
-        static void AddResolution(SelectItem<Resolution> items, Resolution item)
-        {
-            items.Add(item.Name, item);
         }
 
         private async Task<bool> InitDevices()
