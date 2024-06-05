@@ -1,5 +1,6 @@
 using BlazorAdmin;
 using Project.AppCore;
+using Project.Constraints;
 using Project.Services;
 using Project.UI.AntBlazor;
 
@@ -26,9 +27,7 @@ builder.AddProject(setting =>
 builder.AddDefaultLightOrm();
 
 var app = builder.Build();
-
 // Configure the HTTP request pipeline.
-Project.Constraints.AppConst.Environment = app.Environment;
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
@@ -37,6 +36,6 @@ app.UseProject();
 app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
-    .AddAdditionalAssemblies([.. Config.Pages]);
+    .AddAdditionalAssemblies([.. AppConst.Pages]);
 
 app.Run();

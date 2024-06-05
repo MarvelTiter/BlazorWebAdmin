@@ -1,4 +1,5 @@
-﻿using Project.Constraints.Models.Permissions;
+﻿using Project.Constraints;
+using Project.Constraints.Models.Permissions;
 using Project.Constraints.Store.Models;
 using Project.Web.Shared.Pages;
 
@@ -11,30 +12,14 @@ namespace Project.AppCore
         static Type? PermissionPageType;
         static Type? RolePermissionPageType;
         static Type? RunLogPageType;
-        //readonly List<IAddtionalInterceptor> initActions = [];
-        //protected readonly IAppSession appSession;
         protected UserInfo? CurrentUser { get; set; }
         public BasicSetting()
         {
-            UserPageType ??= typeof(UserPage<,,>).MakeGenericType(Config.TypeInfo.UserType, Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
-            PermissionPageType ??= typeof(PermissionSetting<,>).MakeGenericType(Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
-            RolePermissionPageType ??= typeof(RolePermission<,>).MakeGenericType(Config.TypeInfo.PowerType, Config.TypeInfo.RoleType);
-            RunLogPageType ??= typeof(OperationLog<>).MakeGenericType(Config.TypeInfo.RunlogType);
-            //this.appSession = appSession;
-            //this.appSession.RouterStore.RouterChangingEvent += RouterChangingAsync;
-            //this.appSession.RouterStore.RouteMetaFilterEvent += RouteMetaFilterAsync;
-            //this.appSession.UserStore.LoginSuccessEvent += LoginSuccessAsync;
-            //this.appSession.WebApplicationAccessedEvent += AfterWebApplicationAccessed;
+            UserPageType ??= typeof(UserPage<,,>).MakeGenericType(AppConst.TypeInfo.UserType, AppConst.TypeInfo.PowerType, AppConst.TypeInfo.RoleType);
+            PermissionPageType ??= typeof(PermissionSetting<,>).MakeGenericType(AppConst.TypeInfo.PowerType, AppConst.TypeInfo.RoleType);
+            RolePermissionPageType ??= typeof(RolePermission<,>).MakeGenericType(AppConst.TypeInfo.PowerType, AppConst.TypeInfo.RoleType);
+            RunLogPageType ??= typeof(OperationLog<>).MakeGenericType(AppConst.TypeInfo.RunlogType);
         }
-
-        //public void AddService(IAddtionalInterceptor additional)
-        //{
-        //    initActions.Add(additional);
-        //    appSession.RouterStore.RouterChangingEvent += additional.RouterChangingAsync;
-        //    appSession.RouterStore.RouteMetaFilterEvent += additional.RouteMetaFilterAsync;
-        //    appSession.UserStore.LoginSuccessEvent += additional.LoginSuccessAsync;
-        //    appSession.WebApplicationAccessedEvent += additional.AfterWebApplicationAccessedAsync;
-        //}
 
         public virtual Type? GetDashboardType() => null;
         public virtual Type? GetUserPageType() => UserPageType;
@@ -94,38 +79,5 @@ namespace Project.AppCore
         {
             return Task.FromResult(true);
         }
-
-        //#region Dispose
-        //private bool disposedValue;
-
-        //protected virtual void Dispose(bool disposing)
-        //{
-        //    if (!disposedValue)
-        //    {
-        //        if (disposing)
-        //        {
-        //            //appSession.RouterStore.RouterChangingEvent -= RouterChangingAsync;
-        //            //appSession.RouterStore.RouteMetaFilterEvent -= RouteMetaFilterAsync;
-        //            //appSession.UserStore.LoginSuccessEvent -= LoginSuccessAsync;
-        //            //appSession.WebApplicationAccessedEvent -= AfterWebApplicationAccessed;
-
-        //            //foreach (var additional in initActions)
-        //            //{
-        //            //    appSession.UserStore.LoginSuccessEvent -= additional.LoginSuccessAsync;
-        //            //    appSession.RouterStore.RouterChangingEvent -= additional.RouterChangingAsync;
-        //            //    appSession.WebApplicationAccessedEvent -= additional.AfterWebApplicationAccessedAsync;
-        //            //}
-        //        }
-        //        disposedValue = true;
-        //    }
-        //}
-
-
-        //public void Dispose()
-        //{
-        //    Dispose(disposing: true);
-        //    GC.SuppressFinalize(this);
-        //}
-        //#endregion
     }
 }

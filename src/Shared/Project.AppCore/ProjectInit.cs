@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Builder;
 using AspectCore.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
 using MT.Toolkit.LogTool;
+using MT.Toolkit.ReflectionExtension;
 namespace Project.AppCore;
 
 public static class ProjectInit
@@ -36,22 +37,23 @@ public static class ProjectInit
         {
         }
 
+
         var setting = new ProjectSetting();
 
         action.Invoke(setting);
 
-        ArgumentNullException.ThrowIfNull(Config.App.Name);
-        Config.SetFooter($@"
+        ArgumentNullException.ThrowIfNull(AppConst.App.Name);
+        AppConst.SetFooter($@"
         <footer style=""text-align:center"">
-             <span>{Config.App.Id} ©2023-{DateTime.Now:yyyy} Powered By </span>
-             <a href=""#"" target="""" _blank"""">{Config.App.Company}</a>
-             <span>{Config.App.Version}</span>
+             <span>{AppConst.App.Id} ©2023-{DateTime.Now:yyyy} Powered By </span>
+             <a href=""#"" target="""" _blank"""">{AppConst.App.Company}</a>
+             <span>{AppConst.App.Version}</span>
          </footer>
 ");
 
         var services = builder.Services;
 
-        services.AddDataProtection().SetApplicationName(Config.App.Name);
+        services.AddDataProtection().SetApplicationName(AppConst.App.Name);
         // 多语言服务
         services.AddJsonLocales();
         // excel操作
@@ -103,7 +105,7 @@ public static class ProjectInit
             builder.ConfigureContainer(new DynamicProxyServiceProviderFactory());
         }
 
-        Config.AddAssembly(typeof(AppConst).Assembly, typeof(Web.Shared._Imports).Assembly);
+        AppConst.AddAssembly(typeof(Program).Assembly, typeof(Web.Shared._Imports).Assembly);
 
         builder.ConfigureAppSettings();
     }
@@ -196,5 +198,11 @@ public static class ProjectInit
         {
             route.MapControllers();
         }
+
+        var envFunc = app.GetPropertyAccessor<IHostEnvironment>("Environment");
+        AppConst.Environment = envFunc.Invoke(app);
+
+        var serFunc = app.GetPropertyAccessor<IServiceProvider>("Services");
+        AppConst.Services = serFunc.Invoke(app);
     }
 }

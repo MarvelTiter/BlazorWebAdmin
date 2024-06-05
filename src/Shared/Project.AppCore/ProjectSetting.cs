@@ -1,4 +1,5 @@
-﻿using Project.Constraints.Models.Permissions;
+﻿using Project.Constraints;
+using Project.Constraints.Models.Permissions;
 using Project.Services;
 namespace Project.AppCore;
 
@@ -25,8 +26,8 @@ public class ProjectSetting
     public Action<AutoInjectFilter>? AutoInjectConfig { get; set; }
     public bool AddFileLogger { get; set; }
     public bool AddDefaultProjectServices { get; set; } = true;
-    public AppInfo App => Config.App;
-    public DbTableType TypeInfo => Config.TypeInfo;
+    public AppInfo App => AppConst.App;
+    public DbTableType TypeInfo => AppConst.TypeInfo;
 
     public Type UserType => TypeInfo.UserType;
     public Type RoleType => TypeInfo.RoleType;

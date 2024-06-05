@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Project.Constraints.Models.Permissions;
+using Project.Constraints.UI.Extensions;
+using Project.Web.Shared.Pages.Component;
 
 namespace Project.Web.Shared.Pages
 {
-    public partial class PermissionSetting<TPower, TRole> : ModelPage<TPower, GenericRequest<TPower>>
+    public class PermissionSetting<TPower, TRole> : ModelPage<TPower, GenericRequest<TPower>>
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
     {
@@ -18,7 +20,10 @@ namespace Project.Web.Shared.Pages
             Options.Pager = false;
             Options.LoadDataOnLoaded = true;
             Options.TreeChildren = p => p.Children.Cast<TPower>();
-            Options.GetColumn(p => p.Icon).FormTemplate = IconSelect();
+            Options.GetColumn(p => p.Icon).FormTemplate = ctx => b =>
+                b.Component<PowerIconSelector>()
+                .SetComponent(c => c.Context, ctx)
+                .Build();
 
         }
         protected override object SetRowKey(TPower model) => model.PowerId;
@@ -70,10 +75,11 @@ namespace Project.Web.Shared.Pages
         [TableButton(LabelExpression = nameof(AddPowerLabel), VisibleExpression = nameof(CanShow))]
         public async Task<bool> AddPower(TPower parent)
         {
-            var power = await this.ShowAddFormAsync("新增权限");
-            power.ParentId = parent.PowerId;
-            power.PowerLevel = parent.PowerLevel + 1;
-            power.Sort = parent.Children.Count() + 1;
+            var edit = new TPower();
+            edit.ParentId = parent.PowerId;
+            edit.PowerLevel = parent.PowerLevel + 1;
+            edit.Sort = parent.Children.Count() + 1;
+            var power = await this.ShowEditFormAsync("新增权限", edit, false);
             var result = await PermissionSrv.InsertPowerAsync(power);
             if (result.Success)
             {
