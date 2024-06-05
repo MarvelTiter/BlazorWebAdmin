@@ -12,7 +12,7 @@ namespace Project.Constraints.Page;
 public abstract class PageIndex : ComponentBase, IPageAction
 {
     [Inject, NotNull] IPageLocatorService? PageLocator { get; set; }
-    protected abstract Type GetPageType(IPageLocatorService pageLocator);
+    protected abstract Type? GetPageType(IPageLocatorService pageLocator);
     IPageAction? page;
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
