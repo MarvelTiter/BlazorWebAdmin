@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Project.Constraints.PageHelper;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Web.Shared.Pages
 {
-    public abstract class PageIndex : ComponentBase, IPageAction
+    
+    public abstract class SystemPageIndex : ComponentBase, IPageAction
     {
-        [Inject] IProjectSettingService SettingProvider { get; set; }
+        [Inject, NotNull] IProjectSettingService? SettingProvider { get; set; }
 
         protected Type? PageType { get; set; }
         protected override void OnInitialized()
@@ -43,7 +45,7 @@ namespace Project.Web.Shared.Pages
     }
 
     [Route("/user/index")]
-    public class UserIndex : PageIndex
+    public class UserIndex : SystemPageIndex
     {
         public override Type? GetPageType(IProjectSettingService customSetting)
         {
@@ -52,7 +54,7 @@ namespace Project.Web.Shared.Pages
     }
 
     [Route("/operationlog")]
-    public class RunLogIndex : PageIndex
+    public class RunLogIndex : SystemPageIndex
     {
         public override Type? GetPageType(IProjectSettingService customSetting)
         {
@@ -61,7 +63,7 @@ namespace Project.Web.Shared.Pages
     }
 
     [Route("/permission")]
-    public class PermissionIndex : PageIndex
+    public class PermissionIndex : SystemPageIndex
     {
         public override Type? GetPageType(IProjectSettingService customSetting)
         {
@@ -70,7 +72,7 @@ namespace Project.Web.Shared.Pages
     }
 
     [Route("/rolepermission")]
-    public class RolePermissionIndex : PageIndex
+    public class RolePermissionIndex : SystemPageIndex
     {
         public override Type? GetPageType(IProjectSettingService customSetting)
         {

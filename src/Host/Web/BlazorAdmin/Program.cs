@@ -1,4 +1,5 @@
 using BlazorAdmin;
+using BlazorAdmin.TestPages;
 using Project.AppCore;
 using Project.Constraints;
 using Project.Services;
@@ -20,6 +21,10 @@ builder.AddProject(setting =>
     setting.App.Name = "Demo";
     setting.App.Id = "Test";
     setting.App.Company = "Marvel";
+    setting.ConfigurePage(locator =>
+    {
+        locator.SetPage<TestPage4>("LocatorTest");
+    });
     setting.ConfigureSettingProviderType<CustomSetting>();
     setting.AddInterceotor<AdditionalTest>();
 });

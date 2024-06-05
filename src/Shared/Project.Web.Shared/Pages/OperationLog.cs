@@ -3,7 +3,7 @@ using Project.Constraints.PageHelper;
 
 namespace Project.Web.Shared.Pages
 {
-    public partial class OperationLog<TRunLog> : ModelPage<TRunLog, GenericRequest<TRunLog>>, IPageAction
+    public class OperationLog<TRunLog> : ModelPage<TRunLog, GenericRequest<TRunLog>>, IPageAction
         where TRunLog : class, IRunLog, new()
     {
         [Inject]

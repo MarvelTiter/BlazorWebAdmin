@@ -18,6 +18,13 @@ public class ProjectSetting
         interceptorTypes.Add(typeof(T));
     }
 
+    internal IPageLocatorService locator = new PageLocatorService();
+    
+    public void ConfigurePage(Action<IPageLocatorService> pageLocator)
+    {
+        pageLocator.Invoke(locator);
+    }
+
     public void OverrideTableEntity(Action<DbTableType> config)
     {
         config.Invoke(TypeInfo);

@@ -112,6 +112,7 @@ public static class ProjectInit
 
     private static void InterceptorsInit(IServiceCollection services, ProjectSetting setting)
     {
+        services.AddSingleton(setting.locator);
         services.AddScoped(typeof(IProjectSettingService), setting.SettingProviderType);
         foreach (var item in setting.interceptorTypes)
         {
