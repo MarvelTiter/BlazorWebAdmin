@@ -103,6 +103,20 @@ namespace Project.Web.Shared.Components
             }
         }
 
+        public async Task ToggleClipBoxAsync()
+        {
+            if (EnableClip)
+            {
+                await ModuleInvokeVoidAsync("disableClipBox");
+                EnableClip = false;
+            }
+            else
+            {
+                await ModuleInvokeVoidAsync("useClipBox", clipDom, Width, Height);
+                EnableClip = true;
+            }
+        }
+
         private async Task<bool> InitDevices()
         {
             var result = await ModuleInvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");

@@ -10,6 +10,7 @@ namespace Project.Web.Shared.Components
         Task Start(Resolution? resolution);
         Task Start();
         Task Stop();
+        Task ToggleClipBoxAsync();
         Task<CaptureInfo> Capture();
     }
 }

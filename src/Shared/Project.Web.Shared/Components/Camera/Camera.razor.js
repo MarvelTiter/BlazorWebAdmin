@@ -133,6 +133,24 @@ export function init(id, video, canvas, quality, clip, width, height) {
     }
 }
 
+export function useClipBox(id, clip, width, height) {
+    var c = getComponentById(id)
+    if (c) {
+        c.clipBox = new ClipBox(clip, width, height)
+        c.clipBox.initEvents()
+        c.clipBox.setVisible(true)
+    }
+}
+
+export function disableClipBox(id) {
+    var c = getComponentById(id)
+    if (c) {
+        c.clipBox.setVisible(false)
+        c.clipBox.dispose()
+        c.clipBox = null
+    }
+}
+
 
 export async function enumerateDevices() {
     if (navigator && navigator.mediaDevices) {

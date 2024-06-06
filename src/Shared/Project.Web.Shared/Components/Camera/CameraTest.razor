@@ -4,12 +4,13 @@
 @inherits BasicComponent
 @* @attribute [PageInfo(Title = "Camera测试")] *@
 <Camera Width="400" Height="300" OnCapture="handleCapture" @ref=camera PreviewRotate CameraResolution="resolution">
-    <DeviceSelectorRender>
-        @UI.BuildSelect(this, context.Resolutions).Bind(() => resolution, SaveToLocal).Render()
-        @UI.BuildButton(this).OnClick(context.Start).Text("打开").Render()
-        @UI.BuildButton(this).OnClick(context.Capture).Text("拍照").Render()
-    </DeviceSelectorRender>
+    @* <DeviceSelectorRender>
+    @UI.BuildSelect(this, context.Resolutions).Bind(() => resolution, SaveToLocal).Render()
+    @UI.BuildButton(this).OnClick(context.Start).Text("打开").Render()
+    @UI.BuildButton(this).OnClick(context.Capture).Text("拍照").Render()
+    </DeviceSelectorRender> *@
 </Camera>
+@UI.BuildButton(this).Text("Toggle").Primary().OnClick(() => camera.ToggleClipBoxAsync()).Render()
 <img src="@src" />
 @code {
     Camera? camera;

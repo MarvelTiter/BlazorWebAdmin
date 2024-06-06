@@ -44,7 +44,7 @@ namespace Project.Constraints.Page
             {
                 var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
                 RelativePath = attr?.Path ?? $"Components/{ModuleName}";
-                version = attr?.Version;
+                version = attr?.Version ?? Random.Shared.NextDouble().ToString();
                 if (attr?.IsLibrary == false)
                 {
                     IsLibrary = false;
