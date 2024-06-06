@@ -71,7 +71,7 @@ namespace Project.Web.Shared.Components
             AddResolution(Resolutions, Resolution.Cinema4K);
             AddResolution(Resolutions, Resolution.A4);
 
-            foreach (var item in AppOptions.CurrentValue.CameraResolutions)
+            foreach (var item in AppOptions.CurrentValue.CameraResolutions ?? [])
             {
                 AddResolution(Resolutions, item);
             }
