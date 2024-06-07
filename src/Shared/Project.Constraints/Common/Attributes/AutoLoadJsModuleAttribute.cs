@@ -13,10 +13,6 @@ namespace Project.Constraints.Common.Attributes
         /// 不包含js文件名称
         /// </summary>
         public string? Path { get; set; }
-        /// <summary>
-        /// 组件所在是否在类库中 
-        /// </summary>
-        public bool IsLibrary { get; set; } = true;
         public string? Version { get; set; }
     }
 }

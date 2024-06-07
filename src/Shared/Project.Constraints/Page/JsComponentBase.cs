@@ -5,7 +5,7 @@ using Project.Constraints.UI;
 
 namespace Project.Constraints.Page
 {
-    public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisposable
+    public abstract class JsComponentBase : BasicComponent, IJsComponent
     {
         private string? id;
         [Inject] protected IJSRuntime Js { get; set; }
@@ -21,7 +21,7 @@ namespace Project.Constraints.Page
         protected bool LoadJs { get; set; } = true;
 
         protected string ModuleName => GetModuleName();
-        protected bool IsLibrary { get; set; } = true;
+        protected bool IsLibrary => GetType().Assembly.GetName().FullName != Assembly.GetEntryAssembly()?.GetName().FullName;
         private string GetModuleName()
         {
             var type = GetType();
@@ -35,8 +35,8 @@ namespace Project.Constraints.Page
 
         protected string ProjectName => GetType().Assembly.GetName().Name;
         protected string RelativePath { get; set; }
-        
-        string? version;
+
+        protected string? Version { get; set; }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -44,11 +44,7 @@ namespace Project.Constraints.Page
             {
                 var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
                 RelativePath = attr?.Path ?? $"Components/{ModuleName}";
-                version = attr?.Version ?? Random.Shared.NextDouble().ToString();
-                if (attr?.IsLibrary == false)
-                {
-                    IsLibrary = false;
-                }
+                Version = attr?.Version ?? Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? Random.Shared.NextDouble().ToString();
                 //var path = 
                 await LoadJsAsync();
                 await Init();
@@ -60,7 +56,7 @@ namespace Project.Constraints.Page
             var path = IsLibrary
                ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}.razor.js"
                : $"./{RelativePath}/{ModuleName}.razor.js";
-            Module = await Js.InvokeAsync<IJSObjectReference>("import", $"{path}?r={version}");
+            Module = await Js.InvokeAsync<IJSObjectReference>("import", $"{path}?r={Version}");
         }
 
         protected virtual ValueTask Init()
@@ -129,12 +125,6 @@ namespace Project.Constraints.Page
 
                 }
             }
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await DisposeAsync(true);
-            GC.SuppressFinalize(this);
         }
     }
 }
