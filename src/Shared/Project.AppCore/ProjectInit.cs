@@ -67,7 +67,8 @@ public static class ProjectInit
 
         InterceptorsInit(services, setting);
 
-        services.AddControllers().AddApplicationPart(typeof(AppConst).Assembly);
+        services.AddControllers().AddApplicationPart(typeof(ProjectInit).Assembly);
+
         // 配置 IAuthenticationStateProvider
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
         services.AddScoped<IAuthenticationStateProvider>(provider =>
