@@ -150,7 +150,8 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     /// <returns></returns>
     protected virtual Task OnSaveExcelAsync(IEnumerable<TModel> datas)
     {
-        var filename = $"{typeof(TModel).Name}_{DateTime.Now:yyyyMMdd-HHmmss}.xlsx";
+        var mainName = Router.Current?.RouteTitle ?? typeof(TModel).Name;
+        var filename = $"{mainName}_{DateTime.Now:yyyyMMdd-HHmmss}.xlsx";
         var path = Path.Combine(AppConst.TempFilePath, filename);
         Excel.WriteExcel(path, datas);
         DownloadService.DownloadAsync(filename);
