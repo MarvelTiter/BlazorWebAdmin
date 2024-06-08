@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Project.AppCore;
+using Project.Constraints;
 using Project.Services;
 using Project.UI.AntBlazor;
 using System;
@@ -33,7 +34,7 @@ namespace BlazorWpfAdmin
             builder.Services.AddHostedService<WpfHostedService<App, MainWindow>>();
             builder.Services.AddWpfBlazorWebView();
             builder.Services.AddAntDesignUI();
-            Config.AddAssembly(typeof(App).Assembly);
+            AppConst.AddAssembly(typeof(App).Assembly);
             Console.WriteLine(Project.Constraints.AppConst.TempFilePath);
 
             builder.Build().Run();

@@ -1,0 +1,29 @@
+﻿@namespace Project.Web.Shared.Components
+@page "/download/notfound"
+@inherits BasicComponent
+<div class="error-page-wrapper">
+    <div class="content-container">
+        <div class="head-line">
+            <SvgIcon IconName="p404" Style="height:100%;width:100%;"></SvgIcon>
+        </div>
+        <div class="subheader">
+            HTTP 404 - 请求下载的文件不存在！
+        </div>
+        <div class="hr"></div>
+        <div class="context">
+            <p>
+                您可以返回首页，或联系管理员
+            </p>
+        </div>
+        <div class="buttons-container">
+            <a href="#" @onclick="e => NavigatorToIndex()">去首页</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    void NavigatorToIndex()
+    {
+        Navigator.NavigateTo("/");
+    }
+}

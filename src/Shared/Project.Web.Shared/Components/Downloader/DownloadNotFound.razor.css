@@ -1,0 +1,191 @@
+﻿.clearfix {
+    clear: both;
+    zoom: 1;
+}
+
+    .clearfix:before,
+    .clearfix:after {
+        content: "\0020";
+        display: block;
+        height: 0;
+        visibility: hidden;
+    }
+
+    .clearfix:after {
+        clear: both;
+    }
+
+body.error-page-wrapper,
+.error-page-wrapper.preview {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+}
+
+.error-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    width: 100%;
+    padding: 20px;
+}
+
+    .error-page-wrapper .content-container {
+        border-radius: 2px;
+        text-align: center;
+        padding: 50px;
+        background-color: #fff;
+        width: 100%;
+        max-width: 40vw;
+    }
+
+        .error-page-wrapper .content-container.in {
+            left: 0px;
+            opacity: 1;
+        }
+
+    .error-page-wrapper .head-line {
+        transition: color .2s linear;
+        font-size: 40px;
+        line-height: 60px;
+        letter-spacing: -1px;
+        margin-bottom: 20px;
+        color: #777;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .error-page-wrapper .subheader {
+        transition: color .2s linear;
+        font-size: 32px;
+        line-height: 46px;
+        color: #494949;
+    }
+
+    .error-page-wrapper .hr {
+        height: 1px;
+        background-color: #eee;
+        width: 80%;
+        max-width: 350px;
+        margin: 25px auto;
+    }
+
+    .error-page-wrapper .context {
+        transition: color .2s linear;
+        font-size: 16px;
+        line-height: 27px;
+        color: #aaa;
+    }
+
+        .error-page-wrapper .context p {
+            margin: 0;
+        }
+
+            .error-page-wrapper .context p:nth-child(n+2) {
+                margin-top: 16px;
+            }
+
+    .error-page-wrapper .buttons-container {
+        margin-top: 35px;
+        overflow: hidden;
+    }
+
+        .error-page-wrapper .buttons-container a {
+            transition: text-indent .2s ease-out, color .2s linear, background-color .2s linear;
+            text-indent: 0px;
+            font-size: 14px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #fff;
+            background-color: #2ecc71;
+            border-radius: 99px;
+            padding: 8px 0 8px;
+            text-align: center;
+            display: inline-block;
+            overflow: hidden;
+            position: relative;
+            width: 45%;
+        }
+
+            .error-page-wrapper .buttons-container a:hover {
+                text-indent: 15px;
+            }
+
+            .error-page-wrapper .buttons-container a:nth-child(1) {
+                float: center;
+            }
+
+            .error-page-wrapper .buttons-container a:nth-child(2) {
+                float: right;
+            }
+
+@media screen and (max-width:580px) {
+    .error-page-wrapper {
+        padding: 30px 5%;
+    }
+
+        .error-page-wrapper .content-container {
+            padding: 37px;
+            position: static;
+            left: 0;
+            margin-top: 0;
+            margin-left: 0;
+        }
+
+        .error-page-wrapper .head-line {
+            font-size: 36px;
+        }
+
+        .error-page-wrapper .subheader {
+            font-size: 27px;
+            line-height: 37px;
+        }
+
+        .error-page-wrapper .hr {
+            margin: 30px auto;
+            width: 215px;
+        }
+}
+
+@media screen and (max-width:450px) {
+    .error-page-wrapper {
+        padding: 30px;
+    }
+
+        .error-page-wrapper .head-line {
+            font-size: 32px;
+        }
+
+        .error-page-wrapper .hr {
+            margin: 25px auto;
+            width: 180px;
+        }
+
+        .error-page-wrapper .context {
+            font-size: 15px;
+            line-height: 22px;
+        }
+
+            .error-page-wrapper .context p:nth-child(n+2) {
+                margin-top: 10px;
+            }
+
+        .error-page-wrapper .buttons-container {
+            margin-top: 29px;
+        }
+
+            .error-page-wrapper .buttons-container a {
+                float: none !important;
+                width: 65%;
+                margin: 0 auto;
+                font-size: 13px;
+                padding: 9px 0;
+            }
+
+                .error-page-wrapper .buttons-container a:nth-child(2) {
+                    margin-top: 12px;
+                }
+}

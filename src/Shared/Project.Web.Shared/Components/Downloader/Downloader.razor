@@ -17,14 +17,16 @@
         await Module.InvokeVoidAsync("download", payload);
     }
 
-    public async Task DownloadAsync(string filename)
+    public async Task DownloadAsync(string filename, params string[] paths)
     {
         if (Module == null)
             return;
+
         await Module.InvokeVoidAsync("download", new
         {
             token = User.UserInfo?.ApiToken,
             filename = filename,
+            path = AppConst.GetPath(paths)
         });
     }
 }

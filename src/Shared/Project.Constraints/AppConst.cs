@@ -83,6 +83,14 @@ public static class AppConst
     }
 
     public static readonly string TempFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile");
+    public static string GetPath(params string[] paths)
+    {
+        if (paths?.Length == 0)
+        {
+            return TempFilePath;
+        }
+        return Path.Combine([AppDomain.CurrentDomain.BaseDirectory, ..paths]);
+    }
     public static IHostEnvironment? Environment { get; set; }
     public static IServiceProvider? Services { get; set; }
 

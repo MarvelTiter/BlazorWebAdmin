@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Project.AppCore;
+using Project.Constraints;
 using Project.Services;
 using Project.UI.AntBlazor;
 namespace BlazorAdmin
@@ -33,7 +34,7 @@ namespace BlazorAdmin
             builder.Services.AddHostedService<HostedWinformService<MainForm>>();
             builder.Services.AddWindowsFormsBlazorWebView();
             Console.WriteLine(Project.Constraints.AppConst.TempFilePath);
-            Config.AddAssembly(typeof(WinformApp).Assembly);
+            AppConst.AddAssembly(typeof(WinformApp).Assembly);
             builder.Build().Run();
         }
     }

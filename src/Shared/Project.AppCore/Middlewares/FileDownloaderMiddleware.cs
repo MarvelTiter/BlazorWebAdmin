@@ -1,16 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders.Physical;
 using Project.AppCore.Auth;
 using Project.Constraints;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Project.AppCore.Middlewares
 {
@@ -20,6 +12,7 @@ namespace Project.AppCore.Middlewares
         {
             _ = context.Request.Form.TryGetValue("Token", out var t);
             _ = context.Request.Form.TryGetValue("Filename", out var filename);
+            _ = context.Request.Form.TryGetValue("Path", out var path);
 
             var token = JwtTokenHelper.ReadToken(t!);
             if (string.IsNullOrEmpty(token.Uid))
@@ -27,7 +20,8 @@ namespace Project.AppCore.Middlewares
                 context.Response.StatusCode = 403;
                 return;
             }
-            var file = Path.Combine(AppConst.TempFilePath, filename!);
+
+            var file = Path.Combine(path!, filename!);
             if (System.IO.File.Exists(file))
             {
                 var ext = Path.GetExtension(filename);
@@ -41,7 +35,7 @@ namespace Project.AppCore.Middlewares
             }
             else
             {
-                context.Response.StatusCode = 404;
+                context.Response.Redirect("/download/notfound");
             }
             //await next(context);
         }

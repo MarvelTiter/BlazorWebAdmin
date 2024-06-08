@@ -1,6 +1,5 @@
-﻿namespace Project.Web.Shared
+﻿namespace Project.Constraints.Services
 {
-
     public interface IDownloadServiceProvider
     {
         IDownloadService? GetService();
