@@ -20,6 +20,7 @@ namespace Project.Web.Shared.Pages
             base.OnInitialized();
             Options.Pager = false;
             Options.LoadDataOnLoaded = true;
+            Options.Exportable = true;
             Options.GetColumn(u => u.Password).ValueFormat = val =>
             {
                 return "******";

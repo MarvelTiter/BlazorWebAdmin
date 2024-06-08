@@ -16,6 +16,7 @@ using AspectCore.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
 using MT.Toolkit.LogTool;
 using MT.Toolkit.ReflectionExtension;
+using Project.AppCore.BackgroundServices;
 namespace Project.AppCore;
 
 public static class ProjectInit
@@ -64,10 +65,11 @@ public static class ProjectInit
         services.AddHttpClient();
         //
         services.AddHttpContextAccessor();
-
+        //
+        services.AddHostedService<TempFileCleanUpService>();
         InterceptorsInit(services, setting);
 
-        services.AddControllers().AddApplicationPart(typeof(ProjectInit).Assembly);
+        //services.AddControllers().AddApplicationPart(typeof(ProjectInit).Assembly);
 
         // 配置 IAuthenticationStateProvider
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
@@ -196,11 +198,8 @@ public static class ProjectInit
         app.UseMiddleware<CheckBrowserEnabledMiddleware>();
         app.UseStaticFiles();
         app.UseMiddleware<RedirectToLauchUrlMiddleware>();
-        if (app is IEndpointRouteBuilder route)
-        {
-            route.MapControllers();
-        }
-
+        app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/download"), a => a.UseMiddleware<FileDownloaderMiddleware>());
+        
         var envFunc = app.GetPropertyAccessor<IHostEnvironment>("Environment");
         AppConst.Environment = envFunc.Invoke(app);
 
