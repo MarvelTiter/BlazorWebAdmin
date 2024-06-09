@@ -93,8 +93,8 @@ public static class ProjectInit
             services.AddProjectDbServices(setting);
         }
 
-        services.AddSingleton<RedirectToLauchUrlMiddleware>();
-        services.AddSingleton<CheckBrowserEnabledMiddleware>();
+        //services.AddSingleton<RedirectToLauchUrlMiddleware>();
+        //services.AddSingleton<CheckBrowserEnabledMiddleware>();
 
         if (setting.AddFileLogger)
         {

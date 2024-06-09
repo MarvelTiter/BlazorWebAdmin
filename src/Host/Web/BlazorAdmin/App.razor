@@ -10,13 +10,13 @@
     <link href="_content/Project.Web.Shared/css/app.css" rel="stylesheet" />
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="BlazorAdmin.styles.css" />
-    <HeadOutlet @rendermode="@InteractiveServer" />
+    <HeadOutlet @rendermode="@(new InteractiveServerRenderMode(false))" />
 </head>
 
 <body>
-    <Routes @rendermode="@InteractiveServer" />
+    <Routes @rendermode="@(new InteractiveServerRenderMode(false))" />
 
-    <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@InteractiveServer"></Project.Web.Shared.Components.ReconnectorOutlet>
+    <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@(new InteractiveServerRenderMode(false))"></Project.Web.Shared.Components.ReconnectorOutlet>
 
     <script src="_framework/blazor.web.js"></script>
 </body>

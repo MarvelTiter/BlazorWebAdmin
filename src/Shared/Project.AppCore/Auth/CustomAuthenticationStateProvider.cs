@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Project.AppCore.Store;
 using Project.Constraints;
@@ -16,19 +17,23 @@ namespace Project.AppCore.Auth
         private readonly IProtectedLocalStorage storageService;
         private readonly ILoginService loginService;
         private readonly IAppSession appSession;
+        private readonly IHttpContextAccessor httpContextAccessor;
+
         private IUserStore Store => appSession.UserStore;
         private IAppStore AppStore => appSession.AppStore;
 
         private readonly IOptionsMonitor<Token> token;
-
+        public HttpContext? HttpContext => httpContextAccessor.HttpContext;
         public CustomAuthenticationStateProvider(IProtectedLocalStorage storageService
             , ILoginService loginService
             , IAppSession appSession
+            , IHttpContextAccessor httpContextAccessor
             , IOptionsMonitor<Token> token)
         {
             this.storageService = storageService;
             this.loginService = loginService;
             this.appSession = appSession;
+            this.httpContextAccessor = httpContextAccessor;
             this.token = token;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -69,6 +74,7 @@ namespace Project.AppCore.Auth
             }
             await Store.SetUserAsync(info);
             var user = new ClaimsPrincipal(identity);
+            if (HttpContext != null) HttpContext.User = user;
             return new AuthenticationState(user);
         }
 

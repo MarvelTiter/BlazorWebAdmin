@@ -15,11 +15,27 @@ namespace Project.AppCore.Middlewares
         }
         public Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
+            if (context.Request.Path == "/unsupport")
+            {
+                return next(context);
+            }
+            if (MiddlewareHelpers.RequestFile(context))
+            {
+                return next(context);
+            }
+            if (context.Request.Path.StartsWithSegments("/_blazor"))
+            {
+                return next(context);
+            }
             if (context.Request.Cookies["HadCheckedBrowser"] == "1")
             {
                 return next(context);
             }
-
+            if (context.Request.Cookies["HadCheckedBrowser"] == "0")
+            {
+                context.Response.Redirect("/unsupport");
+                return Task.CompletedTask;
+            }
             var agent = context.Request.Headers.UserAgent;
             if (string.IsNullOrEmpty(agent))
             {
@@ -28,10 +44,14 @@ namespace Project.AppCore.Middlewares
             var info = UserAgentHelper.GetBrowser(agent!);
             if (info.IsSupport(options.CurrentValue.SupportedMajorVersion))
             {
+                context.Response.Cookies.Append("HadCheckedBrowser", "1");
                 return next(context);
             }
-            context.Response.Cookies.Append("HadCheckedBrowser", "1");
-            context.Response.Redirect("/unsupport");
+            else
+            {
+                context.Response.Cookies.Append("HadCheckedBrowser", "0");
+                context.Response.Redirect("/unsupport");
+            }
 
             return Task.CompletedTask;
         }
