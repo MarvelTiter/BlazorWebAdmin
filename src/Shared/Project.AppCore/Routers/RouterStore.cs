@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using MT.Toolkit.ReflectionExtension;
 using Project.AppCore.Store;
-using Project.Constraints.Models;
+using Project.Constraints;
 using Project.Constraints.Models.Permissions;
 using Project.Constraints.Options;
-using Project.Constraints.Services;
 using Project.Constraints.Store;
 using Project.Constraints.Store.Models;
 
@@ -258,11 +255,15 @@ public class RouterStore : StoreBase, IRouterStore
     }
 
     public event Func<RouterMeta, Task<bool>> RouteMetaFilterEvent;
-    private Task<bool> OnRouteMetaFilterAsync(RouterMeta meta)
+    private async Task<bool> OnRouteMetaFilterAsync(RouterMeta meta)
     {
+        var used = meta.RouteType == null || AppConst.Pages.IndexOf(meta.RouteType.Assembly) > -1;
         if (RouteMetaFilterEvent != null)
-            return RouteMetaFilterEvent.Invoke(meta);
-        return Task.FromResult(true);
+        {
+            var enable = await RouteMetaFilterEvent.Invoke(meta);
+            return used && enable;
+        }
+        return used;
     }
 
     public Type? GetRouteType(string routeUrl)
