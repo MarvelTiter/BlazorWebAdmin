@@ -23,7 +23,7 @@ namespace Project.AppCore.Middlewares
             {
                 return next(context);
             }
-            if (context.Request.Path.StartsWithSegments("/_blazor"))
+            if (context.Request.Path.StartsWithSegments("/_blazor") || context.Request.Path.StartsWithSegments("/_framework"))
             {
                 return next(context);
             }
