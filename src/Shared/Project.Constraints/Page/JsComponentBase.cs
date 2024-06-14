@@ -2,13 +2,14 @@
 using Microsoft.JSInterop;
 using System.Reflection;
 using Project.Constraints.UI;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Constraints.Page
 {
-    public abstract class JsComponentBase : BasicComponent, IJsComponent
+    public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisposable
     {
         private string? id;
-        [Inject] protected IJSRuntime Js { get; set; }
+        [Inject, NotNull] protected IJSRuntime? Js { get; set; }
         protected IJSObjectReference? Module { get; set; }
         public string Id
         {
@@ -33,8 +34,8 @@ namespace Project.Constraints.Page
             return type.Name;
         }
 
-        protected string ProjectName => GetType().Assembly.GetName().Name;
-        protected string RelativePath { get; set; }
+        protected string? ProjectName => GetType().Assembly.GetName().Name;
+        protected string? RelativePath { get; set; }
 
         protected string? Version { get; set; }
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -101,16 +102,12 @@ namespace Project.Constraints.Page
                 ret = await (Module?.InvokeAsync<T>(identifier, [Id, .. args]) ?? ValueTask.FromCanceled<T>(CancellationToken.None));
             }
             catch { }
-            finally
-            {
-
-            }
-            return ret;
+            return ret!;
         }
 
-        protected virtual async ValueTask DisposeAsync(bool disposing)
+        protected async override ValueTask OnDisposeAsync()
         {
-            if (Module != null && disposing)
+            if (Module != null)
             {
                 // 忽略警告和报错
                 try

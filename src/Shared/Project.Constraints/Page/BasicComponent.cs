@@ -13,42 +13,33 @@ public class BasicComponent : ComponentBase, IAsyncDisposable
     [CascadingParameter, NotNull] public IAppSession? Context { get; set; }
     //[Inject] public IProjectSettingService AppSettingService { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalParameters { get; set; }
-    public IUIService UI => Context?.UI;
-    public IAppStore App => Context?.AppStore;
-    public IRouterStore Router => Context?.RouterStore;
-    public IUserStore User => Context?.UserStore;
-    public NavigationManager Navigator => Context?.Navigator;
+    public IUIService UI => Context.UI;
+    public IAppStore App => Context.AppStore;
+    public IRouterStore Router => Context.RouterStore;
+    public IUserStore User => Context.UserStore;
+    public NavigationManager Navigator => Context.Navigator;
     [Inject, NotNull] public IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
-    protected virtual void OnDispose()
+    protected virtual ValueTask OnDisposeAsync()
     {
-
+        return ValueTask.CompletedTask;
     }
 
-    protected virtual void Dispose(bool disposing)
+    protected virtual async ValueTask DisposeAsync(bool disposing)
     {
         if (!disposedValue)
         {
             if (disposing)
             {
-                OnDispose();
+                await OnDisposeAsync();
             }
-
             disposedValue = true;
         }
     }
 
-    public void Dispose()
-    {
-        // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-
     public ValueTask DisposeAsync()
     {
-        Dispose(disposing: true);
         GC.SuppressFinalize(this);
-        return ValueTask.CompletedTask;
+        return DisposeAsync(disposing: true);
     }
 }

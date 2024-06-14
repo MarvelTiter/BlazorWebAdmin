@@ -7,6 +7,7 @@ using Project.Constraints.Models.Permissions;
 using Project.Constraints.Options;
 using Project.Constraints.Store;
 using Project.Constraints.Store.Models;
+using System.Reflection;
 
 namespace Project.AppCore.Routers;
 
@@ -257,7 +258,9 @@ public class RouterStore : StoreBase, IRouterStore
     public event Func<RouterMeta, Task<bool>> RouteMetaFilterEvent;
     private async Task<bool> OnRouteMetaFilterAsync(RouterMeta meta)
     {
-        var used = meta.RouteType == null || AppConst.Pages.IndexOf(meta.RouteType.Assembly) > -1;
+        var used = meta.RouteType == null
+            || AppConst.Pages.IndexOf(meta.RouteType.Assembly) > -1
+            || meta.RouteType.Assembly == Assembly.GetEntryAssembly();
         if (RouteMetaFilterEvent != null)
         {
             var enable = await RouteMetaFilterEvent.Invoke(meta);

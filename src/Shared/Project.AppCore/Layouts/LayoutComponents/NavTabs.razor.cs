@@ -7,7 +7,7 @@ using Project.Constraints.UI;
 
 namespace Project.AppCore.Layouts.LayoutComponents
 {
-    public partial class NavTabs : IDisposable
+    public partial class NavTabs
     {
         private bool showContextmenu = false;
         private string contextmenuLeft = "";
@@ -92,10 +92,11 @@ namespace Project.AppCore.Layouts.LayoutComponents
             return Task.CompletedTask;
         }
 
-        protected override void OnDispose()
+        protected override ValueTask OnDisposeAsync()
         {
             Router.DataChangedEvent -= StateHasChanged;
             RootLayout.BodyClickEvent -= RootLayout_BodyClickEvent;
+            return base.OnDisposeAsync();
         }
     }
 }

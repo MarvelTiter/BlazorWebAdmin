@@ -252,17 +252,10 @@ namespace Project.Web.Shared.Components
             return info;
         }
 
-        protected override async ValueTask DisposeAsync(bool disposing)
+        protected override async ValueTask OnDisposeAsync()
         {
-            try
-            {
-                await Stop();
-            }
-            finally
-            {
-                await base.DisposeAsync(disposing);
-            }
-
+            await Stop();
+            await base.OnDisposeAsync();
         }
     }
 }
