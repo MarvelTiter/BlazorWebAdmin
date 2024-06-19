@@ -4,13 +4,12 @@ import { EventHandler } from "/_content/Project.Web.Shared/js/jscomponentbase/ev
 import { success, failed } from "/_content/Project.Web.Shared/js/jscomponentbase/utils.js";
 import { startDrag } from "/_content/Project.Web.Shared/js/jscomponentbase/drag-helper.js";
 export class Camera extends BaseComponent {
-    constructor(video, canvas, quality) {
+    constructor(video, quality) {
         super()
         this.currentId = '';
         this.width = 0;
         this.height = 0;
         this.video = video;
-        this.canvas = canvas;
         this.tracks = [];
         this.clipBox = null;
         this.quality = quality;
@@ -64,8 +63,9 @@ export class Camera extends BaseComponent {
     capture(rotate) {
         try {
             var data = ''
-            if (this.video && this.canvas) {
-                var ctx = this.canvas.getContext('2d');
+            if (this.video) {
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
                 var x = 0, y = 0, w = this.video.videoWidth, h = this.video.videoHeight
                 if (this.clipBox) {
                     this.clipBox.applyRect()
@@ -79,16 +79,16 @@ export class Camera extends BaseComponent {
                 rotate = rotate % 4
                 let tx = 0, ty = 0
                 if (rotate == 0 || rotate == 2) {
-                    this.canvas.width = w
-                    this.canvas.height = h
+                    canvas.width = w
+                    canvas.height = h
                     if (rotate == 2) {
                         tx = w
                         ty = h
                     }
                 } else {
                     // 竖屏
-                    this.canvas.width = h
-                    this.canvas.height = w
+                    canvas.width = h
+                    canvas.height = w
                     if (rotate == 1) {
                         tx = h
                     } else {
@@ -103,7 +103,7 @@ export class Camera extends BaseComponent {
                 ctx.translate(-tx, -ty)
 
 
-                var dataURL = this.canvas.toDataURL("image/jpeg", this.quality);
+                var dataURL = canvas.toDataURL("image/jpeg", this.quality);
                 //window.document.getElementById('test').src = dataURL
                 if (dataURL.split(',').length > 1)
                     data = dataURL.split(',')[1];
@@ -123,9 +123,9 @@ export class Camera extends BaseComponent {
     }
 }
 
-export function init(id, video, canvas, quality, clip, width, height) {
+export function init(id, video, quality, clip, width, height) {
     var component = getComponentById(id, () => {
-        return new Camera(video, canvas, quality)
+        return new Camera(video, quality)
     })
     if (clip) {
         component.clipBox = new ClipBox(clip, width, height)

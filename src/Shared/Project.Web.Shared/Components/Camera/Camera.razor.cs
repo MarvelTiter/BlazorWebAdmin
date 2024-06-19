@@ -33,7 +33,6 @@ namespace Project.Web.Shared.Components
         int RotateDeg => PreviewRotate ? InternalRotate * 90 : 0;
         private ElementReference? videoDom;
         private ElementReference? clipDom;
-        private ElementReference? canvasDom;
         private string? selectedDeviceId = null;
         public class DeviceInfo
         {
@@ -90,9 +89,9 @@ namespace Project.Web.Shared.Components
             if (!await InitDevices())
                 return;
             if (EnableClip)
-                await ModuleInvokeVoidAsync("init", videoDom, canvasDom, Quality, clipDom, Width, Height);
+                await ModuleInvokeVoidAsync("init", videoDom, Quality, clipDom, Width, Height);
             else
-                await ModuleInvokeVoidAsync("init", videoDom, canvasDom);
+                await ModuleInvokeVoidAsync("init", videoDom);
             var result = await Storage.GetAsync<string>("previousSelectedDevice");
             if (result.Success)
             {

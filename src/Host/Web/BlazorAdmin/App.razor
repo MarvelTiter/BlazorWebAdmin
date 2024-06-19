@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Project.Web.Shared.Components
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,9 +8,9 @@
     <base href="/" />
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
-    <link href="_content/Project.Web.Shared/css/app.css" rel="stylesheet" />
-    <link rel="stylesheet" href="app.css" />
-    <link rel="stylesheet" href="BlazorAdmin.styles.css" />
+    <Link Href="_content/Project.Web.Shared/css/app.css" />
+    <Link Href="app.css" />
+    <Link Href="BlazorAdmin.styles.css" />
     <HeadOutlet @rendermode="@(new InteractiveServerRenderMode(false))" />
 </head>
 

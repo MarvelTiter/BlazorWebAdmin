@@ -60,6 +60,8 @@ public static class AppConst
 
     static List<Assembly> PageAssemblies = new List<Assembly>();
 
+    public static string Version => Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? Random.Shared.NextDouble().ToString();
+
     public static RenderFragment Footer { get; set; }
     public static List<Assembly> Pages => PageAssemblies;
     public static void SetFooter(string html)
@@ -89,7 +91,7 @@ public static class AppConst
         {
             return TempFilePath;
         }
-        return Path.Combine([AppDomain.CurrentDomain.BaseDirectory, ..paths]);
+        return Path.Combine([AppDomain.CurrentDomain.BaseDirectory, .. paths]);
     }
     public static IHostEnvironment? Environment { get; set; }
     public static IServiceProvider? Services { get; set; }

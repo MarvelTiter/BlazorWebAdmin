@@ -45,7 +45,7 @@ namespace Project.Constraints.Page
             {
                 var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
                 RelativePath = attr?.Path ?? $"Components/{ModuleName}";
-                Version = attr?.Version ?? Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? Random.Shared.NextDouble().ToString();
+                Version = attr?.Version ?? AppConst.Version;
                 //var path = 
                 await LoadJsAsync();
                 await Init();

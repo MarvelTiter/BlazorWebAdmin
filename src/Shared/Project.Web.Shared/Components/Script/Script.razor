@@ -1,0 +1,8 @@
+﻿@namespace Project.Web.Shared.Components
+@using System.Diagnostics.CodeAnalysis
+<script src="@VersionSrc"></script>
+@code {
+    [Parameter, NotNull] public string? Src { get; set; }
+
+    string VersionSrc => $"{Src}?v={AppConst.Version}";
+}
