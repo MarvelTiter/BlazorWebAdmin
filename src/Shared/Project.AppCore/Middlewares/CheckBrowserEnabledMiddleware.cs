@@ -27,15 +27,15 @@ namespace Project.AppCore.Middlewares
             {
                 return next(context);
             }
-            if (context.Request.Cookies["HadCheckedBrowser"] == "1")
-            {
-                return next(context);
-            }
-            if (context.Request.Cookies["HadCheckedBrowser"] == "0")
-            {
-                context.Response.Redirect("/unsupport");
-                return Task.CompletedTask;
-            }
+            //if (context.Request.Cookies["HadCheckedBrowser"] == "1")
+            //{
+            //    return next(context);
+            //}
+            //if (context.Request.Cookies["HadCheckedBrowser"] == "0")
+            //{
+            //    context.Response.Redirect("/unsupport");
+            //    return Task.CompletedTask;
+            //}
             var agent = context.Request.Headers.UserAgent;
             if (string.IsNullOrEmpty(agent))
             {
@@ -44,12 +44,12 @@ namespace Project.AppCore.Middlewares
             var info = UserAgentHelper.GetBrowser(agent!);
             if (info.IsSupport(options.CurrentValue.SupportedMajorVersion))
             {
-                context.Response.Cookies.Append("HadCheckedBrowser", "1");
+                //context.Response.Cookies.Append("HadCheckedBrowser", "1");
                 return next(context);
             }
             else
             {
-                context.Response.Cookies.Append("HadCheckedBrowser", "0");
+                //context.Response.Cookies.Append("HadCheckedBrowser", "0");
                 context.Response.Redirect("/unsupport");
             }
 
