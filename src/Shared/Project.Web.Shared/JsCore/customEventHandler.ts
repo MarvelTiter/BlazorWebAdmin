@@ -1,11 +1,11 @@
 ﻿import { HandlerBase } from './handlerBase'
 export class CustomEventHandler extends HandlerBase {
-    constructor(el: Node
+    constructor(el: Element
         , eventType: string
         , fn: Function
         , id: string
         , once: boolean
-        , drop: Function = undefined) {
+        , drop: Function | undefined = undefined) {
         super(el, eventType, fn, id, once, drop);
     }
 

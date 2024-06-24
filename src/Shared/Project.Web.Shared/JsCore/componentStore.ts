@@ -1,7 +1,7 @@
 ﻿const alls = new Map<string, any>()
 window['a'] = alls
 
-export function getComponentById(id: string, init: Function | Object = undefined) {
+export function getComponentById(id: string, init: Function | Object | undefined = undefined) {
     if (!alls.has(id) && init !== undefined) {
         if (init instanceof Function) {
             alls.set(id, init())

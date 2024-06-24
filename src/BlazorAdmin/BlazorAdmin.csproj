@@ -12,8 +12,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\Shared\Project.AppCore\Project.AppCore.csproj" />
-	  <ProjectReference Include="..\..\..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
+	  <ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
+	  <ProjectReference Include="..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

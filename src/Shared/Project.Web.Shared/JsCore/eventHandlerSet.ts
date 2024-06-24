@@ -40,7 +40,7 @@ export class ElementHandlerSet {
 
     addHandler(fn: Function, eventType: string, once: boolean): void {
         const uid = makeUid(this.element, eventType);
-        let dropHandler: Function = undefined
+        let dropHandler: Function | undefined = undefined
         if (once) {
             dropHandler = () => this.removeHandler(eventType, fn)
         }
@@ -55,7 +55,7 @@ export class ElementHandlerSet {
 
     addResizeHandler(fn: Function, once: boolean) {
         const uid = makeUid(this.element, 'resize');
-        let dropHandler: Function = undefined
+        let dropHandler: Function | undefined = undefined
         if (once) {
             dropHandler = () => this.removeHandler('resize', fn)
         }
@@ -66,7 +66,7 @@ export class ElementHandlerSet {
         handler.on();
     }
 
-    removeHandler(eventType: string, action: Function) {
+    removeHandler(eventType: string, action?: Function) {
         const handlers: Map<string, HandlerBase> = this.events[eventType];
         if (action) {
             for (const handler of handlers.values()) {

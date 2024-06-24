@@ -7,7 +7,7 @@ export class ActionWatcher extends BaseComponent {
     timeout: number
     target: Element
     timer?: number
-    constructor(instance: any, type: number, timeout: number, target: Element = undefined) {
+    constructor(instance: any, type: number, timeout: number, target: Element | undefined = undefined) {
         super()
         this.instance = instance
         this.type = type
@@ -27,7 +27,7 @@ export class ActionWatcher extends BaseComponent {
 
     debounce() {
         clearTimeout(this.timer)
-        this.timer = setTimeout(() => {
+        this.timer = window.setTimeout(() => {
             this.invoke()
         }, this.timeout)
     }
@@ -35,7 +35,7 @@ export class ActionWatcher extends BaseComponent {
     throttle() {
         if (!this.timer) {
             this.invoke()
-            this.timer = setTimeout(() => {
+            this.timer = window.setTimeout(() => {
                 this.timer = undefined
             }, this.timeout)
         }

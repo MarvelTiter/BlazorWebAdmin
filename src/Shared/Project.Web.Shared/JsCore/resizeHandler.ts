@@ -6,7 +6,7 @@ export class ResizeHandler extends HandlerBase {
         , fn: Function
         , id: string
         , once: boolean
-        , drop: Function = undefined) {
+        , drop: Function | undefined = undefined) {
         super(el, 'resize', fn, id, once, drop);
         this.resizeObserver = new ResizeObserver(entries => {
             this.action(entries);

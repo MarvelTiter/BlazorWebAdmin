@@ -16,13 +16,13 @@ export class HandlerBase {
     delegate: Function
     type: string
     once: boolean
-    drop: Function
+    drop: Function | undefined
     constructor(el: Element
         , eventType: string
         , fn: Function
         , id: string
         , once: boolean
-        , drop: Function = undefined) {
+        , drop: Function | undefined = undefined) {
         this.element = el
         this.id = id
         this.delegate = fn

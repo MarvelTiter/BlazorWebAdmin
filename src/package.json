@@ -1,0 +1,35 @@
+{
+  "name": "blazor-admin",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarvelTiter/BlazorAdmin.git"
+  },
+  "keywords": [
+    "blazor"
+  ],
+  "author": "marveltiter",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MarvelTiter/BlazorAdmin/issues"
+  },
+  "homepage": "https://github.com/MarvelTiter/BlazorAdmin#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^8.0.0",
+    "browserify": "^16.5.2",
+    "gulp": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "gulp-uglify": "^3.0.2",
+    "tsify": "^4.0.2",
+    "typescript": "^3.8.3",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}

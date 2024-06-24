@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitAny": false,
+        "noEmitOnError": true,
+        "removeComments": false,
+        "sourceMap": true,
+        "moduleResolution": "node",
+        "target": "es2015"
+    },
+    "files": [
+        "main.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "wwwroot"
+    ],
+    "include": [
+        "./**/*.razor.ts"
+    ]
+}
