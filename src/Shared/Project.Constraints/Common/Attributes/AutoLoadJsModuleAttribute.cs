@@ -13,6 +13,5 @@ namespace Project.Constraints.Common.Attributes
         /// 不包含js文件名称
         /// </summary>
         public string? Path { get; set; }
-        public string? Version { get; set; }
     }
 }

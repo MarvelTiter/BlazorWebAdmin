@@ -4,5 +4,5 @@
 @code {
     [Parameter, NotNull] public string? Src { get; set; }
 
-    string VersionSrc => $"{Src}?v={AppConst.Version}";
+    string VersionSrc => AppConst.GetStatisticsFileWithVersion(Src);
 }

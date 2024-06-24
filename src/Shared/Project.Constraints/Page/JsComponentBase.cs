@@ -37,7 +37,6 @@ namespace Project.Constraints.Page
         protected string? ProjectName => GetType().Assembly.GetName().Name;
         protected string? RelativePath { get; set; }
 
-        protected string? Version { get; set; }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -45,7 +44,6 @@ namespace Project.Constraints.Page
             {
                 var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
                 RelativePath = attr?.Path ?? $"Components/{ModuleName}";
-                Version = attr?.Version ?? AppConst.Version;
                 //var path = 
                 await LoadJsAsync();
                 await Init();
@@ -57,7 +55,7 @@ namespace Project.Constraints.Page
             var path = IsLibrary
                ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}.razor.js"
                : $"./{RelativePath}/{ModuleName}.razor.js";
-            Module = await Js.InvokeAsync<IJSObjectReference>("import", $"{path}?r={Version}");
+            Module = await Js.InvokeAsync<IJSObjectReference>("import", AppConst.GetStatisticsFileWithVersion(path));
         }
 
         protected virtual ValueTask Init()

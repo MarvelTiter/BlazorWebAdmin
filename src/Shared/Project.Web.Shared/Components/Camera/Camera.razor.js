@@ -63,7 +63,7 @@ export class Camera extends BaseComponent {
     capture(rotate) {
         try {
             var data = ''
-            if (this.video) {
+            if (this.video && this.video.readyState > 2) {
                 var canvas = document.createElement('canvas');
                 var ctx = canvas.getContext('2d');
                 var x = 0, y = 0, w = this.video.videoWidth, h = this.video.videoHeight
@@ -102,14 +102,13 @@ export class Camera extends BaseComponent {
                 ctx.rotate(-angle)
                 ctx.translate(-tx, -ty)
 
-
-                var dataURL = canvas.toDataURL("image/jpeg", this.quality);
+                var dataURL = canvas.toDataURL();
                 //window.document.getElementById('test').src = dataURL
                 if (dataURL.split(',').length > 1)
                     data = dataURL.split(',')[1];
                 return success('', data)
             }
-            return failed('')
+            return failed('视频状态异常')
         } catch (e) {
             return failed(e.message)
         }

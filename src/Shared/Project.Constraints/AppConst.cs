@@ -60,7 +60,20 @@ public static class AppConst
 
     static List<Assembly> PageAssemblies = new List<Assembly>();
 
-    public static string Version => Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? Random.Shared.NextDouble().ToString();
+    public static string GetStatisticsFileWithVersion(string path)
+    {
+        if (Environment?.IsDevelopment() == true)
+        {
+            return path;
+        }
+        var file = Path.Combine("wwwroot", path);
+        var fi = new FileInfo(file);
+        if (!fi.Exists)
+        {
+            return path;
+        }
+        return $"{path}?v={fi.LastWriteTime:yyMMddHHmmss}";
+    }
 
     public static RenderFragment Footer { get; set; }
     public static List<Assembly> Pages => PageAssemblies;
