@@ -32,6 +32,7 @@ export class ScrollBar extends BaseComponent {
             this.bar.setVisible(true)
             this.bar.always = options.always
         }
+        this.initEvents()
     }
 
     update() {

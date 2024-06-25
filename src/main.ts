@@ -9,6 +9,7 @@ import { HorizontalScroll } from './Shared/Project.Web.Shared/Components/ScrollB
 import { SplitView } from './Shared/Project.Web.Shared/Components/SplitView/SplitView.razor.ts'
 import { WaterMark } from './Shared/Project.Web.Shared/Components/WaterMark/WaterMark.razor.ts'
 import { NavTabs } from './Shared/Project.AppCore/Layouts/LayoutComponents/NavTabs.razor.ts'
+
 declare global {
     interface Window {
         components: any

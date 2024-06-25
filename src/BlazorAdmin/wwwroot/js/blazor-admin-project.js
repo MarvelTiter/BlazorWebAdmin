@@ -359,6 +359,7 @@ var ResizeHandler = /*#__PURE__*/ function(HandlerBase) {
 }(HandlerBase);
 // Shared/Project.Web.Shared/JsCore/eventHandlerSet.ts
 var registry = /* @__PURE__ */ new Map();
+var RESIZE_EVENT = "resize";
 window.r = registry;
 function getElementEvents(el) {
     var uid = makeUid(el);
@@ -372,7 +373,7 @@ function removeRegistry(el) {
 }
 function addListener(el, eventType, action, once) {
     var ets = getElementEvents(el);
-    if (eventType == "resize") {
+    if (eventType == RESIZE_EVENT) {
         ets.addResizeHandler(action, once);
     } else {
         ets.addHandler(action, eventType, once);
@@ -397,9 +398,9 @@ var ElementHandlerSet = /*#__PURE__*/ function() {
                     };
                 }
                 var handler = new CustomEventHandler(this.element, eventType, fn, uid, once, dropHandler);
-                var handlers = this.events[eventType] || /* @__PURE__ */ new Map();
-                handlers[uid] = handler;
-                this.events[eventType] = handlers;
+                var handlers = this.events.get(eventType) || /* @__PURE__ */ new Map();
+                handlers.set(uid, handler);
+                this.events.set(eventType, handlers);
                 handler.action = handler.action.bind(handler);
                 handler.on();
             }
@@ -408,59 +409,49 @@ var ElementHandlerSet = /*#__PURE__*/ function() {
             key: "addResizeHandler",
             value: function addResizeHandler(fn, once) {
                 var _this = this;
-                var uid = makeUid(this.element, "resize");
+                var uid = makeUid(this.element, RESIZE_EVENT);
                 var dropHandler = void 0;
                 if (once) {
                     dropHandler = function() {
-                        return _this.removeHandler("resize", fn);
+                        return _this.removeHandler(RESIZE_EVENT, fn);
                     };
                 }
                 var handler = new ResizeHandler(this.element, fn, uid, once, dropHandler);
-                var handlers = this.events["resize"] || {};
-                handlers[uid] = handler;
-                this.events["resize"] = handlers;
+                var handlers = this.events.get(RESIZE_EVENT) || /* @__PURE__ */ new Map();
+                handlers.set(uid, handler);
+                this.events.set(RESIZE_EVENT, handlers);
                 handler.on();
             }
         },
         {
             key: "removeHandler",
             value: function removeHandler(eventType, action) {
-                var handlers = this.events[eventType];
+                var handlers = this.events.get(eventType);
+                if (handlers == void 0) {
+                    return;
+                }
                 if (action) {
-                    var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = undefined;
-                    try {
-                        for(var _iterator = handlers.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true){
-                            var handler = _step.value;
-                            if (handler.delegate == action) {
-                                handler.off();
-                                handlers.delete(handler.id);
-                                break;
-                            }
-                        }
-                    } catch (err) {
-                        _didIteratorError = true;
-                        _iteratorError = err;
-                    } finally{
-                        try {
-                            if (!_iteratorNormalCompletion && _iterator.return != null) {
-                                _iterator.return();
-                            }
-                        } finally{
-                            if (_didIteratorError) {
-                                throw _iteratorError;
-                            }
+                    var enumerator = handlers.values();
+                    var r;
+                    while(r = enumerator.next(), !r.done){
+                        var handler = r.value;
+                        if (handler.delegate == action) {
+                            handler.off();
+                            handlers.delete(handler.id);
+                            break;
                         }
                     }
                 } else {
                     for(var h in handlers){
-                        handlers[h].off();
+                        var _handlers_get;
+                        (_handlers_get = handlers.get(h)) === null || _handlers_get === void 0 ? void 0 : _handlers_get.off();
                         handlers.delete(h);
                     }
                 }
-                if (!Object.keys(this.events[eventType]).length) {
+                if (handlers.size == 0) {
                     this.events.delete(eventType);
                 }
-                if (!Object.keys(this.events).length) {
+                if (this.events.size == 0) {
                     removeRegistry(this.element);
                 }
             }
@@ -488,15 +479,14 @@ var EventHandler = {
 var ActionWatcher = /*#__PURE__*/ function(BaseComponent) {
     _inherits(_ActionWatcher, BaseComponent);
     var _super = _create_super(_ActionWatcher);
-    function _ActionWatcher(instance, type, timeout) {
-        var target = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : void 0;
+    function _ActionWatcher(options) {
         _class_call_check(this, _ActionWatcher);
         var _this;
         _this = _super.call(this);
-        _this.instance = instance;
-        _this.type = type;
-        _this.timeout = timeout;
-        _this.target = target || window.document.documentElement;
+        _this.instance = options.instance;
+        _this.type = options.type;
+        _this.timeout = options.timeout;
+        _this.target = options.target || window.document.documentElement;
         return _this;
     }
     _create_class(_ActionWatcher, [
@@ -552,13 +542,13 @@ var ActionWatcher = /*#__PURE__*/ function(BaseComponent) {
     ], [
         {
             key: "init",
-            value: function init(id, dotNetRef, type, timeout, element) {
+            value: function init(id, options) {
                 if (!id) {
                     console.log("id is not defined");
                     return;
                 }
                 var watcher = getComponentById(id, function() {
-                    return new _ActionWatcher(dotNetRef, type, timeout, element);
+                    return new _ActionWatcher(options);
                 });
                 watcher.start();
             }
@@ -597,7 +587,9 @@ function startDrag(e, moveHandler, upHandler) {
     e.stopImmediatePropagation();
     EventHandler.listen(document.documentElement, "mousemove", moveHandler);
     EventHandler.once(document.documentElement, "mouseup", function(e2) {
-        if (upHandler) upHandler();
+        if (upHandler) {
+            upHandler();
+        }
         EventHandler.remove(document.documentElement, "mousemove", moveHandler);
         restoreOnSelectstart();
     });
@@ -1462,6 +1454,7 @@ var ScrollBar = /*#__PURE__*/ function(BaseComponent) {
             _this.bar.setVisible(true);
             _this.bar.always = options.always;
         }
+        _this.initEvents();
         return _this;
     }
     _create_class(_ScrollBar, [

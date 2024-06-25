@@ -8,25 +8,26 @@ declare global {
     }
 }
 const registry = new Map<string, ElementHandlerSet>()
-window.r = registry;
+const RESIZE_EVENT = 'resize'
+window.r = registry
 export function getElementEvents(el: Element): ElementHandlerSet {
-    const uid = makeUid(el);
-    el.eventUid = uid;
-    registry[uid] = registry[uid] || new ElementHandlerSet(el);
-    return registry[uid];
+    const uid = makeUid(el)
+    el.eventUid = uid
+    registry[uid] = registry[uid] || new ElementHandlerSet(el)
+    return registry[uid]
 }
 export function removeRegistry(el: Element): void {
-    const uid = makeUid(el);
-    delete registry[uid];
+    const uid = makeUid(el)
+    delete registry[uid]
 }
 
 export function addListener(el: Element, eventType: string, action: Function, once: boolean) {
-    const ets = getElementEvents(el);
+    const ets = getElementEvents(el)
 
-    if (eventType == 'resize') {
-        ets.addResizeHandler(action, once);
+    if (eventType == RESIZE_EVENT) {
+        ets.addResizeHandler(action, once)
     } else {
-        ets.addHandler(action, eventType, once);
+        ets.addHandler(action, eventType, once)
     }
 }
 
@@ -39,57 +40,70 @@ export class ElementHandlerSet {
     }
 
     addHandler(fn: Function, eventType: string, once: boolean): void {
-        const uid = makeUid(this.element, eventType);
+        const uid = makeUid(this.element, eventType)
         let dropHandler: Function | undefined = undefined
         if (once) {
             dropHandler = () => this.removeHandler(eventType, fn)
         }
-        var handler = new CustomEventHandler(this.element, eventType, fn, uid, once, dropHandler);
-        const handlers: Map<string, HandlerBase> = this.events[eventType] || new Map<string, HandlerBase>();
-        handlers[uid] = handler;
-        this.events[eventType] = handlers;
-        handler.action = handler.action.bind(handler);
-        //this.element.addEventListener(eventType, handler.action);
-        handler.on();
+        var handler = new CustomEventHandler(this.element, eventType, fn, uid, once, dropHandler)
+        const handlers: Map<string, HandlerBase> = this.events.get(eventType) || new Map<string, HandlerBase>()
+        // handlers[uid] = handler
+        handlers.set(uid, handler)
+        this.events.set(eventType, handlers)
+        handler.action = handler.action.bind(handler)
+        //this.element.addEventListener(eventType, handler.action)
+        handler.on()
     }
 
     addResizeHandler(fn: Function, once: boolean) {
-        const uid = makeUid(this.element, 'resize');
+        const uid = makeUid(this.element, RESIZE_EVENT)
         let dropHandler: Function | undefined = undefined
         if (once) {
-            dropHandler = () => this.removeHandler('resize', fn)
+            dropHandler = () => this.removeHandler(RESIZE_EVENT, fn)
         }
-        var handler = new ResizeHandler(this.element, fn, uid, once, dropHandler);
-        const handlers = this.events['resize'] || {};
-        handlers[uid] = handler;
-        this.events['resize'] = handlers;
-        handler.on();
+        var handler = new ResizeHandler(this.element, fn, uid, once, dropHandler)
+        const handlers: Map<string, HandlerBase> = this.events.get(RESIZE_EVENT) || new Map<string, HandlerBase>()
+        handlers.set(uid, handler)
+        this.events.set(RESIZE_EVENT, handlers)
+        handler.on()
     }
 
     removeHandler(eventType: string, action?: Function) {
-        const handlers: Map<string, HandlerBase> = this.events[eventType];
+        const handlers = this.events.get(eventType)
+        if (handlers == undefined) {
+            return
+        }
         if (action) {
-            for (const handler of handlers.values()) {
+            const enumerator = handlers.values()
+            let r: IteratorResult<HandlerBase>
+            while (r = enumerator.next(), !r.done) {
+                const handler = r.value
                 if (handler.delegate == action) {
                     handler.off()
                     handlers.delete(handler.id)
                     break
                 }
-
             }
+            // for (const handler of handlers.values()) {
+            //     if (handler.delegate == action) {
+            //         handler.off()
+            //         handlers.delete(handler.id)
+            //         break
+            //     }
+            // }
         } else {
             // 移除所有 eventType 的处理
             for (var h in handlers) {
-                handlers[h].off()
+                handlers.get(h)?.off()
                 handlers.delete(h)
             }
         }
         // 事件类型为空，移除事件类型
-        if (!Object.keys(this.events[eventType]).length) {
+        if (handlers.size == 0) {
             this.events.delete(eventType)
         }
         // 事件为空，移除对象
-        if (!Object.keys(this.events).length) {
+        if (this.events.size == 0) {
             removeRegistry(this.element)
         }
     }

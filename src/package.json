@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "tsup ./main.ts"
+    "build": "tsup",
+    "build:pub":"tsup --minify terser"
   },
   "repository": {
     "type": "git",

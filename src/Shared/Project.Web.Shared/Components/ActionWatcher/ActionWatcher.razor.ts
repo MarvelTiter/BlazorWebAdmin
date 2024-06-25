@@ -5,14 +5,14 @@ export class ActionWatcher extends BaseComponent {
     instance: any
     type: number
     timeout: number
-    target: Element
+    target: HTMLElement
     timer?: number
-    constructor(instance: any, type: number, timeout: number, target: Element | undefined = undefined) {
+    constructor(options:any) {
         super()
-        this.instance = instance
-        this.type = type
-        this.timeout = timeout
-        this.target = target || window.document.documentElement
+        this.instance = options.instance
+        this.type = options.type
+        this.timeout = options.timeout
+        this.target = options.target || window.document.documentElement
     }
 
     start(): void {
@@ -51,13 +51,13 @@ export class ActionWatcher extends BaseComponent {
         this.timer = undefined
     }
 
-    static init(id: string, dotNetRef: any, type: number, timeout: number, element?: Element) {
+    static init(id: string, options:any) {
         if (!id){
             console.log('id is not defined')
             return
         }
         var watcher = getComponentById(id, () => {
-            return new ActionWatcher(dotNetRef, type, timeout, element);
+            return new ActionWatcher(options);
         });
         watcher.start();
     }
