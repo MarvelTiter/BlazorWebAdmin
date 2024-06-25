@@ -33,7 +33,7 @@
     {
         await base.OnInitializedAsync();
         var userRoles = Ctx.GetValue() as IEnumerable<string>;
-        roleDefs = Roles.Select(r => new RoleDef(r, userRoles!.Contains(r.RoleId))).ToList();
+        roleDefs = Roles.Select(r => new RoleDef(r, userRoles?.Contains(r.RoleId) ?? false)).ToList();
     }
 
     Task SaveUserRole()
