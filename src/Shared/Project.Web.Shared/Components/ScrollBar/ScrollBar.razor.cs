@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Project.Constraints.UI.Flyout;
+using System.Diagnostics;
 namespace Project.Web.Shared.Components
 {
     public partial class ScrollBar : JsComponentBase
@@ -34,9 +36,30 @@ namespace Project.Web.Shared.Components
         {
             if (Native) return;
             //ScrollBarModule ??= await Js.InvokeAsync<IJSObjectReference>("import", "./js/scrollbar/scrollbar.js");
-            await ModuleInvokeVoidAsync("initBarInstance", "vertical", VerticalTracker, VerticalThumb);
-            await ModuleInvokeVoidAsync("initBarInstance", "horizontal", HorizontalTracker, HorizontalThumb);
-            await ModuleInvokeVoidAsync("initScrollbar", ScrollbarRef, WrapElementRef, ResizeRef, MinSize, Always);
+            //await ModuleInvokeVoidAsync("initBarInstance", "vertical", VerticalTracker, VerticalThumb);
+            //await ModuleInvokeVoidAsync("initBarInstance", "horizontal", HorizontalTracker, HorizontalThumb);
+            //await ModuleInvokeVoidAsync("initScrollbar", ScrollbarRef, WrapElementRef, ResizeRef, MinSize, Always);
+            await ModuleInvokeVoidAsync("init", new
+            {
+                scrollbar = ScrollbarRef,
+                wrap = WrapElementRef,
+                resize = ResizeRef,
+                minSize = MinSize,
+                always = Always,
+                bars = new object[2]
+                {
+                    new {
+                        position = "vertical",
+                        tracker = VerticalTracker,
+                        thumb = VerticalThumb
+                    },
+                    new {
+                        position = "horizontal",
+                        tracker = HorizontalTracker,
+                        thumb = HorizontalThumb
+                    }
+                }
+            });
         }
     }
 }

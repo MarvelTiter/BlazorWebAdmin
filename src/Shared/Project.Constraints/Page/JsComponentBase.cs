@@ -10,7 +10,7 @@ namespace Project.Constraints.Page
     {
         private string? id;
         [Inject, NotNull] protected IJSRuntime? Js { get; set; }
-        protected IJSObjectReference? Module { get; set; }
+        //protected IJSObjectReference? Module { get; set; }
         public string Id
         {
             get
@@ -45,18 +45,18 @@ namespace Project.Constraints.Page
                 var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
                 RelativePath = attr?.Path ?? $"Components/{ModuleName}";
                 //var path = 
-                await LoadJsAsync();
+                //await LoadJsAsync();
                 await Init();
             }
         }
 
-        protected virtual async Task LoadJsAsync()
-        {
-            var path = IsLibrary
-               ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}.razor.js"
-               : $"./{RelativePath}/{ModuleName}.razor.js";
-            Module = await Js.InvokeAsync<IJSObjectReference>("import", AppConst.GetStatisticsFileWithVersion(path));
-        }
+        //protected virtual async Task LoadJsAsync()
+        //{
+        //    var path = IsLibrary
+        //       ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}.razor.js"
+        //       : $"./{RelativePath}/{ModuleName}.razor.js";
+        //    Module = await Js.InvokeAsync<IJSObjectReference>("import", AppConst.GetStatisticsFileWithVersion(path));
+        //}
 
         protected virtual ValueTask Init()
         {
@@ -68,7 +68,8 @@ namespace Project.Constraints.Page
             try
             {
                 //await (Module?.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled(CancellationToken.None));
-                await (Module?.InvokeVoidAsync("init", [Id, .. args]) ?? ValueTask.FromCanceled(CancellationToken.None));
+                //await (Module?.InvokeVoidAsync("init", [Id, .. args]) ?? ValueTask.FromCanceled(CancellationToken.None));
+                await Js.InvokeVoidAsync($"{ModuleName}.init", [Id, .. args]);
             }
             catch { }
             finally
@@ -82,7 +83,8 @@ namespace Project.Constraints.Page
             try
             {
                 //await (Module?.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled(CancellationToken.None));
-                await (Module?.InvokeVoidAsync(identifier, [Id, .. args]) ?? ValueTask.FromCanceled(CancellationToken.None));
+                //await (Module?.InvokeVoidAsync(identifier, [Id, .. args]) ?? ValueTask.FromCanceled(CancellationToken.None));
+                await Js.InvokeVoidAsync($"{ModuleName}.{identifier}", [Id, .. args]);
             }
             catch { }
             finally
@@ -97,7 +99,8 @@ namespace Project.Constraints.Page
             try
             {
                 //ret = await (Module?.InvokeAsync<T>($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled<T>(CancellationToken.None));
-                ret = await (Module?.InvokeAsync<T>(identifier, [Id, .. args]) ?? ValueTask.FromCanceled<T>(CancellationToken.None));
+                //ret = await (Module?.InvokeAsync<T>(identifier, [Id, .. args]) ?? ValueTask.FromCanceled<T>(CancellationToken.None));
+                ret = await Js.InvokeAsync<T>($"{ModuleName}.{identifier}", [Id, .. args]);
             }
             catch { }
             return ret!;
@@ -105,20 +108,18 @@ namespace Project.Constraints.Page
 
         protected async override ValueTask OnDisposeAsync()
         {
-            if (Module != null)
+            //if (Module != null)
+            //{
+            //    // 忽略警告和报错
+            //}
+            try
             {
-                // 忽略警告和报错
-                try
-                {
-                    await Module.InvokeVoidAsync($"{ModuleName}.dispose", Id);
-                    await Module.DisposeAsync();
-                    Module = null;
-                }
-                catch { }
-                finally
-                {
+                await Js.InvokeVoidAsync($"{ModuleName}.dispose", Id);
+            }
+            catch { }
+            finally
+            {
 
-                }
             }
         }
     }

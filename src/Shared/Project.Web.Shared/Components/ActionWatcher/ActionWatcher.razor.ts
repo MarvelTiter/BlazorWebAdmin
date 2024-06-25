@@ -52,6 +52,10 @@ export class ActionWatcher extends BaseComponent {
     }
 
     static init(id: string, dotNetRef: any, type: number, timeout: number, element?: Element) {
+        if (!id){
+            console.log('id is not defined')
+            return
+        }
         var watcher = getComponentById(id, () => {
             return new ActionWatcher(dotNetRef, type, timeout, element);
         });

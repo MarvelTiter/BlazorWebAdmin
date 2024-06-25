@@ -3,7 +3,7 @@
     message: string | undefined,
     payload: any | undefined
 }
-export function success(msg: string | undefined, payload: any | undefined): IJsActionResult {
+export function success(msg: string | undefined, payload?: any): IJsActionResult {
     return {
         success: true,
         message: msg,

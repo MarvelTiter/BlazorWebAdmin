@@ -113,6 +113,7 @@ UI.BuildCheckBoxGroup:
 
     async Task ShowModal()
     {
+        await Js.InvokeVoidAsync("ActionWatcher.init");
         var b = await UI.ConfirmAsync("测试", "ConfirmTest");
         if (b)
         {

@@ -1,26 +1,32 @@
-import { BaseComponent } from "/_content/Project.Web.Shared/js/jscomponentbase/base-component.js";
-import { getComponentById } from "/_content/Project.Web.Shared/js/jscomponentbase/component-store.js";
-import { EventHandler } from "/_content/Project.Web.Shared/js/jscomponentbase/event-handler.js";
-import { success, failed } from "/_content/Project.Web.Shared/js/jscomponentbase/utils.js";
-import { startDrag } from "/_content/Project.Web.Shared/js/jscomponentbase/drag-helper.js";
+import { BaseComponent } from "../../JsCore/baseComponent";
+import { getComponentById } from "../../JsCore/componentStore";
+import { startDrag } from "../../JsCore/dragHelper";
+import { EventHandler } from "../../JsCore/eventHandler";
 
 export class SplitView extends BaseComponent {
-    constructor(doms, options) {
+    panel1: HTMLElement
+    panel2: HTMLElement
+    separator: HTMLElement
+    direction: 'row' | 'column'
+    max: number | string
+    min: number | string
+    init: string
+    drag: boolean = false
+    constructor(doms: any, options: any) {
         super()
-        this.panel1 = doms.panel1;
-        this.panel2 = doms.panel2;
-        this.separator = doms.separator;
-        this.direction = options.direction;
-        this.max = options.max;
-        this.min = options.min;
-        this.init = options.initWidth;
-        this.drag = false;
-        this.setup();
+        this.panel1 = doms.panel1
+        this.panel2 = doms.panel2
+        this.separator = doms.separator
+        this.direction = options.direction
+        this.max = options.max
+        this.min = options.min
+        this.init = options.initWidth
+        this.setup()
     }
-
     setup() {
         EventHandler.listen(this.separator, 'mousedown', this.handleMouseDown.bind(this));
-        EventHandler.listen(this.panel1.parentNode, "resize", this.refresh.bind(this));
+        if (this.panel1.parentElement)
+            EventHandler.listen(this.panel1.parentElement, "resize", this.refresh.bind(this));
     }
 
     refresh() {
@@ -30,7 +36,7 @@ export class SplitView extends BaseComponent {
 
     handleMouseDown(e) {
         e.stopPropagation()
-        const wrapRect = this.panel1.parentNode.getBoundingClientRect();
+        const wrapRect = this.panel1.parentElement?.getBoundingClientRect();
         const separatorRect = this.separator.getBoundingClientRect();
         const separatorOffset = this.direction === 'row' ? e.pageX - separatorRect.left : e.pageY - separatorRect.top;
         const handler = this.direction === 'row' ? this.modeRow : this.modeColumn;
@@ -60,11 +66,18 @@ export class SplitView extends BaseComponent {
 
     dispose() {
         EventHandler.remove(this.separator, 'mousedown');
-        EventHandler.remove(this.panel1.parentNode, 'resize');
+        if (this.panel1.parentElement)
+            EventHandler.remove(this.panel1.parentElement, 'resize');
+    }
+
+    static init(id, doms, options) {
+        getComponentById(id, () => {
+            return new SplitView(doms, options);
+        });
     }
 }
 
-function getFinalPercent(offset, total, max, min) {
+function getFinalPercent(offset: number, total: number, max: any, min: any) {
     let p = offset / total * 100;
     if (max.endsWith("%")) {
         const l = Number(max.replace("%", ""));
@@ -87,10 +100,4 @@ function getFinalPercent(offset, total, max, min) {
     }
 
     return p;
-}
-
-export function init(id, doms, options) {
-    getComponentById(id, () => {
-        return new SplitView(doms, options);
-    });
 }
