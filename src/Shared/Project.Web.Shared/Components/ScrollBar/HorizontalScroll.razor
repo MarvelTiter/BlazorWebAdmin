@@ -10,6 +10,6 @@
     ElementReference? WrapElementRef;
     protected override ValueTask Init()
     {
-        return ModuleInvokeVoidAsync("init", WrapElementRef);
+        return InvokeVoidAsync("init", WrapElementRef);
     }
 }

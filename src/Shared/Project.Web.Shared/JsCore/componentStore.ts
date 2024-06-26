@@ -1,24 +1,29 @@
-﻿const alls = new Map<string, any>()
-window['a'] = alls
+﻿const allComponentMap = new Map<string, any>()
+declare global {
+    interface Window {
+        allComponentMap: Map<string, any>
+    }
+}
+window.allComponentMap = allComponentMap
 
 export function getComponentById(id: string, init?: Function | Object) {
-    if (!alls.has(id) && init !== undefined) {
+    if (!allComponentMap.has(id) && init !== undefined) {
         if (init instanceof Function) {
-            alls.set(id, init())
+            allComponentMap.set(id, init())
         }
         else if (init instanceof Object) {
-            alls.set(id, init)
+            allComponentMap.set(id, init)
         } else {
             console.error('初始化异常', init)
             throw new Error('初始化异常')
         }
     }
-    if (alls.has(id))
-        return alls.get(id)
+    if (allComponentMap.has(id))
+        return allComponentMap.get(id)
     else
         return undefined
 }
 
 export function removeComponent(id: string): void {
-    alls.delete(id)
+    allComponentMap.delete(id)
 }

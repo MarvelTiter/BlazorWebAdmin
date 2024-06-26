@@ -116,12 +116,12 @@ namespace Project.Web.Shared.Components
         {
             if (EnableClip)
             {
-                await ModuleInvokeVoidAsync("disableClipBox");
+                await InvokeVoidAsync("disableClipBox");
                 EnableClip = false;
             }
             else
             {
-                await ModuleInvokeVoidAsync("useClipBox", new
+                await InvokeVoidAsync("useClipBox", new
                 {
                     clip = clipDom,
                     width = Width,
@@ -133,7 +133,7 @@ namespace Project.Web.Shared.Components
 
         private async Task<bool> InitDevices()
         {
-            var result = await ModuleInvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");
+            var result = await InvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");
             if (result.Success)
             {
                 Devices = result.Payload;
@@ -198,7 +198,7 @@ namespace Project.Web.Shared.Components
             JsActionResult? result = default;
             while (hadTried < RetryTimes)
             {
-                result = await ModuleInvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, width, height);
+                result = await InvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, width, height);
                 if (result == null || !result.Success)
                 {
                     await Task.Delay(100);
@@ -214,7 +214,7 @@ namespace Project.Web.Shared.Components
 
         public async Task Stop()
         {
-            var result = await ModuleInvokeAsync<JsActionResult>("closeUserMedia");
+            var result = await InvokeAsync<JsActionResult>("closeUserMedia");
             if (result == null)
             {
                 return;
@@ -238,7 +238,7 @@ namespace Project.Web.Shared.Components
         public async Task<CaptureInfo> Capture()
         {
             CaptureInfo info = new();
-            var result = await ModuleInvokeAsync<JsActionResult<string>>("capture", InternalRotate);
+            var result = await InvokeAsync<JsActionResult<string>>("capture", InternalRotate);
             if (result.Success)
             {
                 var filename = $"CameraCapture_{DateTime.Now:yyyyMMddHHmmss}";

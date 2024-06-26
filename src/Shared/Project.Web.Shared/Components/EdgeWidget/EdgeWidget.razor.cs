@@ -20,7 +20,7 @@ namespace Project.Web.Shared.Components
         ElementReference? triggerDiv;
         protected override async ValueTask Init()
         {
-            await ModuleInvokeVoidAsync("init", new
+            await InvokeVoidAsync("init", new
             {
                 mask = maskDiv,
                 container = containerDiv,

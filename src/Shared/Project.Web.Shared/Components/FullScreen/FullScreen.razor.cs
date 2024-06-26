@@ -4,12 +4,12 @@
     {
         protected override async ValueTask Init()
         {
-            await ModuleInvokeVoidAsync("init");
+            await InvokeVoidAsync("init");
         }
 
         public async ValueTask Toggle()
         {
-            await ModuleInvokeVoidAsync("toggle");
+            await InvokeVoidAsync("toggle");
         }
     }
 }

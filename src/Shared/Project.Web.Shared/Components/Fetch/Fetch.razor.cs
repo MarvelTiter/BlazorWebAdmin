@@ -14,7 +14,7 @@ namespace Project.Web.Shared.Components
         [Parameter] public EventCallback<string> OnFailed { get; set; }
         protected override async ValueTask Init()
         {
-            await ModuleInvokeVoidAsync("init");
+            await InvokeVoidAsync("init");
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -45,7 +45,7 @@ namespace Project.Web.Shared.Components
 
         public async Task<TData?> Request()
         {
-            var result = await ModuleInvokeAsync<JsActionResult<TData>>("request", new
+            var result = await InvokeAsync<JsActionResult<TData>>("request", new
             {
                 Url,
                 Method,

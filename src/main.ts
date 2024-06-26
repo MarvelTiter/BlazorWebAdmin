@@ -12,11 +12,11 @@ import { NavTabs } from './Shared/Project.AppCore/Layouts/LayoutComponents/NavTa
 import { Downloader } from './Shared/Project.Web.Shared/Components/Downloader/Downloader.razor.ts'
 declare global {
     interface Window {
-        components: any
+        BlazorAdminProject: any
     }
 }
 
-window.components = {
+window.BlazorAdminProject = {
     ActionWatcher,
     Camera,
     EdgeWidget,

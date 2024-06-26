@@ -26,7 +26,7 @@ namespace Project.AppCore.Layouts.LayoutComponents
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                navMenuWidth = await ModuleInvokeAsync<int>("getMenuWidth");
+                navMenuWidth = await InvokeAsync<int>("getMenuWidth");
             }
         }
 

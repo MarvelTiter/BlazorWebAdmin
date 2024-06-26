@@ -39,7 +39,7 @@ namespace Project.Web.Shared.Components
             //await ModuleInvokeVoidAsync("initBarInstance", "vertical", VerticalTracker, VerticalThumb);
             //await ModuleInvokeVoidAsync("initBarInstance", "horizontal", HorizontalTracker, HorizontalThumb);
             //await ModuleInvokeVoidAsync("initScrollbar", ScrollbarRef, WrapElementRef, ResizeRef, MinSize, Always);
-            await ModuleInvokeVoidAsync("init", new
+            await InvokeVoidAsync("init", new
             {
                 scrollbar = ScrollbarRef,
                 wrap = WrapElementRef,

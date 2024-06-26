@@ -4,12 +4,12 @@ import { ResizeHandler } from './resizeHandler'
 
 declare global {
     interface Window {
-        r: Map<string, ElementHandlerSet>
+        allEventsMap: Map<string, ElementHandlerSet>
     }
 }
 const registry = new Map<string, ElementHandlerSet>()
 const RESIZE_EVENT = 'resize'
-window.r = registry
+window.allEventsMap = registry
 export function getElementEvents(el: Element): ElementHandlerSet {
     const uid = makeUid(el)
     el.eventUid = uid

@@ -63,7 +63,7 @@
 
     void DrawMask(string[] contents, WaterMarkOptions? options = null)
     {
-        _ = ModuleInvokeVoidAsync("setWatermark", wrapper, new
+        _ = InvokeVoidAsync("setWatermark", wrapper, new
         {
             top = options?.Top ?? Top,
             width = options?.Width ?? Width,

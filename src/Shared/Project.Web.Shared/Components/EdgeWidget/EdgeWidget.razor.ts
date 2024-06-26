@@ -3,11 +3,11 @@ import { getComponentById } from "../../JsCore/componentStore";
 import { EventHandler } from "../../JsCore/eventHandler";
 
 export class EdgeWidget extends BaseComponent {
-    mask: Element
+    mask: HTMLElement
     childContentContainer: HTMLElement
-    trigger: Element
+    trigger: HTMLElement
     contentWidth: number
-    show: boolean
+    //show: boolean
     constructor(options: any) {
         super()
         this.mask = options.mask
@@ -15,8 +15,9 @@ export class EdgeWidget extends BaseComponent {
         this.trigger = options.trigger
         var containerRect = this.childContentContainer.getBoundingClientRect()
         this.contentWidth = containerRect.width
-        this.show = false
+        //this.show = false
         this.childContentContainer.style.left = -this.getWidth() + 'px'
+        this.bindEvents()
     }
     getWidth(): number {
         return this.contentWidth
