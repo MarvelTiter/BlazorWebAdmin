@@ -1,7 +1,7 @@
 ﻿export interface IJsActionResult {
     success: boolean,
     message: string | undefined,
-    payload: any | undefined
+    payload: any
 }
 export function success(msg: string | undefined, payload?: any): IJsActionResult {
     return {
@@ -15,7 +15,7 @@ export function failed(msg: string | undefined): IJsActionResult {
     return {
         success: false,
         message: msg,
-        payload: undefined
+        payload: null
     }
 }
 
