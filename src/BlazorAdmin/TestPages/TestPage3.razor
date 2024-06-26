@@ -28,11 +28,6 @@
 <p>是否垂直@(UI.BuildSwitch(this).Bind(() => isVertial).Render())</p>
 <p>垂直对齐@(UI.BuildRadioGroup<string, string>(this, vertial).LabelExpression(s => s).ValueExpression(v => v).Bind(() => v).Render())</p>
 <p>水平对齐@(UI.BuildRadioGroup<string, string>(this, horizontal).LabelExpression(s => s).ValueExpression(v => v).Bind(() => h).Render())</p>
-@UI.BuildButton(this).Text("PostCheck").Primary().OnClick(OpenDialog).Render()
-<br/>
-IsBrowser: @OperatingSystem.IsBrowser()
-
-<Project.Web.Shared.Components.CameraTest></Project.Web.Shared.Components.CameraTest>
 
 @code {
     bool isVertial = false;

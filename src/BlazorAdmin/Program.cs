@@ -1,46 +1,45 @@
-using BlazorAdmin;
-using BlazorAdmin.TestPages;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Project.AppCore;
 using Project.Constraints;
 using Project.Services;
 using Project.UI.AntBlazor;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents()
-    .AddHubOptions(option =>
-    {
-        option.MaximumReceiveMessageSize = 1024 * 1024 * 2;
-    });
-
-builder.Services.AddAntDesignUI();
-builder.AddProject(setting =>
+namespace BlazorWpfAdmin
 {
-    setting.App.Name = "Demo";
-    setting.App.Id = "Test";
-    setting.App.Company = "Marvel";
-    setting.ConfigurePage(locator =>
+    public class Program
     {
-        locator.SetPage<TestPage4>("LocatorTest");
-    });
-    setting.ConfigureSettingProviderType<CustomSetting>();
-    setting.AddInterceotor<AdditionalTest>();
-});
+        [STAThread]
+        public static void Main(string[] args)
+        {
+            var builder = Host.CreateApplicationBuilder(args);
+            
+            builder.AddProject(setting =>
+            {
+                setting.App.Name = "Demo";
+                setting.App.Id = "Test";
+                setting.App.Company = "Marvel";
+                setting.AddFileLogger = true;
+                setting.ConfigureSettingProviderType<CustomSetting>();
+            });
+            
+            builder.AddDefaultLightOrm();
+            builder.Services.AddSingleton<App>();
+            builder.Services.AddTransient<MainWindow>();
+            builder.Services.AddHostedService<WpfHostedService<App, MainWindow>>();
+            builder.Services.AddWpfBlazorWebView();
+            builder.Services.AddAntDesignUI();
+            builder.Services.AddAuthenticationCore();
+            builder.Services.AddAuthorization();
+            AppConst.AddAssembly(typeof(App).Assembly);
+            Console.WriteLine(Project.Constraints.AppConst.TempFilePath);
 
-builder.AddDefaultLightOrm();
-
-var app = builder.Build();
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+            builder.Build().Run();
+        }
+    }
 }
-app.UseProject();
-app.UseAntiforgery();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode()
-    .AddAdditionalAssemblies([.. AppConst.Pages]);
-
-app.Run();

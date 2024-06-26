@@ -1,15 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<RootNamespace>BlazorWpfAdmin</RootNamespace>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
-		<OutputType Condition="'$(Configuration)'!='Debug'">WinExe</OutputType>
-		<DisableWinExeOutputInference>true</DisableWinExeOutputInference>
-		<IsPackable>true</IsPackable>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<UseWPF>true</UseWPF>
+		<EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="8.0.20" />
+	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
@@ -17,22 +20,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Update="appsettings.Development.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</Content>
-		<Content Update="appsettings.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</Content>
+		<None Update="simple.db">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
-
-	<ItemGroup>
-	  <None Update="simple.db">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
-
+	
 </Project>

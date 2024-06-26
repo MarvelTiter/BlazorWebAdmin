@@ -2,7 +2,7 @@
 using Project.Constraints.Common.Attributes;
 using Project.Constraints.UI;
 
-namespace BlazorAdmin.TestPages
+namespace BlazorWpfAdmin.TestPages
 {
 #if DEBUG
     [Route("/test2")]
