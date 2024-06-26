@@ -49,11 +49,11 @@ namespace Project.AppCore.Pages
             if (result.Success)
             {
                 await User.SetUserAsync(result.Payload);
-                await AuthenticationStateProvider.IdentifyUser(result.Payload);
+                await AuthenticationStateProvider.IdentifyUser(result.Payload!);
                 await Router.InitRoutersAsync(result.Payload);
                 UI.Success(Localizer["Login.SuccessTips"].Value);
                 Root.OnKeyDown -= OnPressEnter;
-                var goon = await CustomSetting.LoginInterceptorAsync(result.Payload);
+                var goon = await CustomSetting.LoginInterceptorAsync(result.Payload!);
                 if (goon)
                 {
                     if (string.IsNullOrEmpty(Redirect))
@@ -64,7 +64,7 @@ namespace Project.AppCore.Pages
             }
             else
             {
-                UI.Error(result.Message);
+                UI.Error(result.Message!);
             }
             Loading = false;
             //StateHasChanged();
