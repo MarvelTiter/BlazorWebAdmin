@@ -36,7 +36,7 @@
 
     protected override async ValueTask Init()
     {
-        await ModuleInvokeVoidAsync("init", new
+        await InvokeVoidAsync("init", new
         {
             panel1,
             panel2,

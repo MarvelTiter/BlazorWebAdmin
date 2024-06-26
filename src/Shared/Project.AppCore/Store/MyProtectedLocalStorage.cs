@@ -88,6 +88,8 @@ namespace Project.Constraints.Store
         private ValueTask<string?> GetProtectedJsonAsync(string key)
             => _jsRuntime.InvokeAsync<string?>("localStorage.getItem", key);
 
+        public ValueTask Clear() => _jsRuntime.InvokeVoidAsync("localStorage.clear");
+
         //private IDataProtector GetOrCreateCachedProtector(string purpose)
         //    => _cachedDataProtectorsByPurpose.GetOrAdd(
         //        purpose,

@@ -2,8 +2,8 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using Project.AppCore.Options;
 @using Project.Constraints.Options;
-@inherits JsComponentBase
-@attribute [AutoLoadJsModule(Path = "Layouts/LayoutComponents")]
+@inherits BasicComponent
+@inject IProtectedLocalStorage LocalStorage
 <div class="nav-menu @Class">
     @*全屏按钮*@
     <div class="nav-menu-item" @onclick=ToggleFullScreen title="@Localizer["NavMenu.TipTitle.FullScreen"]">
@@ -66,7 +66,7 @@
 
     async Task ClearLocalStorage()
     {
-        await (Module?.InvokeVoidAsync("clearLocalStorage") ?? ValueTask.CompletedTask);
+        await LocalStorage.Clear();
         await (profile?.HandleLogout() ?? Task.CompletedTask);
     }
 }

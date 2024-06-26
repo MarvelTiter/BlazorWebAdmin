@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+using System.Threading;
 
 namespace Project.Web.Shared.Components
 {
-    
+
     public partial class ActionWatcher : JsComponentBase
     {
         public enum WatchType
@@ -24,19 +25,19 @@ namespace Project.Web.Shared.Components
         protected override async ValueTask Init()
         {
             objRef = DotNetObjectReference.Create(this);
-            if (WatchRoot)
+            await InvokeInit(new
             {
-                await ModuleInvokeVoidAsync("init", objRef, Type, Timeout);
-            }
-            else
-            {
-                await ModuleInvokeVoidAsync("init", objRef, Type, Timeout, container);
-            }
+                instance = objRef,
+                type = Type,
+                timeout = Timeout,
+                target = WatchRoot ? null : (object)container
+            });
         }
         [Inject] ILogger<ActionWatcher> Logger { get; set; }
         [JSInvokable("Call")]
         public Task Invoke()
         {
+            Console.WriteLine($"{Type}: Invoked");
             if (Callback.HasDelegate)
             {
                 return Callback.InvokeAsync();

@@ -1,0 +1,29 @@
+{
+  "name": "blazor-admin",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsup",
+    "build:pub":"tsup --minify terser"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarvelTiter/BlazorAdmin.git"
+  },
+  "keywords": [
+    "blazor"
+  ],
+  "author": "marveltiter",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MarvelTiter/BlazorAdmin/issues"
+  },
+  "homepage": "https://github.com/MarvelTiter/BlazorAdmin#readme",
+  "devDependencies": {
+    "@swc/cli": "^0.3.14",
+    "@swc/core": "^1.6.5",
+    "terser": "^5.31.1",
+    "tsup": "^8.1.0",
+    "typescript": "^5.5.2"
+  }
+}

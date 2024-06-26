@@ -13,7 +13,11 @@ namespace Project.Web.Shared.Components
         protected override async ValueTask Init()
         {
             objRef = DotNetObjectReference.Create<JsTimer>(this);
-            await ModuleInvokeVoidAsync("init", objRef, Interval);
+            await InvokeVoidAsync("init", new
+            {
+                dotNetRef = objRef,
+                interval = Interval,
+            });
         }
 
         [JSInvokable("Call")]

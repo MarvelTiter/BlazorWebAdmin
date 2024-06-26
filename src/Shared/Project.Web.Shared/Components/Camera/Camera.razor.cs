@@ -88,10 +88,20 @@ namespace Project.Web.Shared.Components
         {
             if (!await InitDevices())
                 return;
-            if (EnableClip)
-                await ModuleInvokeVoidAsync("init", videoDom, Quality, clipDom, Width, Height);
-            else
-                await ModuleInvokeVoidAsync("init", videoDom);
+            //if (EnableClip)
+            //    await ModuleInvokeVoidAsync("init", videoDom, Quality, clipDom, Width, Height);
+            //else
+            //    await ModuleInvokeVoidAsync("init", videoDom);
+
+            await InvokeInit(new
+            {
+                video = videoDom,
+                quality = Quality,
+                clip = EnableClip ? clipDom : null,
+                width = Width,
+                height = Height
+            });
+
             var result = await Storage.GetAsync<string>("previousSelectedDevice");
             if (result.Success)
             {
@@ -106,19 +116,24 @@ namespace Project.Web.Shared.Components
         {
             if (EnableClip)
             {
-                await ModuleInvokeVoidAsync("disableClipBox");
+                await InvokeVoidAsync("disableClipBox");
                 EnableClip = false;
             }
             else
             {
-                await ModuleInvokeVoidAsync("useClipBox", clipDom, Width, Height);
+                await InvokeVoidAsync("useClipBox", new
+                {
+                    clip = clipDom,
+                    width = Width,
+                    height = Height
+                });
                 EnableClip = true;
             }
         }
 
         private async Task<bool> InitDevices()
         {
-            var result = await ModuleInvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");
+            var result = await InvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");
             if (result.Success)
             {
                 Devices = result.Payload;
@@ -183,7 +198,7 @@ namespace Project.Web.Shared.Components
             JsActionResult? result = default;
             while (hadTried < RetryTimes)
             {
-                result = await ModuleInvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, width, height);
+                result = await InvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, width, height);
                 if (result == null || !result.Success)
                 {
                     await Task.Delay(100);
@@ -199,7 +214,7 @@ namespace Project.Web.Shared.Components
 
         public async Task Stop()
         {
-            var result = await ModuleInvokeAsync<JsActionResult>("closeUserMedia");
+            var result = await InvokeAsync<JsActionResult>("closeUserMedia");
             if (result == null)
             {
                 return;
@@ -223,7 +238,7 @@ namespace Project.Web.Shared.Components
         public async Task<CaptureInfo> Capture()
         {
             CaptureInfo info = new();
-            var result = await ModuleInvokeAsync<JsActionResult<string>>("capture", InternalRotate);
+            var result = await InvokeAsync<JsActionResult<string>>("capture", InternalRotate);
             if (result.Success)
             {
                 var filename = $"CameraCapture_{DateTime.Now:yyyyMMddHHmmss}";

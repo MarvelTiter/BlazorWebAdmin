@@ -12,17 +12,12 @@
 
     public async Task DownloadAsync(object payload)
     {
-        if (Module == null)
-            return;
-        await Module.InvokeVoidAsync("download", payload);
+        await InvokeVoidAsync("download", payload);
     }
 
     public async Task DownloadAsync(string filename, params string[] paths)
     {
-        if (Module == null)
-            return;
-
-        await Module.InvokeVoidAsync("download", new
+        await InvokeVoidAsync("download", new
         {
             token = User.UserInfo?.ApiToken,
             filename = filename,
