@@ -88,10 +88,20 @@ namespace Project.Web.Shared.Components
         {
             if (!await InitDevices())
                 return;
-            if (EnableClip)
-                await ModuleInvokeVoidAsync("init", videoDom, Quality, clipDom, Width, Height);
-            else
-                await ModuleInvokeVoidAsync("init", videoDom);
+            //if (EnableClip)
+            //    await ModuleInvokeVoidAsync("init", videoDom, Quality, clipDom, Width, Height);
+            //else
+            //    await ModuleInvokeVoidAsync("init", videoDom);
+
+            await InvokeInit(new
+            {
+                video = videoDom,
+                quality = Quality,
+                clip = EnableClip ? clipDom : null,
+                width = Width,
+                height = Height
+            });
+
             var result = await Storage.GetAsync<string>("previousSelectedDevice");
             if (result.Success)
             {
@@ -111,7 +121,12 @@ namespace Project.Web.Shared.Components
             }
             else
             {
-                await ModuleInvokeVoidAsync("useClipBox", clipDom, Width, Height);
+                await ModuleInvokeVoidAsync("useClipBox", new
+                {
+                    clip = clipDom,
+                    width = Width,
+                    height = Height
+                });
                 EnableClip = true;
             }
         }

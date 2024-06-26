@@ -9,7 +9,7 @@ import { HorizontalScroll } from './Shared/Project.Web.Shared/Components/ScrollB
 import { SplitView } from './Shared/Project.Web.Shared/Components/SplitView/SplitView.razor.ts'
 import { WaterMark } from './Shared/Project.Web.Shared/Components/WaterMark/WaterMark.razor.ts'
 import { NavTabs } from './Shared/Project.AppCore/Layouts/LayoutComponents/NavTabs.razor.ts'
-
+import { Downloader } from './Shared/Project.Web.Shared/Components/Downloader/Downloader.razor.ts'
 declare global {
     interface Window {
         components: any
@@ -27,5 +27,6 @@ window.components = {
     HorizontalScroll,
     SplitView,
     WaterMark,
-    NavTabs
+    NavTabs,
+    Downloader
 }

@@ -218,8 +218,7 @@ function _ts_generator(thisArg, body) {
 // Shared/Project.Web.Shared/JsCore/componentStore.ts
 var alls = /* @__PURE__ */ new Map();
 window["a"] = alls;
-function getComponentById(id) {
-    var init = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : void 0;
+function getComponentById(id, init) {
     if (!alls.has(id) && init !== void 0) {
         if (_instanceof(init, Function)) {
             alls.set(id, init());
@@ -234,7 +233,7 @@ function getComponentById(id) {
     else return void 0;
 }
 function removeComponent(id) {
-    delete alls[id];
+    alls.delete(id);
 }
 // Shared/Project.Web.Shared/JsCore/baseComponent.ts
 var BaseComponent = /*#__PURE__*/ function() {
@@ -568,7 +567,7 @@ function failed(msg) {
     return {
         success: false,
         message: msg,
-        payload: void 0
+        payload: null
     };
 }
 var GAP = 4;
@@ -663,8 +662,8 @@ var Camera = /*#__PURE__*/ function(BaseComponent) {
             key: "capture",
             value: function capture(rotate) {
                 try {
-                    var data = "";
                     if (this.video && this.video.readyState > 2) {
+                        var data = "";
                         var canvas = document.createElement("canvas");
                         var ctx = canvas.getContext("2d");
                         if (ctx == null) {
@@ -740,7 +739,7 @@ var Camera = /*#__PURE__*/ function(BaseComponent) {
             key: "init",
             value: // video, quality, clip, width, height
             function init(id, options) {
-                var component = getComponentById(id, function() {
+                getComponentById(id, function() {
                     return new _Camera(options);
                 });
             }
@@ -837,6 +836,25 @@ var Camera = /*#__PURE__*/ function(BaseComponent) {
                         }
                     });
                 })();
+            }
+        },
+        {
+            key: "closeUserMedia",
+            value: function closeUserMedia(id) {
+                try {
+                    var camera = getComponentById(id);
+                    if (camera) camera.close();
+                    return success("");
+                } catch (e) {
+                    return failed(e.message);
+                }
+            }
+        },
+        {
+            key: "capture",
+            value: function capture(id, rotate) {
+                var camera = getComponentById(id);
+                return camera.capture(rotate);
             }
         }
     ]);
@@ -1857,6 +1875,39 @@ var NavTabs = /*#__PURE__*/ function() {
     ]);
     return NavTabs;
 }();
+// Shared/Project.Web.Shared/Components/Downloader/Downloader.razor.ts
+var Downloader = /*#__PURE__*/ function() {
+    function Downloader() {
+        _class_call_check(this, Downloader);
+    }
+    _create_class(Downloader, null, [
+        {
+            key: "download",
+            value: function download(_, payload) {
+                var tempform = document.createElement("form");
+                tempform.action = "/api/download";
+                tempform.method = "post";
+                tempform.style.display = "none";
+                var keys = Object.keys(payload);
+                for(var i = 0; i < keys.length; i++){
+                    var input = document.createElement("input");
+                    var key = keys[i];
+                    input.hidden = true;
+                    input.name = key;
+                    input.value = payload[key];
+                    tempform.appendChild(input);
+                }
+                var submit = document.createElement("input");
+                submit.type = "submit";
+                tempform.appendChild(submit);
+                document.body.appendChild(tempform);
+                tempform.submit();
+                document.body.removeChild(tempform);
+            }
+        }
+    ]);
+    return Downloader;
+}();
 // main.ts
 window.components = {
     ActionWatcher: ActionWatcher,
@@ -1869,6 +1920,7 @@ window.components = {
     HorizontalScroll: HorizontalScroll,
     SplitView: SplitView,
     WaterMark: WaterMark,
-    NavTabs: NavTabs
+    NavTabs: NavTabs,
+    Downloader: Downloader
 };
 //# sourceMappingURL=blazor-admin-project.js.map

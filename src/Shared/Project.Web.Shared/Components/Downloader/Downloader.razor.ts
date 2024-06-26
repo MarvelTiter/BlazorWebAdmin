@@ -1,5 +1,5 @@
 export class Downloader {
-    static download(payload) {
+    static download(_, payload: any) {
         var tempform = document.createElement("form")
         tempform.action = "/api/download"
         tempform.method = "post"

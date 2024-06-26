@@ -3,7 +3,7 @@
 @using Project.Constraints.Page
 @inherits BasicComponent
 @* @attribute [PageInfo(Title = "Camera测试")] *@
-<Camera Width="400" Height="300" OnCapture="handleCapture" @ref=camera PreviewRotate CameraResolution="resolution">
+<Camera Width="400" Height="300" OnCapture="handleCapture" @ref=camera PreviewRotate >
     @* <DeviceSelectorRender>
     @UI.BuildSelect(this, context.Resolutions).Bind(() => resolution, SaveToLocal).Render()
     @UI.BuildButton(this).OnClick(context.Start).Text("打开").Render()

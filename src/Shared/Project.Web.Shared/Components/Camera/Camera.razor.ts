@@ -66,8 +66,8 @@ export class Camera extends BaseComponent {
 
     capture(rotate: number) {
         try {
-            var data = ''
             if (this.video && this.video.readyState > 2) {
+                var data = ''
                 var canvas = document.createElement('canvas');
                 var ctx = canvas.getContext('2d');
                 if (ctx == null) {
@@ -139,11 +139,11 @@ export class Camera extends BaseComponent {
 
     // video, quality, clip, width, height
     static init(id: string, options: any) {
-        var component = getComponentById(id, () => {
+        getComponentById(id, () => {
             return new Camera(options)
         })
     }
-    static useClipBox(id: string, options) {
+    static useClipBox(id: string, options: any) {
         var c: Camera = getComponentById(id)
         if (c && c.clipBox == undefined) {
             c.clipBox = new ClipBox(options)
@@ -175,6 +175,20 @@ export class Camera extends BaseComponent {
         } catch (e: any) {
             return failed(e.message)
         }
+    }
+    static closeUserMedia(id: string) {
+        try {
+            const camera = getComponentById(id)
+            if (camera)
+                camera.close()
+            return success('')
+        } catch (e: any) {
+            return failed(e.message)
+        }
+    }
+    static capture(id: string, rotate: number) {
+        const camera: Camera = getComponentById(id)
+        return camera.capture(rotate)
     }
 }
 class ClipBox extends BaseComponent {
