@@ -18,7 +18,7 @@ namespace BlazorWpfAdmin
         public static void Main(string[] args)
         {
             var builder = Host.CreateApplicationBuilder(args);
-            
+
             builder.AddProject(setting =>
             {
                 setting.App.Name = "Demo";
@@ -27,7 +27,7 @@ namespace BlazorWpfAdmin
                 setting.AddFileLogger = true;
                 setting.ConfigureSettingProviderType<CustomSetting>();
             });
-            
+
             builder.AddDefaultLightOrm();
             builder.Services.AddSingleton<App>();
             builder.Services.AddTransient<MainWindow>();
@@ -39,7 +39,10 @@ namespace BlazorWpfAdmin
             AppConst.AddAssembly(typeof(App).Assembly);
             Console.WriteLine(Project.Constraints.AppConst.TempFilePath);
 
-            builder.Build().Run();
+            AppConst.Environment = builder.Environment;
+            var host = builder.Build();
+            AppConst.Services = host.Services;
+            host.Run();
         }
     }
 }
