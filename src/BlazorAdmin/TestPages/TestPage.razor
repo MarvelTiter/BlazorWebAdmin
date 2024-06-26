@@ -40,6 +40,7 @@ UI.BuildCheckBoxGroup:
     .Render())
 <br />AntDesign.CheckboxGroup:
 <AntDesign.CheckboxGroup @bind-Value=checkedUsers
+                         TValue="string"
                          OnChange="Changed2"
                          Options="users.ConvertToCheckBoxOptions(u=>u.UserName, u=>u.UserId)">
 </AntDesign.CheckboxGroup>
@@ -68,14 +69,14 @@ UI.BuildCheckBoxGroup:
     <span>测试</span>
 </StackPanel>
 
-@UI.BuildButton(this).Primary().Text("下载测试").OnClick(() => Download.DownloadAsync("test.zip","download","zip")).Render()
+@UI.BuildButton(this).Primary().Text("下载测试").OnClick(() => Download.DownloadAsync("test.zip", "download", "zip")).Render()
 
 <MModal @bind-Visible=visible Title="测试">
     <h1>Modal Content</h1>
 </MModal>
 @code {
     [Inject] IUserService<User> UserService { get; set; }
-    [Inject] IDownloadService Download{ get; set; }
+    [Inject] IDownloadService Download { get; set; }
     [Inject] IWatermarkServiceFactory WatermarkServiceFactory { get; set; }
     string[] checkedUsers;
     string selectedUser;

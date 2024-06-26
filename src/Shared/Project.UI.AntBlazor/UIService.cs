@@ -85,9 +85,9 @@ namespace Project.UI.AntBlazor
                 {
                     self.SetComponent(s => s.DataSource, options);
                     if (self.Model.ValueExpression is LambdaExpression valueLambda)
-                        self.SetComponent(s => s.ValueProperty, valueLambda.Compile());
+                        self.SetComponent(s => s.ItemValue, valueLambda.Compile());
                     if (self.Model.LabelExpression is LambdaExpression labelLambda)
-                        self.SetComponent(s => s.LabelProperty, labelLambda.Compile());
+                        self.SetComponent(s => s.ItemLabel, labelLambda.Compile());
 
                     self.SetComponent(s => s.AllowClear, self.Model.AllowClear);
                     self.SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
@@ -290,7 +290,7 @@ namespace Project.UI.AntBlazor
             if (options.ShowFooter && options.Footer != null) modal.Footer = options.Footer;
             else if (!options.ShowFooter) modal.Footer = null;
 
-            var modalRef = await modalService.CreateModalAsync(modal);
+            var modalRef = modalService.CreateModal(modal);
             options.OnClose = async () =>
             {
                 if (options.Feedback != null)
@@ -387,7 +387,7 @@ namespace Project.UI.AntBlazor
         public ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object reciver,
             IEnumerable<TItem> options)
         {
-            return new SelectComponentBuilder<CheckboxGroup, SelectProp, TItem, TValue[]>(self =>
+            return new SelectComponentBuilder<CheckboxGroup<TValue>, SelectProp, TItem, TValue[]>(self =>
                 {
                     // (OneOf<CheckboxOption[], string[]>)
                     if (self.Model.LabelExpression is LambdaExpression labelLambda &&

@@ -12,11 +12,11 @@ namespace Project.UI.AntBlazor
             services.AddScoped<IUIService, UIService>();
         }
 
-        public static CheckboxOption[] ConvertToCheckBoxOptions<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, string> label, Func<TItem, TValue> value)
+        public static CheckboxOption<TValue>[] ConvertToCheckBoxOptions<TItem, TValue>(this IEnumerable<TItem> items, Func<TItem, string> label, Func<TItem, TValue> value)
         {
             return items.Select(item =>
              {
-                 return new CheckboxOption() { Label = label.Invoke(item), Value = $"{value.Invoke(item)}" };
+                 return new CheckboxOption<TValue>() { Label = label.Invoke(item), Value = value.Invoke(item) };
              }).ToArray();
         }
 
