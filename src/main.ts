@@ -1,3 +1,4 @@
+import * as u from './utilsAggregation.ts'
 import { ActionWatcher } from './Shared/Project.Web.Shared/Components/ActionWatcher/ActionWatcher.razor.ts'
 import { Camera } from './Shared/Project.Web.Shared/Components/Camera/Camera.razor.ts'
 import { EdgeWidget } from './Shared/Project.Web.Shared/Components/EdgeWidget/EdgeWidget.razor.ts'
@@ -10,11 +11,15 @@ import { SplitView } from './Shared/Project.Web.Shared/Components/SplitView/Spli
 import { WaterMark } from './Shared/Project.Web.Shared/Components/WaterMark/WaterMark.razor.ts'
 import { NavTabs } from './Shared/Project.AppCore/Layouts/LayoutComponents/NavTabs.razor.ts'
 import { Downloader } from './Shared/Project.Web.Shared/Components/Downloader/Downloader.razor.ts'
+
 declare global {
     interface Window {
         BlazorAdminProject: any
+        Utils: any
     }
 }
+
+window.Utils = u
 
 window.BlazorAdminProject = {
     ActionWatcher,

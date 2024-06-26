@@ -119,6 +119,7 @@ namespace Project.Constraints.Page
             //}
             try
             {
+                await DisposeModule();
                 await DisposeOnGlobal();
             }
             catch { }
@@ -126,7 +127,14 @@ namespace Project.Constraints.Page
             {
 
             }
-
+            async ValueTask DisposeModule()
+            {
+                if (Module != null)
+                {
+                    await Module.InvokeVoidAsync("dispose", Id);
+                    await Module.DisposeAsync();
+                }
+            }
             async ValueTask DisposeOnGlobal()
             {
                 await Js.InvokeVoidAsync($"{GlobalModuleName}.dispose", Id);

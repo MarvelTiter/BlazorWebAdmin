@@ -20,9 +20,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Web.Shared", "Share
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAdmin", "BlazorAdmin\BlazorAdmin.csproj", "{931A53E2-53B1-4BE7-99F0-1AA29B61BA52}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypeScriptBuilder", "TypeScriptBuilder", "{220D9C6C-706A-4B8A-B96D-F22093778C06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunBuild", "RunBuild\RunBuild.csproj", "{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunBuild", "RunBuild\RunBuild.csproj", "{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypeScriptPackup", "TypeScriptPackup", "{0F196314-3413-403C-B39E-DDD6CA938D34}"
+	ProjectSection(SolutionItems) = preProject
+		main.ts = main.ts
+		package.json = package.json
+		tsconfig.json = tsconfig.json
+		tsup.config.ts = tsup.config.ts
+		utilsAggregation.ts = utilsAggregation.ts
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,7 +70,7 @@ Global
 		{7820239B-6C3C-4761-80EA-BD9E98795D75} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
 		{64740E13-062E-40C1-AFB3-6F79BE848D71} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
 		{8D691E07-F967-495C-B1FC-3087ADB3CA4E} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
-		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50} = {220D9C6C-706A-4B8A-B96D-F22093778C06}
+		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50} = {0F196314-3413-403C-B39E-DDD6CA938D34}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0371ABB4-6400-487C-9031-25B119AB8B9E}

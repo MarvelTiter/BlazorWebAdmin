@@ -14,5 +14,16 @@ namespace Project.Web.Shared.Utils
         {
             await runtime.OpenNewTab($"/download/{filename}/{extension}");
         }
+
+
+        const string UTILS_FUNC_PREFIX = "window.Utils.";
+        public static ValueTask InvokeUtilsAsync(this IJSRuntime runtime, string method, params object[] args)
+        {
+            return runtime.InvokeVoidAsync($"{UTILS_FUNC_PREFIX}{method}", args);
+        }
+        public static ValueTask<T> InvokeUtilsAsync<T>(this IJSRuntime runtime, string method, params object[] args)
+        {
+            return runtime.InvokeAsync<T>($"{UTILS_FUNC_PREFIX}{method}", args);
+        }
     }
 }
