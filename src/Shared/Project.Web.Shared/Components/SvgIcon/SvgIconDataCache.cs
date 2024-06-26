@@ -48,8 +48,6 @@ namespace Project.Web.Shared.Components
             if (AppConst.Environment?.IsDevelopment() == true)
             {
 #if DEBUG
-                path = new DirectoryInfo(path).Parent!.Parent!.Parent!.Parent!.Parent!.Parent!.FullName;
-#else
                 path = new DirectoryInfo(path).Parent!.Parent!.Parent!.Parent!.FullName;
 #endif
             }
