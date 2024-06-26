@@ -3,9 +3,7 @@
     "author": "MarvelTiter",
     "classifications": [
         "BlazorAdmin",
-        "Web",
-        "WPF",
-        "WinForms"
+        "Web"
     ],
     "name": "MtBlazorAdminTemplate",
     "identity": "MtBlazorAdminTemplate",
@@ -16,61 +14,18 @@
     },
     "sourceName": "BlazorAdmin",
     "preferNameDirectory": true,
-    "symbols": {
-        "host": {
-            "type": "parameter",
-            "datatype": "choice",
-            "defaultValue": "web",
-            "choices": [
-                {
-                    "choice": "web",
-                    "description": "blazor server web app"
-                },
-                {
-                    "choice": "wpf",
-                    "description": "WPF"
-                },
-                {
-                    "choice": "winforms",
-                    "description": "WinForms"
-                }
-            ]
-        }
-    },
     "sources": [
         {
-            "source": "./Shared",
-            "target": "./Shared"
-        },
-        {
-            "condition": "(host == 'web')",
-            "source": "./Host/Web",
-            "target": "./"
-        },
-        {
-            "condition": "(host == 'web')",
-            "source": "./.template.config/templates/web",
-            "target": "./"
-        },
-        {
-            "condition": "(host == 'wpf')",
-            "source": "./Host/Wpf",
-            "target": "./"
-        },
-        {
-            "condition": "(host == 'wpf')",
-            "source": "./.template.config/templates/wpf",
-            "target": "./"
-        },
-        {
-            "condition": "(host == 'winforms')",
-            "source": "./Host/WinForms",
-            "target": "./"
-        },
-        {
-            "condition": "(host == 'winforms')",
-            "source": "./.template.config/templates/winforms",
-            "target": "./"
+            "source": "./",
+            "target": "./",
+            "exclude": [
+                "**/[Bb]in/**",
+                "**/[Oo]bj/**",
+                ".template.config/**/*",
+                "**/*.filelist",
+                "**/*.user",
+                "*.lock.json"
+            ]
         }
     ]
 }

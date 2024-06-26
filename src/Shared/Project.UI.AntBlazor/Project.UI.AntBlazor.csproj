@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AntDesign" Version="0.18.3" />
+		<PackageReference Include="AntDesign" Version="0.19.3" />
 	</ItemGroup>
 
 
