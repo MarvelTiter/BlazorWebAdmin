@@ -19,7 +19,7 @@ declare global {
     }
 }
 
-window.Utils = u
+window.Utils = u.default
 
 window.BlazorAdminProject = {
     ActionWatcher,
