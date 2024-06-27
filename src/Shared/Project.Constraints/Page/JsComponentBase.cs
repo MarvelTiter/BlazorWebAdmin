@@ -8,7 +8,7 @@ namespace Project.Constraints.Page
 {
     public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisposable
     {
-        public const string JS_FUNC_PREFIX = "window.BlazorAdminProject.";
+        public const string JS_FUNC_PREFIX = "window.BlazorProject.";
         private string? id;
         [Inject, NotNull] protected IJSRuntime? Js { get; set; }
         protected IJSObjectReference? Module { get; set; }

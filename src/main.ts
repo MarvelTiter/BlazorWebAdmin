@@ -14,14 +14,14 @@ import { Downloader } from './Shared/Project.Web.Shared/Components/Downloader/Do
 
 declare global {
     interface Window {
-        BlazorAdminProject: any
+        BlazorProject: any
         Utils: any
     }
 }
 
 window.Utils = u.default
 
-window.BlazorAdminProject = {
+window.BlazorProject = {
     ActionWatcher,
     Camera,
     EdgeWidget,
