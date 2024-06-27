@@ -11,7 +11,8 @@ export class Camera extends BaseComponent {
     video: HTMLVideoElement
     tracks: MediaStreamTrack[]
     clipBox?: ClipBox
-    quality: number = 1
+    quality: number
+    format: string
     constructor(options: any) {
         super()
         this.deviceId = ''
@@ -20,6 +21,7 @@ export class Camera extends BaseComponent {
         this.video = options.video
         this.tracks = []
         this.quality = options.quality
+        this.format = options.format
         if (options.clip) {
             this.clipBox = new ClipBox(options)
             this.clipBox.initEvents()
@@ -109,7 +111,7 @@ export class Camera extends BaseComponent {
                 ctx.rotate(-angle)
                 ctx.translate(-tx, -ty)
 
-                var dataURL = canvas.toDataURL();
+                var dataURL = canvas.toDataURL(this.format, this.quality);
                 //window.document.getElementById('test').src = dataURL
                 if (dataURL.split(',').length > 1)
                     data = dataURL.split(',')[1]

@@ -26,6 +26,13 @@ namespace Project.Web.Shared.Components
         [Parameter] public double Quality { get; set; } = 1;
         [Parameter] public int Rotate { get; set; }
         [Parameter] public bool PreviewRotate { get; set; }
+        /// <summary>
+        /// 默认值 image/png , 可选值 image/jpeg
+        /// <para>
+        /// https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLCanvasElement/toDataURL
+        /// </para>
+        /// </summary>
+        [Parameter] public string PhotoFormat { get; set; } = "image/png";
         int InternalRotate => Rotate % 4;
         int WrapHeight => PreviewRotate ? (Rotate % 2 == 0 ? Height : Width) : Height;
         int WrapWidth => PreviewRotate ? (Rotate % 2 == 0 && PreviewRotate ? Width : Height) : Width;
@@ -99,7 +106,8 @@ namespace Project.Web.Shared.Components
                 quality = Quality,
                 clip = EnableClip ? clipDom : null,
                 width = Width,
-                height = Height
+                height = Height,
+                format = PhotoFormat
             });
 
             var result = await Storage.GetAsync<string>("previousSelectedDevice");
