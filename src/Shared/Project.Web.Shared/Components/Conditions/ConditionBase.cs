@@ -12,5 +12,6 @@ namespace Project.Web.Shared.Components
         [Parameter] public RenderFragment? ChildContent { get; set; }
         [Parameter] public (int Start, int End) ColSpan { get; set; }
         [Parameter] public (int Start, int End) RowSpan { get; set; }
+        [Parameter] public int? LabelWidth { get; set; }
     }
 }

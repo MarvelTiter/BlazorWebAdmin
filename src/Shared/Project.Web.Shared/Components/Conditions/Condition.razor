@@ -2,7 +2,7 @@
 @inherits ConditionBase
 <MGridContent ColSpan="@ColSpan" RowSpan="@RowSpan">
     <span class="conditions" style="@Style">
-        <span class="label" style="width:@($"{Parent.LabelWidth}px");">
+        <span class="label" style="width:@($"{LabelWidth ?? Parent.LabelWidth}px");">
             @Label
         </span>
         @if (Field != null && ChildContent == null)

@@ -4,7 +4,9 @@
 @typeparam TItem
 @inherits BasicComponent
 <CascadingValue Value="this">
-    <MGrid MinWidth=@ColumnMinWidth GridColumns="@Column" Gap="@Gap">
-        @ChildContent
-    </MGrid>
+    <div @attributes="@AdditionalParameters">
+        <MGrid MinWidth=@ColumnMinWidth GridColumns="@Column" Gap="@Gap">
+            @ChildContent
+        </MGrid>
+    </div>
 </CascadingValue>

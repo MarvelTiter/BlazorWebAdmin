@@ -14,6 +14,7 @@ namespace Project.Web.Shared.Components
             if (!_contentCache.TryGetValue(name, out var result))
             {
                 result = await ReadIconData(name);
+                _contentCache.TryAdd(name, result);
             }
             return result;
         }
@@ -30,8 +31,6 @@ namespace Project.Web.Shared.Components
             }
             if (iconFile != null)
             {
-                //FileInfo f = new FileInfo(iconFile);
-                //var files = Directory.EnumerateFiles($"./_content", "*.svg", SearchOption.AllDirectories);
                 var svgContent = await File.ReadAllTextAsync(iconFile);
                 return svgContent;
             }
@@ -47,9 +46,7 @@ namespace Project.Web.Shared.Components
             var path = AppDomain.CurrentDomain.BaseDirectory;
             if (AppConst.Environment?.IsDevelopment() == true)
             {
-#if DEBUG
                 path = new DirectoryInfo(path).Parent!.Parent!.Parent!.Parent!.FullName;
-#endif
             }
             var files = Directory.EnumerateFiles(path, "*.svg", SearchOption.AllDirectories).Where(f => f.Contains("wwwroot"));
             //var files = Directory.EnumerateFiles(path, "*.svg", SearchOption.AllDirectories).Where(f => f.Contains("SvgAssets", StringComparison.CurrentCultureIgnoreCase));

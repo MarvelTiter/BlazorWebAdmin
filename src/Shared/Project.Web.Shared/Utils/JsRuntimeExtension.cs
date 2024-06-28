@@ -10,6 +10,11 @@ namespace Project.Web.Shared.Utils
             await runtime.InvokeVoidAsync("open", url);
         }
 
+        public static async Task OpenWindowAsync(this IJSRuntime runtime, string url, double w = 0.7, double h = 0.7, string target = "_blank")
+        {
+            await runtime.InvokeUtilsAsync("openWindow", url, w, h, target);
+        }
+
         public static async Task DownloadFile(this IJSRuntime runtime, string filename, string extension)
         {
             await runtime.OpenNewTab($"/download/{filename}/{extension}");
