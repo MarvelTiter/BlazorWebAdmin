@@ -8,6 +8,10 @@ public record CameraResolution
     public int Width { get; set; }
     public int Height { get; set; }
 }
+public class OnlineUserPageSetting
+{
+    public string[] EnableUsers { get; set; } = [];
+}
 public sealed class AppSetting
 {
     public string AppTitle { get; set; }
@@ -20,5 +24,6 @@ public sealed class AppSetting
     public bool UseAspectProxy { get; set; }
     public int SupportedMajorVersion { get; set; } = 85;
     public List<CameraResolution> CameraResolutions { get; set; }
+    public OnlineUserPageSetting? OnlineUserPage { get; set; }
 
 }

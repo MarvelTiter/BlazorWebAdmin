@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Routing;
 using MT.Toolkit.LogTool;
 using MT.Toolkit.ReflectionExtension;
 using Project.AppCore.BackgroundServices;
+using Microsoft.AspNetCore.Components.Server.Circuits;
 namespace Project.AppCore;
 
 public static class ProjectInit
@@ -70,7 +71,7 @@ public static class ProjectInit
         InterceptorsInit(services, setting);
 
         //services.AddControllers().AddApplicationPart(typeof(ProjectInit).Assembly);
-
+        builder.Services.AddScoped<CircuitHandler, CircuitTracker>();
         // 配置 IAuthenticationStateProvider
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
         services.AddScoped<IAuthenticationStateProvider>(provider =>
