@@ -7,6 +7,8 @@ using Project.Constraints.Models.Permissions;
 using Project.Constraints.Options;
 using Project.Constraints.Store;
 using Project.Constraints.Store.Models;
+using Project.Constraints.UI.Extensions;
+using Project.Web.Shared.Components;
 using System.Reflection;
 
 namespace Project.AppCore.Routers;
@@ -92,7 +94,7 @@ public class RouterStore : StoreBase, IRouterStore
         else
         {
             //TODO 不允许导航到此页面
-            //tag.Body ??=
+            tag.Body ??= b => b.Component<ForbiddenPage>().Build();
         }
         if (preview != null)
         {
@@ -248,16 +250,26 @@ public class RouterStore : StoreBase, IRouterStore
 
     public event Func<TagRoute, Task<bool>> RouterChangingEvent;
 
-    private Task<bool> OnRouterChangingAsync(TagRoute tag)
+    private async Task<bool> OnRouterChangingAsync(TagRoute tag)
     {
+        if (IsUserDashboard(tag))
+        {
+            return EnableShowUserDashboard(userStore, setting.CurrentValue);
+        }
         if (RouterChangingEvent != null)
-            return RouterChangingEvent.Invoke(tag);
-        return Task.FromResult(true);
+        {
+            return await RouterChangingEvent.Invoke(tag);
+        }
+        return true;
     }
 
     public event Func<RouterMeta, Task<bool>> RouteMetaFilterEvent;
     private async Task<bool> OnRouteMetaFilterAsync(RouterMeta meta)
     {
+        if (IsUserDashboard(meta))
+        {
+            return EnableShowUserDashboard(userStore, setting.CurrentValue);
+        }
         var used = meta.RouteType == null
             || AppConst.Pages.IndexOf(meta.RouteType.Assembly) > -1
             || meta.RouteType.Assembly == Assembly.GetEntryAssembly();
@@ -267,6 +279,19 @@ public class RouterStore : StoreBase, IRouterStore
             return used && enable;
         }
         return used;
+    }
+
+    private static bool IsUserDashboard(RouterMeta meta)
+    {
+        return meta.RouteUrl == "/userdashboard";
+    }
+
+    private static bool EnableShowUserDashboard(IUserStore userStore, AppSetting setting)
+    {
+        var userId = userStore.UserId;
+        var userRoles = userStore.Roles;
+        return Array.IndexOf(setting.OnlineUserPage.EnableUsers, userId) > -1
+            || userRoles.Intersect(setting.OnlineUserPage.EnableRoles).Any();
     }
 
     public Type? GetRouteType(string routeUrl)

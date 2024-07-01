@@ -22,14 +22,6 @@ namespace Project.UI.AntBlazor.Components
             ChildrenExpression = node => Options.ChildrenExpression(node.DataItem);
             IsLeafExpression = node => !(Options.ChildrenExpression(node.DataItem)?.Any() ?? false);
             DataSource = Options.Datas;
-            
         }
-        
-        //protected override void OnParametersSet()
-        //{
-        //    base.OnParametersSet();
-        //    DataSource = Options.Datas;
-
-        //}
     }
 }

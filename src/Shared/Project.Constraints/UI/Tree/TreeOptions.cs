@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-
+﻿
 namespace Project.Constraints.UI.Tree
 {
     public sealed class TreeData<TData>(TData data)
@@ -10,6 +9,7 @@ namespace Project.Constraints.UI.Tree
     public sealed class TreeOptions<TData>(IEnumerable<TreeData<TData>> datas)
     {
         public bool Readonly { get; set; }
+        public bool IncludeIndeterminate { get; set; }
         public List<TreeData<TData>> Datas { get; set; } = datas.ToList();
         public Func<TData, string> KeyExpression { get; set; }
         public Func<TData, string> TitleExpression { get; set; }

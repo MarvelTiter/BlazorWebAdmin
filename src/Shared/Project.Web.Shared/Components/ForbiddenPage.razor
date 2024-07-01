@@ -1,0 +1,38 @@
+﻿@page "/forbidden"
+@namespace Project.Web.Shared.Components
+@inherits BasicComponent
+<div class="error-page-wrapper">
+    <div class="content-container">
+        <div class="head-line">
+            <SvgIcon IconName="@svgName" Style="height:100%;width:100%;"></SvgIcon>
+        </div>
+        <div class="subheader">
+            HTTP 403 - 无法访问当前页面！
+        </div>
+        <div class="hr"></div>
+        <div class="context">
+            <p>
+                您可以返回首页，或联系管理员
+            </p>
+        </div>
+        <div class="buttons-container">
+            <a href="#" @onclick="e => NavigatorToIndex()">去首页</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    string svgName = "p403_01";
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var i = Random.Shared.Next(0, 100);
+        var index = i % 2 == 0 ? "01" : "02";
+        svgName = $"p403_{index}";
+    }
+
+    void NavigatorToIndex()
+    {
+        Navigator.NavigateTo("/");
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Server.Circuits;
+using Microsoft.AspNetCore.Http;
 using Project.Constraints;
 using Project.Constraints.Store;
 
@@ -6,33 +7,32 @@ namespace Project.AppCore.Middlewares
 {
     public class CircuitTracker : CircuitHandler
     {
-        private ClientInfo _circuitInfo = new();
-        private string _visitorId = "";
+        private ClientInfo circuitInfo = new();
         private readonly IUserStore store;
-        private readonly IAuthenticationStateProvider auth;
+        private readonly IHttpContextAccessor contextAccessor;
 
-        public CircuitTracker(IUserStore store, IAuthenticationStateProvider auth)
+        public CircuitTracker(IUserStore store, IHttpContextAccessor contextAccessor)
         {
             store.LoginSuccessEvent += Store_LoginSuccessEvent;
             this.store = store;
-            this.auth = auth;
+            this.contextAccessor = contextAccessor;
         }
 
         private Task Store_LoginSuccessEvent(UserInfo arg)
         {
-            _circuitInfo.UserInfo = arg;
-            _circuitInfo.Context = auth.HttpContext;
+            circuitInfo.UserInfo = arg;
             return Task.CompletedTask;
         }
 
-        public string CircuitId => _circuitInfo.CircuitId;
-        public string VisitorId => _visitorId;
+        public string CircuitId => circuitInfo.CircuitId;
 
         public override Task OnConnectionUpAsync(Circuit circuit, CancellationToken cancellationToken)
         {
-            _circuitInfo.CircuitId = circuit.Id;
-            _circuitInfo.CreateTime = DateTime.Now;
-            CircuitTrackerGlobalInfo.CircuitClients.TryAdd(circuit.Id, _circuitInfo);
+            circuitInfo.CircuitId = circuit.Id;
+            circuitInfo.CreateTime = DateTime.Now;
+            circuitInfo.IpAddress = contextAccessor.HttpContext?.Connection.RemoteIpAddress.ToIpString();
+            circuitInfo.UserAgent = contextAccessor.HttpContext?.Request.Headers.UserAgent;
+            CircuitTrackerGlobalInfo.CircuitClients.TryAdd(circuit.Id, circuitInfo);
             return Task.CompletedTask;
         }
 

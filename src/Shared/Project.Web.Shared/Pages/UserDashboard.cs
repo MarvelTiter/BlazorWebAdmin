@@ -25,7 +25,7 @@ namespace Project.AppCore.Clients
         [TableButton(Label = "用户信息")]
         public async Task<bool> ShowUserInfo(ClientInfo info)
         {
-            _ = await UI.ShowDialogAsync<JsonDisplay, UserInfo>("用户信息", info.UserInfo, width: "50%");
+            _ = await UI.ShowDialogAsync<JsonDisplay, ClientInfo>("用户信息", info, width: "50%");
             return true;
         }
     }
