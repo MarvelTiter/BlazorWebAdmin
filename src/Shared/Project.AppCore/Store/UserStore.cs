@@ -9,7 +9,8 @@ namespace Project.AppCore.Store
         public IEnumerable<string> Roles => UserInfo?.Roles;
         public string? UserId => UserInfo?.UserId;
         public string UserDisplayName => GetUserName();
-
+        public string? UserAgent { get; set; }
+        public string? Ip { get; set; }
         private string GetUserName()
         {
             return UserInfo?.UserName ?? "Unknow";

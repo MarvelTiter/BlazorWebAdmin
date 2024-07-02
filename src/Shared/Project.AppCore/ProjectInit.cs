@@ -200,6 +200,7 @@ public static class ProjectInit
         app.UseStaticFiles();
         app.UseMiddleware<RedirectToLauchUrlMiddleware>();
         app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/download"), a => a.UseMiddleware<FileDownloaderMiddleware>());
+        app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/ip.client"), a => a.UseMiddleware<GetClientIpMiddleware>());
         
         var envFunc = app.GetPropertyAccessor<IHostEnvironment>("Environment");
         AppConst.Environment = envFunc.Invoke(app);

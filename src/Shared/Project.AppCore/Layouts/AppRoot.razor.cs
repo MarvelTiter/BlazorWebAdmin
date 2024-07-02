@@ -1,7 +1,9 @@
 ﻿using AspectCore.DynamicProxy;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using Project.AppCore.Store;
 using Project.Constraints;
+using Project.Web.Shared.Utils;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
@@ -14,6 +16,7 @@ namespace Project.AppCore.Layouts
         [Parameter] public RenderFragment? ChildContent { get; set; }
         [Inject, NotNull] IServiceProvider? Services { get; set; }
         [Inject, NotNull] IProjectSettingService? SettingService { get; set; }
+        [Inject, NotNull] IJSRuntime? Js { get; set; }
 
         readonly List<IAddtionalInterceptor> initActions = [];
         protected override void OnInitialized()
@@ -36,6 +39,17 @@ namespace Project.AppCore.Layouts
             }
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                var c = await Js.InvokeUtilsAsync<string[]>("getClient");
+                Context.UserStore.Ip = c[0];
+                Context.UserStore.UserAgent = c[1];
+            }
+        }
+
         public ValueTask DisposeAsync()
         {
             Context.RouterStore.RouterChangingEvent -= SettingService.RouterChangingAsync;
@@ -54,5 +68,6 @@ namespace Project.AppCore.Layouts
             GC.SuppressFinalize(this);
             return ValueTask.CompletedTask;
         }
+
     }
 }

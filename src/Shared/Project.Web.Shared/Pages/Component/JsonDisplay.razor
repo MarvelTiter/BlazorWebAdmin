@@ -11,7 +11,7 @@
 </pre>
 
 @code {
-    string JsonValue => JsonSerializer.Serialize(Value.UserInfo, new JsonSerializerOptions()
+    string JsonValue => JsonSerializer.Serialize(Value.UserStore!.UserInfo, new JsonSerializerOptions()
         {
             WriteIndented = true,
             Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(UnicodeRanges.All)

@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using Microsoft.JSInterop;
 using Project.AppCore.Store;
 using Project.Constraints;
 using Project.Constraints.Common.Attributes;
 using Project.Constraints.Options;
 using Project.Constraints.Store;
+using Project.Web.Shared.Utils;
 using System.Security.Claims;
 
 namespace Project.AppCore.Auth
@@ -17,22 +19,24 @@ namespace Project.AppCore.Auth
         private readonly IProtectedLocalStorage storageService;
         private readonly ILoginService loginService;
         private readonly IAppSession appSession;
+        private readonly IJSRuntime js;
         private readonly IHttpContextAccessor httpContextAccessor;
 
         private IUserStore Store => appSession.UserStore;
         private IAppStore AppStore => appSession.AppStore;
 
         private readonly IOptionsMonitor<Token> token;
-        public HttpContext? HttpContext => httpContextAccessor.HttpContext;
         public CustomAuthenticationStateProvider(IProtectedLocalStorage storageService
             , ILoginService loginService
             , IAppSession appSession
+            , IJSRuntime js
             , IHttpContextAccessor httpContextAccessor
             , IOptionsMonitor<Token> token)
         {
             this.storageService = storageService;
             this.loginService = loginService;
             this.appSession = appSession;
+            this.js = js;
             this.httpContextAccessor = httpContextAccessor;
             this.token = token;
         }
@@ -45,10 +49,11 @@ namespace Project.AppCore.Auth
                 if (token.CurrentValue.NeedAuthentication)
                 {
                     var result = await storageService.GetAsync<UserInfo>("UID");
+
                     var diff = DateTime.Now - result.Value?.CreatedTime;
                     var actived = DateTime.Now - result.Value?.ActiveTime;
                     if (result.Success && (diff?.Days < token.CurrentValue.Expire || actived?.TotalSeconds < token.CurrentValue.LimitedFreeTime))
-                    {
+                    {                       
                         await loginService.UpdateLastLoginTimeAsync(result.Value!);
                         return await UpdateState(result.Value);
                     }
@@ -58,7 +63,6 @@ namespace Project.AppCore.Auth
             {
             }
             return await UpdateState();
-
         }
 
         async Task<AuthenticationState> UpdateState(UserInfo? info = null)
@@ -74,7 +78,6 @@ namespace Project.AppCore.Auth
             }
             await Store.SetUserAsync(info);
             var user = new ClaimsPrincipal(identity);
-            if (HttpContext != null) HttpContext.User = user;
             return new AuthenticationState(user);
         }
 

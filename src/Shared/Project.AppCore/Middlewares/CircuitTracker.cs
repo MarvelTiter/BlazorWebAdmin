@@ -8,30 +8,20 @@ namespace Project.AppCore.Middlewares
     public class CircuitTracker : CircuitHandler
     {
         private ClientInfo circuitInfo = new();
-        private readonly IUserStore store;
-        private readonly IHttpContextAccessor contextAccessor;
-
-        public CircuitTracker(IUserStore store, IHttpContextAccessor contextAccessor)
+        public CircuitTracker(IUserStore store)
         {
-            store.LoginSuccessEvent += Store_LoginSuccessEvent;
-            this.store = store;
-            this.contextAccessor = contextAccessor;
+            circuitInfo.UserStore = store;
         }
 
-        private Task Store_LoginSuccessEvent(UserInfo arg)
-        {
-            circuitInfo.UserInfo = arg;
-            return Task.CompletedTask;
-        }
-
-        public string CircuitId => circuitInfo.CircuitId;
 
         public override Task OnConnectionUpAsync(Circuit circuit, CancellationToken cancellationToken)
         {
             circuitInfo.CircuitId = circuit.Id;
             circuitInfo.CreateTime = DateTime.Now;
-            circuitInfo.IpAddress = contextAccessor.HttpContext?.Connection.RemoteIpAddress.ToIpString();
-            circuitInfo.UserAgent = contextAccessor.HttpContext?.Request.Headers.UserAgent;
+            if (string.IsNullOrEmpty(circuitInfo.UserStore?.Ip) && string.IsNullOrEmpty(circuitInfo.UserStore?.UserAgent))
+            {
+                return Task.CompletedTask;
+            }
             CircuitTrackerGlobalInfo.CircuitClients.TryAdd(circuit.Id, circuitInfo);
             return Task.CompletedTask;
         }
@@ -39,7 +29,6 @@ namespace Project.AppCore.Middlewares
         public override Task OnConnectionDownAsync(Circuit circuit, CancellationToken cancellationToken)
         {
             CircuitTrackerGlobalInfo.CircuitClients.TryRemove(circuit.Id, out _);
-            store.LoginSuccessEvent -= Store_LoginSuccessEvent;
             return Task.CompletedTask;
         }
     }

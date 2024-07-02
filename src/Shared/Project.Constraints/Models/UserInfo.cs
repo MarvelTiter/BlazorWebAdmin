@@ -12,6 +12,7 @@ namespace Project.Constraints.Models
         public string UserName { get; set; }
         public string Password { get; set; }
         public object? Payload { get; set; }
+       
         /// <summary>
         /// 框架内Api
         /// </summary>
@@ -27,7 +28,7 @@ namespace Project.Constraints.Models
         {
             UserId = string.Empty;
             Payload = null;
-            Roles = Enumerable.Empty<string>();
+            Roles = [];
             CreatedTime = DateTime.Now;
             ActiveTime = DateTime.Now;
         }

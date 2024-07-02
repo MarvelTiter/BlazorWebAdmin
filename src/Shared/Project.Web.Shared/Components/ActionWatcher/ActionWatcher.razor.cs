@@ -33,11 +33,9 @@ namespace Project.Web.Shared.Components
                 target = WatchRoot ? null : (object)container
             });
         }
-        [Inject] ILogger<ActionWatcher> Logger { get; set; }
         [JSInvokable("Call")]
         public Task Invoke()
         {
-            Console.WriteLine($"{Type}: Invoked");
             if (Callback.HasDelegate)
             {
                 return Callback.InvokeAsync();
