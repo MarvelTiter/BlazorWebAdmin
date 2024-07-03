@@ -4,8 +4,8 @@ function closeWin() {
 }
 
 function openWindow(url: string, width: number, height: number, target?: string) {
-    const cW = document.body.clientWidth
-    const cH = document.body.clientHeight
+    const cW = window.outerWidth
+    const cH = window.outerHeight
     let w = cW, h = cH
     if (width <= 1) {
         w = cW * width
