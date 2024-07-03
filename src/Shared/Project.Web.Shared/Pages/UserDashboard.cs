@@ -19,7 +19,7 @@ namespace Project.AppCore.Clients
         protected override async Task<IQueryCollectionResult<ClientInfo>> OnQueryAsync(GenericRequest query)
         {
             await Task.Delay(1);
-            return CircuitTrackerGlobalInfo.CircuitClients.Values.CollectionResult();
+            return CircuitTrackerGlobalInfo.CircuitClients.Values.Where(c => c.UserAgent != null).CollectionResult();
         }
 
         [TableButton(Label = "用户信息")]

@@ -21,7 +21,7 @@ function openWindow(url: string, width: number, height: number, target?: string)
 }
 
 async function getClient() {
-    if (window.opener == null) {
+    if (window.opener !== null) {
         return [null, null]
     }
     const response = await fetch('/ip.client')

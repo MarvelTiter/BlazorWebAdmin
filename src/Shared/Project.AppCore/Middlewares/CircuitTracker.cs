@@ -13,15 +13,10 @@ namespace Project.AppCore.Middlewares
             circuitInfo.UserStore = store;
         }
 
-
         public override Task OnConnectionUpAsync(Circuit circuit, CancellationToken cancellationToken)
         {
             circuitInfo.CircuitId = circuit.Id;
             circuitInfo.CreateTime = DateTime.Now;
-            if (string.IsNullOrEmpty(circuitInfo.UserStore?.Ip) && string.IsNullOrEmpty(circuitInfo.UserStore?.UserAgent))
-            {
-                return Task.CompletedTask;
-            }
             CircuitTrackerGlobalInfo.CircuitClients.TryAdd(circuit.Id, circuitInfo);
             return Task.CompletedTask;
         }
