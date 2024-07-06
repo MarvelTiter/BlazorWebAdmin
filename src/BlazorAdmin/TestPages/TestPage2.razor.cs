@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Constraints.Common.Attributes;
 using Project.Constraints.UI;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorAdmin.TestPages
 {
@@ -10,6 +11,6 @@ namespace BlazorAdmin.TestPages
 #endif
     public partial class TestPage2
     {
-        [Inject] IUIService UI { get; set; }
+        [Inject, NotNull] IUIService? UI { get; set; }
     }
 }

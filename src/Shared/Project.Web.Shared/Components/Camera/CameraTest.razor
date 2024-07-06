@@ -10,17 +10,17 @@
     @UI.BuildButton(this).OnClick(context.Capture).Text("拍照").Render()
     </DeviceSelectorRender> *@
 </Camera>
-@UI.BuildButton(this).Text("Toggle").Primary().OnClick(() => camera.ToggleClipBoxAsync()).Render()
+@UI.BuildButton(this).Text("Toggle").Primary().OnClick(() => camera?.ToggleClipBoxAsync() ?? Task.CompletedTask).Render()
 <img src="@src" />
 @code {
     Camera? camera;
-    [Inject] IProtectedLocalStorage LocalStorage { get; set; }
+    [Inject, NotNull] IProtectedLocalStorage? LocalStorage { get; set; }
     public async Task SwitchCamera(IEnumerable<Camera.DeviceInfo> devices, int type)
     {
         await camera!.SwitchCamera(devices.First(d => d.Kind == "videoinput").DeviceId);
     }
     Camera.Resolution resolution;
-    string src;
+    string? src;
 
     public void handleCapture(Camera.CaptureInfo info)
     {

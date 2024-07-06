@@ -3,6 +3,7 @@ using Project.Constraints.Common.Attributes;
 using Project.Constraints.Page;
 using Project.Constraints.Services;
 using Project.Constraints.UI;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorAdmin.TestPages
 {
@@ -12,9 +13,9 @@ namespace BlazorAdmin.TestPages
 #endif
     public class LocatorTest : PageIndex
     {
-        [Inject] IUIService UI { get; set; }
+        [Inject, NotNull] IUIService? UI { get; set; }
 
-        protected override Type GetPageType(IPageLocatorService pageLocator)
+        protected override Type? GetPageType(IPageLocatorService pageLocator)
         {
             return pageLocator.GetPage("LocatorTest");
         }

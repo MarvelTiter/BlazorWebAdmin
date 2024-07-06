@@ -6,13 +6,14 @@ namespace Project.Web.Shared.ComponentHelper
 {
     public class MCard : BasicComponent
     {
-        [Parameter] public string Title { get; set; }
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter] public string? Title { get; set; }
+        [Parameter] public RenderFragment? TitleTemplate { get; set; }
+        [Parameter] public RenderFragment? ChildContent { get; set; }
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             UI.BuildCard()
-                .Set("ChildContent", ChildContent)
-                .Set("Title", Title)
+                .SetIf(ChildContent != null, "ChildContent", ChildContent!)
+                .SetIf(Title != null, "Title", Title!)
                 .AdditionalParameters(AdditionalParameters)
                 .Render()
                 .Invoke(builder);
@@ -21,11 +22,11 @@ namespace Project.Web.Shared.ComponentHelper
 
     public class MRow : BasicComponent
     {
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment? ChildContent { get; set; }
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             UI.BuildRow()
-                .Set(c=>c.ChildContent, ChildContent)
+                .Set(c => c.ChildContent, ChildContent)
                 .AdditionalParameters(AdditionalParameters)
                 .Render()
                 .Invoke(builder);
@@ -34,13 +35,13 @@ namespace Project.Web.Shared.ComponentHelper
 
     public class MCol : BasicComponent
     {
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment? ChildContent { get; set; }
         [Parameter] public int ColSpan { get; set; }
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             UI.BuildCol()
-                .Set(p=>p.ChildContent, ChildContent)
-                .Set(p=>p.ColSpan, ColSpan)
+                .Set(p => p.ChildContent, ChildContent)
+                .Set(p => p.ColSpan, ColSpan)
                 .AdditionalParameters(AdditionalParameters)
                 .Render()
                 .Invoke(builder);

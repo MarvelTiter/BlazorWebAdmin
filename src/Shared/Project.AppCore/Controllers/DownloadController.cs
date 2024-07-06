@@ -2,6 +2,7 @@
 using Project.AppCore.Auth;
 using Project.Constraints;
 using Project.Constraints.Services;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.AppCore.Controllers
 {
@@ -12,8 +13,8 @@ namespace Project.AppCore.Controllers
     {
         public class DownloadRequest
         {
-            public string Filename { get; set; }
-            public string Token { get; set; }
+            [NotNull] public string? Filename { get; set; }
+            [NotNull] public string? Token { get; set; }
         }
         [HttpPost]
         public IActionResult DownloadTempFile([FromForm] DownloadRequest request)

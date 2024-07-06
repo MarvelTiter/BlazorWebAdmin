@@ -1,5 +1,6 @@
 ﻿@using Project.Web.Shared.Components
 @using Project.AppCore.Routers;
+@using System.Diagnostics.CodeAnalysis
 @inherits BasicComponent
 @if (Context != null)
 {
@@ -20,7 +21,7 @@
 }
 
 @code {
-    [CascadingParameter] public RouteData RouteData { get; set; }
+    [CascadingParameter, NotNull] public RouteData? RouteData { get; set; }
 
     public override Task SetParametersAsync(ParameterView parameters)
     {

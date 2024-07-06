@@ -4,7 +4,7 @@
     {
         private bool disposedValue;
 
-        public event Action DataChangedEvent;
+        public event Action? DataChangedEvent;
         protected void NotifyChanged()
         {
             DataChangedEvent?.Invoke();

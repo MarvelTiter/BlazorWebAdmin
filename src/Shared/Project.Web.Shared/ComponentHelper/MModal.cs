@@ -9,9 +9,9 @@ namespace Project.Web.Shared.ComponentHelper
     {
         [Parameter] public bool Visible { get; set; }
         [Parameter] public EventCallback<bool> VisibleChanged { get; set; }
-        [Parameter] public string Title { get; set; }
-        [Parameter] public RenderFragment ChildContent { get; set; }
-        [Parameter] public string Width { get; set; }
+        [Parameter] public string? Title { get; set; }
+        [Parameter] public RenderFragment? ChildContent { get; set; }
+        [Parameter] public string? Width { get; set; }
         [Parameter] public bool HideDefaultFooter { get; set; }
         //FlyoutOptions
         protected override void BuildRenderTree(RenderTreeBuilder builder)

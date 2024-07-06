@@ -22,8 +22,8 @@ namespace Project.Web.Shared.ComponentHelper
     {
         [Parameter] public int GridColumns { get; set; } = 1;
         [Parameter] public int? MinWidth { get; set; }
-        [Parameter] public string Gap { get; set; }
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter] public string? Gap { get; set; }
+        [Parameter, NotNull] public RenderFragment? ChildContent { get; set; }
 
         string ColumnTemplate()
         {
@@ -56,7 +56,7 @@ namespace Project.Web.Shared.ComponentHelper
     {
         [Parameter] public (int Start, int End) ColSpan { get; set; }
         [Parameter] public (int Start, int End) RowSpan { get; set; }
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter, NotNull] public RenderFragment? ChildContent { get; set; }
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             var style = "";

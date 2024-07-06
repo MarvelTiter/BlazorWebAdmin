@@ -21,7 +21,7 @@ namespace Project.Web.Shared.Components
         /// </summary>
         [Parameter]
         public RenderFragment? ReconnectRejectedTemplate { get; set; }
-        [Inject] public IReconnectorProvider Provider { get; set; }
+        [Inject, NotNull] public IReconnectorProvider? Provider { get; set; }
         protected override void OnAfterRender(bool firstRender)
         {
             base.OnAfterRender(firstRender);

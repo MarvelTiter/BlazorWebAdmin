@@ -6,7 +6,7 @@ namespace Project.AppCore.Store
     public partial class UserStore : StoreBase, IUserStore
     {
         public UserInfo? UserInfo { get; set; }
-        public IEnumerable<string> Roles => UserInfo?.Roles;
+        public IEnumerable<string> Roles => UserInfo?.Roles ?? [];
         public string? UserId => UserInfo?.UserId;
         public string UserDisplayName => GetUserName();
         public string? UserAgent { get; set; }
@@ -29,7 +29,7 @@ namespace Project.AppCore.Store
         {
             UserInfo = null;
         }
-        public event Func<UserInfo, Task> LoginSuccessEvent;
+        public event Func<UserInfo, Task>? LoginSuccessEvent;
 
         private Task OnLoginSuccessAsync(UserInfo info)
         {

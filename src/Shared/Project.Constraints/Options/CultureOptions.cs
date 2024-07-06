@@ -2,11 +2,11 @@
 
 public sealed class LangInfo
 {
-    public string Name { get; set; }
-    public string Culture { get; set; }
+    [NotNull] public string? Name { get; set; }
+    [NotNull] public string? Culture { get; set; }
 }
 public sealed class CultureOptions
 {
     public bool Enabled { get; set; }
-    public LangInfo[] SupportedCulture { get; set; }
+    public LangInfo[] SupportedCulture { get; set; } = [];
 }

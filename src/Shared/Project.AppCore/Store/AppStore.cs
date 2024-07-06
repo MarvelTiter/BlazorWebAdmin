@@ -9,7 +9,7 @@ namespace Project.AppCore.Store;
 public class AppStore : StoreBase, IAppStore
 {
     public const string KEY = "APP_SETTING";
-    private readonly IOptionsMonitor<AppSetting> options;
+    private readonly IOptionsMonitor<AppSetting>? options;
 
     public AppStore(IOptionsMonitor<AppSetting> options)
     {
@@ -34,8 +34,8 @@ public class AppStore : StoreBase, IAppStore
     public string MainThemeColor { get; set; } = "#1464ff";
     public void ApplySetting(IAppStore? app)
     {
-        this.Mode = app?.Mode ?? options.CurrentValue.LayoutMode ?? LayoutMode.Card;
-        this.AppLanguage = app?.AppLanguage ?? options.CurrentValue.AppLanguage ?? "zh-CN";
+        this.Mode = app?.Mode ?? options?.CurrentValue.LayoutMode ?? LayoutMode.Card;
+        this.AppLanguage = app?.AppLanguage ?? options?.CurrentValue.AppLanguage ?? "zh-CN";
         this.Collapsed = app?.Collapsed ?? false;
         CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(this.AppLanguage);
     }

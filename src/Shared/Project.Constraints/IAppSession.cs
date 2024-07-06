@@ -7,7 +7,7 @@ namespace Project.Constraints;
 [AutoInject]
 public interface IAppSession
 {
-    event Func<Task> WebApplicationAccessedEvent;
+    event Func<Task>? WebApplicationAccessedEvent;
     NavigationManager Navigator { get; }
     IAppStore AppStore { get; }
     //IAuthenticationStateProvider AuthenticationStateProvider { get; }

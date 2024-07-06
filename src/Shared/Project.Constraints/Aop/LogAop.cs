@@ -50,7 +50,7 @@ public class LogAopAttribute : AbstractInterceptorAttribute
 
     private static string GetUserIdFromContext(AspectContext context)
     {
-        return (context.Parameters.FirstOrDefault() as UserInfo)?.UserId ?? context.Parameters.FirstOrDefault()?.ToString();
+        return (context.Parameters.FirstOrDefault() as UserInfo)?.UserId ?? context.Parameters.FirstOrDefault()?.ToString() ?? "Get UserId Failed";
     }
 }
 

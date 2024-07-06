@@ -17,7 +17,7 @@ namespace Project.Constraints.Services
         [LogInfo(Action = "删除用户", Module = "权限控制")]
         Task<IQueryResult> DeleteUserAsync(TUser user);
         [LogInfo(Action = "修改密码", Module = "权限控制")]
-        Task<TUser> GetUserAsync(string id);
+        Task<TUser?> GetUserAsync(string id);
     }
 
     [IgnoreAutoInject]

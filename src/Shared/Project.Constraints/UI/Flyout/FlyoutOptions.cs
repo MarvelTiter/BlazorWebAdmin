@@ -4,29 +4,29 @@ namespace Project.Constraints.UI.Flyout;
 
 public class FlyoutOptions
 {
-    public string Title { get; set; }
+    public string? Title { get; set; }
     public string? Width { get; set; }
     public string? OkText { get; set; }
     public string? CancelText { get; set; }
-    public Func<Task> OnOk { get; set; }
-    public Func<Task> OnClose { get; set; }
-    public RenderFragment Content { get; set; }
+    public Func<Task>? OnOk { get; set; }
+    public Func<Task>? OnClose { get; set; }
+    public RenderFragment? Content { get; set; }
     public RenderFragment? Footer { get; set; }
     public bool ShowFooter { get; set; } = true;
 }
 
 public class PopoverOptions
 {
-    public string Title { get; set; }
-    public RenderFragment Content { get; set; }
-    public RenderFragment Trigger { get; set;}
-    public Func<Task>? CloseAsync { get; set;}
+    public string? Title { get; set; }
+    [NotNull] public RenderFragment? Content { get; set; }
+    public RenderFragment? Trigger { get; set; }
+    public Func<Task>? CloseAsync { get; set; }
 }
 
 public class FlyoutOptions<TReturn> : FlyoutOptions
 {
     public IFeedback<TReturn>? Feedback { get; set; }
-    public Func<TReturn, Func<bool>, bool>? PostCheck { get; set; }
+    public Func<TReturn?, Func<bool>, bool>? PostCheck { get; set; }
 }
 
 public enum Position

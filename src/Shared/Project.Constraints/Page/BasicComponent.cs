@@ -12,7 +12,7 @@ public class BasicComponent : ComponentBase, IAsyncDisposable
 
     [CascadingParameter, NotNull] public IAppSession? Context { get; set; }
     //[Inject] public IProjectSettingService AppSettingService { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalParameters { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalParameters { get; set; } = [];
     public IUIService UI => Context.UI;
     public IAppStore App => Context.AppStore;
     public IRouterStore Router => Context.RouterStore;
@@ -31,7 +31,13 @@ public class BasicComponent : ComponentBase, IAsyncDisposable
         {
             if (disposing)
             {
-                await OnDisposeAsync();
+                try
+                {
+                    await OnDisposeAsync();
+                }
+                catch
+                {
+                }
             }
             disposedValue = true;
         }
@@ -39,7 +45,6 @@ public class BasicComponent : ComponentBase, IAsyncDisposable
 
     public ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
         return DisposeAsync(disposing: true);
     }
 }

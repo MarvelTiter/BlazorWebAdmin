@@ -100,11 +100,11 @@
 </Card>
 
 @code {
-    [Parameter] public TableOptions<TData, TQuery> Options { get; set; }
-    [Inject] IStringLocalizer<TData> Localizer { get; set; }
-    [Inject] IStringLocalizer<TableOptions> TableLocalizer { get; set; }
-    [Inject] ConfirmService ConfirmSrv { get; set; }
-    [Inject] MessageService MessageSrv { get; set; }
+    [Parameter, NotNull] public TableOptions<TData, TQuery>? Options { get; set; }
+    [Inject, NotNull] IStringLocalizer<TData>? Localizer { get; set; }
+    [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
+    [Inject, NotNull] ConfirmService? ConfirmSrv { get; set; }
+    [Inject, NotNull] MessageService? MessageSrv { get; set; }
     IEnumerable<TData> Datas => Options.Result?.Payload ?? Enumerable.Empty<TData>();
     int Total => Options.Result?.TotalRecord ?? 0;
 

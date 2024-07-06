@@ -12,7 +12,7 @@ namespace Project.Constraints.UI.Table
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class TableButtonAttribute : Attribute
     {
-        public string Label { get; set; }
+        public string? Label { get; set; }
         /// <summary>
         /// 委托签名
         /// <code>
@@ -20,7 +20,7 @@ namespace Project.Constraints.UI.Table
         /// </code>
         /// </summary>
         public string? LabelExpression { get; set; }
-        public string Icon { get; set; }
+        public string? Icon { get; set; }
         /// <summary>
         /// 委托签名
         /// <code>
@@ -69,9 +69,9 @@ namespace Project.Constraints.UI.Table
         }
     }
 
-    public class TableButtonContext<T>
+    public class TableButtonContext<T>(T data)
     {
-        public T Data { get; set; }
+        public T Data { get; set; } = data;
         //public TableButton<T> ButtonDefinition { get; set; }
         public string? AdditionalParameter { get; set; }
     }
@@ -90,7 +90,7 @@ namespace Project.Constraints.UI.Table
         }
         public TableButton(TableButtonAttribute options)
         {
-            Label = options.Label;
+            Label = options.Label ?? "Button";
             Icon = options.Icon;
             ButtonType = options.Type;
             Danger = options.Danger;
@@ -99,15 +99,15 @@ namespace Project.Constraints.UI.Table
             AdditionalParameter = options.AdditionalParameter;
             Group = options.Group ?? "TableTips.ActionColumn";
         }
-        public string Label { get; set; }
+        public string Label { get; set; } = "Button";
         public bool Danger { get; set; }
-        public string Icon { get; set; }
-        public string ButtonType { get; set; }
+        public string? Icon { get; set; }
+        public string? ButtonType { get; set; }
         public string? ConfirmContent { get; set; }
         public string? ConfirmTitle { get; set; }
         public string? AdditionalParameter { get; set; }
-        public string Group { get; set; }
-        public Func<TData, Task<bool>> Callback { get; set; }
+        public string Group { get; set; } = "TableTips.ActionColumn";
+        [NotNull] public Func<TData, Task<bool>>? Callback { get; set; }
 
         private Func<TableButtonContext<TData>, bool>? visible;
         private Func<TableButtonContext<TData>, string>? label;
@@ -116,12 +116,12 @@ namespace Project.Constraints.UI.Table
         public Func<TableButtonContext<TData>, bool>? VisibleExpression { set => visible = value; }
         public bool CheckVisible(TData data)
         {
-            var context = new TableButtonContext<TData>() { Data = data, AdditionalParameter = AdditionalParameter };
+            var context = new TableButtonContext<TData>(data) { AdditionalParameter = AdditionalParameter };
             return visible?.Invoke(context) ?? true;
         }
         public string? GetLabel(TData data)
         {
-            var context = new TableButtonContext<TData>() { Data = data, AdditionalParameter = AdditionalParameter };
+            var context = new TableButtonContext<TData>(data) { AdditionalParameter = AdditionalParameter };
             return label?.Invoke(context);
         }
 

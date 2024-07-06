@@ -17,7 +17,7 @@ namespace Project.Web.Shared.Components
 
             public int Width { get; set; }
             public int Height { get; set; }
-            public string Name { get; set; }
+            [NotNull] public string? Name { get; set; }
             public Resolution() { }
             public Resolution(string name, int width, int height)
             {

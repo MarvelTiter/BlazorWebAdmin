@@ -2,7 +2,7 @@
     @Options.Trigger
 </Popover>
 @code {
-    [Parameter] public PopoverOptions Options { get; set; }
+    [Parameter, NotNull] public PopoverOptions? Options { get; set; }
     Popover? popover;
     protected override void OnAfterRender(bool firstRender)
     {

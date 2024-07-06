@@ -53,7 +53,7 @@ namespace Project.AppCore.Auth
                     var diff = DateTime.Now - result.Value?.CreatedTime;
                     var actived = DateTime.Now - result.Value?.ActiveTime;
                     if (result.Success && (diff?.Days < token.CurrentValue.Expire || actived?.TotalSeconds < token.CurrentValue.LimitedFreeTime))
-                    {                       
+                    {
                         await loginService.UpdateLastLoginTimeAsync(result.Value!);
                         return await UpdateState(result.Value);
                     }
@@ -102,7 +102,7 @@ namespace Project.AppCore.Auth
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, info.UserId),
-                new Claim(ClaimTypes.GivenName, info.UserName),
+                new Claim(ClaimTypes.GivenName, info.UserName!),
             };
             foreach (var r in info.Roles)
             {
@@ -111,10 +111,10 @@ namespace Project.AppCore.Auth
             return new ClaimsIdentity(claims, "authentication");
         }
 
-        private UserInfo Deserialize(string json)
-        {
-            if (string.IsNullOrEmpty(json)) return null;
-            return System.Text.Json.JsonSerializer.Deserialize<UserInfo>(json);
-        }
+        //private UserInfo Deserialize(string json)
+        //{
+        //    if (string.IsNullOrEmpty(json)) return null;
+        //    return System.Text.Json.JsonSerializer.Deserialize<UserInfo>(json);
+        //}
     }
 }

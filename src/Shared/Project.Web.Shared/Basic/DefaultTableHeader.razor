@@ -9,20 +9,20 @@
 <div class="queryarea">
     <div class="condition">
         <StackPanel>
-            @if (Options.EnabledAdvancedQuery)
+            @if (Options?.EnabledAdvancedQuery ?? false)
             {
                 <ConditionBuilder Columns=@Options.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder>
             }
             @UI.BuildButton(this).OnClick(Search).Text(TableLocalizer["TableButtons.Query"]).Primary().Render()
-            @if (Options.EnabledAdvancedQuery)
+            @if (Options?.EnabledAdvancedQuery ?? false)
             {
                 @UI.BuildButton(this).OnClick(() => AdvanceModalVisible = true).Text(TableLocalizer["TableButtons.AdvancedQuery"]).Render()
             }
-            @if (Options.ShowAddButton)
+            @if (Options?.ShowAddButton ?? false)
             {
                 @UI.BuildButton(this).OnClick(HandleAdd).Text(TableLocalizer["TableButtons.Add"]).Primary().Render()
             }
-            @if (Options.ShowExportButton || Options.Exportable)
+            @if ((Options?.ShowExportButton ?? false) || (Options?.Exportable ?? false))
             {
                 @UI.BuildButton(this).OnClick(Export).Text(TableLocalizer["TableButtons.Export"]).Primary().Render()
             }
@@ -33,7 +33,7 @@
         </StackPanel>
     </div>
 </div>
-@if (Options.EnabledAdvancedQuery)
+@if (Options?.EnabledAdvancedQuery ?? false)
 {
     <MModal @bind-Visible="AdvanceModalVisible" Title=@TableLocalizer["TableButtons.AdvancedQuery"] HideDefaultFooter>
         <ConditionGroup Columns=@Options.Columns
@@ -48,15 +48,15 @@
     </MModal>
 }
 @code {
-    [Parameter] public TableOptions<TData, TQuery> Options { get; set; }
-    [Parameter] public RenderFragment ChildContent { get; set; }
-    [Inject] IStringLocalizer<TData> Localizer { get; set; }
-    [Inject] IStringLocalizer<TableOptions> TableLocalizer { get; set; }
-    [Inject] IProtectedLocalStorage LocalStorage { get; set; }
+    [Parameter] public TableOptions<TData, TQuery>? Options { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Inject, NotNull] IStringLocalizer<TData>? Localizer { get; set; }
+    [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
+    [Inject, NotNull] IProtectedLocalStorage? LocalStorage { get; set; }
     private bool AdvanceModalVisible = false;
     private ConditionInfo? conditionInfo;
     private Expression<Func<TData, bool>>? ConditionExpression = e => true;
-    ConditionBuilder insRef;
+    ConditionBuilder? insRef;
 
     readonly string cache_key = $"TableOptions_{typeof(TData).Name}_ConditionAction";
     async Task CacheInfo(ConditionInfo info)
@@ -87,6 +87,10 @@
 
     async Task HandleAdd()
     {
+        if (Options?.OnAddItemAsync == null)
+        {
+            return;
+        }
         var success = await Options.OnAddItemAsync();
         if (success)
         {
@@ -96,6 +100,10 @@
 
     public async Task Search()
     {
+        if (Options == null)
+        {
+            return;
+        }
         Options.Query.PageIndex = 1;
         if (conditionInfo != null)
             Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
@@ -104,6 +112,10 @@
 
     public async Task Export()
     {
+        if (Options == null)
+        {
+            return;
+        }
         if (conditionInfo != null)
             Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
         await Options.ExportAsync();
@@ -112,6 +124,10 @@
 
     public async void AdvanceExport()
     {
+        if (Options == null)
+        {
+            return;
+        }
         Options.Query.Expression = ConditionExpression;
         AdvanceModalVisible = false;
         await Options.ExportAsync();
@@ -119,6 +135,10 @@
 
     public async Task AdvanceSearch()
     {
+        if (Options == null)
+        {
+            return;
+        }
         Options.Query.PageIndex = 1;
         Options.Query.Expression = ConditionExpression;
         AdvanceModalVisible = false;

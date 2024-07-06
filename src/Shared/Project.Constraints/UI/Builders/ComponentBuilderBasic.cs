@@ -11,7 +11,7 @@ namespace Project.Constraints.UI.Builders
         where TComponent : IComponent
         where TSelf : ComponentBuilderBasic<TComponent, TSelf>
     {
-        public object Receiver { get; set; }
+        [NotNull] public object? Receiver { get; set; }
 
         protected readonly Dictionary<string, object?> parameters = new(StringComparer.Ordinal);
         protected Func<TSelf, RenderFragment>? newRender;
@@ -36,11 +36,20 @@ namespace Project.Constraints.UI.Builders
         {
             var prop = selector.ExtractProperty();
             Set(prop.Name, value!);
-            return this as TSelf;
+            return (this as TSelf)!;
         }
         public IUIComponent Set(string key, object value)
         {
             parameters[key] = value;
+            return this;
+        }
+
+        public IUIComponent SetIf(bool condition, string key, object value)
+        {
+            if (condition)
+            {
+                Set(key, value);
+            }
             return this;
         }
 
@@ -63,5 +72,7 @@ namespace Project.Constraints.UI.Builders
                 builder.CloseComponent();
             };
         }
+
+        
     }
 }

@@ -58,7 +58,7 @@ namespace Project.AppCore.Auth
                 jwtToken.Payload.TryGetValue(JwtRegisteredClaimNames.Name, out var name);
                 return (Uid: name?.ToString(), Roles: jwtToken.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToArray());
             }
-            catch (Exception e)
+            catch
             {
                 throw;
             }

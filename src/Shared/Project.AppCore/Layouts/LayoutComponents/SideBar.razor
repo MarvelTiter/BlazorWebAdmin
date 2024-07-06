@@ -10,8 +10,8 @@
 </div>
 
 @code {
-    [Parameter] public RenderFragment TopBanner { get; set; }
-    [Parameter] public string Class { get; set; }
+    [Parameter] public RenderFragment? TopBanner { get; set; }
+    [Parameter] public string? Class { get; set; }
     [Parameter] public bool Horizontal { get; set; }
     protected override Task OnInitializedAsync()
     {
@@ -20,15 +20,12 @@
     }
 
     private string Width => App.Collapsed ? 80.ToPixel() : App.SideBarExpandWidth.ToPixel();
-    private bool collapse = false;
 
     public void ToggleCollapse()
     {
         // collapse = newState;
         StateHasChanged();
     }
-
-    private bool disposedValue;
 
     protected override ValueTask OnDisposeAsync()
     {

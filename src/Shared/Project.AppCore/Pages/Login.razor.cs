@@ -7,6 +7,7 @@ using Project.Constraints.Page;
 using Project.Constraints.Services;
 using Project.Constraints.UI;
 using Project.Constraints.UI.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.Web;
 
 namespace Project.AppCore.Pages
@@ -14,10 +15,10 @@ namespace Project.AppCore.Pages
     public partial class Login : BasicComponent
     {
         private LoginFormModel model = new LoginFormModel();
-        [Inject] public ILoginService LoginSrv { get; set; }
-        [Inject] IStringLocalizer<Login> Localizer { get; set; }
-        [Inject] IProjectSettingService CustomSetting { get; set; }
-        [CascadingParameter] IDomEventHandler Root { get; set; }
+        [Inject, NotNull] public ILoginService? LoginSrv { get; set; }
+        [Inject, NotNull] IStringLocalizer<Login>? Localizer { get; set; }
+        [Inject, NotNull] IProjectSettingService? CustomSetting { get; set; }
+        [CascadingParameter, NotNull] IDomEventHandler? Root { get; set; }
         public bool Loading { get; set; } = false;
         public string? Redirect { get; set; }
         protected override void OnInitialized()

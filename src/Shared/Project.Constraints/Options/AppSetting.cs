@@ -1,4 +1,5 @@
 ﻿using Project.Constraints.Store.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Constraints.Options;
 
@@ -15,8 +16,8 @@ public class OnlineUserPageSetting
 }
 public sealed class AppSetting
 {
-    public string AppTitle { get; set; }
-    public string AppShortName { get; set; }
+    [NotNull] public string? AppTitle { get; set; }
+    [NotNull] public string? AppShortName { get; set; }
     public LayoutMode? LayoutMode { get; set; }
     public string? AppLanguage { get; set; }
     public string? LauchUrl { get; set; }
@@ -24,7 +25,7 @@ public sealed class AppSetting
     public bool LoadPageFromDatabase { get; set; } = true;
     public bool UseAspectProxy { get; set; }
     public int SupportedMajorVersion { get; set; } = 85;
-    public List<CameraResolution> CameraResolutions { get; set; }
+    public List<CameraResolution>? CameraResolutions { get; set; }
     public OnlineUserPageSetting OnlineUserPage { get; set; } = new();
 
 }

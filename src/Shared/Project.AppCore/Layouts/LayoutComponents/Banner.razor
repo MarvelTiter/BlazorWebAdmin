@@ -2,6 +2,7 @@
 @using Project.AppCore.Options;
 @using Project.Constraints.Page
 @using Project.Web.Shared.Components
+@using System.Diagnostics.CodeAnalysis
 @inherits BasicComponent
 <div class="layout-logo @Class">
     @if (!collapse)
@@ -18,8 +19,8 @@
 @code {
     [Parameter] public EventCallback<bool> OnToggleCollapse { get; set; }
     [Parameter] public bool ShowCollapseButton { get; set; } = true;
-    [Parameter] public string Class { get; set; }
-    [Inject] public IOptionsMonitor<AppSetting> Config { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Inject, NotNull] public IOptionsMonitor<AppSetting>? Config { get; set; }
     private bool collapse = false;
     private string IconName => collapse ? "expand_menu" : "collapse_menu";
 

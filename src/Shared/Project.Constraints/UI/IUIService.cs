@@ -16,6 +16,7 @@ namespace Project.Constraints.UI;
 public interface IUIComponent
 {
     IUIComponent Set(string key, object value);
+    IUIComponent SetIf(bool condition, string key, object value);
     IUIComponent AdditionalParameters(Dictionary<string, object> parameters);
     RenderFragment Render();
 }

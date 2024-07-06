@@ -25,10 +25,10 @@ namespace Project.Web.Shared.Components
         public int LabelWidth { get; set; } = 100;
         [Parameter]
         public string Gap { get; set; } = "5px";
+        [Parameter, NotNull]
+        public RenderFragment? ChildContent { get; set; }
         [Parameter]
-        public RenderFragment ChildContent { get; set; }
-        [Parameter]
-        public Expression<Func<TItem, bool>> Expression { get; set; }
+        public Expression<Func<TItem, bool>>? Expression { get; set; }
         [Parameter]
         public EventCallback<Expression<Func<TItem, bool>>> ExpressionChanged { get; set; }
 

@@ -35,10 +35,10 @@
 </Card>
 
 @code {
-    [Parameter] public TData DataSource { get; set; }
-    [Parameter] public TableOptions<TRowData, TQuery> Options { get; set; }
+    [Parameter, NotNull] public TData? DataSource { get; set; }
+    [Parameter, NotNull] public TableOptions<TRowData, TQuery>? Options { get; set; }
 
-    [Inject] IStringLocalizer<TableOptions> TableLocalizer { get; set; }
+    [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
 
     IEnumerable<TRowData> Datas => Options.Result?.Payload ?? Enumerable.Empty<TRowData>();
     int Total => Options.Result?.TotalRecord ?? 0;
@@ -49,7 +49,7 @@
         Options.NotifyChanged = () => InvokeAsync(StateHasChanged);
     }
 
-    
+
     /// <summary>
     /// table总数
     /// </summary>

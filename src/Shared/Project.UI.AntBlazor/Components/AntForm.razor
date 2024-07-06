@@ -19,16 +19,16 @@
     }
 </Form>
 @code {
-    [Parameter] public FormOptions<TData> Options { get; set; }
-    [Inject] IStringLocalizer<TData> Localizer { get; set; }
-    IForm form;
+    [Parameter, NotNull] public FormOptions<TData>? Options { get; set; }
+    [Inject, NotNull] IStringLocalizer<TData>? Localizer { get; set; }
+    IForm? form;
 
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
         if (firstRender)
         {
-            Options.Validate = form.Validate;
+            Options.Validate = form != null ? form.Validate : null;
             Options.Update = StateHasChanged;
         }
     }

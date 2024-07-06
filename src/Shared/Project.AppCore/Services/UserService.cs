@@ -47,7 +47,7 @@ namespace Project.AppCore.Services
             var flag = await context.Repository<TUser>().UpdateAsync(user, u => u.UserId == user.UserId);
             return flag.Result();
         }
-        public async Task<TUser> GetUserAsync(string id)
+        public async Task<TUser?> GetUserAsync(string id)
         {
             var u = await context.Repository<TUser>().GetSingleAsync(u => u.UserId == id);
             return u;

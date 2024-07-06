@@ -34,12 +34,12 @@
     .AddClass(ViewClass);
 
     StyleBuilder WrapSls => StyleBuilder.Default
-    .AddStyleBase(WrapStyle, () => WrapStyle != null)
+    .AddStyleBase(WrapStyle!, () => WrapStyle != null)
     .AddStyle("height", () => Height > 0 ? Height.ToPixel() : "100vh", () => Height.HasValue)
     .AddStyle("max-height", () => MaxHeight.ToPixel(), () => MaxHeight.HasValue);
 
     StyleBuilder ViewSls => StyleBuilder.Default
-    .AddStyleBase(ViewStyle, () => ViewStyle != null);
+    .AddStyleBase(ViewStyle!, () => ViewStyle != null);
 
     StyleBuilder BarStyle(bool vertical) => StyleBuilder.Default
     .AddStyle("width", () => BarWidth.ToPixel(), () => vertical)

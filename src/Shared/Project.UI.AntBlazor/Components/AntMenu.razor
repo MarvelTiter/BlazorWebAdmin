@@ -6,9 +6,9 @@
 </Menu>
 
 @code {
-    [Parameter] public IRouterStore Router { get; set; }
+    [Parameter, NotNull] public IRouterStore? Router { get; set; }
     [Parameter] public bool Horizontal { get; set; }
-    [Parameter] public IAppStore App { get; set; }
+    [Parameter, NotNull] public IAppStore? App { get; set; }
 
     bool Collapsed => Horizontal ? false : App.Collapsed;
 }

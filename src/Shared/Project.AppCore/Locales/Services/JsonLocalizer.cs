@@ -11,7 +11,7 @@ namespace Project.AppCore.Locales.Services
         public JsonDocument? Fallback { get; set; }
         public JsonDocument? Main { get; set; }
         public bool UseTypedName { get; set; }
-        public string SearchedLocation { get; set; }
+        public string? SearchedLocation { get; set; }
         private bool TryGetValue(JsonElement? root, string key, string typedName, out string? value)
         {
             if (!root.HasValue)
@@ -72,14 +72,14 @@ namespace Project.AppCore.Locales.Services
     }
     public class JsonLocalizer : IStringLocalizer
     {
-        private readonly ConcurrentDictionary<string, JsonDocument> documentCache = new();
+        private readonly ConcurrentDictionary<string, JsonDocument?> documentCache = new();
         private static readonly ConcurrentDictionary<string, JsonDocument> allJsonFiles = new();
         private static readonly ConcurrentDictionary<string, JsonDocument> fallbackJsonFiles = new();
-        private readonly string typedName;
+        private readonly string typedName = string.Empty;
         private string? searchedLocation;
         private readonly ConcurrentDictionary<string, JsonInfo> infos = new();
 
-        private readonly ILogger logger;
+        private readonly ILogger? logger;
         public JsonLocalizer()
         {
 
@@ -259,7 +259,7 @@ namespace Project.AppCore.Locales.Services
                 }
                 catch (Exception e)
                 {
-                    logger.LogWarning(e, $"invalid json content, path: {searchedLocation}, content: {content}");
+                    logger?.LogWarning(e, $"invalid json content, path: {searchedLocation}, content: {content}");
                 }
             }
             value = null;

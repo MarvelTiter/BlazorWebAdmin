@@ -10,9 +10,9 @@ namespace Project.AppCore.Layouts
 {
     public partial class RootLayout : IDomEventHandler, IDisposable
     {
-        public event Func<MouseEventArgs, Task> BodyClickEvent;
-        public event Func<KeyboardEventArgs, Task> OnKeyDown;
-        public event Func<KeyboardEventArgs, Task> OnKeyUp;
+        public event Func<MouseEventArgs, Task>? BodyClickEvent;
+        public event Func<KeyboardEventArgs, Task>? OnKeyDown;
+        public event Func<KeyboardEventArgs, Task>? OnKeyUp;
         protected ElementReference? RootWrapper { get; set; }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -27,12 +27,17 @@ namespace Project.AppCore.Layouts
 
         protected Task HandleRootClick(MouseEventArgs e)
         {
-            return BodyClickEvent?.Invoke(e);
+            return BodyClickEvent?.Invoke(e) ?? Task.CompletedTask;
         }
 
-        protected Task HandleKeyAction(KeyboardEventArgs e)
+        protected Task HandleKeyDownAction(KeyboardEventArgs e)
         {
-            return OnKeyDown?.Invoke(e);
+            return OnKeyDown?.Invoke(e) ?? Task.CompletedTask;
+        }
+
+        protected Task HandleKeyUpAction(KeyboardEventArgs e)
+        {
+            return OnKeyUp?.Invoke(e) ?? Task.CompletedTask;
         }
 
         private bool disposedValue;

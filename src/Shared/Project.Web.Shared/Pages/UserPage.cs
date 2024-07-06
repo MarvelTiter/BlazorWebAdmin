@@ -11,9 +11,9 @@ namespace Project.Web.Shared.Pages
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
     {
-        [Inject] public IUserService<TUser> UserSrv { get; set; }
-        [Inject, NotNull] public IPermissionService<TPower, TRole> PermissionSrv { get; set; }
-        [Inject] public IStringLocalizer Localizer { get; set; }
+        [Inject, NotNull] public IUserService<TUser>? UserSrv { get; set; }
+        [Inject, NotNull] public IPermissionService<TPower, TRole>? PermissionSrv { get; set; }
+        [Inject, NotNull] public IStringLocalizer? Localizer { get; set; }
         IEnumerable<TRole> allRoles = [];
         protected override void OnInitialized()
         {

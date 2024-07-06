@@ -20,7 +20,7 @@ namespace Project.AppCore.Store
         public IUIService UI { get; } = ui;
         public Action? Update { get; set; }
 
-        public event Func<Task> WebApplicationAccessedEvent;
+        public event Func<Task>? WebApplicationAccessedEvent;
         public Task NotifyWebApplicationAccessedAsync()
         {
             if (WebApplicationAccessedEvent != null)

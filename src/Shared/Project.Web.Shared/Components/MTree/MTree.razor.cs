@@ -7,23 +7,23 @@ namespace Project.Web.Shared.Components
     {
         [Parameter]
         [NotNull]
-        public IEnumerable<TNode> DataSource { get; set; }
+        public IEnumerable<TNode>? DataSource { get; set; }
+        [Parameter, NotNull]
+        public Func<TNode, string>? KeyExpression { get; set; }
         [Parameter]
-        public Func<TNode, string> KeyExpression { get; set; }
+        public Func<TNode, IEnumerable<TNode>>? ChildrenExpression { get; set; }
         [Parameter]
-        public Func<TNode, IEnumerable<TNode>> ChildrenExpression { get; set; }
-        [Parameter]
-        public Func<TNode, string> TitleExpression { get; set; }
+        public Func<TNode, string>? TitleExpression { get; set; }
         [Parameter]
         public int Indent { get; set; } = 20;
         [Parameter]
-        public string[] CheckedKeys { get; set; }
+        public string[] CheckedKeys { get; set; } = [];
         [Parameter]
         public EventCallback<string[]> CheckedKeysChanged { get; set; }
         [Parameter]
         public bool IncludeIndeterminate { get; set; }
         [Parameter]
-        public RenderFragment<TNode> TitleTemplate { get; set; }
+        public RenderFragment<TNode>? TitleTemplate { get; set; }
         [Parameter] public bool CollapseAll { get; set; }
 
         private List<MTreeNode<TNode>> nodes = new List<MTreeNode<TNode>>();

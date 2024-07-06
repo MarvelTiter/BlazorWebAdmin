@@ -17,7 +17,7 @@
             Group = meta.Group;
             Cache = meta.Cache;
         }
-        public IEnumerable<RouteMenu> Children { get; set; }
+        public IEnumerable<RouteMenu>? Children { get; set; }
         public bool HasChildren => Children != null && Children.Any();
 
     }

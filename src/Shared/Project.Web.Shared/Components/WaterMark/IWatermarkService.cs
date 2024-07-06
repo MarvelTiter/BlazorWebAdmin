@@ -48,6 +48,6 @@ public class WaterMarkOptions
 }
 public interface IWatermarkService
 {
-    Task UpdateWaterMarkAsync(WaterMarkOptions? options, params string[] contents);
-    Task UpdateWaterMarkAsync(params string[] contents);
+    Task UpdateWaterMarkAsync(WaterMarkOptions? options, params string?[] contents);
+    Task UpdateWaterMarkAsync(params string?[] contents);
 }

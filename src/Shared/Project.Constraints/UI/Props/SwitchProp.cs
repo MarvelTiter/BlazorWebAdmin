@@ -2,7 +2,7 @@
 {
     public class SwitchProp : DefaultProp
     {
-        public string CheckedLabel { get; set; }
-        public string UnCheckedLabel { get; set; }
+        public string? CheckedLabel { get; set; }
+        public string? UnCheckedLabel { get; set; }
     }
 }

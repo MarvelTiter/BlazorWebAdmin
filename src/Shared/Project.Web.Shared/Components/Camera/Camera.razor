@@ -18,7 +18,7 @@
     {
         <div style="text-align:center;margin-top:10px;">
             <div>
-                @UI.BuildSelect(this, dropdownDevices).Bind(() => selectedDeviceId).Set("Style", "width:200px;").Render()
+                @UI.BuildSelect(this, dropdownDevices).Bind(() => selectedDeviceId!).Set("Style", "width:200px;").Render()
                 @UI.BuildButton(this).OnClick(Start).Text("开启").Primary().Set("Disabled", playButtonStatus).Render()
                 @UI.BuildButton(this).OnClick(Stop).Text("关闭").Primary().Set("Disabled", !playButtonStatus).Render()
             </div>

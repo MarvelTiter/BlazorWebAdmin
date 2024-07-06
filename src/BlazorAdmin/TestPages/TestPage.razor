@@ -8,6 +8,7 @@
 @using Project.Web.Shared.ComponentHelper
 @using Project.Web.Shared.Components
 @using Project.Web.Shared.Utils
+@using System.Diagnostics.CodeAnalysis
 @inherits JsComponentBase
 <WaterMark Contents="@(["123","123"])">
     <MGrid MinWidth="300" Gap="10px">
@@ -77,11 +78,11 @@ UI.BuildCheckBoxGroup:
     <h1>Modal Content</h1>
 </MModal>
 @code {
-    [Inject] IUserService<User> UserService { get; set; }
-    [Inject] IDownloadService Download { get; set; }
-    [Inject] IWatermarkServiceFactory WatermarkServiceFactory { get; set; }
-    string[] checkedUsers;
-    string selectedUser;
+    [Inject, NotNull] IUserService<User>? UserService { get; set; }
+    [Inject, NotNull] IDownloadService? Download { get; set; }
+    [Inject, NotNull] IWatermarkServiceFactory? WatermarkServiceFactory { get; set; }
+    string[] checkedUsers = [];
+    string selectedUser = string.Empty;
     bool visible;
     IEnumerable<User> users = Enumerable.Empty<User>();
     protected override async Task OnInitializedAsync()

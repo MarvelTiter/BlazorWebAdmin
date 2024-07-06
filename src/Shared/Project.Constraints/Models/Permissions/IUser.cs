@@ -4,10 +4,10 @@ namespace Project.Constraints.Models.Permissions
 {
     public interface IUser
     {
-        public string UserId { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public IEnumerable<string> Roles { get; set; }
+        [NotNull] public string? UserId { get; set; }
+        [NotNull] public string? UserName { get; set; }
+        [NotNull] public string? Password { get; set; }
+        public IEnumerable<string>? Roles { get; set; }
         public void OnUserSave(SaveActionType type)
         {
 
@@ -17,11 +17,14 @@ namespace Project.Constraints.Models.Permissions
     public class UserPwd
     {
         [Required]
-        public string OldPassword { get; set; }
+        [NotNull]
+        public string? OldPassword { get; set; }
         [Required]
-        public string Password { get; set; }
+        [NotNull]
+        public string? Password { get; set; }
         [Required]
-        public string ConfirmPassword { get; set; }
+        [NotNull]
+        public string? ConfirmPassword { get; set; }
     }
 
     [LightTable(Name = "USER")]
@@ -29,20 +32,23 @@ namespace Project.Constraints.Models.Permissions
     {
         [ColumnDefinition(Readonly = true)]
         [LightColumn(Name = "USER_ID", PrimaryKey = true)]
-        public string UserId { get; set; }
+        [NotNull]
+        public string? UserId { get; set; }
         [ColumnDefinition]
         [LightColumn(Name = "USER_NAME")]
-        public string UserName { get; set; }
+        [NotNull]
+        public string? UserName { get; set; }
         [ColumnDefinition]
         [LightColumn(Name = "PASSWORD")]
         [Form(InputType.Password)]
-        public string Password { get; set; }
+        [NotNull]
+        public string? Password { get; set; }
         [ColumnDefinition]
         [LightColumn(Name = "AGE")]
         public int? Age { get; set; }
         [ColumnDefinition]
         [LightColumn(Name = "SIGN")]
-        public string Sign { get; set; }
+        public string? Sign { get; set; }
         [ColumnDefinition]
         [LightColumn(Name = "LAST_LOGIN")]
         [Form(Hide = true)]
@@ -50,6 +56,6 @@ namespace Project.Constraints.Models.Permissions
 
         [Ignore]
         [ColumnDefinition(Visible = false)]
-        public IEnumerable<string> Roles { get; set; } = [];
+        public IEnumerable<string>? Roles { get; set; }
     }
 }

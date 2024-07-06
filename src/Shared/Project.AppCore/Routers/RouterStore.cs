@@ -248,7 +248,7 @@ public class RouterStore : StoreBase, IRouterStore
         }
     }
 
-    public event Func<TagRoute, Task<bool>> RouterChangingEvent;
+    public event Func<TagRoute, Task<bool>>? RouterChangingEvent;
 
     private async Task<bool> OnRouterChangingAsync(TagRoute tag)
     {
@@ -263,7 +263,7 @@ public class RouterStore : StoreBase, IRouterStore
         return true;
     }
 
-    public event Func<RouterMeta, Task<bool>> RouteMetaFilterEvent;
+    public event Func<RouterMeta, Task<bool>>? RouteMetaFilterEvent;
     private async Task<bool> OnRouteMetaFilterAsync(RouterMeta meta)
     {
         if (IsUserDashboard(meta))

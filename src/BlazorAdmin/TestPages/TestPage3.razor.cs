@@ -2,6 +2,7 @@
 using Project.Constraints.Common.Attributes;
 using Project.Constraints.UI;
 using Project.Constraints.UI.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorAdmin.TestPages
 {
@@ -11,10 +12,10 @@ namespace BlazorAdmin.TestPages
 #endif
     public partial class TestPage3
     {
-        [Inject] IUIService UI { get; set; }
+        [Inject, NotNull] IUIService? UI { get; set; }
         class RefInt()
         {
-            public int Value { get; set; } 
+            public int Value { get; set; }
         }
         async Task OpenDialog()
         {
@@ -24,8 +25,8 @@ namespace BlazorAdmin.TestPages
             {
                 builder.Div().AddContent(b =>
                 {
-                    b.AddContent(0,"要大于10");
-                    b.AddContent(1, UI.BuildInput<int>(this).Bind(() => val.Value).Render());
+                    b.AddContent(0, "要大于10");
+                    b.AddContent(1, UI.BuildInput<int>(this).Bind(() => val!.Value).Render());
                 }).Build();
             }
                , refInt, false, config =>
@@ -33,7 +34,7 @@ namespace BlazorAdmin.TestPages
                    config.Title = "测试PostCheck";
                    config.PostCheck = (v, validate) =>
                    {
-                       return v.Value > 10;
+                       return v!.Value > 10;
                    };
                });
         }

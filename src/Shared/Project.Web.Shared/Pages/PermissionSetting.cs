@@ -10,8 +10,8 @@ namespace Project.Web.Shared.Pages
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
     {
-        [Inject] public IPermissionService<TPower, TRole> PermissionSrv { get; set; }
-        [Inject] IStringLocalizer<TPower> Localizer { get; set; }
+        [Inject, NotNull] public IPermissionService<TPower, TRole>? PermissionSrv { get; set; }
+        [Inject, NotNull] IStringLocalizer<TPower>? Localizer { get; set; }
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
@@ -19,7 +19,7 @@ namespace Project.Web.Shared.Pages
             HideDefaultTableHeader = true;
             Options.Pager = false;
             Options.LoadDataOnLoaded = true;
-            Options.TreeChildren = p => p.Children.Cast<TPower>();
+            Options.TreeChildren = p => p.Children?.Cast<TPower>() ?? [];
             Options.GetColumn(p => p.Icon).FormTemplate = ctx => b =>
                 b.Component<PowerIconSelector>()
                 .SetComponent(c => c.Context, ctx)
@@ -68,7 +68,6 @@ namespace Project.Web.Shared.Pages
         #endregion
 
         string[] defaultPageButtons = new[] { "Add", "Modify", "Delete" };
-        bool test;
         public bool CanShow(TableButtonContext<TPower> context) => context.Data.PowerType == PowerType.Page;
         public string AddPowerLabel(TableButtonContext<TPower> _) => Localizer["PermissionSetting.AddChild"];
 
@@ -78,7 +77,7 @@ namespace Project.Web.Shared.Pages
             var edit = new TPower();
             edit.ParentId = parent.PowerId;
             edit.PowerLevel = parent.PowerLevel + 1;
-            edit.Sort = parent.Children.Count() + 1;
+            edit.Sort = parent.Children?.Count() ?? 0 + 1;
             var power = await this.ShowEditFormAsync("新增权限", edit, false);
             var result = await PermissionSrv.InsertPowerAsync(power);
             if (result.Success)

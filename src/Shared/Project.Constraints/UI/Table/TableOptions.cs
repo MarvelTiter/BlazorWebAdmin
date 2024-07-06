@@ -1,5 +1,6 @@
 ﻿using Project.Constraints.Common;
 using Project.Constraints.Models.Request;
+using Project.Constraints.Utils;
 using System.Data;
 using System.Linq.Expressions;
 
@@ -25,7 +26,7 @@ public class TableOptions
     public int? ActionButtonColumn { get; set; }
     public bool Exportable { get; set; }
     public bool AutoRefreshData { get; set; } = true;
-    public List<ColumnInfo> Columns { get; set; }
+    [NotNull] public List<ColumnInfo>? Columns { get; set; }
 }
 
 public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest, new()
@@ -39,19 +40,19 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     }
     public TQuery Query { get; set; }
     public IQueryCollectionResult<TData>? Result { get; set; }
-    public Func<TData, object> RowKey { get; set; }
-    public Func<TData, IEnumerable<TData>> TreeChildren { get; set; } = t => Enumerable.Empty<TData>();
-    public IEnumerable<TData> Selected { get; set; } = Enumerable.Empty<TData>();
-    public Func<Task<bool>> OnAddItemAsync { get; set; }
-    public Func<TQuery, Task<IQueryCollectionResult<TData>>> OnQueryAsync { get; set; }
-    public Func<TQuery, Task<IQueryCollectionResult<TData>>> OnExportAsync { get; set; }
-    public Func<TData, Task> OnRowClickAsync { get; set; }
-    public Func<TData, Dictionary<string, object>?> AddRowOptions { get; set; }
-    public Func<string, IEnumerable<TData>, Task> ExportIntercept { get; set; }
+    public Func<TData, object> RowKey { get; set; } = d => d!;
+    public Func<TData, IEnumerable<TData>> TreeChildren { get; set; } = t => [];
+    public IEnumerable<TData> Selected { get; set; } = [];
+    public Func<Task<bool>>? OnAddItemAsync { get; set; }
+    public Func<TQuery, Task<IQueryCollectionResult<TData>>>? OnQueryAsync { get; set; }
+    public Func<TQuery, Task<IQueryCollectionResult<TData>>>? OnExportAsync { get; set; }
+    public Func<TData, Task>? OnRowClickAsync { get; set; }
+    public Func<TData, Dictionary<string, object>?>? AddRowOptions { get; set; }
+    public Func<string, IEnumerable<TData>, Task>? ExportIntercept { get; set; }
     public List<TableButton<TData>>? Buttons { get; set; }
     public Func<TableButton<TData>, bool, Task>? OnTableButtonClickAsync { get; set; }
-    public Func<IEnumerable<TData>, Task> OnSaveExcelAsync { get; set; }
-    public Func<IEnumerable<TData>, Task> OnSelectedChangedAsync { get; set; }
+    public Func<IEnumerable<TData>, Task>? OnSaveExcelAsync { get; set; }
+    public Func<IEnumerable<TData>, Task>? OnSelectedChangedAsync { get; set; }
     //public Func<Task> RefreshAsync { get; set; }
     public ColumnInfo this[string name]
     {
@@ -69,28 +70,35 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
 
     public async Task RefreshAsync()
     {
-        Loading = true;
+        using var _ = BooleanStatusManager.New((b) => Loading = b, callback: NotifyChanged);
         await NotifyChanged.Invoke();
-        await Task.Yield();
-        var result = await OnQueryAsync(Query);
-        Result = result;
-        Loading = false;
-        await NotifyChanged.Invoke();
+        //await Task.Yield();
+        if (OnQueryAsync != null)
+        {
+            var result = await OnQueryAsync(Query);
+            Result = result;
+        }
     }
 
     public async Task ExportAsync()
     {
-        Loading = true;
-        NotifyChanged?.Invoke();
-        var datas = await OnExportAsync(Query);
-        var exportDatas = (datas?.Success ?? false) ? datas.Payload : Result?.Payload ?? Enumerable.Empty<TData>();
+        using var _ = BooleanStatusManager.New(b => Loading = b, callback: NotifyChanged);
+        await NotifyChanged.Invoke();
+        IQueryCollectionResult<TData> datas;
+        if (OnExportAsync != null)
+        {
+            datas = await OnExportAsync(Query);
+        }
+        else
+        {
+            datas = QueryResult.EmptyResult<TData>();
+        }
+        var exportDatas = datas.Success ? datas.Payload : Result?.Payload ?? [];
 
         if (exportDatas.Any() && OnSaveExcelAsync != null)
         {
             await OnSaveExcelAsync.Invoke(exportDatas);
         }
-        Loading = false;
-        NotifyChanged?.Invoke();
     }
 
 

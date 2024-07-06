@@ -10,7 +10,7 @@ namespace Project.Constraints.Store.Models
         public DateTime ActiveTime { get; set; }
         public RenderFragment? Body { get; set; }
         public RenderFragment? Title { get; set; }
-        public object PageRef { get; set; }
+        public object? PageRef { get; set; }
 
         private bool isActive;
         public bool IsActive { get => isActive; set => SetActive(value); }

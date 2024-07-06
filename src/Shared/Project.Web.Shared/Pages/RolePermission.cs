@@ -11,10 +11,10 @@ namespace Project.Web.Shared.Pages
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
     {
-        IEnumerable<TPower> allPower;
-        [Inject] public IPermissionService<TPower, TRole> PermissionSrv { get; set; }
-        [Inject] public IStringLocalizer<TPower> Localizer { get; set; }
-        [Inject] public IOptionsMonitor<CultureOptions> CultureSetting { get; set; }
+        IEnumerable<TPower> allPower = [];
+        [Inject, NotNull] public IPermissionService<TPower, TRole>? PermissionSrv { get; set; }
+        [Inject, NotNull] public IStringLocalizer<TPower>? Localizer { get; set; }
+        [Inject, NotNull] public IOptionsMonitor<CultureOptions>? CultureSetting { get; set; }
 
         TreeOptions<TPower>? options;
         protected override async Task OnInitializedAsync()

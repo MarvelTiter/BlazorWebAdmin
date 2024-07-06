@@ -4,13 +4,12 @@
 @inherits BasicComponent
 @UI.BuildPopover(options)
 @code {
-    List<string> icons;
-    bool visible;
-    [Parameter] public string Value { get; set; }
+    List<string> icons = [];
+    [Parameter] public string? Value { get; set; }
     [Parameter] public EventCallback<string> ValueChanged { get; set; }
     [Parameter] public EventCallback OnChanged { get; set; }
-    [Inject] IStringLocalizer<IconSelector> Localizer { get; set; }
-    Project.Constraints.UI.Flyout.PopoverOptions options;
+    [Inject, NotNull] IStringLocalizer<IconSelector>? Localizer { get; set; }
+    [NotNull] Project.Constraints.UI.Flyout.PopoverOptions? options = null;
     RenderFragment content =>
     @<div>
         <div class="icons-wrapper">

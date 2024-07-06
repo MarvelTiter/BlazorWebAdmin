@@ -282,8 +282,8 @@ namespace Project.UI.AntBlazor
                 OkText = localizer[options.OkText ?? "CustomButtons.Ok"].Value,
                 CancelText = localizer[options.CancelText ?? "CustomButtons.Cancel"].Value,
                 Maximizable = true,
-                OnOk = e => options.OnOk.Invoke(),
-                OnCancel = e => options.OnClose.Invoke(),
+                OnOk = e => options.OnOk?.Invoke(),
+                OnCancel = e => options.OnClose?.Invoke(),
             };
 
             if (options.Width != null) modal.Width = options.Width;
@@ -333,7 +333,7 @@ namespace Project.UI.AntBlazor
 
             _ = await drawerService.CreateAsync(modal);
 
-            return default;
+            return default!;
         }
 
         public IUIComponent BuildCard()

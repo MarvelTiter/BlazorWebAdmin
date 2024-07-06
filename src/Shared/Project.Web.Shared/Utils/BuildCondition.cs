@@ -26,10 +26,10 @@ namespace Project.Web.Shared.Utils
             if (expType.HasValue)
             {
                 Expression right;
-                object v;
+                object? v;
                 if (info.ValueType.IsEnum)
                 {
-                    v = Enum.Parse(info.ValueType, info.Value.ToString()!);
+                    v = Enum.Parse(info.ValueType, info.Value?.ToString()!);
                     var enumInt = Expression.Constant((int)v, typeof(int));
                     right = Expression.Convert(enumInt, info.ValueType);
                 }
@@ -58,7 +58,7 @@ namespace Project.Web.Shared.Utils
         public static Expression<Func<T, bool>> CombineExpression<T>(Queue<ConditionInfo> infos)
         {
             var pExp = Expression.Parameter(typeof(T), "p");
-            Expression expression = null;
+            Expression? expression = null;
 
             while (infos.Count > 0)
             {

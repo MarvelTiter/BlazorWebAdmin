@@ -18,7 +18,7 @@ namespace Project.Services
 		public async Task<IQueryResult<UserInfo>> LoginAsync(string username, string password)
 		{
 			var result = await settingProvider.GetUserInfoAsync(username, password);
-			await UpdateLastLoginTimeAsync(result.Payload);
+			await UpdateLastLoginTimeAsync(result.Payload!);
 			return result;
 		}
 

@@ -10,7 +10,7 @@
 		}
 		else
 		{
-			<span class="node-title">@Root.TitleExpression(NodeValue)</span>
+			<span class="node-title">@Root.TitleExpression?.Invoke(NodeValue)</span>
 		}
 	</div>
 </div>

@@ -6,8 +6,7 @@ namespace Project.Web.Shared.Pages
     public class OperationLog<TRunLog> : ModelPage<TRunLog, GenericRequest<TRunLog>>, IPageAction
         where TRunLog : class, IRunLog, new()
     {
-        [Inject]
-        public IRunLogService<TRunLog> RunLogSrv { get; set; }
+        [Inject, NotNull] IRunLogService<TRunLog>? RunLogSrv { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();

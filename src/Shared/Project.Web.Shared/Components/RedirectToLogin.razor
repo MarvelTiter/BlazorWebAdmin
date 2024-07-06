@@ -1,17 +1,15 @@
-﻿
-@inject IOptionsMonitor<Token> Token
+﻿@inject IOptionsMonitor<Token> Token
 @code {
 
-    [Inject] public IAppSession Context { get; set; }
+    [Inject, NotNull] NavigationManager? Nav { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();
         try
         {
             @*_ = MsgSrv.Error("登录过期！请重新登录！");*@
-            var nav = Context.Navigator;
-            var redirect = nav.ToBaseRelativePath(nav.Uri);
-            nav.NavigateTo($"/login?Redirect={HttpUtility.UrlEncode(redirect)}", true);
+            var redirect = Nav.ToBaseRelativePath(Nav.Uri);
+            Nav.NavigateTo($"/login?Redirect={HttpUtility.UrlEncode(redirect)}", true);
         }
         catch
         {

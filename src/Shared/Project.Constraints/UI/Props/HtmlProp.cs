@@ -17,8 +17,8 @@
     public class HtmlProp
     {
         [PropName("class")]
-        public string Class { get; set; }
+        public string? Class { get; set; }
         [PropName("style")]
-        public string Style { get; set; }
+        public string? Style { get; set; }
     }
 }

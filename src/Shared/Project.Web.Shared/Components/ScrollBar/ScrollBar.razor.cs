@@ -19,12 +19,12 @@ namespace Project.Web.Shared.Components
         public ElementReference? VerticalThumb { get; set; }
         //public IJSObjectReference ScrollBarModule { get; set; }
         [Parameter] public bool Always { get; set; }
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment? ChildContent { get; set; }
         [Parameter] public bool Native { get; set; }
-        [Parameter] public string WrapClass { get; set; }
-        [Parameter] public string ViewClass { get; set; }
-        [Parameter] public string ViewStyle { get; set; }
-        [Parameter] public string WrapStyle { get; set; }
+        [Parameter] public string? WrapClass { get; set; }
+        [Parameter] public string? ViewClass { get; set; }
+        [Parameter] public string? ViewStyle { get; set; }
+        [Parameter] public string? WrapStyle { get; set; }
         [Parameter] public int? Height { get; set; }
         [Parameter] public int? MaxHeight { get; set; }
         //[Parameter] public EventCallback<ScrollArgs> OnScroll { get; set; }

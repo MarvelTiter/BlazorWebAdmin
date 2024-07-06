@@ -7,10 +7,10 @@ using System.Reflection;
 namespace Project.Constraints;
 public class AppInfo
 {
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public string Company { get; set; }
-    public string Version { get; set; }
+    public string? Id { get; set; }
+    public string? Name { get; set; }
+    public string? Company { get; set; }
+    public string? Version { get; set; }
 }
 
 public class DbTableType
@@ -75,7 +75,7 @@ public static class AppConst
         return $"{path}?v={fi.LastWriteTime:yyMMddHHmmss}";
     }
 
-    public static RenderFragment Footer { get; set; }
+    public static RenderFragment? Footer { get; set; }
     public static List<Assembly> Pages => PageAssemblies;
     public static void SetFooter(string html)
     {

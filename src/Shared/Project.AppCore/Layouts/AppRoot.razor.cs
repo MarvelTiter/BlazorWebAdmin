@@ -11,7 +11,7 @@ namespace Project.AppCore.Layouts
 {
     public partial class AppRoot : IAsyncDisposable
     {
-        [Parameter, NotNull] public Assembly AppAssembly { get; set; }
+        [Parameter, NotNull] public Assembly? AppAssembly { get; set; }
         [Inject, NotNull] IAppSession? Context { get; set; }
         [Parameter] public RenderFragment? ChildContent { get; set; }
         [Inject, NotNull] IServiceProvider? Services { get; set; }

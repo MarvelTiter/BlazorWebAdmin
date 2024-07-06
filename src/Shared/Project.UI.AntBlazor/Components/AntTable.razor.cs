@@ -74,7 +74,7 @@ public partial class AntTable<TData,TQuery> where TQuery : IRequest, new()
         }
         else
         {
-            return c => null;
+            return c => null!;
         }
     }
 }

@@ -9,9 +9,9 @@
     </div>
 }
 @code {
-    [Inject] IWatermarkServiceFactory WatermarkFactory { get; set; }
+    [Inject, NotNull] IWatermarkServiceFactory? WatermarkFactory { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public string[] Contents { get; set; }
+    [Parameter] public string[]? Contents { get; set; }
     [Parameter] public int Top { get; set; } = 20;
     [Parameter] public (int X, int Y) Gap { get; set; } = (100, 100);
     [Parameter] public int Width { get; set; } = 120;
@@ -49,19 +49,19 @@
         }
     }
 
-    public Task UpdateWaterMarkAsync(params string[] contents)
+    public Task UpdateWaterMarkAsync(params string?[] contents)
     {
         DrawMask(contents);
         return Task.CompletedTask;
     }
 
-    public Task UpdateWaterMarkAsync(WaterMarkOptions? options, params string[] contents)
+    public Task UpdateWaterMarkAsync(WaterMarkOptions? options, params string?[] contents)
     {
         DrawMask(contents, options);
         return Task.CompletedTask;
     }
 
-    void DrawMask(string[] contents, WaterMarkOptions? options = null)
+    void DrawMask(string?[] contents, WaterMarkOptions? options = null)
     {
         _ = InvokeVoidAsync("setWatermark", wrapper, new
         {

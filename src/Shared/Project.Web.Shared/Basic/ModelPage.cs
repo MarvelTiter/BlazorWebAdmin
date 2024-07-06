@@ -16,9 +16,9 @@ namespace Project.Web.Shared.Basic;
 public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     where TQuery : IRequest, new()
 {
-    [Inject] protected IExcelHelper Excel { get; set; }
-    [Inject] IDownloadService DownloadService { get; set; }
-    [CascadingParameter] IDomEventHandler DomEvent { get; set; }
+    [Inject, NotNull] protected IExcelHelper? Excel { get; set; }
+    [Inject, NotNull] IDownloadService? DownloadService { get; set; }
+    [CascadingParameter] IDomEventHandler? DomEvent { get; set; }
     [CascadingParameter] TagRoute? RouteInfo { get; set; }
     public TableOptions<TModel, TQuery> Options { get; set; } = new();
     protected bool HideDefaultTableHeader { get; set; }
@@ -48,52 +48,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         //DomEvent.OnKeyDown += DomEvent_OnKeyDown;
     }
 
-    //protected override void OnDispose()
-    //{
-    //    DomEvent.OnKeyDown -= DomEvent_OnKeyDown;
-    //}
-
-    //private Task DomEvent_OnKeyDown(Microsoft.AspNetCore.Components.Web.KeyboardEventArgs arg)
-    //{
-    //    Console.WriteLine($"{RouteInfo?.RouteUrl} {arg.Key} down");
-    //    if (RouteInfo?.IsActive ?? false)
-    //    {
-    //        return Options.RefreshAsync();
-    //    }
-    //    return Task.CompletedTask;
-    //}
-
-    protected virtual object SetRowKey(TModel model) => model;
-
-    //private List<TableButton<TModel>> CollectButtons()
-    //{
-    //    List<TableButton<TModel>> buttons = new List<TableButton<TModel>>();
-
-    //    var type = GetType();
-    //    var methods = type.GetMethods().Where(m => m.GetCustomAttribute<TableButtonAttribute>() != null);
-
-    //    foreach (var method in methods)
-    //    {
-    //        var btnOptions = method.GetCustomAttribute<TableButtonAttribute>()!;
-    //        ArgumentNullException.ThrowIfNull(btnOptions.Label ?? btnOptions.LabelExpression);
-    //        var btn = new TableButton<TModel>(btnOptions);
-    //        btn.Callback = method.CreateDelegate<Func<TModel, Task<bool>>>(this);
-    //        if (btnOptions.LabelExpression != null)
-    //        {
-    //            var le = type.GetMethod(btnOptions.LabelExpression);
-    //            btn.LabelExpression = le?.CreateDelegate<Func<TableButtonContext<TModel>, string>>(this);
-    //        }
-
-    //        if (btnOptions.VisibleExpression != null)
-    //        {
-    //            var ve = type.GetMethod(btnOptions.VisibleExpression);
-    //            btn.VisibleExpression = ve?.CreateDelegate<Func<TableButtonContext<TModel>, bool>>(this);
-    //        }
-
-    //        buttons.Add(btn);
-    //    }
-    //    return buttons;
-    //}
+    protected virtual object SetRowKey(TModel model) => model!;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -140,7 +95,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         {
             await Options.RefreshAsync();
         }
-        return Options.Result;
+        return Options.Result ?? QueryResult.EmptyResult<TModel>();
     }
 
     /// <summary>

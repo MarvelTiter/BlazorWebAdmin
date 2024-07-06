@@ -10,13 +10,14 @@ using System.Reflection;
 using System.Collections.Concurrent;
 using Project.Constraints.Models.Request;
 using Project.Constraints.UI.Extensions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.UI.AntBlazor.Components
 {
     public class AntTableColumns<TData, TRowData> : ComponentBase
     {
-        [Parameter] public TData Source { get; set; }
-        [Parameter] public TRowData RowData { get; set; }
+        [Parameter] public TData? Source { get; set; }
+        [Parameter] public TRowData? RowData { get; set; }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {

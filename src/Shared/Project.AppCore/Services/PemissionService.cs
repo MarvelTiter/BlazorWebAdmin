@@ -122,7 +122,7 @@ namespace Project.AppCore.Services
         public async Task<IQueryResult<bool>> InsertPowerAsync(TPower power)
         {
             var n = await context.Repository<TPower>().InsertAsync(power);
-            return (n != null).Result();
+            return (n > 0).Result();
         }
 
         public async Task<IQueryResult<bool>> UpdateRoleAsync(TRole role)
@@ -134,7 +134,7 @@ namespace Project.AppCore.Services
         public async Task<IQueryResult<bool>> InsertRoleAsync(TRole role)
         {
             var n = await context.Repository<TRole>().InsertAsync(role);
-            return (n != null).Result();
+            return (n > 0).Result();
         }
 
         public async Task<IQueryResult<bool>> DeleteRoleAsync(TRole role)

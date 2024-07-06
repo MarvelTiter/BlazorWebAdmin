@@ -35,24 +35,24 @@
         </NotAuthorized>
     </AuthorizeView>
     @*清除LocalStorage*@
-    <div class="nav-menu-item" @onclick=ClearLocalStorage title="@Localizer["NavMenu.TipTitle.ClearStorage"]">
+    <div class="nav-menu-item" @onclick="@ClearLocalStorage" title="@Localizer["NavMenu.TipTitle.ClearStorage"]">
         <SvgIcon IconName="clear"
                  ClassName="nav-menu-icon" />
     </div>
     @*系统设置*@
-    <div class="nav-menu-item" @onclick=OpenSetting title="@Localizer["NavMenu.TipTitle.SysSetting"]">
+    <div class="nav-menu-item" @onclick="@OpenSetting" title="@Localizer["NavMenu.TipTitle.SysSetting"]">
         <SvgIcon IconName="setting">
         </SvgIcon>
     </div>
 </div>
 
 @code {
-    [Parameter] public string Class { get; set; }
+    [Parameter] public string? Class { get; set; }
     FullScreen? fullscreen;
     Profile? profile;
-    [Inject] IStringLocalizer<NavMenu> Localizer { get; set; }
-    [Inject] IOptionsMonitor<CultureOptions> CultureOptions { get; set; }
-    [Inject] IOptionsMonitor<Token> Token { get; set; }
+    [Inject, NotNull] IStringLocalizer<NavMenu>? Localizer { get; set; }
+    [Inject, NotNull] IOptionsMonitor<CultureOptions>? CultureOptions { get; set; }
+    [Inject, NotNull] IOptionsMonitor<Token>? Token { get; set; }
 
     async Task ToggleFullScreen()
     {

@@ -51,7 +51,7 @@ namespace Project.Constraints.UI.Extensions
             return result;
         }
 
-        public static async Task<TData> ShowDialogAsync<TData>(this IUIService service, string title, RenderFragment<TData> content, TData? param = default, bool? edit = null, string? width = null)
+        public static async Task<TData> ShowDialogAsync<TData>(this IUIService service, string title, RenderFragment<TData?> content, TData? param = default, bool? edit = null, string? width = null)
         {
             return await ShowDialogAsync(service, content, param, edit, config =>
             {
@@ -60,7 +60,7 @@ namespace Project.Constraints.UI.Extensions
             });
         }
 
-        public static async Task<TData> ShowDialogAsync<TData>(this IUIService service, RenderFragment<TData> content, TData? param = default, bool? edit = null, Action<FlyoutOptions<TData>>? config = null)
+        public static async Task<TData> ShowDialogAsync<TData>(this IUIService service, RenderFragment<TData?> content, TData? param = default, bool? edit = null, Action<FlyoutOptions<TData>>? config = null)
         {
             var options = new FlyoutOptions<TData>();
             config?.Invoke(options);
@@ -80,7 +80,7 @@ namespace Project.Constraints.UI.Extensions
             return result;
         }
 
-        public static async Task<TReturn> ShowDialogAsync<TInput, TReturn>(this IUIService service, RenderFragment<TInput> content, TInput data, Action<FlyoutOptions<TReturn>>? config = null)
+        public static async Task<TReturn> ShowDialogAsync<TInput, TReturn>(this IUIService service, RenderFragment<TInput?> content, TInput data, Action<FlyoutOptions<TReturn>>? config = null)
         {
             var options = new FlyoutOptions<TReturn>();
             config?.Invoke(options);

@@ -4,9 +4,9 @@ namespace Project.Constraints.Common
 {
     public static class ObjectExtensions
     {
-        public static T ConvertTo<T>(this object value, object? defaultValue = null) => (T)ConvertTo(typeof(T), value, defaultValue);
+        public static T? ConvertTo<T>(this object value, object? defaultValue = null) => (T?)ConvertTo(typeof(T), value, defaultValue);
 
-        public static object ConvertTo(Type type, object value, object? defaultValue = null)
+        public static object? ConvertTo(Type type, object value, object? defaultValue = null)
         {
             if (value == null || value == DBNull.Value)
                 return defaultValue;

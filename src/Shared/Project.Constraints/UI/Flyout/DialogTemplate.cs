@@ -15,13 +15,13 @@ namespace Project.Constraints.UI.Flyout
     }
     public class DialogTemplate<TInput, TReturn> : JsComponentBase, IFeedback<TReturn>
     {
-        [Parameter, NotNull] public FormParam<TInput> DialogModel { get; set; }
-        [Parameter, NotNull] public RenderFragment<TInput> ChildContent { get; set; }
-        [Parameter, NotNull] public FlyoutOptions<TReturn> Options { get; set; }
-        [Inject] protected IStringLocalizer<TInput> Localizer { get; set; }
+        [Parameter, NotNull] public FormParam<TInput>? DialogModel { get; set; }
+        [Parameter, NotNull] public RenderFragment<TInput?>? ChildContent { get; set; }
+        [Parameter, NotNull] public FlyoutOptions<TReturn>? Options { get; set; }
+        [Inject, NotNull] protected IStringLocalizer<TInput>? Localizer { get; set; }
         protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TInput).Name}.{prop}"];
 
-        protected TInput Value
+        protected TInput? Value
         {
             get
             {
@@ -33,7 +33,7 @@ namespace Project.Constraints.UI.Flyout
             }
         }
 
-        protected virtual TReturn ReturnValue { get; set; }
+        protected virtual TReturn? ReturnValue { get; set; }
 
         protected bool Edit => DialogModel.Edit;
         protected override void OnInitialized()
@@ -61,12 +61,12 @@ namespace Project.Constraints.UI.Flyout
 
         protected Task CloseAsync()
         {
-            return Options.OnClose();
+            return Options.OnClose?.Invoke() ?? Task.CompletedTask;
         }
 
         protected Task OkAsync()
         {
-            return Options.OnOk();
+            return Options.OnOk?.Invoke() ?? Task.CompletedTask;
         }
 
         public Task OnCancelAsync()
@@ -96,6 +96,6 @@ namespace Project.Constraints.UI.Flyout
 
     public class DialogTemplate<TValue> : DialogTemplate<TValue, TValue>
     {
-        protected override TValue ReturnValue { get => Value; set => Value = value; }
+        protected override TValue? ReturnValue { get => Value; set => Value = value; }
     }
 }

@@ -34,9 +34,9 @@ else
 
 
 @code {
-    [Parameter] public RouteMenu Route { get; set; }
+    [Parameter, NotNull] public RouteMenu? Route { get; set; }
 
-    [Inject] IRouterStore RouterStore { get; set; }
+    [Inject, NotNull] IRouterStore? RouterStore { get; set; }
 
     public RouteMenu Current => Route;
     // public RouteMenu Current => onlyOneChildren ? Children.First() : Route;

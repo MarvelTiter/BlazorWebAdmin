@@ -8,7 +8,7 @@ namespace Project.Constraints.UI.Table;
 [IgnoreAutoInject]
 public record ColumnInfo(PropertyInfo Property)
 {
-    public string Label { get; set; }
+    [NotNull] public string? Label { get; set; }
     public string PropertyOrFieldName => Property.Name;
     public int Index { get; set; }
     public int? Row { get; set; }
@@ -28,7 +28,7 @@ public record ColumnInfo(PropertyInfo Property)
     public Dictionary<string, string>? EnumValues { get; set; }
     public bool Sortable { get; set; }
     public Func<object, string>? ValueFormat { get; set; }
-    public Dictionary<string, string> TagColors { get; set; }
+    public Dictionary<string, string>? TagColors { get; set; }
     public Func<string, Dictionary<string, object>>? AddCellOptions { get; set; }
     public InputType? InputType { get; set; }
     public RenderFragment<object?>? CellTemplate { get; set; }

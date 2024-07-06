@@ -10,13 +10,13 @@ namespace Project.Web.Shared.Components
 {
     public partial class Camera : JsComponentBase, ICameraObject
     {
-        [Inject] public IProtectedLocalStorage Storage { get; set; }
-        [Inject] public IOptionsMonitor<AppSetting> AppOptions { get; set; }
+        [Inject, NotNull] public IProtectedLocalStorage? Storage { get; set; }
+        [Inject, NotNull] public IOptionsMonitor<AppSetting>? AppOptions { get; set; }
         [Parameter] public bool AutoPlay { get; set; }
         [Parameter] public bool EnableClip { get; set; }
         [Parameter] public int Width { get; set; }
         [Parameter] public int Height { get; set; }
-        [Parameter] public RenderFragment<ICameraObject> DeviceSelectorRender { get; set; }
+        [Parameter] public RenderFragment<ICameraObject>? DeviceSelectorRender { get; set; }
         [Parameter] public EventCallback<CaptureInfo> OnCapture { get; set; }
         [Parameter] public bool AutoDownload { get; set; }
         [Parameter] public Resolution? CameraResolution { get; set; }
@@ -43,13 +43,13 @@ namespace Project.Web.Shared.Components
         private string? selectedDeviceId = null;
         public class DeviceInfo
         {
-            public string DeviceId { get; set; }
-            public string Label { get; set; }
-            public string GroupId { get; set; }
+            [NotNull] public string? DeviceId { get; set; }
+            [NotNull] public string? Label { get; set; }
+            public string? GroupId { get; set; }
             /// <summary>
             /// videoinput | audioouput | audioinput
             /// </summary>
-            public string Kind { get; set; }
+            public string? Kind { get; set; }
         }
 
         public struct CaptureInfo
@@ -144,7 +144,7 @@ namespace Project.Web.Shared.Components
             var result = await InvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");
             if (result.Success)
             {
-                Devices = result.Payload;
+                Devices = result.Payload ?? [];
                 dropdownDevices.Clear();
                 dropdownDevices.AddRange(Devices.Where(d => d.Kind == "videoinput").Select(d => new Options<string>(d.Label, d.DeviceId)));
                 StateHasChanged();
@@ -152,7 +152,7 @@ namespace Project.Web.Shared.Components
             }
             else
             {
-                UI.Error(result.Message);
+                UI.Error(result.Message ?? "an error occured while enumerate devices");
                 return false;
             }
         }
@@ -196,7 +196,7 @@ namespace Project.Web.Shared.Components
             }
             else
             {
-                UI.Error(result.Message);
+                UI.Error(result.Message ?? "something wrong when try to open the camera");
             }
         }
 
@@ -233,7 +233,7 @@ namespace Project.Web.Shared.Components
             }
             else
             {
-                UI.Error(result.Message);
+                UI.Error(result.Message ?? "an error occured while closing the camera");
             }
         }
 
@@ -253,7 +253,7 @@ namespace Project.Web.Shared.Components
                 info = new CaptureInfo
                 {
                     Filename = filename,
-                    Content = result.Payload,
+                    Content = result.Payload!,
                 };
                 if (OnCapture.HasDelegate)
                 {
@@ -262,14 +262,14 @@ namespace Project.Web.Shared.Components
                 if (AutoDownload)
                 {
                     using var fs = File.Open(Path.Combine(AppConst.TempFilePath, $"{filename}.jpeg"), FileMode.Create, FileAccess.Write);
-                    fs.Write(Convert.FromBase64String(result.Payload));
+                    fs.Write(Convert.FromBase64String(result.Payload!));
                     await fs.FlushAsync();
                     _ = Js.DownloadFile(filename, "jpeg");
                 }
             }
             else
             {
-                UI.Error(result.Message);
+                UI.Error(result.Message ?? "an error occured while capture photo");
             }
             return info;
         }

@@ -11,10 +11,10 @@ namespace Project.Constraints.UI.Builders
         where TPropModel : DefaultProp, new()
     {
 
-        protected TValue value;
-        protected EventCallback<TValue> callback;
-        protected Action<TValue> assignAction;
-        protected Func<TValue, Task> Callback;
+        protected TValue? value;
+        protected EventCallback<TValue>? callback;
+        protected Action<TValue>? assignAction;
+        protected Func<TValue, Task>? Callback;
         public BindableComponentBuilder()
         {
 
@@ -29,7 +29,7 @@ namespace Project.Constraints.UI.Builders
         {
             this.tpropHandle = tpropHandle;
         }
-                
+
         public IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression)
         {
             return Bind(expression, null);

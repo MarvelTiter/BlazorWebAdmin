@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 using Project.Constraints.Common;
 using Project.Constraints.Store.Models;
 using Project.Constraints.UI;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Project.AppCore.Layouts.LayoutComponents
 {
@@ -12,9 +13,9 @@ namespace Project.AppCore.Layouts.LayoutComponents
         private bool showContextmenu = false;
         private string contextmenuLeft = "";
         private string contextmenuTop = "";
-        private TagRoute current;
-        [CascadingParameter] public IDomEventHandler RootLayout { get; set; }
-        [Parameter] public string Class { get; set; }
+        private TagRoute? current;
+        [CascadingParameter, NotNull] public IDomEventHandler? RootLayout { get; set; }
+        [Parameter] public string? Class { get; set; }
         private int navMenuWidth = 200;
         protected override void OnInitialized()
         {

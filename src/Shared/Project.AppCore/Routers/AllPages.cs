@@ -9,9 +9,9 @@ namespace Project.AppCore.Routers
     internal static class AllPages
     {
         public static IList<Assembly> Assemblies { get; }
-        public static IList<RouterMeta> AllRoutes { get; }
+        public static IList<RouterMeta> AllRoutes { get; } = [];
         public static IEnumerable<RouteMenu> RouteMenu { get; } = new List<RouteMenu>();
-        static List<RouterMeta> Groups { get; }
+        static List<RouterMeta> Groups { get; } = [];
         static AllPages()
         {
             var entryAssembly = Assembly.GetEntryAssembly();
@@ -23,12 +23,11 @@ namespace Project.AppCore.Routers
             var referencedAssemblies = entryAssembly.GetReferencedAssemblies().Select(Assembly.Load);
             Assemblies = new List<Assembly> { entryAssembly }.Union(referencedAssemblies).ToList();
             List<RouterMeta> routes = new();
-            Groups = new List<RouterMeta>();
             foreach (var assembly in Assemblies)
             {
                 routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).SelectMany(GetRouterMeta));
             }
-            AllRoutes = routes.Concat(Groups).OrderBy(r => r.Sort).ToList();
+            AllRoutes = [.. routes.Concat(Groups).OrderBy(r => r.Sort)];
         }
 
         private static IEnumerable<RouterMeta> GetRouterMeta(Type t)

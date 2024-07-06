@@ -5,7 +5,7 @@
 </div>
 
 @code {
-    [Parameter] public FormItemContext Context { get; set; }
+    [Parameter, NotNull] public FormItemContext? Context { get; set; }
     string? iconName;
     protected override void OnInitialized()
     {

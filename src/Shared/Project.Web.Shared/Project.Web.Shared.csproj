@@ -5,6 +5,13 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Components\TwoSidePage\**" />
+	  <Content Remove="Components\TwoSidePage\**" />
+	  <EmbeddedResource Remove="Components\TwoSidePage\**" />
+	  <None Remove="Components\TwoSidePage\**" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />

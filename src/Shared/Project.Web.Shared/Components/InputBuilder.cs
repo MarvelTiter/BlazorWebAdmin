@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using Project.Constraints.Common;
 using Project.Constraints.Common.Attributes;
 using Project.Constraints.UI;
 using Project.Constraints.UI.Extensions;
-using Project.Constraints.UI.Table;
 using System.Collections.Concurrent;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using static Project.Web.Shared.Components.InputBuilderHelper;
@@ -39,13 +36,13 @@ namespace Project.Web.Shared.Components
     }
     public class InputBuilder<TData> : ComponentBase
     {
-        [Parameter] public ColumnInfo Column { get; set; }
-        [Parameter] public IUIService UI { get; set; }
-        [Parameter] public object Reciver { get; set; }
-        [Parameter, NotNull] public TData Data { get; set; }
+        [Parameter, NotNull] public ColumnInfo? Column { get; set; }
+        [Parameter, NotNull] public IUIService? UI { get; set; }
+        [Parameter, NotNull] public object? Reciver { get; set; }
+        [Parameter, NotNull] public TData? Data { get; set; }
         [CascadingParameter] public bool Edit { get; set; }
 
-        private string TempValue { get; set; }
+        private string TempValue { get; set; } = string.Empty;
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
@@ -121,7 +118,7 @@ namespace Project.Web.Shared.Components
         private Task UpdateValue(ColumnInfo col)
         {
             //property.SetValue(Data, ObjectExtensions.ConvertTo(property.PropertyType, TempValue));
-            col.SetValue(Data, ObjectExtensions.ConvertTo(col.DataType, TempValue));
+            col.SetValue(Data, ObjectExtensions.ConvertTo(col.DataType, TempValue) ?? default!);
             return Task.CompletedTask;
         }
 

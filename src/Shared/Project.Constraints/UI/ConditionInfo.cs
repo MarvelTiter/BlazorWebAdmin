@@ -22,7 +22,7 @@ public enum CompareType
 }
 public class ConditionInfo
 {
-    public ConditionInfo(string Name, CompareType Type, object Value, Type ValueType, bool Legal)
+    public ConditionInfo(string Name, CompareType Type, object? Value, Type ValueType, bool Legal)
     {
         this.Name = Name;
         this.Type = Type;
@@ -35,10 +35,12 @@ public class ConditionInfo
 
     }
     [JsonIgnore]
-    public Type ValueType { get; set; }
+    [NotNull]
+    public Type? ValueType { get; set; }
     public ExpressionType? LinkType { get; set; }
-    public string Name { get; set; }
+    [NotNull]
+    public string? Name { get; set; }
     public CompareType Type { get; set; }
-    public object Value { get; set; }
+    public object? Value { get; set; }
     public bool Legal { get; set; }
 }

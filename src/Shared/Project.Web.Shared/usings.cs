@@ -7,3 +7,4 @@ global using Project.Constraints.Models.Request;
 global using Project.Constraints.Models;
 global using Project.Constraints.UI.Table;
 global using Microsoft.Extensions.Localization;
+global using System.Diagnostics.CodeAnalysis;

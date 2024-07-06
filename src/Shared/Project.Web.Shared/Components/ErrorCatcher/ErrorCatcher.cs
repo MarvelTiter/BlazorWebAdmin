@@ -23,14 +23,14 @@ namespace Project.Web.Shared.Components
         private IErrorBoundaryLogger? ErrorBoundaryLogger { get; set; }
 
         [Parameter] public bool ShowMessage { get; set; }
-        [Inject] IRouterStore Router { get; set; }
+        [Inject, NotNull] IRouterStore? Router { get; set; }
         /// <summary>
         /// 
         /// </summary>
         protected Exception? Exception { get; set; }
 
-        public event Func<Exception, Task> OnHandleExcetionAsync;
-        public event Action<Exception> OnHandleExcetion;
+        public event Func<Exception, Task>? OnHandleExcetionAsync;
+        public event Action<Exception>? OnHandleExcetion;
 
         protected override void OnInitialized()
         {
@@ -77,8 +77,7 @@ namespace Project.Web.Shared.Components
             Recover();
         }
 
-        [Inject]
-        public IUIService UI { get; set; }
+        [Inject, NotNull] public IUIService? UI { get; set; }
         /// <summary>
         /// OnErrorAsync 方法
         /// </summary>
@@ -89,6 +88,11 @@ namespace Project.Web.Shared.Components
             {
                 UI.Notify(MessageType.Error, "程序异常", exception.Message);
                 Logger.LogError(exception, exception.Message);
+            }
+            OnHandleExcetion?.Invoke(exception);
+            if (OnHandleExcetionAsync != null)
+            {
+                return OnHandleExcetionAsync(exception);
             }
             return Task.CompletedTask;
         }

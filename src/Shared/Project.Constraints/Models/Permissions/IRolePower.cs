@@ -2,15 +2,15 @@
 {
     public interface IRolePower
     {
-        string RoleId { get; set; }
-        string PowerId { get; set; }
+        [NotNull] string? RoleId { get; set; }
+        [NotNull] string? PowerId { get; set; }
     }
     [LightTable(Name = "ROLE_POWER")]
-    public class RolePower: IRolePower
+    public class RolePower : IRolePower
     {
         [LightColumn(Name = "ROLE_ID", PrimaryKey = true)]
-        public string RoleId { get; set; }
+        [NotNull] public string? RoleId { get; set; }
         [LightColumn(Name = "POWER_ID", PrimaryKey = true)]
-        public string PowerId { get; set; }
+        [NotNull] public string? PowerId { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Project.Constraints.UI.Extensions
             return service.BuildSelect<KeyValuePair<string, string>, string>(receiver, options.ToList()).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key);
         }
 
-        public static ISelectInput<SelectProp, KeyValuePair<TValue, string>, TValue> BuildDictionarySelect<TValue>(this IUIService service, object receiver, Dictionary<TValue, string> options)
+        public static ISelectInput<SelectProp, KeyValuePair<TValue, string>, TValue> BuildDictionarySelect<TValue>(this IUIService service, object receiver, Dictionary<TValue, string> options) where TValue : notnull
         {
             return service.BuildSelect<KeyValuePair<TValue, string>, TValue>(receiver, options.ToList()).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key);
         }

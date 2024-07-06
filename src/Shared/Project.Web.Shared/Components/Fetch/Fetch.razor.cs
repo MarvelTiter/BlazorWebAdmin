@@ -5,8 +5,8 @@ namespace Project.Web.Shared.Components
 {
     public partial class Fetch<TData>
     {
-        [Parameter] public string Url { get; set; }
-        [Parameter] public string Method { get; set; }
+        [Parameter] public string? Url { get; set; }
+        [Parameter] public string? Method { get; set; }
         [Parameter] public object? Body { get; set; }
         [Parameter] public bool FetchOnLoaded { get; set; }
         [Parameter] public EventCallback OnCompleted { get; set; }

@@ -19,7 +19,7 @@
         @(UI.BuildSelect<ColumnInfo, ColumnInfo>(this, Columns)
             .ValueExpression(c => c)
             .LabelExpression(c => Localizer == null ? c.Label : Localizer[c.Label])
-            .Bind(() => selectedField, NotifyChanged)
+            .Bind(() => selectedField!, NotifyChanged)
             .Render())
     </MCol>
     <MCol ColSpan="4">
@@ -48,38 +48,34 @@
             return UI.BuildSelect<KeyValuePair<string, string>, string>(this, selectedField.EnumValues!.ToList())
             .LabelExpression(kv => kv.Value)
             .ValueExpression(kv => kv.Key)
-            .Bind(() => stringValue, NotifyChanged)
+            .Bind(() => stringValue!, NotifyChanged)
             .Render();
         }
         else
         {
-            return UI.BuildInput(this).Bind(() => stringValue, NotifyChanged).Render();
+            return UI.BuildInput(this).Bind(() => stringValue!, NotifyChanged).Render();
         }
     }
     bool check = true;
-    string stringValue;
-    string currentField;
+    string stringValue = string.Empty;
+    string? currentField;
     DateTime dateValue = DateTime.Now;
     ColumnInfo? selectedField;
 
     CompareType type;
     ExpressionType LinkType = ExpressionType.AndAlso;
-    [Parameter]
-    public List<ColumnInfo> Columns { get; set; }
-    [Parameter]
-    public ConditionInfo Info { get; set; }
-    [Parameter]
-    public EventCallback<ConditionInfo> InfoChanged { get; set; }
+    [Parameter, NotNull]
+    public List<ColumnInfo>? Columns { get; set; }
+    [Parameter] public ConditionInfo? Info { get; set; }
+    [Parameter] public EventCallback<ConditionInfo> InfoChanged { get; set; }
     [Parameter]
     public EventCallback<ConditionInfo> OnChanged { get; set; }
     [Parameter]
-    public string Style { get; set; }
+    public string? Style { get; set; }
     [Parameter]
     public int Index { get; set; }
-    [Parameter]
-    public IStringLocalizer Localizer { get; set; }
-    [Parameter]
-    public IStringLocalizer TableLocalizer { get; set; }
+    [Parameter, NotNull] public IStringLocalizer? Localizer { get; set; }
+    [Parameter, NotNull] public IStringLocalizer? TableLocalizer { get; set; }
 
     public void InitStatus(ConditionInfo info)
     {
@@ -89,7 +85,7 @@
         //StateHasChanged();
     }
 
-    object GetInnerValue(out bool legal)
+    object? GetInnerValue(out bool legal)
     {
         if (selectedField?.DataType == typeof(DateTime))
         {
@@ -98,15 +94,15 @@
         }
         else if (selectedField?.EnumValues != null && selectedField.IsEnum)
         {
-            legal = stringValue.IsEnable();
+            legal = stringValue!.IsEnable();
             return stringValue;
         }
         else
         {
-            legal = stringValue.IsEnable();
+            legal = stringValue!.IsEnable();
             if (legal && IsNumberOrDateTime())
             {
-                legal = stringValue.IsNumeric<int>(out _);
+                legal = stringValue!.IsNumeric<int>(out _);
             }
             return stringValue;
         }
@@ -144,7 +140,7 @@
         var attr = Attribute.GetCustomAttribute(member, typeof(DisplayAttribute));
         if (attr is DisplayAttribute display)
         {
-            return display.Name;
+            return display.Name!;
         }
         return "";
     }

@@ -8,13 +8,13 @@ namespace Project.Constraints.UI.Flyout
 {
     public sealed class FormDialogTemplate<TValue> : DialogTemplate<TValue> where TValue : class, new()
     {
-        [Parameter] public IEnumerable<ColumnInfo> Columns { get; set; }
+        [Parameter, NotNull] public IEnumerable<ColumnInfo>? Columns { get; set; }
         FormOptions<TValue>? options;
         public override Task<bool> OnPostAsync()
         {
             if (options != null && options.Validate != null)
             {
-               var flag = Options.PostCheck?.Invoke(Value, options.Validate) ?? options.Validate.Invoke();
+                var flag = Options.PostCheck?.Invoke(Value, options.Validate) ?? options.Validate.Invoke();
                 return Task.FromResult(flag);
             }
             return base.OnPostAsync();

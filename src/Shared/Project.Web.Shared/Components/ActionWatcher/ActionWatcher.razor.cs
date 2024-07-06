@@ -14,14 +14,14 @@ namespace Project.Web.Shared.Components
             Debounce,
             Throttle
         }
-        [Parameter] public RenderFragment ChildContent { get; set; }
+        [Parameter] public RenderFragment? ChildContent { get; set; }
         [Parameter] public bool WatchRoot { get; set; }
         [Parameter] public int Timeout { get; set; } = 1000 * 60 * 15;
         [Parameter] public EventCallback Callback { get; set; }
         [Parameter] public WatchType Type { get; set; }
 
-        public DotNetObjectReference<ActionWatcher> objRef;
-        public ElementReference container;
+        public DotNetObjectReference<ActionWatcher>? objRef;
+        public ElementReference? container;
         protected override async ValueTask Init()
         {
             objRef = DotNetObjectReference.Create(this);
@@ -30,7 +30,7 @@ namespace Project.Web.Shared.Components
                 instance = objRef,
                 type = Type,
                 timeout = Timeout,
-                target = WatchRoot ? null : (object)container
+                target = WatchRoot ? null : container
             });
         }
         [JSInvokable("Call")]

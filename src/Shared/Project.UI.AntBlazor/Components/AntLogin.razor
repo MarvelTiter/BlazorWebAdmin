@@ -23,9 +23,9 @@
 
 @code {
 
-    [Inject] IStringLocalizer Localizer { get; set; }
-    [Parameter] public LoginFormModel LoginModel { get; set; }
-    [Parameter] public Func<Task> HandleLogin { get; set; }
+    [Inject, NotNull] IStringLocalizer? Localizer { get; set; }
+    [Parameter, NotNull] public LoginFormModel? LoginModel { get; set; }
+    [Parameter, NotNull] public Func<Task>? HandleLogin { get; set; }
 
     bool loading = false;
 

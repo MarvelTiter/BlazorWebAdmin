@@ -27,7 +27,6 @@ namespace Project.Web.Shared.Components
         [Parameter] public CompareType Compare { get; set; } = CompareType.Equal;
         [Parameter] public ColumnInfo? Field { get; set; }
         [Parameter] public object? DefaultValue { get; set; }
-        [Inject] public ILogger<Condition> Logger { get; set; }
         public int Index { get; set; }
         DateTime dateValue = DateTime.Now;
         string stringValue = string.Empty;

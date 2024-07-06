@@ -6,25 +6,26 @@
 @using System.Globalization;
 @using Project.AppCore.Routers;
 @using Project.AppCore.Layouts.Layouts;
+@using System.Diagnostics.CodeAnalysis
 @inherits LayoutComponentBase
 @implements IDisposable
 @layout AuthorizedLayout
 
 <PageTitle>
-    @($"管理系统 - {AppSession.RouterStore.Current?.RouteTitle ?? "主页"}")
+    @($"管理系统 - {Context.RouterStore.Current?.RouteTitle ?? "主页"}")
 </PageTitle>
 
 <div class="page">
     <CascadingValue Value="this" IsFixed>
-        @if (AppSession.AppStore.Mode == LayoutMode.Classic)
+        @if (Context.AppStore.Mode == LayoutMode.Classic)
         {
             <ClassicLayout @ref=LayoutBase></ClassicLayout>
         }
-        else if (AppSession.AppStore.Mode == LayoutMode.Card)
+        else if (Context.AppStore.Mode == LayoutMode.Card)
         {
             <CardLayout @ref=LayoutBase></CardLayout>
         }
-        else if (AppSession.AppStore.Mode == LayoutMode.Line)
+        else if (Context.AppStore.Mode == LayoutMode.Line)
         {
             <LineLayout @ref=LayoutBase></LineLayout>
         }
@@ -38,14 +39,14 @@
     </CascadingValue>
 </div>
 @code {
-    [Inject] IAppSession AppSession { get; set; }
+    [CascadingParameter, NotNull] IAppSession? Context { get; set; }
     public LayoutBase? LayoutBase { get; set; }
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
         // WebSetting更新页面
-        AppSession.Update = StateHasChanged;
+        Context.Update = StateHasChanged;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -53,7 +54,7 @@
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            await AppSession.NotifyWebApplicationAccessedAsync();
+            await Context.NotifyWebApplicationAccessedAsync();
         }
     }
 

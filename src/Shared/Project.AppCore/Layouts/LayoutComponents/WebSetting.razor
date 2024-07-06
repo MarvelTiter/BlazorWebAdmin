@@ -31,9 +31,7 @@
     </div>
 </MCard>
 @code {
-    [Inject] IProtectedLocalStorage Storage { get; set; }
-    public event Action SettingChanged;
-    private bool showSetting;
+    [Inject, NotNull] IProtectedLocalStorage? Storage { get; set; }
     LayoutMode Mode
     {
         get => App.Mode ?? LayoutMode.Classic;
@@ -48,12 +46,6 @@
     async void SaveSetting()
     {
         await Storage.SetAsync(AppStore.KEY, App);
-        showSetting = false;
     }
 
-    public void Open()
-    {
-        showSetting = true;
-        StateHasChanged();
-    }
 }

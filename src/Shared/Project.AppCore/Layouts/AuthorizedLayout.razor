@@ -4,12 +4,14 @@
 @using Project.AppCore.Options;
 @using Project.AppCore.Routers;
 @using Project.Constraints
+@using System.Diagnostics.CodeAnalysis
 @inherits RootLayout
 @inject IProtectedLocalStorage LocalStorage
 @inject IOptionsMonitor<Token> Token
 @inject IOptionsMonitor<AppSetting> Setting
-<div @onclick="HandleRootClick"
-     @onkeydown=HandleKeyAction
+<div @onclick="@HandleRootClick"
+     @onkeydown="@HandleKeyDownAction"
+     @onkeyup="@HandleKeyUpAction"
      tabindex="0"
      @ref="RootWrapper">
     <CascadingValue Value="this">
@@ -36,14 +38,11 @@
 </div>
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationStateTask { get; set; }
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
-    [Inject]
-    public ILogger<AuthorizedLayout> Logger { get; set; }
-    [Inject] IAppSession AppSession { get; set; }
-    [Inject] IAuthenticationStateProvider AuthenticationStateProvider { get; set; }
+    [CascadingParameter] private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Inject, NotNull] public ILogger<AuthorizedLayout>? Logger { get; set; }
+    [CascadingParameter, NotNull] IAppSession? AppSession { get; set; }
+    [Inject, NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
     string? LauchUrl => Setting.CurrentValue.LauchUrl;
 
     protected override async Task OnInitializedAsync()
@@ -88,6 +87,6 @@
         {
             return UpdateUserToken();
         }
-        return AuthenticationStateProvider?.ClearState();
+        return AuthenticationStateProvider?.ClearState() ?? Task.CompletedTask;
     }
 }

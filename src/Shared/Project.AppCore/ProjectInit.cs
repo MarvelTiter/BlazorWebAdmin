@@ -76,7 +76,7 @@ public static class ProjectInit
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
         services.AddScoped<IAuthenticationStateProvider>(provider =>
         {
-            var auth = provider.GetService<AuthenticationStateProvider>() as CustomAuthenticationStateProvider;
+            var auth = (CustomAuthenticationStateProvider)provider.GetService<AuthenticationStateProvider>()!;
             return auth;
         });
 
@@ -141,21 +141,21 @@ public static class ProjectInit
         services.AddScoped<IUserService>(provider =>
         {
             var srv = provider.GetService(typeof(IUserService<>).MakeGenericType(setting.UserType));
-            return srv as IUserService;
+            return (srv as IUserService)!;
         });
         // permission
         services.AddScoped(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType), typeof(Services.PemissionService<,,,>).MakeGenericType(setting.PowerType, setting.RoleType, setting.RolePowerType, setting.UserRoleType));
         services.AddScoped<IPermissionService>(provider =>
         {
             var srv = provider.GetService(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType));
-            return srv as IPermissionService;
+            return (srv as IPermissionService)!;
         });
         // runlog
         services.AddScoped(typeof(IRunLogService<>), typeof(Services.RunLogService<>));
         services.AddScoped<IRunLogService>(provider =>
         {
             var srv = provider.GetService(typeof(IRunLogService<>).MakeGenericType(setting.RunlogType));
-            return srv as IRunLogService;
+            return (srv as IRunLogService)!;
         });
     }
 

@@ -63,7 +63,7 @@
     [Parameter]
     public RenderFragment? ReconnectRejectedTemplate { get; set; }
 
-    [Inject] public IReconnectorProvider Provider { get; set; }
+    [Inject, NotNull] public IReconnectorProvider? Provider { get; set; }
 
     public override Task SetParametersAsync(ParameterView parameters)
     {

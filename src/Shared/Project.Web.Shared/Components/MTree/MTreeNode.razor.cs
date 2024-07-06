@@ -5,12 +5,12 @@ namespace Project.Web.Shared.Components
 {
     public partial class MTreeNode<TNode>
     {
-        [Parameter]
-        public TNode NodeValue { get; set; }
-        [CascadingParameter]
-        public MTree<TNode> Root { get; set; }
-        [CascadingParameter]
-        public MTreeNode<TNode> Parent { get; set; }
+        [Parameter, NotNull]
+        public TNode? NodeValue { get; set; }
+        [CascadingParameter, NotNull]
+        public MTree<TNode>? Root { get; set; }
+        [CascadingParameter, NotNull]
+        public MTreeNode<TNode>? Parent { get; set; }
         [Parameter]
         public int Deepth { get; set; }
 
@@ -26,11 +26,11 @@ namespace Project.Web.Shared.Components
             }
         }
 
-        public string Key => Root.KeyExpression(NodeValue);
+        public string Key => Root.KeyExpression.Invoke(NodeValue);
 
         public bool Indeterminate { get; set; }
 
-        public IEnumerable<TNode> Children => Root.ChildrenExpression(NodeValue) ?? Enumerable.Empty<TNode>();
+        public IEnumerable<TNode> Children => Root.ChildrenExpression?.Invoke(NodeValue) ?? [];
 
         public bool HasChild => Children.Any();
 
