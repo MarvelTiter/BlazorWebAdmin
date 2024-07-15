@@ -31,6 +31,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypeScriptPackup", "TypeScr
 		utilsAggregation.ts = utilsAggregation.ts
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Generators", "Generators", "{7092C678-32D9-4414-9E1E-DCBFCDE36049}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiGenerator", "WebApiGenerator\WebApiGenerator.csproj", "{7C04E4EE-9036-43FB-9471-3384D6EABEDC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +65,10 @@ Global
 		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C04E4EE-9036-43FB-9471-3384D6EABEDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C04E4EE-9036-43FB-9471-3384D6EABEDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C04E4EE-9036-43FB-9471-3384D6EABEDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C04E4EE-9036-43FB-9471-3384D6EABEDC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +79,7 @@ Global
 		{64740E13-062E-40C1-AFB3-6F79BE848D71} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
 		{8D691E07-F967-495C-B1FC-3087ADB3CA4E} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
 		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50} = {0F196314-3413-403C-B39E-DDD6CA938D34}
+		{7C04E4EE-9036-43FB-9471-3384D6EABEDC} = {7092C678-32D9-4414-9E1E-DCBFCDE36049}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0371ABB4-6400-487C-9031-25B119AB8B9E}
