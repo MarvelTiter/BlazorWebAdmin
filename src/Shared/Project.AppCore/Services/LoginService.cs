@@ -4,60 +4,61 @@ using Project.AppCore.Auth;
 using Project.Constraints.Store;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
+using WebApiGenerator.Attributes;
 namespace Project.Services
 {
-    [ApiController]
-    [Route("[controller]/[action]")]
-    [Authorize]
-    public class LoginController
-    {
-        private readonly LoginService service;
+    //[ApiController]
+    //[Route("[controller]/[action]")]
+    //[Authorize]
+    //public class LoginController
+    //{
+    //    private readonly LoginService service;
 
-        public LoginController(LoginService service)
-        {
-            this.service = service;
-        }
+    //    public LoginController(LoginService service)
+    //    {
+    //        this.service = service;
+    //    }
 
-        [HttpGet]
-        public Task<IQueryResult<UserInfo>> Login(string username, string password) => service.LoginAsync(username, password);
+    //    [HttpGet]
+    //    public Task<IQueryResult<UserInfo>> Login(string username, string password) => service.LoginAsync(username, password);
 
-    }
+    //}
 
-    public class LoginServiceClient : ILoginService
-    {
-        private readonly IHttpClientFactory factory;
-        private readonly IUserStore store;
+    //public class LoginServiceClient : ILoginService
+    //{
+    //    private readonly IHttpClientFactory factory;
+    //    private readonly IUserStore store;
 
-        public LoginServiceClient(IHttpClientFactory factory, IUserStore store)
-        {
-            this.factory = factory;
-            this.store = store;
-        }
-        public Task<bool> CheckUser(UserInfo info)
-        {
-            throw new NotImplementedException();
-        }
+    //    public LoginServiceClient(IHttpClientFactory factory, IUserStore store)
+    //    {
+    //        this.factory = factory;
+    //        this.store = store;
+    //    }
+    //    public Task<bool> CheckUser(UserInfo info)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
 
-        public async Task<IQueryResult<UserInfo>> LoginAsync(string username, string password)
-        {
-            var client = factory.CreateClient("LoginServiceClient");
-            var result = await client.SendAsync(new HttpRequestMessage());
-            var content = await result.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<IQueryResult<UserInfo>>(content);
-        }
+    //    public async Task<IQueryResult<UserInfo>> LoginAsync(string username, string password)
+    //    {
+    //        var client = factory.CreateClient("LoginServiceClient");
+    //        var result = await client.SendAsync(new HttpRequestMessage());
+    //        var content = await result.Content.ReadAsStringAsync();
+    //        return JsonSerializer.Deserialize<IQueryResult<UserInfo>>(content);
+    //    }
 
-        public Task<IQueryResult<bool>> LogoutAsync()
-        {
-            throw new NotImplementedException();
-        }
+    //    public Task<IQueryResult<bool>> LogoutAsync()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
 
-        public Task<IQueryResult<bool>> UpdateLastLoginTimeAsync(UserInfo info)
-        {
-            throw new NotImplementedException();
-        }
-    }
-        
+    //    public Task<IQueryResult<bool>> UpdateLastLoginTimeAsync(UserInfo info)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
+    [WebController]
     public partial class LoginService : ILoginService
     {
         private readonly IProjectSettingService settingProvider;

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace WebApiGenerator
 {
     public class WebApiGeneratorHepers
     {
-        public const string Enums = @"""
+        public const string Enums = """
 namespace WebApiGenerator
 {
     public enum HttpMethod
@@ -16,7 +15,7 @@ namespace WebApiGenerator
     }
 }
 """;
-        public const string WebMethodAttribute = @"""
+        public const string WebMethodAttribute = """
 namespace WebApiGenerator
 {
     [System.AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
@@ -28,7 +27,7 @@ namespace WebApiGenerator
 }
 """;
 
-        public const string WebControllerAttribute = @"""
+        public const string WebControllerAttribute = """
 namespace WebApiGenerator
 {
     [System.AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
@@ -38,6 +37,7 @@ namespace WebApiGenerator
     }
 }
 """;
+        public const string WebControllerAttributeFullName = "WebApiGenerator.Attributes.WebControllerAttribute";
     }
 
     

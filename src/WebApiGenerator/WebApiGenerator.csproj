@@ -2,7 +2,13 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<EnforceExtendedAyalyzerRules>true</EnforceExtendedAyalyzerRules>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
+		<IsRoslynComponent>true</IsRoslynComponent>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
 	</PropertyGroup>
 
 	<ItemGroup>
