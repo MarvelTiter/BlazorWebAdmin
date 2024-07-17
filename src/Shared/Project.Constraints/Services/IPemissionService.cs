@@ -11,7 +11,7 @@ namespace Project.Constraints.Services
     //[Aspectable(AspectHandleType = typeof(LogAop))]
     [LogAop]
     [AutoInject]
-    public partial interface IPermissionService<TPower, TRole> : IPermissionService
+    public partial interface IPermissionService<TPower, TRole>
         where TPower : IPower
         where TRole : IRole
     {
@@ -19,7 +19,7 @@ namespace Project.Constraints.Services
         Task<IQueryCollectionResult<TPower>> GetPowerListAsync();
         Task<IQueryCollectionResult<TRole>> GetRoleListAsync(GenericRequest<TRole> req);
         Task<IQueryCollectionResult<TRole>> GetRoleListAsync();
-        new Task<IQueryCollectionResult<TPower>> GetPowerListByUserIdAsync(string usrId);
+        Task<IQueryCollectionResult<TPower>> GetPowerListByUserIdAsync(string usrId);
         Task<IQueryCollectionResult<TPower>> GetPowerListByRoleIdAsync(string roleId);
         Task<IQueryCollectionResult<TRole>> GetUserRolesAsync(string usrId);
         [LogInfo(Action = "修改用户角色", Module = "权限控制")]
@@ -40,5 +40,5 @@ namespace Project.Constraints.Services
         Task<IQueryResult<bool>> DeleteRoleAsync(TRole role);
     }
 
-    
+
 }

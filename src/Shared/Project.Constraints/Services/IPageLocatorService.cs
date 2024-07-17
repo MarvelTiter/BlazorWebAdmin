@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Project.Constraints.Services
 {
+    
     public interface IPageLocatorService
     {
         void SetPage<T>(string key);
@@ -34,5 +35,20 @@ namespace Project.Constraints.Services
             pages.TryRemove(key, out var _);
             pages.TryAdd(key, type);
         }
+    }
+
+    public static class PageLocatorServiceExtensions
+    {
+        public static Type? GetUserPageType(this IPageLocatorService locator) => locator.GetPage("USER_INDEX");
+        public static Type? GetDashboardType(this IPageLocatorService locator) => locator.GetPage("SYSTEM_DASHBOARD");
+        public static Type? GetPermissionPageType(this IPageLocatorService locator) => locator.GetPage("PERMISSION_INDEX");
+        public static Type? GetRolePermissionPageType(this IPageLocatorService locator) => locator.GetPage("ROLE_PERMISSION_INDEX");
+        public static Type? GetRunLogPageType(this IPageLocatorService locator) => locator.GetPage("RUNLOG_INDEX");
+
+        public static void SetUserPageType<T>(this IPageLocatorService locator) => locator.SetPage<T>("USER_INDEX");
+        public static void SetDashboardType<T>(this IPageLocatorService locator) => locator.SetPage<T>("SYSTEM_DASHBOARD");
+        public static void SetPermissionPageType<T>(this IPageLocatorService locator) => locator.SetPage<T>("PERMISSION_INDEX");
+        public static void SetRolePermissionPageType<T>(this IPageLocatorService locator) => locator.SetPage<T>("ROLE_PERMISSION_INDEX");
+        public static void SetRunLogPageType<T>(this IPageLocatorService locator) => locator.SetPage<T>("RUNLOG_INDEX");
     }
 }

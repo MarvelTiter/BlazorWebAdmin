@@ -18,6 +18,8 @@ using MT.Toolkit.LogTool;
 using MT.Toolkit.ReflectionExtension;
 using Project.AppCore.BackgroundServices;
 using Microsoft.AspNetCore.Components.Server.Circuits;
+using Project.Constraints.Models.Permissions;
+using Project.Web.Shared.Pages;
 namespace Project.AppCore;
 
 public static class ProjectInit
@@ -42,6 +44,14 @@ public static class ProjectInit
 
         var setting = new ProjectSetting();
 
+        //set default
+        setting.ConfigurePage(locator =>
+        {
+            locator.SetUserPageType<UserPage<User, Power, Role>>();
+            locator.SetRunLogPageType<OperationLog<RunLog>>();
+            locator.SetPermissionPageType<PermissionSetting<Power, Role>>();
+            locator.SetRolePermissionPageType<RolePermission<Power, Role>>();
+        });
         action.Invoke(setting);
 
         ArgumentNullException.ThrowIfNull(AppConst.App.Name);
@@ -144,12 +154,12 @@ public static class ProjectInit
             return (srv as IUserService)!;
         });
         // permission
-        services.AddScoped(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType), typeof(Services.PemissionService<,,,>).MakeGenericType(setting.PowerType, setting.RoleType, setting.RolePowerType, setting.UserRoleType));
-        services.AddScoped<IPermissionService>(provider =>
-        {
-            var srv = provider.GetService(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType));
-            return (srv as IPermissionService)!;
-        });
+        services.AddScoped(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType), typeof(Services.PermissionService<,,,>).MakeGenericType(setting.PowerType, setting.RoleType, setting.RolePowerType, setting.UserRoleType));
+        services.AddScoped(typeof(IPermissionService), typeof(Services.PermissionService<,,>).MakeGenericType(setting.PowerType, setting.RolePowerType, setting.UserRoleType));
+        //{
+        //    var srv = provider.GetService(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType));
+        //    return (srv as IPermissionService)!;
+        //});
         // runlog
         services.AddScoped(typeof(IRunLogService<>), typeof(Services.RunLogService<>));
         services.AddScoped<IRunLogService>(provider =>
@@ -201,7 +211,7 @@ public static class ProjectInit
         app.UseMiddleware<RedirectToLauchUrlMiddleware>();
         app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/download"), a => a.UseMiddleware<FileDownloaderMiddleware>());
         app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/ip.client"), a => a.UseMiddleware<GetClientIpMiddleware>());
-        
+
         var envFunc = app.GetPropertyAccessor<IHostEnvironment>("Environment");
         AppConst.Environment = envFunc.Invoke(app);
 

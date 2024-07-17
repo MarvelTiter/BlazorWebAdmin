@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Project.AppCore.Controllers
 {
-    [Route("{controller}/{action}")]
+    [Route("api/[controller]/[action]")]
     public class CultureController : ControllerBase
     {
         public IActionResult Set(string culture, string redirectUri)
@@ -17,6 +17,11 @@ namespace Project.AppCore.Controllers
             }
 
             return LocalRedirect(redirectUri);
+        }
+
+        public IActionResult Hello()
+        {
+            return Ok("hello world");
         }
     }
 }

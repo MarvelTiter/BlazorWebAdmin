@@ -3,7 +3,8 @@ using LightORM.Extension;
 namespace Project.AppCore.Services
 {
     [IgnoreAutoInject]
-    public partial class PemissionService<TPower, TRole, TRolePower, TUserRole> : IPermissionService<TPower, TRole>
+    [WebApiGenerator.Attributes.WebController]
+    public partial class PermissionService<TPower, TRole, TRolePower, TUserRole> : IPermissionService<TPower, TRole>
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
         where TRolePower : class, IRolePower, new()
@@ -11,7 +12,7 @@ namespace Project.AppCore.Services
     {
         private readonly IExpressionContext context;
 
-        public PemissionService(IExpressionContext context)
+        public PermissionService(IExpressionContext context)
         {
             this.context = context;
         }
@@ -173,12 +174,31 @@ namespace Project.AppCore.Services
             }
 
         }
+    }
 
-        async Task<IQueryCollectionResult<IPower>> IPermissionService.GetPowerListByUserIdAsync(string usrId)
+    [IgnoreAutoInject]
+    [WebApiGenerator.Attributes.WebController(Route = "permission")]
+    public class PermissionService<TPower, TRolePower, TUserRole> : IPermissionService
+        where TPower : class, IPower, new()
+        where TRolePower : class, IRolePower, new()
+        where TUserRole : class, IUserRole, new()
+    {
+        private readonly IExpressionContext context;
+
+        public PermissionService(IExpressionContext context)
         {
-            var powers = await GetPowerListByUserIdAsync(usrId);
-            var ips = powers.Payload.Cast<IPower>();
-            return ips.CollectionResult();
+            this.context = context;
+        }
+        public async Task<IQueryCollectionResult<IPower>> GetPowerListByUserIdAsync(string usrId)
+        {
+            var powers = await context.Select<TPower, TRolePower, TUserRole>(w => new { w.Tb1.PowerId, w.Tb1.PowerName, w.Tb1.ParentId, w.Tb1.PowerType, w.Tb1.PowerLevel, w.Tb1.Icon, w.Tb1.Path, w.Tb1.Sort })
+                                      .Distinct()
+                                      .InnerJoin<TRolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
+                                      .InnerJoin<TUserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
+                                      .Where(w => w.Tb3.UserId == usrId)
+                                      .OrderBy(w => w.Tb1.Sort)
+                                      .ToListAsync();
+            return powers.Cast<IPower>().CollectionResult();
         }
     }
 }

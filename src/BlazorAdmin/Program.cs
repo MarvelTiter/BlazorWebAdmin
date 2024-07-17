@@ -2,8 +2,11 @@ using BlazorAdmin;
 using BlazorAdmin.TestPages;
 using Project.AppCore;
 using Project.Constraints;
+using Project.Constraints.Models.Permissions;
+using Project.Constraints.Services;
 using Project.Services;
 using Project.UI.AntBlazor;
+using Project.Web.Shared.Pages;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,14 +24,10 @@ builder.AddProject(setting =>
     setting.App.Name = "Demo";
     setting.App.Id = "Test";
     setting.App.Company = "Marvel";
-    setting.ConfigurePage(locator =>
-    {
-        locator.SetPage<TestPage4>("LocatorTest");
-    });
     setting.ConfigureSettingProviderType<CustomSetting>();
     setting.AddInterceotor<AdditionalTest>();
 });
-
+builder.Services.AddControllers().AddApplicationPart(typeof(Project.AppCore._Imports).Assembly);
 builder.AddDefaultLightOrm();
 
 var app = builder.Build();
@@ -42,5 +41,6 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddAdditionalAssemblies([.. AppConst.Pages]);
+app.MapControllers();
 
 app.Run();

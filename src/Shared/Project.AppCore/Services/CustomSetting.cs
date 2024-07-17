@@ -11,7 +11,6 @@ namespace Project.Services
     public class CustomSetting : BasicSetting, IProjectSettingService
     {
         private readonly IExpressionContext context;
-
         private readonly IWatermarkServiceFactory watermarkServiceFactory;
         private readonly IPermissionService permissionService;
 
