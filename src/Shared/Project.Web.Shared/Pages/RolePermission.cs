@@ -48,7 +48,7 @@ namespace Project.Web.Shared.Pages
         /// <returns></returns>
         async Task GetAllPowersAsync()
         {
-            var result = await PermissionSrv.GetPowerListAsync();
+            var result = await PermissionSrv.GetAllPowerAsync();
             allPower = result.Payload;
         }
         /// <summary>

@@ -2,7 +2,6 @@
 using WebApiGenerator.Attributes;
 namespace Project.Services
 {
-    [WebController]
     public partial class LoginService : ILoginService
     {
         private readonly IProjectSettingService settingProvider;

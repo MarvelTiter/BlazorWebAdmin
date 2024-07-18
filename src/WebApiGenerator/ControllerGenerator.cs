@@ -56,6 +56,19 @@ namespace WebApiGenerator
                     members.Add(methodSyntax);
                 }
 
+                Debugger.Launch();
+                var tree = source.SemanticModel.Compilation.GetSemanticModel(source.TargetNode.SyntaxTree);
+
+                var syntaxc = source.TargetSymbol.DeclaringSyntaxReferences;
+                var cn = (INamedTypeSymbol)source.TargetSymbol;
+                var ems = cn.GetMembers();
+                var ms = cn.BaseType?.GetMembers();
+                //var f = ms.Value.First() as IFieldSymbol;
+                //var syntax = f.DeclaringSyntaxReferences.First().GetSyntax();
+                foreach (var e in ms ?? [])
+                {
+                    var syntax = e.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax();
+                }
                 var unit = CompilationUnit()
                   .AddMembers(WebApiGeneratorHepers.CreateNamespaceDeclaration(source, out var usings)
                   .AddMembers(WebApiGeneratorHepers.CreateControllerClassDeclaration(source)

@@ -16,9 +16,9 @@ namespace Project.Constraints.Services
         where TRole : IRole
     {
         Task<IQueryCollectionResult<TPower>> GetPowerListAsync(GenericRequest<TPower> req);
-        Task<IQueryCollectionResult<TPower>> GetPowerListAsync();
+        Task<IQueryCollectionResult<TPower>> GetAllPowerAsync();
         Task<IQueryCollectionResult<TRole>> GetRoleListAsync(GenericRequest<TRole> req);
-        Task<IQueryCollectionResult<TRole>> GetRoleListAsync();
+        Task<IQueryCollectionResult<TRole>> GetAllRoleAsync();
         Task<IQueryCollectionResult<TPower>> GetPowerListByUserIdAsync(string usrId);
         Task<IQueryCollectionResult<TPower>> GetPowerListByRoleIdAsync(string roleId);
         Task<IQueryCollectionResult<TRole>> GetUserRolesAsync(string usrId);

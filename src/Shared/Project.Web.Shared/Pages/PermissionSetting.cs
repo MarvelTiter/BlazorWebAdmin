@@ -29,7 +29,7 @@ namespace Project.Web.Shared.Pages
         protected override object SetRowKey(TPower model) => model.PowerId;
         protected override async Task<IQueryCollectionResult<TPower>> OnQueryAsync(GenericRequest<TPower> query)
         {
-            var result = await PermissionSrv.GetPowerListAsync();
+            var result = await PermissionSrv.GetAllPowerAsync();
             var powers = result.Payload;
             result.Payload = GeneratePowerTreeDataAsync(powers);
             return result;
