@@ -20,6 +20,7 @@ using Project.AppCore.BackgroundServices;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Project.Constraints.Models.Permissions;
 using Project.Web.Shared.Pages;
+using Project.AppCore.Services;
 namespace Project.AppCore;
 
 public static class ProjectInit
@@ -49,8 +50,8 @@ public static class ProjectInit
         {
             locator.SetUserPageType<UserPage<User, Power, Role>>();
             locator.SetRunLogPageType<OperationLog<RunLog>>();
-            locator.SetPermissionPageType<PermissionSetting<Power, Role>>();
-            locator.SetRolePermissionPageType<RolePermission<Power, Role>>();
+            locator.SetPermissionPageType<PermissionSetting<Power, Role, IStandardPermissionService>>();
+            locator.SetRolePermissionPageType<RolePermission<Power, Role, IStandardPermissionService>>();
         });
         action.Invoke(setting);
 

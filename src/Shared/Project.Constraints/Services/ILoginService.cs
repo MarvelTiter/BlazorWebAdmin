@@ -6,6 +6,7 @@ namespace Project.Constraints.Services
     //[Aspectable(AspectHandleType = typeof(LogAop))]
     [LogAop]
     [AutoInject]
+    [WebApiGenerator.Attributes.WebController]
     public partial interface ILoginService
     {
         [LogInfo(Action = "用户登录", Module = "登录模块")]

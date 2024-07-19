@@ -6,11 +6,6 @@ namespace Project.Constraints.Services
     [AutoInject]
     public interface IProjectSettingService
     {
-        Type? GetUserPageType();
-        Type? GetDashboardType();
-        Type? GetPermissionPageType();
-        Type? GetRolePermissionPageType();
-        Type? GetRunLogPageType();
         /// <summary>
         /// 用户登录逻辑
         /// </summary>

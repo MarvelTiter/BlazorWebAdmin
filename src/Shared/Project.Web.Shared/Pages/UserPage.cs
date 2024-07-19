@@ -3,6 +3,7 @@ using Project.Constraints.PageHelper;
 using Project.Constraints.UI.Extensions;
 using Project.Web.Shared.Pages.Component;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace Project.Web.Shared.Pages
 {
@@ -72,7 +73,7 @@ namespace Project.Web.Shared.Pages
         private async Task UpdateRoles()
         {
             var result = await PermissionSrv.GetAllRoleAsync();
-            allRoles = result.Payload;
+            allRoles = result.Payload.Cast<TRole>();
         }
 
         public Task OnShowAsync()

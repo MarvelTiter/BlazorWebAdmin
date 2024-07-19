@@ -2,7 +2,7 @@
 
 namespace WebApiGenerator.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false)]
     public class WebControllerAttribute : Attribute
     {
         public string? Route { get; set; }

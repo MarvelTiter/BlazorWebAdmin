@@ -14,7 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\WebApiGenerator\WebApiGenerator.csproj" OutputItemType="Analyzer"/>
+		<!-- OutputItemType="Analyzer" -->
+		<ProjectReference Include="..\..\WebApiGenerator\WebApiGenerator.csproj" OutputItemType="Analyzer" /> 
 		<ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
 	</ItemGroup>
 

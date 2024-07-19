@@ -180,9 +180,15 @@ public static class EnumerableExtensionForQueryResult
     {
         return CollectionResult(values, (int)total);
     }
-    public static IQueryCollectionResult<T> SetMessage<T>(this IQueryCollectionResult<T> self, string message)
+    public static IQueryCollectionResult<T> SetMessage<T>(this IQueryCollectionResult<T> self, string? message)
     {
         self.Message = message;
         return self;
+    }
+
+    public static IQueryCollectionResult<TTranform> Cast<T, TTranform>(this IQueryCollectionResult<T> origin)
+    {
+       var list = origin.Payload.Cast<TTranform>();
+        return list.CollectionResult(origin.TotalRecord).SetMessage(origin.Message);
     }
 }

@@ -6,11 +6,12 @@ using Project.Web.Shared.Pages.Component;
 
 namespace Project.Web.Shared.Pages
 {
-    public class PermissionSetting<TPower, TRole> : ModelPage<TPower, GenericRequest<TPower>>
+    public class PermissionSetting<TPower, TRole,TPermissionService> : ModelPage<TPower, GenericRequest<TPower>>
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
+        where TPermissionService : IPermissionService<TPower, TRole>
     {
-        [Inject, NotNull] public IPermissionService<TPower, TRole>? PermissionSrv { get; set; }
+        [Inject, NotNull] public TPermissionService? PermissionSrv { get; set; }
         [Inject, NotNull] IStringLocalizer<TPower>? Localizer { get; set; }
         protected override async Task OnInitializedAsync()
         {
@@ -30,7 +31,7 @@ namespace Project.Web.Shared.Pages
         protected override async Task<IQueryCollectionResult<TPower>> OnQueryAsync(GenericRequest<TPower> query)
         {
             var result = await PermissionSrv.GetAllPowerAsync();
-            var powers = result.Payload;
+            var powers = result.Payload.Cast<TPower>();
             result.Payload = GeneratePowerTreeDataAsync(powers);
             return result;
         }

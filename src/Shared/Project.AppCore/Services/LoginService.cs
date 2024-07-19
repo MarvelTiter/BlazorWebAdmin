@@ -1,7 +1,7 @@
 ﻿using Project.AppCore.Auth;
-using WebApiGenerator.Attributes;
 namespace Project.Services
 {
+    [WebApiGenerator.Attributes.WebController]
     public partial class LoginService : ILoginService
     {
         private readonly IProjectSettingService settingProvider;

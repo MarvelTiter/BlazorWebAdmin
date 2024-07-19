@@ -8,24 +8,7 @@ namespace Project.AppCore
     [IgnoreAutoInject]
     public abstract class BasicSetting : IProjectSettingService//, IDisposable
     {
-        static Type? UserPageType;
-        static Type? PermissionPageType;
-        static Type? RolePermissionPageType;
-        static Type? RunLogPageType;
         protected UserInfo? CurrentUser { get; set; }
-        public BasicSetting()
-        {
-            UserPageType ??= typeof(UserPage<,,>).MakeGenericType(AppConst.TypeInfo.UserType, AppConst.TypeInfo.PowerType, AppConst.TypeInfo.RoleType);
-            PermissionPageType ??= typeof(PermissionSetting<,>).MakeGenericType(AppConst.TypeInfo.PowerType, AppConst.TypeInfo.RoleType);
-            RolePermissionPageType ??= typeof(RolePermission<,>).MakeGenericType(AppConst.TypeInfo.PowerType, AppConst.TypeInfo.RoleType);
-            RunLogPageType ??= typeof(OperationLog<>).MakeGenericType(AppConst.TypeInfo.RunlogType);
-        }
-
-        public virtual Type? GetDashboardType() => null;
-        public virtual Type? GetUserPageType() => UserPageType;
-        public virtual Type? GetPermissionPageType() => PermissionPageType;
-        public virtual Type? GetRolePermissionPageType() => RolePermissionPageType;
-        public virtual Type? GetRunLogPageType() => RunLogPageType;
 
         public abstract Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
         public abstract Task<int> UpdateLoginInfo(UserInfo info);
