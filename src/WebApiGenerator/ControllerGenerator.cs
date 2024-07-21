@@ -16,40 +16,32 @@ namespace WebApiGenerator
     {
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
-            var list = context.SyntaxProvider.ForAttributeWithMetadataName(WebApiGeneratorHepers.WebControllerAttributeFullName,
+            var list = context.SyntaxProvider.ForAttributeWithMetadataName(
+                WebApiGeneratorHepers.WebControllerAttributeFullName,
                 static (node, token) => node is ClassDeclarationSyntax,
                 static (c, t) => c);
 
             context.RegisterSourceOutput(list, static (context, source) =>
             {
                 var classSymbol = source.TargetSymbol as INamedTypeSymbol;
-                //if (!Debugger.IsAttached)
-                //{
-                //    Debugger.Launch();
-                //}
-                if (!classSymbol!.AllInterfaces.Any(a => a.GetAttributes().Any(a => a.AttributeClass?.ToDisplayString() == WebApiGeneratorHepers.WebControllerAttributeFullName)))
+                var interfaceSymbol = classSymbol!.Interfaces.FirstOrDefault(c => c.GetAttribute<Attributes.WebControllerAttribute>(out _));
+                if (interfaceSymbol == null)
                 {
-        //            context.ReportDiagnostic(Diagnostic.Create(new DiagnosticDescriptor(
-        //                id: "IG00001",
-        //title: "接口未标注[WebControllerAttribute]",
-        //messageFormat: "接口未标注[WebControllerAttribute]",
-        //category: typeof(ControllerGenerator).FullName,
-        //defaultSeverity: DiagnosticSeverity.Error,
-        //isEnabledByDefault: true,
-        //description: "The source generator features from the MVVM Toolkit require consuming projects to set the C# language version to at least C# 8.0. Make sure to add <LangVersion>8.0</LangVersion> (or above) to your .csproj file."), source.TargetNode.GetLocation()));
                     return;
                 }
-                var methods = WebApiGeneratorHepers.GetAllMethods(classSymbol);
+                if (!interfaceSymbol.GetAttribute<Attributes.WebControllerAttribute>(out var attributeData))
+                {
+                    context.ReportDiagnostic(DiagnosticDefinitions.WAG00001(source.TargetNode.GetLocation()));
+                    return;
+                }
+                var methods = interfaceSymbol.GetAllMethods();
                 List<MemberDeclarationSyntax> members = new List<MemberDeclarationSyntax>();
 
-                var ctorSyntax = (ConstructorDeclarationSyntax)source.TargetNode.ChildNodes().First(c => c is ConstructorDeclarationSyntax);
+                var localField = FieldDeclaration(VariableDeclaration(IdentifierName(interfaceSymbol.ToDisplayString())).AddVariables(VariableDeclarator(Identifier("proxyService")))).AddModifiers(Token(SyntaxKind.PrivateKeyword), Token(SyntaxKind.ReadOnlyKeyword));
 
+                var cBody = ExpressionStatement(AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, IdentifierName("proxyService"), IdentifierName("service")));
 
-                var localField = FieldDeclaration(VariableDeclaration(IdentifierName(source.TargetSymbol.ToDisplayString())).AddVariables(VariableDeclarator(Identifier("proxyService")))).AddModifiers(Token(SyntaxKind.PrivateKeyword), Token(SyntaxKind.ReadOnlyKeyword));
-
-                var cBody = ExpressionStatement(AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, IdentifierName("proxyService"), ObjectCreationExpression(IdentifierName(source.TargetSymbol.ToDisplayString())).AddArgumentListArguments([.. ctorSyntax.ParameterList.Parameters.Select(p => Argument(IdentifierName(p.Identifier.Text)))])));
-
-                var constructor = ConstructorDeclaration($"{WebApiGeneratorHepers.FormatClassName(source.TargetSymbol.MetadataName)}Controller")
+                var constructor = ConstructorDeclaration($"{WebApiGeneratorHepers.FormatClassName(interfaceSymbol.MetadataName)}Controller")
                     .AddAttributeLists(
                      AttributeList(SingletonSeparatedList(
                      Attribute(IdentifierName("global::System.CodeDom.Compiler.GeneratedCode"))
@@ -59,7 +51,7 @@ namespace WebApiGenerator
                          )
                      )))
                     .AddModifiers(Token(SyntaxKind.PublicKeyword))
-                    .AddParameterListParameters([.. ctorSyntax.ParameterList.Parameters])
+                    .AddParameterListParameters(Parameter(Identifier("service")).WithType(IdentifierName(interfaceSymbol.ToDisplayString())))
                 .WithBody(Block(cBody));
 
                 members.Add(localField);
@@ -67,21 +59,36 @@ namespace WebApiGenerator
 
                 foreach (var methodSymbol in methods)
                 {
-                    var a = methodSymbol.GetAttributes().FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == WebApiGeneratorHepers.WebMethodAttributeFullName);
+                    string httpMethod;
+                    if (methodSymbol.GetAttribute<Attributes.WebMethodAttribute>(out var a))
+                    {
+                        httpMethod = a.GetAttributeValue<HttpMethod>(nameof(Attributes.WebMethodAttribute.Method)) switch
+                        {
+                            HttpMethod.Get => "HttpGet",
+                            HttpMethod.Post => "HttpPost",
+                            HttpMethod.Put => "HttpPut",
+                            HttpMethod.Delete => "HttpDelete",
+                            _ => "HttpGet"
+                        };
+                    }
+                    else
+                    {
+                        httpMethod = TryGetHttpMethodFromMethodName(methodSymbol.Name);
+                    }
                     var methodSyntax = MethodDeclaration(
                                     IdentifierName(methodSymbol.ReturnType.ToDisplayString()),
                                     Identifier(methodSymbol.Name)
                                 ).AddParameterListParameters([.. methodSymbol.Parameters.Select(p => Parameter(
                                     [],[],IdentifierName(p.Type.ToDisplayString()),Identifier(p.Name),null))])
                                 .AddAttributeLists(AttributeList(SingletonSeparatedList(
-                                    Attribute(IdentifierName("global::Microsoft.AspNetCore.Mvc.HttpGet"))
+                                    Attribute(IdentifierName($"global::Microsoft.AspNetCore.Mvc.{httpMethod}"))
                                     .AddArgumentListArguments(AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(a.GetAttributeValue("Route")?.ToString() ?? methodSymbol.Name.Replace("Async", "")))))
                                     ))
                                 , AttributeList(SingletonSeparatedList(
                                      Attribute(IdentifierName("global::System.CodeDom.Compiler.GeneratedCode"))
                                         .AddArgumentListArguments(
-                                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof           (ControllerGenerator).FullName))),
-                                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof              (ControllerGenerator).Assembly.GetName().Version.ToString())))
+                                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ControllerGenerator).FullName))),
+                                            AttributeArgument(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(typeof(ControllerGenerator).Assembly.GetName().Version.ToString())))
                                          )
                                      ))
                                 )
@@ -93,28 +100,44 @@ namespace WebApiGenerator
 
                     members.Add(methodSyntax);
                 }
-
-                //var tree = source.SemanticModel.Compilation.GetSemanticModel(source.TargetNode.SyntaxTree);
-
-                //var syntaxc = source.TargetSymbol.DeclaringSyntaxReferences;
-                //var cn = (INamedTypeSymbol)source.TargetSymbol;
-                //var ems = cn.GetMembers();
-                //var ms = cn.BaseType?.GetMembers();
-                ////var f = ms.Value.First() as IFieldSymbol;
-                ////var syntax = f.DeclaringSyntaxReferences.First().GetSyntax();
-                //foreach (var e in ms ?? [])
-                //{
-                //    var syntax = e.DeclaringSyntaxReferences.FirstOrDefault()?.GetSyntax();
-                //}
-
+                                
                 var unit = CompilationUnit()
                   .AddMembers(WebApiGeneratorHepers.CreateNamespaceDeclaration(source, out var usings)
                   .AddMembers(WebApiGeneratorHepers.CreateControllerClassDeclaration(source)
                         .AddMembers([.. members]))
                    ).AddUsings(usings).NormalizeWhitespace();
-                //var text = unit.GetText(Encoding.UTF8).ToString();
-                context.AddSource($"{source.TargetSymbol.MetadataName}Controller.g.cs", unit.GetText(Encoding.UTF8));
+                var text = unit.GetText(Encoding.UTF8).ToString();
+                context.AddSource($"{interfaceSymbol.MetadataName}Controller.g.cs", unit.GetText(Encoding.UTF8));
             });
+        }
+
+        private static string TryGetHttpMethodFromMethodName(string name)
+        {
+            if (name.StartsWith("create", StringComparison.OrdinalIgnoreCase)
+                || name.StartsWith("add", StringComparison.OrdinalIgnoreCase))
+            {
+                return "HttpPost";
+            }
+            else if (name.StartsWith("get", StringComparison.OrdinalIgnoreCase)
+                || name.StartsWith("find", StringComparison.OrdinalIgnoreCase)
+                || name.StartsWith("query", StringComparison.OrdinalIgnoreCase))
+            {
+                return "HttpGet";
+            }
+            else if (name.StartsWith("update", StringComparison.OrdinalIgnoreCase)
+                || name.StartsWith("put", StringComparison.OrdinalIgnoreCase))
+            {
+                return "HttpPut";
+            }
+            else if (name.StartsWith("delete", StringComparison.OrdinalIgnoreCase)
+                || name.StartsWith("remove", StringComparison.OrdinalIgnoreCase))
+            {
+                return "HttpDelete";
+            }
+            else
+            {
+                return "HttpGet";
+            }
         }
     }
 }

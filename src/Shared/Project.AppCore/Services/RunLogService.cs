@@ -37,4 +37,14 @@ namespace Project.AppCore.Services
             return WriteLog(tlog);
         }
     }
+
+
+    public interface IStandardRunLogService : IRunLogService<RunLog> { }
+    [WebApiGenerator.Attributes.WebController(Route = "runlog")]
+    public class StandardRunLogService : RunLogService<RunLog>, IStandardRunLogService
+    {
+        public StandardRunLogService(IExpressionContext context) : base(context)
+        {
+        }
+    }
 }

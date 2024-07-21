@@ -2,8 +2,6 @@
 using LightORM.Extension;
 namespace Project.AppCore.Services
 {
-
-
     [IgnoreAutoInject]
     public class PermissionService<TPower, TRole, TRolePower, TUserRole> : IPermissionService<TPower, TRole>
         where TPower : class, IPower, new()
@@ -201,12 +199,10 @@ namespace Project.AppCore.Services
         }
     }
 
-    [WebApiGenerator.Attributes.WebController]
     public interface IStandardPermissionService : IPermissionService<Power, Role>
     {
 
     }
-
     [WebApiGenerator.Attributes.WebController(Route = "permission")]
     public class StandardPermissionService : PermissionService<Power, Role, RolePower, UserRole>, IStandardPermissionService
     {

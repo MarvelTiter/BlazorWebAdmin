@@ -6,7 +6,7 @@ namespace WebApiGenerator.Attributes
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class WebMethodAttribute : Attribute
     {
-        public HttpMethod Method { get; set; }
+        public HttpMethod Method { get; set; } = HttpMethod.Get;
         public string? Route { get; set; }
     }
 }

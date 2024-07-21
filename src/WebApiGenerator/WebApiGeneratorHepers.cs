@@ -18,7 +18,11 @@ namespace WebApiGenerator
         {
             if (className.IndexOf('`') > -1)
             {
-                return className.Substring(0, className.IndexOf('`'));
+                className = className.Substring(0, className.IndexOf('`'));
+            }
+            if (className.StartsWith("I"))
+            {
+                className = className.Substring(1);
             }
             return className;
         }
@@ -43,20 +47,19 @@ namespace WebApiGenerator
             return data != null;
         }
 
-        public static IEnumerable<IMethodSymbol> GetAllMethods(INamedTypeSymbol? symbol)
+        public static IEnumerable<IMethodSymbol> GetAllMethods(this INamedTypeSymbol? symbol)
         {
-            for (var b = symbol; b != null; b = b.BaseType)
+            var all = symbol?.Interfaces.Insert(0, symbol) ?? [];
+            foreach (var m in all)
             {
-                if (b.Name == nameof(Object))
-                    yield break;
-                foreach (var item in b.GetMembers().Where(m => m is IMethodSymbol).Cast<IMethodSymbol>())
+                foreach (var item in m.GetMembers().Where(m => m is IMethodSymbol).Cast<IMethodSymbol>())
                 {
-                    if (item.MethodKind == MethodKind.Constructor)
-                    {
-                        continue;
-                    }
+                    //if (item.MethodKind == MethodKind.Constructor)
+                    //{
+                    //    continue;
+                    //}
 
-                    yield return b.IsGenericType ? item.ConstructedFrom : item;
+                    yield return m.IsGenericType ? item.ConstructedFrom : item;
                 }
             }
         }
@@ -64,11 +67,11 @@ namespace WebApiGenerator
         public static ClassDeclarationSyntax CreateControllerClassDeclaration(GeneratorAttributeSyntaxContext source)
         {
             var cd = ClassDeclaration($"{FormatClassName(source.TargetSymbol.MetadataName)}Controller");
-            var classNode = (ClassDeclarationSyntax)source.TargetNode;
-            if (classNode is { TypeParameterList: var list and not null })
-            {
-                cd = cd.AddTypeParameterListParameters([.. list.Parameters]).AddConstraintClauses([.. classNode.ConstraintClauses]);
-            }
+            //var classNode = (ClassDeclarationSyntax)source.TargetNode;
+            //if (classNode is { TypeParameterList: var list and not null })
+            //{
+            //    cd = cd.AddTypeParameterListParameters([.. list.Parameters]).AddConstraintClauses([.. classNode.ConstraintClauses]);
+            //}
             var controllerAttribute = source.TargetSymbol.GetAttributes().First(a => a.AttributeClass?.ToDisplayString() == WebControllerAttributeFullName);
             var route = controllerAttribute.GetAttributeValue(nameof(WebApiGenerator.Attributes.WebControllerAttribute.Route)) ?? "[controller]";
             cd = cd.AddBaseListTypes(SimpleBaseType(IdentifierName("global::Microsoft.AspNetCore.Mvc.ControllerBase")))
@@ -94,8 +97,7 @@ namespace WebApiGenerator
                          )
                      ))
                  )
-             .AddModifiers(Token(TriviaList(Comment("/// <inheritdoc/>")), SyntaxKind.PublicKeyword, TriviaList()))
-             .AddMembers(classNode.ChildNodes().Where(n => n is FieldDeclarationSyntax).Cast<FieldDeclarationSyntax>().ToArray());
+             .AddModifiers(Token(TriviaList(Comment("/// <inheritdoc/>")), SyntaxKind.PublicKeyword, TriviaList()));
 
             return cd;
         }

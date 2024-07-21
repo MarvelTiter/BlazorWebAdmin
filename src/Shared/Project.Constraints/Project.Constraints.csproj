@@ -14,8 +14,5 @@
 		<PackageReference Include="MT.Toolkit" Version="2.0.8" />
 		<PackageReference Include="LightExcel" Version="2.1.0.5" />
 	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\..\WebApiGenerator\WebApiGenerator.csproj" />
-	</ItemGroup>
 
 </Project>

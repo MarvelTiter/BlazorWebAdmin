@@ -11,13 +11,12 @@
 		<PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.4.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
 		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+		<PackageReference Include="WebApiGenerator" Version="0.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- OutputItemType="Analyzer" -->
-		<ProjectReference Include="..\..\WebApiGenerator\WebApiGenerator.csproj" OutputItemType="Analyzer" /> 
+		<!-- OutputItemType="Analyzer" --> 
 		<ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
 	</ItemGroup>
-
 </Project>
 
