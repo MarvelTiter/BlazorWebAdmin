@@ -39,41 +39,42 @@ namespace Project.Services
         }
     }
 
-    public class LoginServiceApiInvoker : ILoginService
-    {
-        private readonly IHttpClientFactory clientFactory;
-        private readonly JsonSerializerOptions jsonOptions = new() { PropertyNameCaseInsensitive = true };
-        public LoginServiceApiInvoker(IHttpClientFactory factory)
-        {
-            clientFactory = factory;
-        }
+    //public class LoginServiceApiInvoker : ILoginService
+    //{
+    //    private readonly IHttpClientFactory clientFactory;
+    //    private readonly JsonSerializerOptions jsonOptions = new() { PropertyNameCaseInsensitive = true };
+    //    public LoginServiceApiInvoker(IHttpClientFactory factory)
+    //    {
+    //        clientFactory = factory;
+    //    }
 
-        public async Task<bool> CheckUser(UserInfo info)
-        {
-            var client = clientFactory.CreateClient(nameof(LoginServiceApiInvoker));
-            var request = new HttpRequestMessage();
-            var jsonPayload = System.Text.Json.JsonSerializer.Serialize(info);
-            request.Content = new StringContent(jsonPayload, Encoding.Default, "application/json");
-            request.Method = HttpMethod.Post;
-            request.RequestUri = new Uri("/api/LoginService/CheckUser", UriKind.Relative);
-            var response = await client.SendAsync(request);
-            var jsonStream = await response.Content.ReadAsStreamAsync();
-            return System.Text.Json.JsonSerializer.Deserialize<bool>(jsonStream, jsonOptions);
-        }
+    //    public async Task<bool> CheckUser(UserInfo info)
+    //    {
+    //        var client = clientFactory.CreateClient(nameof(LoginServiceApiInvoker));
+    //        var request = new HttpRequestMessage();
+    //        var jsonPayload = System.Text.Json.JsonSerializer.Serialize(info);
+    //        request.Content = new StringContent(jsonPayload, Encoding.Default, "application/json");
+    //        request.Method = HttpMethod.Post;
+    //        request.RequestUri = new Uri("/api/LoginService/CheckUser", UriKind.Relative);
+    //        var response = await client.SendAsync(request);
+    //        response.EnsureSuccessStatusCode();
+    //        var jsonStream = await response.Content.ReadAsStreamAsync();
+    //        return System.Text.Json.JsonSerializer.Deserialize<bool>(jsonStream, jsonOptions);
+    //    }
 
-        public Task<IQueryResult<UserInfo>> LoginAsync(string username, string password)
-        {
-            throw new NotImplementedException();
-        }
+    //    public Task<IQueryResult<UserInfo>> LoginAsync(string username, string password)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
 
-        public Task<IQueryResult<bool>> LogoutAsync()
-        {
-            throw new NotImplementedException();
-        }
+    //    public Task<IQueryResult<bool>> LogoutAsync()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
 
-        public Task<IQueryResult<bool>> UpdateLastLoginTimeAsync(UserInfo info)
-        {
-            throw new NotImplementedException();
-        }
-    }
+    //    public Task<IQueryResult<bool>> UpdateLastLoginTimeAsync(UserInfo info)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
 }

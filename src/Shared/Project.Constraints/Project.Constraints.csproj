@@ -13,6 +13,7 @@
 		<PackageReference Include="MT.LightORM" Version="2.0.9" />
 		<PackageReference Include="MT.Toolkit" Version="2.0.8" />
 		<PackageReference Include="LightExcel" Version="2.1.0.5" />
+		<PackageReference Include="WebApiGenerator" Version="0.0.5" />
 	</ItemGroup>
 
 </Project>

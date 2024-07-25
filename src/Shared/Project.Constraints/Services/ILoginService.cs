@@ -9,6 +9,7 @@ namespace Project.Constraints.Services
     public partial interface ILoginService
     {
         [LogInfo(Action = "用户登录", Module = "登录模块")]
+        [WebApiGenerator.Attributes.WebMethod(Method = WebApiGenerator.Models.WebMethod.Get)]
         Task<IQueryResult<UserInfo>> LoginAsync(string username, string password);
         [LogInfo(Action = "用户登录[缓存]", Module = "登录模块")]
         Task<IQueryResult<bool>> UpdateLastLoginTimeAsync(UserInfo info);
