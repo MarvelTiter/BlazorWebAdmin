@@ -48,8 +48,8 @@ public static class ProjectInit
         //set default
         setting.ConfigurePage(locator =>
         {
-            locator.SetUserPageType<UserPage<User, Power, Role>>();
-            locator.SetRunLogPageType<OperationLog<RunLog>>();
+            locator.SetUserPageType<UserPage<User, Power, Role, IStandardUserService, IStandardPermissionService>>();
+            locator.SetRunLogPageType<OperationLog<RunLog, IStandardRunLogService>>();
             locator.SetPermissionPageType<PermissionSetting<Power, Role, IStandardPermissionService>>();
             locator.SetRolePermissionPageType<RolePermission<Power, Role, IStandardPermissionService>>();
         });
@@ -72,7 +72,7 @@ public static class ProjectInit
         // excel操作
         services.AddLightExcel();
         //
-        services.AutoInjects(setting.AutoInjectConfig);
+        //services.AutoInjects(setting.AutoInjectConfig);
         //
         services.AddHttpClient();
         //
@@ -148,26 +148,26 @@ public static class ProjectInit
     internal static void AddProjectDbServices(this IServiceCollection services, ProjectSetting setting)
     {
         // user
-        services.AddScoped(typeof(IUserService<>), typeof(Services.UserService<>));
-        services.AddScoped<IUserService>(provider =>
-        {
-            var srv = provider.GetService(typeof(IUserService<>).MakeGenericType(setting.UserType));
-            return (srv as IUserService)!;
-        });
-        // permission
-        services.AddScoped(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType), typeof(Services.PermissionService<,,,>).MakeGenericType(setting.PowerType, setting.RoleType, setting.RolePowerType, setting.UserRoleType));
-        services.AddScoped(typeof(IPermissionService), typeof(Services.PermissionService<,,>).MakeGenericType(setting.PowerType, setting.RolePowerType, setting.UserRoleType));
+        //services.AddScoped(typeof(IUserService<>), typeof(Services.UserService<>));
+        //services.AddScoped<IUserService>(provider =>
         //{
-        //    var srv = provider.GetService(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType));
-        //    return (srv as IPermissionService)!;
+        //    var srv = provider.GetService(typeof(IUserService<>).MakeGenericType(setting.UserType));
+        //    return (srv as IUserService)!;
         //});
-        // runlog
-        services.AddScoped(typeof(IRunLogService<>), typeof(Services.RunLogService<>));
-        services.AddScoped<IRunLogService>(provider =>
-        {
-            var srv = provider.GetService(typeof(IRunLogService<>).MakeGenericType(setting.RunlogType));
-            return (srv as IRunLogService)!;
-        });
+        //// permission
+        //services.AddScoped(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType), typeof(Services.PermissionService<,,,>).MakeGenericType(setting.PowerType, setting.RoleType, setting.RolePowerType, setting.UserRoleType));
+        //services.AddScoped(typeof(IPermissionService), typeof(Services.PermissionService<,,>).MakeGenericType(setting.PowerType, setting.RolePowerType, setting.UserRoleType));
+        ////{
+        ////    var srv = provider.GetService(typeof(IPermissionService<,>).MakeGenericType(setting.PowerType, setting.RoleType));
+        ////    return (srv as IPermissionService)!;
+        ////});
+        //// runlog
+        //services.AddScoped(typeof(IRunLogService<>), typeof(Services.RunLogService<>));
+        //services.AddScoped<IRunLogService>(provider =>
+        //{
+        //    var srv = provider.GetService(typeof(IRunLogService<>).MakeGenericType(setting.RunlogType));
+        //    return (srv as IRunLogService)!;
+        //});
     }
 
     internal static void ConfigureAppSettings(this IHostApplicationBuilder builder)

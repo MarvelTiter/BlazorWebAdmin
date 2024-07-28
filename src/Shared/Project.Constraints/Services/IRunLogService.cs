@@ -4,15 +4,15 @@ using Project.Constraints.Models.Request;
 
 namespace Project.Constraints.Services
 {
-    [AutoInject]
-    public interface IRunLogService<TRunLog> : IRunLogService where TRunLog : IRunLog
+    public interface IStandardRunLogService : IRunLogService<RunLog> { }
+    public interface IRunLogService<TRunLog> where TRunLog : IRunLog
     {
-        Task<IQueryCollectionResult<TRunLog>> GetRunLogsAsync(GenericRequest<TRunLog> runLog);
-        Task WriteLog(TRunLog log);
+        Task<QueryCollectionResult<TRunLog>> GetRunLogsAsync(GenericRequest<TRunLog> runLog);
+        Task<QueryResult> WriteLog(TRunLog log);
     }
 
     public interface IRunLogService
     {
-        Task Log(IRunLog log);
+        Task<QueryResult> WriteLog<T>(T log) where T: IRunLog;
     }
 }

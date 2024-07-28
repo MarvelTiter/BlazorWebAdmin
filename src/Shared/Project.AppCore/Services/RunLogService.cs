@@ -1,8 +1,10 @@
-﻿using Project.Constraints.Models.Permissions;
+﻿using AutoInjectGenerator;
+using AutoWasmApiGenerator;
+using MT.Generators.Abstraction;
+using Project.Constraints.Models.Permissions;
 
 namespace Project.AppCore.Services
 {
-    [IgnoreAutoInject]
     public class RunLogService<TRunLog> : IRunLogService<TRunLog> where TRunLog : class, IRunLog, new()
     {
         private readonly IExpressionContext context;
@@ -12,35 +14,40 @@ namespace Project.AppCore.Services
             this.context = context;
         }
 
-        public async Task<IQueryCollectionResult<TRunLog>> GetRunLogsAsync(GenericRequest<TRunLog> req)
+        public async Task<QueryCollectionResult<TRunLog>> GetRunLogsAsync(GenericRequest<TRunLog> req)
         {
             var list = await context.Repository<TRunLog>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize, log => log.LogId, false);
             return list.CollectionResult((int)total);
         }
 
-        public async Task WriteLog(TRunLog log)
+        public async Task<QueryResult> WriteLog(TRunLog log)
         {
-            await context.Repository<TRunLog>().InsertAsync(log);
-        }
-
-        public Task Log(IRunLog log)
-        {
-            var tlog = new TRunLog
-            {
-                UserId = log.UserId,
-                ActionModule = log.ActionModule,
-                ActionName = log.ActionName,
-                ActionResult = log.ActionResult,
-                ActionMessage = log.ActionMessage,
-                ActionTime = log.ActionTime,
-            };
-            return WriteLog(tlog);
+            var i = await context.Repository<TRunLog>().InsertAsync(log);
+            return (i > 0).Result();
         }
     }
 
+    [AutoInject(Group = "SERVER")]
+    public class RunLogService : IRunLogService
+    {
+        private readonly IExpressionContext context;
 
-    public interface IStandardRunLogService : IRunLogService<RunLog> { }
-    [WebApiGenerator.Attributes.WebController(Route = "runlog")]
+        public RunLogService(IExpressionContext context)
+        {
+            this.context = context;
+        }
+
+        public async Task<QueryResult> WriteLog<T>(T log) where T : IRunLog
+        {
+            var i = await context.Repository<T>().InsertAsync(log);
+            return (i > 0).Result();
+        }
+    }
+
+    //[WebController(Route = "runlog")]
+    [ApiInvokerGenera(typeof(AutoInjectAttribute))]
+    [AttachAttributeArgument(typeof(ApiInvokerGeneraAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
+    [AutoInject(Group = "SERVER")]
     public class StandardRunLogService : RunLogService<RunLog>, IStandardRunLogService
     {
         public StandardRunLogService(IExpressionContext context) : base(context)

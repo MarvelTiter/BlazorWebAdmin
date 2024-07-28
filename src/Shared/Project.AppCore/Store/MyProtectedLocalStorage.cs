@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.DataProtection;
+﻿using AutoInjectGenerator;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.JSInterop;
 using Project.Constraints.Store.Models;
 using System.Collections.Concurrent;
@@ -7,6 +8,7 @@ using System.Text.Json;
 
 namespace Project.Constraints.Store
 {
+    [AutoInject]
     /// <summary>
     /// https://source.dot.net/#Microsoft.AspNetCore.Components.Server/ProtectedBrowserStorage/ProtectedLocalStorage.cs,2ced327c1fc4a5f4
     /// </summary>

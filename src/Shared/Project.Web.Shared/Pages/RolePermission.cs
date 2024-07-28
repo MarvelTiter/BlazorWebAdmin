@@ -31,7 +31,7 @@ namespace Project.Web.Shared.Pages
         }
         protected override object SetRowKey(TRole model) => model.RoleId;
 
-        protected override async Task<IQueryCollectionResult<TRole>> OnQueryAsync(GenericRequest<TRole> query)
+        protected override async Task<QueryCollectionResult<TRole>> OnQueryAsync(GenericRequest<TRole> query)
         {
             var result = await PermissionSrv.GetRoleListAsync(query);
             return result;
@@ -112,7 +112,7 @@ namespace Project.Web.Shared.Pages
             role.Powers = powers.Payload.Select(p => p.PowerId).ToList();
             var newRole = await this.ShowEditFormAsync("编辑角色", role);
             var result = await PermissionSrv.UpdateRoleAsync(newRole);
-            await PermissionSrv.SaveRolePowerAsync(newRole.RoleId, [.. newRole.Powers]);
+            await PermissionSrv.SaveRolePowerAsync((newRole.RoleId, newRole.Powers));
             return result.Success;
         }
 

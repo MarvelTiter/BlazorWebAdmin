@@ -7,7 +7,6 @@ namespace Project.Constraints.Store
         event Action DataChangedEvent;
     }
 
-    [AutoInject]
     public interface IRouterStore : IStore, IDisposable
     {
         event Func<TagRoute, Task<bool>>? RouterChangingEvent;

@@ -6,7 +6,6 @@ using System.Reflection;
 
 namespace Project.Constraints.UI.Builders
 {
-    [IgnoreAutoInject]
     public class ComponentBuilderBasic<TComponent, TSelf> : IUIComponent
         where TComponent : IComponent
         where TSelf : ComponentBuilderBasic<TComponent, TSelf>

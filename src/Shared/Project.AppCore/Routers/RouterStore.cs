@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AutoInjectGenerator;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Options;
 using Project.AppCore.Store;
@@ -13,6 +14,7 @@ using System.Reflection;
 
 namespace Project.AppCore.Routers;
 
+[AutoInject(ServiceType = typeof(IRouterStore))]
 public class RouterStore : StoreBase, IRouterStore
 {
     private readonly IProjectSettingService settingService;

@@ -7,14 +7,17 @@ using System.Linq;
 
 namespace Project.Web.Shared.Pages
 {
-    public class UserPage<TUser, TPower, TRole> : ModelPage<TUser, GenericRequest<TUser>>, IPageAction
+    public class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : ModelPage<TUser, GenericRequest<TUser>>, IPageAction
         where TUser : class, IUser, new()
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
+        where TUserService : IUserService<TUser>
+        where TPermissionService: IPermissionService<TPower, TRole>
     {
-        [Inject, NotNull] public IUserService<TUser>? UserSrv { get; set; }
-        [Inject, NotNull] public IPermissionService<TPower, TRole>? PermissionSrv { get; set; }
+        [Inject, NotNull] public TUserService? UserSrv { get; set; }
+        [Inject, NotNull] public TPermissionService? PermissionSrv { get; set; }
         [Inject, NotNull] public IStringLocalizer? Localizer { get; set; }
+
         IEnumerable<TRole> allRoles = [];
         protected override void OnInitialized()
         {
@@ -38,7 +41,7 @@ namespace Project.Web.Shared.Pages
             await UpdateRoles();
         }
 
-        protected override async Task<IQueryCollectionResult<TUser>> OnQueryAsync(GenericRequest<TUser> query)
+        protected override async Task<QueryCollectionResult<TUser>> OnQueryAsync(GenericRequest<TUser> query)
         {
             return await UserSrv.GetUserListAsync(query);
         }
@@ -59,7 +62,7 @@ namespace Project.Web.Shared.Pages
             var n = await this.ShowEditFormAsync(Localizer["User.DialogTitle.Modify"], user);
             n.OnUserSave(SaveActionType.Update);
             await UserSrv.UpdateUserAsync(n);
-            await PermissionSrv.SaveUserRoleAsync(n.UserId, [.. n.Roles]);
+            await PermissionSrv.SaveUserRoleAsync((n.UserId, n.Roles));
             return true;
         }
 

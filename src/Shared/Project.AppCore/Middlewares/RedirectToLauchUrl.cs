@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoInjectGenerator;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Project.Constraints.Options;
 
 namespace Project.AppCore.Middlewares
 {
+    [AutoInject(ServiceType = typeof(RedirectToLauchUrlMiddleware), LifeTime = InjectLifeTime.Singleton)]
     public class RedirectToLauchUrlMiddleware : IMiddleware
     {
         private readonly IOptionsMonitor<AppSetting> setting;

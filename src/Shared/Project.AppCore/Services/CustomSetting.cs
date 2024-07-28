@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AutoInjectGenerator;
+using Microsoft.AspNetCore.Components;
 using Project.AppCore;
 using Project.Constraints;
 using Project.Constraints.Models.Permissions;
@@ -8,6 +9,7 @@ using Project.Web.Shared.Components;
 
 namespace Project.Services
 {
+    [AutoInject(Group = "SERVER")]
     public class CustomSetting : BasicSetting, IProjectSettingService
     {
         private readonly IExpressionContext context;
@@ -22,7 +24,7 @@ namespace Project.Services
             this.watermarkServiceFactory = watermarkServiceFactory;
             this.permissionService = permissionService;
         }
-        public override async Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password)
+        public override async Task<QueryResult<UserInfo>> GetUserInfoAsync(string username, string password)
         {
             var u = await context.Repository<User>().GetSingleAsync(u => u.UserId == username);
             var userInfo = new UserInfo
@@ -72,7 +74,7 @@ namespace Project.Services
 
         public override async Task<IEnumerable<IPower>> GetUserPowersAsync(UserInfo info)
         {
-            var result = await permissionService.GetPowerListByUserIdAsync(info.UserId);
+            var result = await permissionService.GetPowerListByUserIdAsync<Power, RolePower, UserRole>(info.UserId);
             return result.Payload;
         }
     }

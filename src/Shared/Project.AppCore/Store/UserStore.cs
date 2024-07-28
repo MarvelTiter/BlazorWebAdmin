@@ -1,8 +1,10 @@
-﻿using Project.Constraints.Models;
+﻿using AutoInjectGenerator;
+using Project.Constraints.Models;
 using Project.Constraints.Store;
 
 namespace Project.AppCore.Store
 {
+    [AutoInject]
     public partial class UserStore : StoreBase, IUserStore
     {
         public UserInfo? UserInfo { get; set; }

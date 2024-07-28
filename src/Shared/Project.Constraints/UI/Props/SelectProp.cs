@@ -2,7 +2,6 @@
 
 namespace Project.Constraints.UI.Props
 {
-    [IgnoreAutoInject]
     public class SelectProp : DefaultProp
     {
         public bool AllowClear { get; set; } = true;

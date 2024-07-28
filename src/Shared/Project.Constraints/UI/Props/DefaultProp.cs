@@ -2,7 +2,6 @@
 
 namespace Project.Constraints.UI.Props
 {
-    [IgnoreAutoInject]
     public class DefaultProp
     {
         public string? Label { get; set; }

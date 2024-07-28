@@ -39,13 +39,13 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
         Columns = typeof(TData).GenerateColumns();
     }
     public TQuery Query { get; set; }
-    public IQueryCollectionResult<TData>? Result { get; set; }
+    public QueryCollectionResult<TData>? Result { get; set; }
     public Func<TData, object> RowKey { get; set; } = d => d!;
     public Func<TData, IEnumerable<TData>> TreeChildren { get; set; } = t => [];
     public IEnumerable<TData> Selected { get; set; } = [];
     public Func<Task<bool>>? OnAddItemAsync { get; set; }
-    public Func<TQuery, Task<IQueryCollectionResult<TData>>>? OnQueryAsync { get; set; }
-    public Func<TQuery, Task<IQueryCollectionResult<TData>>>? OnExportAsync { get; set; }
+    public Func<TQuery, Task<QueryCollectionResult<TData>>>? OnQueryAsync { get; set; }
+    public Func<TQuery, Task<QueryCollectionResult<TData>>>? OnExportAsync { get; set; }
     public Func<TData, Task>? OnRowClickAsync { get; set; }
     public Func<TData, Dictionary<string, object>?>? AddRowOptions { get; set; }
     public Func<string, IEnumerable<TData>, Task>? ExportIntercept { get; set; }
@@ -84,14 +84,14 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     {
         using var _ = BooleanStatusManager.New(b => Loading = b, callback: NotifyChanged);
         await NotifyChanged.Invoke();
-        IQueryCollectionResult<TData> datas;
+        QueryCollectionResult<TData> datas;
         if (OnExportAsync != null)
         {
             datas = await OnExportAsync(Query);
         }
         else
         {
-            datas = QueryResult.EmptyResult<TData>();
+            datas = Models.Result.EmptyResult<TData>();
         }
         var exportDatas = datas.Success ? datas.Payload : Result?.Payload ?? [];
 

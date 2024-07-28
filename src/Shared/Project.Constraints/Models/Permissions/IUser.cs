@@ -16,6 +16,7 @@ namespace Project.Constraints.Models.Permissions
 
     public class UserPwd
     {
+        public string? UserId { get; set; }
         [Required]
         [NotNull]
         public string? OldPassword { get; set; }

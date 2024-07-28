@@ -3,9 +3,6 @@ using Project.Constraints.Common.Attributes;
 using System.Reflection;
 
 namespace Project.Constraints.UI.Table;
-
-
-[IgnoreAutoInject]
 public record ColumnInfo(PropertyInfo Property)
 {
     [NotNull] public string? Label { get; set; }

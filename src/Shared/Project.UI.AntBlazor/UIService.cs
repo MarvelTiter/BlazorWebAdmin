@@ -20,8 +20,10 @@ using Project.Web.Shared.ComponentHelper;
 using System.Data;
 using Project.Constraints.Common;
 using Microsoft.Extensions.DependencyInjection;
+using AutoInjectGenerator;
 namespace Project.UI.AntBlazor
 {
+    [AutoInject]
     public class UIService(
         ModalService modalService,
         MessageService messageService,

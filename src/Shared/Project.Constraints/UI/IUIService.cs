@@ -64,7 +64,6 @@ public enum ButtonType
     Danger,
     Success,
 }
-[AutoInject]
 public interface IUIService
 {
     void Message(MessageType type, string message);

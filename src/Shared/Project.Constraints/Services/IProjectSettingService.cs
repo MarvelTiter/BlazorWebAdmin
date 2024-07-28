@@ -3,7 +3,6 @@ using Project.Constraints.Store.Models;
 
 namespace Project.Constraints.Services
 {
-    [AutoInject]
     public interface IProjectSettingService
     {
         /// <summary>
@@ -12,7 +11,7 @@ namespace Project.Constraints.Services
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
+        Task<QueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
         /// <summary>
         /// 更新登录信息
         /// </summary>

@@ -2,9 +2,11 @@
 using Project.Constraints.Store;
 using Project.Constraints.UI;
 using Project.Constraints;
+using AutoInjectGenerator;
 
 namespace Project.AppCore.Store
 {
+    [AutoInject]
     public class AppSession(NavigationManager navigationManager
         , IAppStore appStore
         , IRouterStore routerStore

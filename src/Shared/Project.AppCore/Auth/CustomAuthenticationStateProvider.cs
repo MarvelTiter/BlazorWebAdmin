@@ -1,19 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
 using Project.AppCore.Store;
 using Project.Constraints;
-using Project.Constraints.Common.Attributes;
 using Project.Constraints.Options;
 using Project.Constraints.Store;
-using Project.Web.Shared.Utils;
 using System.Security.Claims;
 
 namespace Project.AppCore.Auth
 {
-    [IgnoreAutoInject]
     public class CustomAuthenticationStateProvider : AuthenticationStateProvider, IAuthenticationStateProvider
     {
         private readonly IProtectedLocalStorage storageService;

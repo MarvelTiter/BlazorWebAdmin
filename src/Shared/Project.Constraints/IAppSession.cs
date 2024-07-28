@@ -4,7 +4,7 @@ using Project.Constraints.UI;
 
 namespace Project.Constraints;
 
-[AutoInject]
+//[AutoInject]
 public interface IAppSession
 {
     event Func<Task>? WebApplicationAccessedEvent;

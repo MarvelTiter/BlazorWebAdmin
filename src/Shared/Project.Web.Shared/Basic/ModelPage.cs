@@ -89,13 +89,13 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     /// <param name="query"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    protected virtual async Task<IQueryCollectionResult<TModel>> OnExportAsync(TQuery query)
+    protected virtual async Task<QueryCollectionResult<TModel>> OnExportAsync(TQuery query)
     {
         if (Options.Result == null)
         {
             await Options.RefreshAsync();
         }
-        return Options.Result ?? QueryResult.EmptyResult<TModel>();
+        return Options.Result ?? Result.EmptyResult<TModel>();
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     /// </summary>
     /// <param name="query"></param>
     /// <returns></returns>
-    protected abstract Task<IQueryCollectionResult<TModel>> OnQueryAsync(TQuery query);
+    protected abstract Task<QueryCollectionResult<TModel>> OnQueryAsync(TQuery query);
 
     protected RenderFragment TableFragment => builder =>
     {

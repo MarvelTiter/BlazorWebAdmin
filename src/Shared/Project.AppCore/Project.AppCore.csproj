@@ -9,9 +9,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.4.0" />
+		<PackageReference Include="AutoWasmApiGenerator" Version="0.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
+		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
 		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
-		<PackageReference Include="WebApiGenerator" Version="0.0.5" />
 	</ItemGroup>
 
 	<ItemGroup>

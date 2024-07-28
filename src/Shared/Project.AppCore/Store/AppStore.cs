@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using AutoInjectGenerator;
+using Microsoft.Extensions.Options;
 using Project.Constraints.Options;
 using Project.Constraints.Store;
 using Project.Constraints.Store.Models;
@@ -6,6 +7,7 @@ using System.Globalization;
 
 namespace Project.AppCore.Store;
 
+[AutoInject]
 public class AppStore : StoreBase, IAppStore
 {
     public const string KEY = "APP_SETTING";

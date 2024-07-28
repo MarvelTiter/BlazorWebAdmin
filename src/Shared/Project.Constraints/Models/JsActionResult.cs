@@ -13,7 +13,7 @@ namespace Project.Constraints.Models
         public object? Payload { get; set; }
         public int Code { get; set; }
     }
-    public class JsActionResult<T> : JsActionResult, IQueryResult<T>
+    public class JsActionResult<T> : JsActionResult
     {
         public new T? Payload { get; set; }
     }

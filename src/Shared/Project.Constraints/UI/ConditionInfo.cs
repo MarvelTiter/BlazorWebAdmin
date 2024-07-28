@@ -32,7 +32,8 @@ public class ConditionInfo
     }
     public ConditionInfo()
     {
-
+        //ValueType
+        //System.Type
     }
     [JsonIgnore]
     [NotNull]

@@ -33,7 +33,7 @@ public class LogAopAttribute : AbstractInterceptorAttribute
             ActionResult = result?.Success ?? false ? "成功" : "失败",
             ActionMessage = result?.Message ?? "",
         };
-        await logService!.Log(l);
+        await logService!.WriteLog(l);
     }
 
     private static async Task<T> GetReturnValue<T>(AspectContext context)

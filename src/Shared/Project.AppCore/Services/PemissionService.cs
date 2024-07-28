@@ -1,9 +1,11 @@
 ﻿using Project.Constraints.Models.Permissions;
 using LightORM.Extension;
+using AutoWasmApiGenerator;
+using AutoInjectGenerator;
+using MT.Generators.Abstraction;
 namespace Project.AppCore.Services
 {
-    [IgnoreAutoInject]
-    public class PermissionService<TPower, TRole, TRolePower, TUserRole> : IPermissionService<TPower, TRole>
+    public class PermissionService<TPower, TRole, TRolePower, TUserRole>
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
         where TRolePower : class, IRolePower, new()
@@ -15,31 +17,31 @@ namespace Project.AppCore.Services
         {
             this.context = context;
         }
-        public async Task<IQueryCollectionResult<TPower>> GetPowerListAsync(GenericRequest<TPower> req)
+        public async Task<QueryCollectionResult<TPower>> GetPowerListAsync(GenericRequest<TPower> req)
         {
             var list = await context.Repository<TPower>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize, p => p.Sort);
             return list.CollectionResult((int)total);
         }
 
-        public async Task<IQueryCollectionResult<TPower>> GetAllPowerAsync()
+        public async Task<QueryCollectionResult<TPower>> GetAllPowerAsync()
         {
             var list = await context.Select<TPower>().OrderBy(e => e.Sort).ToListAsync();
             return list.CollectionResult();
         }
 
-        public async Task<IQueryCollectionResult<TRole>> GetRoleListAsync(GenericRequest<TRole> req)
+        public async Task<QueryCollectionResult<TRole>> GetRoleListAsync(GenericRequest<TRole> req)
         {
             var list = await context.Repository<TRole>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize);
             return list.CollectionResult((int)total);
         }
 
-        public async Task<IQueryCollectionResult<TRole>> GetAllRoleAsync()
+        public async Task<QueryCollectionResult<TRole>> GetAllRoleAsync()
         {
             var list = await context.Repository<TRole>().GetListAsync(e => true);
             return list.CollectionResult();
         }
 
-        public async Task<IQueryCollectionResult<TPower>> GetPowerListByUserIdAsync(string usrId)
+        public async Task<QueryCollectionResult<TPower>> GetPowerListByUserIdAsync(string usrId)
         {
             var powers = await context.Select<TPower, TRolePower, TUserRole>(w => new { w.Tb1.PowerId, w.Tb1.PowerName, w.Tb1.ParentId, w.Tb1.PowerType, w.Tb1.PowerLevel, w.Tb1.Icon, w.Tb1.Path, w.Tb1.Sort })
                                       .Distinct()
@@ -51,7 +53,7 @@ namespace Project.AppCore.Services
             return powers.CollectionResult();
         }
 
-        public async Task<IQueryCollectionResult<TPower>> GetPowerListByRoleIdAsync(string roleId)
+        public async Task<QueryCollectionResult<TPower>> GetPowerListByRoleIdAsync(string roleId)
         {
             var powers = await context.Select<TPower, TRolePower>()
                                       .InnerJoin<TRolePower>((r, p) => p.PowerId == r.PowerId)
@@ -60,7 +62,7 @@ namespace Project.AppCore.Services
             return powers.CollectionResult();
         }
 
-        public async Task<IQueryCollectionResult<TRole>> GetUserRolesAsync(string usrId)
+        public async Task<QueryCollectionResult<TRole>> GetUserRolesAsync(string usrId)
         {
             var roles = await context.Select<TRole, TUserRole>()
                                      .InnerJoin<TUserRole>((r, ur) => r.RoleId == ur.RoleId)
@@ -69,11 +71,13 @@ namespace Project.AppCore.Services
             return roles.CollectionResult();
         }
 
-        public async Task<IQueryResult<bool>> SaveUserRoleAsync(string usrId, params string[] roles)
+        public async Task<QueryResult<bool>> SaveUserRoleAsync(KeyRelations<string, string> relations)
         {
             try
             {
                 await context.BeginTranAsync();
+                var usrId = relations.Main;
+                var roles = relations.Slaves ?? [];
                 await context.Delete<TUserRole>().Where(u => u.UserId == usrId).ExecuteAsync();
                 foreach (var r in roles)
                 {
@@ -90,11 +94,13 @@ namespace Project.AppCore.Services
             }
         }
 
-        public async Task<IQueryResult<bool>> SaveRolePowerAsync(string roleId, params string[] powers)
+        public async Task<QueryResult<bool>> SaveRolePowerAsync(KeyRelations<string, string> relations)
         {
             try
             {
                 await context.BeginTranAsync();
+                var roleId = relations.Main;
+                var powers = relations.Slaves ?? [];
                 var n = await context.Delete<TRolePower>().Where(r => r.RoleId == roleId).ExecuteAsync();
                 foreach (var p in powers)
                 {
@@ -112,31 +118,31 @@ namespace Project.AppCore.Services
             }
         }
 
-        public async Task<IQueryResult<bool>> UpdatePowerAsync(TPower power)
+        public async Task<QueryResult<bool>> UpdatePowerAsync(TPower power)
         {
             var n = await context.Repository<TPower>().UpdateAsync(power, p => p.PowerId == power.PowerId);
             return (n > 0).Result();
         }
 
-        public async Task<IQueryResult<bool>> InsertPowerAsync(TPower power)
+        public async Task<QueryResult<bool>> InsertPowerAsync(TPower power)
         {
             var n = await context.Repository<TPower>().InsertAsync(power);
             return (n > 0).Result();
         }
 
-        public async Task<IQueryResult<bool>> UpdateRoleAsync(TRole role)
+        public async Task<QueryResult<bool>> UpdateRoleAsync(TRole role)
         {
             var n = await context.Repository<TRole>().UpdateAsync(role, r => r.RoleId == role.RoleId);
             return (n > 0).Result();
         }
 
-        public async Task<IQueryResult<bool>> InsertRoleAsync(TRole role)
+        public async Task<QueryResult<bool>> InsertRoleAsync(TRole role)
         {
             var n = await context.Repository<TRole>().InsertAsync(role);
             return (n > 0).Result();
         }
 
-        public async Task<IQueryResult<bool>> DeleteRoleAsync(TRole role)
+        public async Task<QueryResult<bool>> DeleteRoleAsync(TRole role)
         {
             try
             {
@@ -155,7 +161,7 @@ namespace Project.AppCore.Services
 
         }
 
-        public async Task<IQueryResult<bool>> DeletePowerAsync(TPower power)
+        public async Task<QueryResult<bool>> DeletePowerAsync(TPower power)
         {
             try
             {
@@ -174,11 +180,12 @@ namespace Project.AppCore.Services
         }
     }
 
-    [IgnoreAutoInject]
-    public class PermissionService<TPower, TRolePower, TUserRole> : IPermissionService
-        where TPower : class, IPower, new()
-        where TRolePower : class, IRolePower, new()
-        where TUserRole : class, IUserRole, new()
+    //[WebController(Route = "permissionforpower")]
+    //[ApiInvokerGenera(typeof(AutoInjectAttribute))]
+    //[AttachAttributeArgument(typeof(ApiInvokerGeneraAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
+    [AutoInject(Group = "SERVER")]
+    public class PermissionService : IPermissionService
+
     {
         private readonly IExpressionContext context;
 
@@ -186,7 +193,10 @@ namespace Project.AppCore.Services
         {
             this.context = context;
         }
-        public async Task<IQueryCollectionResult<IPower>> GetPowerListByUserIdAsync(string usrId)
+        public async Task<QueryCollectionResult<IPower>> GetPowerListByUserIdAsync<TPower, TRolePower, TUserRole>(string usrId)
+            where TPower : class, IPower, new()
+            where TRolePower : class, IRolePower, new()
+            where TUserRole : class, IUserRole, new()
         {
             var powers = await context.Select<TPower, TRolePower, TUserRole>(w => new { w.Tb1.PowerId, w.Tb1.PowerName, w.Tb1.ParentId, w.Tb1.PowerType, w.Tb1.PowerLevel, w.Tb1.Icon, w.Tb1.Path, w.Tb1.Sort })
                                       .Distinct()
@@ -199,11 +209,10 @@ namespace Project.AppCore.Services
         }
     }
 
-    public interface IStandardPermissionService : IPermissionService<Power, Role>
-    {
-
-    }
-    [WebApiGenerator.Attributes.WebController(Route = "permission")]
+    [WebController(Route = "standardpermission")]
+    [ApiInvokerGenera(typeof(AutoInjectAttribute))]
+    [AttachAttributeArgument(typeof(ApiInvokerGeneraAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
+    [AutoInject(ServiceType = typeof(IStandardPermissionService), Group = "SERVER")]
     public class StandardPermissionService : PermissionService<Power, Role, RolePower, UserRole>, IStandardPermissionService
     {
         public StandardPermissionService(IExpressionContext context) : base(context)
@@ -211,5 +220,4 @@ namespace Project.AppCore.Services
 
         }
     }
-
 }

@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 
 namespace Project.Constraints.UI.Builders
 {
-    [IgnoreAutoInject]
     public class PropComponentBuilder<TComponent, TPropModel> : ComponentBuilderBasic<TComponent, PropComponentBuilder<TComponent, TPropModel>>, IUIComponent<TPropModel>
         where TPropModel : new()
         where TComponent : IComponent

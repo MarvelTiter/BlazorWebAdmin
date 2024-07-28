@@ -1,9 +1,11 @@
-﻿using Project.Constraints.Models.Permissions;
+﻿using AutoInjectGenerator;
+using AutoWasmApiGenerator;
+using MT.Generators.Abstraction;
+using Project.Constraints.Models.Permissions;
 
 namespace Project.AppCore.Services
 {
-    [IgnoreAutoInject]
-    public partial class UserService<TUser> : IUserService<TUser> where TUser : IUser
+    public class UserService<TUser> : IUserService<TUser> where TUser : IUser
     {
         private readonly IExpressionContext context;
 
@@ -12,7 +14,7 @@ namespace Project.AppCore.Services
             this.context = context;
         }
 
-        public async Task<IQueryResult> DeleteUserAsync(TUser user)
+        public async Task<QueryResult> DeleteUserAsync(TUser user)
         {
             await context.BeginTranAsync();
             await context.Delete<TUser>().Where(u => u.UserId == user.UserId).ExecuteAsync();
@@ -21,19 +23,19 @@ namespace Project.AppCore.Services
             return true.Result();
         }
 
-        public async Task<IQueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req)
+        public async Task<QueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req)
         {
             var list = await context.Repository<TUser>().GetListAsync(req.Expression, out var count, req.PageIndex, req.PageSize);
             return list.CollectionResult((int)count);
         }
 
-        public async Task<IQueryResult> InsertUserAsync(TUser user)
+        public async Task<QueryResult> InsertUserAsync(TUser user)
         {
             var u = await context.Repository<TUser>().InsertAsync(user);
             return u.Result();
         }
 
-        public async Task<IQueryResult> ModifyUserPasswordAsync(string uid, string old, string pwd)
+        public async Task<QueryResult> ModifyUserPasswordAsync(string uid, string old, string pwd)
         {
             var flag = await context.Update<TUser>()
                 .Set(u => u.Password, pwd)
@@ -42,7 +44,7 @@ namespace Project.AppCore.Services
             return flag.Result();
         }
 
-        public async Task<IQueryResult> UpdateUserAsync(TUser user)
+        public async Task<QueryResult> UpdateUserAsync(TUser user)
         {
             var flag = await context.Repository<TUser>().UpdateAsync(user, u => u.UserId == user.UserId);
             return flag.Result();
@@ -51,6 +53,31 @@ namespace Project.AppCore.Services
         {
             var u = await context.Repository<TUser>().GetSingleAsync(u => u.UserId == id);
             return u;
+        }
+    }
+
+    //[WebController]
+    [AutoInject(Group = "SERVER")]
+    public class UserService : IUserService
+    {
+        public UserService()
+        {
+
+        }
+        public Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    //[WebController(Route = "user")]
+    [ApiInvokerGenera(typeof(AutoInjectAttribute))]
+    [AttachAttributeArgument(typeof(ApiInvokerGeneraAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
+    [AutoInject(Group = "SERVER")]
+    public class StandardUserService : UserService<User>, IStandardUserService
+    {
+        public StandardUserService(IExpressionContext context) : base(context)
+        {
         }
     }
 }

@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoInjectGenerator;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Project.Constraints.Common;
 using Project.Constraints.Options;
 
 namespace Project.AppCore.Middlewares
 {
+    [AutoInject(ServiceType = typeof(CheckBrowserEnabledMiddleware), LifeTime = InjectLifeTime.Singleton)]
     public class CheckBrowserEnabledMiddleware : IMiddleware
     {
         private readonly IOptionsMonitor<AppSetting> options;

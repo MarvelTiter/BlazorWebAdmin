@@ -1,7 +1,6 @@
 ﻿
 namespace Project.Constraints.Store;
 
-[AutoInject]
 public interface IUserStore
 {
     event Func<UserInfo, Task> LoginSuccessEvent;

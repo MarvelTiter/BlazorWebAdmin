@@ -50,6 +50,7 @@
         if (User.UserInfo == null)
             return;
         var pwd = await UI.ShowDialogAsync<ModifyUserPassword, UserPwd>(Localizer["UserPwd.Title"]);
-        await UserSrv.ModifyUserPasswordAsync(User.UserInfo.UserId, pwd.OldPassword, pwd.Password);
+        pwd.UserId = User.UserInfo.UserId;
+        await UserSrv.ModifyUserPasswordAsync(pwd);
     }
 }

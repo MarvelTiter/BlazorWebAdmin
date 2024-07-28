@@ -1,3 +1,4 @@
+using AutoInjectGenerator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders.Physical;
 using Project.AppCore.Auth;
@@ -8,6 +9,7 @@ using System.Text.Json;
 
 namespace Project.AppCore.Middlewares
 {
+    [AutoInject(ServiceType = typeof(GetClientIpMiddleware), LifeTime = InjectLifeTime.Singleton)]
     public class GetClientIpMiddleware : IMiddleware
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)

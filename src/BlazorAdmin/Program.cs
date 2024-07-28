@@ -3,10 +3,13 @@ using BlazorAdmin.TestPages;
 using Project.AppCore;
 using Project.Constraints;
 using Project.Constraints.Models.Permissions;
+using Project.Constraints.Models.Request;
 using Project.Constraints.Services;
 using Project.Services;
 using Project.UI.AntBlazor;
 using Project.Web.Shared.Pages;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +30,10 @@ builder.AddProject(setting =>
     setting.ConfigureSettingProviderType<CustomSetting>();
     setting.AddInterceotor<AdditionalTest>();
 });
-builder.Services.AddControllers().AddApplicationPart(typeof(Project.AppCore._Imports).Assembly);
+
+builder.Services.AutoInject();
+
+//builder.Services.AddControllers().AddApplicationPart(typeof(Project.AppCore._Imports).Assembly);
 builder.AddDefaultLightOrm();
 
 var app = builder.Build();

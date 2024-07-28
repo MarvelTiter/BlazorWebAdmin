@@ -2,7 +2,6 @@
 
 namespace Project.Constraints.Store
 {
-    [AutoInject]
     public interface IAppStore
     {
         bool Working { get; set; }

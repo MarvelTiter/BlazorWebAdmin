@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoInjectGenerator;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders.Physical;
 using Project.AppCore.Auth;
 using Project.Constraints;
@@ -6,6 +7,7 @@ using System.Text;
 
 namespace Project.AppCore.Middlewares
 {
+    [AutoInject(ServiceType = typeof(FileDownloaderMiddleware), LifeTime = InjectLifeTime.Singleton)]
     public class FileDownloaderMiddleware : IMiddleware
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)

@@ -3,10 +3,11 @@ using Project.Constraints.PageHelper;
 
 namespace Project.Web.Shared.Pages
 {
-    public class OperationLog<TRunLog> : ModelPage<TRunLog, GenericRequest<TRunLog>>, IPageAction
+    public class OperationLog<TRunLog, TRunLogService> : ModelPage<TRunLog, GenericRequest<TRunLog>>, IPageAction
         where TRunLog : class, IRunLog, new()
+        where TRunLogService : IRunLogService<TRunLog>
     {
-        [Inject, NotNull] IRunLogService<TRunLog>? RunLogSrv { get; set; }
+        [Inject, NotNull] TRunLogService? RunLogSrv { get; set; }
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -19,9 +20,9 @@ namespace Project.Web.Shared.Pages
 
         protected override object SetRowKey(TRunLog model) => model.LogId;
 
-        protected override Task<IQueryCollectionResult<TRunLog>> OnQueryAsync(GenericRequest<TRunLog> query) => RunLogSrv.GetRunLogsAsync(query);
+        protected override Task<QueryCollectionResult<TRunLog>> OnQueryAsync(GenericRequest<TRunLog> query) => RunLogSrv.GetRunLogsAsync(query);
 
-        protected override Task<IQueryCollectionResult<TRunLog>> OnExportAsync(GenericRequest<TRunLog> query) => base.OnExportAsync(query);
+        protected override Task<QueryCollectionResult<TRunLog>> OnExportAsync(GenericRequest<TRunLog> query) => base.OnExportAsync(query);
 
     }
 }

@@ -1,8 +1,8 @@
-﻿using Project.Constraints.Store;
+﻿using AutoInjectGenerator;
+using Project.Constraints.Store;
 
 namespace Project.Constraints.Services
 {
-    [AutoInject]
     public interface IWebSettingInitService
     {
         void UpdateUserInfo(UserInfo info);

@@ -5,12 +5,11 @@ using Project.Web.Shared.Pages;
 
 namespace Project.AppCore
 {
-    [IgnoreAutoInject]
     public abstract class BasicSetting : IProjectSettingService//, IDisposable
     {
         protected UserInfo? CurrentUser { get; set; }
 
-        public abstract Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
+        public abstract Task<QueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
         public abstract Task<int> UpdateLoginInfo(UserInfo info);
         public virtual Task LoginSuccessAsync(UserInfo result)
         {

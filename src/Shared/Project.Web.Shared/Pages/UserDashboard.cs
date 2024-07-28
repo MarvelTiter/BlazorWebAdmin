@@ -16,7 +16,7 @@ namespace Project.AppCore.Clients
             Options.LoadDataOnLoaded = true;
         }
 
-        protected override async Task<IQueryCollectionResult<ClientInfo>> OnQueryAsync(GenericRequest query)
+        protected override async Task<QueryCollectionResult<ClientInfo>> OnQueryAsync(GenericRequest query)
         {
             await Task.Delay(1);
             return CircuitTrackerGlobalInfo.CircuitClients.Values.Where(c => c.UserAgent != null).CollectionResult();

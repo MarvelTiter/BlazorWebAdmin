@@ -43,7 +43,6 @@ namespace Project.Constraints.Models
         }
     }
 
-    [IgnoreAutoInject]
     public class SelectItem<T> : IEnumerable<Options<T>>
     {
         private readonly List<Options<T>> items = new();
@@ -111,7 +110,6 @@ namespace Project.Constraints.Models
         }
     }
 
-    [IgnoreAutoInject]
     public class Options<T>
     {
         public Options(string label, T value)

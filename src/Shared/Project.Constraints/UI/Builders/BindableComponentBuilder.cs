@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 
 namespace Project.Constraints.UI.Builders
 {
-    [IgnoreAutoInject]
     public class BindableComponentBuilder<TComponent, TPropModel, TValue> : PropComponentBuilder<TComponent, TPropModel>, IBindableInputComponent<TPropModel, TValue>
         where TComponent : IComponent
         where TPropModel : DefaultProp, new()
