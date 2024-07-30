@@ -45,10 +45,10 @@ namespace Project.Constraints.Models.Request
         public CompareType? CompareType { get; }
         public object? Value { get; }
         public LinkType? LinkType { get; set; }
+        public IList<ConditionUnit>? Children { get; set; }
     }
     public class ConditionAggregation
     {
-        public LinkType? LinkType { get; set; }
-        public IList<ConditionUnit>? Conditions { get; set; }
+        public IList<ConditionUnit> Conditions { get; set; } = [];
     }
 }

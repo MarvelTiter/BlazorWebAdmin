@@ -1,11 +1,24 @@
 ﻿@namespace Project.Web.Shared.Components
 @inherits BasicComponent
 <div>
-
+    @foreach (var item in ConditionAggregation.Conditions)
+    {
+        <Group></Group>
+    }
 </div>
 
 @code {
     [Parameter, NotNull] public List<ColumnInfo>? Columns { get; set; }
-    [Parameter, NotNull] public IList<ConditionAggregation> ConditionAggregations { get; set; } = [];
-    [Parameter, NotNull] public EventCallback<IList<ConditionAggregation>> ConditionAggregationsChanged { get; set; }
+    [Parameter, NotNull] public ConditionAggregation? ConditionAggregation { get; set; }
+    [Parameter, NotNull] public EventCallback<ConditionAggregation> ConditionAggregationChanged { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (ConditionAggregation == null || ConditionAggregation.Conditions.Count == 0)
+        {
+            ConditionAggregation = new ConditionAggregation();
+            ConditionAggregation.Conditions.Add(new ConditionUnit());
+        }
+    }
 }

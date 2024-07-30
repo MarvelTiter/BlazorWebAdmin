@@ -1,0 +1,9 @@
+﻿@namespace Project.Web.Shared.Components
+@foreach (var item in Item.Children ?? [])
+{
+    
+}
+
+@code {
+    [Parameter, NotNull] public ConditionUnit? Item { get; set; }
+}
