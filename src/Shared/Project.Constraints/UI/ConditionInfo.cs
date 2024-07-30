@@ -20,6 +20,7 @@ public enum CompareType
     [Display(Name = "<=")]
     LessThanOrEqual,
 }
+
 public class ConditionInfo
 {
     public ConditionInfo(string Name, CompareType Type, object? Value, Type ValueType, bool Legal)
