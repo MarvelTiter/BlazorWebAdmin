@@ -11,7 +11,7 @@
         <StackPanel>
             @if (Options?.EnabledAdvancedQuery ?? false)
             {
-                <ConditionBuilder Columns=@Options.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder>
+                @* <ConditionBuilder Columns=@Options.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder> *@
             }
             @UI.BuildButton(this).OnClick(Search).Text(TableLocalizer["TableButtons.Query"]).Primary().Render()
             @if (Options?.EnabledAdvancedQuery ?? false)
@@ -56,7 +56,7 @@
     private bool AdvanceModalVisible = false;
     private ConditionInfo? conditionInfo;
     private Expression<Func<TData, bool>>? ConditionExpression = e => true;
-    ConditionBuilder? insRef;
+    ConditionBuilder<TData>? insRef;
 
     readonly string cache_key = $"TableOptions_{typeof(TData).Name}_ConditionAction";
     async Task CacheInfo(ConditionInfo info)
@@ -74,7 +74,7 @@
                 var result = await LocalStorage.GetAsync<ConditionInfo>(cache_key);
                 if (result.Success)
                 {
-                    insRef?.InitStatus(result.Value!);
+                    // insRef?.InitStatus(result.Value!);
                 }
             }
             catch

@@ -1,9 +1,65 @@
 ﻿@namespace Project.Web.Shared.Components
-@foreach (var item in Item.Children ?? [])
-{
-    
+@{
+    int childIndex = 0;
 }
+<div style="padding:5px;">
+    @if (Index > 0)
+    {
+        <div>
+            @UI.BuildSwitch(this).Bind(() => link, UpdateLinkType).Set(p => p.CheckedLabel, "并且").Set(p => p.UnCheckedLabel, "或者").Render()
+        </div>
+    }
+    <MRow Style="@($"min-width:450px;")">
+        <MCol ColSpan="8">
+            <span>PropertyName</span>
+        </MCol>
+        <MCol ColSpan="4">
+            @(UI.BuildSelect<CompareType>(this, null).Render())
+        </MCol>
+        <MCol ColSpan="8">
+            <span>PropertyValue</span>
+        </MCol>
+        <MCol ColSpan="4">
+            @UI.BuildButton(this).Text("+").Primary().OnClick(AddChild).Render()
+        </MCol>
+    </MRow>
+    @if (Item.Children.Count > 0)
+    {
+        <div>
+            @UI.BuildSwitch(this).Bind(() => linkChildren, UpdateLinkChildren).Set(p => p.CheckedLabel, "并且").Set(p => p.UnCheckedLabel, "或者").Render()
+        </div>
+        <div style="border:1px solid #ccc; padding:10px; margin-left:10px;">
+            @foreach (var item in Item.Children)
+            {
+                <Group Item="item" Columns="Columns" UI="UI" Index="childIndex"></Group>
+                childIndex++;
+            }
+        </div>
+    }
+</div>
 
 @code {
     [Parameter, NotNull] public ConditionUnit? Item { get; set; }
+    [Parameter, NotNull] public List<ColumnInfo>? Columns { get; set; }
+    [Parameter, NotNull] public IUIService? UI { get; set; }
+    [Parameter] public int Index { get; set; }
+    bool linkChildren;
+    bool link;
+    public Task AddChild()
+    {
+        Item.Children.Add(new());
+        // return InvokeAsync(StateHasChanged);
+        return Task.CompletedTask;
+    }
+
+    public Task UpdateLinkChildren()
+    {
+        Item.LinkChildren = linkChildren ? LinkType.AndAlso : LinkType.OrElse;
+        return Task.CompletedTask;
+    }
+    public Task UpdateLinkType()
+    {
+        Item.LinkType = link ? LinkType.AndAlso : LinkType.OrElse;
+        return Task.CompletedTask;
+    }
 }

@@ -1,24 +1,29 @@
 ﻿@namespace Project.Web.Shared.Components
+@typeparam TModel
 @inherits BasicComponent
+@{
+    int index = 0;
+}
 <div>
-    @foreach (var item in ConditionAggregation.Conditions)
+    @foreach (var item in Condition.Children)
     {
-        <Group></Group>
+        <Group Item="item" Columns="Columns" UI="@UI" Index="index"></Group>
+        index++;
     }
 </div>
 
 @code {
-    [Parameter, NotNull] public List<ColumnInfo>? Columns { get; set; }
-    [Parameter, NotNull] public ConditionAggregation? ConditionAggregation { get; set; }
-    [Parameter, NotNull] public EventCallback<ConditionAggregation> ConditionAggregationChanged { get; set; }
-
+    [Parameter, NotNull] public ConditionUnit? Condition { get; set; }
+    [Parameter, NotNull] public EventCallback<ConditionUnit> ConditionChanged { get; set; }
+    private List<ColumnInfo>? Columns;
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        if (ConditionAggregation == null || ConditionAggregation.Conditions.Count == 0)
+        if (Condition == null || Condition.Children.Count == 0)
         {
-            ConditionAggregation = new ConditionAggregation();
-            ConditionAggregation.Conditions.Add(new ConditionUnit());
+            Condition = new ConditionUnit();
+            Condition.Children.Add(new ConditionUnit());
         }
+        Columns = typeof(TModel).GenerateColumns();
     }
 }
