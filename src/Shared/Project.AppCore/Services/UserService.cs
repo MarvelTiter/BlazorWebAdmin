@@ -25,7 +25,7 @@ namespace Project.AppCore.Services
 
         public async Task<QueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req)
         {
-            var list = await context.Repository<TUser>().GetListAsync(req.Expression, out var count, req.PageIndex, req.PageSize);
+            var list = await context.Repository<TUser>().GetListAsync(req.Expression(), out var count, req.PageIndex, req.PageSize);
             return list.CollectionResult((int)count);
         }
 

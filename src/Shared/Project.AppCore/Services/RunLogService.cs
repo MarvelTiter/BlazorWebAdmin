@@ -16,7 +16,7 @@ namespace Project.AppCore.Services
 
         public async Task<QueryCollectionResult<TRunLog>> GetRunLogsAsync(GenericRequest<TRunLog> req)
         {
-            var list = await context.Repository<TRunLog>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize, log => log.LogId, false);
+            var list = await context.Repository<TRunLog>().GetListAsync(req.Expression(), out var total, req.PageIndex, req.PageSize, log => log.LogId, false);
             return list.CollectionResult((int)total);
         }
 

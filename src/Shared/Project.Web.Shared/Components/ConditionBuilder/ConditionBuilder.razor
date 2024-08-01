@@ -7,7 +7,6 @@
 @if (Condition.Children.Count == 0)
 {
     @UI.BuildButton(this).Text("新增条件").Primary().OnClick(() => Condition.Children.Add(new())).Render()
-    ;
 }
 <div>
     <CascadingValue Value="this" IsFixed="true">
@@ -29,7 +28,7 @@
 @code {
     [Parameter, NotNull] public ConditionUnit? Condition { get; set; }
     [Parameter, NotNull] public EventCallback<ConditionUnit> ConditionChanged { get; set; }
-    [Parameter] public int Indent { get; set; } = 10;
+    [Parameter] public int Indent { get; set; } = 20;
     private List<ColumnInfo>? Columns;
     public SelectItem<LinkType> LinkOptions = new();
     protected override void OnInitialized()
@@ -38,6 +37,7 @@
         LinkOptions.Add("或者", LinkType.OrElse);
         base.OnInitialized();
         Columns = typeof(TModel).GenerateColumns();
+        Condition ??= new();
         Condition.LinkType = LinkType.None;
     }
         

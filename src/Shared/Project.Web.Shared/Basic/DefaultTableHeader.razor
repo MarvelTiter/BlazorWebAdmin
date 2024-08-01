@@ -36,15 +36,14 @@
 @if (Options?.EnabledAdvancedQuery ?? false)
 {
     <MModal @bind-Visible="AdvanceModalVisible" Title=@TableLocalizer["TableButtons.AdvancedQuery"] HideDefaultFooter>
-        <ConditionGroup Columns=@Options.Columns
-                        TData=TData
-                        Localizer="Localizer"
-                        TableLocalizer="TableLocalizer"
-                        @bind-Expression="ConditionExpression"
-                        ShowExportButton=@(Options.ShowExportButton)
-                        OnConfirmToSearch=AdvanceSearch
-                        OnConfirmToExport=AdvanceExport>
-        </ConditionGroup>
+        <AdvanceQuery TData=TData
+                      Localizer="Localizer"
+                      TableLocalizer="TableLocalizer"
+                      @bind-Condition="Options.Query.Condition"
+                      ShowExportButton=@(Options.ShowExportButton)
+                      OnConfirmToSearch=AdvanceSearch
+                      OnConfirmToExport=AdvanceExport>
+        </AdvanceQuery>
     </MModal>
 }
 @code {
@@ -105,8 +104,8 @@
             return;
         }
         Options.Query.PageIndex = 1;
-        if (conditionInfo != null)
-            Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
+        // if (conditionInfo != null)
+        //     Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
         await Options.RefreshAsync();
     }
 
@@ -116,8 +115,8 @@
         {
             return;
         }
-        if (conditionInfo != null)
-            Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
+        // if (conditionInfo != null)
+        //     Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
         await Options.ExportAsync();
     }
 
@@ -128,7 +127,7 @@
         {
             return;
         }
-        Options.Query.Expression = ConditionExpression;
+        // Options.Query.Expression = ConditionExpression;
         AdvanceModalVisible = false;
         await Options.ExportAsync();
     }
@@ -140,7 +139,7 @@
             return;
         }
         Options.Query.PageIndex = 1;
-        Options.Query.Expression = ConditionExpression;
+        // Options.Query.Expression = ConditionExpression;
         AdvanceModalVisible = false;
         await Options.RefreshAsync();
     }

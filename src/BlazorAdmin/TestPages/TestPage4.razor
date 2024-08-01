@@ -1,5 +1,6 @@
 ﻿@using Project.Constraints.Models.Request
 @using Project.Constraints.UI
+@using Project.Constraints.Utils
 @inject IUIService UI
 <h3>TestPage4</h3>
 
@@ -10,13 +11,15 @@
 <pre>
     @jsonResult
 </pre>
+
 @code {
     ConditionUnit condition = new();
 
     public void BuildExpression()
     {
-        ToJson();
-
+        // ToJson();
+        var exp = condition.BuildExpression<Project.Constraints.Models.Permissions.User>();
+        jsonResult = exp.ToString();
     }
     string? jsonResult;
     public void ToJson()

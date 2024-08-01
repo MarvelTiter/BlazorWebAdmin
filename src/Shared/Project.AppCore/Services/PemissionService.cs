@@ -19,7 +19,7 @@ namespace Project.AppCore.Services
         }
         public async Task<QueryCollectionResult<TPower>> GetPowerListAsync(GenericRequest<TPower> req)
         {
-            var list = await context.Repository<TPower>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize, p => p.Sort);
+            var list = await context.Repository<TPower>().GetListAsync(req.Expression(), out var total, req.PageIndex, req.PageSize, p => p.Sort);
             return list.CollectionResult((int)total);
         }
 
@@ -31,7 +31,7 @@ namespace Project.AppCore.Services
 
         public async Task<QueryCollectionResult<TRole>> GetRoleListAsync(GenericRequest<TRole> req)
         {
-            var list = await context.Repository<TRole>().GetListAsync(req.Expression, out var total, req.PageIndex, req.PageSize);
+            var list = await context.Repository<TRole>().GetListAsync(req.Expression(), out var total, req.PageIndex, req.PageSize);
             return list.CollectionResult((int)total);
         }
 

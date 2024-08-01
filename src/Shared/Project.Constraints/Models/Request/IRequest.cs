@@ -16,10 +16,10 @@ namespace Project.Constraints.Models.Request
         /// </summary>
         public bool FixTime { get; set; }
         //public Expression? Expression { get; set; }
+        ConditionUnit Condition { get; set; }
     }
     public interface IRequest<T> : IRequest
     {
-        ConditionUnit Condition { get; set; }
     }
 
     public static class RequestExtensions

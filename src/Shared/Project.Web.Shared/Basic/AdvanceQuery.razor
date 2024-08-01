@@ -1,0 +1,35 @@
+﻿@typeparam TData
+@inherits BasicComponent
+<ConditionBuilder TModel="TData" Condition="@Condition" ConditionChanged="@ConditionChanged"></ConditionBuilder>
+<div style="text-align:right;margin-top:10px;">
+    @UI.BuildButton(this).Text(TableLocalizer["TableButtons.Query"].Value).OnClick(ConfirmConditionToSearch).SetButtonType(ButtonType.Primary).Render()
+    @if (ShowExportButton)
+    {
+        @UI.BuildButton(this).Text(TableLocalizer["TableButtons.Export"].Value).OnClick(ConfirmConditionToExport).SetButtonType(ButtonType.Primary).Render()
+    }
+</div>
+@code {
+    [Parameter] public ConditionUnit? Condition { get; set; }
+    [Parameter, NotNull] public EventCallback<ConditionUnit> ConditionChanged { get; set; }
+    [Parameter] public bool ShowExportButton { get; set; }
+    [Parameter] public EventCallback OnConfirmToSearch { get; set; }
+    [Parameter] public EventCallback OnConfirmToExport { get; set; }
+    [Parameter, NotNull] public IStringLocalizer? Localizer { get; set; }
+    [Parameter, NotNull] public IStringLocalizer? TableLocalizer { get; set; }
+
+    public async Task ConfirmConditionToSearch()
+    {
+        if (OnConfirmToSearch.HasDelegate)
+        {
+            await OnConfirmToSearch.InvokeAsync();
+        }
+    }
+
+    public async Task ConfirmConditionToExport()
+    {
+        if (OnConfirmToExport.HasDelegate)
+        {
+            await OnConfirmToExport.InvokeAsync();
+        }
+    }
+}

@@ -24,7 +24,7 @@ namespace Project.Constraints.Utils
             Expression? returnExpression = null;
             foreach (var item in conditions)
             {
-                if (string.IsNullOrEmpty(item.Name) || item.Value == null)
+                if (string.IsNullOrEmpty(item.Name) || item.Value == null || string.IsNullOrEmpty(item.Value?.ToString()))
                 {
                     continue;
                 }
@@ -76,7 +76,7 @@ namespace Project.Constraints.Utils
             return exp;
         }
 
-        static Dictionary<LinkType, ExpressionType> LinkTypeMap = new()
+        static readonly Dictionary<LinkType, ExpressionType> LinkTypeMap = new()
         {
             [LinkType.AndAlso] = ExpressionType.AndAlso,
             [LinkType.OrElse] = ExpressionType.OrElse
