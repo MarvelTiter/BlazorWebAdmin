@@ -1,65 +1,142 @@
 ﻿@namespace Project.Web.Shared.Components
+@typeparam TModel
 @{
     int childIndex = 0;
 }
 <div style="padding:5px;">
     @if (Index > 0)
     {
-        <div>
-            @UI.BuildSwitch(this).Bind(() => link, UpdateLinkType).Set(p => p.CheckedLabel, "并且").Set(p => p.UnCheckedLabel, "或者").Render()
+        <div style="margin-bottom:10px;">
+            @(UI.BuildRadioGroup<Options<LinkType>, LinkType>(this, Root.LinkOptions)
+                .LabelExpression(p => p.Label)
+                .ValueExpression(p => p.Value)
+                .Bind(() => Item.LinkType)
+                .Set(p => p.ButtonGroup, true)
+                .Render())
         </div>
     }
-    <MRow Style="@($"min-width:450px;")">
-        <MCol ColSpan="8">
-            <span>PropertyName</span>
-        </MCol>
-        <MCol ColSpan="4">
-            @(UI.BuildSelect<CompareType>(this, null).Render())
-        </MCol>
-        <MCol ColSpan="8">
-            <span>PropertyValue</span>
-        </MCol>
-        <MCol ColSpan="4">
-            @UI.BuildButton(this).Text("+").Primary().OnClick(AddChild).Render()
-        </MCol>
-    </MRow>
+    <StackPanel>
+        @(UI.BuildSelect<ColumnInfo, string>(this, Columns)
+            .ValueExpression(c => c.PropertyOrFieldName)
+            .LabelExpression(c => c.Label)
+            .Bind(() => Item.Name!)
+            .Style("width:150px;")
+            .Render()
+            )
+        @(UI.BuildSelect<CompareType>(this, null)
+            .Bind(() => Item.CompareType)
+            .Style("width:80px;")
+            .Render())
+        @ValueInput()
+        @if (Index == 0)
+        {
+            @UI.BuildButton(this).Text("新增条件").Primary().OnClick(AddSibling).Render()
+        }
+        @UI.BuildButton(this).Text("新增子条件").Primary().OnClick(AddChild).Render()
+        @UI.BuildButton(this).Text("移除").Primary().OnClick(Remove).Render()
+    </StackPanel>
+
     @if (Item.Children.Count > 0)
     {
-        <div>
-            @UI.BuildSwitch(this).Bind(() => linkChildren, UpdateLinkChildren).Set(p => p.CheckedLabel, "并且").Set(p => p.UnCheckedLabel, "或者").Render()
-        </div>
-        <div style="border:1px solid #ccc; padding:10px; margin-left:10px;">
-            @foreach (var item in Item.Children)
-            {
-                <Group Item="item" Columns="Columns" UI="UI" Index="childIndex"></Group>
-                childIndex++;
-            }
+        <div class="children-wrapper">
+            <div style=@($"padding:8px 0;margin-left:{Indent}px;")>
+                @(UI.BuildRadioGroup<Options<LinkType>, LinkType>(this, Root.LinkOptions)
+                    .LabelExpression(p => p.Label)
+                    .ValueExpression(p => p.Value)
+                    .Bind(() => Item.LinkChildren)
+                    .Set(p => p.ButtonGroup, true)
+                    .Render())
+                @UI.BuildButton(this).Text("移除").Primary().OnClick(RemoveChildren).Render()
+            </div>
+            <div style=@($"border:1px solid #ccc; padding: 8px {Indent}px; margin-left:{Indent}px;")>
+                @foreach (var item in Item.Children)
+                {
+                    <Group Item="item" Columns="Columns" UI="UI" Indent="@Indent" Index="childIndex" Parent="Item" TModel="TModel"></Group>
+                    childIndex++;
+                }
+            </div>
         </div>
     }
 </div>
 
 @code {
     [Parameter, NotNull] public ConditionUnit? Item { get; set; }
+    [Parameter, NotNull] public ConditionUnit? Parent { get; set; }
     [Parameter, NotNull] public List<ColumnInfo>? Columns { get; set; }
     [Parameter, NotNull] public IUIService? UI { get; set; }
+    [CascadingParameter, NotNull] public ConditionBuilder<TModel>? Root { get; set; }
     [Parameter] public int Index { get; set; }
-    bool linkChildren;
-    bool link;
+    [Parameter] public int Indent { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (Index == 0)
+        {
+            Item.LinkType = LinkType.None;
+        }
+    }
     public Task AddChild()
     {
         Item.Children.Add(new());
         // return InvokeAsync(StateHasChanged);
         return Task.CompletedTask;
     }
-
-    public Task UpdateLinkChildren()
+    public Task AddSibling()
     {
-        Item.LinkChildren = linkChildren ? LinkType.AndAlso : LinkType.OrElse;
+        Parent.Children.Add(new());
+        return Root.UpdateView();
+    }
+
+    public Task Remove()
+    {
+        Parent.Children.Remove(Item);
+        return Root.UpdateView();
+    }
+
+    public Task RemoveChildren()
+    {
+        Item.Children.Clear();
         return Task.CompletedTask;
     }
-    public Task UpdateLinkType()
+
+    DateTime? dateValue;
+    string? stringValue;
+    Func<object?>? GetCurrentValue;
+    RenderFragment ValueInput()
     {
-        Item.LinkType = link ? LinkType.AndAlso : LinkType.OrElse;
+        ColumnInfo? selectedField = Columns.FirstOrDefault(c => c.PropertyOrFieldName == Item.Name);
+
+        if (selectedField?.DataType == typeof(DateTime) || selectedField?.DataType == typeof(DateTime?))
+        {
+            GetCurrentValue = () => dateValue;
+            return UI.BuildDatePicker<DateTime?>(this)
+            .Bind(() => dateValue, NotifyChanged)
+            .Style("width:200px;")
+            .Render();
+        }
+        else if (selectedField?.EnumValues != null || (selectedField?.IsEnum ?? false))
+        {
+            GetCurrentValue = () => stringValue;
+            return UI.BuildSelect<KeyValuePair<string, string>, string>(this, selectedField.EnumValues!.ToList())
+            .LabelExpression(kv => kv.Value)
+            .ValueExpression(kv => kv.Key)
+            .Bind(() => stringValue!, NotifyChanged)
+            .Style("width:200px;")
+            .Render();
+        }
+        else
+        {
+            GetCurrentValue = () => stringValue;
+            return UI.BuildInput(this)
+            .Bind(() => stringValue!, NotifyChanged)
+            .Style("width:200px;")
+            .Render();
+        }
+    }
+
+    Task NotifyChanged()
+    {
+        Item.Value = GetCurrentValue?.Invoke();
         return Task.CompletedTask;
     }
 }

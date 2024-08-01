@@ -16,6 +16,7 @@ namespace Project.Constraints.UI;
 public interface IUIComponent
 {
     IUIComponent Set(string key, object value);
+    IUIComponent Style(string value);
     IUIComponent SetIf(bool condition, string key, object value);
     IUIComponent AdditionalParameters(Dictionary<string, object> parameters);
     RenderFragment Render();
@@ -146,6 +147,7 @@ public interface IUIService
 
     ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object receiver, IEnumerable<TItem> options);
     ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object receiver, IEnumerable<TItem> options);
+    //ISelectInput<SelectProp, SelectItem<TValue>, TValue> BuildRadioGroup<TValue>(object receiver, SelectItem<TValue> options);
     IUIComponent<ModalProp> BuildModal();
     IUIComponent<GridProp> BuildRow();
     IUIComponent<GridProp> BuildCol();

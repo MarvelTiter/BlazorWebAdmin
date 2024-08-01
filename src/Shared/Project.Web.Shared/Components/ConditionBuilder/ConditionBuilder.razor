@@ -4,26 +4,43 @@
 @{
     int index = 0;
 }
+@if (Condition.Children.Count == 0)
+{
+    @UI.BuildButton(this).Text("新增条件").Primary().OnClick(() => Condition.Children.Add(new())).Render()
+    ;
+}
 <div>
-    @foreach (var item in Condition.Children)
-    {
-        <Group Item="item" Columns="Columns" UI="@UI" Index="index"></Group>
-        index++;
-    }
+    <CascadingValue Value="this" IsFixed="true">
+        @foreach (var item in Condition.Children)
+        {
+            <Group Item="item"
+                   TModel="TModel"
+                   Columns="Columns"
+                   UI="@UI"
+                   Index="index"
+                   Indent="@Indent"
+                   Parent="Condition"></Group>
+            index++;
+        }
+    </CascadingValue>
 </div>
+
 
 @code {
     [Parameter, NotNull] public ConditionUnit? Condition { get; set; }
     [Parameter, NotNull] public EventCallback<ConditionUnit> ConditionChanged { get; set; }
+    [Parameter] public int Indent { get; set; } = 10;
     private List<ColumnInfo>? Columns;
+    public SelectItem<LinkType> LinkOptions = new();
     protected override void OnInitialized()
     {
+        LinkOptions.Add("并且", LinkType.AndAlso);
+        LinkOptions.Add("或者", LinkType.OrElse);
         base.OnInitialized();
-        if (Condition == null || Condition.Children.Count == 0)
-        {
-            Condition = new ConditionUnit();
-            Condition.Children.Add(new ConditionUnit());
-        }
         Columns = typeof(TModel).GenerateColumns();
+        Condition.LinkType = LinkType.None;
     }
+        
+    public Task UpdateView() => InvokeAsync(StateHasChanged);
+    
 }

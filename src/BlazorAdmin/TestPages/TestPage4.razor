@@ -1,9 +1,29 @@
-﻿<h3>TestPage4</h3>
+﻿@using Project.Constraints.Models.Request
+@using Project.Constraints.UI
+@inject IUIService UI
+<h3>TestPage4</h3>
 
-<Project.Web.Shared.Components.ConditionBuilder TModel="Project.Constraints.Models.Permissions.User">
+<Project.Web.Shared.Components.ConditionBuilder TModel="Project.Constraints.Models.Permissions.User" Condition="condition">
 
 </Project.Web.Shared.Components.ConditionBuilder>
-
+@UI.BuildButton(this).Text("生成").OnClick(BuildExpression).Render()
+<pre>
+    @jsonResult
+</pre>
 @code {
+    ConditionUnit condition = new();
 
+    public void BuildExpression()
+    {
+        ToJson();
+
+    }
+    string? jsonResult;
+    public void ToJson()
+    {
+        jsonResult = System.Text.Json.JsonSerializer.Serialize(condition, options: new System.Text.Json.JsonSerializerOptions()
+            {
+                WriteIndented = true
+            });
+    }
 }

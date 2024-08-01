@@ -415,6 +415,10 @@ namespace Project.UI.AntBlazor
                         var value = (Func<TItem, TValue>)valueLambda.Compile();
                         self.SetComponent(rg => rg.Options, options.ConvertToRadioOptions(label, value));
                     }
+                    if (self.Model.ButtonGroup)
+                    {
+                        self.SetComponent(rg => rg.ButtonStyle, RadioButtonStyle.Solid);
+                    }
                 })
             { Receiver = reciver };
         }

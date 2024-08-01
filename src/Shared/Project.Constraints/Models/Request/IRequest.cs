@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Project.Constraints.Utils;
+using System.Linq.Expressions;
 
 namespace Project.Constraints.Models.Request
 {
@@ -14,18 +15,22 @@ namespace Project.Constraints.Models.Request
         /// <para>EndTime => yyyy-MM-dd 23:59:59</para>
         /// </summary>
         public bool FixTime { get; set; }
-        public Expression? Expression { get; set; }
+        //public Expression? Expression { get; set; }
     }
     public interface IRequest<T> : IRequest
     {
-        public new Expression<Func<T, bool>>? Expression { get; set; }
+        ConditionUnit Condition { get; set; }
     }
 
     public static class RequestExtensions
     {
         public static Expression<Func<T, bool>> Expression<T>(this IRequest<T> request)
         {
-            return default;
+            if (typeof(T) == typeof(object))
+            {
+                throw new NotSupportedException("");
+            }
+            return request.Condition.BuildExpression<T>();
         }
     }
 }

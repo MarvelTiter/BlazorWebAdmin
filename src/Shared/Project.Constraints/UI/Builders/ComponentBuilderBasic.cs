@@ -42,7 +42,13 @@ namespace Project.Constraints.UI.Builders
             parameters[key] = value;
             return this;
         }
-
+        
+        public IUIComponent Style(string value)
+        {
+            parameters.Add("style", value);
+            parameters.Add("Style", value);
+            return this;
+        }
         public IUIComponent SetIf(bool condition, string key, object value)
         {
             if (condition)
@@ -72,6 +78,6 @@ namespace Project.Constraints.UI.Builders
             };
         }
 
-        
+
     }
 }

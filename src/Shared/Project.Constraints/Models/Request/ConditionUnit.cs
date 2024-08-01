@@ -5,6 +5,7 @@ namespace Project.Constraints.Models.Request
 {
     public enum LinkType
     {
+        None,
         AndAlso,
         OrElse
     }
@@ -27,31 +28,17 @@ namespace Project.Constraints.Models.Request
     //}
     public class ConditionUnit
     {
-        public ConditionUnit(string name, CompareType compareType, object? value)
-        {
-            Name = name;
-            CompareType = compareType;
-            Value = value;
-        }
-        public ConditionUnit()
-        {
-
-        }
-        public string? Name { get; }
-        public CompareType? CompareType { get; }
-        public object? Value { get; }
+        public string Name { get; set; } = string.Empty;
+        public CompareType CompareType { get; set; } = CompareType.Equal;
+        public object? Value { get; set; }
         /// <summary>
         /// 同级节点的连接方式
         /// </summary>
-        public LinkType? LinkType { get; set; }
+        public LinkType LinkType { get; set; } = LinkType.AndAlso;
         /// <summary>
         /// 与子节点的连接方式
         /// </summary>
-        public LinkType? LinkChildren { get; set; }
+        public LinkType LinkChildren { get; set; } = LinkType.AndAlso;
         public IList<ConditionUnit> Children { get; set; } = [];
-    }
-    public class ConditionAggregation
-    {
-        public IList<ConditionUnit> Conditions { get; set; } = [];
     }
 }

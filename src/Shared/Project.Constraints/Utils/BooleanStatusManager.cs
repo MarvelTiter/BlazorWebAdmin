@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Constraints.Utils
 {
-    internal class BooleanStatusManager : IDisposable
+    public class BooleanStatusManager : IDisposable
     {
         private bool disposedValue;
         private readonly Action<bool> setter;
