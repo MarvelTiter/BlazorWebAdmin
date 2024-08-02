@@ -47,7 +47,7 @@ namespace Project.AppCore.Services
     //[WebController(Route = "runlog")]
     [ApiInvokerGenera(typeof(AutoInjectAttribute))]
     [AttachAttributeArgument(typeof(ApiInvokerGeneraAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
-    [AutoInject(Group = "SERVER")]
+    [AutoInject(Group = "SERVER", ServiceType = typeof(IStandardRunLogService))]
     public class StandardRunLogService : RunLogService<RunLog>, IStandardRunLogService
     {
         public StandardRunLogService(IExpressionContext context) : base(context)

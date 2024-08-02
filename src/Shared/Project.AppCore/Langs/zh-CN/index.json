@@ -110,6 +110,11 @@
     "ConditionSwitch": {
       "AndAlso": "并且",
       "OrElse": "或者"
+    },
+    "AdvanceCondition": {
+      "AddCondition": "新增条件",
+      "AddChildCondition": "新增子条件",
+      "RemoveCondition": "移除"
     }
   }
 }

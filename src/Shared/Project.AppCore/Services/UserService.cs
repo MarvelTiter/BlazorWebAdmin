@@ -73,7 +73,7 @@ namespace Project.AppCore.Services
     //[WebController(Route = "user")]
     [ApiInvokerGenera(typeof(AutoInjectAttribute))]
     [AttachAttributeArgument(typeof(ApiInvokerGeneraAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
-    [AutoInject(Group = "SERVER")]
+    [AutoInject(Group = "SERVER", ServiceType = typeof(IStandardUserService))]
     public class StandardUserService : UserService<User>, IStandardUserService
     {
         public StandardUserService(IExpressionContext context) : base(context)

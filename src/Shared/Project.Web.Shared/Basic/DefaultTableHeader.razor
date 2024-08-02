@@ -12,7 +12,7 @@
             @if (Options?.EnabledAdvancedQuery ?? false)
             {
                 @* <ConditionBuilder Columns=@Options.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder> *@
-                <SingleConditionBuilder Item="@Options.Query.Condition" Columns="@Options.Columns" OnNameChanged="CacheInfo"></SingleConditionBuilder>
+                <SingleConditionBuilder Item="@Options.Query.Condition" Columns="@Options.Columns" OnNameChanged="CacheInfo" Localizer="Localizer" TableLocalizer="TableLocalizer"></SingleConditionBuilder>
             }
             @UI.BuildButton(this).OnClick(Search).Text(TableLocalizer["TableButtons.Query"]).Primary().Render()
             @if (Options?.EnabledAdvancedQuery ?? false)
@@ -36,7 +36,7 @@
 </div>
 @if (Options?.EnabledAdvancedQuery ?? false)
 {
-    <MModal @bind-Visible="AdvanceModalVisible" Title=@TableLocalizer["TableButtons.AdvancedQuery"] HideDefaultFooter>
+    <MModal @bind-Visible="AdvanceModalVisible" Title=@TableLocalizer["TableButtons.AdvancedQuery"] Width="800px" HideDefaultFooter>
         <AdvanceQuery TData=TData
                       Localizer="Localizer"
                       TableLocalizer="TableLocalizer"
@@ -80,6 +80,7 @@
                 {
                     Options.Query.Condition.Name = result.Value!.Name;
                     Options.Query.Condition.CompareType = result.Value!.CompareType;
+                    await InvokeAsync(StateHasChanged);
                 }
             }
             catch

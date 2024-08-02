@@ -9,12 +9,12 @@
         .ValueExpression(c => c.PropertyOrFieldName)
         .LabelExpression(c => Localizer[c.Label].Value)
         .Bind(() => Item.Name!, NotifyNameChanged)
-        .Style("width:150px;")
+        .Style("min-width:120px;")
         .Render()
         )
     @(UI.BuildSelect<CompareType>(this, null)
         .Bind(() => Item.CompareType)
-        .Style("width:80px;")
+        .Style("min-width:80px;")
         .Render())
     @ValueInput()
 </StackPanel>
@@ -33,7 +33,7 @@
         if (selectedField?.DataType == typeof(DateTime) || selectedField?.DataType == typeof(DateTime?))
         {
             GetCurrentValue = () => dateValue;
-            return UI.BuildDatePicker<DateTime?>(this).Bind(() => dateValue, NotifyChanged).Set("Style", "width:100%;").Render();
+            return UI.BuildDatePicker<DateTime>(this).Bind(() => dateValue, NotifyChanged).Style("width:200px;").Render();
         }
         else if (selectedField?.EnumValues != null || (selectedField?.IsEnum ?? false))
         {
@@ -42,12 +42,13 @@
             .LabelExpression(kv => kv.Value)
             .ValueExpression(kv => kv.Key)
             .Bind(() => stringValue!, NotifyChanged)
+            .Style("width:200px;")
             .Render();
         }
         else
         {
             GetCurrentValue = () => stringValue;
-            return UI.BuildInput(this).Bind(() => stringValue!, NotifyChanged).Render();
+            return UI.BuildInput(this).Bind(() => stringValue!, NotifyChanged).Style("width:200px;").Render();
         }
     }
 

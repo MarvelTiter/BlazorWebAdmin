@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Project.Web.Shared.Components
 {
-	public interface ICondition
+    public interface ICondition
     {
 
     }
@@ -117,19 +117,32 @@ namespace Project.Web.Shared.Components
             }
         }
 
-       
-        async Task NotifyChanged()
+
+        Task NotifyChanged()
         {
-            if (Field == null) return;
+            if (Field == null) return Task.CompletedTask;
             var values = GetInnerValue(out bool validValue);
             int count = 0;
             foreach (var value in values)
             {
-                var condition = new ConditionInfo(Field.PropertyOrFieldName, value.Item2, value.Item1, Field.DataType, validValue);
-                condition.LinkType = Index > 0 || count > 0 ? ExpressionType.AndAlso : null;
-                await Parent!.UpdateCondition(Index + count, condition);
+                if (Parent!.TryGetCondition(Index + count, out var c))
+                {
+                    c!.Value = validValue;
+                }
+                else
+                {
+                    c = new ConditionUnit();
+                    c.Name = Field.PropertyOrFieldName;
+                    c.Value = value.Item1;
+                    c.CompareType = value.Item2;
+                    Parent!.UpdateCondition(Index + count, c);
+                }
+                //var condition = new ConditionInfo(Field.PropertyOrFieldName, value.Item2, value.Item1, Field.DataType, validValue);
+                //condition.LinkType = Index > 0 || count > 0 ? ExpressionType.AndAlso : null;
+                //await Parent!.UpdateCondition(Index + count, condition);
                 count++;
             }
+            return Task.CompletedTask;
         }
     }
 }

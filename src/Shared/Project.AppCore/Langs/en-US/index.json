@@ -110,6 +110,11 @@
     "ConditionSwitch": {
       "AndAlso": "AndAlso",
       "OrElse": "OrElse"
+    },
+    "AdvanceCondition": {
+      "AddCondition": "Add",
+      "AddChildCondition": "Add Child",
+      "RemoveCondition": "Remove"
     }
   }
 }

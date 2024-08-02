@@ -1,6 +1,6 @@
 ﻿@typeparam TData
 @inherits BasicComponent
-<ConditionBuilder TModel="TData" Condition="@Condition" ConditionChanged="@ConditionChanged"></ConditionBuilder>
+<ConditionBuilder TModel="TData" Condition="@Condition" ConditionChanged="@ConditionChanged" Localizer="@Localizer" TableLocalizer="@TableLocalizer"></ConditionBuilder>
 <div style="text-align:right;margin-top:10px;">
     @UI.BuildButton(this).Text(TableLocalizer["TableButtons.Query"].Value).OnClick(ConfirmConditionToSearch).SetButtonType(ButtonType.Primary).Render()
     @if (ShowExportButton)

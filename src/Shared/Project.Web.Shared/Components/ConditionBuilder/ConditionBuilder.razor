@@ -6,21 +6,25 @@
 }
 @if (Condition.Children.Count == 0)
 {
-    @UI.BuildButton(this).Text("新增条件").Primary().OnClick(() => Condition.Children.Add(new())).Render()
+    @UI.BuildButton(this).Text(TableLocalizer["AdvanceCondition.AddCondition"]).Primary().OnClick(() => Condition.Children.Add(new())).Render()
 }
 <div>
     <CascadingValue Value="this" IsFixed="true">
-        @foreach (var item in Condition.Children)
-        {
-            <Group Item="item"
-                   TModel="TModel"
-                   Columns="Columns"
-                   UI="@UI"
-                   Index="index"
-                   Indent="@Indent"
-                   Parent="Condition"></Group>
-            index++;
-        }
+        <CascadingValue Value="Localizer" Name="@nameof(Localizer)" IsFixed="true">
+            <CascadingValue Value="TableLocalizer" Name="@nameof(TableLocalizer)" IsFixed="true">
+                @foreach (var item in Condition.Children)
+                {
+                    <Group Item="item"
+                           TModel="TModel"
+                           Columns="Columns"
+                           UI="@UI"
+                           Index="index"
+                           Indent="@Indent"
+                           Parent="Condition"></Group>
+                    index++;
+                }
+            </CascadingValue>
+        </CascadingValue>
     </CascadingValue>
 </div>
 
@@ -28,19 +32,21 @@
 @code {
     [Parameter, NotNull] public ConditionUnit? Condition { get; set; }
     [Parameter, NotNull] public EventCallback<ConditionUnit> ConditionChanged { get; set; }
+    [Parameter, NotNull] public IStringLocalizer? Localizer { get; set; }
+    [Parameter, NotNull] public IStringLocalizer? TableLocalizer { get; set; }
     [Parameter] public int Indent { get; set; } = 20;
     private List<ColumnInfo>? Columns;
     public SelectItem<LinkType> LinkOptions = new();
     protected override void OnInitialized()
     {
-        LinkOptions.Add("并且", LinkType.AndAlso);
-        LinkOptions.Add("或者", LinkType.OrElse);
+        LinkOptions.Add(TableLocalizer["ConditionSwitch.AndAlso"], LinkType.AndAlso);
+        LinkOptions.Add(TableLocalizer["ConditionSwitch.OrElse"], LinkType.OrElse);
         base.OnInitialized();
         Columns = typeof(TModel).GenerateColumns();
         Condition ??= new();
         Condition.LinkType = LinkType.None;
     }
-        
+
     public Task UpdateView() => InvokeAsync(StateHasChanged);
-    
+
 }
