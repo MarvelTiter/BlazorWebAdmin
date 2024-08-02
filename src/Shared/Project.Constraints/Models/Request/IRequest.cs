@@ -3,6 +3,11 @@ using System.Linq.Expressions;
 
 namespace Project.Constraints.Models.Request
 {
+    public enum SolveType
+    {
+        All,
+        TopOnly,
+    }
     public interface IRequest
     {
         public int PageIndex { get; set; }
@@ -16,6 +21,7 @@ namespace Project.Constraints.Models.Request
         /// </summary>
         public bool FixTime { get; set; }
         //public Expression? Expression { get; set; }
+        public SolveType ExpressionSolveType { get; set; }
         ConditionUnit Condition { get; set; }
     }
     public interface IRequest<T> : IRequest
@@ -30,7 +36,15 @@ namespace Project.Constraints.Models.Request
             {
                 throw new NotSupportedException("");
             }
-            return request.Condition.BuildExpression<T>();
+            if (request.ExpressionSolveType == SolveType.All)
+            {
+                return request.Condition.BuildExpression<T>();
+            }
+            else if (request.ExpressionSolveType == SolveType.TopOnly)
+            {
+                return request.Condition.BuildTopExpression<T>();
+            }
+            throw new NotSupportedException(nameof(request.ExpressionSolveType));
         }
     }
 }

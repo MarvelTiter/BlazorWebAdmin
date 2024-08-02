@@ -4,32 +4,40 @@
 @using MT.Toolkit.StringExtension
 @inherits BasicComponent
 
-<MRow Style="@($"min-width:450px;{Style}")">
-    <MCol ColSpan="10">
-        @(UI.BuildSelect<ColumnInfo, ColumnInfo>(this, Columns)
-            .ValueExpression(c => c)
-            .LabelExpression(c => Localizer == null ? c.Label : Localizer[c.Label])
-            .Bind(() => selectedField!, NotifyChanged)
-            .Render())
-    </MCol>
-    <MCol ColSpan="4">
-        @(UI.BuildSelect<CompareType>(this, null).Bind(() => type, NotifyChanged).Render())
-    </MCol>
-    <MCol ColSpan="10">
-        @ValueInput()
-    </MCol>
-</MRow>
+<StackPanel>
+    @(UI.BuildSelect<ColumnInfo, string>(this, Columns)
+        .ValueExpression(c => c.PropertyOrFieldName)
+        .LabelExpression(c => Localizer[c.Label].Value)
+        .Bind(() => Item.Name!, NotifyNameChanged)
+        .Style("width:150px;")
+        .Render()
+        )
+    @(UI.BuildSelect<CompareType>(this, null)
+        .Bind(() => Item.CompareType)
+        .Style("width:80px;")
+        .Render())
+    @ValueInput()
+</StackPanel>
 
 @code {
+    [Parameter, NotNull] public List<ColumnInfo>? Columns { get; set; }
+    [Parameter, NotNull] public ConditionUnit? Item { get; set; }
+    [Parameter, NotNull] public IStringLocalizer? Localizer { get; set; }
+    [Parameter, NotNull] public IStringLocalizer? TableLocalizer { get; set; }
+    [Parameter] public EventCallback OnNameChanged { get; set; }
+    Func<object?>? GetCurrentValue;
 
     RenderFragment ValueInput()
     {
-        if (selectedField?.DataType == typeof(DateTime))
+        var selectedField = Columns.FirstOrDefault(c => c.PropertyOrFieldName == Item.Name);
+        if (selectedField?.DataType == typeof(DateTime) || selectedField?.DataType == typeof(DateTime?))
         {
-            return UI.BuildDatePicker<DateTime>(this).Bind(() => dateValue).Set("Style", "width:100%;").Render();
+            GetCurrentValue = () => dateValue;
+            return UI.BuildDatePicker<DateTime?>(this).Bind(() => dateValue, NotifyChanged).Set("Style", "width:100%;").Render();
         }
         else if (selectedField?.EnumValues != null || (selectedField?.IsEnum ?? false))
         {
+            GetCurrentValue = () => stringValue;
             return UI.BuildSelect<KeyValuePair<string, string>, string>(this, selectedField.EnumValues!.ToList())
             .LabelExpression(kv => kv.Value)
             .ValueExpression(kv => kv.Key)
@@ -38,123 +46,65 @@
         }
         else
         {
+            GetCurrentValue = () => stringValue;
             return UI.BuildInput(this).Bind(() => stringValue!, NotifyChanged).Render();
         }
     }
 
     bool check = true;
     string stringValue = string.Empty;
-    string? currentField;
     DateTime dateValue = DateTime.Now;
-    ColumnInfo? selectedField;
 
-    CompareType type;
-    ExpressionType LinkType = ExpressionType.AndAlso;
-    [Parameter, NotNull]
-    public List<ColumnInfo>? Columns { get; set; }
-    [Parameter] public ConditionInfo? Info { get; set; }
-    [Parameter] public EventCallback<ConditionInfo> InfoChanged { get; set; }
-    [Parameter]
-    public EventCallback<ConditionInfo> OnChanged { get; set; }
-    [Parameter]
-    public string? Style { get; set; }
-    [Parameter]
-    public int Index { get; set; }
-    [Parameter, NotNull] public IStringLocalizer? Localizer { get; set; }
-    [Parameter, NotNull] public IStringLocalizer? TableLocalizer { get; set; }
-
-    public void InitStatus(ConditionInfo info)
+    Task NotifyChanged()
     {
-        currentField = info.Name;
-        type = info.Type;
-        selectedField = Columns.First(c => c.PropertyOrFieldName == info.Name);
-        //StateHasChanged();
+        Item.Value = GetCurrentValue?.Invoke();
+        return Task.CompletedTask;
     }
 
-    object? GetInnerValue(out bool legal)
+    Task NotifyNameChanged()
     {
-        if (selectedField?.DataType == typeof(DateTime))
+        if (OnNameChanged.HasDelegate)
         {
-            legal = dateValue != default;
-            return dateValue;
+            return OnNameChanged.InvokeAsync();
         }
-        else if (selectedField?.EnumValues != null && selectedField.IsEnum)
-        {
-            legal = stringValue!.IsEnable();
-            return stringValue;
-        }
-        else
-        {
-            legal = stringValue!.IsEnable();
-            if (legal && IsNumberOrDateTime())
-            {
-                legal = stringValue!.IsNumeric<int>(out _);
-            }
-            return stringValue;
-        }
-    }
-    async Task UpdateLinkType()
-    {
-        LinkType = check ? ExpressionType.AndAlso : ExpressionType.OrElse;
-        await NotifyChanged();
+        return Task.CompletedTask;
     }
 
-    async Task NotifyChanged()
-    {
+    // string GetDisplay(CompareType t)
+    // {
+    //     var member = typeof(CompareType).GetMember(Enum.GetName<CompareType>(t)!)[0];
+    //     var attr = Attribute.GetCustomAttribute(member, typeof(DisplayAttribute));
+    //     if (attr is DisplayAttribute display)
+    //     {
+    //         return display.Name!;
+    //     }
+    //     return "";
+    // }
 
-        if (selectedField is null)
-        {
-            return;
-        }
-        var isLegal = CheckComparable();
-        if (!isLegal)
-        {
-            // _ = MessageSrv.Error($"[{GetDisplay(type)}]不能应用于字段[{selectedField.Label}]");
-        }
-        var condition = new ConditionInfo(selectedField.PropertyOrFieldName, type, GetInnerValue(out bool validValue), selectedField.DataType, isLegal && validValue);
-        condition.LinkType = Index > 0 ? LinkType : null;
-        await InfoChanged.InvokeAsync(condition);
-        if (OnChanged.HasDelegate)
-        {
-            await OnChanged.InvokeAsync(condition);
-        }
-    }
-
-    string GetDisplay(CompareType t)
-    {
-        var member = typeof(CompareType).GetMember(Enum.GetName<CompareType>(t)!)[0];
-        var attr = Attribute.GetCustomAttribute(member, typeof(DisplayAttribute));
-        if (attr is DisplayAttribute display)
-        {
-            return display.Name!;
-        }
-        return "";
-    }
-
-    bool CheckComparable()
-    {
-        return type switch
-        {
-            CompareType.GreaterThan => IsNumberOrDateTime(),
-            CompareType.GreaterThanOrEqual => IsNumberOrDateTime(),
-            CompareType.LessThan => IsNumberOrDateTime(),
-            CompareType.LessThanOrEqual => IsNumberOrDateTime(),
-            _ => true
-        };
-    }
-    bool IsNumberOrDateTime()
-    {
-        return selectedField!.DataType == typeof(Int16)
-        || selectedField!.DataType == typeof(Int32)
-        || selectedField!.DataType == typeof(Int64)
-        || selectedField!.DataType == typeof(Single)
-        || selectedField!.DataType == typeof(Double)
-        || selectedField!.DataType == typeof(DateTime)
-        || selectedField!.DataType == typeof(Int16?)
-        || selectedField!.DataType == typeof(Int32?)
-        || selectedField!.DataType == typeof(Int64?)
-        || selectedField!.DataType == typeof(Single?)
-        || selectedField!.DataType == typeof(Double?)
-        || selectedField!.DataType == typeof(DateTime?);
-    }
+    // bool CheckComparable()
+    // {
+    //     return type switch
+    //     {
+    //         CompareType.GreaterThan => IsNumberOrDateTime(),
+    //         CompareType.GreaterThanOrEqual => IsNumberOrDateTime(),
+    //         CompareType.LessThan => IsNumberOrDateTime(),
+    //         CompareType.LessThanOrEqual => IsNumberOrDateTime(),
+    //         _ => true
+    //     };
+    // }
+    // bool IsNumberOrDateTime()
+    // {
+    //     return selectedField!.DataType == typeof(Int16)
+    //     || selectedField!.DataType == typeof(Int32)
+    //     || selectedField!.DataType == typeof(Int64)
+    //     || selectedField!.DataType == typeof(Single)
+    //     || selectedField!.DataType == typeof(Double)
+    //     || selectedField!.DataType == typeof(DateTime)
+    //     || selectedField!.DataType == typeof(Int16?)
+    //     || selectedField!.DataType == typeof(Int32?)
+    //     || selectedField!.DataType == typeof(Int64?)
+    //     || selectedField!.DataType == typeof(Single?)
+    //     || selectedField!.DataType == typeof(Double?)
+    //     || selectedField!.DataType == typeof(DateTime?);
+    // }
 }

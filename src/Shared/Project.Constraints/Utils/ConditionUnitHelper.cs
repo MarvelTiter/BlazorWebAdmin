@@ -19,6 +19,23 @@ namespace Project.Constraints.Utils
             return lambda;
         }
 
+        public static Expression<Func<T,bool>> BuildTopExpression<T>(this ConditionUnit condition)
+        {
+            var parameterExpression = Expression.Parameter(typeof(T), "p");
+
+            if (string.IsNullOrEmpty(condition.Name) || condition.Value == null || string.IsNullOrEmpty(condition.Value?.ToString()))
+            {
+                return t => true;
+            }
+            var body = BuildExpression<T>(parameterExpression, condition);
+            if (body == null)
+            {
+                return t => true;
+            }
+            var lambda = Expression.Lambda<Func<T, bool>>(body, parameterExpression);
+            return lambda;
+        }
+
         private static Expression? SolveConditionUnit<T>(ParameterExpression pExp, IEnumerable<ConditionUnit> conditions)
         {
             Expression? returnExpression = null;
@@ -39,9 +56,10 @@ namespace Project.Constraints.Utils
             }
             return returnExpression;
         }
+
         private static readonly MethodInfo ContainMethod = typeof(string).GetMethod(nameof(string.Contains), [typeof(string)])!;
 
-        public static Expression BuildExpression<T>(ParameterExpression pExp, ConditionUnit info)
+        private static Expression BuildExpression<T>(ParameterExpression pExp, ConditionUnit info)
         {
             var propExp = Expression.Property(pExp, info.Name);
             ExpressionType? expType = info.CompareType switch

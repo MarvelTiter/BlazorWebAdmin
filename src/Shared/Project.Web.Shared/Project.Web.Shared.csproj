@@ -12,6 +12,10 @@
 	  <EmbeddedResource Remove="Components\TwoSidePage\**" />
 	  <None Remove="Components\TwoSidePage\**" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
+	</ItemGroup>
 	
 	<ItemGroup>
 		<ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />

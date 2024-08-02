@@ -21,28 +21,28 @@ public enum CompareType
     LessThanOrEqual,
 }
 
-public class ConditionInfo
-{
-    public ConditionInfo(string Name, CompareType Type, object? Value, Type ValueType, bool Legal)
-    {
-        this.Name = Name;
-        this.Type = Type;
-        this.Value = Value;
-        this.ValueType = ValueType;
-        this.Legal = Legal;
-    }
-    public ConditionInfo()
-    {
-        //ValueType
-        //System.Type
-    }
-    [JsonIgnore]
-    [NotNull]
-    public Type? ValueType { get; set; }
-    public ExpressionType? LinkType { get; set; }
-    [NotNull]
-    public string? Name { get; set; }
-    public CompareType Type { get; set; }
-    public object? Value { get; set; }
-    public bool Legal { get; set; }
-}
+//public class ConditionInfo
+//{
+//    public ConditionInfo(string Name, CompareType Type, object? Value, Type ValueType, bool Legal)
+//    {
+//        this.Name = Name;
+//        this.Type = Type;
+//        this.Value = Value;
+//        this.ValueType = ValueType;
+//        this.Legal = Legal;
+//    }
+//    public ConditionInfo()
+//    {
+//        //ValueType
+//        //System.Type
+//    }
+//    [JsonIgnore]
+//    [NotNull]
+//    public Type? ValueType { get; set; }
+//    public ExpressionType? LinkType { get; set; }
+//    [NotNull]
+//    public string? Name { get; set; }
+//    public CompareType Type { get; set; }
+//    public object? Value { get; set; }
+//    public bool Legal { get; set; }
+//}

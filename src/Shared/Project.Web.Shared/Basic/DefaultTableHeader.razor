@@ -12,6 +12,7 @@
             @if (Options?.EnabledAdvancedQuery ?? false)
             {
                 @* <ConditionBuilder Columns=@Options.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder> *@
+                <SingleConditionBuilder Item="@Options.Query.Condition" Columns="@Options.Columns" OnNameChanged="CacheInfo"></SingleConditionBuilder>
             }
             @UI.BuildButton(this).OnClick(Search).Text(TableLocalizer["TableButtons.Query"]).Primary().Render()
             @if (Options?.EnabledAdvancedQuery ?? false)
@@ -47,20 +48,24 @@
     </MModal>
 }
 @code {
-    [Parameter] public TableOptions<TData, TQuery>? Options { get; set; }
+    [Parameter, NotNull] public TableOptions<TData, TQuery>? Options { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Inject, NotNull] IStringLocalizer<TData>? Localizer { get; set; }
     [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
     [Inject, NotNull] IProtectedLocalStorage? LocalStorage { get; set; }
     private bool AdvanceModalVisible = false;
-    private ConditionInfo? conditionInfo;
-    private Expression<Func<TData, bool>>? ConditionExpression = e => true;
+    private ConditionUnit? conditionInfo;
     ConditionBuilder<TData>? insRef;
 
     readonly string cache_key = $"TableOptions_{typeof(TData).Name}_ConditionAction";
-    async Task CacheInfo(ConditionInfo info)
+    async Task CacheInfo()
     {
-        await LocalStorage.SetAsync(cache_key, info);
+        var storageValue = new ConditionStorage()
+            {
+                Name = Options.Query.Condition.Name,
+                CompareType = Options.Query.Condition.CompareType
+            };
+        await LocalStorage.SetAsync(cache_key, storageValue);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -70,10 +75,11 @@
         {
             try
             {
-                var result = await LocalStorage.GetAsync<ConditionInfo>(cache_key);
+                var result = await LocalStorage.GetAsync<ConditionStorage>(cache_key);
                 if (result.Success)
                 {
-                    // insRef?.InitStatus(result.Value!);
+                    Options.Query.Condition.Name = result.Value!.Name;
+                    Options.Query.Condition.CompareType = result.Value!.CompareType;
                 }
             }
             catch
@@ -104,8 +110,7 @@
             return;
         }
         Options.Query.PageIndex = 1;
-        // if (conditionInfo != null)
-        //     Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
+        Options.Query.ExpressionSolveType = SolveType.TopOnly;
         await Options.RefreshAsync();
     }
 
@@ -115,8 +120,7 @@
         {
             return;
         }
-        // if (conditionInfo != null)
-        //     Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
+        Options.Query.ExpressionSolveType = SolveType.TopOnly;
         await Options.ExportAsync();
     }
 
@@ -127,7 +131,7 @@
         {
             return;
         }
-        // Options.Query.Expression = ConditionExpression;
+        Options.Query.ExpressionSolveType = SolveType.All;
         AdvanceModalVisible = false;
         await Options.ExportAsync();
     }
@@ -139,7 +143,7 @@
             return;
         }
         Options.Query.PageIndex = 1;
-        // Options.Query.Expression = ConditionExpression;
+        Options.Query.ExpressionSolveType = SolveType.All;
         AdvanceModalVisible = false;
         await Options.RefreshAsync();
     }

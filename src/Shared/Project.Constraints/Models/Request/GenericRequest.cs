@@ -22,6 +22,7 @@ namespace Project.Constraints.Models.Request
         public int To => PageIndex * PageSize;
 
         public ConditionUnit Condition { get; set; } = new();
+        public SolveType ExpressionSolveType { get; set; } = SolveType.TopOnly;
 
         //[JsonIgnore]
         //Expression? IRequest.Expression
