@@ -1,6 +1,5 @@
-﻿using Project.Constraints.Common.Attributes;
-using Microsoft.AspNetCore.Components;
-using Project.AppCore.Layouts;
+﻿using Microsoft.AspNetCore.Components;
+using Project.Web.Shared.Layouts;
 namespace BlazorAdmin.TestPages
 {
 #if DEBUG

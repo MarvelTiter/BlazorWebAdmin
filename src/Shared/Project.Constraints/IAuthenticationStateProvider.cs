@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Project.Constraints;
+﻿namespace Project.Constraints;
 
 public interface IAuthenticationStateProvider
 {

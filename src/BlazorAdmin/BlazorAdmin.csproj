@@ -12,10 +12,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.5" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
 	  <ProjectReference Include="..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
 	</ItemGroup>
-
+	
 	<ItemGroup>
 		<Content Update="appsettings.Development.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

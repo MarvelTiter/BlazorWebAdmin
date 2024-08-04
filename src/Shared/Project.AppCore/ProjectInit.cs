@@ -1,26 +1,21 @@
 ﻿using Project.Web.Shared.Components;
 using LightExcel;
 using Microsoft.AspNetCore.Components.Authorization;
-using Project.Web.Shared;
 using Project.AppCore.Locales.Extensions;
 using Project.AppCore.Auth;
 using Project.Constraints;
 using Project.Constraints.Options;
 using Project.AppCore.Middlewares;
-using MT.Toolkit.LogTool.LogExtension;
 using Microsoft.AspNetCore.DataProtection;
 using System.Data.SQLite;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
-using AspectCore.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Routing;
 using MT.Toolkit.LogTool;
 using MT.Toolkit.ReflectionExtension;
 using Project.AppCore.BackgroundServices;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Project.Constraints.Models.Permissions;
 using Project.Web.Shared.Pages;
-using Project.AppCore.Services;
 namespace Project.AppCore;
 
 public static class ProjectInit
@@ -116,8 +111,8 @@ public static class ProjectInit
         var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
         if (useProxy)
         {
-            services.ConfigureDynamicProxy();
-            builder.ConfigureContainer(new DynamicProxyServiceProviderFactory());
+            //services.ConfigureDynamicProxy();
+            //builder.ConfigureContainer(new DynamicProxyServiceProviderFactory());
         }
 
         AppConst.AddAssembly(typeof(Program).Assembly, typeof(Web.Shared._Imports).Assembly);

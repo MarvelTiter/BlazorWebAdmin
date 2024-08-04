@@ -1,0 +1,89 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.Extensions.Options
+@using Project.Constraints
+@using System.Diagnostics.CodeAnalysis
+@inherits RootLayout
+@inject IProtectedLocalStorage LocalStorage
+@inject IOptionsMonitor<Token> Token
+@inject IOptionsMonitor<AppSetting> Setting
+<div @onclick="@HandleRootClick"
+     @onkeydown="@HandleKeyDownAction"
+     @onkeyup="@HandleKeyUpAction"
+     tabindex="0"
+     @ref="RootWrapper">
+    <CascadingValue Value="this">
+        <AuthorizeView>
+            <Authorized>
+                <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
+                    <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken">
+                        @Body
+                    </ActionWatcher>
+                </ActionWatcher>
+            </Authorized>
+            <NotAuthorized>
+                @if (Token.CurrentValue.NeedAuthentication)
+                {
+                    <RedirectToLogin></RedirectToLogin>
+                }
+                else
+                {
+                    @Body
+                }
+            </NotAuthorized>
+        </AuthorizeView>
+    </CascadingValue>
+</div>
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState>? authenticationStateTask { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    // [Inject, NotNull] public ILogger<AuthorizedLayout>? Logger { get; set; }
+    [CascadingParameter, NotNull] IAppSession? AppSession { get; set; }
+    [Inject, NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+    string? LauchUrl => Setting.CurrentValue.LauchUrl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (authenticationStateTask != null)
+        {
+            var state = await authenticationStateTask;
+            if (state.User.Identity!.IsAuthenticated)
+            {
+                await AppSession.RouterStore.InitRoutersAsync(AuthenticationStateProvider?.Current);
+                var url = AppSession.Navigator.ToBaseRelativePath(AppSession.Navigator.Uri);
+                AppSession.Navigator.NavigateTo(url);
+            }
+            else
+            {
+                await AppSession.RouterStore.InitRoutersAsync(null);
+            }
+        }
+    }
+    bool rendered = false;
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        rendered = true;
+
+    }
+
+
+    async Task UpdateUserToken()
+    {
+        var current = AuthenticationStateProvider?.Current;
+        if (rendered && current != null)
+        {
+            current.ActiveTime = DateTime.Now;
+            await LocalStorage.SetAsync("UID", current);
+        }
+    }
+    Task NoneOperation()
+    {
+        if (AppSession.AppStore.Working)
+        {
+            return UpdateUserToken();
+        }
+        return AuthenticationStateProvider?.ClearState() ?? Task.CompletedTask;
+    }
+}

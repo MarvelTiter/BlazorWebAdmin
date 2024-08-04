@@ -8,7 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.4.0" />
 		<PackageReference Include="AutoWasmApiGenerator" Version="0.0.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
@@ -18,6 +17,15 @@
 	<ItemGroup>
 		<!-- OutputItemType="Analyzer" --> 
 		<ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Update="Langs\en-US\index.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
+	  <Content Update="Langs\zh-CN\index.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 </Project>
 

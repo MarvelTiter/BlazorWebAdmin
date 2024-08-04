@@ -1,0 +1,15 @@
+﻿@using Project.Constraints
+@using Project.Web.Shared.Layouts.LayoutComponents
+@inherits LayoutBase
+<Section Vertical Style="height:100vh;">
+     <Header Style="display:flex;width:100%;height: 50px;">
+         <Banner ShowCollapseButton=false Class="line"></Banner>
+         <SideBar Class="line" Horizontal></SideBar>
+         <NavMenu Class="line"></NavMenu>
+     </Header>
+     <Main Style="padding:16px;height:100%;">
+         <AppMain>
+         </AppMain>
+     </Main>
+     @AppConst.Footer
+</Section>

@@ -1,0 +1,55 @@
+﻿@using Project.Constraints.Page
+@using Project.Constraints.Services
+@using Project.Constraints.UI.Dropdown
+@using Project.Web.Shared.Utils;
+@inject ILoginService LoginSrv
+@inject IUserService UserSrv
+@inject IStringLocalizer<Profile> Localizer
+@inherits BasicComponent
+
+@* @UI.BuildDropdown(options) *@
+@UI.BuildProfile(options)
+@code {
+    private string DisplayName => User.UserDisplayName;
+    ProfileInfo options = new();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        options.Content =@<div class="wrapper">
+        <img class="avatar" src="/_content/Project.Web.Shared/assets/avator.png" />
+        <span class="name">@DisplayName</span>
+    </div>
+    ;
+
+    options.UserName = DisplayName;
+
+        options.Actions = new List<ActionInfo>();
+        options.Actions.Add(new ActionInfo
+                {
+                    OnClick = HandlePwdModify,
+                    Content = @<div class="menu-item green-tag">@Localizer["NavMenu.UserAction.ModifyPassword"]</div>,
+            });
+
+        options.Actions.Add(new ActionInfo
+                {
+                    OnClick = HandleLogout,
+                    Content = @<div class="menu-item red-tag">@Localizer["NavMenu.UserAction.Logout"]</div>,
+        });
+    }
+
+    public async Task HandleLogout()
+    {
+        await LoginSrv.LogoutAsync();
+        User.ClearUser();
+        await AuthenticationStateProvider.ClearState();
+    }
+
+    async Task HandlePwdModify()
+    {
+        if (User.UserInfo == null)
+            return;
+        var pwd = await UI.ShowDialogAsync<ModifyUserPassword, UserPwd>(Localizer["UserPwd.Title"]);
+        pwd.UserId = User.UserInfo.UserId;
+        await UserSrv.ModifyUserPasswordAsync(pwd);
+    }
+}

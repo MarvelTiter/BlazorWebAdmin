@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@inherits JsComponentBase
+<div style="flex:1;width:calc(100% - @(navMenuWidth + 16)px)">
+    <HorizontalScroll>
+        <div class="tags_box @Class" style="--tags_box-theme-color: @App.MainThemeColor;display:flex;height:50px;">
+            @foreach (var item in Router.TopLinks)
+            {
+                @if (!item.Cache) continue;
+                <div class="nav_top @(item.RouteUrl == Router.CurrentUrl ? "active":"")" @oncontextmenu="e => OpenContextMenu(e, item)">
+                    <NavLink href="@item.RouteUrl" Match="NavLinkMatch.All">
+                        <div style="display:flex;padding:0 5px 0 5px;align-items: center;">
+                            <span>
+                                <SvgIcon IconName="@item.Icon" ClassName="top-link-icon"></SvgIcon>
+                            </span>
+                            <span @oncontextmenu:preventDefault>@item.RouteTitle</span>
+                            @if (item.RouteUrl == Router.CurrentUrl && !item.Pin)
+                            {
+                                <span style="padding-left:5px;" @onclick="e => CloseTag(item)" @onclick:stopPropagation @onclick:preventDefault>
+                                    X
+                                </span>
+                            }
+                        </div>
+                    </NavLink>
+                </div>
+            }
+        </div>
+    </HorizontalScroll>
+</div>
+<ul class="@ContextmenuClass.Class" style="left:@contextmenuLeft;top:@contextmenuTop">
+    <li @onclick="e => CloseOther()">除此之外全部关闭</li>
+    <li @onclick="e => CloseAll()">关闭全部选项卡</li>
+    <li @onclick="e => CloseSelf()">关闭</li>
+</ul>

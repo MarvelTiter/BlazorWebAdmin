@@ -1,0 +1,42 @@
+﻿using AutoInjectGenerator;
+using Project.Constraints.Models;
+using Project.Constraints.Store;
+
+namespace Project.Web.Shared.Store;
+
+[AutoInject]
+public partial class UserStore : StoreBase, IUserStore
+{
+    public UserInfo? UserInfo { get; set; }
+    public IEnumerable<string> Roles => UserInfo?.Roles ?? [];
+    public string? UserId => UserInfo?.UserId;
+    public string UserDisplayName => GetUserName();
+    public string? UserAgent { get; set; }
+    public string? Ip { get; set; }
+    private string GetUserName()
+    {
+        return UserInfo?.UserName ?? "Unknow";
+    }
+
+    public async Task SetUserAsync(UserInfo? userInfo)
+    {
+        if (userInfo != null)
+        {
+            await OnLoginSuccessAsync(userInfo);
+        }
+        UserInfo = userInfo;
+    }
+
+    public void ClearUser()
+    {
+        UserInfo = null;
+    }
+    public event Func<UserInfo, Task>? LoginSuccessEvent;
+
+    private Task OnLoginSuccessAsync(UserInfo info)
+    {
+        if (LoginSuccessEvent != null)
+            return LoginSuccessEvent(info);
+        return Task.CompletedTask;
+    }
+}

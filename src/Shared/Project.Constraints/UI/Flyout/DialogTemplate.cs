@@ -4,7 +4,6 @@ using Microsoft.Extensions.Localization;
 using MT.Toolkit.Mapper;
 using Project.Constraints.Page;
 using Project.Constraints.UI.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Constraints.UI.Flyout
 {

@@ -1,0 +1,34 @@
+﻿@using Project.Constraints.Common
+@inherits Project.Constraints.Page.BasicComponent
+<div class="side_bar @Class" style="display: flex;flex-direction: column;width:@Width">
+    @TopBanner
+    <ScrollBar>
+        @UI.BuildMenu(Router, Horizontal, App)
+    </ScrollBar>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? TopBanner { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public bool Horizontal { get; set; }
+    protected override Task OnInitializedAsync()
+    {
+        Router.DataChangedEvent += StateHasChanged;
+        return base.OnInitializedAsync();
+    }
+
+    private string Width => App.Collapsed ? 80.ToPixel() : App.SideBarExpandWidth.ToPixel();
+
+    public void ToggleCollapse()
+    {
+        // collapse = newState;
+        StateHasChanged();
+    }
+
+    protected override ValueTask OnDisposeAsync()
+    {
+        Router.DataChangedEvent -= StateHasChanged;
+        return base.OnDisposeAsync();
+    }
+}
+

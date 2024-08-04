@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Project.Constraints.Services;
-using Project.Constraints.Store;
+﻿using Project.Constraints.Store;
 
 namespace Project.Constraints.Models
 {

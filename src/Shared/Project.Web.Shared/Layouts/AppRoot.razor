@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Project.Constraints
+@using Project.AppCore;
+@using System.Reflection;
+@using Project.Web.Shared.Components;
+<CascadingAuthenticationState>
+    <CascadingValue Value="Context">
+        <ErrorCatcher>
+            <CascadingValue Value="this" IsFixed="true">
+                <Router AppAssembly="AppAssembly" AdditionalAssemblies="AppConst.Pages">
+                    <Found Context="routeData">
+                        <CascadingValue Value="@routeData">
+                            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                        </CascadingValue>
+                    </Found>
+                </Router>
+            </CascadingValue>
+        </ErrorCatcher>
+        <WaterMark ProvideService></WaterMark>
+        <WebAdminReconnector></WebAdminReconnector>
+        <Downloader />
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+    </CascadingValue>
+</CascadingAuthenticationState>

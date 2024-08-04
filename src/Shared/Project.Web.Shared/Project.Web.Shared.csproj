@@ -7,16 +7,20 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Components\TwoSidePage\**" />
-	  <Content Remove="Components\TwoSidePage\**" />
-	  <EmbeddedResource Remove="Components\TwoSidePage\**" />
-	  <None Remove="Components\TwoSidePage\**" />
+		<Compile Remove="Components\TwoSidePage\**" />
+		<Content Remove="Components\TwoSidePage\**" />
+		<EmbeddedResource Remove="Components\TwoSidePage\**" />
+		<None Remove="Components\TwoSidePage\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
+		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
 	</ItemGroup>
-	
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.6" />
+	</ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
 	</ItemGroup>
