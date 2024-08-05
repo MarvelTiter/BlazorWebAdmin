@@ -28,19 +28,4 @@
         //    services.AddScoped<Project.Constraints.UI.IUIService, Project.UI.AntBlazor.UIService>();
         //}
     }
-
-    //static partial class AutoInjectContext
-    //{
-    //    public static partial void AutoInject(this IServiceCollection services)
-    //    {
-
-    //    }
-    //}
-
-    [AutoInjectGenerator.AutoInjectContext]
-    public static partial class AutoInjectWasmctContext
-    {
-        [AutoInjectGenerator.AutoInjectConfiguration(Include = "WASM")]
-        public static partial void AutoInjectWasm(this IServiceCollection services);
-    }
 }

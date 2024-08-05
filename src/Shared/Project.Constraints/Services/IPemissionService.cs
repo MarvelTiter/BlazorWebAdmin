@@ -1,4 +1,7 @@
-﻿using Project.Constraints.Aop;
+﻿using AutoInjectGenerator;
+using AutoWasmApiGenerator;
+using MT.Generators.Abstraction;
+using Project.Constraints.Aop;
 using Project.Constraints.Models.Permissions;
 using Project.Constraints.Models.Request;
 
@@ -12,6 +15,9 @@ namespace Project.Constraints.Services
             where TUserRole : class, IUserRole, new();
     }
 
+    [WebController(Route = "standardpermission")]
+    [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
+    [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public interface IStandardPermissionService : IPermissionService<Power, Role>
     {
 

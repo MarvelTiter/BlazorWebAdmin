@@ -1,4 +1,7 @@
-﻿using Project.Constraints.Aop;
+﻿using AutoInjectGenerator;
+using AutoWasmApiGenerator;
+using MT.Generators.Abstraction;
+using Project.Constraints.Aop;
 using Project.Constraints.Models.Permissions;
 using Project.Constraints.Models.Request;
 
@@ -24,6 +27,9 @@ namespace Project.Constraints.Services
         Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd);
     }
 
+    [WebController(Route = "user")]
+    [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
+    [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public interface IStandardUserService : IUserService<User>
     {
 

@@ -107,8 +107,8 @@
         return Task.CompletedTask;
     }
 
-    DateTime? dateValue;
-    string? stringValue;
+    DateTime? dateValue = DateTime.Now;
+    string? stringValue = string.Empty;
     Func<object?>? GetCurrentValue;
     RenderFragment ValueInput()
     {

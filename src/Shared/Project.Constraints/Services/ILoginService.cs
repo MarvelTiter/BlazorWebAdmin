@@ -1,10 +1,16 @@
-﻿using Project.Constraints.Aop;
+﻿using AutoInjectGenerator;
+using AutoWasmApiGenerator;
+using MT.Generators.Abstraction;
+using Project.Constraints.Aop;
 using Project.Constraints.Models;
 
 namespace Project.Constraints.Services
 {
     //[Aspectable(AspectHandleType = typeof(LogAop))]
     [LogAop]
+    [WebController(Route = "login")]
+    [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
+    [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public partial interface ILoginService
     {
         [LogInfo(Action = "用户登录", Module = "登录模块")]

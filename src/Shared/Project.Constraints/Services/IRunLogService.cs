@@ -1,9 +1,15 @@
-﻿using Project.Constraints.Models;
+﻿using AutoInjectGenerator;
+using AutoWasmApiGenerator;
+using MT.Generators.Abstraction;
+using Project.Constraints.Models;
 using Project.Constraints.Models.Permissions;
 using Project.Constraints.Models.Request;
 
 namespace Project.Constraints.Services
 {
+    [WebController(Route = "runlog")]
+    [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
+    [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public interface IStandardRunLogService : IRunLogService<RunLog> { }
     public interface IRunLogService<TRunLog> where TRunLog : IRunLog
     {

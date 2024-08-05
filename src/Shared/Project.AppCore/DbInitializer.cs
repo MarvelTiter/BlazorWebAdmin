@@ -85,7 +85,7 @@ namespace Project.AppCore
         ];
         public override void Initialized(IDbInitial db)
         {
-            db.CreateTable<Power>(datas:[.. powers]);
+            db.CreateTable<Power>(datas: [.. powers]);
         }
     }
 }

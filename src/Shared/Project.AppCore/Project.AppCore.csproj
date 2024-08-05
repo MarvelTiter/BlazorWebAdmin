@@ -8,13 +8,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AutoWasmApiGenerator" Version="0.0.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
-		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
 		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
 		<!-- OutputItemType="Analyzer" --> 
 		<ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
 	</ItemGroup>

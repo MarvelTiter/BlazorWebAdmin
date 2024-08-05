@@ -5,17 +5,15 @@ using Project.AppCore.Locales.Extensions;
 using Project.AppCore.Auth;
 using Project.Constraints;
 using Project.Constraints.Options;
-using Project.AppCore.Middlewares;
-using Microsoft.AspNetCore.DataProtection;
 using System.Data.SQLite;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Builder;
 using MT.Toolkit.LogTool;
 using MT.Toolkit.ReflectionExtension;
 using Project.AppCore.BackgroundServices;
-using Microsoft.AspNetCore.Components.Server.Circuits;
 using Project.Constraints.Models.Permissions;
 using Project.Web.Shared.Pages;
+using Microsoft.AspNetCore.Builder;
+using Project.AppCore.Middlewares;
 namespace Project.AppCore;
 
 public static class ProjectInit
@@ -61,7 +59,6 @@ public static class ProjectInit
 
         var services = builder.Services;
 
-        services.AddDataProtection().SetApplicationName(AppConst.App.Name);
         // 多语言服务
         services.AddJsonLocales();
         // excel操作
@@ -71,13 +68,11 @@ public static class ProjectInit
         //
         services.AddHttpClient();
         //
-        services.AddHttpContextAccessor();
-        //
         services.AddHostedService<TempFileCleanUpService>();
         InterceptorsInit(services, setting);
 
         //services.AddControllers().AddApplicationPart(typeof(ProjectInit).Assembly);
-        builder.Services.AddScoped<CircuitHandler, CircuitTracker>();
+        //builder.Services.AddScoped<CircuitHandler, CircuitTracker>();
         // 配置 IAuthenticationStateProvider
         services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
         services.AddScoped<IAuthenticationStateProvider>(provider =>

@@ -30,7 +30,6 @@ public class ProjectSetting
         config.Invoke(TypeInfo);
     }
 
-    public Action<AutoInjectFilter>? AutoInjectConfig { get; set; }
     public bool AddFileLogger { get; set; }
     public bool AddDefaultProjectServices { get; set; } = true;
     public AppInfo App => AppConst.App;

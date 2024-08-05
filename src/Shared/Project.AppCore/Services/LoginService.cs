@@ -4,9 +4,7 @@ using AutoInjectGenerator;
 using MT.Generators.Abstraction;
 namespace Project.Services
 {
-    [WebController(Route = "login")]
-    [ApiInvokerGenera(typeof(AutoInjectAttribute))]
-    [AttachAttributeArgument(typeof(ApiInvokerGeneraAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
+    
     [AutoInject(Group = "SERVER")]
     public partial class LoginService : ILoginService
     {

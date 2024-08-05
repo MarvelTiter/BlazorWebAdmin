@@ -54,8 +54,6 @@
     [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
     [Inject, NotNull] IProtectedLocalStorage? LocalStorage { get; set; }
     private bool AdvanceModalVisible = false;
-    private ConditionUnit? conditionInfo;
-    ConditionBuilder<TData>? insRef;
 
     readonly string cache_key = $"TableOptions_{typeof(TData).Name}_ConditionAction";
     async Task CacheInfo()

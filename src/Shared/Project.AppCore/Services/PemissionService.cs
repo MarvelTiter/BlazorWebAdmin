@@ -209,9 +209,7 @@ namespace Project.AppCore.Services
         }
     }
 
-    [WebController(Route = "standardpermission")]
-    [ApiInvokerGenera(typeof(AutoInjectAttribute))]
-    [AttachAttributeArgument(typeof(ApiInvokerGeneraAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
+    
     [AutoInject(ServiceType = typeof(IStandardPermissionService), Group = "SERVER")]
     public class StandardPermissionService : PermissionService<Power, Role, RolePower, UserRole>, IStandardPermissionService
     {
