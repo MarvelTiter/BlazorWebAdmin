@@ -11,16 +11,20 @@
     <Project.Web.Shared.Components.Link Href="_content/Project.Web.Shared/css/app.css" />
     <Project.Web.Shared.Components.Link Href="app.css" />
     <Project.Web.Shared.Components.Link Href="BlazorAdmin.styles.css" />
-    <HeadOutlet @rendermode="@(new InteractiveAutoRenderMode(false))" />
+    <HeadOutlet @rendermode="@RenderMode" />
 </head>
 
 <body>
-    <Routes @rendermode="@(new InteractiveAutoRenderMode(false))" />
+    <Routes @rendermode="@RenderMode" />
 
-    <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@(new InteractiveAutoRenderMode(false))"></Project.Web.Shared.Components.ReconnectorOutlet>
+    <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></Project.Web.Shared.Components.ReconnectorOutlet>
 
     <script src="_framework/blazor.web.js"></script>
     <Project.Web.Shared.Components.Script Src="./js//blazor-admin-project.js"></Project.Web.Shared.Components.Script>
 </body>
 
 </html>
+
+@code {
+    IComponentRenderMode RenderMode => new InteractiveWebAssemblyRenderMode(false);
+}

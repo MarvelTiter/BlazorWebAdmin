@@ -12,10 +12,10 @@ namespace Project.Constraints.Services
     [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public interface IPermissionService
     {
-        Task<QueryCollectionResult<IPower>> GetPowerListByUserIdAsync(string usrId);
+        Task<QueryCollectionResult<MinimalPower>> GetPowerListByUserIdAsync(string usrId);
     }
 
-    [WebController(Route = "standardpermission")]
+    [WebController(Route = "default/permission")]
     [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
     [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public interface IStandardPermissionService : IPermissionService<Power, Role>

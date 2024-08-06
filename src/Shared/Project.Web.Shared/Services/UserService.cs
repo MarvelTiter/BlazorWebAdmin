@@ -1,7 +1,7 @@
 ﻿using AutoInjectGenerator;
 using LightORM;
 
-namespace Project.AppCore.Services
+namespace Project.Web.Shared.Services
 {
     public class UserService<TUser> : IUserService<TUser> where TUser : IUser
     {
@@ -68,7 +68,7 @@ namespace Project.AppCore.Services
         }
     }
 
-    
+
     [AutoInject(Group = "SERVER", ServiceType = typeof(IStandardUserService))]
     public class StandardUserService : UserService<User>, IStandardUserService
     {

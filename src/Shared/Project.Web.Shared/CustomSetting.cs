@@ -68,7 +68,7 @@ public class CustomSetting : BasicSetting, IProjectSettingService
         return Task.FromResult(true);
     }
 
-    public override async Task<IEnumerable<IPower>> GetUserPowersAsync(UserInfo info)
+    public override async Task<IEnumerable<MinimalPower>> GetUserPowersAsync(UserInfo info)
     {
         var result = await permissionService.GetPowerListByUserIdAsync(info.UserId);
         return result.Payload;

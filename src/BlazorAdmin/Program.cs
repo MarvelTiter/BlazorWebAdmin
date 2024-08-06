@@ -26,7 +26,7 @@ builder.AddProjectService(setting =>
 });
 
 builder.Services.AutoInject();
-
+;
 //builder.Services.AddControllers().AddApplicationPart(typeof(Project.AppCore._Imports).Assembly);
 builder.AddDefaultLightOrm();
 builder.Services.AddControllers();

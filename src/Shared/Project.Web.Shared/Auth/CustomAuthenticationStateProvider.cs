@@ -80,7 +80,6 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider, IA
 
     public async Task IdentifyUser(UserInfo info)
     {
-        logger.LogInformation("IdentifyUser");
         await storageService.SetAsync("UID", info);
         NotifyAuthenticationStateChanged(UpdateState(info));
     }

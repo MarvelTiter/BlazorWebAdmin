@@ -76,7 +76,7 @@ namespace Project.Web.Shared.Pages
         private async Task UpdateRoles()
         {
             var result = await PermissionSrv.GetAllRoleAsync();
-            allRoles = result.Payload.Cast<TRole>();
+            allRoles = result.Payload;
         }
 
         public Task OnShowAsync()

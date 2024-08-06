@@ -45,7 +45,6 @@ namespace Project.Web.Shared.Pages
             BooleanStatusManager.New(b => Loading = b, callback: () => InvokeAsync(StateHasChanged));
             //await InvokeAsync(StateHasChanged);
             var result = await AuthService.SignInAsync(model);
-            Logger.LogInformation(System.Text.Json.JsonSerializer.Serialize(result));
             if (result.Success)
             {
                 await User.SetUserAsync(result.Payload);
@@ -54,13 +53,18 @@ namespace Project.Web.Shared.Pages
                 var goon = await CustomSetting.LoginInterceptorAsync(result.Payload!);
                 if (goon.Success)
                 {
-                    await AuthenticationStateProvider.IdentifyUser(result.Payload!);
                     await Router.InitRoutersAsync(result.Payload);
-
+                    await AuthenticationStateProvider.IdentifyUser(result.Payload!);
                     if (string.IsNullOrEmpty(Redirect))
+                    {
+                        Logger.LogInformation("Redirect to /");
                         Navigator.NavigateTo("/");
+                    }
                     else
+                    {
+
                         Navigator.NavigateTo(Redirect);
+                    }
                 }
                 else
                 {

@@ -38,7 +38,7 @@ namespace Project.Constraints.Services
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        Task<IEnumerable<IPower>> GetUserPowersAsync(UserInfo info);
+        Task<IEnumerable<MinimalPower>> GetUserPowersAsync(UserInfo info);
 
         /// <summary>
         /// 导航钩子

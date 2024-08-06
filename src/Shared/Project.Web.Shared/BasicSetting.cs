@@ -40,7 +40,7 @@ public abstract class BasicSetting : IProjectSettingService//, IDisposable
     /// <param name="info"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public virtual Task<IEnumerable<IPower>> GetUserPowersAsync(UserInfo info) => Task.FromResult<IEnumerable<IPower>>([]);
+    public virtual Task<IEnumerable<MinimalPower>> GetUserPowersAsync(UserInfo info) => Task.FromResult<IEnumerable<MinimalPower>>([]);
 
     /// <summary>
     /// <inheritdoc/>

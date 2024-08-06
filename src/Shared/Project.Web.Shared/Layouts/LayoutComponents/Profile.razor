@@ -42,6 +42,7 @@
         await AuthService.SignOutAsync(User.UserInfo?.ApiToken);
         User.ClearUser();
         await AuthenticationStateProvider.ClearState();
+        // await InvokeAsync(StateHasChanged);
     }
 
     async Task HandlePwdModify()
