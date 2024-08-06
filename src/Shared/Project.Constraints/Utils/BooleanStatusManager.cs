@@ -20,6 +20,7 @@ namespace Project.Constraints.Utils
             this.init = init;
             this.callback = callback;
             this.setter.Invoke(init);
+            callback?.Invoke().GetAwaiter().GetResult();
         }
 
         protected virtual void Dispose(bool disposing)

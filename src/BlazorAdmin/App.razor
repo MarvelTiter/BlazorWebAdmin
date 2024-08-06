@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using BlazorAdmin.Client
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,13 +11,13 @@
     <Project.Web.Shared.Components.Link Href="_content/Project.Web.Shared/css/app.css" />
     <Project.Web.Shared.Components.Link Href="app.css" />
     <Project.Web.Shared.Components.Link Href="BlazorAdmin.styles.css" />
-    <HeadOutlet @rendermode="@(new InteractiveServerRenderMode(false))" />
+    <HeadOutlet @rendermode="@(new InteractiveAutoRenderMode(false))" />
 </head>
 
 <body>
-    <Routes @rendermode="@(new InteractiveServerRenderMode(false))" />
+    <Routes @rendermode="@(new InteractiveAutoRenderMode(false))" />
 
-    <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@(new InteractiveServerRenderMode(false))"></Project.Web.Shared.Components.ReconnectorOutlet>
+    <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@(new InteractiveAutoRenderMode(false))"></Project.Web.Shared.Components.ReconnectorOutlet>
 
     <script src="_framework/blazor.web.js"></script>
     <Project.Web.Shared.Components.Script Src="./js//blazor-admin-project.js"></Project.Web.Shared.Components.Script>

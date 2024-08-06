@@ -1,9 +1,11 @@
-﻿using Project.Constraints.Services;
+﻿using AutoInjectGenerator;
+using Project.Constraints.Services;
 using Project.Constraints.Store.Models;
 
 namespace BlazorAdmin
 {
-    public class AdditionalTest: IAddtionalInterceptor
+    [AutoInject(ServiceType = typeof(IAddtionalInterceptor))]
+    public class AdditionalTest : IAddtionalInterceptor
     {
         private readonly IPageLocatorService pageLocator;
 

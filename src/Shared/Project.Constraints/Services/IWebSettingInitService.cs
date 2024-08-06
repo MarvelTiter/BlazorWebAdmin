@@ -12,11 +12,11 @@ namespace Project.Constraints.Services
     [AutoInject]
     public class WebSettingInitService : IWebSettingInitService
     {
-        private readonly ILoginService loginService;
+        private readonly IAuthenticationService authenticationService;
 
-        public WebSettingInitService(ILoginService loginService)
+        public WebSettingInitService(IAuthenticationService authenticationService)
         {
-            this.loginService = loginService;
+            this.authenticationService = authenticationService;
         }
         public void ApplyAppSetting(IAppStore app)
         {

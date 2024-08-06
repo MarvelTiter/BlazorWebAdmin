@@ -1,4 +1,4 @@
-﻿namespace Project.AppCore.Locales.Services
+﻿namespace Project.Web.Shared.Locales.Services
 {
     public class JsonLocalizationOptions
     {

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Logging;
 using Project.Constraints.UI;
 using Project.Constraints.UI.Extensions;
+using Project.Constraints.Utils;
 using System.Web;
 
 namespace Project.Web.Shared.Pages
@@ -9,9 +11,10 @@ namespace Project.Web.Shared.Pages
     public partial class Login : BasicComponent
     {
         private LoginFormModel model = new LoginFormModel();
-        [Inject, NotNull] public ILoginService? LoginSrv { get; set; }
+        [Inject, NotNull] public IAuthenticationService? AuthService { get; set; }
         [Inject, NotNull] IStringLocalizer<Login>? Localizer { get; set; }
         [Inject, NotNull] IProjectSettingService? CustomSetting { get; set; }
+        [Inject, NotNull] ILogger<Login>? Logger { get; set; }
         [CascadingParameter, NotNull] IDomEventHandler? Root { get; set; }
         public bool Loading { get; set; } = false;
         public string? Redirect { get; set; }
@@ -38,30 +41,36 @@ namespace Project.Web.Shared.Pages
 
         private async Task HandleLogin()
         {
-            Loading = true;
-            await InvokeAsync(StateHasChanged);
-            var result = await LoginSrv.LoginAsync(model.UserName, model.Password);
+            //Loading = true;
+            BooleanStatusManager.New(b => Loading = b, callback: () => InvokeAsync(StateHasChanged));
+            //await InvokeAsync(StateHasChanged);
+            var result = await AuthService.SignInAsync(model);
+            Logger.LogInformation(System.Text.Json.JsonSerializer.Serialize(result));
             if (result.Success)
             {
                 await User.SetUserAsync(result.Payload);
-                await AuthenticationStateProvider.IdentifyUser(result.Payload!);
-                await Router.InitRoutersAsync(result.Payload);
                 UI.Success(Localizer["Login.SuccessTips"].Value);
                 Root.OnKeyDown -= OnPressEnter;
                 var goon = await CustomSetting.LoginInterceptorAsync(result.Payload!);
-                if (goon)
+                if (goon.Success)
                 {
+                    await AuthenticationStateProvider.IdentifyUser(result.Payload!);
+                    await Router.InitRoutersAsync(result.Payload);
+
                     if (string.IsNullOrEmpty(Redirect))
                         Navigator.NavigateTo("/");
                     else
                         Navigator.NavigateTo(Redirect);
+                }
+                else
+                {
+                    UI.Error(goon.Message!);
                 }
             }
             else
             {
                 UI.Error(result.Message!);
             }
-            Loading = false;
             //StateHasChanged();
         }
     }

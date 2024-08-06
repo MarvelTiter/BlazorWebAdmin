@@ -17,7 +17,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     where TQuery : IRequest, new()
 {
     [Inject, NotNull] protected IExcelHelper? Excel { get; set; }
-    [Inject, NotNull] IDownloadService? DownloadService { get; set; }
+    [Inject, NotNull] IDownloadServiceProvider? DownloadServiceProvider { get; set; }
     [CascadingParameter] IDomEventHandler? DomEvent { get; set; }
     [CascadingParameter] TagRoute? RouteInfo { get; set; }
     public TableOptions<TModel, TQuery> Options { get; set; } = new();
@@ -105,12 +105,13 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     /// <returns></returns>
     protected virtual Task OnSaveExcelAsync(IEnumerable<TModel> datas)
     {
+        var service = DownloadServiceProvider.GetService();
+        if (service == null) return Task.CompletedTask;
         var mainName = Router.Current?.RouteTitle ?? typeof(TModel).Name;
         var filename = $"{mainName}_{DateTime.Now:yyyyMMdd-HHmmss}.xlsx";
         var path = Path.Combine(AppConst.TempFilePath, filename);
         Excel.WriteExcel(path, datas);
-        DownloadService.DownloadAsync(filename);
-        return Task.CompletedTask;
+        return service.DownloadAsync(filename);
     }
 
     /// <summary>

@@ -9,9 +9,9 @@ import { ScrollBar } from './Shared/Project.Web.Shared/Components/ScrollBar/Scro
 import { HorizontalScroll } from './Shared/Project.Web.Shared/Components/ScrollBar/HorizontalScroll.razor.ts'
 import { SplitView } from './Shared/Project.Web.Shared/Components/SplitView/SplitView.razor.ts'
 import { WaterMark } from './Shared/Project.Web.Shared/Components/WaterMark/WaterMark.razor.ts'
-import { NavTabs } from './Shared/Project.AppCore/Layouts/LayoutComponents/NavTabs.razor.ts'
+import { NavTabs } from './Shared/Project.Web.Shared/Layouts/LayoutComponents/NavTabs.razor.ts'
 import { Downloader } from './Shared/Project.Web.Shared/Components/Downloader/Downloader.razor.ts'
-
+import { SvgIcon } from './Shared/Project.Web.Shared/Components/SvgIcon/SvgIcon.razor.ts'
 declare global {
     interface Window {
         BlazorProject: any
@@ -33,5 +33,6 @@ window.BlazorProject = {
     SplitView,
     WaterMark,
     NavTabs,
-    Downloader
+    Downloader,
+    SvgIcon
 }

@@ -72,14 +72,14 @@ UI.BuildCheckBoxGroup:
     <span>测试</span>
 </StackPanel>
 
-@UI.BuildButton(this).Primary().Text("下载测试").OnClick(() => Download.DownloadAsync("test.zip", "download", "zip")).Render()
+@UI.BuildButton(this).Primary().Text("下载测试").OnClick(() => DownloadProvider.GetService()!.DownloadAsync("test.zip", "download", "zip")).Render()
 
 <MModal @bind-Visible=visible Title="测试">
     <h1>Modal Content</h1>
 </MModal>
 @code {
     [Inject, NotNull] IUserService<User>? UserService { get; set; }
-    [Inject, NotNull] IDownloadService? Download { get; set; }
+    [Inject, NotNull] IDownloadServiceProvider? DownloadProvider { get; set; }
     [Inject, NotNull] IWatermarkServiceFactory? WatermarkServiceFactory { get; set; }
     string[] checkedUsers = [];
     string selectedUser = string.Empty;

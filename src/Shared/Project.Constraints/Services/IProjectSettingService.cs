@@ -11,13 +11,13 @@ namespace Project.Constraints.Services
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        Task<QueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
+        //Task<QueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
         /// <summary>
         /// 更新登录信息
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        Task<int> UpdateLoginInfo(UserInfo info);
+        //Task<int> UpdateLoginInfo(UserInfo info);
 
         /// <summary>
         /// 登录成功钩子
@@ -31,7 +31,7 @@ namespace Project.Constraints.Services
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        Task<bool> LoginInterceptorAsync(UserInfo info);
+        Task<QueryResult> LoginInterceptorAsync(UserInfo info);
 
         /// <summary>
         /// 初始化用户可用菜单

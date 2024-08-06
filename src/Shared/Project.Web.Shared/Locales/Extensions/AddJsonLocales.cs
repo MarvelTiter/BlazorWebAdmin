@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Localization;
-using Project.AppCore.Locales.Services;
+using Project.Web.Shared.Locales.Services;
 
-namespace Project.AppCore.Locales.Extensions
+namespace Project.Web.Shared.Locales.Extensions
 {
     public static class AddJsonLocalesExtensions
     {

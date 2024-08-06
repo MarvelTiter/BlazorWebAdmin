@@ -16,6 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
 	  <ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
 	  <ProjectReference Include="..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
 	</ItemGroup>

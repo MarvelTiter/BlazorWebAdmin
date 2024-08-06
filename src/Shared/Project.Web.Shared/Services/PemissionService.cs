@@ -1,9 +1,7 @@
-﻿using Project.Constraints.Models.Permissions;
-using LightORM.Extension;
-using AutoWasmApiGenerator;
+﻿using LightORM.Extension;
 using AutoInjectGenerator;
-using MT.Generators.Abstraction;
-namespace Project.AppCore.Services
+using LightORM;
+namespace Project.Web.Shared.Services
 {
     public class PermissionService<TPower, TRole, TRolePower, TUserRole>
         where TPower : class, IPower, new()
@@ -180,9 +178,6 @@ namespace Project.AppCore.Services
         }
     }
 
-    //[WebController(Route = "permissionforpower")]
-    //[ApiInvokerGenera(typeof(AutoInjectAttribute))]
-    //[AttachAttributeArgument(typeof(ApiInvokerGeneraAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     [AutoInject(Group = "SERVER")]
     public class PermissionService : IPermissionService
 
@@ -193,15 +188,12 @@ namespace Project.AppCore.Services
         {
             this.context = context;
         }
-        public async Task<QueryCollectionResult<IPower>> GetPowerListByUserIdAsync<TPower, TRolePower, TUserRole>(string usrId)
-            where TPower : class, IPower, new()
-            where TRolePower : class, IRolePower, new()
-            where TUserRole : class, IUserRole, new()
+        public async Task<QueryCollectionResult<IPower>> GetPowerListByUserIdAsync(string usrId)
         {
-            var powers = await context.Select<TPower, TRolePower, TUserRole>(w => new { w.Tb1.PowerId, w.Tb1.PowerName, w.Tb1.ParentId, w.Tb1.PowerType, w.Tb1.PowerLevel, w.Tb1.Icon, w.Tb1.Path, w.Tb1.Sort })
+            var powers = await context.Select<Power, RolePower, UserRole>(w => new { w.Tb1.PowerId, w.Tb1.PowerName, w.Tb1.ParentId, w.Tb1.PowerType, w.Tb1.PowerLevel, w.Tb1.Icon, w.Tb1.Path, w.Tb1.Sort })
                                       .Distinct()
-                                      .InnerJoin<TRolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
-                                      .InnerJoin<TUserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
+                                      .InnerJoin<RolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
+                                      .InnerJoin<UserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
                                       .Where(w => w.Tb3.UserId == usrId)
                                       .OrderBy(w => w.Tb1.Sort)
                                       .ToListAsync();
@@ -209,7 +201,7 @@ namespace Project.AppCore.Services
         }
     }
 
-    
+
     [AutoInject(ServiceType = typeof(IStandardPermissionService), Group = "SERVER")]
     public class StandardPermissionService : PermissionService<Power, Role, RolePower, UserRole>, IStandardPermissionService
     {

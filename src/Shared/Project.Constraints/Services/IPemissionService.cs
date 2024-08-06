@@ -7,12 +7,12 @@ using Project.Constraints.Models.Request;
 
 namespace Project.Constraints.Services
 {
+    [WebController(Route = "permission")]
+    [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
+    [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public interface IPermissionService
     {
-        Task<QueryCollectionResult<IPower>> GetPowerListByUserIdAsync<TPower, TRolePower, TUserRole>(string usrId)
-            where TPower : class, IPower, new()
-            where TRolePower : class, IRolePower, new()
-            where TUserRole : class, IUserRole, new();
+        Task<QueryCollectionResult<IPower>> GetPowerListByUserIdAsync(string usrId);
     }
 
     [WebController(Route = "standardpermission")]

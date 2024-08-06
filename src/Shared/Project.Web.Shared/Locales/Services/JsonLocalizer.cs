@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text.Json;
 
-namespace Project.AppCore.Locales.Services
+namespace Project.Web.Shared.Locales.Services
 {
     public class JsonInfo
     {
@@ -86,7 +87,7 @@ namespace Project.AppCore.Locales.Services
         }
         public JsonLocalizer(JsonLocalizationOptions options, string resourceName, ILogger logger)
         {
-            this.typedName = resourceName;
+            typedName = resourceName;
             this.logger = logger ?? NullLogger.Instance;
         }
         public LocalizedString this[string name]

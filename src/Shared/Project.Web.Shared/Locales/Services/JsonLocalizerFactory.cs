@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Text.Json;
 
-namespace Project.AppCore.Locales.Services
+namespace Project.Web.Shared.Locales.Services
 {
     public class JsonLocalizerFactory : IStringLocalizerFactory
     {

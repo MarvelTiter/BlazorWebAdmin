@@ -1,11 +1,10 @@
 ﻿@namespace Project.Web.Shared.Components
-<i style="display: flex;align-items: center;" @onclick="handleClick">
-    @IconMarkuString
-</i>
+@inherits JsComponentBase
+<i style="display: flex;align-items: center;" @onclick="handleClick" @ref="icon_wrapper"></i>
 @code {
     [Parameter]
     public string? IconName { get; set; }
-
+    ElementReference? icon_wrapper;
     MarkupString IconMarkuString;
 
     [Parameter]
@@ -23,10 +22,24 @@
         await OnClick.InvokeAsync();
     }
 
-    protected override async Task OnParametersSetAsync()
+    // protected override async Task OnParametersSetAsync()
+    // {
+    //     await loadSvgData();
+    //     await base.OnParametersSetAsync();
+    // }
+
+    protected override ValueTask Init()
     {
-        await loadSvgData();
-        await base.OnParametersSetAsync();
+        Style ??= $"font-size: {FontSize ?? "18px"}";
+        var className = $"svg-icon {ClassName}";
+        return InvokeInit(new
+        {
+            Container = icon_wrapper,
+            IconName,
+            ClassName = className,
+            Style,
+            FontSize
+        });
     }
 
     async Task loadSvgData()
