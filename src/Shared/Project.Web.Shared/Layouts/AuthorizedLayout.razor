@@ -1,7 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.Extensions.Options
-@using Project.Constraints
-@using System.Diagnostics.CodeAnalysis
 @inherits RootLayout
 @inject IProtectedLocalStorage LocalStorage
 @inject IOptionsMonitor<Token> Token
@@ -20,6 +17,9 @@
                     </ActionWatcher>
                 </ActionWatcher>
             </Authorized>
+            <Authorizing>
+                <h1>Authorizing...</h1>
+            </Authorizing>
             <NotAuthorized>
                 @if (Token.CurrentValue.NeedAuthentication)
                 {
@@ -36,10 +36,12 @@
 
 @code {
     [CascadingParameter] private Task<AuthenticationState>? authenticationStateTask { get; set; }
+
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
     // [Inject, NotNull] public ILogger<AuthorizedLayout>? Logger { get; set; }
-    [CascadingParameter, NotNull] IAppSession? AppSession { get; set; }
-    [Inject, NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+    [CascadingParameter] [NotNull] IAppSession? AppSession { get; set; }
+    [Inject] [NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
     string? LauchUrl => Setting.CurrentValue.LauchUrl;
 
     protected override async Task OnInitializedAsync()
@@ -60,12 +62,13 @@
             }
         }
     }
-    bool rendered = false;
+
+    bool rendered;
+
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
         rendered = true;
-
     }
 
 
@@ -78,12 +81,15 @@
             await LocalStorage.SetAsync("UID", current);
         }
     }
+
     Task NoneOperation()
     {
         if (AppSession.AppStore.Working)
         {
             return UpdateUserToken();
         }
+
         return AuthenticationStateProvider?.ClearState() ?? Task.CompletedTask;
     }
+
 }

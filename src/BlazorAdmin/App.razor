@@ -26,5 +26,12 @@
 </html>
 
 @code {
-    IComponentRenderMode RenderMode => new InteractiveWebAssemblyRenderMode(false);
+    [CascadingParameter] public HttpContext? HttpContext { get; set; }
+    IComponentRenderMode RenderMode => new InteractiveAutoRenderMode(false);
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
 }
