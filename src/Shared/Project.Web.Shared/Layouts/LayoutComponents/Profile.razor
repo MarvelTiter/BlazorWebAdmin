@@ -43,6 +43,7 @@
         User.ClearUser();
         await AuthenticationStateProvider.ClearState();
         // await InvokeAsync(StateHasChanged);
+        // Context.Update?.Invoke();
     }
 
     async Task HandlePwdModify()

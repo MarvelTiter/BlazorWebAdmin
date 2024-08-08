@@ -17,9 +17,9 @@
                     </ActionWatcher>
                 </ActionWatcher>
             </Authorized>
-            <Authorizing>
-                <h1>Authorizing...</h1>
-            </Authorizing>
+            @* <Authorizing>
+            <h1>Authorizing...</h1>
+            </Authorizing> *@
             <NotAuthorized>
                 @if (Token.CurrentValue.NeedAuthentication)
                 {
@@ -40,8 +40,8 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     // [Inject, NotNull] public ILogger<AuthorizedLayout>? Logger { get; set; }
-    [CascadingParameter] [NotNull] IAppSession? AppSession { get; set; }
-    [Inject] [NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+    [CascadingParameter][NotNull] IAppSession? AppSession { get; set; }
+    [Inject, NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
     string? LauchUrl => Setting.CurrentValue.LauchUrl;
 
     protected override async Task OnInitializedAsync()
@@ -82,14 +82,17 @@
         }
     }
 
-    Task NoneOperation()
+    async Task NoneOperation()
     {
         if (AppSession.AppStore.Working)
         {
-            return UpdateUserToken();
+            await UpdateUserToken();
         }
-
-        return AuthenticationStateProvider?.ClearState() ?? Task.CompletedTask;
+        else
+        {
+            await AuthenticationStateProvider.ClearState();
+        }
+        await InvokeAsync(StateHasChanged);
     }
 
 }

@@ -6,15 +6,20 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
+	
 	<ItemGroup>
-		<Compile Remove="Components\TwoSidePage\**" />
-		<Content Remove="Components\TwoSidePage\**" />
-		<EmbeddedResource Remove="Components\TwoSidePage\**" />
-		<None Remove="Components\TwoSidePage\**" />
+		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
+		<Content Remove="Langs\en-US\index.json" />
+		<Content Remove="Langs\zh-CN\index.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
+	  <EmbeddedResource Include="Langs\en-US\index.json">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Langs\zh-CN\index.json">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>

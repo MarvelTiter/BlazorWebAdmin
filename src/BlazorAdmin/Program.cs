@@ -29,6 +29,7 @@ builder.Services.AutoInject();
 ;
 //builder.Services.AddControllers().AddApplicationPart(typeof(Project.AppCore._Imports).Assembly);
 builder.AddDefaultLightOrm();
+
 builder.Services.AddControllers();
 var app = builder.Build();
 // Configure the HTTP request pipeline.

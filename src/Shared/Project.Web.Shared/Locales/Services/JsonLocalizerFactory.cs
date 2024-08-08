@@ -22,25 +22,14 @@ namespace Project.Web.Shared.Locales.Services
 
         public IStringLocalizer Create(Type resourceSource)
         {
-            if (resourceSource == null)
-            {
-                throw new ArgumentNullException(nameof(resourceSource));
-            }
+            ArgumentNullException.ThrowIfNull(resourceSource);
             return CreateJsonLocalizer(resourceSource.Name);
         }
 
         public IStringLocalizer Create(string baseName, string location)
         {
-            if (baseName == null)
-            {
-                throw new ArgumentNullException(nameof(baseName));
-            }
-
-            if (location == null)
-            {
-                throw new ArgumentNullException(nameof(location));
-            }
-
+            ArgumentNullException.ThrowIfNull(baseName);
+            ArgumentNullException.ThrowIfNull(location);
             return CreateJsonLocalizer(location);
         }
 
@@ -52,6 +41,5 @@ namespace Project.Web.Shared.Locales.Services
                 resName,
                 logger));
         }
-
     }
 }

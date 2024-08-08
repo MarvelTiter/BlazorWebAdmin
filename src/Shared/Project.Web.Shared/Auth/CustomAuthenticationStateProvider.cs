@@ -41,12 +41,10 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider, IA
         try
         {
             var app = await storageService.GetAsync<AppStore>(ConstraintString.APP_STORE_KEY);
-            logger.LogInformation(app.Value?.AppLanguage);
             AppStore.ApplySetting(app.Value);
             if (token.CurrentValue.NeedAuthentication)
             {
                 var result = await storageService.GetAsync<UserInfo>("UID");
-                logger.LogInformation(result.Value?.UserName);
                 var diff = DateTime.Now - result.Value?.CreatedTime;
                 var actived = DateTime.Now - result.Value?.ActiveTime;
                 if (result.Success && (diff?.Days < token.CurrentValue.Expire || actived?.TotalSeconds < token.CurrentValue.LimitedFreeTime))
@@ -55,11 +53,12 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider, IA
                     return await UpdateState(result.Value);
                 }
             }
+            return await UpdateState();
         }
         catch (Exception)
         {
+            return await UpdateState();
         }
-        return await UpdateState();
     }
 
     async Task<AuthenticationState> UpdateState(UserInfo? info = null)
@@ -90,6 +89,7 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider, IA
         {
         }
         await storageService.DeleteAsync("UID");
+        logger.LogInformation("ClearState");
         NotifyAuthenticationStateChanged(UpdateState());
     }
 

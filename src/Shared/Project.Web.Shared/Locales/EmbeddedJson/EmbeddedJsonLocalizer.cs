@@ -1,31 +1,39 @@
-﻿using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.Logging;
+using Project.Web.Shared.Locales.Services;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
-namespace Project.Web.Shared.Locales.Services
+namespace Project.Web.Shared.Locales.EmbeddedJson
 {
-    public class JsonLocalizer : IStringLocalizer
+    class InteractiveLocalizer<T>(IStringLocalizerFactory factory) : IStringLocalizer<T>
+    {
+
+        public LocalizedString this[string name] => factory.Create(typeof(T))[name];
+
+        public LocalizedString this[string name, params object[] arguments] => factory.Create(typeof(T))[name, arguments];
+
+        public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => [];
+    }
+
+    internal class EmbeddedJsonLocalizer : IStringLocalizer
     {
         private readonly ConcurrentDictionary<string, JsonDocument?> documentCache = new();
         private static readonly ConcurrentDictionary<string, JsonDocument> allJsonFiles = new();
         private static readonly ConcurrentDictionary<string, JsonDocument> fallbackJsonFiles = new();
         private readonly ConcurrentDictionary<string, JsonInfo> infos = new();
-        private readonly string typedName = string.Empty;
+        private readonly string typedName;
+        private readonly ConcurrentDictionary<string, string> allJsonFile;
+        private readonly CultureInfo cultureInfo;
         private string? searchedLocation;
-
-        private readonly ILogger? logger;
-        public JsonLocalizer()
-        {
-
-        }
-        public JsonLocalizer(JsonLocalizationOptions options, string resourceName, ILogger logger)
-        {
-            typedName = resourceName;
-            this.logger = logger ?? NullLogger.Instance;
-        }
         public LocalizedString this[string name]
         {
             get
@@ -47,45 +55,25 @@ namespace Project.Web.Shared.Locales.Services
             }
         }
 
+        public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => [];
+
+        public EmbeddedJsonLocalizer(string resourceName, ConcurrentDictionary<string, string> allJsonFile, CultureInfo cultureInfo)
+        {
+            this.typedName = resourceName;
+            this.allJsonFile = allJsonFile;
+            this.cultureInfo = cultureInfo;
+        }
         private string? GetStringSafely(string name)
         {
-            var info = GetJsonDocument(CultureInfo.CurrentUICulture.Name);
+            var info = GetJsonDocument(CultureInfo.CurrentUICulture.Name.Replace('-', '_'));
             if (!info.TryGetValueFromMain(name, typedName, out var value))
             {
                 info.TryGetValueFromFallback(name, typedName, out value);
             }
             return value;
         }
-        ///// <summary>
-        ///// 判断获取的Json文件，是不是按resourceName区分文件夹
-        ///// </summary>
-        //bool useResourceName = false;
-        //private string? SolveJsonPath(JsonElement root, string name)
-        //{
-        //    var node = root;
-        //    if (name.IndexOf('.') > -1)
-        //    {
-        //        var paths = new Queue<string>(name.Split('.'));
-        //        while (paths.Count > 0)
-        //        {
-        //            var p = paths.Dequeue();
-        //            if (p == typedName && useResourceName) continue;
-        //            if (!node.TryGetProperty(p, out node))
-        //            {
-        //                return null;
-        //            }
-        //        }
-        //        return node.GetString();
-        //    }
-        //    else
-        //    {
-        //        if (node.TryGetProperty(name, out node) && node.ValueKind == JsonValueKind.String)
-        //        {
-        //            return node.GetString();
-        //        }
-        //        return null;
-        //    }
-        //}
+
+
         private JsonInfo GetJsonDocument(string culture)
         {
             if (!infos.TryGetValue(culture, out var info))
@@ -132,7 +120,7 @@ namespace Project.Web.Shared.Locales.Services
 
         private string ConstructJsonFilePath(bool useCultureFolder, bool useTypedFolder, bool useTypedName, string culture)
         {
-            var paths = new List<string>() { AppDomain.CurrentDomain.BaseDirectory, "Langs" };
+            var paths = new List<string>() { "Langs" };
             if (useCultureFolder)
                 paths.Add(culture);
             if (useTypedFolder)
@@ -175,7 +163,7 @@ namespace Project.Web.Shared.Locales.Services
                 }
             }
 
-            return Path.Combine(paths.ToArray());
+            return string.Join(".", paths);
         }
 
         private void LoadJsonDocumentFromPath(string path, out JsonDocument? value)
@@ -185,7 +173,7 @@ namespace Project.Web.Shared.Locales.Services
             {
                 return;
             }
-            var content = File.ReadAllText(searchedLocation, System.Text.Encoding.UTF8);
+            allJsonFile.TryGetValue(searchedLocation, out var content);
             if (!string.IsNullOrWhiteSpace(content))
             {
                 try
@@ -194,9 +182,8 @@ namespace Project.Web.Shared.Locales.Services
                     allJsonFiles.TryAdd(searchedLocation, value);
                     return;
                 }
-                catch (Exception e)
+                catch
                 {
-                    logger?.LogWarning(e, $"invalid json content, path: {searchedLocation}, content: {content}");
                 }
             }
             value = null;
@@ -205,7 +192,7 @@ namespace Project.Web.Shared.Locales.Services
         private bool CheckFileExits(bool useCultureFolder, bool useTypedFolder, bool useTypedName, string culture, out string path)
         {
             path = ConstructJsonFilePath(useCultureFolder, useTypedFolder, useTypedName, culture);
-            return File.Exists(path);
+            return allJsonFile.ContainsKey(path);
         }
 
         private JsonDocument? GetFallbackJsonDocument(string culture)
@@ -227,11 +214,6 @@ namespace Project.Web.Shared.Locales.Services
                     fallbackJsonFiles.TryAdd(culture, fallback);
             }
             return fallback;
-        }
-
-        public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
-        {
-            return Enumerable.Empty<LocalizedString>();
         }
     }
 }

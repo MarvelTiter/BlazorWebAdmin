@@ -26,7 +26,7 @@ else
 {
     <DynamicComponent Type="homeType"></DynamicComponent>
 }
-<p>IsBrowser: @OperatingSystem.IsBrowser()</p>
+<p>@UI.BuildButton(this).OnClick(() => IsWasm = OperatingSystem.IsBrowser()).Text("刷新").Render() WASM: @IsWasm</p>
 @code {
     async Task Update()
     {
@@ -42,4 +42,7 @@ else
         base.OnInitialized();
         homeType = Locator.GetDashboardType();
     }
+
+    bool IsWasm;
+
 }

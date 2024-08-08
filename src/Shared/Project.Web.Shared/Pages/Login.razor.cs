@@ -56,7 +56,6 @@ public partial class Login : BasicComponent
                 await AuthenticationStateProvider.IdentifyUser(result.Payload!);
                 if (string.IsNullOrEmpty(Redirect))
                 {
-                    Logger.LogInformation("Redirect to /");
                     Navigator.NavigateTo("/");
                 }
                 else
