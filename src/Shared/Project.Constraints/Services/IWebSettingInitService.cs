@@ -12,9 +12,9 @@ namespace Project.Constraints.Services
     [AutoInject]
     public class WebSettingInitService : IWebSettingInitService
     {
-        private readonly IAuthenticationService authenticationService;
+        private readonly IAuthService authenticationService;
 
-        public WebSettingInitService(IAuthenticationService authenticationService)
+        public WebSettingInitService(IAuthService authenticationService)
         {
             this.authenticationService = authenticationService;
         }

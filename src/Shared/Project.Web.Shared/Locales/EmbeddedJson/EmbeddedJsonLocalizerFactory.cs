@@ -43,8 +43,7 @@ namespace Project.Web.Shared.Locales.EmbeddedJson
         {
             var cultureInfo = CultureInfo.CurrentUICulture;
             var typeInfo = resourceSource.GetTypeInfo();
-            var assembly = typeInfo.Assembly;
-            return CreateLocalizer(typeInfo.Name, assembly, cultureInfo);
+            return CreateLocalizer(typeInfo.Name, cultureInfo);
         }
 
         public IStringLocalizer Create(string baseName, string location)
@@ -52,15 +51,12 @@ namespace Project.Web.Shared.Locales.EmbeddedJson
             throw new NotImplementedException();
         }
 
-        private IStringLocalizer CreateLocalizer(string resourceName, Assembly assembly, CultureInfo cultureInfo)
+        private IStringLocalizer CreateLocalizer(string resourceName, CultureInfo cultureInfo)
         {
-            var cacheKey = GetCacheKey(resourceName, assembly, cultureInfo);
+            var cacheKey = GetCacheKey(resourceName, cultureInfo);
             return caches.GetOrAdd(cacheKey, new EmbeddedJsonLocalizer(resourceName, AllJsons, cultureInfo));
         }
 
-        private string GetCacheKey(string resourceName, Assembly assembly, CultureInfo cultureInfo)
-        {
-            return resourceName + ';' + assembly.FullName + ';' + cultureInfo.Name;
-        }
+        private static string GetCacheKey(string resourceName, CultureInfo cultureInfo) => resourceName + ';' + cultureInfo.Name;
     }
 }

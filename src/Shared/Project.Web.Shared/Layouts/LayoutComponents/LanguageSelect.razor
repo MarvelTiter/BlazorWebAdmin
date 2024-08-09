@@ -8,7 +8,7 @@
     string current = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "";
     [Inject, NotNull] IProtectedLocalStorage? Storage { get; set; }
     [Parameter, NotNull] public CultureOptions? Options { get; set; }
-
+    [Inject, NotNull] public ILanguageService? Language { get; set; }
     DropdownOptions options = new();
 
     protected override void OnInitialized()
@@ -25,12 +25,10 @@
         if (lang != CultureInfo.DefaultThreadCurrentUICulture?.Name)
         {
             var culture = CultureInfo.GetCultureInfo(lang);
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentCulture = culture;
-            CultureInfo.DefaultThreadCurrentUICulture = culture;
             App.AppLanguage = lang;
             Storage.SetAsync(ConstraintString.APP_STORE_KEY, App);
-            Navigator.NavigateTo(Navigator.Uri, true);
+            Language.SetLanguage(lang);
+            Navigator.NavigateTo(Navigator.Uri);
         }
     }
 }

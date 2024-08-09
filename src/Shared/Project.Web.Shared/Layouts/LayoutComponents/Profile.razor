@@ -2,7 +2,7 @@
 @using Project.Constraints.Services
 @using Project.Constraints.UI.Dropdown
 @using Project.Web.Shared.Utils;
-@inject IAuthenticationService AuthService
+@inject IAuthService AuthService
 @inject IUserService UserSrv
 @inject IStringLocalizer<Profile> Localizer
 @inherits BasicComponent
@@ -39,9 +39,10 @@
 
     public async Task HandleLogout()
     {
-        await AuthService.SignOutAsync(User.UserInfo?.ApiToken);
-        User.ClearUser();
+        await AuthService.SignOutAsync(User.UserInfo?.Token);
+        // User.ClearUser();
         await AuthenticationStateProvider.ClearState();
+        // Navigator.NavigateTo("/logout", true);
         // await InvokeAsync(StateHasChanged);
         // Context.Update?.Invoke();
     }

@@ -3,7 +3,7 @@ using Project.Constraints.Common.Attributes;
 using Project.Constraints.UI;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BlazorAdmin.TestPages
+namespace BlazorAdmin.Client.TestPages
 {
 #if DEBUG
     [Route("/test2")]

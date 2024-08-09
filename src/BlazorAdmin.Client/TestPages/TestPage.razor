@@ -1,4 +1,4 @@
-﻿@using BlazorAdmin.TestPages.Components
+﻿@using BlazorAdmin.Client.TestPages.Components
 @using Project.Constraints.Common.Attributes
 @using Project.Constraints.Models.Permissions
 @using Project.Constraints.Page
@@ -35,63 +35,20 @@
     </MGrid>
 </WaterMark>
 
-UI.BuildCheckBoxGroup:
-@(UI.BuildCheckBoxGroup<User, string>(this, users)
-    .LabelsExpression(u => u.UserName)
-    .ValuesExpression(u => u.UserId)
-    .Bind(() => checkedUsers, Changed)
-    .Render())
-<br />AntDesign.CheckboxGroup:
-<AntDesign.CheckboxGroup @bind-Value=checkedUsers
-                         TValue="string"
-                         OnChange="Changed2"
-                         Options="users.ConvertToCheckBoxOptions(u=>u.UserName, u=>u.UserId)">
-</AntDesign.CheckboxGroup>
-<br />
-@(string.Join(",", checkedUsers ?? []))
-<br />UI.BuildRadioGroup
-@(UI.BuildRadioGroup<User, string>(this, users)
-    .LabelExpression(u => u.UserName)
-    .ValueExpression(u => u.UserId)
-    .Bind(() => selectedUser, Changed)
-    .Render())
-&nbsp; selected: @selectedUser
 
 <Project.Web.Shared.Components.IconSelector @bind-Value=selectedUser></Project.Web.Shared.Components.IconSelector>
 
-<StackPanel IsVertial HorizontalAlign="left">
-    <span>测试</span>
-    <span>测试</span>
-    <span>测试</span>
-    <span>测试</span>
-    <span>测试</span>
-    <span>测试</span>
-    <span>测试</span>
-    <span>测试</span>
-    <span>测试</span>
-    <span>测试</span>
-</StackPanel>
-
-@UI.BuildButton(this).Primary().Text("下载测试").OnClick(() => DownloadProvider.GetService()!.DownloadAsync("test.zip", "download", "zip")).Render()
 
 <MModal @bind-Visible=visible Title="测试">
     <h1>Modal Content</h1>
 </MModal>
 @code {
-    [Inject, NotNull] IUserService<User>? UserService { get; set; }
     [Inject, NotNull] IDownloadServiceProvider? DownloadProvider { get; set; }
     [Inject, NotNull] IWatermarkServiceFactory? WatermarkServiceFactory { get; set; }
     string[] checkedUsers = [];
     string selectedUser = string.Empty;
     bool visible;
-    IEnumerable<User> users = Enumerable.Empty<User>();
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        var result = await UserService.GetUserListAsync(new Project.Constraints.Models.Request.GenericRequest<User>());
-        users = result.Payload;
-        // ArgumentNullException.ThrowIfNull(selectedUser);
-    }
+    
     Task Changed2(string[] values)
     {
         Console.WriteLine(string.Join(",", values ?? []));

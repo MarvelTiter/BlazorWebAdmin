@@ -10,7 +10,6 @@
             @*_ = MsgSrv.Error("登录过期！请重新登录！");*@
             var redirect = Nav.ToBaseRelativePath(Nav.Uri);
             Nav.NavigateTo($"/login?Redirect={HttpUtility.UrlEncode(redirect)}", true);
-            OperatingSystem.IsBrowser();
         }
         catch
         {

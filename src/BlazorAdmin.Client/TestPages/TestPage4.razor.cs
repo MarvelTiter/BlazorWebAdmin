@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Web.Shared.Layouts;
-namespace BlazorAdmin.TestPages
+namespace BlazorAdmin.Client.TestPages
 {
 #if DEBUG
     [Route("/test4")]

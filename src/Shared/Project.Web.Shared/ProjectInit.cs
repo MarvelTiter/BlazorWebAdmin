@@ -57,7 +57,7 @@ public static class ProjectInit
 ");
 
         services.AddJsonLocales();
-
+        services.AddLightExcel();
         services.AddScoped(provider =>
         {
             var p = provider.GetService<IDownloadServiceProvider>()!;

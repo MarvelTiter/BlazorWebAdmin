@@ -140,7 +140,7 @@ public interface IUIService
 
     RenderFragment BuildMenu(IRouterStore router, bool horizontal, IAppStore app);
 
-    RenderFragment BuildLoginForm(LoginFormModel model, Func<Task> handleLogin);
+    RenderFragment BuildLoginForm(Func<LoginFormModel, Task> handleLogin);
 
     //TODO BuildTree需要优化和完善
     IBindableInputComponent<DefaultProp, string[]> BuildTree<TData>(object revicer, TreeOptions<TData> options);

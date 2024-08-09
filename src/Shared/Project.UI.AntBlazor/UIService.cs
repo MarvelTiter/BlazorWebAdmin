@@ -261,12 +261,11 @@ namespace Project.UI.AntBlazor
                     .Build();
         }
 
-        public RenderFragment BuildLoginForm(LoginFormModel model, Func<Task> handleLogin)
+        public RenderFragment BuildLoginForm(Func<LoginFormModel, Task> handleLogin)
         {
             return builder =>
             {
                 builder.Component<AntLogin>()
-                    .SetComponent(c => c.LoginModel, model)
                     .SetComponent(c => c.HandleLogin, handleLogin)
                     .Build();
             };

@@ -1,4 +1,5 @@
 ﻿using LightExcel;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using MT.Toolkit.LogTool;
@@ -23,8 +24,8 @@ namespace Project.AppCore
             {
                 builder.Logging.AddLocalFileLogger();
             }
-
-            builder.Services.AddLightExcel();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
         }
 
         public static void AddDefaultLightOrm(this IHostApplicationBuilder builder, Action<ExpressionSqlOptions>? action = null)

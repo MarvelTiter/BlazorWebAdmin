@@ -1,4 +1,5 @@
 ﻿@using BlazorAdmin.Client
+@using System.Diagnostics.CodeAnalysis
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,8 +27,18 @@
 </html>
 
 @code {
-    [CascadingParameter] public HttpContext? HttpContext { get; set; }
-    IComponentRenderMode RenderMode => new InteractiveAutoRenderMode(false);
+    [CascadingParameter, NotNull] public HttpContext? HttpContext { get; set; }
+    IComponentRenderMode? RenderMode
+    {
+        get
+        {
+            if (HttpContext.Request.Path.StartsWithSegments("/login"))
+            {
+                return null;
+            }
+            return new InteractiveWebAssemblyRenderMode(false);
+        }
+    }
 
     protected override void OnInitialized()
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Constraints.Common.Attributes;
 
-namespace BlazorAdmin.TestPages
+namespace BlazorAdmin.Client.TestPages
 {
 #if DEBUG
     [Route("/test")]

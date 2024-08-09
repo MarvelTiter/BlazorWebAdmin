@@ -1,4 +1,5 @@
 using BlazorAdmin;
+using Microsoft.AspNetCore.Authentication;
 using Project.AppCore;
 using Project.Constraints;
 using Project.UI.AntBlazor;
@@ -24,7 +25,6 @@ builder.AddProjectService(setting =>
     setting.ConfigureSettingProviderType<CustomSetting>();
     //setting.AddInterceotor<AdditionalTest>();
 });
-
 builder.Services.AutoInject();
 ;
 //builder.Services.AddControllers().AddApplicationPart(typeof(Project.AppCore._Imports).Assembly);
@@ -38,11 +38,21 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseWebAssemblyDebugging();
 }
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseProject();
 app.UseAntiforgery();
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode()
+
+var rb = app.MapRazorComponents<App>();
+rb.AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies([.. AppConst.Pages]);
 app.MapControllers();
+
+app.Map("/logout", async (HttpContext context) =>
+{
+    await context.SignOutAsync();
+    context.Response.Redirect("/");
+});
+
 app.Run();

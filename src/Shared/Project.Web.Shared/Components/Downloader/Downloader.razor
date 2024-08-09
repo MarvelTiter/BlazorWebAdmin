@@ -19,7 +19,7 @@
     {
         await InvokeVoidAsync("download", new
         {
-            token = User.UserInfo?.ApiToken,
+            token = User.UserInfo?.Token,
             filename = filename,
             path = AppConst.GetPath(paths)
         });

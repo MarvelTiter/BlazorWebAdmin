@@ -6,11 +6,21 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="Pages\Login.razor.cs" />
+	</ItemGroup>
+
 	
 	<ItemGroup>
 		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
 		<Content Remove="Langs\en-US\index.json" />
 		<Content Remove="Langs\zh-CN\index.json" />
+		<Content Remove="Pages\Login.razor" />
+	</ItemGroup>
+
+	
+	<ItemGroup>
+	  <None Remove="Pages\Login.razor.css" />
 	</ItemGroup>
 
 	<ItemGroup>

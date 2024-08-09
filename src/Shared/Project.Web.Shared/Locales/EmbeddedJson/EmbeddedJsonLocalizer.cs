@@ -14,12 +14,27 @@ using System.Threading.Tasks;
 
 namespace Project.Web.Shared.Locales.EmbeddedJson
 {
-    class InteractiveLocalizer<T>(IStringLocalizerFactory factory) : IStringLocalizer<T>
+    class InteractiveLocalizer<T> : IStringLocalizer<T>
     {
+        private readonly IStringLocalizerFactory factory;
+        private readonly ILanguageService languageService;
+        private IStringLocalizer localizer;
+        public InteractiveLocalizer(IStringLocalizerFactory factory, ILanguageService languageService)
+        {
+            this.factory = factory;
+            this.languageService = languageService;
+            this.languageService.LanguageChanged += LanguageService_LanguageChanged;
+            localizer = factory.Create(typeof(T));
+        }
 
-        public LocalizedString this[string name] => factory.Create(typeof(T))[name];
+        private void LanguageService_LanguageChanged(CultureInfo obj)
+        {
+            localizer = factory.Create(typeof(T));
+        }
 
-        public LocalizedString this[string name, params object[] arguments] => factory.Create(typeof(T))[name, arguments];
+        public LocalizedString this[string name] => localizer[name];
+
+        public LocalizedString this[string name, params object[] arguments] => localizer[name, arguments];
 
         public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => [];
     }

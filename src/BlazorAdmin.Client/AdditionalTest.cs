@@ -1,8 +1,9 @@
 ﻿using AutoInjectGenerator;
+using BlazorAdmin.Client.TestPages;
 using Project.Constraints.Services;
 using Project.Constraints.Store.Models;
 
-namespace BlazorAdmin
+namespace BlazorAdmin.Client
 {
     [AutoInject(ServiceType = typeof(IAddtionalInterceptor))]
     public class AdditionalTest : IAddtionalInterceptor
@@ -15,13 +16,13 @@ namespace BlazorAdmin
         }
         public Task<bool> RouterChangingAsync(TagRoute route)
         {
-            Console.WriteLine(route.RouteUrl);
+            Console.WriteLine($"AdditionalTest: RouterChangingAsync: {route.RouteUrl}");
             return Task.FromResult(true);
         }
 
         public Task AfterWebApplicationAccessedAsync()
         {
-            pageLocator.SetPage<TestPages.TestPage2>("LocatorTest");
+            pageLocator.SetPage<TestPage2>("LocatorTest");
             return Task.CompletedTask;
         }
     }

@@ -1,0 +1,26 @@
+﻿@page "/login"
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Options
+@using Project.Constraints.Options
+@using Project.Constraints.Page
+@using Project.Web.Shared.Layouts
+@layout NotAuthorizedLayout
+@inject IConfiguration Configuration
+@inject IOptionsMonitor<AppSetting> AppOptions
+@inherits BasicComponent
+<PageTitle>登录</PageTitle>
+<HeadContent>
+    <link rel="stylesheet" href="/Login.css" type="text/css" media="all" />
+</HeadContent>
+<div class="login-container" style="background-image: url('/_content/Project.Web.Shared/assets/login_bg.png');background-size:cover;">
+    <div class="title-container">
+        <div class="title-position">
+            @*style="background-image: url('assets/logo.png')"*@
+            <h3 class="title">@AppOptions.CurrentValue.AppTitle</h3>
+        </div>
+    </div>
+    <div class="login-form">
+        @UI.BuildLoginForm(HandleLogin)
+    </div>
+</div>

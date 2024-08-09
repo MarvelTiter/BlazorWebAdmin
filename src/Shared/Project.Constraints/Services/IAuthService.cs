@@ -7,7 +7,7 @@ namespace Project.Constraints.Services
     [WebController(Route = "auth")]
     [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
     [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
-    public interface IAuthenticationService
+    public interface IAuthService
     {
         Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm);
         Task<QueryResult> SignOutAsync(string? token);

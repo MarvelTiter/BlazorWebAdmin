@@ -52,6 +52,7 @@
     [Inject, NotNull] IStringLocalizer<NavMenu>? Localizer { get; set; }
     [Inject, NotNull] IOptionsMonitor<CultureOptions>? CultureOptions { get; set; }
     [Inject, NotNull] IOptionsMonitor<Token>? Token { get; set; }
+    [Inject, NotNull] ILanguageService? LanguageService { get; set; }
 
     async Task ToggleFullScreen()
     {

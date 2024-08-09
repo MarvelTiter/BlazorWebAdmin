@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Project.Web.Shared.Layouts.LayoutComponents
 @inherits RootLayout
 @inject IProtectedLocalStorage LocalStorage
 @inject IOptionsMonitor<Token> Token
@@ -8,6 +9,11 @@
      @onkeyup="@HandleKeyUpAction"
      tabindex="0"
      @ref="RootWrapper">
+    @* <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
+        <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken">
+            @Body
+        </ActionWatcher>
+    </ActionWatcher> *@
     <CascadingValue Value="this">
         <AuthorizeView>
             <Authorized>
@@ -17,9 +23,6 @@
                     </ActionWatcher>
                 </ActionWatcher>
             </Authorized>
-            @* <Authorizing>
-            <h1>Authorizing...</h1>
-            </Authorizing> *@
             <NotAuthorized>
                 @if (Token.CurrentValue.NeedAuthentication)
                 {

@@ -4,7 +4,7 @@ using Project.Constraints.UI;
 using Project.Constraints.UI.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BlazorAdmin.TestPages
+namespace BlazorAdmin.Client.TestPages
 {
 #if DEBUG
     [Route("/test3")]

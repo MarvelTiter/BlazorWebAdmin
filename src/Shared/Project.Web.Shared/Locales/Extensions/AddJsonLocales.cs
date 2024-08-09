@@ -11,6 +11,7 @@ namespace Project.Web.Shared.Locales.Extensions
         public static IServiceCollection AddJsonLocales(this IServiceCollection services)
         {
             services.TryAddSingleton<IStringLocalizerFactory, EmbeddedJsonLocalizerFactory>();
+            services.AddScoped<ILanguageService, LanguageService>();
             services.TryAddTransient(typeof(IStringLocalizer<>), typeof(InteractiveLocalizer<>));
             services.TryAddTransient(typeof(IStringLocalizer), typeof(InteractiveLocalizer<object>));
             return services;

@@ -1,6 +1,12 @@
 ﻿@using AntDesign
 @using Project.Web.Shared.Layouts
+@using System.Reflection
 
-<AppRoot AppAssembly="@typeof(Program).Assembly">
+
+<AppRoot AppAssembly="@MainAssembly">
     <AntContainer />
 </AppRoot>
+
+@code {
+    [Parameter] public Assembly? MainAssembly { get; set; } = typeof(Program).Assembly;
+}

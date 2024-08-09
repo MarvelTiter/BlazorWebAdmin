@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Project.Web.Shared.Services
 {
     [AutoInject]
-    public class DefaultAuthenticationService : IAuthenticationService
+    public class DefaultAuthenticationService : IAuthService
     {
         private readonly IExpressionContext context;
 
@@ -43,8 +43,7 @@ namespace Project.Web.Shared.Services
                 return result;
             }
             var roles = await context.Repository<UserRole>().GetListAsync(ur => ur.UserId == username);
-
-            userInfo.Roles = roles.Select(ur => ur.RoleId).ToList();
+            userInfo.Roles = roles.Select(ur => ur.RoleId).ToArray();
             return result;
         }
 
