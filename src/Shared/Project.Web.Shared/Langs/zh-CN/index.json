@@ -82,6 +82,7 @@
   },
   "RouterStore": {
     "Home": "主页",
+    "OnlineUsers": "在线用户",
     "BasicSetting": "基础配置",
     "Setting": "系统设置",
     "User": "用户",

@@ -81,13 +81,14 @@
     }
   },
   "RouterStore": {
-    "Home": "Home",
+    "Home": "Dashboard",
+    "OnlineUsers": "Online Users",
     "BasicSetting": "Setting",
     "Setting": "SysSetting",
     "User": "Users",
-    "RolePermission": "RolePermission",
-    "Permission": "Permission",
-    "OperationLog": "OperationLog"
+    "RolePermission": "Role Permission",
+    "Permission": "Permissions",
+    "OperationLog": "Operation Log"
   },
   "TableOptions": {
     "TableButtons": {

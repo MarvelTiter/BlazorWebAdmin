@@ -1,6 +1,7 @@
 using BlazorAdmin;
 using Microsoft.AspNetCore.Authentication;
 using Project.AppCore;
+using Project.AppCore.Services;
 using Project.Constraints;
 using Project.UI.AntBlazor;
 using Project.Web.Shared;
@@ -23,11 +24,10 @@ builder.AddProjectService(setting =>
     setting.App.Id = "Test";
     setting.App.Company = "Marvel";
     setting.ConfigureSettingProviderType<CustomSetting>();
-    //setting.AddInterceotor<AdditionalTest>();
+    setting.ConfigureAuthService<DefaultAuthenticationService>();
 });
 builder.Services.AutoInject();
 ;
-//builder.Services.AddControllers().AddApplicationPart(typeof(Project.AppCore._Imports).Assembly);
 builder.AddDefaultLightOrm();
 
 builder.Services.AddControllers();
@@ -42,17 +42,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseProject();
 app.UseAntiforgery();
-
 var rb = app.MapRazorComponents<App>();
 rb.AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies([.. AppConst.Pages]);
 app.MapControllers();
-
-app.Map("/logout", async (HttpContext context) =>
-{
-    await context.SignOutAsync();
-    context.Response.Redirect("/");
-});
 
 app.Run();

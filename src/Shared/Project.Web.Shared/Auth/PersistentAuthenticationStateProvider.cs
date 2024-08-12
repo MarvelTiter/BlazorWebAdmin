@@ -23,9 +23,9 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
 
     private IUserStore Store => appSession.UserStore;
     private IAppStore AppStore => appSession.AppStore;
-    private static readonly Task<AuthenticationState> defaultUnauthenticatedTask =
-           Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
+    private static readonly Task<AuthenticationState> defaultUnauthenticatedTask = Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
     private readonly Task<AuthenticationState> authenticationStateTask = defaultUnauthenticatedTask;
+    private UserInfo? userInfo;
     private readonly IOptionsMonitor<Token> token;
     public PersistentAuthenticationStateProvider(IProtectedLocalStorage storageService
         , PersistentComponentState state
@@ -44,11 +44,15 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
         {
             return;
         }
-        logger.LogInformation(System.Text.Json.JsonSerializer.Serialize(userInfo));
-        Store.UserInfo = (userInfo);
+        this.userInfo = userInfo;
         authenticationStateTask = Task.FromResult(new AuthenticationState(BuildClaims(userInfo)));
     }
-    public override Task<AuthenticationState> GetAuthenticationStateAsync() => authenticationStateTask;
+    public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+    {
+        await Store.SetUserAsync(userInfo);
+        var result = await authenticationStateTask;
+        return result;
+    }
     //{
     //    try
     //    {
@@ -97,9 +101,9 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
 
     public Task ClearState()
     {
-        appSession.UserStore.ClearUser();
+        //appSession.UserStore.ClearUser();
         //await httpContextAccessor.HttpContext.SignOutAsync();
-        appSession.Navigator.NavigateTo("/logout", true);
+        appSession.Navigator.NavigateTo("/api/account/logout", true);
         return Task.CompletedTask;
     }
 

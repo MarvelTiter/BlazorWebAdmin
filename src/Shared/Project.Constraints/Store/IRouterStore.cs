@@ -20,6 +20,7 @@ namespace Project.Constraints.Store
         Task RemoveOther(string link);
         Task Reset();
         Task InitRoutersAsync(UserInfo? userInfo);
-        Type? GetRouteType(string routeUrl); 
+        Type? GetRouteType(string routeUrl);
+        string GetLocalizerString(RouterMeta meta);
     }
 }

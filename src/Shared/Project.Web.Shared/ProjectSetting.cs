@@ -5,11 +5,16 @@ namespace Project.Web.Shared;
 public class ProjectSetting
 {
     Type settingProviderType = typeof(CustomSetting);
+    Type? authServiceType;
     public Type SettingProviderType => settingProviderType;
-
+    public Type? AuthServiceType => authServiceType;
     public void ConfigureSettingProviderType<T>() where T : BasicSetting, IProjectSettingService
     {
         settingProviderType = typeof(T);
+    }
+    public void ConfigureAuthService<T>() where T : IAuthService
+    {
+        authServiceType = typeof(T);
     }
     public List<Type> interceptorTypes = [];
     public void AddInterceotor<T>() where T : IAddtionalInterceptor

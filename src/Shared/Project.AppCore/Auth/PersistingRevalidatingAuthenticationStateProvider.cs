@@ -42,7 +42,8 @@ namespace Project.AppCore.Auth
             subscription = state.RegisterOnPersisting(OnPersistingAsync, RenderMode.InteractiveWebAssembly);
             if (httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true)
             {
-                app.UserStore.UserInfo = httpContextAccessor.HttpContext.User.GetUserInfo();
+                var u = httpContextAccessor.HttpContext.User.GetUserInfo();
+                _ = app.UserStore.SetUserAsync(u);
             }
         }
 
@@ -60,7 +61,8 @@ namespace Project.AppCore.Auth
 
             if (principal.Identity?.IsAuthenticated == true)
             {
-                state.PersistAsJson(nameof(UserInfo), principal.GetUserInfo());
+                var u = principal.GetUserInfo();
+                state.PersistAsJson(nameof(UserInfo), u);
             }
         }
 
@@ -80,10 +82,10 @@ namespace Project.AppCore.Auth
         {
             //var t = Task.FromResult(new AuthenticationState(new(new ClaimsIdentity())));
             //SetAuthenticationState(t);
-            
-            app.UserStore.ClearUser();
+
+            //app.UserStore.ClearUser();
             //await httpContextAccessor.HttpContext.SignOutAsync();
-            app.Navigator.NavigateTo("/logout", true);
+            app.Navigator.NavigateTo("/api/account/logout", true);
             return Task.CompletedTask;
         }
     }

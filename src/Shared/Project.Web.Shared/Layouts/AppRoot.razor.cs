@@ -46,6 +46,7 @@ namespace Project.Web.Shared.Layouts
                 var c = await Js.InvokeUtilsAsync<string[]>("getClient");
                 Context.UserStore.Ip = c[0];
                 Context.UserStore.UserAgent = c[1];
+                await Context.NotifyWebApplicationAccessedAsync();
             }
         }
 

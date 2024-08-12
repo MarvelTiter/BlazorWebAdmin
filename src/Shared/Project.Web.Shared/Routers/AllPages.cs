@@ -45,7 +45,7 @@ namespace Project.Web.Shared.Routers
 
             yield return new()
             {
-                RouteId = info?.Id ?? t.FullName!,
+                RouteId = info?.Id ?? t.Name,
                 RouteTitle = info?.Title ?? t.Name,
                 RouteUrl = routerAttr!.Template,
                 Icon = info?.Icon ?? "",

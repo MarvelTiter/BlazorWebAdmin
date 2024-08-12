@@ -46,14 +46,14 @@
         Context.Update = StateHasChanged;
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-        if (firstRender)
-        {
-            await Context.NotifyWebApplicationAccessedAsync();
-        }
-    }
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     await base.OnAfterRenderAsync(firstRender);
+    //     if (firstRender)
+    //     {
+    //         await Context.NotifyWebApplicationAccessedAsync();
+    //     }
+    // }
 
     private bool disposedValue;
     protected virtual void Dispose(bool disposing)

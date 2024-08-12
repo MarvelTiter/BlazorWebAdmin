@@ -24,7 +24,7 @@ public partial class UserStore : StoreBase, IUserStore
         {
             await OnLoginSuccessAsync(userInfo);
         }
-        UserInfo = userInfo;
+            UserInfo = userInfo;
     }
 
     public void ClearUser()

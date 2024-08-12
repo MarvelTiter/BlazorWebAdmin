@@ -26,7 +26,7 @@ else
 {
     <DynamicComponent Type="homeType"></DynamicComponent>
 }
-<p>@UI.BuildButton(this).OnClick(() => IsWasm = OperatingSystem.IsBrowser()).Text("刷新").Render() WASM: @IsWasm</p>
+<p>RenderMode: @(IsWasm ? "WebAssembly" : "Server") @UI.BuildButton(this).OnClick(() => IsWasm = OperatingSystem.IsBrowser()).Text("刷新").Render() </p>
 @code {
     async Task Update()
     {
@@ -42,7 +42,11 @@ else
         base.OnInitialized();
         homeType = Locator.GetDashboardType();
     }
-
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        IsWasm = OperatingSystem.IsBrowser();
+    }
     bool IsWasm;
 
 }

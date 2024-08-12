@@ -39,7 +39,7 @@
 
     public async Task HandleLogout()
     {
-        await AuthService.SignOutAsync(User.UserInfo?.Token);
+        // await AuthService.SignOutAsync();
         // User.ClearUser();
         await AuthenticationStateProvider.ClearState();
         // Navigator.NavigateTo("/logout", true);

@@ -1,6 +1,9 @@
 ﻿using AutoInjectGenerator;
 using LightORM;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Project.Constraints.Models.Permissions;
+using Project.Constraints.Store;
 using Project.Web.Shared.Pages;
 using System;
 using System.Collections.Generic;
@@ -8,18 +11,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Web.Shared.Services
+namespace Project.AppCore.Services
 {
-    [AutoInject]
+    //[AutoInject]
     public class DefaultAuthenticationService : IAuthService
     {
         private readonly IExpressionContext context;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public DefaultAuthenticationService(IExpressionContext context)
+        public DefaultAuthenticationService(IExpressionContext context, IHttpContextAccessor httpContextAccessor)
         {
             this.context = context;
+            this.httpContextAccessor = httpContextAccessor;
         }
-        public async Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm)
+        public virtual async Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm)
         {
             var username = loginForm.UserName;
             var password = loginForm.Password;
@@ -47,9 +52,15 @@ namespace Project.Web.Shared.Services
             return result;
         }
 
-        public Task<QueryResult> SignOutAsync(string? token)
+        public virtual async Task SignOutAsync()
         {
-            return Task.FromResult(Result.Success());
+            if (httpContextAccessor.HttpContext == null)
+            {
+                return;
+            }
+            var ctx = httpContextAccessor.HttpContext.User;
+            await httpContextAccessor.HttpContext.SignOutAsync();
+            httpContextAccessor.HttpContext.Response.Redirect("/login");
         }
     }
 }

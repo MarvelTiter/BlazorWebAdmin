@@ -8,7 +8,7 @@ namespace Project.AppCore.Clients
 {
     [Route("/userdashboard")]
     [PageInfo(Icon = "setting", Title = "在线用户")]
-    public class UserDashboard : ModelPage<ClientInfo, GenericRequest>
+    public class OnlineUsers : ModelPage<ClientInfo, GenericRequest>
     {
         protected override void OnInitialized()
         {

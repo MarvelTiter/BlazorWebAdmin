@@ -4,12 +4,14 @@ using MT.Generators.Abstraction;
 
 namespace Project.Constraints.Services
 {
-    [WebController(Route = "auth")]
+    [WebController(Route = "account")]
     [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
     [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public interface IAuthService
     {
+        [WebMethod(Route = "login")]
         Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm);
-        Task<QueryResult> SignOutAsync(string? token);
+        [WebMethod(Method = WebMethod.Get, Route = "logout")]
+        Task SignOutAsync();
     }
 }

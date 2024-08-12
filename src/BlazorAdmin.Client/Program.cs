@@ -1,21 +1,14 @@
 using BlazorAdmin.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Project.Constraints;
-using Project.Web.Shared;
-using Project.UI.AntBlazor;
 using Project.Constraints.Services;
-using System.Text.Json;
-using Project.Web.Shared.Services;
-using LightExcel;
-using Microsoft.AspNetCore.Components.Authorization;
+using Project.UI.AntBlazor;
+using Project.Web.Shared;
+
 //[assembly: GenerateApiInvoker]
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.ConfigureHttpClientDefaults(c =>
 {
-    c.ConfigureHttpClient(h =>
-    {
-        h.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
-    });
+    c.ConfigureHttpClient(h => { h.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
 });
 //builder.Configuration
 builder.Services.AddAntDesignUI();
@@ -37,4 +30,3 @@ builder.Services.AddScoped<IStandardRunLogService, StandardRunLogServiceApiInvok
 builder.Services.AddScoped<IStandardUserService, StandardUserServiceApiInvoker>();
 
 await builder.Build().RunAsync();
-

@@ -55,6 +55,7 @@
             var state = await authenticationStateTask;
             if (state.User.Identity!.IsAuthenticated)
             {
+                // AppSession.UserStore.
                 await AppSession.RouterStore.InitRoutersAsync(AuthenticationStateProvider?.Current);
                 var url = AppSession.Navigator.ToBaseRelativePath(AppSession.Navigator.Uri);
                 AppSession.Navigator.NavigateTo(url);

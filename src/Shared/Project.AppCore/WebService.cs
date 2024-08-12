@@ -17,13 +17,14 @@ namespace Project.AppCore
         public static void AddProjectService(this IHostApplicationBuilder builder, Action<ProjectSetting> action)
         {
             builder.Services.AddProject(builder.Configuration, action, out var setting);
-
+            ArgumentNullException.ThrowIfNull(setting.AuthServiceType);
             //var setting = new ProjectSetting();
             //action.Invoke(setting);
             if (setting.AddFileLogger)
             {
                 builder.Logging.AddLocalFileLogger();
             }
+            builder.Services.AddScoped(typeof(IAuthService), setting.AuthServiceType);
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
         }

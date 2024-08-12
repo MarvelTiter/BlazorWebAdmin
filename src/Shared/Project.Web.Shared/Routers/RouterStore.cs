@@ -40,12 +40,13 @@ public class RouterStore : StoreBase, IRouterStore
         this.options = options;
         this.logger = logger;
         this.setting = setting;
+
     }
 
 
     readonly Dictionary<string, TagRoute> pages = new();
 
-    public List<TagRoute> TopLinks => pages.Values.ToList();
+    public List<TagRoute> TopLinks => [.. pages.Values];
 
     public List<RouteMenu> Menus { get; set; } = new List<RouteMenu>();
 
@@ -79,6 +80,7 @@ public class RouterStore : StoreBase, IRouterStore
             }
             tag = new TagRoute
             {
+                RouteId = meta?.RouteId,
                 RouteUrl = meta?.RouteUrl ?? CurrentUrl,
                 RouteTitle = meta?.RouteTitle ?? "",
                 Icon = meta?.Icon ?? "",
@@ -141,16 +143,18 @@ public class RouterStore : StoreBase, IRouterStore
         pages.Remove(link);
     }
 
-    string GetLocalizerString(string key, string defaultValue)
+    public string GetLocalizerString(RouterMeta meta)
     {
-        if (options.CurrentValue.Enabled) return localizer[key];
-        else return defaultValue;
-    }
-
-    string GetHomeLocalizer()
-    {
-        if (options.CurrentValue.Enabled) return localizer["Home"];
-        else return "主页";
+        if (options.CurrentValue.Enabled)
+        {
+            var l = localizer[meta.RouteId];
+            if (!string.Equals(l, meta.RouteId))
+            {
+                return l;
+            }
+            //return localizer[meta.RouteId];
+        }
+        return meta.RouteTitle;
     }
 
     public Task RemoveOther(string link)
@@ -171,7 +175,8 @@ public class RouterStore : StoreBase, IRouterStore
         pages.Add("/", new TagRoute
         {
             RouteUrl = "/",
-            RouteTitle = GetHomeLocalizer(),
+            RouteId = "Home",
+            RouteTitle = "主页",
             Icon = "home",
             Pin = true
         });
@@ -209,10 +214,10 @@ public class RouterStore : StoreBase, IRouterStore
             var enable = await OnRouteMetaFilterAsync(meta);
             if (!enable)
                 continue;
-            var title = GetLocalizerString(meta.RouteId, meta.RouteTitle);
-            if (title == meta.RouteId)
-                title = meta.RouteTitle;
-            meta.RouteTitle = title;
+            //var title = GetLocalizerString(meta);
+            //if (title == meta.RouteId)
+            //    title = meta.RouteTitle;
+            //meta.RouteTitle = title;
             Menus.Add(new RouteMenu(meta));
         }
     }
@@ -225,12 +230,12 @@ public class RouterStore : StoreBase, IRouterStore
         Menus.Clear();
         Menus.Add(new()
         {
-            RouteId = "Dashboard",
+            RouteId = "Home",
             RouteUrl = "/",
             Icon = "home",
             Group = "ROOT",
             Cache = true,
-            RouteTitle = GetHomeLocalizer(),
+            RouteTitle = "主页",
         });
         foreach (var pow in powers)
         {
@@ -240,7 +245,7 @@ public class RouterStore : StoreBase, IRouterStore
             var enable = await OnRouteMetaFilterAsync(meta);
             if (!enable)
                 continue;
-            meta.RouteTitle = GetLocalizerString(pow.PowerId, pow.PowerName);
+            meta.RouteTitle = pow.PowerName;
             meta.RouteId = pow.PowerId;
             meta.Icon = pow.Icon;
             meta.Group = pow.ParentId;
