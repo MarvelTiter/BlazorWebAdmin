@@ -54,6 +54,12 @@ public class CustomSetting : BasicSetting, IProjectSettingService
     //                            .Where(u => u.UserId == info.UserId).ExecuteAsync();
     //}
 
+    public override Task LoginSuccessAsync(UserInfo result)
+    {
+        Console.WriteLine($"LoginSuccessAsync: {result.UserName}");
+        return base.LoginSuccessAsync(result);
+    }
+
     public override Task AfterWebApplicationAccessed()
     {
         var service = watermarkServiceFactory.GetWatermarkService();

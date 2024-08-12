@@ -31,5 +31,16 @@ namespace Project.Web.Shared.Store
             }
             return Task.CompletedTask;
         }
+
+        public event Func<UserInfo, Task>? LoginSuccessEvent;
+
+        public Task NotifyLoginSuccessAsync()
+        {
+            if (LoginSuccessEvent != null)
+            {
+                return LoginSuccessEvent(UserStore.UserInfo);
+            }
+            return Task.CompletedTask;
+        }
     }
 }

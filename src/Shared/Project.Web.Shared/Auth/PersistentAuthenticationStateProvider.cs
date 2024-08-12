@@ -25,7 +25,6 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
     private IAppStore AppStore => appSession.AppStore;
     private static readonly Task<AuthenticationState> defaultUnauthenticatedTask = Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
     private readonly Task<AuthenticationState> authenticationStateTask = defaultUnauthenticatedTask;
-    private UserInfo? userInfo;
     private readonly IOptionsMonitor<Token> token;
     public PersistentAuthenticationStateProvider(IProtectedLocalStorage storageService
         , PersistentComponentState state
@@ -40,19 +39,15 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
         this.logger = logger;
         this.token = token;
 
-        if (!state.TryTakeFromJson<UserInfo>(nameof(UserInfo), out var userInfo) || userInfo is null)
+        if (!state.TryTakeFromJson<UserInfo>(nameof(UserInfo), out var u) || u is null)
         {
             return;
         }
-        this.userInfo = userInfo;
-        authenticationStateTask = Task.FromResult(new AuthenticationState(BuildClaims(userInfo)));
+        Store.SetUser(u);
+        authenticationStateTask = Task.FromResult(new AuthenticationState(BuildClaims(u)));
     }
-    public override async Task<AuthenticationState> GetAuthenticationStateAsync()
-    {
-        await Store.SetUserAsync(userInfo);
-        var result = await authenticationStateTask;
-        return result;
-    }
+
+    public override Task<AuthenticationState> GetAuthenticationStateAsync() => authenticationStateTask;
     //{
     //    try
     //    {
@@ -77,26 +72,27 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
     //    }
     //}
 
-    async Task<AuthenticationState> UpdateState(UserInfo? info = null)
-    {
-        ClaimsIdentity identity;
-        if (info != null)
-        {
-            identity = new ClaimsIdentity();
-        }
-        else
-        {
-            identity = new ClaimsIdentity();
-        }
-        await Store.SetUserAsync(info);
-        var user = new ClaimsPrincipal(identity);
-        return new AuthenticationState(user);
-    }
+    // async Task<AuthenticationState> UpdateState(UserInfo? info = null)
+    // {
+    //     ClaimsIdentity identity;
+    //     if (info != null)
+    //     {
+    //         identity = new ClaimsIdentity();
+    //     }
+    //     else
+    //     {
+    //         identity = new ClaimsIdentity();
+    //     }
+    //     await Store.SetUserAsync(info);
+    //     var user = new ClaimsPrincipal(identity);
+    //     return new AuthenticationState(user);
+    // }
 
-    public async Task IdentifyUser(UserInfo info)
+    public Task IdentifyUser(UserInfo info)
     {
-        await storageService.SetAsync("UID", info);
-        NotifyAuthenticationStateChanged(UpdateState(info));
+        // await storageService.SetAsync("UID", info);
+        // NotifyAuthenticationStateChanged(UpdateState(info));
+        return Task.CompletedTask;
     }
 
     public Task ClearState()

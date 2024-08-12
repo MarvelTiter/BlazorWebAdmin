@@ -26,7 +26,10 @@ namespace Project.AppCore
             }
             builder.Services.AddScoped(typeof(IAuthService), setting.AuthServiceType);
             builder.Services.AddHttpContextAccessor();
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.SlidingExpiration = true;
+            });
         }
 
         public static void AddDefaultLightOrm(this IHostApplicationBuilder builder, Action<ExpressionSqlOptions>? action = null)

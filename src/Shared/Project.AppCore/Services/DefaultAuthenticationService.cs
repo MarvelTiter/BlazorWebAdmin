@@ -60,7 +60,7 @@ namespace Project.AppCore.Services
             }
             var ctx = httpContextAccessor.HttpContext.User;
             await httpContextAccessor.HttpContext.SignOutAsync();
-            httpContextAccessor.HttpContext.Response.Redirect("/login");
+            httpContextAccessor.HttpContext.Response.Redirect("/account/login");
         }
     }
 }

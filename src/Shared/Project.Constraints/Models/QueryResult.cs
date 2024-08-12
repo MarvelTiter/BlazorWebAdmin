@@ -28,6 +28,7 @@ public class QueryResult<T> : QueryResult, IQueryResult
 {
     public new T? Payload { get; set; }
     object? IQueryResult.Payload { get => Payload; set => Payload = (T?)value; }
+    public static implicit operator QueryResult<T>(T value) => new QueryResult<T>() { Payload = value, Success = value.ValueEnable()};
 }
 
 public class DataTableResult : IQueryResult
@@ -133,6 +134,12 @@ public static class Result
             TotalRecord = total,
             Payload = payload
         };
+    }
+
+    public static bool ValueEnable<T>(this T value)
+    {
+        T def = default;
+        return !Equals(value, def);
     }
 }
 

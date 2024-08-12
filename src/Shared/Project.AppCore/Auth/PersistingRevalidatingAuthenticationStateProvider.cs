@@ -27,7 +27,7 @@ namespace Project.AppCore.Auth
 
         protected override Task<bool> ValidateAuthenticationStateAsync(AuthenticationState authenticationState, CancellationToken cancellationToken)
         => Task.FromResult(true);
-        PersistentComponentState state;
+        private readonly PersistentComponentState state;
         private readonly IAppSession app;
         private readonly PersistingComponentStateSubscription subscription;
         private Task<AuthenticationState>? authenticationStateTask;
@@ -43,7 +43,7 @@ namespace Project.AppCore.Auth
             if (httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true)
             {
                 var u = httpContextAccessor.HttpContext.User.GetUserInfo();
-                _ = app.UserStore.SetUserAsync(u);
+                app.UserStore.SetUser(u);
             }
         }
 

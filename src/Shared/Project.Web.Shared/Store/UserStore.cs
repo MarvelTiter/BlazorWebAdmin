@@ -7,7 +7,7 @@ namespace Project.Web.Shared.Store;
 [AutoInject]
 public partial class UserStore : StoreBase, IUserStore
 {
-    public UserInfo? UserInfo { get; set; }
+    public UserInfo? UserInfo { get; private set; }
     public IEnumerable<string> Roles => UserInfo?.Roles ?? [];
     public string? UserId => UserInfo?.UserId;
     public string UserDisplayName => GetUserName();
@@ -18,25 +18,18 @@ public partial class UserStore : StoreBase, IUserStore
         return UserInfo?.UserName ?? "Unknow";
     }
 
-    public async Task SetUserAsync(UserInfo? userInfo)
-    {
-        if (userInfo != null)
-        {
-            await OnLoginSuccessAsync(userInfo);
-        }
-            UserInfo = userInfo;
-    }
+    public void SetUser(UserInfo? userInfo) => UserInfo = userInfo;
 
     public void ClearUser()
     {
         UserInfo = null;
     }
-    public event Func<UserInfo, Task>? LoginSuccessEvent;
+    // public event Func<UserInfo, Task>? LoginSuccessEvent;
 
-    private Task OnLoginSuccessAsync(UserInfo info)
-    {
-        if (LoginSuccessEvent != null)
-            return LoginSuccessEvent(info);
-        return Task.CompletedTask;
-    }
+    // private Task OnLoginSuccessAsync(UserInfo info)
+    // {
+    //     if (LoginSuccessEvent != null)
+    //         return LoginSuccessEvent(info);
+    //     return Task.CompletedTask;
+    // }
 }

@@ -23,7 +23,7 @@ namespace Project.Web.Shared.Layouts
             base.OnInitialized();
             Context.RouterStore.RouterChangingEvent += SettingService.RouterChangingAsync;
             Context.RouterStore.RouteMetaFilterEvent += SettingService.RouteMetaFilterAsync;
-            Context.UserStore.LoginSuccessEvent += SettingService.LoginSuccessAsync;
+            Context.LoginSuccessEvent += SettingService.LoginSuccessAsync;
             Context.WebApplicationAccessedEvent += SettingService.AfterWebApplicationAccessed;
 
             var interceptors = Services.GetServices<IAddtionalInterceptor>();
@@ -33,7 +33,7 @@ namespace Project.Web.Shared.Layouts
                 initActions.Add(additional);
                 Context.RouterStore.RouterChangingEvent += additional.RouterChangingAsync;
                 Context.RouterStore.RouteMetaFilterEvent += additional.RouteMetaFilterAsync;
-                Context.UserStore.LoginSuccessEvent += additional.LoginSuccessAsync;
+                Context.LoginSuccessEvent += additional.LoginSuccessAsync;
                 Context.WebApplicationAccessedEvent += additional.AfterWebApplicationAccessedAsync;
             }
         }
@@ -54,12 +54,12 @@ namespace Project.Web.Shared.Layouts
         {
             Context.RouterStore.RouterChangingEvent -= SettingService.RouterChangingAsync;
             Context.RouterStore.RouteMetaFilterEvent -= SettingService.RouteMetaFilterAsync;
-            Context.UserStore.LoginSuccessEvent -= SettingService.LoginSuccessAsync;
+            Context.LoginSuccessEvent -= SettingService.LoginSuccessAsync;
             Context.WebApplicationAccessedEvent -= SettingService.AfterWebApplicationAccessed;
 
             foreach (var additional in initActions)
             {
-                Context.UserStore.LoginSuccessEvent -= additional.LoginSuccessAsync;
+                Context.LoginSuccessEvent -= additional.LoginSuccessAsync;
                 Context.RouterStore.RouteMetaFilterEvent -= additional.RouteMetaFilterAsync;
                 Context.RouterStore.RouterChangingEvent -= additional.RouterChangingAsync;
                 Context.WebApplicationAccessedEvent -= additional.AfterWebApplicationAccessedAsync;

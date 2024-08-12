@@ -32,11 +32,11 @@
     {
         get
         {
-            if (HttpContext.Request.Path.StartsWithSegments("/login"))
+            if (HttpContext.Request.Path.StartsWithSegments("/account/login"))
             {
                 return null;
             }
-            return new InteractiveServerRenderMode(false);
+            return new InteractiveAutoRenderMode(false);
         }
     }
 

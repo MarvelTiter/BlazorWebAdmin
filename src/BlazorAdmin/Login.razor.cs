@@ -56,7 +56,7 @@ public partial class Login : BasicComponent
         var result = await AuthService.SignInAsync(model);
         if (result.Success)
         {
-            await User.SetUserAsync(result.Payload);
+            User.SetUser(result.Payload);
             UI.Success(Localizer["Login.SuccessTips"].Value);
             //Root.OnKeyDown -= OnPressEnter;
             var goon = await CustomSetting.LoginInterceptorAsync(result.Payload!);
