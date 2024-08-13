@@ -138,6 +138,8 @@ namespace Project.UI.AntBlazor
 
         public void Message(Constraints.UI.MessageType type, string message)
         {
+            // var messageConfig = new MessageConfig();
+            // messageConfig.
             switch (type)
             {
                 case Constraints.UI.MessageType.Success:

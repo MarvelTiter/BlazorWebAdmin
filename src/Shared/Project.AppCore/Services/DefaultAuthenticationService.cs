@@ -54,13 +54,15 @@ namespace Project.AppCore.Services
 
         public virtual async Task SignOutAsync()
         {
-            if (httpContextAccessor.HttpContext == null)
+            var ctx = httpContextAccessor.HttpContext;
+            if (ctx == null)
             {
                 return;
             }
-            var ctx = httpContextAccessor.HttpContext.User;
+            // var ctx = httpContextAccessor.HttpContext.User;
             await httpContextAccessor.HttpContext.SignOutAsync();
-            httpContextAccessor.HttpContext.Response.Redirect("/account/login");
+            var redirect = ctx.Request.Query["Redirect"];
+            httpContextAccessor.HttpContext.Response.Redirect($"/account/login?Redirect={redirect}");
         }
     }
 }

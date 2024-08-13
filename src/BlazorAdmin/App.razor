@@ -1,5 +1,9 @@
 ﻿@using BlazorAdmin.Client
 @using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Options
+@using Project.Constraints.Options
+@using Project.Constraints.Store.Models
+@using AntDesign
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,7 +21,6 @@
 
 <body>
     <Routes @rendermode="@RenderMode" />
-
     <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></Project.Web.Shared.Components.ReconnectorOutlet>
 
     <script src="_framework/blazor.web.js"></script>
@@ -28,6 +31,7 @@
 
 @code {
     [CascadingParameter, NotNull] public HttpContext? HttpContext { get; set; }
+    [Inject, NotNull] public IOptionsMonitor<AppSetting>? Option { get; set; }
     IComponentRenderMode? RenderMode
     {
         get
@@ -36,7 +40,14 @@
             {
                 return null;
             }
-            return new InteractiveAutoRenderMode(false);
+
+            return Option.CurrentValue.RunMode switch
+            {
+                AppRunMode.Auto => new InteractiveAutoRenderMode(false),
+                AppRunMode.Server => new InteractiveServerRenderMode(false),
+                AppRunMode.WebAssembly => new InteractiveWebAssemblyRenderMode(false),
+                _ => throw new ArgumentException()
+            };
         }
     }
 

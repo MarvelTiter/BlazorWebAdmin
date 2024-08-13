@@ -1,7 +1,7 @@
-﻿@inject IOptionsMonitor<Token> Token
-@code {
+﻿@code {
 
     [Inject, NotNull] NavigationManager? Nav { get; set; }
+    [Inject, NotNull] IUIService? UI { get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();

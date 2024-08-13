@@ -1,5 +1,5 @@
 using BlazorAdmin;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Project.AppCore;
 using Project.AppCore.Services;
 using Project.Constraints;
@@ -7,7 +7,6 @@ using Project.UI.AntBlazor;
 using Project.Web.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
@@ -38,6 +37,8 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseWebAssemblyDebugging();
 }
+
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseProject();

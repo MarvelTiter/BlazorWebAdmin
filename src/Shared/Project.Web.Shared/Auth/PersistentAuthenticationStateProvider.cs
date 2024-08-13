@@ -9,6 +9,7 @@ using Project.Constraints.Options;
 using Project.Constraints.Store;
 using Project.Web.Shared.Store;
 using System.Security.Claims;
+using System.Web;
 
 namespace Project.Web.Shared.Auth;
 
@@ -99,7 +100,8 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
     {
         //appSession.UserStore.ClearUser();
         //await httpContextAccessor.HttpContext.SignOutAsync();
-        appSession.Navigator.NavigateTo("/api/account/logout", true);
+        var redirect = appSession.Navigator.ToBaseRelativePath(appSession.Navigator.Uri);
+        appSession.Navigator.NavigateTo($"/api/account/logout?Redirect={HttpUtility.UrlEncode(redirect)}", true);
         return Task.CompletedTask;
     }
 

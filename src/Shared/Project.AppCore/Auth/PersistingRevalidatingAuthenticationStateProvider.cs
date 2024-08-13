@@ -14,6 +14,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Project.AppCore.Auth
 {
@@ -85,7 +86,8 @@ namespace Project.AppCore.Auth
 
             //app.UserStore.ClearUser();
             //await httpContextAccessor.HttpContext.SignOutAsync();
-            app.Navigator.NavigateTo("/api/account/logout", true);
+            var redirect = app.Navigator.ToBaseRelativePath(app.Navigator.Uri);
+            app.Navigator.NavigateTo($"/api/account/logout?Redirect={HttpUtility.UrlEncode(redirect)}", true);
             return Task.CompletedTask;
         }
     }

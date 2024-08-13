@@ -22,7 +22,7 @@ namespace Project.Constraints.Services
         Task<TUser?> GetUserAsync(string id);
     }
 
-    [WebController(Route = "user")]
+    [WebController(Route = "user", Authorize = true)]
     [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
     [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public interface IUserService
@@ -30,7 +30,7 @@ namespace Project.Constraints.Services
         Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd);
     }
 
-    [WebController(Route = "user")]
+    [WebController(Route = "user", Authorize = true)]
     [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
     [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public interface IStandardUserService : IUserService<User>

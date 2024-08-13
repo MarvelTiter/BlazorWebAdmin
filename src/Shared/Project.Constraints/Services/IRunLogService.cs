@@ -7,7 +7,7 @@ using Project.Constraints.Models.Request;
 
 namespace Project.Constraints.Services
 {
-    [WebController(Route = "runlog")]
+    [WebController(Route = "runlog", Authorize = true)]
     [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
     [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public interface IStandardRunLogService : IRunLogService<RunLog> { }
