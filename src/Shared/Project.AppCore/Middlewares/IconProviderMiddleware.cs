@@ -19,6 +19,11 @@ namespace Project.AppCore.Middlewares
         }
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
+            if (context.User.Identity?.IsAuthenticated == false)
+            {
+                context.Response.StatusCode = 403;
+                return;
+            }
             var path = context.Request.Path;
             var name = Path.GetFileNameWithoutExtension(path);
             if (!_contentCache.TryGetValue(name, out var result))

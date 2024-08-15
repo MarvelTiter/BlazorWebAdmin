@@ -14,8 +14,8 @@
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
 		<PackageReference Include="MT.LightORM" Version="2.0.9" />
 		<PackageReference Include="MT.Toolkit" Version="2.0.8" />
-		<PackageReference Include="LightExcel" Version="2.1.0.8" />
-		<PackageReference Include="AutoInjectGenerator" Version="0.0.1" />
+		<PackageReference Include="LightExcel" Version="2.1.0.9" />
+		<PackageReference Include="AutoInjectGenerator" Version="0.0.3" />
 	</ItemGroup>
 
 </Project>

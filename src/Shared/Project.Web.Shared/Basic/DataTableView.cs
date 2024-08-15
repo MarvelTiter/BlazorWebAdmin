@@ -68,7 +68,7 @@ namespace Project.Web.Shared.Basic
             var filename = $"{DateTime.Now:yyyyMMdd-HHmmss}.xlsx";
             var path = Path.Combine(AppConst.TempFilePath, filename);
             Excel.WriteExcel(path, dt);
-            DownloadService.DownloadAsync(filename);
+            DownloadService.DownloadFileAsync(filename);
             return Task.CompletedTask;
         }
 

@@ -20,16 +20,19 @@ public record ColumnInfo(PropertyInfo Property)
     public bool Readonly { get; set; }
     public bool Ellipsis { get; set; }
     public bool Visible { get; set; } = true;
+    /// <summary>
+    /// 参数是行数据对象
+    /// </summary>
     public Func<object?, bool>? VisibleExpression { get; set; }
     public bool UseTag { get; set; }
-    public Dictionary<string, string>? EnumValues { get; set; }
     public bool Sortable { get; set; }
-    public Func<object, string>? ValueFormat { get; set; }
+    public Dictionary<string, string>? EnumValues { get; set; }
     public Dictionary<string, string>? TagColors { get; set; }
-    public Func<string, Dictionary<string, object>>? AddCellOptions { get; set; }
     public InputType? InputType { get; set; }
-    public RenderFragment<object?>? CellTemplate { get; set; }
-    public RenderFragment<FormItemContext>? FormTemplate { get; set; }
+    public Func<object, string>? ValueFormat { get; set; }
+    public Func<string, Dictionary<string, object>>? AddCellOptions { get; set; }
+    public RenderFragment<ColumnItemContext>? CellTemplate { get; set; }
+    public RenderFragment<ColumnItemContext>? FormTemplate { get; set; }
     public bool Grouping { get; set; }
 
     private Func<object, object> groupByExpression = static obj => 0;
@@ -54,14 +57,4 @@ public record ColumnInfo(PropertyInfo Property)
         }
         return "Blue";
     }
-}
-
-public class FormItemContext(object instance, ColumnInfo col)
-{
-    public object Instance { get; set; } = instance;
-    public ColumnInfo Column { get; set; } = col;
-
-    public object? GetValue() => Column.GetValue(Instance);
-
-    public void SetValue(object val) => Column.SetValue(Instance, val);
 }

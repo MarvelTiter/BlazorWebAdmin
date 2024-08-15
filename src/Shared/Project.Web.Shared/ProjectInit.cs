@@ -46,7 +46,7 @@ public static class ProjectInit
 
         services.AddSingleton(setting.locator);
         services.AddScoped(typeof(IProjectSettingService), setting.SettingProviderType);
-
+        services.AddCascadingAuthenticationState();
         ArgumentNullException.ThrowIfNull(AppConst.App.Name);
         AppConst.SetFooter($@"
         <footer style=""text-align:center"">

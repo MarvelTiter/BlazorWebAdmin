@@ -103,15 +103,24 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     /// </summary>
     /// <param name="datas"></param>
     /// <returns></returns>
-    protected virtual Task OnSaveExcelAsync(IEnumerable<TModel> datas)
+    protected virtual async Task OnSaveExcelAsync(IEnumerable<TModel> datas)
     {
         var service = DownloadServiceProvider.GetService();
-        if (service == null) return Task.CompletedTask;
+        if (service == null) return;
         var mainName = Router.Current?.RouteTitle ?? typeof(TModel).Name;
         var filename = $"{mainName}_{DateTime.Now:yyyyMMdd-HHmmss}.xlsx";
-        var path = Path.Combine(AppConst.TempFilePath, filename);
-        Excel.WriteExcel(path, datas);
-        return service.DownloadAsync(filename);
+        if (OperatingSystem.IsBrowser())
+        {
+            using var ms = new MemoryStream();
+            Excel.WriteExcel(ms, datas);
+            await service.DownloadStreamAsync(filename, ms);
+        }
+        else
+        {
+            var path = Path.Combine(AppConst.TempFilePath, filename);
+            Excel.WriteExcel(path, datas);
+            await service.DownloadFileAsync(filename);
+        }
     }
 
     /// <summary>

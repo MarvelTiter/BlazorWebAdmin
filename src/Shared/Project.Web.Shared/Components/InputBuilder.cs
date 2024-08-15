@@ -48,7 +48,7 @@ namespace Project.Web.Shared.Components
         {
             if (Column.FormTemplate != null)
             {
-                Column.FormTemplate.Invoke(new FormItemContext(Data, Column)).Invoke(builder);
+                Column.FormTemplate.Invoke(new ColumnItemContext(Data, Column)).Invoke(builder);
                 return;
             }
             var instance = Expression.Constant(Data);

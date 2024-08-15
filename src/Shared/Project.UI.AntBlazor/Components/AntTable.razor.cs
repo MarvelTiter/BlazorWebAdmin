@@ -7,13 +7,13 @@ using Project.Constraints.UI.Table;
 
 namespace Project.UI.AntBlazor.Components;
 
-public partial class AntTable<TData,TQuery> where TQuery : IRequest, new()
+public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
 {
-    private static RenderFragment CellContentRender<TProp>(ColumnInfo col, CellData<TProp> context)
+    private static RenderFragment CellContentRender<TProp>(TData row, ColumnInfo col, CellData<TProp> context)
     {
         if (col.CellTemplate != null)
         {
-            return col.CellTemplate.Invoke(context.FieldValue);
+            return col.CellTemplate.Invoke(new ColumnItemContext(row!, col));
         }
 
         string? formattedValue = null;
@@ -63,7 +63,7 @@ public partial class AntTable<TData,TQuery> where TQuery : IRequest, new()
         return false;
     }
 
-    private static RenderFragment<CellData<T>> ColumnRender<T>(ColumnInfo col) => context => CellContentRender(col, context);
+    private static RenderFragment<CellData<T>> ColumnRender<T>(TData row, ColumnInfo col) => context => CellContentRender(row, col, context);
 
 
     private static Func<CellData, Dictionary<string, object>> GetOnCell(ColumnInfo col)

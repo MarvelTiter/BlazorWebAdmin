@@ -15,13 +15,23 @@
         await InvokeVoidAsync("download", payload);
     }
 
-    public async Task DownloadAsync(string filename, params string[] paths)
+    public async Task DownloadFileAsync(string filename, params string[] paths)
     {
         await InvokeVoidAsync("download", new
         {
             token = User.UserInfo?.Token,
             filename = filename,
             path = AppConst.GetPath(paths)
+        });
+    }
+
+    public async Task DownloadStreamAsync(string filename, Stream stream)
+    {
+        using var streamRef = new DotNetStreamReference(stream);
+        await InvokeVoidAsync("downloadStream", new
+        {
+            filename,
+            streamRef
         });
     }
 }
