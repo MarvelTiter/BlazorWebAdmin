@@ -1,18 +1,18 @@
 {
-    "compilerOptions": {
-        "strict": true,
-        "forceConsistentCasingInFileNames": true,
-        "allowImportingTsExtensions": true,
-        "noEmit": true,
-        "noImplicitAny": false,
-        "noEmitOnError": true,
-        "removeComments": false,
-        "sourceMap": true,
-        "moduleResolution": "node",
-        "target": "es5"
-    },
-    "exclude": [
-        "node_modules",
-        "wwwroot"
-    ]
+  "compilerOptions": {
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "target": "ES2015"
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ]
 }

@@ -23,16 +23,23 @@ export class Downloader {
         document.body.removeChild(tempform)
     }
 
-    static async downloadStream(_, payload: any) {
-        const { filename, streamRef } = payload;
-        const arrayBuffer = await streamRef.arrayBuffer();
-        const blob = new Blob([arrayBuffer]);
-        const url = URL.createObjectURL(blob);
-        const anchorElement = document.createElement('a');
-        anchorElement.href = url;
-        anchorElement.download = filename ?? '';
-        anchorElement.click();
-        anchorElement.remove();
-        URL.revokeObjectURL(url);
+    static downloadStream = async (_, payload: any) => {
+        try {
+            const {filename, streamRef} = payload;
+            // window['Stream'] = streamRef
+            // const arrayBuffer = new Uint8Array(buffer)
+            const arrayBuffer = await streamRef.arrayBuffer();
+            const blob = new Blob([arrayBuffer]);
+            const url = URL.createObjectURL(blob);
+            const anchorElement = document.createElement('a');
+            // window.document.body.append(anchorElement);
+            anchorElement.href = url;
+            anchorElement.download = filename ?? '';
+            anchorElement.click();
+            anchorElement.remove();
+            URL.revokeObjectURL(url);
+        } catch (e) {
+            console.error(e);
+        }
     }
 }

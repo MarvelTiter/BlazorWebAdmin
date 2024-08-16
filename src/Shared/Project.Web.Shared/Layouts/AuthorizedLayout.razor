@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
-@using Project.Web.Shared.Layouts.LayoutComponents
+﻿@using Project.Web.Shared.Layouts.LayoutComponents
 @inherits RootLayout
 @inject IProtectedLocalStorage LocalStorage
 @inject IOptionsMonitor<Token> Token
@@ -18,9 +17,9 @@
         <AuthorizeView>
             <Authorized>
                 <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
-                    <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken">
-                        @Body
-                    </ActionWatcher>
+                    @* <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken"> *@
+                    @* </ActionWatcher> *@
+                    @Body
                 </ActionWatcher>
             </Authorized>
             <NotAuthorized>
@@ -43,8 +42,8 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     // [Inject, NotNull] public ILogger<AuthorizedLayout>? Logger { get; set; }
-    [CascadingParameter][NotNull] IAppSession? AppSession { get; set; }
-    [Inject, NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+    [CascadingParameter] [NotNull] IAppSession? AppSession { get; set; }
+    [Inject] [NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
     string? LauchUrl => Setting.CurrentValue.LauchUrl;
 
     protected override async Task OnInitializedAsync()
@@ -68,35 +67,35 @@
         }
     }
 
-    bool rendered;
+    // bool rendered;
+    //
+    // protected override void OnAfterRender(bool firstRender)
+    // {
+    //     base.OnAfterRender(firstRender);
+    //     rendered = true;
+    // }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-        rendered = true;
-    }
 
-
-    async Task UpdateUserToken()
-    {
-        var current = AuthenticationStateProvider?.Current;
-        if (rendered && current != null)
-        {
-            current.ActiveTime = DateTime.Now;
-            await LocalStorage.SetAsync("UID", current);
-        }
-    }
+    // async Task UpdateUserToken()
+    // {
+    //     var current = AuthenticationStateProvider?.Current;
+    //     if (rendered && current != null)
+    //     {
+    //         current.ActiveTime = DateTime.Now;
+    //         await LocalStorage.SetAsync("UID", current);
+    //     }
+    // }
 
     async Task NoneOperation()
     {
         if (AppSession.AppStore.Working)
         {
-            await UpdateUserToken();
+            return;
         }
-        else
-        {
-            await AuthenticationStateProvider.ClearState();
-        }
+
+        // 退出
+        await AuthenticationStateProvider.ClearState();
+
         await InvokeAsync(StateHasChanged);
     }
 

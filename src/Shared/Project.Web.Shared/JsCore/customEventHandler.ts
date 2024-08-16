@@ -1,6 +1,7 @@
-﻿import { HandlerBase } from './handlerBase'
+﻿import {HandlerBase} from './handlerBase'
+
 export class CustomEventHandler extends HandlerBase {
-    constructor(el: Element
+    constructor(el: EventTarget
         , eventType: string
         , fn: Function
         , id: string

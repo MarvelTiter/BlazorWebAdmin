@@ -1,15 +1,10 @@
 ﻿@page "/"
-@using System.Linq.Expressions;
-@using Project.Constraints
-@using Project.Constraints.Page
-@using Project.Constraints.Services
-@using Project.Web.Shared.ComponentHelper
 @inherits BasicComponent
 @inject IPageLocatorService Locator
 @attribute [PageInfo(Icon = "home", Id = "Dashboard", Pin = true, Sort = 0, Title = "主页")]
 
 <JsTimer Interval="1000" Callback="Update"></JsTimer>
-    @if (homeType == null)
+@if (homeType == null)
 {
     <MCard>
         <h2>
@@ -18,7 +13,7 @@
     </MCard>
     <MCard>
         <h2>
-            会话持续时间: @((User?.UserInfo?.ActiveTime - User?.UserInfo?.CreatedTime)?.ToString("dd\\-hh\\:mm\\:ss"))
+            会话持续时间: @((DateTime.Now - User?.UserInfo?.CreatedTime)?.ToString("dd\\-hh\\:mm\\:ss"))
         </h2>
     </MCard>
 }
@@ -27,26 +22,33 @@ else
     <DynamicComponent Type="homeType"></DynamicComponent>
 }
 <p>RenderMode: @(IsWasm ? "WebAssembly" : "Server") @UI.BuildButton(this).OnClick(() => IsWasm = OperatingSystem.IsBrowser()).Text("刷新").Render() </p>
+
 @code {
-    async Task Update()
+
+    Task Update()
     {
-        if (User?.UserInfo != null)
-        {
-            User.UserInfo.ActiveTime = DateTime.Now;
-        }
-        await InvokeAsync(StateHasChanged);
+        // if (User?.UserInfo != null)
+        // {
+        //     User.UserInfo.ActiveTime = DateTime.Now;
+        // }
+
+        return InvokeAsync(StateHasChanged);
     }
+
     Type? homeType;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
         homeType = Locator.GetDashboardType();
     }
+
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
         IsWasm = OperatingSystem.IsBrowser();
     }
+
     bool IsWasm;
 
 }
