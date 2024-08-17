@@ -1,13 +1,13 @@
-﻿@using Project.Constraints.Models.Request
+﻿@using BlazorAdmin.Client.TestPages.Components
+@using Project.Constraints.Models.Request
 @using Project.Constraints.UI
 @using Project.Constraints.Utils
 @inject IUIService UI
 <h3>TestPage4</h3>
 
-<Project.Web.Shared.Components.ConditionBuilder TModel="Project.Constraints.Models.Permissions.User" Condition="condition">
 
-</Project.Web.Shared.Components.ConditionBuilder>
-@UI.BuildButton(this).Text("生成").OnClick(BuildExpression).Render()
+@* @UI.BuildButton(this).Text("生成").OnClick(BuildExpression).Render() *@
+@UI.BuildButton(this).Text("Dialog").OnClick(Open).Render()
 <pre>
     @jsonResult
 </pre>
@@ -28,5 +28,11 @@
             {
                 WriteIndented = true
             });
+    }
+
+    public async Task Open()
+    {
+        var r =  await UI.ShowDialogAsync<DialogTest, int>("测试");
+        UI.Success($"返回结果: {r}");
     }
 }

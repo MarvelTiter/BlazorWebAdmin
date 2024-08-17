@@ -279,7 +279,8 @@ public class RouterStore : StoreBase, IRouterStore
         }
         var used = meta.RouteType == null
             || AppConst.Pages.IndexOf(meta.RouteType.Assembly) > -1
-            || meta.RouteType.Assembly == Assembly.GetEntryAssembly();
+            || meta.RouteType.Assembly == Assembly.GetEntryAssembly()
+            || (meta.RouteType.Assembly.GetName().Name?.EndsWith(".Client") ?? false);
         if (RouteMetaFilterEvent != null)
         {
             var enable = await RouteMetaFilterEvent.Invoke(meta);

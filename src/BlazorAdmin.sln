@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypeScriptPackup", "TypeScr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAdmin.Client", "BlazorAdmin.Client\BlazorAdmin.Client.csproj", "{1D658FD0-24FE-4F9A-9C25-8CCA537BB3AD}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.UI.FluentUI", "Shared\Project.UI.FluentUI\Project.UI.FluentUI.csproj", "{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{1D658FD0-24FE-4F9A-9C25-8CCA537BB3AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D658FD0-24FE-4F9A-9C25-8CCA537BB3AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D658FD0-24FE-4F9A-9C25-8CCA537BB3AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +83,7 @@ Global
 		{64740E13-062E-40C1-AFB3-6F79BE848D71} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
 		{8D691E07-F967-495C-B1FC-3087ADB3CA4E} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
 		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50} = {0F196314-3413-403C-B39E-DDD6CA938D34}
+		{8D2D31C0-251B-4F1A-B196-ED22F05A0C63} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0371ABB4-6400-487C-9031-25B119AB8B9E}

@@ -63,7 +63,7 @@ function getComponentById(id, init) {
   if (!allComponentMap.has(id) && init !== void 0) {
     if (init instanceof Function) {
       allComponentMap.set(id, init());
-    } else if (init instanceof Object) {
+    } else if (init) {
       allComponentMap.set(id, init);
     } else {
       console.error("\u521D\u59CB\u5316\u5F02\u5E38", init);
@@ -142,7 +142,8 @@ var ResizeHandler = class extends HandlerBase {
     });
   }
   on() {
-    this.resizeObserver.observe(this.element);
+    if (this.element instanceof Element)
+      this.resizeObserver.observe(this.element);
   }
   off() {
     this.resizeObserver.disconnect();
@@ -904,16 +905,22 @@ var ScrollBar = class _ScrollBar extends BaseComponent {
     }
     this.initEvents();
   }
+  // scrollbar, wrap, resize, minSize, always
+  static init(id, options) {
+    getComponentById(id, () => {
+      return new _ScrollBar(options);
+    });
+  }
   update() {
     if (!this.wrap) return;
-    var offsetHeight = this.wrap.offsetHeight - GAP;
-    var offsetWidth = this.wrap.offsetWidth - GAP;
-    var scrollHeight = this.wrap.scrollHeight;
-    var scrollWidth = this.wrap.scrollWidth;
-    var originalHeight = offsetHeight * offsetHeight / scrollHeight;
-    var originalWidth = offsetWidth * offsetWidth / scrollWidth;
-    var height = Math.max(originalHeight, this.minSize);
-    var width = Math.max(originalWidth, this.minSize);
+    const offsetHeight = this.wrap.offsetHeight - GAP;
+    const offsetWidth = this.wrap.offsetWidth - GAP;
+    const scrollHeight = this.wrap.scrollHeight;
+    const scrollWidth = this.wrap.scrollWidth;
+    const originalHeight = offsetHeight * offsetHeight / scrollHeight;
+    const originalWidth = offsetWidth * offsetWidth / scrollWidth;
+    const height = Math.max(originalHeight, this.minSize);
+    const width = Math.max(originalWidth, this.minSize);
     this.ratioY = originalHeight / (offsetHeight - originalHeight) / (height / (offsetHeight - height));
     this.ratioX = originalWidth / (offsetWidth - originalWidth) / (width / (offsetWidth - width));
     this.sizeHeight = height + GAP < offsetHeight ? height + "px" : "";
@@ -947,12 +954,6 @@ var ScrollBar = class _ScrollBar extends BaseComponent {
     EventHandler.remove(this.wrap, "scroll");
     EventHandler.remove(this.wrap, "resize");
     EventHandler.remove(this.resize, "resize");
-  }
-  // scrollbar, wrap, resize, minSize, always
-  static init(id, options) {
-    getComponentById(id, () => {
-      return new _ScrollBar(options);
-    });
   }
 };
 
@@ -1242,7 +1243,7 @@ _Downloader.downloadStream = (_, payload) => __async(_Downloader, null, function
 var Downloader = _Downloader;
 
 // Shared/Project.Web.Shared/Components/SvgIcon/SvgIcon.razor.ts
-var SvgIcon = class _SvgIcon extends BaseComponent {
+var _SvgIcon = class _SvgIcon extends BaseComponent {
   constructor(options) {
     super();
     this.el = options.container;
@@ -1252,31 +1253,45 @@ var SvgIcon = class _SvgIcon extends BaseComponent {
     this.fontSize = options.fontSize;
     this.load();
   }
+  static getIcon(name) {
+    return __async(this, null, function* () {
+      if (!name) return "";
+      let icon = _SvgIcon.caches.get(name);
+      if (icon) {
+        return icon;
+      }
+      const response = yield fetch(`/icons/${name}.svg`);
+      icon = yield response.text();
+      if (!_SvgIcon.caches.has(name)) {
+        _SvgIcon.caches.set(name, icon);
+      }
+      return icon;
+    });
+  }
   load() {
-    fetch(`/icons/${this.iconName}.svg`).then((response) => {
-      response.text().then((content) => {
-        this.el.innerHTML = content;
-        const svgEl = this.el.getElementsByTagName("svg").item(0);
-        if (svgEl) {
-          if (this.className) {
-            var all = this.className.split(" ");
-            for (const c of all) {
-              if (c == null ? void 0 : c.trim()) svgEl.classList.add(c.trim());
-            }
-          }
-          if (this.style) {
-            svgEl.setAttribute("style", this.style);
+    return __async(this, null, function* () {
+      const icon = yield _SvgIcon.getIcon(this.iconName);
+      this.el.innerHTML = icon;
+      const svgEl = this.el.getElementsByTagName("svg").item(0);
+      if (svgEl) {
+        if (this.className) {
+          var all = this.className.split(" ");
+          for (const c of all) {
+            if (c == null ? void 0 : c.trim()) svgEl.classList.add(c.trim());
           }
         }
-      });
-    }).catch((error) => {
-      console.debug(error);
+        if (this.style) {
+          svgEl.setAttribute("style", this.style);
+        }
+      }
     });
   }
   static init(id, options) {
     new _SvgIcon(options);
   }
 };
+_SvgIcon.caches = /* @__PURE__ */ new Map();
+var SvgIcon = _SvgIcon;
 
 // main.ts
 window.Utils = utilsAggregation_default;

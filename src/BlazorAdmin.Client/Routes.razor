@@ -1,12 +1,9 @@
-﻿@using AntDesign
-@using Project.Web.Shared.Layouts
+﻿@using Project.Web.Shared.Layouts
 @using System.Reflection
 
 
-<AppRoot AppAssembly="@MainAssembly">
-    <AntContainer />
-</AppRoot>
+<AppRoot AppAssembly="@MainAssembly"></AppRoot>
 
 @code {
-    [Parameter] public Assembly? MainAssembly { get; set; } = typeof(Program).Assembly;
+    [Parameter] public Assembly? MainAssembly { get; set; } = typeof(BlazorAdmin.Client.Routes).Assembly;
 }

@@ -9,5 +9,6 @@ namespace Project.Constraints.UI.Props
         public Expression? LabelExpression { get; set; }
         public Expression? ValueExpression { get; set; }
         public bool ButtonGroup { get; set; }
+        public bool Mulitple { get; set; }
     }
 }

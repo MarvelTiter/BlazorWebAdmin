@@ -58,8 +58,9 @@ public static class AppConst
     public static AppInfo App { get; set; } = new AppInfo();
     public static DbTableType TypeInfo { get; set; } = new DbTableType();
 
-    static List<Assembly> PageAssemblies = new List<Assembly>();
-
+    static List<Assembly> AdditionalPageAssemblies = new List<Assembly>();
+    //public static Assembly ServerAssembly { get; set; }
+    //public static Assembly ClientAssembly { get; set; }
     public static string GetStatisticsFileWithVersion(string path)
     {
         if (Environment?.IsDevelopment() == true)
@@ -76,7 +77,16 @@ public static class AppConst
     }
 
     public static RenderFragment? Footer { get; set; }
-    public static List<Assembly> Pages => PageAssemblies;
+    public static List<Assembly> Pages => AdditionalPageAssemblies;
+    //public static IEnumerable<Assembly> AllEnableAssembly()
+    //{
+    //    yield return ServerAssembly;
+    //    yield return ClientAssembly;
+    //    foreach (var item in Pages)
+    //    {
+    //        yield return item;
+    //    }
+    //}
     public static void SetFooter(string html)
     {
         Footer = html.AsMarkupString();
@@ -85,7 +95,7 @@ public static class AppConst
     {
         foreach (var item in types)
         {
-            PageAssemblies.Add(item.Assembly);
+            AdditionalPageAssemblies.Add(item.Assembly);
         }
     }
 
@@ -93,7 +103,7 @@ public static class AppConst
     {
         foreach (var item in asms)
         {
-            PageAssemblies.Add(item);
+            AdditionalPageAssemblies.Add(item);
         }
     }
 

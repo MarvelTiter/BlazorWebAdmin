@@ -81,7 +81,7 @@ public interface IUIService
     /// UI.BuildInput(this).Bind(() => ValueExpression).Render()
     /// </code>
     /// </summary>
-    IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object receiver);
+    IBindableInputComponent<DefaultProp, string> BuildInput(object receiver);
 
     /// <summary>
     /// 生成密码输入框
@@ -96,9 +96,9 @@ public interface IUIService
     /// <![CDATA[UI.BuildInput<TValue>(this).Bind(() => ValueExpression).Render()]]>
     /// </code>
     /// </summary>
-    IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver);
+    IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver) where TValue: struct;
 
-    IBindableInputComponent<DefaultProp, TValue> BuildDatePicker<TValue>(object receiver);
+    IBindableInputComponent<DatePickerProp, DateTime?> BuildDatePicker(object receiver);
 
     IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object receiver);
 
@@ -151,5 +151,7 @@ public interface IUIService
     IUIComponent<ModalProp> BuildModal();
     IUIComponent<GridProp> BuildRow();
     IUIComponent<GridProp> BuildCol();
-    IUIComponent BuildCard();
+    IUIComponent<CardProp> BuildCard();
+
+    RenderFragment RenderContainer();
 }

@@ -8,4 +8,9 @@ namespace Project.Constraints.UI.Props
         public bool EnableValueExpression { get; set; } = true;
         public string BindValueName { get; set; } = "Value";
     }
+
+    public class DatePickerProp: DefaultProp
+    {
+        public bool WithTime { get; set; }
+    }
 }

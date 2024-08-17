@@ -21,36 +21,44 @@ using System.Data;
 using Project.Constraints.Common;
 using Microsoft.Extensions.DependencyInjection;
 using AutoInjectGenerator;
+
 namespace Project.UI.AntBlazor
 {
     [AutoInject]
     public class UIService(
         ModalService modalService,
-        MessageService messageService,
+        IMessageService messageService,
         DrawerService drawerService,
-        NotificationService notificationService,
+        INotificationService notificationService,
         IServiceProvider services) : IUIService
     {
-        private readonly ModalService modalService = modalService;
-        private readonly MessageService messageService = messageService;
-        private readonly DrawerService drawerService = drawerService;
-        private readonly NotificationService notificationService = notificationService;
+        // private readonly ModalService modalService = modalService;
+        // private readonly IMessageService messageService = messageService;
+        // private readonly DrawerService drawerService = drawerService;
+        // private readonly INotificationService notificationService = notificationService;
 
         public IServiceProvider ServiceProvider { get; } = services;
 
-        public IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object reciver)
+        public IBindableInputComponent<DefaultProp, string> BuildInput(object reciver)
         {
-            return new BindableComponentBuilder<Input<TValue>, DefaultProp, TValue>() { Receiver = reciver };
+            return new BindableComponentBuilder<Input<string>, DefaultProp, string>() { Receiver = reciver };
         }
 
-        public IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object reciver)
+        public IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object reciver) where TValue : struct
         {
             return new BindableComponentBuilder<InputNumber<TValue>, DefaultProp, TValue>() { Receiver = reciver };
         }
 
-        public IBindableInputComponent<DefaultProp, TValue> BuildDatePicker<TValue>(object reciver)
+        public IBindableInputComponent<DatePickerProp, DateTime?> BuildDatePicker(object reciver)
         {
-            return new BindableComponentBuilder<DatePicker<TValue>, DefaultProp, TValue> { Receiver = reciver };
+            return new BindableComponentBuilder<DatePicker<DateTime?>, DatePickerProp, DateTime?>(builder =>
+            {
+                if (builder.Model.WithTime)
+                {
+                    builder.SetComponent(c => c.ShowTime, "HH:mm");
+                }
+            })
+            { Receiver = reciver };
         }
 
         public IBindableInputComponent<DefaultProp, string> BuildPassword(object reciver)
@@ -204,19 +212,20 @@ namespace Project.UI.AntBlazor
             {
                 builder.Component<AntTable<TModel, TQuery>>()
                     .SetComponent(c => c.Options, options)
-                .Build();
+                    .Build();
             };
         }
 
-        public RenderFragment BuildDynamicTable<TData, TRowData, TQuery>(TableOptions<TRowData, TQuery> options, TData source)
+        public RenderFragment BuildDynamicTable<TData, TRowData, TQuery>(TableOptions<TRowData, TQuery> options,
+            TData source)
             where TQuery : IRequest, new()
         {
             return builder =>
             {
                 builder.Component<AntDynamicTable<TData, TRowData, TQuery>>()
-                .SetComponent(c => c.Options, options)
-                .SetComponent(c => c.DataSource, source)
-                .Build();
+                    .SetComponent(c => c.Options, options)
+                    .SetComponent(c => c.DataSource, source)
+                    .Build();
             };
         }
 
@@ -245,8 +254,8 @@ namespace Project.UI.AntBlazor
         public RenderFragment BuildDropdown(DropdownOptions options)
         {
             return builder => builder.Component<AntDropdown>()
-                    .SetComponent(c => c.Options, options)
-                    .Build();
+                .SetComponent(c => c.Options, options)
+                .Build();
         }
 
         public RenderFragment BuildProfile(ProfileInfo info)
@@ -257,10 +266,10 @@ namespace Project.UI.AntBlazor
         public RenderFragment BuildMenu(IRouterStore router, bool horizontal, IAppStore app)
         {
             return builder => builder.Component<AntMenu>()
-                    .SetComponent(c => c.Router, router)
-                    .SetComponent(c => c.Horizontal, horizontal)
-                    .SetComponent(c => c.App, app)
-                    .Build();
+                .SetComponent(c => c.Router, router)
+                .SetComponent(c => c.Horizontal, horizontal)
+                .SetComponent(c => c.App, app)
+                .Build();
         }
 
         public RenderFragment BuildLoginForm(Func<LoginFormModel, Task> handleLogin)
@@ -339,9 +348,14 @@ namespace Project.UI.AntBlazor
             return default!;
         }
 
-        public IUIComponent BuildCard()
+        public IUIComponent<CardProp> BuildCard()
         {
-            return new ComponentBuilder<Card>();
+            return new PropComponentBuilder<Card, CardProp>(card =>
+            {
+                var title = card.Model.TitleTemplate ?? (card.Model.Title ?? "").AsContent();
+                card.SetComponent(c => c.TitleTemplate, title);
+                card.SetComponent(c => c.ChildContent, card.Model.ChildContent);
+            });
         }
 
         public IUIComponent<GridProp> BuildRow()
@@ -364,10 +378,10 @@ namespace Project.UI.AntBlazor
         public IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object reciver)
         {
             var binder = new BindableComponentBuilder<Checkbox, DefaultProp, bool>(self =>
-            {
-                if (self.Model.Label != null)
-                    self.SetComponent(cb => cb.ChildContent, self.Model.Label.AsContent());
-            })
+                {
+                    if (self.Model.Label != null)
+                        self.SetComponent(cb => cb.ChildContent, self.Model.Label.AsContent());
+                })
             { Receiver = reciver };
             binder.Model.BindValueName = "Checked";
             return binder;
@@ -416,6 +430,7 @@ namespace Project.UI.AntBlazor
                         var value = (Func<TItem, TValue>)valueLambda.Compile();
                         self.SetComponent(rg => rg.Options, options.ConvertToRadioOptions(label, value));
                     }
+
                     if (self.Model.ButtonGroup)
                     {
                         self.SetComponent(rg => rg.ButtonStyle, RadioButtonStyle.Solid);
@@ -447,6 +462,11 @@ namespace Project.UI.AntBlazor
                     self.SetComponent(m => m.Width, self.Model.Width);
                 }
             });
+        }
+
+        public RenderFragment RenderContainer()
+        {
+            return b => b.Component<AntContainer>().Build();
         }
     }
 }

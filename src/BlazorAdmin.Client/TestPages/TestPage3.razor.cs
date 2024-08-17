@@ -2,6 +2,7 @@
 using Project.Constraints.Common.Attributes;
 using Project.Constraints.UI;
 using Project.Constraints.UI.Extensions;
+using Project.Web.Shared.Layouts;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorAdmin.Client.TestPages
@@ -9,6 +10,7 @@ namespace BlazorAdmin.Client.TestPages
 #if DEBUG
     [Route("/test3")]
     [PageInfo(Id = "TestPage3", Title = "测试3", GroupId = "test")]
+    [Layout(typeof(NotAuthorizedLayout))]
 #endif
     public partial class TestPage3
     {
@@ -26,7 +28,7 @@ namespace BlazorAdmin.Client.TestPages
                 builder.Div().AddContent(b =>
                 {
                     b.AddContent(0, "要大于10");
-                    b.AddContent(1, UI.BuildInput<int>(this).Bind(() => val!.Value).Render());
+                    b.AddContent(1, UI.BuildNumberInput<int>(this).Bind(() => val!.Value).Render());
                 }).Build();
             }
                , refInt, false, config =>

@@ -39,8 +39,8 @@
     public SelectItem<LinkType> LinkOptions = new();
     protected override void OnInitialized()
     {
-        LinkOptions.Add(TableLocalizer["ConditionSwitch.AndAlso"], LinkType.AndAlso);
-        LinkOptions.Add(TableLocalizer["ConditionSwitch.OrElse"], LinkType.OrElse);
+        LinkOptions.Add(TableLocalizer?["ConditionSwitch.AndAlso"] ?? "并且", LinkType.AndAlso);
+        LinkOptions.Add(TableLocalizer?["ConditionSwitch.OrElse"] ?? "或者", LinkType.OrElse);
         base.OnInitialized();
         Columns = typeof(TModel).GenerateColumns();
         Condition ??= new();

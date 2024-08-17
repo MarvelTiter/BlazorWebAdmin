@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using System.Linq
+@using Microsoft.FluentUI.AspNetCore.Components
+@using Microsoft.JSInterop
+@using Project.Constraints.Store
+@using Project.Constraints.Store.Models
+@using Project.Web.Shared.Components
+@using System.Diagnostics.CodeAnalysis
+@if (!HasChildren)
+{
+    <FluentNavLink Href="@Route.RouteUrl">
+        @* <span slot="start">
+    </span> *@
+        <span class="fluent-ui-menu-title">
+            <SvgIcon ClassName="nav-icon" IconName="@Route.Icon"></SvgIcon>
+            <span>@RouterStore.GetLocalizerString(Route)</span>
+        </span>
+    </FluentNavLink>
+}
+else
+{
+    <FluentNavGroup>
+        <TitleTemplate>
+            <span class="fluent-ui-menu-title">
+                <SvgIcon ClassName="nav-icon" IconName="@Route.Icon"></SvgIcon>
+                <span>@RouterStore.GetLocalizerString(Route)</span>
+            </span>
+        </TitleTemplate>
+        <ChildContent>
+            @foreach (var item in Children)
+            {
+                <FluentUIMenuItem Route="@item"></FluentUIMenuItem>
+            }
+        </ChildContent>
+    </FluentNavGroup>
+}
+
+<style>
+    .fluent-ui-menu-title {
+        display: flex;
+        gap:0.3em;
+    }
+
+    .fluent-ui-menu-title .nav-icon{
+            color: rgb(64, 158, 255);
+    }
+</style>
+
+@code {
+    [Parameter, NotNull] public RouteMenu? Route { get; set; }
+
+    [Inject, NotNull] IRouterStore? RouterStore { get; set; }
+    [Inject, NotNull] IJSRuntime? Js { get; set; }
+
+    // public RouteMenu Current => Route;
+    // public RouteMenu Current => onlyOneChildren ? Children.First() : Route;
+
+    // private bool onlyOneChildren => Children.Count() == 1;
+
+    private bool HasChildren => Children.Any();
+
+    private IEnumerable<RouteMenu> Children => RouterStore.Menus.Where(m => m.Group == Route.RouteId);
+    // Icon? Svg { get; set; }
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     await base.OnInitializedAsync();
+    //     if (!string.IsNullOrEmpty(Route.Icon))
+    //     {
+    //         Svg = await Js.GetCustomIcon(Route.Icon);
+    //         await InvokeAsync(StateHasChanged);
+    //     }
+    // }
+}

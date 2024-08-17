@@ -13,7 +13,7 @@
         }
         else if (typeof(TData) == typeof(DateTime))
         {
-            @(UI.BuildDatePicker<TData>(this).Bind(() => Value!, NotifyChanged).Render())
+            @(UI.BuildDatePicker(this).Bind(() => dateValue, NotifyChanged).Render())
         }
         else if (EnumValues != null)
         {
@@ -21,7 +21,7 @@
         }
         else
         {
-            @(UI.BuildInput<TData>(this).Bind(() => Value!, NotifyChanged).Render())
+            @(UI.BuildInput(this).Bind(() => stringValue!, NotifyChanged).Render())
         }
     </span>
 </MGridContent>
@@ -32,6 +32,7 @@
     [Parameter] public Dictionary<string, string>? EnumValues { get; set; }
 
     string? stringValue = null;
+    DateTime? dateValue = DateTime.Today;
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -49,6 +50,7 @@
         {
             return ValueChanged.InvokeAsync(Value);
         }
+
         return Task.CompletedTask;
     }
 
@@ -62,6 +64,8 @@
                 return ValueChanged.InvokeAsync(v);
             }
         }
+
         return ValueChanged.InvokeAsync(default);
     }
+
 }

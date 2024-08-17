@@ -22,9 +22,6 @@
     <WaterMark ProvideService></WaterMark>
     <WebAdminReconnector></WebAdminReconnector>
     <Downloader />
-    @if (ChildContent != null)
-    {
-        @ChildContent
-    }
+    @Context.UI.RenderContainer()
 </CascadingValue>
 @* </CascadingAuthenticationState> *@

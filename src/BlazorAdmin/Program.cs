@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Project.AppCore;
 using Project.AppCore.Services;
 using Project.Constraints;
-using Project.UI.AntBlazor;
+using Project.UI.FluentUI;
+//using Project.UI.AntBlazor;
 using Project.Web.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +17,8 @@ builder.Services.AddRazorComponents()
 //    option.MaximumReceiveMessageSize = 1024 * 1024 * 2;
 //});
 
-builder.Services.AddAntDesignUI();
+//builder.Services.AddAntDesignUI();
+builder.Services.AddFluentUI();
 builder.AddProjectService(setting =>
 {
     setting.App.Name = "Demo";
@@ -30,6 +32,9 @@ builder.Services.AutoInject();
 builder.AddDefaultLightOrm();
 
 builder.Services.AddControllers();
+
+AppConst.AddAssembly(typeof(BlazorAdmin.Client._Imports));
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -37,14 +42,14 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     app.UseWebAssemblyDebugging();
 }
-
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseProject();
 app.UseAntiforgery();
-var rb = app.MapRazorComponents<App>();
-rb.AddInteractiveServerRenderMode()
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies([.. AppConst.Pages]);
 app.MapControllers();

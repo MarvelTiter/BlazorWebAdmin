@@ -12,8 +12,9 @@ namespace Project.Web.Shared.ComponentHelper
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             UI.BuildCard()
-                .SetIf(ChildContent != null, "ChildContent", ChildContent!)
-                .SetIf(Title != null, "Title", Title!)
+                .Set(c=>c.Title, Title)
+                .Set(c => c.TitleTemplate, TitleTemplate)
+                .Set(c=>c.ChildContent, ChildContent)
                 .AdditionalParameters(AdditionalParameters)
                 .Render()
                 .Invoke(builder);

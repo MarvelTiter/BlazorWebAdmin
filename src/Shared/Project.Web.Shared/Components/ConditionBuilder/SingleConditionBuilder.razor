@@ -33,7 +33,7 @@
         if (selectedField?.DataType == typeof(DateTime) || selectedField?.DataType == typeof(DateTime?))
         {
             GetCurrentValue = () => dateValue;
-            return UI.BuildDatePicker<DateTime>(this).Bind(() => dateValue, NotifyChanged).Style("width:200px;").Render();
+            return UI.BuildDatePicker(this).Bind(() => dateValue, NotifyChanged).Style("width:200px;").Render();
         }
         else if (selectedField?.EnumValues != null || (selectedField?.IsEnum ?? false))
         {

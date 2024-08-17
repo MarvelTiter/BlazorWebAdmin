@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Project.Constraints.Models
 {
+    public class SvgInfo
+    {
+        public string? Content { get; set; }
+        public int? Width { get; set; }
+        public int? Height { get; set; }
+    }
     public class JsActionResult : IQueryResult
     {
         public bool Success { get; set; }

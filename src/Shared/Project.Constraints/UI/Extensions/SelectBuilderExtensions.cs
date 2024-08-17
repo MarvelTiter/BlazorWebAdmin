@@ -42,13 +42,13 @@ namespace Project.Constraints.UI.Extensions
         }
     }
 
-    public static class InputBuilderExtensions
-    {
-        public static IBindableInputComponent<DefaultProp, string> BuildInput(this IUIService service, object receiver)
-        {
-            return service.BuildInput<string>(receiver);
-        }
-    }
+    // public static class InputBuilderExtensions
+    // {
+    //     public static IBindableInputComponent<DefaultProp, string> BuildInput(this IUIService service, object receiver)
+    //     {
+    //         return service.BuildInput<string>(receiver);
+    //     }
+    // }
 
     //public static class SelectPropExtensions
     //{

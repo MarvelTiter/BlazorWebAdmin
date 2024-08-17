@@ -61,6 +61,7 @@ public partial class AppRoot : IAsyncDisposable
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
+            //Context.Navigator.NavigateTo("/test4");
             var c = await Js.InvokeUtilsAsync<string[]>("getClient");
             Context.UserStore.Ip = c[0];
             Context.UserStore.UserAgent = c[1];

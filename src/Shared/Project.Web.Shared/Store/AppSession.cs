@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using Project.Constraints.Store;
-using Project.Constraints.UI;
-using Project.Constraints;
-using AutoInjectGenerator;
+﻿using Project.Constraints.UI;
 
 namespace Project.Web.Shared.Store
 {
@@ -38,7 +34,7 @@ namespace Project.Web.Shared.Store
         {
             if (LoginSuccessEvent != null)
             {
-                return LoginSuccessEvent(UserStore.UserInfo);
+                return LoginSuccessEvent(UserStore.UserInfo!);
             }
             return Task.CompletedTask;
         }

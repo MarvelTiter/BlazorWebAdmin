@@ -1,7 +1,9 @@
 using BlazorAdmin.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Project.Constraints;
 using Project.Constraints.Services;
-using Project.UI.AntBlazor;
+using Project.UI.FluentUI;
+//using Project.UI.AntBlazor;
 using Project.Web.Shared;
 
 //[assembly: GenerateApiInvoker]
@@ -11,7 +13,8 @@ builder.Services.ConfigureHttpClientDefaults(c =>
     c.ConfigureHttpClient(h => { h.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
 });
 //builder.Configuration
-builder.Services.AddAntDesignUI();
+//builder.Services.AddAntDesignUI();
+builder.Services.AddFluentUI();
 builder.Services.AddProject(builder.Configuration, setting =>
 {
     setting.App.Name = "Demo";
@@ -19,7 +22,6 @@ builder.Services.AddProject(builder.Configuration, setting =>
     setting.App.Company = "Marvel";
     setting.ConfigureSettingProviderType<CustomSetting>();
 }, out _);
-
 builder.Services.AutoInjectWasm();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IUserService, UserServiceApiInvoker>();
