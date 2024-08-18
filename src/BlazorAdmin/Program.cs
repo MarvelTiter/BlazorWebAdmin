@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Project.AppCore;
 using Project.AppCore.Services;
 using Project.Constraints;
-using Project.UI.FluentUI;
-//using Project.UI.AntBlazor;
 using Project.Web.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,9 +14,10 @@ builder.Services.AddRazorComponents()
 //{
 //    option.MaximumReceiveMessageSize = 1024 * 1024 * 2;
 //});
-
+Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
+//Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 //builder.Services.AddAntDesignUI();
-builder.Services.AddFluentUI();
+//builder.Services.AddFluentUI();
 builder.AddProjectService(setting =>
 {
     setting.App.Name = "Demo";

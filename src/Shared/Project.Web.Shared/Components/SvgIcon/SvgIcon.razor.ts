@@ -32,6 +32,14 @@ export class SvgIcon extends BaseComponent {
         return icon
     }
 
+    static async getIconPath(name: string) {
+        const icon = await SvgIcon.getIcon(name)
+        const div = document.createElement('div')
+        div.innerHTML = icon
+        const svgEl = div.querySelector('svg')
+        return svgEl?.innerHTML
+    }
+
     async load() {
         const icon = await SvgIcon.getIcon(this.iconName)
         this.el.innerHTML = icon

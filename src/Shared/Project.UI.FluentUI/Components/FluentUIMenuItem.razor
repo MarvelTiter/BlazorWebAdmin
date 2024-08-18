@@ -8,24 +8,24 @@
 @using System.Diagnostics.CodeAnalysis
 @if (!HasChildren)
 {
-    <FluentNavLink Href="@Route.RouteUrl">
+    <FluentNavLink Href="@Route.RouteUrl" Icon="@Svg">
         @* <span slot="start">
     </span> *@
-        <span class="fluent-ui-menu-title">
+        @* <span class="fluent-ui-menu-title">
             <SvgIcon ClassName="nav-icon" IconName="@Route.Icon"></SvgIcon>
+        </span> *@
             <span>@RouterStore.GetLocalizerString(Route)</span>
-        </span>
     </FluentNavLink>
 }
 else
 {
-    <FluentNavGroup>
-        <TitleTemplate>
+    <FluentNavGroup Icon="@Svg" Title="@RouterStore.GetLocalizerString(Route)">
+        @* <TitleTemplate>
             <span class="fluent-ui-menu-title">
                 <SvgIcon ClassName="nav-icon" IconName="@Route.Icon"></SvgIcon>
-                <span>@RouterStore.GetLocalizerString(Route)</span>
+                <span></span>
             </span>
-        </TitleTemplate>
+        </TitleTemplate> *@
         <ChildContent>
             @foreach (var item in Children)
             {
@@ -60,14 +60,14 @@ else
     private bool HasChildren => Children.Any();
 
     private IEnumerable<RouteMenu> Children => RouterStore.Menus.Where(m => m.Group == Route.RouteId);
-    // Icon? Svg { get; set; }
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     await base.OnInitializedAsync();
-    //     if (!string.IsNullOrEmpty(Route.Icon))
-    //     {
-    //         Svg = await Js.GetCustomIcon(Route.Icon);
-    //         await InvokeAsync(StateHasChanged);
-    //     }
-    // }
+    Icon? Svg { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (!string.IsNullOrEmpty(Route.Icon))
+        {
+            Svg = await Js.GetCustomIcon(Route.Icon);
+            await InvokeAsync(StateHasChanged);
+        }
+    }
 }

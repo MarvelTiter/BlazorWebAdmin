@@ -44,7 +44,7 @@ namespace Project.UI.AntBlazor
             return new BindableComponentBuilder<Input<string>, DefaultProp, string>() { Receiver = reciver };
         }
 
-        public IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object reciver) where TValue : struct
+        public IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object reciver) where TValue : new()
         {
             return new BindableComponentBuilder<InputNumber<TValue>, DefaultProp, TValue>() { Receiver = reciver };
         }
@@ -467,6 +467,11 @@ namespace Project.UI.AntBlazor
         public RenderFragment RenderContainer()
         {
             return b => b.Component<AntContainer>().Build();
+        }
+
+        public int GetMenuWidth(bool collapsed)
+        {
+            return collapsed ? 80 : 260;
         }
     }
 }

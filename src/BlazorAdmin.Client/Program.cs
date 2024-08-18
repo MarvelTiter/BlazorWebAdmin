@@ -2,8 +2,6 @@ using BlazorAdmin.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Project.Constraints;
 using Project.Constraints.Services;
-using Project.UI.FluentUI;
-//using Project.UI.AntBlazor;
 using Project.Web.Shared;
 
 //[assembly: GenerateApiInvoker]
@@ -13,8 +11,8 @@ builder.Services.ConfigureHttpClientDefaults(c =>
     c.ConfigureHttpClient(h => { h.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
 });
 //builder.Configuration
-//builder.Services.AddAntDesignUI();
-builder.Services.AddFluentUI();
+Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
+//Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 builder.Services.AddProject(builder.Configuration, setting =>
 {
     setting.App.Name = "Demo";

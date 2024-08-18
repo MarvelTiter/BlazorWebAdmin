@@ -1268,6 +1268,15 @@ var _SvgIcon = class _SvgIcon extends BaseComponent {
       return icon;
     });
   }
+  static getIconPath(name) {
+    return __async(this, null, function* () {
+      const icon = yield _SvgIcon.getIcon(name);
+      const div = document.createElement("div");
+      div.innerHTML = icon;
+      const svgEl = div.querySelector("svg");
+      return svgEl == null ? void 0 : svgEl.innerHTML;
+    });
+  }
   load() {
     return __async(this, null, function* () {
       const icon = yield _SvgIcon.getIcon(this.iconName);

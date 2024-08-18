@@ -7,6 +7,7 @@ namespace Project.Constraints.UI.Props
         public string? Label { get; set; }
         public bool EnableValueExpression { get; set; } = true;
         public string BindValueName { get; set; } = "Value";
+        public bool StringValue { get; set; } = false;
     }
 
     public class DatePickerProp: DefaultProp

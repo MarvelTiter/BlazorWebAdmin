@@ -194,7 +194,7 @@ public class UIService(
         { Receiver = receiver };
     }
 
-    public IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver) where TValue : struct
+    public IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver) where TValue : new()
     {
         return new BindableComponentBuilder<FluentNumberField<TValue>, DefaultProp, TValue>() { Receiver = receiver };
     }
@@ -223,6 +223,7 @@ public class UIService(
             var builder = new BindableComponentBuilder<FluentEnumSelect<TValue>, SelectProp, TValue>()
             { Receiver = receiver };
             builder.Model.BindValueName = "EnumValue";
+            builder.Model.StringValue = true;
             return builder;
         }
         else
@@ -235,7 +236,7 @@ public class UIService(
         IEnumerable<TItem> options)
     {
 #pragma warning disable CS8714
-        var builder = new SelectComponentBuilder<FluentTypedSelect<TItem, TValue>, SelectProp, TItem, TValue>
+        var builder = new SelectComponentBuilder<FluentTypedSelect<TItem, string>, SelectProp, TItem, TValue>
 #pragma warning disable CS8714
         (builder =>
         {
@@ -251,6 +252,7 @@ public class UIService(
         })
         { Receiver = receiver };
         builder.Model.BindValueName = "SelectedValue";
+        builder.Model.StringValue = true;
         return builder;
     }
 
@@ -285,7 +287,9 @@ public class UIService(
     public RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options)
         where TQuery : IRequest, new()
     {
-        return b => b.AddContent(1, "NotImplemented");
+        return builder => builder.Component<FluentTable<TModel, TQuery>>()
+                    .SetComponent(c => c.Options, options)
+                    .Build();
     }
 
     public RenderFragment BuildDynamicTable<TData, TRowData, TQuery>(TableOptions<TRowData, TQuery> options,
@@ -348,7 +352,7 @@ public class UIService(
 
     public IUIComponent<ModalProp> BuildModal()
     {
-        throw new NotImplementedException();
+        return new PropComponentBuilder<FluentDialog, ModalProp>().SetComponent(d => d.Hidden, true);
     }
 
     public IUIComponent<GridProp> BuildRow()
@@ -382,5 +386,10 @@ public class UIService(
             b.Component<FluentTooltipProvider>().Build();
             b.Component<FluentMessageBarProvider>().Build();
         };
+    }
+
+    public int GetMenuWidth(bool collapsed)
+    {
+        return collapsed ? 42 : 240;
     }
 }

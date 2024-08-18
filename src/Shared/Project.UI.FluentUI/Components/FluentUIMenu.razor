@@ -1,7 +1,7 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 @using Microsoft.FluentUI.AspNetCore.Components
 @using Project.Constraints.Store
-<FluentNavMenu Collapsible="@false" CollapsedChildNavigation="@true" Style="flex: 1;">
+<FluentNavMenu Collapsible="@true" Expanded="@(!Collapsed)" CollapsedChildNavigation="@true" Style="flex: 1;">
     @foreach (var item in Router.Menus.Where(m => m.Group == "ROOT"))
     {
         <FluentUIMenuItem Route=item></FluentUIMenuItem>

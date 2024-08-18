@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project.Constraints.Utils
 {
-    public class BooleanStatusManager : IDisposable
+    public class BooleanStatusManager : IDisposable, IAsyncDisposable
     {
         private bool disposedValue;
         private readonly Action<bool> setter;
@@ -39,6 +39,16 @@ namespace Project.Constraints.Utils
         public void Dispose()
         {
             Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            setter.Invoke(!init);
+            if (callback != null)
+            {
+                await callback.Invoke();
+            }
             GC.SuppressFinalize(this);
         }
     }

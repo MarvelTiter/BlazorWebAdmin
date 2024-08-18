@@ -96,7 +96,7 @@ public interface IUIService
     /// <![CDATA[UI.BuildInput<TValue>(this).Bind(() => ValueExpression).Render()]]>
     /// </code>
     /// </summary>
-    IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver) where TValue: struct;
+    IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver) where TValue: new();
 
     IBindableInputComponent<DatePickerProp, DateTime?> BuildDatePicker(object receiver);
 
@@ -154,4 +154,6 @@ public interface IUIService
     IUIComponent<CardProp> BuildCard();
 
     RenderFragment RenderContainer();
+
+    int GetMenuWidth(bool collapsed);
 }

@@ -1,12 +1,8 @@
-<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: rgb(241, 242, 243); display: block; shape-rendering: auto;" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-<circle cx="28" cy="75" r="11" fill="#93dbe9">
-  <animate attributeName="fill-opacity" repeatCount="indefinite" dur="1s" values="0;1;1" keyTimes="0;0.2;1" begin="0s"></animate>
-</circle>
-<path d="M28 47A28 28 0 0 1 56 75" fill="none" stroke="#689cc5" stroke-width="10">
-  <animate attributeName="stroke-opacity" repeatCount="indefinite" dur="1s" values="0;1;1" keyTimes="0;0.2;1" begin="0.1s"></animate>
-</path>
-<path d="M28 25A50 50 0 0 1 78 75" fill="none" stroke="#5e6fa3" stroke-width="10">
-  <animate attributeName="stroke-opacity" repeatCount="indefinite" dur="1s" values="0;1;1" keyTimes="0;0.2;1" begin="0.2s"></animate>
-</path>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+<g id="surface1">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(57.647059%,85.882353%,91.372549%);fill-opacity:1;" d="M 9.359375 18 C 9.359375 19.457031 8.179688 20.640625 6.71875 20.640625 C 5.261719 20.640625 4.078125 19.457031 4.078125 18 C 4.078125 16.542969 5.261719 15.359375 6.71875 15.359375 C 8.179688 15.359375 9.359375 16.542969 9.359375 18 Z M 9.359375 18 "/>
+<path style="fill:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(40.784314%,61.176471%,77.254902%);stroke-opacity:1;stroke-miterlimit:4;" d="M 27.994792 47.005208 C 43.457031 47.005208 56.005859 59.53776 56.005859 75 " transform="matrix(0.24,0,0,0.24,0,0)"/>
+<path style="fill:none;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke:rgb(36.862745%,43.529412%,63.921569%);stroke-opacity:1;stroke-miterlimit:4;" d="M 27.994792 25 C 55.615234 25 77.994792 47.379557 77.994792 75 " transform="matrix(0.24,0,0,0.24,0,0)"/>
+</g>
 </svg>

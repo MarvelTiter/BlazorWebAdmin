@@ -18,8 +18,8 @@ namespace Project.UI.FluentUI.Components
         {
             if (!fluentIcons.TryGetValue(name, out var icon))
             {
-                var svg = await js.InvokeAsync<JsActionResult<SvgInfo>>($"{JsComponentBase.JS_FUNC_PREFIX}SvgIcon.getIcon", name);
-                icon = new Icon(name, variant, size, svg.Payload?.Content ?? string.Empty);
+                var svgPath = await js.InvokeAsync<string>($"{JsComponentBase.JS_FUNC_PREFIX}SvgIcon.getIcon", name);
+                icon = new Icon(name, variant, size, svgPath ?? string.Empty);
                 fluentIcons[name] = icon;
             }
             return icon;

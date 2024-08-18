@@ -12,7 +12,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Shared\Project.UI.FluentUI\Project.UI.FluentUI.csproj" />
+	  <ProjectReference Include="..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
 	  <ProjectReference Include="..\Shared\Project.Web.Shared\Project.Web.Shared.csproj" />
 	</ItemGroup>
 

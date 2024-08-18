@@ -17,7 +17,7 @@
         return base.OnInitializedAsync();
     }
 
-    private string Width => App.Collapsed ? 80.ToPixel() : App.SideBarExpandWidth.ToPixel();
+    private string Width => UI.GetMenuWidth(App.Collapsed).ToPixel();//  App.Collapsed ? 80.ToPixel() : App.SideBarExpandWidth.ToPixel();
 
     public void ToggleCollapse()
     {
