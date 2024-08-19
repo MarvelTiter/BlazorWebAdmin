@@ -24,13 +24,14 @@ namespace Project.Constraints.Services
 
 #if (ExcludeDefaultService)
 #else
-    [WebController(Route = "user", Authorize = true)]
-    [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
-    [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
-    public interface IUserService
-    {
-        Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd);
-    }
+    // [WebController(Route = "user", Authorize = true)]
+    // [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
+    // [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
+    // public interface IUserService
+    // {
+    //     Task<QueryResult> CheckUserPasswordAsync(string oldPassword);
+    //     Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd);
+    // }
 
     [WebController(Route = "user", Authorize = true)]
     [ApiInvokerGenerate(typeof(AutoInjectAttribute))]

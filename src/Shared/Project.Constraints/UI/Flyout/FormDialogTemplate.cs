@@ -10,14 +10,12 @@ namespace Project.Constraints.UI.Flyout
     {
         [Parameter, NotNull] public IEnumerable<ColumnInfo>? Columns { get; set; }
         FormOptions<TValue>? options;
-        public override Task<bool> OnPostAsync()
+        public override async Task<bool> OnPostAsync()
         {
-            if (options != null && options.Validate != null)
-            {
-                var flag = Options.PostCheck?.Invoke(Value, options.Validate) ?? options.Validate.Invoke();
-                return Task.FromResult(flag);
-            }
-            return base.OnPostAsync();
+            if (options?.Validate == null) return await base.OnPostAsync();
+            if (Options.PostCheck == null) return options.Validate.Invoke();
+            var checke = await Options.PostCheck(Value,options.Validate);
+            return checke;
         }
 
         protected override void OnInitialized()

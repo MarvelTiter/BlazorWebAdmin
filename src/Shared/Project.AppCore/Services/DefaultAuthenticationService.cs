@@ -18,12 +18,13 @@ namespace Project.AppCore.Services
     {
         //private readonly IExpressionContext context;
         //private readonly IHttpContextAccessor httpContextAccessor;
-        protected  IServiceProvider Services { get; }
+        protected IServiceProvider Services { get; }
 
         public DefaultAuthenticationService(IServiceProvider services)
         {
             Services = services;
         }
+
         public virtual async Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm)
         {
             var context = Services.GetService<IExpressionContext>();
@@ -35,7 +36,6 @@ namespace Project.AppCore.Services
             {
                 UserId = username,
                 UserName = u?.UserName ?? "",
-                Password = password
             };
             var result = userInfo.Result(u != null);
             if (!result.Success)
@@ -43,12 +43,14 @@ namespace Project.AppCore.Services
                 result.Message = $"用户：{username} 不存在";
                 return result;
             }
+
             if (u!.Password != password)
             {
                 result.Message = "密码错误";
                 result.Success = false;
                 return result;
             }
+
             var roles = await context.Repository<UserRole>().GetListAsync(ur => ur.UserId == username);
             userInfo.Roles = roles.Select(ur => ur.RoleId).ToArray();
             return result;
@@ -63,10 +65,31 @@ namespace Project.AppCore.Services
             {
                 return;
             }
+
             // var ctx = httpContextAccessor.HttpContext.User;
             await ctx.SignOutAsync();
             var redirect = ctx.Request.Query["Redirect"];
             ctx.Response.Redirect($"/account/login?Redirect={redirect}");
+        }
+
+        public async Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd)
+        {
+            var context = Services.GetService<IExpressionContext>();
+            ArgumentNullException.ThrowIfNull(context);
+            var old = await context.Select<User>(u => u.Password)
+                .Where(u => u.UserId == pwd.UserId)
+                .FirstAsync();
+            return old?.Password == pwd.OldPassword;
+        }
+
+        public async Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd)
+        {
+            var context = Services.GetService<IExpressionContext>();
+            ArgumentNullException.ThrowIfNull(context);
+            var r = await context.Update<User>().Set(u => u.Password, pwd.Password)
+                .Where(u => u.UserId == pwd.UserId)
+                .ExecuteAsync();
+            return r > 0;
         }
     }
 }

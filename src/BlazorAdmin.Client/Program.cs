@@ -25,7 +25,7 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IAuthService, AuthServiceApiInvoker>();
 #if (ExcludeDefaultService)
 #else
-builder.Services.AddScoped<IUserService, UserServiceApiInvoker>();
+// builder.Services.AddScoped<IUserService, UserServiceApiInvoker>();
 builder.Services.AddScoped<IPermissionService, PermissionServiceApiInvoker>();
 builder.Services.AddScoped<IStandardPermissionService, StandardPermissionServiceApiInvoker>();
 builder.Services.AddScoped<IStandardRunLogService, StandardRunLogServiceApiInvoker>();

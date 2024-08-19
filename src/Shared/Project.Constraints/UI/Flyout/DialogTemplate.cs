@@ -52,10 +52,11 @@ namespace Project.Constraints.UI.Flyout
             }
         }
 
-        public virtual Task<bool> OnPostAsync()
+        public virtual async Task<bool> OnPostAsync()
         {
-            var flag = Options.PostCheck?.Invoke(ReturnValue, static () => true) ?? true;
-            return Task.FromResult(flag);
+            if (Options.PostCheck == null) return true;
+            var flag = await Options.PostCheck.Invoke(ReturnValue, static () => true) ;
+            return flag;
         }
 
         protected Task CloseAsync()

@@ -3,7 +3,6 @@
 @using Project.Constraints.UI.Dropdown
 @using Project.Web.Shared.Utils;
 @inject IAuthService AuthService
-@inject IUserService UserSrv
 @inject IStringLocalizer<Profile> Localizer
 @inherits BasicComponent
 
@@ -22,8 +21,10 @@
         </NavMenuItem>
     </NotAuthorized>
 </AuthorizeView>
+
 @code {
     EventCallback PasswordModifyHandler;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -64,8 +65,36 @@
     {
         if (User.UserInfo == null)
             return;
-        var pwd = await UI.ShowDialogAsync<ModifyUserPassword, UserPwd>(Localizer["UserPwd.Title"]);
-        pwd.UserId = User.UserInfo.UserId;
-        await UserSrv.ModifyUserPasswordAsync(pwd);
+        var pwd = await UI.ShowDialogAsync<ModifyUserPassword, UserPwd>(config: config =>
+        {
+            config.Title = Localizer["UserPwd.Title"];
+            config.PostCheck = async (userPwd, validate) =>
+            {
+                var v = validate.Invoke();
+                if (!v) return false;
+                if (userPwd?.Password != userPwd?.ConfirmPassword)
+                {
+                    UI.Error(Localizer["UserPwd.PasswordDifference"]);
+                    return false;
+                }
+                userPwd.UserId = User.UserInfo.UserId;
+                var pass = await AuthService.CheckUserPasswordAsync(userPwd);
+                if (!pass.Success)
+                {
+                    UI.Error(Localizer["UserPwd.OldPasswordError"]);
+                }
+                return pass.Success;
+            };
+        });
+        var result = await AuthService.ModifyUserPasswordAsync(pwd);
+        if (result.Success)
+        {
+            await HandleLogout();
+        }
+        else
+        {
+            UI.Error(result.Message);
+        }
     }
+
 }

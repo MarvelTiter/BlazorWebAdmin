@@ -16,15 +16,23 @@ namespace Project.Constraints.Models.Permissions
 
     public class UserPwd
     {
+        [Form(Hide = true)]
+        [NotNull]
         public string? UserId { get; set; }
         [Required]
         [NotNull]
+        [ColumnDefinition]
+        [Form(InputType.Password)]
         public string? OldPassword { get; set; }
         [Required]
         [NotNull]
+        [ColumnDefinition]
+        [Form(InputType.Password)]
         public string? Password { get; set; }
         [Required]
         [NotNull]
+        [ColumnDefinition]
+        [Form(InputType.Password)]
         public string? ConfirmPassword { get; set; }
     }
 

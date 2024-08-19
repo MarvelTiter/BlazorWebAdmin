@@ -1,6 +1,7 @@
 ﻿using AutoInjectGenerator;
 using AutoWasmApiGenerator;
 using MT.Generators.Abstraction;
+using Project.Constraints.Models.Permissions;
 
 namespace Project.Constraints.Services
 {
@@ -13,5 +14,7 @@ namespace Project.Constraints.Services
         Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm);
         [WebMethod(Method = WebMethod.Get, Route = "logout")]
         Task SignOutAsync();
+        Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd);
+        Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd);
     }
 }

@@ -34,10 +34,7 @@ namespace BlazorAdmin.Client.TestPages
                , refInt, false, config =>
                {
                    config.Title = "测试PostCheck";
-                   config.PostCheck = (v, validate) =>
-                   {
-                       return v!.Value > 10;
-                   };
+                   config.PostCheck = (val, validate) => Task.FromResult(val!.Value > 10);
                });
         }
     }

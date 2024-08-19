@@ -28,7 +28,7 @@ public class QueryResult<T> : QueryResult, IQueryResult
 {
     public new T? Payload { get; set; }
     object? IQueryResult.Payload { get => Payload; set => Payload = (T?)value; }
-    public static implicit operator QueryResult<T>(T value) => new QueryResult<T>() { Payload = value, Success = value.ValueEnable()};
+    public static implicit operator QueryResult<T>(T value) => new () { Payload = value, Success = value.ValueEnable()};
 }
 
 public class DataTableResult : IQueryResult
@@ -57,6 +57,10 @@ public class QueryResult : IQueryResult
     public int Code { get; set; }
     public string? Message { get; set; }
     public object? Payload { get; set; }
+    public static implicit operator QueryResult(bool value) => new () { Payload = value, Success = value};
+    public static implicit operator QueryResult(int? value) => new () { Payload = value, Success = value.HasValue };
+    public static implicit operator QueryResult(string? value) => new () { Payload = value,Success = value.ValueEnable() };
+
 }
 
 public static class Result
