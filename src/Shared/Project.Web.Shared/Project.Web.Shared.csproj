@@ -20,7 +20,13 @@
 
 	
 	<ItemGroup>
+	  <None Remove="Layouts\LayoutComponents\NavMenuItem.razor.css" />
 	  <None Remove="Pages\Login.razor.css" />
+	</ItemGroup>
+
+	
+	<ItemGroup>
+	  <Content Include="Layouts\LayoutComponents\NavMenuItem.razor.css" />
 	</ItemGroup>
 
 	<ItemGroup>

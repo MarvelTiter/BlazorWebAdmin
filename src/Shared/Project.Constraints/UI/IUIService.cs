@@ -135,7 +135,7 @@ public interface IUIService
     RenderFragment BuildForm<TData>(FormOptions<TData> options) where TData : class, new();
 
     RenderFragment BuildDropdown(DropdownOptions options);
-    RenderFragment BuildProfile(ProfileInfo info);
+    RenderFragment BuildProfile();
     RenderFragment BuildPopover(PopoverOptions options);
 
     RenderFragment BuildMenu(IRouterStore router, bool horizontal, IAppStore app);

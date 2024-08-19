@@ -16,16 +16,18 @@ namespace Project.AppCore.Services
     //[AutoInject]
     public class DefaultAuthenticationService : IAuthService
     {
-        private readonly IExpressionContext context;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        //private readonly IExpressionContext context;
+        //private readonly IHttpContextAccessor httpContextAccessor;
+        protected  IServiceProvider Services { get; }
 
-        public DefaultAuthenticationService(IExpressionContext context, IHttpContextAccessor httpContextAccessor)
+        public DefaultAuthenticationService(IServiceProvider services)
         {
-            this.context = context;
-            this.httpContextAccessor = httpContextAccessor;
+            Services = services;
         }
         public virtual async Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm)
         {
+            var context = Services.GetService<IExpressionContext>();
+            ArgumentNullException.ThrowIfNull(context);
             var username = loginForm.UserName;
             var password = loginForm.Password;
             var u = await context.Repository<User>().GetSingleAsync(u => u.UserId == username);
@@ -54,15 +56,17 @@ namespace Project.AppCore.Services
 
         public virtual async Task SignOutAsync()
         {
+            var httpContextAccessor = Services.GetService<IHttpContextAccessor>();
+            ArgumentNullException.ThrowIfNull(httpContextAccessor);
             var ctx = httpContextAccessor.HttpContext;
             if (ctx == null)
             {
                 return;
             }
             // var ctx = httpContextAccessor.HttpContext.User;
-            await httpContextAccessor.HttpContext.SignOutAsync();
+            await ctx.SignOutAsync();
             var redirect = ctx.Request.Query["Redirect"];
-            httpContextAccessor.HttpContext.Response.Redirect($"/account/login?Redirect={redirect}");
+            ctx.Response.Redirect($"/account/login?Redirect={redirect}");
         }
     }
 }

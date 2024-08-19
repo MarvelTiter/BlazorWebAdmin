@@ -21,7 +21,8 @@ else
 {
     <DynamicComponent Type="homeType"></DynamicComponent>
 }
-<p>RenderMode: @(IsWasm ? "WebAssembly" : "Server") @UI.BuildButton(this).OnClick(() => IsWasm = OperatingSystem.IsBrowser()).Text("刷新").Render() </p>
+
+@RenderRenderMode()
 
 @code {
 
@@ -50,5 +51,15 @@ else
     }
 
     bool IsWasm;
+
+    RenderFragment RenderRenderMode()
+    {
+#if DEBUG
+    return @<p>RenderMode: @(IsWasm ? "WebAssembly" : "Server") @UI.BuildButton(this).OnClick(() => IsWasm = OperatingSystem.IsBrowser()).Text("刷新").Render() </p>;
+#else
+        return@<span></span>;
+#endif
+    }
+
 
 }

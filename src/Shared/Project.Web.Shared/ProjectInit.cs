@@ -32,7 +32,8 @@ public static class ProjectInit
 
 
         setting = new ProjectSetting();
-
+#if (ExcludeDefaultService)
+#else
         //set default
         setting.ConfigurePage(locator =>
         {
@@ -41,7 +42,7 @@ public static class ProjectInit
             locator.SetPermissionPageType<PermissionSetting<Power, Role, IStandardPermissionService>>();
             locator.SetRolePermissionPageType<RolePermission<Power, Role, IStandardPermissionService>>();
         });
-
+#endif
         action.Invoke(setting);
 
         services.AddSingleton(setting.locator);

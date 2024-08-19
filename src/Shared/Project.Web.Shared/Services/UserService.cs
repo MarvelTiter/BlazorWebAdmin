@@ -1,4 +1,5 @@
 ﻿using AutoInjectGenerator;
+using AutoWasmApiGenerator;
 using LightORM;
 
 namespace Project.Web.Shared.Services
@@ -54,17 +55,16 @@ namespace Project.Web.Shared.Services
         }
     }
 
-    //[WebController]
-    [AutoInject(Group = "SERVER")]
-    public class UserService : IUserService
-    {
-        public UserService()
-        {
 
-        }
-        public Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd)
+#if(ExcludeDefaultService)
+#else
+    [AutoInject(Group = "SERVER")]
+    public class UserService(IExpressionContext context) : IUserService
+    {
+        public async Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd)
         {
-            throw new NotImplementedException();
+            var r = await context.Update<User>().Set(u => u.Password, pwd.Password).ExecuteAsync();
+            return (r > 0).Result();
         }
     }
 
@@ -76,4 +76,5 @@ namespace Project.Web.Shared.Services
         {
         }
     }
+#endif
 }

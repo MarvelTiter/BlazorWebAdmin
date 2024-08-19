@@ -4,15 +4,8 @@
         <Menu>
             @foreach (var item in Options.Actions ?? [])
             {
-                <MenuItem OnClick="@(()=>item.OnClick?.DynamicInvoke())">
-                    @if (item.Content == null)
-                    {
-                        <Button Type="@AntDesign.ButtonType.Text">@item.Label</Button>
-                    }
-                    else
-                    {
-                        @item.Content
-                    }
+                <MenuItem OnClick="@item.OnClick">
+                    <Button Type="@AntDesign.ButtonType.Text">@item.Label</Button>
                 </MenuItem>
             }
         </Menu>

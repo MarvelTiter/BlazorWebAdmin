@@ -308,7 +308,7 @@ public class UIService(
         return b => b.AddContent(1, "NotImplemented");
     }
 
-    public RenderFragment BuildProfile(ProfileInfo info)
+    public RenderFragment BuildProfile()
     {
         return b => b.AddContent(1, "NotImplemented");
     }

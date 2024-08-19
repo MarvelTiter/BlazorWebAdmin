@@ -22,6 +22,8 @@ namespace Project.Constraints.Services
         Task<TUser?> GetUserAsync(string id);
     }
 
+#if (ExcludeDefaultService)
+#else
     [WebController(Route = "user", Authorize = true)]
     [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
     [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
@@ -37,4 +39,5 @@ namespace Project.Constraints.Services
     {
 
     }
+#endif
 }

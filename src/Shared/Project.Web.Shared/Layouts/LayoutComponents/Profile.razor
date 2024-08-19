@@ -8,33 +8,46 @@
 @inherits BasicComponent
 
 @* @UI.BuildDropdown(options) *@
-@UI.BuildProfile(options)
+<AuthorizeView>
+    <Authorized>
+        <NavMenuItem FitContent Title="登录用户">
+            <CascadingValue Name="PasswordModify" Value="PasswordModifyHandler" IsFixed="@true">
+                @UI.BuildProfile()
+            </CascadingValue>
+        </NavMenuItem>
+    </Authorized>
+    <NotAuthorized>
+        <NavMenuItem Title="登录">
+            <SvgIcon IconName="login"></SvgIcon>
+        </NavMenuItem>
+    </NotAuthorized>
+</AuthorizeView>
 @code {
-    private string DisplayName => User.UserDisplayName;
-    ProfileInfo options = new();
+    EventCallback PasswordModifyHandler;
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        options.Content =@<div class="wrapper">
-        <img class="avatar" src="/_content/Project.Web.Shared/assets/avator.png" />
-        <span class="name">@DisplayName</span>
-    </div>
-    ;
+        PasswordModifyHandler = EventCallback.Factory.Create(this, HandlePwdModify);
+        //     options.Content =@<div class="wrapper">
+        //     <img class="avatar" src="/_content/Project.Web.Shared/assets/avator.png" />
+        //     <span class="name">@DisplayName</span>
+        // </div>
+        ;
 
-    options.UserName = DisplayName;
+        // options.UserName = DisplayName;
 
-        options.Actions = new List<ActionInfo>();
-        options.Actions.Add(new ActionInfo
-                {
-                    OnClick = HandlePwdModify,
-                    Content = @<div class="menu-item green-tag">@Localizer["NavMenu.UserAction.ModifyPassword"]</div>,
-            });
+        // options.Actions = new List<ActionInfo>();
+        // options.Actions.Add(new ActionInfo
+        //     {
+        //         OnClick = EventCallback.Factory.Create(this, HandlePwdModify),
+        //         Label = Localizer["NavMenu.UserAction.ModifyPassword"]
+        //     });
 
-        options.Actions.Add(new ActionInfo
-                {
-                    OnClick = HandleLogout,
-                    Content = @<div class="menu-item red-tag">@Localizer["NavMenu.UserAction.Logout"]</div>,
-        });
+        // options.Actions.Add(new ActionInfo
+        //     {
+        //         OnClick = EventCallback.Factory.Create(this, HandleLogout),
+        //         Label = Localizer["NavMenu.UserAction.Logout"]
+        //     });
     }
 
     public async Task HandleLogout()

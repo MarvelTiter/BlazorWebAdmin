@@ -15,11 +15,18 @@
     {
         base.OnInitialized();
         options.Content =@<SvgIcon IconName="language"
-             ClassName="nav-menu-icon" />
+         ClassName="nav-menu-icon" />
     ;
-        options.Actions = Options.SupportedCulture.Select(l => new ActionInfo() { Label = l.Name, OnClick = () => ToggleLang(l.Culture) }).ToList();
+        options.Actions = Options.SupportedCulture.Select(l => new ActionInfo()
+            {
+                Label = l.Name,
+                OnClick = EventCallback.Factory.Create(this, () =>
+            {
+                ToggleLang(l.Culture);
+            })
+            }).ToList();
     }
-
+        
     void ToggleLang(string lang)
     {
         if (lang != CultureInfo.DefaultThreadCurrentUICulture?.Name)

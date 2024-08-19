@@ -35,7 +35,7 @@
     private async Task DoLogin()
     {
         using var _ = BooleanStatusManager.New(b => loading = b);
-        await Task.Yield();
+        // await Task.Yield();
         if (HandleLogin != null)
         {
             await HandleLogin.Invoke(LoginModel);

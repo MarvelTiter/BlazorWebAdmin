@@ -22,11 +22,13 @@ builder.Services.AddProject(builder.Configuration, setting =>
 }, out _);
 builder.Services.AutoInjectWasm();
 builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<IUserService, UserServiceApiInvoker>();
 builder.Services.AddScoped<IAuthService, AuthServiceApiInvoker>();
+#if (ExcludeDefaultService)
+#else
+builder.Services.AddScoped<IUserService, UserServiceApiInvoker>();
 builder.Services.AddScoped<IPermissionService, PermissionServiceApiInvoker>();
 builder.Services.AddScoped<IStandardPermissionService, StandardPermissionServiceApiInvoker>();
 builder.Services.AddScoped<IStandardRunLogService, StandardRunLogServiceApiInvoker>();
 builder.Services.AddScoped<IStandardUserService, StandardUserServiceApiInvoker>();
-
+#endif
 await builder.Build().RunAsync();

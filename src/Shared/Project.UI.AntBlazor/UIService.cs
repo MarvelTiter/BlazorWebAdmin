@@ -258,9 +258,9 @@ namespace Project.UI.AntBlazor
                 .Build();
         }
 
-        public RenderFragment BuildProfile(ProfileInfo info)
+        public RenderFragment BuildProfile()
         {
-            return builder => builder.Component<AntProfile>().SetComponent(c => c.Options, info).Build();
+            return builder => builder.Component<AntProfile>().Build();
         }
 
         public RenderFragment BuildMenu(IRouterStore router, bool horizontal, IAppStore app)
@@ -352,8 +352,9 @@ namespace Project.UI.AntBlazor
         {
             return new PropComponentBuilder<Card, CardProp>(card =>
             {
-                var title = card.Model.TitleTemplate ?? (card.Model.Title ?? "").AsContent();
-                card.SetComponent(c => c.TitleTemplate, title);
+                var title = card.Model.TitleTemplate ?? (string.IsNullOrEmpty(card.Model.Title) ? null : card.Model.Title.AsContent());
+                if (title != null)
+                    card.SetComponent(c => c.TitleTemplate, title);
                 card.SetComponent(c => c.ChildContent, card.Model.ChildContent);
             });
         }
