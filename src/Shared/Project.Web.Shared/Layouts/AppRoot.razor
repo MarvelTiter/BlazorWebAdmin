@@ -1,11 +1,4 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Components.Routing
-@using Microsoft.AspNetCore.Components.Web
-@using Project.Constraints
-@using Project.AppCore;
-@using System.Reflection;
-@using Project.Web.Shared.Components;
-@* 使用services.AddCascadingAuthenticationState();代替 *@
+﻿@* 使用services.AddCascadingAuthenticationState();代替 *@
 @* <CascadingAuthenticationState> *@
 <CascadingValue Value="Context">
     <ErrorCatcher>
@@ -13,7 +6,7 @@
             <Router AppAssembly="AppAssembly" AdditionalAssemblies="AppConst.Pages">
                 <Found Context="routeData">
                     <CascadingValue Value="@routeData">
-                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
                     </CascadingValue>
                 </Found>
             </Router>
@@ -21,7 +14,8 @@
     </ErrorCatcher>
     <WaterMark ProvideService></WaterMark>
     <WebAdminReconnector></WebAdminReconnector>
-    <Downloader />
+    <Downloader/>
+    <ClientHub/>
     @Context.UI.RenderContainer()
 </CascadingValue>
 @* </CascadingAuthenticationState> *@

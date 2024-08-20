@@ -1,9 +1,10 @@
 using BlazorAdmin;
-using Microsoft.AspNetCore.Authorization;
 using Project.AppCore;
 using Project.AppCore.Services;
 using Project.Constraints;
+using Project.UI.AntBlazor;
 using Project.Web.Shared;
+using _Imports = BlazorAdmin.Client._Imports;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -14,7 +15,7 @@ builder.Services.AddRazorComponents()
 //{
 //    option.MaximumReceiveMessageSize = 1024 * 1024 * 2;
 //});
-Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
+Extensions.AddAntDesignUI(builder.Services);
 //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 //builder.Services.AddAntDesignUI();
 //builder.Services.AddFluentUI();
@@ -27,20 +28,21 @@ builder.AddProjectService(setting =>
     setting.ConfigureAuthService<DefaultAuthenticationService>();
 });
 builder.Services.AutoInject();
-;
+
 builder.AddDefaultLightOrm();
 
 builder.Services.AddControllers();
 
-AppConst.AddAssembly(typeof(BlazorAdmin.Client._Imports));
+AppConst.AddAssembly(typeof(_Imports));
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    app.UseExceptionHandler("/Error", true);
     app.UseWebAssemblyDebugging();
 }
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

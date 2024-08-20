@@ -1,6 +1,5 @@
 ﻿@page "/"
 @inherits BasicComponent
-@inject IPageLocatorService Locator
 @attribute [PageInfo(Icon = "home", Id = "Dashboard", Pin = true, Sort = 0, Title = "主页")]
 
 <JsTimer Interval="1000" Callback="Update"></JsTimer>
@@ -22,44 +21,4 @@ else
     <DynamicComponent Type="homeType"></DynamicComponent>
 }
 
-@RenderRenderMode()
-
-@code {
-
-    Task Update()
-    {
-        // if (User?.UserInfo != null)
-        // {
-        //     User.UserInfo.ActiveTime = DateTime.Now;
-        // }
-
-        return InvokeAsync(StateHasChanged);
-    }
-
-    Type? homeType;
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        homeType = Locator.GetDashboardType();
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-        IsWasm = OperatingSystem.IsBrowser();
-    }
-
-    bool IsWasm;
-
-    RenderFragment RenderRenderMode()
-    {
-#if DEBUG
-    return @<p>RenderMode: @(IsWasm ? "WebAssembly" : "Server") @UI.BuildButton(this).OnClick(() => IsWasm = OperatingSystem.IsBrowser()).Text("刷新").Render() </p>;
-#else
-        return@<span></span>;
-#endif
-    }
-
-
-}
+@CurrentRenderMode()

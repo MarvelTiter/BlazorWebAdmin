@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
 using Project.Web.Shared.Store;
-using Project.Web.Shared.Utils;
 
 namespace Project.Web.Shared.Layouts;
 
@@ -62,9 +61,9 @@ public partial class AppRoot : IAsyncDisposable
         if (firstRender)
         {
             //Context.Navigator.NavigateTo("/test4");
-            var c = await Js.InvokeUtilsAsync<string[]>("getClient");
-            Context.UserStore.Ip = c[0];
-            Context.UserStore.UserAgent = c[1];
+            // var c = await Js.InvokeUtilsAsync<string[]>("getClient");
+            // Context.UserStore.Ip = c[0];
+            // Context.UserStore.UserAgent = c[1];
             await Context.NotifyWebApplicationAccessedAsync();
             var app = await LocalStorage.GetAsync<AppStore>(ConstraintString.APP_STORE_KEY);
             if (app.Success) Context.AppStore.ApplySetting(app.Value);

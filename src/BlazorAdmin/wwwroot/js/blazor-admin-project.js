@@ -1302,6 +1302,73 @@ var _SvgIcon = class _SvgIcon extends BaseComponent {
 _SvgIcon.caches = /* @__PURE__ */ new Map();
 var SvgIcon = _SvgIcon;
 
+// Shared/Project.Web.Shared/Components/ClientHub/ClientHub.ts
+var ClientHub = class _ClientHub extends BaseComponent {
+  constructor(id, options) {
+    super();
+    this.mainKey = "admin_project_ClientHub_main";
+    this.allClients = [];
+    this.channel = new BroadcastChannel("admin_project_ClientHub");
+    this.id = id;
+    const { interval, dotnetRef } = options;
+    this.interval = interval;
+    this.dotnetRef = dotnetRef;
+    this.init();
+  }
+  static init(id, options) {
+    return __async(this, null, function* () {
+      getComponentById(id, () => new _ClientHub(id, options));
+      const response = yield fetch("/ip.client");
+      const ip = yield response.text();
+      return [ip, navigator.userAgent];
+    });
+  }
+  init() {
+    const main = localStorage.getItem(this.mainKey);
+    if (!main) {
+      localStorage.setItem(this.mainKey, this.id);
+    }
+    const _ = this.send();
+    EventHandler.listen(this.channel, "message", this.receive.bind(this));
+    this.timer = window.setInterval(() => __async(this, null, function* () {
+      yield this.send();
+    }), this.interval);
+  }
+  send() {
+    return __async(this, null, function* () {
+      this.channel.postMessage({ id: this.id, action: "ping" });
+      let mainId = localStorage.getItem(this.mainKey);
+      if (!mainId || this.allClients.length === 0) {
+        localStorage.setItem(this.mainKey, this.id);
+        mainId = this.id;
+      }
+      if (mainId == this.id) {
+        yield this.dotnetRef.invokeMethodAsync("Tick");
+      }
+    });
+  }
+  receive(data) {
+    const { id, action } = data;
+    if (action === "ping" && this.allClients.find((v) => v === id) === void 0) {
+      this.allClients.push(id);
+    } else if (action === "dispose") {
+      const index = this.allClients.indexOf(id);
+      if (index > -1) {
+        this.allClients = this.allClients.splice(index, 1);
+      }
+      if (localStorage.getItem(this.mainKey) === id) {
+        localStorage.removeItem(this.mainKey);
+      }
+    }
+  }
+  dispose() {
+    window.clearInterval(this.timer);
+    EventHandler.remove(this.channel, "message");
+    this.channel.postMessage({ id: this.id, action: "dispose" });
+    this.channel.close();
+  }
+};
+
 // main.ts
 window.Utils = utilsAggregation_default;
 window.BlazorProject = {
@@ -1317,6 +1384,7 @@ window.BlazorProject = {
   WaterMark,
   NavTabs,
   Downloader,
-  SvgIcon
+  SvgIcon,
+  ClientHub
 };
 //# sourceMappingURL=blazor-admin-project.js.map

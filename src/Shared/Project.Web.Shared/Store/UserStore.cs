@@ -1,28 +1,26 @@
-﻿using AutoInjectGenerator;
-using Project.Constraints.Models;
-using Project.Constraints.Store;
-
-namespace Project.Web.Shared.Store;
+﻿namespace Project.Web.Shared.Store;
 
 [AutoInject]
-public partial class UserStore : StoreBase, IUserStore
+public class UserStore : StoreBase, IUserStore
 {
     public UserInfo? UserInfo { get; private set; }
     public IEnumerable<string> Roles => UserInfo?.Roles ?? [];
     public string? UserId => UserInfo?.UserId;
     public string UserDisplayName => GetUserName();
-    public string? UserAgent { get; set; }
-    public string? Ip { get; set; }
-    private string GetUserName()
-    {
-        return UserInfo?.UserName ?? "Unknow";
-    }
 
-    public void SetUser(UserInfo? userInfo) => UserInfo = userInfo;
+    public void SetUser(UserInfo? userInfo)
+    {
+        UserInfo = userInfo;
+    }
 
     public void ClearUser()
     {
         UserInfo = null;
+    }
+
+    private string GetUserName()
+    {
+        return UserInfo?.UserName ?? "Unknow";
     }
     // public event Func<UserInfo, Task>? LoginSuccessEvent;
 

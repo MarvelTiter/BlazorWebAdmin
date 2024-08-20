@@ -21,8 +21,11 @@ export class ClientHub extends BaseComponent {
         this.init()
     }
 
-    static init(id: string, options: any) {
+    static async init(id: string, options: any) {
         getComponentById(id, () => new ClientHub(id, options))
+        const response = await fetch('/ip.client')
+        const ip = await response.text()
+        return [ip, navigator.userAgent]
     }
 
     init() {
