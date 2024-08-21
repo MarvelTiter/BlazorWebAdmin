@@ -26,6 +26,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
             {
                 b.Component<DefaultTableHeader<TModel, TQuery>>()
                     .SetComponent(c => c.Options, Options)
+                    .SetComponent(c => c.DownloadImportTemplate, EventCallback.Factory.Create(this, DownloadImportTemplate))
                     .Build();
             });
         builder.AddContent(1, UI.BuildTable(Options));
@@ -55,7 +56,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         // 被重写了
         Options.ShowExportButton = IsOverride(nameof(OnExportAsync));
         Options.ShowAddButton = IsOverride(nameof(OnAddItemAsync));
-        Options.ShowImportButton = IsOverride(nameof(OnImportAsync));
+        Options.ShowImportButton = IsOverride(nameof(HandleImportedDataAsync));
         //DomEvent.OnKeyDown += DomEvent_OnKeyDown;
     }
 
@@ -156,17 +157,29 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         {
             var result = await HandleImportedDataAsync(item);
             total++;
-            if (result.Success)
+            if (!result.Success)
             {
                 failed++;
             }
         }
-        UI.AlertInfo("导入完成", $"总数：{total}{Environment.NewLine}导入失败：{failed}");
+        UI.AlertInfo("导入完成", $"总数：{total} 导入失败：{failed}");
     }
 
     protected virtual Task<QueryResult> HandleImportedDataAsync(TModel data)
     {
         throw new NotImplementedException();
+    }
+
+    private async Task DownloadImportTemplate()
+    {
+        var service = DownloadServiceProvider.GetService();
+        if (service == null) return;
+        List<TModel> datas = [];
+        using var ms = new MemoryStream();
+        Excel.WriteExcel(ms, datas);
+        // ms 在writeexcle后已经关闭了
+        using var newms = new MemoryStream(ms.ToArray());
+        await service.DownloadStreamAsync("导入模板.xlsx", newms);
     }
 
     /// <summary>

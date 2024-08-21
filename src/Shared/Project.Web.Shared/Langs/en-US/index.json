@@ -97,6 +97,7 @@
       "AddCondition": "More",
       "Export": "Export",
       "Import": "Import",
+      "ImportTemplate": "Import Template",
       "Add": "New",
       "Edit": "Edit",
       "Delete": "Delete"

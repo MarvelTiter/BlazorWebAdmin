@@ -54,9 +54,10 @@ namespace Project.Web.Shared.Pages
             return true;
         }
 
-        protected override Task OnDataImportsAsync()
+        protected override async Task<QueryResult> HandleImportedDataAsync(TUser data)
         {
-            return base.OnDataImportsAsync();
+            await Task.CompletedTask;
+            return true;
         }
 
         [EditButton]
