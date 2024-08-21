@@ -117,6 +117,7 @@ public interface IUIService
     /// 生成按钮
     /// </summary>
     IButtonInput BuildButton(object receiver);
+    RenderFragment BuildFakeButton(ButtonProp props);
 
     IBindableInputComponent<SwitchProp, bool> BuildSwitch(object receiver);
 

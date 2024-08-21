@@ -54,6 +54,11 @@ namespace Project.Web.Shared.Pages
             return true;
         }
 
+        protected override Task OnDataImportsAsync()
+        {
+            return base.OnDataImportsAsync();
+        }
+
         [EditButton]
         public async Task<bool> EditUser(TUser user)
         {

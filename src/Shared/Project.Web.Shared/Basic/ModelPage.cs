@@ -11,9 +11,9 @@ namespace Project.Web.Shared.Basic;
 public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     where TQuery : IRequest, new()
 {
-    [Inject] [NotNull] protected IExcelHelper? Excel { get; set; }
-    [Inject] [NotNull] private IDownloadServiceProvider? DownloadServiceProvider { get; set; }
-    [Inject] [NotNull] private ILogger<ModelPage<TModel, TQuery>>? Logger { get; set; }
+    [Inject][NotNull] protected IExcelHelper? Excel { get; set; }
+    [Inject][NotNull] private IDownloadServiceProvider? DownloadServiceProvider { get; set; }
+    [Inject][NotNull] private ILogger<ModelPage<TModel, TQuery>>? Logger { get; set; }
     [CascadingParameter] private IDomEventHandler? DomEvent { get; set; }
     [CascadingParameter] private TagRoute? RouteInfo { get; set; }
     public TableOptions<TModel, TQuery> Options { get; set; } = new();
@@ -49,12 +49,13 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         Options.OnRowClickAsync = OnRowClickAsync;
         Options.AddRowOptions = OnAddRowOptions;
         Options.OnExportAsync = OnExportAsync;
+        Options.OnImportAsync = OnImportAsync;
         Options.OnSaveExcelAsync = OnSaveExcelAsync;
         Options.OnSelectedChangedAsync = OnSelectedChangedAsync;
         // 被重写了
         Options.ShowExportButton = IsOverride(nameof(OnExportAsync));
         Options.ShowAddButton = IsOverride(nameof(OnAddItemAsync));
-
+        Options.ShowImportButton = IsOverride(nameof(OnImportAsync));
         //DomEvent.OnKeyDown += DomEvent_OnKeyDown;
     }
 
@@ -143,14 +144,33 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     /// </summary>
     /// <param name="enumerable"></param>
     /// <returns></returns>
-    protected virtual Task OnSelectedChangedAsync(IEnumerable<TModel> enumerable)
-    {
+    protected virtual Task OnSelectedChangedAsync(IEnumerable<TModel> enumerable) =>
         // TODO table的行选择处理
-        return Task.CompletedTask;
+        Task.CompletedTask;
+
+    protected virtual async Task OnImportAsync(Stream stream)
+    {
+        var datas = Excel.QueryExcel<TModel>(stream, "Sheet1");
+        int total = 0, failed = 0;
+        foreach (var item in datas)
+        {
+            var result = await HandleImportedDataAsync(item);
+            total++;
+            if (result.Success)
+            {
+                failed++;
+            }
+        }
+        UI.AlertInfo("导入完成", $"总数：{total}{Environment.NewLine}导入失败：{failed}");
+    }
+
+    protected virtual Task<QueryResult> HandleImportedDataAsync(TModel data)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>
-    ///     查询数据
+    /// 查询数据
     /// </summary>
     /// <param name="query"></param>
     /// <returns></returns>

@@ -5,7 +5,7 @@ namespace Project.AppCore.Middlewares;
 
 public class CircuitTracker : CircuitHandler
 {
-    private readonly ClientInfo circuitInfo = new("");
+    private readonly ClientInfo circuitInfo = new();
 
     public CircuitTracker(IUserStore store)
     {

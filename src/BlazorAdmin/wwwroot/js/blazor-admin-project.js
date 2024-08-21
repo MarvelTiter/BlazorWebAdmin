@@ -1307,54 +1307,58 @@ var ClientHub = class _ClientHub extends BaseComponent {
   constructor(id, options) {
     super();
     this.mainKey = "admin_project_ClientHub_main";
-    this.allClients = [];
+    this.otherClients = [];
     this.channel = new BroadcastChannel("admin_project_ClientHub");
     this.id = id;
+    this.uuid = getUUID();
     const { interval, dotnetRef } = options;
     this.interval = interval;
     this.dotnetRef = dotnetRef;
-    this.init();
   }
   static init(id, options) {
     return __async(this, null, function* () {
-      getComponentById(id, () => new _ClientHub(id, options));
+      var hub = getComponentById(id, () => new _ClientHub(id, options));
       const response = yield fetch("/ip.client");
       const ip = yield response.text();
-      return [ip, navigator.userAgent];
+      hub.ip = ip;
+      yield hub.init();
     });
   }
   init() {
-    const main = localStorage.getItem(this.mainKey);
-    if (!main) {
-      localStorage.setItem(this.mainKey, this.id);
-    }
-    const _ = this.send();
-    EventHandler.listen(this.channel, "message", this.receive.bind(this));
-    this.timer = window.setInterval(() => __async(this, null, function* () {
+    return __async(this, null, function* () {
+      const main = localStorage.getItem(this.mainKey);
+      if (!main) {
+        localStorage.setItem(this.mainKey, this.id);
+      }
+      EventHandler.listen(this.channel, "message", (e) => this.receive(e));
+      window.onunload = (e) => this.dispose();
       yield this.send();
-    }), this.interval);
+      this.timer = window.setInterval(() => __async(this, null, function* () {
+        yield this.send();
+      }), this.interval);
+    });
   }
   send() {
     return __async(this, null, function* () {
       this.channel.postMessage({ id: this.id, action: "ping" });
       let mainId = localStorage.getItem(this.mainKey);
-      if (!mainId || this.allClients.length === 0) {
+      if (!mainId || this.otherClients.length === 0) {
         localStorage.setItem(this.mainKey, this.id);
         mainId = this.id;
       }
       if (mainId == this.id) {
-        yield this.dotnetRef.invokeMethodAsync("Tick");
+        yield this.dotnetRef.invokeMethodAsync("Tick", [this.uuid, this.ip, navigator.userAgent]);
       }
     });
   }
-  receive(data) {
-    const { id, action } = data;
-    if (action === "ping" && this.allClients.find((v) => v === id) === void 0) {
-      this.allClients.push(id);
+  receive(e) {
+    const { id, action } = e.data;
+    if (action === "ping" && this.otherClients.find((v) => v === id) === void 0) {
+      this.otherClients.push(id);
     } else if (action === "dispose") {
-      const index = this.allClients.indexOf(id);
+      const index = this.otherClients.indexOf(id);
       if (index > -1) {
-        this.allClients = this.allClients.splice(index, 1);
+        this.otherClients = this.otherClients.splice(index, 1);
       }
       if (localStorage.getItem(this.mainKey) === id) {
         localStorage.removeItem(this.mainKey);
@@ -1368,6 +1372,20 @@ var ClientHub = class _ClientHub extends BaseComponent {
     this.channel.close();
   }
 };
+function getUUID() {
+  let uuid = localStorage.getItem("admin_project_Client_uuid");
+  if (uuid) {
+    return uuid;
+  }
+  let d = (/* @__PURE__ */ new Date()).getTime();
+  uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
+    const r = (d + Math.random() * 16) % 16 | 0;
+    d = Math.floor(d / 16);
+    return (c == "x" ? r : r & 3 | 8).toString(16);
+  });
+  localStorage.setItem("admin_project_Client_uuid", uuid);
+  return uuid;
+}
 
 // main.ts
 window.Utils = utilsAggregation_default;

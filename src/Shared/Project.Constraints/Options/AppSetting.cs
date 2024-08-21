@@ -2,11 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Constraints.Options;
-public class OnlineUserPageSetting
-{
-    public string[] EnableUsers { get; set; } = [];
-    public string[] EnableRoles { get; set; } = [];
-}
 public sealed class AppSetting
 {
     [NotNull] public string? AppTitle { get; set; }
@@ -20,6 +15,6 @@ public sealed class AppSetting
     public bool UseAspectProxy { get; set; }
     public int SupportedMajorVersion { get; set; } = 85;
     public List<CameraResolution>? CameraResolutions { get; set; }
-    public OnlineUserPageSetting OnlineUserPage { get; set; } = new();
+    public ClientHubOptions ClientHubOptions { get; set; } = new();
 
 }

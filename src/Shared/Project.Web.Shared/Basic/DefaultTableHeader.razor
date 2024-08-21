@@ -23,6 +23,13 @@
             {
                 @UI.BuildButton(this).OnClick(HandleAdd).Text(TableLocalizer["TableButtons.Add"]).Primary().Render()
             }
+            @if (Options?.ShowImportButton == true)
+            {
+                <label for="@($"{typeof(TData).Name}_import")">
+                    <InputFile id="@($"{typeof(TData).Name}_import")" hidden OnChange="ImportAsync" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></InputFile>
+                    @UI.BuildFakeButton(new() { ButtonType = ButtonType.Primary, Text = TableLocalizer["TableButtons.Import"] })
+                </label>
+            }
             @if ((Options?.ShowExportButton ?? false) || (Options?.Exportable ?? false))
             {
                 @UI.BuildButton(this).OnClick(Export).Text(TableLocalizer["TableButtons.Export"]).Primary().Render()
@@ -54,7 +61,7 @@
     [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
     [Inject, NotNull] IProtectedLocalStorage? LocalStorage { get; set; }
     private bool AdvanceModalVisible = false;
-
+    // ElementReference? elementReference;
     readonly string cache_key = $"TableOptions_{typeof(TData).Name}_ConditionAction";
     async Task CacheInfo()
     {
@@ -145,6 +152,18 @@
         Options.Query.ExpressionSolveType = SolveType.All;
         AdvanceModalVisible = false;
         await Options.RefreshAsync();
+    }
+
+    public Task ImportAsync(InputFileChangeEventArgs e)
+    {
+        if (e.File.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        {
+            UI.AlertError("文件类型错误", "请将Excel文件转为xlsx类型");
+            return Task.CompletedTask;
+        }
+        var fileStream = e.File.OpenReadStream();
+        return Options.OnImportAsync?.Invoke(fileStream) ?? Task.CompletedTask;
+
     }
 }
 

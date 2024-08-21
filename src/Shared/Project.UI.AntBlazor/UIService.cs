@@ -140,8 +140,21 @@ namespace Project.UI.AntBlazor
                     }
 
                     self.TrySet("ChildContent", (RenderFragment)(builder => builder.AddContent(1, self.Model.Text)));
+
                 })
             { Receiver = reciver };
+        }
+
+        public RenderFragment BuildFakeButton(ButtonProp props)
+        {
+            var tyleClass = props.ButtonType switch
+            {
+                Constraints.UI.ButtonType.Primary => "ant-btn-primary",
+                Constraints.UI.ButtonType.Danger => "ant-btn-dangerous",
+                _ => "ant-btn-default"
+            };
+            var spanClass = $"ant-btn {tyleClass}";
+            return b => b.Span().Set("class", spanClass).AddText(props.Text).Build();
         }
 
         public void Message(Constraints.UI.MessageType type, string message)

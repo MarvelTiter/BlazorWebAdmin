@@ -19,6 +19,7 @@ public class TableOptions
     public bool EnableRowClick { get; set; }
     public bool ShowAddButton { get; set; }
     public bool ShowExportButton { get; set; }
+    public bool ShowImportButton { get; set; }
     public string ActionColumnWidth { get; set; } = "170";
     /// <summary>
     /// 启用grid布局
@@ -46,6 +47,7 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     public Func<Task<bool>>? OnAddItemAsync { get; set; }
     public Func<TQuery, Task<QueryCollectionResult<TData>>>? OnQueryAsync { get; set; }
     public Func<TQuery, Task<QueryCollectionResult<TData>>>? OnExportAsync { get; set; }
+    public Func<Stream, Task>? OnImportAsync { get; set; }
     public Func<TData, Task>? OnRowClickAsync { get; set; }
     public Func<TData, Dictionary<string, object>?>? AddRowOptions { get; set; }
     public Func<string, IEnumerable<TData>, Task>? ExportIntercept { get; set; }

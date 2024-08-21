@@ -10,11 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
+    .AddHubOptions(option =>
+    {
+        option.MaximumReceiveMessageSize = 1024 * 1024 * 2;
+    })
     .AddInteractiveWebAssemblyComponents();
-//.AddHubOptions(option =>
-//{
-//    option.MaximumReceiveMessageSize = 1024 * 1024 * 2;
-//});
+
 Extensions.AddAntDesignUI(builder.Services);
 //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 //builder.Services.AddAntDesignUI();

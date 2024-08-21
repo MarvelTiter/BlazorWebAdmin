@@ -279,6 +279,11 @@ public class UIService(
         { Receiver = receiver };
     }
 
+    public RenderFragment BuildFakeButton(ButtonProp props)
+    {
+        return b => b.Span().AddText("NotImplemented").Build();
+    }
+
     public IBindableInputComponent<SwitchProp, bool> BuildSwitch(object receiver)
     {
         return new BindableComponentBuilder<FluentSwitch, SwitchProp, bool>() { Receiver = receiver };

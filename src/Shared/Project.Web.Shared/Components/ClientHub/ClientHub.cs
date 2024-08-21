@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
+using Project.Constraints.Options;
 
 namespace Project.Web.Shared.Components;
 
@@ -9,6 +11,7 @@ public class ClientHub : JsComponentBase
     [Inject] [NotNull] private IClientService? ClientService { get; set; }
 
     [Inject] [NotNull] private IUserStore? UserStore { get; set; }
+    [Inject, NotNull] private IOptions<AppSetting>? Options { get; set; }
     private new string Id { get; } = Guid.NewGuid().ToString();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -16,25 +19,30 @@ public class ClientHub : JsComponentBase
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            var info = await InvokeAsync<string[]>("init", new
+            await InvokeAsync<string[]>("init", new
             {
-                interval = 1000,
+                interval = Options.Value.ClientHubOptions.ClientSendFrequency.TotalMilliseconds,
                 dotnetRef = DotNetObjectReference.Create(this)
             });
-            client = new ClientInfo(Id)
-            {
-                UserStore = UserStore,
-                IpAddress = info[0],
-                UserAgent = info[1]
-            };
-            await ClientService.AddOrUpdateAsync(client);
+            //client = new ClientInfo(Id)
+            //{
+            //    UserStore = UserStore,
+            //    IpAddress = info[0],
+            //    UserAgent = info[1]
+            //};
         }
     }
 
     [JSInvokable("Tick")]
-    public async Task SendBeatAsync()
+    public async Task SendBeatAsync(string[] info)
     {
-        if (client == null) return;
+        client ??= new ClientInfo()
+        {
+            CircuitId = info[0],
+            UserStore = UserStore,
+            IpAddress = info[1],
+            UserAgent = info[2]
+        };
         await ClientService.AddOrUpdateAsync(client);
     }
 }

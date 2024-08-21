@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Options;
+using Project.Constraints.Options;
 using System.Collections.Concurrent;
 
 namespace Project.Web.Shared.Services;
@@ -8,12 +10,14 @@ public sealed class ClientService : IClientService, IDisposable
     private readonly ConcurrentDictionary<string, ClientInfo> clients = [];
     private readonly CancellationTokenSource tokenSource = new();
     private readonly Task clearTimeoutClientTask;
+    private readonly IOptions<AppSetting> options;
     private bool disposedValue;
 
-    public ClientService()
+    public ClientService(IOptions<AppSetting> options)
     {
         clearTimeoutClientTask = new Task(ClearTimeoutClient, tokenSource.Token, TaskCreationOptions.LongRunning);
         clearTimeoutClientTask.Start();
+        this.options = options;
     }
 
     public Task<QueryResult<int>> GetCountAsync()
@@ -23,28 +27,37 @@ public sealed class ClientService : IClientService, IDisposable
 
     public Task<QueryCollectionResult<ClientInfo>> GetClientsAsync()
     {
+        RemoveExpired();
         return Task.FromResult(clients.Values.CollectionResult());
     }
 
     public Task<QueryResult> AddOrUpdateAsync(ClientInfo client)
     {
-        clients.AddOrUpdate(client.CircuitId, client, UpdateClient);
+        clients.AddOrUpdate(client.CircuitId, client, (_, _) => UpdateClient(client));
         return Task.FromResult(Result.Success());
     }
 
-    private void ClearTimeoutClient()
+    private async void ClearTimeoutClient()
     {
         while (!tokenSource.IsCancellationRequested)
         {
             try
             {
-                await Task.Delay()
+                await Task.Delay(options.Value.ClientHubOptions.ServerScanFrequency, tokenSource.Token);
+                RemoveExpired();
             }
             catch
             {
 
             }
         }
+    }
+
+    private void RemoveExpired()
+    {
+        // 距离上一次的心跳超过超时限制时间
+        var expired = clients.Values.Where(c => DateTime.Now - c.BeatTime > options.Value.ClientHubOptions.ClearTimeoutLimit).Select(c => c.CircuitId).ToList();
+        expired.ForEach(id => clients.TryRemove(id, out _));
     }
 
     // public Task<QueryResult<ClientInfo>> GetClientAsync(string key)
@@ -54,10 +67,9 @@ public sealed class ClientService : IClientService, IDisposable
     //     }
     // }
 
-    private static ClientInfo UpdateClient(string circuitId, ClientInfo client)
+    private static ClientInfo UpdateClient(ClientInfo client)
     {
         client.BeatTime = DateTime.Now;
-        Console.WriteLine("UpdateClient");
         return client;
     }
 

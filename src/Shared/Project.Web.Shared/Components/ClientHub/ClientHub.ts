@@ -9,58 +9,65 @@ export class ClientHub extends BaseComponent {
     timer: number | undefined
     interval: number
     dotnetRef: any
-    allClients: string[] = []
+    otherClients: string[] = []
+    ip: string | undefined
+    uuid:string
 
     constructor(id: string, options: any) {
         super();
         this.channel = new BroadcastChannel("admin_project_ClientHub")
         this.id = id
+        this.uuid = getUUID()
         const {interval, dotnetRef} = options
         this.interval = interval
         this.dotnetRef = dotnetRef
-        this.init()
     }
 
     static async init(id: string, options: any) {
-        getComponentById(id, () => new ClientHub(id, options))
+        var hub: ClientHub = getComponentById(id, () => new ClientHub(id, options))
         const response = await fetch('/ip.client')
         const ip = await response.text()
-        return [ip, navigator.userAgent]
+        hub.ip = ip
+        await hub.init()
     }
 
-    init() {
+    async init() {
+         //当前是否有正在发送心跳的ClientHub，如果没有，将当前实例设置为发送心跳的ClientHub
         const main = localStorage.getItem(this.mainKey)
         if (!main) {
             localStorage.setItem(this.mainKey, this.id)
         }
-        const _ = this.send()
-        EventHandler.listen(this.channel, 'message', this.receive.bind(this))
+        EventHandler.listen(this.channel, 'message', e => this.receive(e))
+        window.onunload = e => this.dispose()
+        await this.send()
         this.timer = window.setInterval(async () => {
             await this.send()
         }, this.interval)
     }
 
     async send() {
-        this.channel.postMessage({id: this.id, action: 'ping'})
+        // 广播通知其他ClientHub
+        this.channel.postMessage({ id: this.id, action: 'ping' })
+        // 检查当前是否有正在发送心跳的ClientHub
         let mainId = localStorage.getItem(this.mainKey)
-        if (!mainId || this.allClients.length === 0) {
+        if (!mainId || this.otherClients.length === 0) {
             localStorage.setItem(this.mainKey, this.id)
             mainId = this.id
         }
         if (mainId == this.id) {
             // 只有保存在localStorage中的组件id才能发送心跳
-            await this.dotnetRef.invokeMethodAsync("Tick")
+            await this.dotnetRef.invokeMethodAsync("Tick", [this.uuid, this.ip, navigator.userAgent])
         }
     }
 
-    receive(data: any) {
-        const {id, action} = data;
-        if (action === 'ping' && this.allClients.find(v => v === id) === void 0) {
-            this.allClients.push(id);
+    receive(e: any) {
+        const {id, action} = e.data;
+        if (action === 'ping' && this.otherClients.find(v => v === id) === void 0) {
+            this.otherClients.push(id);
         } else if (action === 'dispose') {
-            const index = this.allClients.indexOf(id);
+            const index = this.otherClients.indexOf(id);
             if (index > -1) {
-                this.allClients = this.allClients.splice(index, 1);
+                this.otherClients = this.otherClients.splice(index, 1);
             }
             if (localStorage.getItem(this.mainKey) === id) {
                 localStorage.removeItem(this.mainKey);
@@ -75,3 +82,21 @@ export class ClientHub extends BaseComponent {
         this.channel.close();
     }
 }
+
+
+
+function getUUID() {
+
+    let uuid = localStorage.getItem('admin_project_Client_uuid')
+    if (uuid) {
+        return uuid
+    }
+    let d = new Date().getTime()
+    uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = (d + Math.random() * 16) % 16 | 0
+        d = Math.floor(d / 16)
+        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16)
+    });
+    localStorage.setItem('admin_project_Client_uuid', uuid)
+    return uuid
+};

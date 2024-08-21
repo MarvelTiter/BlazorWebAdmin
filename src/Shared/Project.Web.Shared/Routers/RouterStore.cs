@@ -294,13 +294,7 @@ public class RouterStore : StoreBase, IRouterStore
         return meta.RouteUrl == "/userdashboard";
     }
 
-    private static bool EnableShowUserDashboard(IUserStore userStore, AppSetting setting)
-    {
-        var userId = userStore.UserId;
-        var userRoles = userStore.Roles;
-        return Array.IndexOf(setting.OnlineUserPage.EnableUsers, userId) > -1
-            || userRoles.Intersect(setting.OnlineUserPage.EnableRoles).Any();
-    }
+    private static bool EnableShowUserDashboard(IUserStore _, AppSetting setting) => setting.ClientHubOptions.Enable;
 
     public Type? GetRouteType(string routeUrl)
     {
