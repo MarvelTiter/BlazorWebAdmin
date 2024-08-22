@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="AutoGenMapperGenerator" Version="0.0.1" />
+		<PackageReference Include="AutoGenMapperGenerator" Version="0.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
 	</ItemGroup>
 	<ItemGroup>
