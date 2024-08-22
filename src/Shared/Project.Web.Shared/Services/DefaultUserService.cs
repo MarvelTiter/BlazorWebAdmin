@@ -4,11 +4,11 @@ using LightORM;
 
 namespace Project.Web.Shared.Services
 {
-    public class UserService<TUser> : IUserService<TUser> where TUser : IUser
+    public class DefaultUserService<TUser> where TUser : IUser
     {
         private readonly IExpressionContext context;
 
-        public UserService(IExpressionContext context)
+        public DefaultUserService(IExpressionContext context)
         {
             this.context = context;
         }
@@ -75,7 +75,7 @@ namespace Project.Web.Shared.Services
 
 
     [AutoInject(Group = "SERVER", ServiceType = typeof(IStandardUserService))]
-    public class StandardUserService : UserService<User>, IStandardUserService
+    public class StandardUserService : DefaultUserService<User>, IStandardUserService
     {
         public StandardUserService(IExpressionContext context) : base(context)
         {

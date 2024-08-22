@@ -15,12 +15,7 @@ public interface IPermissionService
     Task<QueryCollectionResult<MinimalPower>> GetPowerListByUserIdAsync(string usrId);
 }
 
-[WebController(Route = "default/permission", Authorize = true)]
-[ApiInvokerGenerate(typeof(AutoInjectAttribute))]
-[AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
-public interface IStandardPermissionService : IPermissionService<Power, Role>
-{
-}
+
 
 //[Aspectable(AspectHandleType = typeof(LogAop))]
 [LogAop]
@@ -61,3 +56,13 @@ public interface IPermissionService<TPower, TRole>
     [LogInfo(Action = "删除角色", Module = "权限控制")]
     Task<QueryResult<bool>> DeleteRoleAsync(TRole role);
 }
+
+
+#if (ExcludeDefaultService)
+#else
+[WebController(Route = "default/permission", Authorize = true)]
+[ApiInvokerGenerate]
+public interface IStandardPermissionService : IPermissionService<Power, Role>
+{
+}
+#endif

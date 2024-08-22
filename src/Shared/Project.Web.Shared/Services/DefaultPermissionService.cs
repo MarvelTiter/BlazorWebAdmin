@@ -3,7 +3,7 @@ using AutoInjectGenerator;
 using LightORM;
 namespace Project.Web.Shared.Services
 {
-    public class PermissionService<TPower, TRole, TRolePower, TUserRole>
+    public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
         where TRolePower : class, IRolePower, new()
@@ -11,7 +11,7 @@ namespace Project.Web.Shared.Services
     {
         private readonly IExpressionContext context;
 
-        public PermissionService(IExpressionContext context)
+        public DefaultPermissionService(IExpressionContext context)
         {
             this.context = context;
         }
@@ -178,6 +178,8 @@ namespace Project.Web.Shared.Services
         }
     }
 
+#if(ExcludeDefaultService)
+#else
     [AutoInject(Group = "SERVER")]
     public class PermissionService : IPermissionService
 
@@ -201,13 +203,13 @@ namespace Project.Web.Shared.Services
         }
     }
 
-
     [AutoInject(ServiceType = typeof(IStandardPermissionService), Group = "SERVER")]
-    public class StandardPermissionService : PermissionService<Power, Role, RolePower, UserRole>, IStandardPermissionService
+    public class StandardPermissionService : DefaultPermissionService<Power, Role, RolePower, UserRole>, IStandardPermissionService
     {
         public StandardPermissionService(IExpressionContext context) : base(context)
         {
 
         }
     }
+#endif
 }

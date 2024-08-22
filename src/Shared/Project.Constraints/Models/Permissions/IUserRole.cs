@@ -1,4 +1,6 @@
 ﻿
+using AutoGenMapperGenerator;
+
 namespace Project.Constraints.Models.Permissions
 {
     public interface IUserRole
@@ -8,7 +10,8 @@ namespace Project.Constraints.Models.Permissions
     }
 
     [LightTable(Name = "USER_ROLE")]
-    public class UserRole : IUserRole
+    [GenMapper]
+    public partial class UserRole : IUserRole, IAutoMap
     {
         [LightColumn(Name = "USER_ID", PrimaryKey = true)]
         [NotNull] 

@@ -164,7 +164,7 @@
             return;
         }
         // 10m
-        var fileStream = e.File.OpenReadStream(1024 * 1000 * 10);
+        using var fileStream = e.File.OpenReadStream(1024 * 1000 * 10);
         using var ms = new MemoryStream();
         await fileStream.CopyToAsync(ms);
         await (Options.OnImportAsync?.Invoke(ms) ?? Task.CompletedTask);

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AutoGenMapperGenerator;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project.Constraints.Models.Permissions
 {
@@ -37,7 +38,8 @@ namespace Project.Constraints.Models.Permissions
     }
 
     [LightTable(Name = "USER")]
-    public class User : IUser
+    [GenMapper]
+    public partial class User : IUser, IAutoMap
     {
         [ColumnDefinition(Readonly = true)]
         [LightColumn(Name = "USER_ID", PrimaryKey = true)]

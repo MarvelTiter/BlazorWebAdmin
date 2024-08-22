@@ -68,7 +68,7 @@
         var pwd = await UI.ShowDialogAsync<ModifyUserPassword, UserPwd>(config: config =>
         {
             config.Title = Localizer["UserPwd.Title"];
-            config.PostCheck = async (userPwd, validate) =>
+            config.PostCheckAsync = async (userPwd, validate) =>
             {
                 var v = validate.Invoke();
                 if (!v) return false;

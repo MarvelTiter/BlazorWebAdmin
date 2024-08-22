@@ -7,18 +7,25 @@ using Project.Constraints.Models.Request;
 
 namespace Project.Constraints.Services
 {
-    [WebController(Route = "runlog", Authorize = true)]
-    [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
-    [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
-    public interface IStandardRunLogService : IRunLogService<RunLog> { }
     public interface IRunLogService<TRunLog> where TRunLog : IRunLog
     {
         Task<QueryCollectionResult<TRunLog>> GetRunLogsAsync(GenericRequest<TRunLog> runLog);
         Task<QueryResult> WriteLog(TRunLog log);
     }
 
+    //[WebController(Route = "writelog", Authorize = true)]
+    //[ApiInvokerGenerate]
     public interface IRunLogService
     {
-        Task<QueryResult> WriteLog<T>(T log) where T: IRunLog;
+        [WebMethod(Route = "write")]
+        Task<QueryResult> WriteLog(MinimalLog log);
     }
+
+#if (ExcludeDefaultService)
+#else
+    [WebController(Route = "runlog", Authorize = true)]
+    [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
+    [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
+    public interface IStandardRunLogService : IRunLogService<RunLog> { }
+#endif
 }

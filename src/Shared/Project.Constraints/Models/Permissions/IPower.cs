@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AutoGenMapperGenerator;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Constraints.Models.Permissions
@@ -41,7 +42,8 @@ namespace Project.Constraints.Models.Permissions
     }
 
     [LightTable(Name = "POWERS")]
-    public class Power : IPower
+    [GenMapper]
+    public partial class Power : IPower, IAutoMap
     {
         [ColumnDefinition]
         [Required]

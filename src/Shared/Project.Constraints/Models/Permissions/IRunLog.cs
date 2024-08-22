@@ -12,6 +12,15 @@ public interface IRunLog
     string? ActionMessage { get; set; }
 }
 
+public class MinimalLog
+{
+    public string? UserId { get; set; }
+    public string? Module { get; set; }
+    public string? Action { get; set; }
+    public string? Result { get; set; }
+    public string? Message { get; set; }
+}
+
 [LightTable(Name = "RUN_LOG")]
 public class RunLog : IRunLog
 {

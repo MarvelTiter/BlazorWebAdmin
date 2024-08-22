@@ -13,8 +13,8 @@ namespace Project.Constraints.UI.Flyout
         public override async Task<bool> OnPostAsync()
         {
             if (options?.Validate == null) return await base.OnPostAsync();
-            if (Options.PostCheck == null) return options.Validate.Invoke();
-            var checke = await Options.PostCheck(Value,options.Validate);
+            if (Options.PostCheckAsync == null) return options.Validate.Invoke();
+            var checke = await Options.PostCheckAsync(Value,options.Validate);
             return checke;
         }
 

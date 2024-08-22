@@ -3,11 +3,11 @@ using LightORM;
 
 namespace Project.AppCore.Services
 {
-    public class RunLogService<TRunLog> : IRunLogService<TRunLog> where TRunLog : class, IRunLog, new()
+    public class DefaultRunLogService<TRunLog> where TRunLog : class, IRunLog, new()
     {
         private readonly IExpressionContext context;
 
-        public RunLogService(IExpressionContext context)
+        public DefaultRunLogService(IExpressionContext context)
         {
             this.context = context;
         }
@@ -25,29 +25,40 @@ namespace Project.AppCore.Services
         }
     }
 
+#if (ExcludeDefaultService)
+#else
     [AutoInject(Group = "SERVER")]
-    public class RunLogService : IRunLogService
+    public class DefaultRunLogService : IRunLogService
     {
         private readonly IExpressionContext context;
 
-        public RunLogService(IExpressionContext context)
+        public DefaultRunLogService(IExpressionContext context)
         {
             this.context = context;
         }
 
-        public async Task<QueryResult> WriteLog<T>(T log) where T : IRunLog
+        public async Task<QueryResult> WriteLog(MinimalLog log)
         {
-            var i = await context.Repository<T>().InsertAsync(log);
+            var l = new RunLog
+            {
+                UserId = log.UserId,
+                ActionModule = log.Module,
+                ActionName = log.Action,
+                ActionResult = log.Result,
+                ActionMessage = log.Message,
+            };
+            var i = await context.Repository<RunLog>().InsertAsync(l);
             return (i > 0).Result();
         }
     }
 
-    
+
     [AutoInject(Group = "SERVER", ServiceType = typeof(IStandardRunLogService))]
-    public class StandardRunLogService : RunLogService<RunLog>, IStandardRunLogService
+    public class StandardRunLogService : DefaultRunLogService<RunLog>, IStandardRunLogService
     {
         public StandardRunLogService(IExpressionContext context) : base(context)
         {
         }
     }
+#endif
 }
