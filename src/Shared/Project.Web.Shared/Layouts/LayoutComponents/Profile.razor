@@ -70,9 +70,10 @@
             config.Title = Localizer["UserPwd.Title"];
             config.PostCheckAsync = async (userPwd, validate) =>
             {
+                if (userPwd == null) return false;
                 var v = validate.Invoke();
                 if (!v) return false;
-                if (userPwd?.Password != userPwd?.ConfirmPassword)
+                if (userPwd.Password != userPwd.ConfirmPassword)
                 {
                     UI.Error(Localizer["UserPwd.PasswordDifference"]);
                     return false;
@@ -93,7 +94,7 @@
         }
         else
         {
-            UI.Error(result.Message);
+            UI.Error(result.Message ?? "");
         }
     }
 

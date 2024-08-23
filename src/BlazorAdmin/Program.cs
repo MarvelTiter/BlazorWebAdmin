@@ -34,7 +34,7 @@ builder.AddDefaultLightOrm();
 
 builder.Services.AddControllers();
 
-AppConst.AddAssembly(typeof(_Imports));
+//AppConst.AddAssembly(typeof(_Imports));
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
