@@ -7,6 +7,8 @@ namespace Project.Constraints.Models.Permissions
         [NotNull] string? RoleId { get; set; }
         [NotNull] string? PowerId { get; set; }
     }
+#if (ExcludeDefaultService)
+#else
     [LightTable(Name = "ROLE_POWER")]
     [GenMapper]
     public partial class RolePower : IRolePower, IAutoMap
@@ -16,4 +18,5 @@ namespace Project.Constraints.Models.Permissions
         [LightColumn(Name = "POWER_ID", PrimaryKey = true)]
         [NotNull] public string? PowerId { get; set; }
     }
+#endif
 }

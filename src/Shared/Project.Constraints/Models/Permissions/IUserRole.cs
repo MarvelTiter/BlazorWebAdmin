@@ -9,6 +9,8 @@ namespace Project.Constraints.Models.Permissions
         [NotNull] string? RoleId { get; set; }
     }
 
+#if (ExcludeDefaultService)
+#else
     [LightTable(Name = "USER_ROLE")]
     [GenMapper]
     public partial class UserRole : IUserRole, IAutoMap
@@ -20,4 +22,5 @@ namespace Project.Constraints.Models.Permissions
         [NotNull]
         public string? RoleId { get; set; }
     }
+#endif
 }

@@ -20,7 +20,8 @@ public class MinimalLog
     public string? Result { get; set; }
     public string? Message { get; set; }
 }
-
+#if (ExcludeDefaultService)
+#else
 [LightTable(Name = "RUN_LOG")]
 public class RunLog : IRunLog
 {
@@ -54,3 +55,4 @@ public class RunLog : IRunLog
     [ColumnDefinition]
     public string? ActionMessage { get; set; }
 }
+#endif

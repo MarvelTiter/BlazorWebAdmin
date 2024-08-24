@@ -30,7 +30,10 @@ builder.AddProjectService(setting =>
 });
 builder.Services.AutoInject();
 
-builder.AddDefaultLightOrm();
+builder.AddDefaultLightOrm(options =>
+{
+    options.SetTableContext(new LightOrmTableContext());
+});
 
 builder.Services.AddControllers();
 

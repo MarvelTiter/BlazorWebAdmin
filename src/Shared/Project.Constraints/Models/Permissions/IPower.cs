@@ -41,6 +41,8 @@ namespace Project.Constraints.Models.Permissions
         public bool GenerateCRUDButton { get; set; }
     }
 
+#if (ExcludeDefaultService)
+#else
     [LightTable(Name = "POWERS")]
     [GenMapper]
     public partial class Power : IPower, IAutoMap
@@ -88,4 +90,5 @@ namespace Project.Constraints.Models.Permissions
         [Form]
         public bool GenerateCRUDButton { get; set; }
     }
+#endif
 }

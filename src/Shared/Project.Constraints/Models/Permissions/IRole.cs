@@ -9,7 +9,8 @@ namespace Project.Constraints.Models.Permissions
         [NotNull] string? RoleName { get; set; }
         IEnumerable<string>? Powers { get; set; }
     }
-
+#if (ExcludeDefaultService)
+#else
     [LightTable(Name = "ROLE")]
     [GenMapper]
     public partial class Role : IRole, IAutoMap
@@ -27,4 +28,5 @@ namespace Project.Constraints.Models.Permissions
         [Ignore]
         public IEnumerable<string>? Powers { get; set; }
     }
+#endif
 }

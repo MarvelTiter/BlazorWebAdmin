@@ -36,7 +36,8 @@ namespace Project.Constraints.Models.Permissions
         [Form(InputType.Password)]
         public string? ConfirmPassword { get; set; }
     }
-
+#if (ExcludeDefaultService)
+#else
     [LightTable(Name = "USER")]
     [GenMapper]
     public partial class User : IUser, IAutoMap
@@ -69,4 +70,5 @@ namespace Project.Constraints.Models.Permissions
         [ColumnDefinition(Visible = false)]
         public IEnumerable<string>? Roles { get; set; }
     }
+#endif
 }
