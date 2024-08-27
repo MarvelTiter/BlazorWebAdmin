@@ -24,8 +24,7 @@ namespace Project.Constraints.Services
 #if (ExcludeDefaultService)
 #else
     [WebController(Route = "runlog", Authorize = true)]
-    [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
-    [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
+    [ApiInvokerGenerate]
     public interface IStandardRunLogService : IRunLogService<RunLog> { }
 #endif
 }

@@ -20,7 +20,7 @@ Extensions.AddAntDesignUI(builder.Services);
 //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 //builder.Services.AddAntDesignUI();
 //builder.Services.AddFluentUI();
-builder.AddProjectService(setting =>
+builder.AddServerProject(setting =>
 {
     setting.App.Name = "Demo";
     setting.App.Id = "Test";

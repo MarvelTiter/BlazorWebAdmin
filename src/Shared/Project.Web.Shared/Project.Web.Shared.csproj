@@ -7,27 +7,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Pages\Login.razor.cs" />
+	  <Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
 	</ItemGroup>
 
-	
-	<ItemGroup>
-		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
-		<Content Remove="Langs\en-US\index.json" />
-		<Content Remove="Langs\zh-CN\index.json" />
-		<Content Remove="Pages\Login.razor" />
-	</ItemGroup>
-
-	
-	<ItemGroup>
-	  <None Remove="Layouts\LayoutComponents\NavMenuItem.razor.css" />
-	  <None Remove="Pages\Login.razor.css" />
-	</ItemGroup>
-
-	
-	<ItemGroup>
-	  <Content Include="Layouts\LayoutComponents\NavMenuItem.razor.css" />
-	</ItemGroup>
 
 	<ItemGroup>
 	  <EmbeddedResource Include="Langs\en-US\index.json">
@@ -43,6 +25,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- <ProjectReference Include="..\..\..\..\MT.Generators\src\AutoAopProxy.Roslyn\AutoAopProxy.Roslyn.csproj" OutputItemType="Analyzer"/> -->
 		<ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
 	</ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
-﻿using AutoInjectGenerator;
+﻿using AutoAopProxyGenerator;
+using AutoInjectGenerator;
 using AutoWasmApiGenerator;
 using MT.Generators.Abstraction;
 using Project.Constraints.Aop;
@@ -7,10 +8,10 @@ using Project.Constraints.Models.Request;
 
 namespace Project.Constraints.Services
 {
-    //[Aspectable(AspectHandleType = typeof(LogAop))]
-    [LogAop]
+    [AddAspectHandler(AspectType = typeof(AopLogger))]
     public partial interface IUserService<TUser> where TUser : IUser
     {
+        [IgnoreAspect]
         Task<QueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req);
         [LogInfo(Action = "新增用户", Module = "权限控制")]
         Task<QueryResult> InsertUserAsync(TUser user);
@@ -34,8 +35,7 @@ namespace Project.Constraints.Services
     // }
 
     [WebController(Route = "user", Authorize = true)]
-    [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
-    [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
+    [ApiInvokerGenerate]
     public interface IStandardUserService : IUserService<User>
     {
 

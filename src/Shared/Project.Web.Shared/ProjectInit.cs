@@ -13,23 +13,8 @@ using Project.Web.Shared.Locales.Extensions;
 namespace Project.Web.Shared;
 public static class ProjectInit
 {
-    public static void AddProject(this IServiceCollection services, IConfiguration configuration, Action<ProjectSetting> action, out ProjectSetting setting)
+    public static void AddClientProject(this IServiceCollection services, IConfiguration configuration, Action<ProjectSetting> action, out ProjectSetting setting)
     {
-        //try
-        //{
-        //    var processName = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
-        //    bool isNewInstance;
-        //    Mutex mtx = new Mutex(true, processName, out isNewInstance);
-        //    if (!isNewInstance)
-        //    {
-        //        var process = System.Diagnostics.Process.GetProcessesByName(processName).FirstOrDefault();
-        //        process?.Kill();
-        //    }
-        //}
-        //catch
-        //{
-        //}
-
 
         setting = new ProjectSetting();
 #if (ExcludeDefaultService)

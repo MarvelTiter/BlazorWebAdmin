@@ -1,4 +1,5 @@
-﻿using AutoInjectGenerator;
+﻿using AutoAopProxyGenerator;
+using AutoInjectGenerator;
 using AutoWasmApiGenerator;
 using LightORM;
 
@@ -56,25 +57,10 @@ namespace Project.Web.Shared.Services
     }
 
 
-#if(ExcludeDefaultService)
+#if (ExcludeDefaultService)
 #else
-    // [AutoInject(Group = "SERVER")]
-    // public class UserService(IExpressionContext context) : IUserService
-    // {
-    //     public async Task<QueryResult> CheckUserPasswordAsync(string oldPassword)
-    //     {
-    //         throw new NotImplementedException();
-    //     }
-    //
-    //     public async Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd)
-    //     {
-    //         var r = await context.Update<User>().Set(u => u.Password, pwd.Password).ExecuteAsync();
-    //         return (r > 0).Result();
-    //     }
-    // }
-
-
     [AutoInject(Group = "SERVER", ServiceType = typeof(IStandardUserService))]
+    [GenAspectProxy]
     public class StandardUserService : DefaultUserService<User>, IStandardUserService
     {
         public StandardUserService(IExpressionContext context) : base(context)

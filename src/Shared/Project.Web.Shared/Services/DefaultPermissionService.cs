@@ -1,6 +1,7 @@
 ﻿using LightORM.Extension;
 using AutoInjectGenerator;
 using LightORM;
+using AutoAopProxyGenerator;
 namespace Project.Web.Shared.Services
 {
     public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
@@ -204,6 +205,7 @@ namespace Project.Web.Shared.Services
     }
 
     [AutoInject(ServiceType = typeof(IStandardPermissionService), Group = "SERVER")]
+    [GenAspectProxy]
     public class StandardPermissionService : DefaultPermissionService<Power, Role, RolePower, UserRole>, IStandardPermissionService
     {
         public StandardPermissionService(IExpressionContext context) : base(context)

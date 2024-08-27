@@ -13,7 +13,7 @@ builder.Services.ConfigureHttpClientDefaults(c =>
 //builder.Configuration
 Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
 //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
-builder.Services.AddProject(builder.Configuration, setting =>
+builder.Services.AddClientProject(builder.Configuration, setting =>
 {
     setting.App.Name = "Demo";
     setting.App.Id = "Test";

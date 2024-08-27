@@ -14,9 +14,9 @@ namespace Project.AppCore
 {
     public static class WebService
     {
-        public static void AddProjectService(this IHostApplicationBuilder builder, Action<ProjectSetting> action)
+        public static void AddServerProject(this IHostApplicationBuilder builder, Action<ProjectSetting> action)
         {
-            builder.Services.AddProject(builder.Configuration, action, out var setting);
+            builder.Services.AddClientProject(builder.Configuration, action, out var setting);
             ArgumentNullException.ThrowIfNull(setting.AuthServiceType);
             //var setting = new ProjectSetting();
             //action.Invoke(setting);
@@ -30,6 +30,11 @@ namespace Project.AppCore
             {
                 options.SlidingExpiration = true;
             });
+            var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
+            if (useProxy)
+            {
+                builder.ConfigureContainer(new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
+            }
         }
 
         public static void AddDefaultLightOrm(this IHostApplicationBuilder builder, Action<ExpressionSqlOptions>? action = null)

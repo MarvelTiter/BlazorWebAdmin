@@ -1,4 +1,5 @@
-﻿using AutoInjectGenerator;
+﻿using AutoAopProxyGenerator;
+using AutoInjectGenerator;
 using LightORM;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Project.AppCore.Services
 {
-    //[AutoInject]
+    [GenAspectProxy]
     public class DefaultAuthenticationService : IAuthService
     {
         //private readonly IExpressionContext context;
