@@ -13,6 +13,7 @@ public sealed class AppSetting
     public bool LoadUnregisteredPage { get; set; }
     public bool LoadPageFromDatabase { get; set; } = true;
     public bool UseAspectProxy { get; set; }
+    public bool ShowExceptionDetial { get; set; }
     public int SupportedMajorVersion { get; set; } = 85;
     public List<CameraResolution>? CameraResolutions { get; set; }
     public ClientHubOptions ClientHubOptions { get; set; } = new();

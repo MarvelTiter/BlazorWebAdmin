@@ -2,7 +2,7 @@
 @inherits DialogTemplate<int>
 
 <h1>Close Test</h1>
-
+Input: @(UI.BuildNumberInput<int>(this).Bind(() => Value).Render())
 @UI.BuildButton(this).Primary().Text("关闭").OnClick(CloseAsync).Render()
 @code {
 

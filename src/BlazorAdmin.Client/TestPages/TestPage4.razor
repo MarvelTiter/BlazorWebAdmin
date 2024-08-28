@@ -32,7 +32,11 @@
 
     public async Task Open()
     {
-        var r =  await UI.ShowDialogAsync<DialogTest, int>("测试");
+        var r = await UI.ShowDialogAsync<DialogTest, int>("测试");
         UI.Success($"返回结果: {r}");
+        if (r > 100)
+        {
+            throw new Exception("太大啦");
+        }
     }
 }

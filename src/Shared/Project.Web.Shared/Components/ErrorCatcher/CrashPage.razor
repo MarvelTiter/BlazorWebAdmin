@@ -1,15 +1,45 @@
 ﻿@page "/crash"
 @namespace Project.Web.Shared.Components
 @inject IUIService UI
-<ErrorPage>
+<ErrorPage OnDetialClick="@(() => showDetial = true)">
     <p>未处理的异常：请联系管理员</p>
+    @if (showDetial)
+    {
+        <div style="
+width:fit-content;
+background-color:white;
+padding:10px;
+text-align: left;
+font-size: 14px;
+position:absolute;
+left:50%;
+right:50%;
+z-index: 999;
+border: 1px solid #ccc;
+box-shadow: 0 0 12px 0 rgb(0 0 0 / 20%);
+transform: translate(-50%, -50%);">
+            @if (Options.Value.ShowExceptionDetial)
+            {
+
+                <pre>错误信息: <span style="color:orangered">@Exception?.Message</span></pre>
+                <pre>@Exception?.StackTrace</pre>
+
+            }
+            else
+            {
+                <pre style="font-size:24px;">已禁止显示详细错误信息</pre>
+            }
+            <div style="text-align:right;padding-right:20px;"><a @onclick:preventDefault @onclick:stopPropagation @onclick="@(() => showDetial = false)">关闭</a></div>
+        </div>
+
+    }
 </ErrorPage>
-<div style="text-align:center;display:none;">
-    <p>@Exception?.Message</p>
-    <p>@Exception?.StackTrace</p>
-</div>
 
 @code {
-    [Parameter] public Exception? Exception{ get; set; }
+    [Parameter] public Exception? Exception { get; set; }
+    [Inject, NotNull] IOptions<AppSetting>? Options { get; set; }
+    bool showDetial = false;
+
+
 
 }
