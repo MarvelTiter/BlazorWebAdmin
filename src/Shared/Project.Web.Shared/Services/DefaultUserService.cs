@@ -5,7 +5,9 @@ using LightORM;
 
 namespace Project.Web.Shared.Services
 {
-    public class DefaultUserService<TUser> where TUser : IUser
+    public class DefaultUserService<TUser, TUserRole>
+        where TUser : IUser
+        where TUserRole : IUserRole
     {
         private readonly IExpressionContext context;
 
@@ -18,7 +20,7 @@ namespace Project.Web.Shared.Services
         {
             await context.BeginTranAsync();
             await context.Delete<TUser>().Where(u => u.UserId == user.UserId).ExecuteAsync();
-            await context.Delete<UserRole>().Where(ur => ur.UserId == user.UserId).ExecuteAsync();
+            await context.Delete<TUserRole>().Where(ur => ur.UserId == user.UserId).ExecuteAsync();
             await context.CommitTranAsync();
             return true.Result();
         }
@@ -61,7 +63,7 @@ namespace Project.Web.Shared.Services
 #else
     [AutoInject(Group = "SERVER", ServiceType = typeof(IStandardUserService))]
     [GenAspectProxy]
-    public class StandardUserService : DefaultUserService<User>, IStandardUserService
+    public class StandardUserService : DefaultUserService<User, UserRole>, IStandardUserService
     {
         public StandardUserService(IExpressionContext context) : base(context)
         {

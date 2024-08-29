@@ -1,9 +1,8 @@
 ﻿using AutoInjectGenerator;
-using BlazorAdmin.Client.TestPages;
 using Project.Constraints.Services;
 using Project.Constraints.Store.Models;
 
-namespace BlazorAdmin.Client
+namespace BlazorAdmin.Client.TestPages
 {
     [AutoInject(ServiceType = typeof(IAddtionalInterceptor))]
     public class AdditionalTest : IAddtionalInterceptor

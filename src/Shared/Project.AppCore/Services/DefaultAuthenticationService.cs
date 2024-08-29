@@ -25,7 +25,13 @@ namespace Project.AppCore.Services
         {
             Services = services;
         }
-
+#if (ExcludeDefaultService)
+        public virtual Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm) => throw new NotImplementedException();
+        
+        public virtual Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd) => Task.FromResult(Result.Success());
+        
+        public virtual Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd) => throw new NotImplementedException();
+#else
         public virtual async Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm)
         {
             var context = Services.GetService<IExpressionContext>();
@@ -38,6 +44,7 @@ namespace Project.AppCore.Services
                 UserId = username,
                 UserName = u?.UserName ?? "",
             };
+            
             var result = userInfo.Result(u != null);
             if (!result.Success)
             {
@@ -57,6 +64,26 @@ namespace Project.AppCore.Services
             return result;
         }
 
+        public virtual async Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd)
+        {
+            var context = Services.GetService<IExpressionContext>();
+            ArgumentNullException.ThrowIfNull(context);
+            var old = await context.Select<User>(u => u.Password)
+                .Where(u => u.UserId == pwd.UserId)
+                .FirstAsync();
+            return old?.Password == pwd.OldPassword;
+        }
+
+        public virtual async Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd)
+        {
+            var context = Services.GetService<IExpressionContext>();
+            ArgumentNullException.ThrowIfNull(context);
+            var r = await context.Update<User>().Set(u => u.Password, pwd.Password)
+                .Where(u => u.UserId == pwd.UserId)
+                .ExecuteAsync();
+            return r > 0;
+        }
+#endif
         public virtual async Task SignOutAsync()
         {
             var httpContextAccessor = Services.GetService<IHttpContextAccessor>();
@@ -71,26 +98,6 @@ namespace Project.AppCore.Services
             await ctx.SignOutAsync();
             var redirect = ctx.Request.Query["Redirect"];
             ctx.Response.Redirect($"/account/login?Redirect={redirect}");
-        }
-
-        public async Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd)
-        {
-            var context = Services.GetService<IExpressionContext>();
-            ArgumentNullException.ThrowIfNull(context);
-            var old = await context.Select<User>(u => u.Password)
-                .Where(u => u.UserId == pwd.UserId)
-                .FirstAsync();
-            return old?.Password == pwd.OldPassword;
-        }
-
-        public async Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd)
-        {
-            var context = Services.GetService<IExpressionContext>();
-            ArgumentNullException.ThrowIfNull(context);
-            var r = await context.Update<User>().Set(u => u.Password, pwd.Password)
-                .Where(u => u.UserId == pwd.UserId)
-                .ExecuteAsync();
-            return r > 0;
         }
     }
 }

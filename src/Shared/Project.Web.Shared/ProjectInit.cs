@@ -81,4 +81,15 @@ public static class ProjectInit
             configuration.GetSection(nameof(Token)).Bind(opt);
         });
     }
+
+    public static T ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration, string? propertyName = null)
+      where T : class, new()
+    {
+        var name = propertyName ?? typeof(T).Name;
+        var section = configuration.GetSection(name);
+        services.Configure<T>(section.Bind);
+        var option = new T();
+        section.Bind(option);
+        return option;
+    }
 }

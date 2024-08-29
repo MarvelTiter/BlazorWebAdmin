@@ -25,8 +25,14 @@ builder.AddServerProject(setting =>
     setting.App.Name = "Demo";
     setting.App.Id = "Test";
     setting.App.Company = "Marvel";
+    // 配置 IProjectSettingService和IAuthService
+    // 默认分别为BasicSetting和DefaultAuthenticationService
+    //setting.ConfigureSettingProviderType<CustomSetting>();
+    //setting.ConfigureAuthService<DefaultAuthenticationService>();
+#if DEBUG
     setting.ConfigureSettingProviderType<CustomSetting>();
     setting.ConfigureAuthService<DefaultAuthenticationService>();
+#endif
 });
 builder.Services.AutoInject();
 

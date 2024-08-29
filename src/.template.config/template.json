@@ -24,7 +24,8 @@
                 ".template.config/**/*",
                 "**/*.filelist",
                 "**/*.user",
-                "*.lock.json"
+                "*.lock.json",
+                "**/TestPages/**"
             ]
         }
     ],

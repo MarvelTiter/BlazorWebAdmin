@@ -41,8 +41,8 @@ public partial class Dashboard
             s.AddContent(2,
                 UI.BuildButton(this).OnClick(() => IsWasm = OperatingSystem.IsBrowser()).Text("刷新").Render());
         }).Build();
-    }
 #else
         return b => b.Span().Build();
 #endif
+    }
 }

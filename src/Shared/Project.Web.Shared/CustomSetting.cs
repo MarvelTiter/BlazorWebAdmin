@@ -20,40 +20,7 @@ public class CustomSetting : BasicSetting, IProjectSettingService
         this.watermarkServiceFactory = watermarkServiceFactory;
         this.permissionService = permissionService;
     }
-    //public override async Task<QueryResult<UserInfo>> GetUserInfoAsync(string username, string password)
-    //{
-    //    var u = await context.Repository<User>().GetSingleAsync(u => u.UserId == username);
-    //    var userInfo = new UserInfo
-    //    {
-    //        UserId = username,
-    //        UserName = u?.UserName ?? "",
-    //        Password = password
-    //    };
-    //    var result = userInfo.Result(u != null);
-    //    if (!result.Success)
-    //    {
-    //        result.Message = $"用户：{username} 不存在";
-    //        return result;
-    //    }
-    //    if (u!.Password != password)
-    //    {
-    //        result.Message = "密码错误";
-    //        result.Success = false;
-    //        return result;
-    //    }
-    //    var roles = await context.Repository<UserRole>().GetListAsync(ur => ur.UserId == username);
-
-    //    userInfo.Roles = roles.Select(ur => ur.RoleId).ToList();
-    //    return result;
-    //}
-
-    //public override async Task<int> UpdateLoginInfo(UserInfo info)
-    //{
-    //    return await context.Update<User>()
-    //                            .Set(u => u.LastLogin, DateTime.Now)
-    //                            .Where(u => u.UserId == info.UserId).ExecuteAsync();
-    //}
-
+    
     public override Task LoginSuccessAsync(UserInfo result)
     {
         Console.WriteLine($"LoginSuccessAsync: {result.UserName}");
