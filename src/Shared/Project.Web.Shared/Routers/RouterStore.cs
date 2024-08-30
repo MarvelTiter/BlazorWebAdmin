@@ -228,20 +228,22 @@ public class RouterStore : StoreBase, IRouterStore
         var result = await settingService.GetUserPowersAsync(userInfo);
         var powers = result.Where(p => p.PowerType == PowerType.Page);
         Menus.Clear();
-        Menus.Add(new()
-        {
-            RouteId = "Home",
-            RouteUrl = "/",
-            Icon = "home",
-            Group = "ROOT",
-            Cache = true,
-            RouteTitle = "主页",
-        });
+        //if (!setting.CurrentValue.LoadUnregisteredPage)
+        //{
+        //    Menus.Add(new()
+        //    {
+        //        RouteId = "Home",
+        //        RouteUrl = "/",
+        //        Icon = "home",
+        //        Group = "ROOT",
+        //        Cache = true,
+        //        RouteTitle = "主页",
+        //    });
+        //}
         foreach (var pow in powers)
         {
-            var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteUrl == "/" + pow.Path);
-            if (meta == null)
-                continue;
+            var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteUrl == pow.Path);
+            meta ??= new RouterMeta();
             var enable = await OnRouteMetaFilterAsync(meta);
             if (!enable)
                 continue;

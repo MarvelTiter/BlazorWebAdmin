@@ -20,7 +20,7 @@ public class GenericRequest<T> : IRequest<T>
 
     public ConditionUnit Condition { get; set; } = new();
     public SolveType ExpressionSolveType { get; set; } = SolveType.TopOnly;
-
+    public ConditionUnit? AdditionalCondition { get; set; }
     //[JsonIgnore]
     //Expression? IRequest.Expression
     //{

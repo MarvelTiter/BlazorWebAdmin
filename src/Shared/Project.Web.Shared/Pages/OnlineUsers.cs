@@ -11,7 +11,7 @@ using System.Text.Json;
 namespace Project.AppCore.Clients
 {
     [Route("/userdashboard")]
-    [PageInfo(Icon = "setting", Title = "在线用户")]
+    [PageInfo(Icon = "setting", Title = "在线用户", Sort = 999)]
     public class OnlineUsers : ModelPage<ClientInfo, GenericRequest>
     {
         [Inject, NotNull] IClientService? ClientService { get; set; }

@@ -1,10 +1,11 @@
+using AutoInjectGenerator;
 using Microsoft.Extensions.Options;
 using Project.Constraints.Options;
 using System.Collections.Concurrent;
 
-namespace Project.Web.Shared.Services;
+namespace Project.AppCore.Services;
 
-[AutoInject(LifeTime = InjectLifeTime.Singleton)]
+[AutoInject(Group = "SERVER", LifeTime = InjectLifeTime.Singleton)]
 public sealed class ClientService : IClientService, IDisposable
 {
     private readonly ConcurrentDictionary<string, ClientInfo> clients = [];

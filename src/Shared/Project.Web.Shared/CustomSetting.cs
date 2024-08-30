@@ -1,14 +1,8 @@
-﻿using AutoInjectGenerator;
-using Microsoft.AspNetCore.Components;
-using Project.Constraints;
-using Project.Constraints.Models.Permissions;
-using Project.Constraints.Store;
-using Project.Constraints.Store.Models;
+﻿using Project.Constraints.Store.Models;
 using Project.Web.Shared.Components;
 
 namespace Project.Web.Shared;
 
-[AutoInject(Group = "SERVER")]
 public class CustomSetting : BasicSetting, IProjectSettingService
 {
     private readonly IWatermarkServiceFactory watermarkServiceFactory;

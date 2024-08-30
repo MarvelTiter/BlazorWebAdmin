@@ -1,4 +1,5 @@
-﻿using Project.Constraints.Utils;
+﻿using Project.Constraints.UI;
+using Project.Constraints.Utils;
 using System.Linq.Expressions;
 
 namespace Project.Constraints.Models.Request
@@ -23,6 +24,7 @@ namespace Project.Constraints.Models.Request
         //public Expression? Expression { get; set; }
         public SolveType ExpressionSolveType { get; set; }
         ConditionUnit Condition { get; set; }
+        ConditionUnit? AdditionalCondition { get; set; }
     }
     public interface IRequest<T> : IRequest
     {
@@ -38,13 +40,41 @@ namespace Project.Constraints.Models.Request
             }
             if (request.ExpressionSolveType == SolveType.All)
             {
+                if (request.AdditionalCondition != null)
+                {
+                    var u = new ConditionUnit()
+                    {
+                        Children = [.. request.Condition.Children, request.AdditionalCondition]
+                    };
+                    return u.BuildExpression<T>();
+                }
                 return request.Condition.BuildExpression<T>();
             }
             else if (request.ExpressionSolveType == SolveType.TopOnly)
             {
+                if (request.AdditionalCondition != null)
+                {
+                    var u = new ConditionUnit()
+                    {
+                        Children = [request.Condition, request.AdditionalCondition]
+                    };
+                    return u.BuildExpression<T>();
+                }
                 return request.Condition.BuildTopExpression<T>();
             }
             throw new NotSupportedException(nameof(request.ExpressionSolveType));
         }
+
+        public static IRequest<T> AddCondition<T>(this IRequest<T> request, string name, object value, CompareType compare = CompareType.Equal)
+        {
+            return AddCondition<T>(request, new() { Name = name, Value = value, CompareType = compare });
+        }
+
+        public static IRequest<T> AddCondition<T>(this IRequest<T> request, ConditionUnit unit)
+        {
+            request.AdditionalCondition = unit;
+            return request;
+        }
+
     }
 }

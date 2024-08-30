@@ -15,14 +15,17 @@ Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
 //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 builder.Services.AddClientProject(builder.Configuration, setting =>
 {
-    setting.App.Name = "Demo";
     setting.App.Id = "Test";
+    setting.App.Name = "Demo";
     setting.App.Company = "Marvel";
+#if DEBUG
     setting.ConfigureSettingProviderType<CustomSetting>();
+#endif
 }, out _);
 builder.Services.AutoInjectWasm();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IAuthService, AuthServiceApiInvoker>();
+builder.Services.AddScoped<IClientService, ClientServiceApiInvoker>();
 #if (ExcludeDefaultService)
 #else
 // builder.Services.AddScoped<IUserService, UserServiceApiInvoker>();

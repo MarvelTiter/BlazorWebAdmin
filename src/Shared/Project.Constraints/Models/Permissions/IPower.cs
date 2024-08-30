@@ -83,7 +83,7 @@ namespace Project.Constraints.Models.Permissions
         public int Sort { get; set; }
 
         [NotMapped]
-        public IEnumerable<Power>? Children { get; set; }
+        public IEnumerable<Power>? Children { get; set; } = [];
         IEnumerable<IPower>? IPower.Children { get => Children; set => Children = value?.Cast<Power>(); }
 
         [NotMapped]

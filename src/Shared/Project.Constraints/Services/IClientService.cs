@@ -1,5 +1,9 @@
+using AutoWasmApiGenerator;
+
 namespace Project.Constraints.Services;
 
+[WebController(Route = "hub")]
+[ApiInvokerGenerate]
 public interface IClientService
 {
     Task<QueryResult<int>> GetCountAsync();
