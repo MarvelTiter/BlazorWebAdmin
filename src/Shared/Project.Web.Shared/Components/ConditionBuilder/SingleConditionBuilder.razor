@@ -20,7 +20,7 @@
 </StackPanel>
 
 @code {
-    [Parameter, NotNull] public List<ColumnInfo>? Columns { get; set; }
+    [Parameter, NotNull] public ColumnInfo[]? Columns { get; set; }
     [Parameter, NotNull] public ConditionUnit? Item { get; set; }
     [Parameter, NotNull] public IStringLocalizer? Localizer { get; set; }
     [Parameter, NotNull] public IStringLocalizer? TableLocalizer { get; set; }

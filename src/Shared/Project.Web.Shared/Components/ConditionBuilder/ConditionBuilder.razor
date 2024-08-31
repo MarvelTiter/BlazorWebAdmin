@@ -35,7 +35,7 @@
     [Parameter, NotNull] public IStringLocalizer? Localizer { get; set; }
     [Parameter, NotNull] public IStringLocalizer? TableLocalizer { get; set; }
     [Parameter] public int Indent { get; set; } = 20;
-    private List<ColumnInfo>? Columns;
+    private ColumnInfo[]? Columns;
     public SelectItem<LinkType> LinkOptions = new();
     protected override void OnInitialized()
     {

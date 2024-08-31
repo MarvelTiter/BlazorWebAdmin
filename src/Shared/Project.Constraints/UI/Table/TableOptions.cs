@@ -27,7 +27,7 @@ public class TableOptions
     public int? ActionButtonColumn { get; set; }
     public bool Exportable { get; set; }
     public bool AutoRefreshData { get; set; } = true;
-    [NotNull] public List<ColumnInfo>? Columns { get; set; }
+    [NotNull] public ColumnInfo[]? Columns { get; set; }
 }
 
 public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest, new()

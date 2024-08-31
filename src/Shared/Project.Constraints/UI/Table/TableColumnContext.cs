@@ -10,13 +10,14 @@ namespace Project.Constraints.UI.Table
 {
     public static class TableColumnContext
     {
-        public static List<ColumnInfo> GetColumnInfos<T>()
+        public record TableColumns(ColumnInfo[] Columns);
+        public static ColumnInfo[] GetColumnInfos<T>()
         {
             return typeof(T).GenerateColumns();
         }
-        public static List<ColumnInfo> GenerateColumns(this Type type)
+        public static ColumnInfo[] GenerateColumns(this Type type)
         {
-            return StaticCache<List<ColumnInfo>>.GetOrAdd($"{type.FullName}_{type.GUID}", () =>
+            var tc = StaticCache<TableColumns>.GetOrAdd($"{type.FullName}_{type.GUID}", () =>
             {
                 var props = type.GetProperties();
                 var heads = props.Select(p => (Prop: p, Column: p.GetColumnDefinition()));
@@ -36,8 +37,10 @@ namespace Project.Constraints.UI.Table
                 {
                     columns.Sort((a, b) => a.Index - b.Index);
                 }
-                return [.. columns];
-            });
+                return new TableColumns(columns.ToArray());
+            }) with
+            { };
+            return tc.Columns;
         }
 
         private static ColumnInfo GenerateColumn(this PropertyInfo self, ColumnDefinitionAttribute head)

@@ -68,7 +68,7 @@
 @code {
     [Parameter, NotNull] public ConditionUnit? Item { get; set; }
     [Parameter, NotNull] public ConditionUnit? Parent { get; set; }
-    [Parameter, NotNull] public List<ColumnInfo>? Columns { get; set; }
+    [Parameter, NotNull] public ColumnInfo[]? Columns { get; set; }
     [Parameter, NotNull] public IUIService? UI { get; set; }
     [CascadingParameter(Name = nameof(Localizer)), NotNull] public IStringLocalizer? Localizer { get; set; }
     [CascadingParameter(Name = nameof(TableLocalizer)), NotNull] public IStringLocalizer? TableLocalizer { get; set; }

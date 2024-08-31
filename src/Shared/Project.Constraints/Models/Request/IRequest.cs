@@ -65,10 +65,6 @@ namespace Project.Constraints.Models.Request
             throw new NotSupportedException(nameof(request.ExpressionSolveType));
         }
 
-        public static IRequest<T> AddCondition<T>(this IRequest<T> request, string name, object value, CompareType compare = CompareType.Equal)
-        {
-            return AddCondition<T>(request, new() { Name = name, Value = value, CompareType = compare });
-        }
 
         public static IRequest<T> AddCondition<T>(this IRequest<T> request, ConditionUnit unit)
         {
@@ -76,5 +72,29 @@ namespace Project.Constraints.Models.Request
             return request;
         }
 
+        public static IRequest<T> AndAlso<T>(this IRequest<T> request, string name, object value, CompareType compare = CompareType.Equal)
+        {
+            var unit = new ConditionUnit
+            {
+                Name = name,
+                Value = value,
+                CompareType = compare,
+                LinkType = LinkType.AndAlso
+            };
+            request.AdditionalCondition = unit;
+            return request;
+        }
+        public static IRequest<T> OrElse<T>(this IRequest<T> request, string name, object value, CompareType compare = CompareType.Equal)
+        {
+            var unit = new ConditionUnit
+            {
+                Name = name,
+                Value = value,
+                CompareType = compare,
+                LinkType = LinkType.OrElse
+            };
+            request.AdditionalCondition = unit;
+            return request;
+        }
     }
 }

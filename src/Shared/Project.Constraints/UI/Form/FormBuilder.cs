@@ -16,10 +16,8 @@ namespace Project.Constraints.UI.Form
 
         public static FormBuilder Create<TData>()
         {
-            var builder = new FormBuilder
-            {
-                columns = typeof(TData).GenerateColumns()
-            };
+            var builder = new FormBuilder();
+            builder.columns.AddRange(typeof(TData).GenerateColumns());
 
             // foreach (var item in props)
             // {
@@ -31,7 +29,7 @@ namespace Project.Constraints.UI.Form
             return builder;
         }
 
-        List<ColumnInfo> columns = new List<ColumnInfo>();
+        private readonly List<ColumnInfo> columns = [];
 
         public FormBuilder AddField(string label, PropertyInfo property)
         {
