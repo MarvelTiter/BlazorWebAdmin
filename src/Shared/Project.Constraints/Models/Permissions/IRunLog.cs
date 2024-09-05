@@ -12,6 +12,16 @@ public interface IRunLog
     string? ActionMessage { get; set; }
 }
 
+public class MinimalLog
+{
+    public string? UserId { get; set; }
+    public string? Module { get; set; }
+    public string? Action { get; set; }
+    public string? Result { get; set; }
+    public string? Message { get; set; }
+}
+#if (ExcludeDefaultService)
+#else
 [LightTable(Name = "RUN_LOG")]
 public class RunLog : IRunLog
 {
@@ -45,3 +55,4 @@ public class RunLog : IRunLog
     [ColumnDefinition]
     public string? ActionMessage { get; set; }
 }
+#endif

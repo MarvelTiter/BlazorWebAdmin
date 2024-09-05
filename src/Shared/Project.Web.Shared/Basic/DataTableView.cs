@@ -2,13 +2,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Project.Constraints;
-using Project.Constraints.Models;
-using Project.Constraints.Models.Request;
 using Project.Constraints.UI.Extensions;
-using Project.Constraints.UI.Table;
-using Project.Web.Shared.ComponentHelper;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Web.Shared.Basic
 {
@@ -35,7 +30,7 @@ namespace Project.Web.Shared.Basic
             Options.OnRowClickAsync = OnRowClickAsync;
         }
 
-        protected async Task<IQueryCollectionResult<DataRow>> InternalQueryAsync(TRequest query)
+        protected async Task<QueryCollectionResult<DataRow>> InternalQueryAsync(TRequest query)
         {
             var result = await OnQueryAsync(query);
             Total = 0;
@@ -48,10 +43,10 @@ namespace Project.Web.Shared.Basic
             {
                 return Data.ToEnumerable().CollectionResult(Total);
             }
-            return QueryResult.EmptyResult<DataRow>();
+            return Result.EmptyResult<DataRow>();
         }
 
-        protected virtual Task<IDataTableResult> OnQueryAsync(TRequest query) => Task.FromResult<IDataTableResult>(null!);
+        protected virtual Task<DataTableResult> OnQueryAsync(TRequest query) => Task.FromResult<DataTableResult>(null!);
 
         /// <summary>
         /// 获取导出数据
@@ -59,7 +54,7 @@ namespace Project.Web.Shared.Basic
         /// <param name="query"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        protected virtual Task<IQueryCollectionResult<DataRow>> OnExportAsync(TRequest query) => InternalQueryAsync(query);
+        protected virtual Task<QueryCollectionResult<DataRow>> OnExportAsync(TRequest query) => InternalQueryAsync(query);
 
         /// <summary>
         /// 导出Excel文件
@@ -73,7 +68,7 @@ namespace Project.Web.Shared.Basic
             var filename = $"{DateTime.Now:yyyyMMdd-HHmmss}.xlsx";
             var path = Path.Combine(AppConst.TempFilePath, filename);
             Excel.WriteExcel(path, dt);
-            DownloadService.DownloadAsync(filename);
+            DownloadService.DownloadFileAsync(filename);
             return Task.CompletedTask;
         }
 

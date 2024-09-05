@@ -11,7 +11,8 @@
         <StackPanel>
             @if (Options?.EnabledAdvancedQuery ?? false)
             {
-                <ConditionBuilder Columns=@Options.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder>
+                @* <ConditionBuilder Columns=@Options.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder> *@
+                <SingleConditionBuilder Item="@Options.Query.Condition" Columns="@Options.Columns" OnNameChanged="CacheInfo" Localizer="Localizer" TableLocalizer="TableLocalizer"></SingleConditionBuilder>
             }
             @UI.BuildButton(this).OnClick(Search).Text(TableLocalizer["TableButtons.Query"]).Primary().Render()
             @if (Options?.EnabledAdvancedQuery ?? false)
@@ -26,6 +27,14 @@
             {
                 @UI.BuildButton(this).OnClick(Export).Text(TableLocalizer["TableButtons.Export"]).Primary().Render()
             }
+            @if (Options?.ShowImportButton == true)
+            {
+                <label for="@($"{typeof(TData).Name}_import")">
+                    <InputFile id="@($"{typeof(TData).Name}_import")" hidden OnChange="ImportAsync" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></InputFile>
+                    @UI.BuildFakeButton(new() { ButtonType = ButtonType.Primary, Text = TableLocalizer["TableButtons.Import"] })
+                </label>
+                @UI.BuildButton(this).Primary().Text(TableLocalizer["TableButtons.ImportTemplate"]).OnClick(DownloadImportTemplate).Render()
+            }
             @if (ChildContent != null)
             {
                 @ChildContent
@@ -35,33 +44,35 @@
 </div>
 @if (Options?.EnabledAdvancedQuery ?? false)
 {
-    <MModal @bind-Visible="AdvanceModalVisible" Title=@TableLocalizer["TableButtons.AdvancedQuery"] HideDefaultFooter>
-        <ConditionGroup Columns=@Options.Columns
-                        TData=TData
-                        Localizer="Localizer"
-                        TableLocalizer="TableLocalizer"
-                        @bind-Expression="ConditionExpression"
-                        ShowExportButton=@(Options.ShowExportButton)
-                        OnConfirmToSearch=AdvanceSearch
-                        OnConfirmToExport=AdvanceExport>
-        </ConditionGroup>
+    <MModal @bind-Visible="AdvanceModalVisible" Title=@TableLocalizer["TableButtons.AdvancedQuery"] Width="800px" HideDefaultFooter>
+        <AdvanceQuery TData=TData
+                      Localizer="Localizer"
+                      TableLocalizer="TableLocalizer"
+                      @bind-Condition="Options.Query.Condition"
+                      ShowExportButton=@(Options.ShowExportButton)
+                      OnConfirmToSearch=AdvanceSearch
+                      OnConfirmToExport=AdvanceExport>
+        </AdvanceQuery>
     </MModal>
 }
 @code {
-    [Parameter] public TableOptions<TData, TQuery>? Options { get; set; }
+    [Parameter, NotNull] public TableOptions<TData, TQuery>? Options { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Inject, NotNull] IStringLocalizer<TData>? Localizer { get; set; }
     [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
     [Inject, NotNull] IProtectedLocalStorage? LocalStorage { get; set; }
+    [Parameter] public EventCallback DownloadImportTemplate { get; set; }
     private bool AdvanceModalVisible = false;
-    private ConditionInfo? conditionInfo;
-    private Expression<Func<TData, bool>>? ConditionExpression = e => true;
-    ConditionBuilder? insRef;
-
+    // ElementReference? elementReference;
     readonly string cache_key = $"TableOptions_{typeof(TData).Name}_ConditionAction";
-    async Task CacheInfo(ConditionInfo info)
+    async Task CacheInfo()
     {
-        await LocalStorage.SetAsync(cache_key, info);
+        var storageValue = new ConditionStorage()
+            {
+                Name = Options.Query.Condition.Name,
+                CompareType = Options.Query.Condition.CompareType
+            };
+        await LocalStorage.SetAsync(cache_key, storageValue);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -71,10 +82,12 @@
         {
             try
             {
-                var result = await LocalStorage.GetAsync<ConditionInfo>(cache_key);
+                var result = await LocalStorage.GetAsync<ConditionStorage>(cache_key);
                 if (result.Success)
                 {
-                    insRef?.InitStatus(result.Value!);
+                    Options.Query.Condition.Name = result.Value!.Name;
+                    Options.Query.Condition.CompareType = result.Value!.CompareType;
+                    await InvokeAsync(StateHasChanged);
                 }
             }
             catch
@@ -105,8 +118,7 @@
             return;
         }
         Options.Query.PageIndex = 1;
-        if (conditionInfo != null)
-            Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
+        Options.Query.ExpressionSolveType = SolveType.TopOnly;
         await Options.RefreshAsync();
     }
 
@@ -116,8 +128,7 @@
         {
             return;
         }
-        if (conditionInfo != null)
-            Options.Query.Expression = BuildCondition.CombineExpression<TData>(conditionInfo);
+        Options.Query.ExpressionSolveType = SolveType.TopOnly;
         await Options.ExportAsync();
     }
 
@@ -128,7 +139,7 @@
         {
             return;
         }
-        Options.Query.Expression = ConditionExpression;
+        Options.Query.ExpressionSolveType = SolveType.All;
         AdvanceModalVisible = false;
         await Options.ExportAsync();
     }
@@ -140,9 +151,23 @@
             return;
         }
         Options.Query.PageIndex = 1;
-        Options.Query.Expression = ConditionExpression;
+        Options.Query.ExpressionSolveType = SolveType.All;
         AdvanceModalVisible = false;
         await Options.RefreshAsync();
+    }
+
+    public async Task ImportAsync(InputFileChangeEventArgs e)
+    {
+        if (e.File.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        {
+            UI.AlertError("文件类型错误", "请将Excel文件转为xlsx类型");
+            return;
+        }
+        // 10m
+        using var fileStream = e.File.OpenReadStream(1024 * 1000 * 10);
+        using var ms = new MemoryStream();
+        await fileStream.CopyToAsync(ms);
+        await (Options.OnImportAsync?.Invoke(ms) ?? Task.CompletedTask);
     }
 }
 

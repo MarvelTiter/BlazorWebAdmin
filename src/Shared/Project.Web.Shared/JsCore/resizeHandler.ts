@@ -1,8 +1,9 @@
-﻿import { HandlerBase } from './handlerBase'
+﻿import {HandlerBase} from './handlerBase'
 
 export class ResizeHandler extends HandlerBase {
     resizeObserver: ResizeObserver
-    constructor(el: Element
+
+    constructor(el: Element | EventTarget
         , fn: Function
         , id: string
         , once: boolean
@@ -14,8 +15,10 @@ export class ResizeHandler extends HandlerBase {
     }
 
     on(): void {
-        this.resizeObserver.observe(this.element);
+        if (this.element instanceof Element)
+            this.resizeObserver.observe(this.element);
     }
+
     off(): void {
         this.resizeObserver.disconnect();
     }

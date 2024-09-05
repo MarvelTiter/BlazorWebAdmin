@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AutoGenMapperGenerator;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Localization;
 using MT.Toolkit.Mapper;
 using Project.Constraints.Page;
 using Project.Constraints.UI.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Constraints.UI.Flyout
 {
@@ -48,15 +48,19 @@ namespace Project.Constraints.UI.Flyout
             }
             else
             {
-                if (valueType.IsClass && valueType != typeof(string) && DialogModel.Value != null)
-                    DialogModel.Value = Mapper.Map<TInput, TInput>(DialogModel.Value);
+                if (DialogModel.Value is IAutoMap map)
+                {
+                    DialogModel.Value = map.MapTo<TInput>();
+                }
+                //DialogModel.Value = Mapper.Map<TInput, TInput>(DialogModel.Value);
             }
         }
 
-        public virtual Task<bool> OnPostAsync()
+        public virtual async Task<bool> OnPostAsync()
         {
-            var flag = Options.PostCheck?.Invoke(ReturnValue, static () => true) ?? true;
-            return Task.FromResult(flag);
+            if (Options.PostCheckAsync == null) return true;
+            var flag = await Options.PostCheckAsync.Invoke(ReturnValue, static () => true);
+            return flag;
         }
 
         protected Task CloseAsync()

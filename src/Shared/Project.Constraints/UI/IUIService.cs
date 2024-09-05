@@ -16,6 +16,7 @@ namespace Project.Constraints.UI;
 public interface IUIComponent
 {
     IUIComponent Set(string key, object value);
+    IUIComponent Style(string value);
     IUIComponent SetIf(bool condition, string key, object value);
     IUIComponent AdditionalParameters(Dictionary<string, object> parameters);
     RenderFragment Render();
@@ -64,7 +65,6 @@ public enum ButtonType
     Danger,
     Success,
 }
-[AutoInject]
 public interface IUIService
 {
     void Message(MessageType type, string message);
@@ -81,7 +81,7 @@ public interface IUIService
     /// UI.BuildInput(this).Bind(() => ValueExpression).Render()
     /// </code>
     /// </summary>
-    IBindableInputComponent<DefaultProp, TValue> BuildInput<TValue>(object receiver);
+    IBindableInputComponent<DefaultProp, string> BuildInput(object receiver);
 
     /// <summary>
     /// 生成密码输入框
@@ -96,9 +96,9 @@ public interface IUIService
     /// <![CDATA[UI.BuildInput<TValue>(this).Bind(() => ValueExpression).Render()]]>
     /// </code>
     /// </summary>
-    IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver);
+    IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver) where TValue: new();
 
-    IBindableInputComponent<DefaultProp, TValue> BuildDatePicker<TValue>(object receiver);
+    IBindableInputComponent<DatePickerProp, DateTime?> BuildDatePicker(object receiver);
 
     IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object receiver);
 
@@ -117,6 +117,7 @@ public interface IUIService
     /// 生成按钮
     /// </summary>
     IButtonInput BuildButton(object receiver);
+    RenderFragment BuildFakeButton(ButtonProp props);
 
     IBindableInputComponent<SwitchProp, bool> BuildSwitch(object receiver);
 
@@ -135,20 +136,25 @@ public interface IUIService
     RenderFragment BuildForm<TData>(FormOptions<TData> options) where TData : class, new();
 
     RenderFragment BuildDropdown(DropdownOptions options);
-    RenderFragment BuildProfile(ProfileInfo info);
+    RenderFragment BuildProfile();
     RenderFragment BuildPopover(PopoverOptions options);
 
     RenderFragment BuildMenu(IRouterStore router, bool horizontal, IAppStore app);
 
-    RenderFragment BuildLoginForm(LoginFormModel model, Func<Task> handleLogin);
+    RenderFragment BuildLoginForm(Func<LoginFormModel, Task> handleLogin);
 
     //TODO BuildTree需要优化和完善
     IBindableInputComponent<DefaultProp, string[]> BuildTree<TData>(object revicer, TreeOptions<TData> options);
 
     ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object receiver, IEnumerable<TItem> options);
     ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object receiver, IEnumerable<TItem> options);
+    //ISelectInput<SelectProp, SelectItem<TValue>, TValue> BuildRadioGroup<TValue>(object receiver, SelectItem<TValue> options);
     IUIComponent<ModalProp> BuildModal();
     IUIComponent<GridProp> BuildRow();
     IUIComponent<GridProp> BuildCol();
-    IUIComponent BuildCard();
+    IUIComponent<CardProp> BuildCard();
+
+    RenderFragment RenderContainer();
+
+    int GetMenuWidth(bool collapsed);
 }

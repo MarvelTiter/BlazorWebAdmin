@@ -25,7 +25,7 @@
         public TRole Role { get; set; }
         public bool Check { get; set; }
     }
-    [Parameter, NotNull] public FormItemContext? Ctx { get; set; }
+    [Parameter, NotNull] public ColumnItemContext? Ctx { get; set; }
     [Parameter] public IEnumerable<TRole> Roles { get; set; } = [];
     List<RoleDef> roleDefs = new List<RoleDef>();
     IEnumerable<TRole> roles = Enumerable.Empty<TRole>();

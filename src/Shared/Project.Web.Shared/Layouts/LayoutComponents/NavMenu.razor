@@ -1,0 +1,60 @@
+﻿@using System.Diagnostics.CodeAnalysis;
+@using Microsoft.AspNetCore.Components.Authorization
+@using Project.Constraints.Options;
+@inherits BasicComponent
+@inject IProtectedLocalStorage LocalStorage
+<div class="nav-menu @Class">
+    @*全屏按钮*@
+    <NavMenuItem OnClick="ToggleFullScreen" Title="@Localizer["NavMenu.TipTitle.FullScreen"]">
+        <FullScreen @ref="fullscreen"></FullScreen>
+        <SvgIcon IconName="fullscreen"
+                 ClassName="nav-menu-icon" />
+    </NavMenuItem>
+    @if (CultureOptions.CurrentValue.Enabled)
+    {
+        @*语言选择*@
+        <NavMenuItem Title="@Localizer["NavMenu.TipTitle.LangSelect"]">
+            <LanguageSelect Options="CultureOptions.CurrentValue"></LanguageSelect>
+        </NavMenuItem>
+    }
+    @*登录用户*@
+    <Profile @ref=profile></Profile>
+    
+    @*清除LocalStorage*@
+    <NavMenuItem OnClick="@ClearLocalStorage" Title="@Localizer["NavMenu.TipTitle.ClearStorage"]">
+        <SvgIcon IconName="clear"
+                 ClassName="nav-menu-icon" />
+    </NavMenuItem>
+    @*系统设置*@
+    <NavMenuItem OnClick="@OpenSetting" Title="@Localizer["NavMenu.TipTitle.SysSetting"]">
+        <SvgIcon IconName="setting">
+        </SvgIcon>
+    </NavMenuItem>
+</div>
+
+@code {
+    [Parameter] public string? Class { get; set; }
+    FullScreen? fullscreen;
+    Profile? profile;
+    [Inject, NotNull] IStringLocalizer<NavMenu>? Localizer { get; set; }
+    [Inject, NotNull] IOptionsMonitor<CultureOptions>? CultureOptions { get; set; }
+    [Inject, NotNull] IOptionsMonitor<Token>? Token { get; set; }
+    [Inject, NotNull] ILanguageService? LanguageService { get; set; }
+
+    async Task ToggleFullScreen()
+    {
+        await fullscreen!.Toggle();
+    }
+
+    async void OpenSetting()
+    {
+        await UI.ShowDrawerAsync<WebSetting>("", 500);
+    }
+
+    async Task ClearLocalStorage()
+    {
+        await LocalStorage.Clear();
+        // await (profile?.HandleLogout() ?? Task.CompletedTask);
+        UI.Success("Done!");
+    }
+}

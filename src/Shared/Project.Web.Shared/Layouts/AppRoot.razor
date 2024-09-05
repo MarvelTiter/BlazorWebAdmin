@@ -1,0 +1,21 @@
+﻿@* 使用services.AddCascadingAuthenticationState();代替 *@
+@* <CascadingAuthenticationState> *@
+<CascadingValue Value="Context">
+    <ErrorCatcher>
+        <CascadingValue Value="this" IsFixed="true">
+            <Router AppAssembly="AppAssembly" AdditionalAssemblies="AppConst.Pages">
+                <Found Context="routeData">
+                    <CascadingValue Value="@routeData">
+                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+                    </CascadingValue>
+                </Found>
+            </Router>
+        </CascadingValue>
+    </ErrorCatcher>
+    <WaterMark ProvideService></WaterMark>
+    <WebAdminReconnector></WebAdminReconnector>
+    <Downloader/>
+    <ClientHub/>
+    @Context.UI.RenderContainer()
+</CascadingValue>
+@* </CascadingAuthenticationState> *@

@@ -12,7 +12,7 @@
 </MTree>
 @code {
     [Parameter, NotNull] public TreeOptions<TPower>? Options { get; set; }
-    [Parameter, NotNull] public FormItemContext? Context { get; set; }
+    [Parameter, NotNull] public ColumnItemContext? Context { get; set; }
     string[]? selectedKeys;
     protected override void OnInitialized()
     {

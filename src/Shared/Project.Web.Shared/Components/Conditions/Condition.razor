@@ -7,9 +7,9 @@
         </span>
         @if (Field != null && ChildContent == null)
         {
-            if (Field.DataType == typeof(DateTime))
+            if (Field.DataType == typeof(DateTime) || Field.DataType == typeof(DateTime?))
             {
-                @(UI.BuildDatePicker<DateTime>(this).Bind(() => dateValue, NotifyChanged).Render())
+                @(UI.BuildDatePicker(this).Bind(() => dateValue, NotifyChanged).Render())
             }
             else if (Field?.EnumValues != null || (Field?.IsEnum ?? false))
             {

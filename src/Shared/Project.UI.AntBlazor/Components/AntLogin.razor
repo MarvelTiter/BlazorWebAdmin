@@ -1,42 +1,44 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
 @using Microsoft.Extensions.Localization
 @using Project.Constraints.Models
-<Form Model="LoginModel">
+@using Project.Constraints.Utils
+<Form Model="LoginModel" Method="post" OnFinish="DoLogin" Name="login">
     <FormItem>
-        <Input @bind-Value="@context.UserName" placeholder="@Localizer["Login.Placeholder.UserName"].Value" name="username" type="text" tabindex="1" AutoComplete="true">
+        <Input @bind-Value="@LoginModel.UserName" placeholder="@Localizer["Login.Placeholder.UserName"].Value" type="text" tabindex="1">
         <Prefix>
             <Icon Type="user" Theme="outline" />
         </Prefix>
         </Input>
     </FormItem>
     <FormItem>
-        <InputPassword OnInput="@(e => context.Password = e.Value?.ToString() ??"")" placeholder="@Localizer["Login.Placeholder.Password"].Value" tabindex="2" AutoComplete="true">
+        <InputPassword @bind-Value="LoginModel.Password" placeholder="@Localizer["Login.Placeholder.Password"].Value" tabindex="2">
             <Prefix>
                 <Icon Type="lock" Theme="outline" />
             </Prefix>
         </InputPassword>
     </FormItem>
+    <FormItem>
+        <button class="ant-btn ant-btn-primary" type="submit">
+            @Localizer["Login.Buttons.Login"]
+        </button>
+    </FormItem>
 </Form>
-<Button Loading="loading" Type="@AntDesign.ButtonType.Primary" OnClick="@(async e=>await DoLogin())">
-    @Localizer["Login.Buttons.Login"]
-</Button>
 
 @code {
 
     [Inject, NotNull] IStringLocalizer? Localizer { get; set; }
-    [Parameter, NotNull] public LoginFormModel? LoginModel { get; set; }
-    [Parameter, NotNull] public Func<Task>? HandleLogin { get; set; }
+    [SupplyParameterFromForm] public LoginFormModel LoginModel { get; set; } = new();
+    [Parameter, NotNull] public Func<LoginFormModel, Task>? HandleLogin { get; set; }
 
     bool loading = false;
 
     private async Task DoLogin()
     {
-        loading = true;
-        await Task.Yield();
+        using var _ = BooleanStatusManager.New(b => loading = b);
+        // await Task.Yield();
         if (HandleLogin != null)
         {
-            await HandleLogin.Invoke();
+            await HandleLogin.Invoke(LoginModel);
         }
-        loading = false;
     }
 }

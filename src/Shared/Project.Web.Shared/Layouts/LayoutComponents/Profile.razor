@@ -1,0 +1,101 @@
+﻿@using Project.Constraints.Page
+@using Project.Constraints.Services
+@using Project.Constraints.UI.Dropdown
+@using Project.Web.Shared.Utils;
+@inject IAuthService AuthService
+@inject IStringLocalizer<Profile> Localizer
+@inherits BasicComponent
+
+@* @UI.BuildDropdown(options) *@
+<AuthorizeView>
+    <Authorized>
+        <NavMenuItem FitContent Title="登录用户">
+            <CascadingValue Name="PasswordModify" Value="PasswordModifyHandler" IsFixed="@true">
+                @UI.BuildProfile()
+            </CascadingValue>
+        </NavMenuItem>
+    </Authorized>
+    <NotAuthorized>
+        <NavMenuItem Title="登录">
+            <SvgIcon IconName="login"></SvgIcon>
+        </NavMenuItem>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    EventCallback PasswordModifyHandler;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        PasswordModifyHandler = EventCallback.Factory.Create(this, HandlePwdModify);
+        //     options.Content =@<div class="wrapper">
+        //     <img class="avatar" src="/_content/Project.Web.Shared/assets/avator.png" />
+        //     <span class="name">@DisplayName</span>
+        // </div>
+        ;
+
+        // options.UserName = DisplayName;
+
+        // options.Actions = new List<ActionInfo>();
+        // options.Actions.Add(new ActionInfo
+        //     {
+        //         OnClick = EventCallback.Factory.Create(this, HandlePwdModify),
+        //         Label = Localizer["NavMenu.UserAction.ModifyPassword"]
+        //     });
+
+        // options.Actions.Add(new ActionInfo
+        //     {
+        //         OnClick = EventCallback.Factory.Create(this, HandleLogout),
+        //         Label = Localizer["NavMenu.UserAction.Logout"]
+        //     });
+    }
+
+    public async Task HandleLogout()
+    {
+        // await AuthService.SignOutAsync();
+        // User.ClearUser();
+        await AuthenticationStateProvider.ClearState();
+        // Navigator.NavigateTo("/logout", true);
+        // await InvokeAsync(StateHasChanged);
+        // Context.Update?.Invoke();
+    }
+
+    async Task HandlePwdModify()
+    {
+        if (User.UserInfo == null)
+            return;
+        var pwd = await UI.ShowDialogAsync<ModifyUserPassword, UserPwd>(config: config =>
+        {
+            config.Title = Localizer["UserPwd.Title"];
+            config.PostCheckAsync = async (userPwd, validate) =>
+            {
+                if (userPwd == null) return false;
+                var v = validate.Invoke();
+                if (!v) return false;
+                if (userPwd.Password != userPwd.ConfirmPassword)
+                {
+                    UI.Error(Localizer["UserPwd.PasswordDifference"]);
+                    return false;
+                }
+                userPwd.UserId = User.UserInfo.UserId;
+                var pass = await AuthService.CheckUserPasswordAsync(userPwd);
+                if (!pass.Success)
+                {
+                    UI.Error(Localizer["UserPwd.OldPasswordError"]);
+                }
+                return pass.Success;
+            };
+        });
+        var result = await AuthService.ModifyUserPasswordAsync(pwd);
+        if (result.Success)
+        {
+            await HandleLogout();
+        }
+        else
+        {
+            UI.Error(result.Message ?? "");
+        }
+    }
+
+}

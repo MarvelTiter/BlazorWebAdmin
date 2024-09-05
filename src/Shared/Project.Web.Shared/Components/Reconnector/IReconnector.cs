@@ -1,4 +1,5 @@
 ﻿
+using AutoInjectGenerator;
 using Microsoft.AspNetCore.Components;
 
 namespace Project.Web.Shared.Components
@@ -9,6 +10,7 @@ namespace Project.Web.Shared.Components
         void RegisterView(Action<IReconnector> action);
     }
 
+    [AutoInject]
     public class ReconnectorProvider : IReconnectorProvider
     {
         Action<IReconnector>? action;

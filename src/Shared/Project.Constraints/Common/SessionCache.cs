@@ -2,7 +2,7 @@
 
 namespace Project.Constraints.Common
 {
-    [AutoInject]
+    //[AutoInject]
     public class SessionCache<T>
     {
         readonly ConcurrentDictionary<string, T> caches = [];

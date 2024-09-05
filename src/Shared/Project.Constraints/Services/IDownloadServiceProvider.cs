@@ -1,4 +1,6 @@
-﻿namespace Project.Constraints.Services
+﻿using AutoInjectGenerator;
+
+namespace Project.Constraints.Services
 {
     public interface IDownloadServiceProvider
     {
@@ -6,6 +8,7 @@
         void Register(IDownloadService service);
     }
 
+    [AutoInject]
     public class DownloadServiceProvider : IDownloadServiceProvider
     {
         private IDownloadService? service;

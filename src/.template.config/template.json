@@ -24,8 +24,17 @@
                 ".template.config/**/*",
                 "**/*.filelist",
                 "**/*.user",
-                "*.lock.json"
+                "*.lock.json",
+                "**/TestPages/**"
             ]
         }
-    ]
+    ],
+    "symbols": {
+        "ExcludeDefaultService":{
+            "type": "parameter",
+            "datatype":"bool",
+            "defaultValue": "false",
+            "description": "默认页面是否去除默认的服务实现(需要自己实现服务)"
+        }
+    }
 }

@@ -4,16 +4,18 @@ using Project.Constraints.Models;
 namespace Project.Constraints.Services
 {
     //[Aspectable(AspectHandleType = typeof(LogAop))]
-    [LogAop]
-    [AutoInject]
+    //[LogAop]
+    //[WebController(Route = "login")]
+    //[ApiInvokerGenerate(typeof(AutoInjectAttribute))]
+    //[AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
     public partial interface ILoginService
     {
         [LogInfo(Action = "用户登录", Module = "登录模块")]
-        Task<IQueryResult<UserInfo>> LoginAsync(string username, string password);
+        Task<QueryResult<UserInfo>> LoginAsync(string username, string password);
         [LogInfo(Action = "用户登录[缓存]", Module = "登录模块")]
-        Task<IQueryResult<bool>> UpdateLastLoginTimeAsync(UserInfo info);
+        Task<QueryResult<bool>> UpdateLastLoginTimeAsync(UserInfo info);
         Task<bool> CheckUser(UserInfo info);
         [LogInfo(Action = "用户登出", Module = "登录模块")]
-        Task<IQueryResult<bool>> LogoutAsync();
+        Task<QueryResult<bool>> LogoutAsync();
     }
 }

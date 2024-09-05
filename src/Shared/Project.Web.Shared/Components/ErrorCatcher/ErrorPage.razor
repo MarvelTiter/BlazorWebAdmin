@@ -24,12 +24,16 @@
         <div class="buttons-container">
             <a href="#" @onclick="e => NavigatorToIndex()">去首页</a>
         </div>
+        <div>
+            <a href="#" @onclick:preventDefault @onclick:stopPropagation @onclick="OnDetialClick">查看详情?</a>
+        </div>
     </div>
 </div>
 
 @code {
     string svgName = "p500_01";
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback OnDetialClick{ get; set; }
     protected override void OnInitialized()
     {
         base.OnInitialized();

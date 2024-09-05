@@ -4,11 +4,12 @@
 @inherits BasicComponent
 @UI.BuildPopover(options)
 @code {
-    List<string> icons = [];
+    string[] icons = [];
     [Parameter] public string? Value { get; set; }
     [Parameter] public EventCallback<string> ValueChanged { get; set; }
     [Parameter] public EventCallback OnChanged { get; set; }
     [Inject, NotNull] IStringLocalizer<IconSelector>? Localizer { get; set; }
+    [Inject, NotNull] ISvgIconService? SvgService { get; set; }
     [NotNull] Project.Constraints.UI.Flyout.PopoverOptions? options = null;
     RenderFragment content =>
     @<div>
@@ -27,7 +28,8 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        icons = SvgIconDataCache.GetIcons();
+        var result = await SvgService.GetAllIcon();
+        icons = result.Payload.ToArray();
         options = new Constraints.UI.Flyout.PopoverOptions
             {
                 Title = Localizer["IconSelector.Title"],

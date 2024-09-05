@@ -6,7 +6,7 @@ namespace Project.Constraints.UI.Form
     {
         public IUIService UI { get; } = ui;
         public TData Data { get; } = data ?? new TData();
-        public List<ColumnInfo> Columns { get; } = columns;
+        public ColumnInfo[] Columns { get; } = [.. columns];
         public int LabelSpan { get; set; } = 6;
         public int WrapperSpan { get; set; }
         public Func<TData, Task<bool>>? OnPostAsync {  get; set; }

@@ -1,6 +1,8 @@
 ﻿
-namespace Project.Web.Shared.Components;
+using AutoInjectGenerator;
 
+namespace Project.Web.Shared.Components;
+[AutoInject]
 public sealed class WatermarkServiceFactory : IWatermarkServiceFactory
 {
     private const string KEY = "DEFAULT";

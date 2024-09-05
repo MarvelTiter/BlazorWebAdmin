@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using BlazorAdmin.Client
+@using System.Diagnostics.CodeAnalysis
+@using Microsoft.Extensions.Options
+@using Project.Constraints.Options
+@using Project.Constraints.Store.Models
+@using Project.Web.Shared.Components
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,19 +13,49 @@
     <base href="/" />
     <link href="_content/AntDesign/css/ant-design-blazor.css" rel="stylesheet">
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
-    <Project.Web.Shared.Components.Link Href="_content/Project.Web.Shared/css/app.css" />
-    <Project.Web.Shared.Components.Link Href="app.css" />
-    <Project.Web.Shared.Components.Link Href="BlazorAdmin.styles.css" />
-    <HeadOutlet @rendermode="@(new InteractiveServerRenderMode(false))" />
+    @* <script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script> *@
+
+    <VLink Href="_content/Project.Web.Shared/css/app.css" />
+    <VLink Href="app.css" />
+    <VLink Href="BlazorAdmin.styles.css" />
+    <HeadOutlet @rendermode="@RenderMode" />
 </head>
 
 <body>
-    <Routes @rendermode="@(new InteractiveServerRenderMode(false))" />
-
-    <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@(new InteractiveServerRenderMode(false))"></Project.Web.Shared.Components.ReconnectorOutlet>
+    <Routes @rendermode="@RenderMode" />
+    <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></Project.Web.Shared.Components.ReconnectorOutlet>
 
     <script src="_framework/blazor.web.js"></script>
-    <Project.Web.Shared.Components.Script Src="./js//blazor-admin-project.js"></Project.Web.Shared.Components.Script>
+    <VScript Src="./js//blazor-admin-project.js"></VScript>
 </body>
 
 </html>
+
+@code {
+    [CascadingParameter, NotNull] public HttpContext? HttpContext { get; set; }
+    [Inject, NotNull] public IOptionsMonitor<AppSetting>? Option { get; set; }
+    IComponentRenderMode? RenderMode
+    {
+        get
+        {
+            if (HttpContext.Request.Path.StartsWithSegments("/account/login"))
+            {
+                return null;
+            }
+
+            return Option.CurrentValue.RunMode switch
+            {
+                AppRunMode.Auto => new InteractiveAutoRenderMode(false),
+                AppRunMode.Server => new InteractiveServerRenderMode(false),
+                AppRunMode.WebAssembly => new InteractiveWebAssemblyRenderMode(false),
+                _ => throw new ArgumentException()
+            };
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+}

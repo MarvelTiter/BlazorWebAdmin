@@ -1,6 +1,6 @@
 ﻿
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+//using Microsoft.IdentityModel.Tokens;
+//using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
@@ -22,15 +22,15 @@ namespace Project.AppCore.Auth
             //    new Claim(ClaimTypes.Role, "Admin"),
             //};
 
-            List<Claim> claims = new List<Claim>()
-            {
-                new Claim(JwtRegisteredClaimNames.Name, uid)
-            };
+            //List<Claim> claims = new List<Claim>()
+            //{
+            //    new Claim(JwtRegisteredClaimNames.Name, uid)
+            //};
 
-            foreach (var item in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, item));
-            }
+            //foreach (var item in roles)
+            //{
+            //    claims.Add(new Claim(ClaimTypes.Role, item));
+            //}
 
             // 3. 从 appsettings.json 中读取SecretKey
             //var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
@@ -38,11 +38,11 @@ namespace Project.AppCore.Auth
             //var signingCredentials = new SigningCredentials(secretKey, algorithm);
 
             // 5. 根据以上组件，生成token
-            var token = new JwtSecurityToken(claims: claims);
+            //var token = new JwtSecurityToken(claims: claims);
             // 6. 将token变为string
-            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwtToken;
+            //var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+            //return jwtToken;
+            return default;
         }
         /// <summary>
         /// 
@@ -51,18 +51,18 @@ namespace Project.AppCore.Auth
         /// <returns></returns>
         public static (string? Uid, string[] Roles) ReadToken(string token)
         {
-            var jwtHandler = new JwtSecurityTokenHandler();
-            JwtSecurityToken jwtToken = jwtHandler.ReadJwtToken(token);
-            try
-            {
-                jwtToken.Payload.TryGetValue(JwtRegisteredClaimNames.Name, out var name);
-                return (Uid: name?.ToString(), Roles: jwtToken.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToArray());
-            }
-            catch
-            {
-                throw;
-            }
-
+            //var jwtHandler = new JwtSecurityTokenHandler();
+            //JwtSecurityToken jwtToken = jwtHandler.ReadJwtToken(token);
+            //try
+            //{
+            //    jwtToken.Payload.TryGetValue(JwtRegisteredClaimNames.Name, out var name);
+            //    return (Uid: name?.ToString(), Roles: jwtToken.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToArray());
+            //}
+            //catch
+            //{
+            //    throw;
+            //}
+            return default;
         }
     }
 }

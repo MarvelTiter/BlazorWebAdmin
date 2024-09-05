@@ -11,4 +11,11 @@ namespace Project.Constraints.Store.Models
         [Display(Name = "流线型")]
         Line,
     }
+
+    public enum AppRunMode
+    {
+        Server,
+        WebAssembly,
+        Auto
+    }
 }

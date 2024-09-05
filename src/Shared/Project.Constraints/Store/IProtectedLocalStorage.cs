@@ -2,7 +2,6 @@
 
 namespace Project.Constraints.Store
 {
-    [AutoInject]
     public interface IProtectedLocalStorage
     {
         ValueTask<StorageResult<TValue>> GetAsync<TValue>(string key);

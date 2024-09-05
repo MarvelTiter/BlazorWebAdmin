@@ -7,12 +7,13 @@ using Project.Web.Shared.Pages.Component;
 
 namespace Project.Web.Shared.Pages
 {
-    public class RolePermission<TPower, TRole> : ModelPage<TRole, GenericRequest<TRole>>
+    public class RolePermission<TPower, TRole, TPermissionService> : ModelPage<TRole, GenericRequest<TRole>>
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
+        where TPermissionService : IPermissionService<TPower, TRole>
     {
         IEnumerable<TPower> allPower = [];
-        [Inject, NotNull] public IPermissionService<TPower, TRole>? PermissionSrv { get; set; }
+        [Inject, NotNull] public TPermissionService? PermissionSrv { get; set; }
         [Inject, NotNull] public IStringLocalizer<TPower>? Localizer { get; set; }
         [Inject, NotNull] public IOptionsMonitor<CultureOptions>? CultureSetting { get; set; }
 
@@ -30,9 +31,10 @@ namespace Project.Web.Shared.Pages
         }
         protected override object SetRowKey(TRole model) => model.RoleId;
 
-        protected override Task<IQueryCollectionResult<TRole>> OnQueryAsync(GenericRequest<TRole> query)
+        protected override async Task<QueryCollectionResult<TRole>> OnQueryAsync(GenericRequest<TRole> query)
         {
-            return PermissionSrv.GetRoleListAsync(query);
+            var result = await PermissionSrv.GetRoleListAsync(query);
+            return result;
 
         }
 
@@ -48,7 +50,7 @@ namespace Project.Web.Shared.Pages
         /// <returns></returns>
         async Task GetAllPowersAsync()
         {
-            var result = await PermissionSrv.GetPowerListAsync();
+            var result = await PermissionSrv.GetAllPowerAsync();
             allPower = result.Payload;
         }
         /// <summary>
@@ -110,7 +112,7 @@ namespace Project.Web.Shared.Pages
             role.Powers = powers.Payload.Select(p => p.PowerId).ToList();
             var newRole = await this.ShowEditFormAsync("编辑角色", role);
             var result = await PermissionSrv.UpdateRoleAsync(newRole);
-            await PermissionSrv.SaveRolePowerAsync(newRole.RoleId, [.. newRole.Powers]);
+            await PermissionSrv.SaveRolePowerAsync((newRole.RoleId, newRole.Powers));
             return result.Success;
         }
 

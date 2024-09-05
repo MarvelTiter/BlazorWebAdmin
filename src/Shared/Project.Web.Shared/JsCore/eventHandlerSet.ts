@@ -1,6 +1,6 @@
-﻿import { HandlerBase, makeUid } from './handlerBase'
-import { CustomEventHandler } from './customEventHandler'
-import { ResizeHandler } from './resizeHandler'
+﻿import {HandlerBase, makeUid} from './handlerBase'
+import {CustomEventHandler} from './customEventHandler'
+import {ResizeHandler} from './resizeHandler'
 
 declare global {
     interface Window {
@@ -10,18 +10,20 @@ declare global {
 const registry = new Map<string, ElementHandlerSet>()
 const RESIZE_EVENT = 'resize'
 window.allEventsMap = registry
-export function getElementEvents(el: Element): ElementHandlerSet {
+
+export function getElementEvents(el: EventTarget): ElementHandlerSet {
     const uid = makeUid(el)
     el.eventUid = uid
     registry[uid] = registry[uid] || new ElementHandlerSet(el)
     return registry[uid]
 }
-export function removeRegistry(el: Element): void {
+
+export function removeRegistry(el: EventTarget): void {
     const uid = makeUid(el)
     delete registry[uid]
 }
 
-export function addListener(el: Element, eventType: string, action: Function, once: boolean) {
+export function addListener(el: EventTarget, eventType: string, action: Function, once: boolean) {
     const ets = getElementEvents(el)
 
     if (eventType == RESIZE_EVENT) {
@@ -32,9 +34,10 @@ export function addListener(el: Element, eventType: string, action: Function, on
 }
 
 export class ElementHandlerSet {
-    element: Element
+    element: EventTarget
     events: Map<string, Map<string, HandlerBase>>
-    constructor(el: Element) {
+
+    constructor(el: EventTarget) {
         this.element = el
         this.events = new Map<string, Map<string, HandlerBase>>()
     }

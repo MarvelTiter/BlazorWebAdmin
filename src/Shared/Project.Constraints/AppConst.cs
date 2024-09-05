@@ -13,70 +13,39 @@ public class AppInfo
     public string? Version { get; set; }
 }
 
-public class DbTableType
-{
-    Type userType = typeof(User);
-    public Type UserType => userType;
-    Type roleType = typeof(Role);
-    public Type RoleType => roleType;
-    Type powerType = typeof(Power);
-    public Type PowerType => powerType;
-    Type rolepowerType = typeof(RolePower);
-    public Type RolePowerType => rolepowerType;
-    Type userroleType = typeof(UserRole);
-    public Type UserRoleType => userroleType;
-    Type logType = typeof(RunLog);
-    public Type RunlogType => logType;
-
-    public void SetUserType<TUser>() where TUser : IUser
-    {
-        userType = typeof(TUser);
-    }
-    public void SetRoleType<TRole>() where TRole : IRole
-    {
-        roleType = typeof(TRole);
-    }
-    public void SetPowerType<TPower>() where TPower : IPower
-    {
-        powerType = typeof(TPower);
-    }
-    public void SetRolePowerType<TRolePower>() where TRolePower : IRolePower
-    {
-        rolepowerType = typeof(TRolePower);
-    }
-    public void SetUserRoleType<TUserRole>() where TUserRole : IUserRole
-    {
-        userroleType = typeof(TUserRole);
-    }
-    public void SetRunlogType<TRunLog>() where TRunLog : IRunLog
-    {
-        logType = typeof(TRunLog);
-    }
-}
 public static class AppConst
 {
     public static AppInfo App { get; set; } = new AppInfo();
-    public static DbTableType TypeInfo { get; set; } = new DbTableType();
 
-    static List<Assembly> PageAssemblies = new List<Assembly>();
-
-    public static string GetStatisticsFileWithVersion(string path)
-    {
-        if (Environment?.IsDevelopment() == true)
-        {
-            return path;
-        }
-        var file = Path.Combine("wwwroot", path);
-        var fi = new FileInfo(file);
-        if (!fi.Exists)
-        {
-            return path;
-        }
-        return $"{path}?v={fi.LastWriteTime:yyMMddHHmmss}";
-    }
+    static List<Assembly> AdditionalPageAssemblies = new List<Assembly>();
+    //public static Assembly ServerAssembly { get; set; }
+    //public static Assembly ClientAssembly { get; set; }
+    //public static string GetStatisticsFileWithVersion(string path)
+    //{
+    //    if (Environment?.IsDevelopment() == true)
+    //    {
+    //        return path;
+    //    }
+    //    var file = Path.Combine("wwwroot", path);
+    //    var fi = new FileInfo(file);
+    //    if (!fi.Exists)
+    //    {
+    //        return path;
+    //    }
+    //    return $"{path}?v={fi.LastWriteTime:yyMMddHHmmss}";
+    //}
 
     public static RenderFragment? Footer { get; set; }
-    public static List<Assembly> Pages => PageAssemblies;
+    public static List<Assembly> Pages => AdditionalPageAssemblies;
+    //public static IEnumerable<Assembly> AllEnableAssembly()
+    //{
+    //    yield return ServerAssembly;
+    //    yield return ClientAssembly;
+    //    foreach (var item in Pages)
+    //    {
+    //        yield return item;
+    //    }
+    //}
     public static void SetFooter(string html)
     {
         Footer = html.AsMarkupString();
@@ -85,7 +54,7 @@ public static class AppConst
     {
         foreach (var item in types)
         {
-            PageAssemblies.Add(item.Assembly);
+            AdditionalPageAssemblies.Add(item.Assembly);
         }
     }
 
@@ -93,7 +62,7 @@ public static class AppConst
     {
         foreach (var item in asms)
         {
-            PageAssemblies.Add(item);
+            AdditionalPageAssemblies.Add(item);
         }
     }
 
@@ -106,8 +75,8 @@ public static class AppConst
         }
         return Path.Combine([AppDomain.CurrentDomain.BaseDirectory, .. paths]);
     }
-    public static IHostEnvironment? Environment { get; set; }
-    public static IServiceProvider? Services { get; set; }
+    //public static IHostEnvironment? Environment { get; set; }
+    //public static IServiceProvider? Services { get; set; }
 
     static AppConst()
     {

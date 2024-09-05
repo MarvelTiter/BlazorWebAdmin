@@ -3,27 +3,21 @@ using Project.Constraints.Store.Models;
 
 namespace Project.Constraints.Services
 {
-    [AutoInject]
     public interface IProjectSettingService
     {
-        Type? GetUserPageType();
-        Type? GetDashboardType();
-        Type? GetPermissionPageType();
-        Type? GetRolePermissionPageType();
-        Type? GetRunLogPageType();
         /// <summary>
         /// 用户登录逻辑
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        Task<IQueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
+        //Task<QueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
         /// <summary>
         /// 更新登录信息
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        Task<int> UpdateLoginInfo(UserInfo info);
+        //Task<int> UpdateLoginInfo(UserInfo info);
 
         /// <summary>
         /// 登录成功钩子
@@ -37,14 +31,14 @@ namespace Project.Constraints.Services
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        Task<bool> LoginInterceptorAsync(UserInfo info);
+        Task<QueryResult> LoginInterceptorAsync(UserInfo info);
 
         /// <summary>
         /// 初始化用户可用菜单
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        Task<IEnumerable<IPower>> GetUserPowersAsync(UserInfo info);
+        Task<IEnumerable<MinimalPower>> GetUserPowersAsync(UserInfo info);
 
         /// <summary>
         /// 导航钩子

@@ -27,7 +27,7 @@ body.error-page-wrapper,
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 70vh;
+    height: 80vh;
     width: 100%;
     padding: 20px;
 }
@@ -38,7 +38,7 @@ body.error-page-wrapper,
         padding: 50px;
         background-color: #fff;
         width: 100%;
-        max-width: 40vw;
+        max-width: 50vw;
     }
 
         .error-page-wrapper .content-container.in {
@@ -53,9 +53,9 @@ body.error-page-wrapper,
         letter-spacing: -1px;
         margin-bottom: 20px;
         color: #777;
-        display: flex;
+/*        display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: center;*/
     }
 
     .error-page-wrapper .subheader {

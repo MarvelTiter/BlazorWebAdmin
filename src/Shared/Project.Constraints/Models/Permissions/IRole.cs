@@ -1,4 +1,6 @@
 ﻿
+using AutoGenMapperGenerator;
+
 namespace Project.Constraints.Models.Permissions
 {
     public interface IRole
@@ -7,9 +9,11 @@ namespace Project.Constraints.Models.Permissions
         [NotNull] string? RoleName { get; set; }
         IEnumerable<string>? Powers { get; set; }
     }
-
+#if (ExcludeDefaultService)
+#else
     [LightTable(Name = "ROLE")]
-    public class Role : IRole
+    [GenMapper]
+    public partial class Role : IRole, IAutoMap
     {
         [ColumnDefinition(Readonly = true)]
         [LightColumn(Name = "ROLE_ID", PrimaryKey = true)]
@@ -24,4 +28,5 @@ namespace Project.Constraints.Models.Permissions
         [Ignore]
         public IEnumerable<string>? Powers { get; set; }
     }
+#endif
 }

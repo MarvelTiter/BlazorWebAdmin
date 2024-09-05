@@ -5,8 +5,6 @@ using System.Linq.Expressions;
 
 namespace Project.Constraints.UI.Builders
 {
-
-    [IgnoreAutoInject]
     public class ComponentBuilder<TComponent> : ComponentBuilderBasic<TComponent, ComponentBuilder<TComponent>>, IUIComponent
         where TComponent : IComponent
     {
@@ -25,7 +23,6 @@ namespace Project.Constraints.UI.Builders
             this.newRender = func;
         }
     }
-    [IgnoreAutoInject]
     public class CustomComponentBuilder<TComponent>(RenderTreeBuilder builder)
         where TComponent : IComponent
     {

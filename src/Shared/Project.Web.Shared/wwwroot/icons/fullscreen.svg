@@ -1,1 +1,6 @@
-<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1678151487944" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2768" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200"><path d="M213.333333 213.333333h213.333334V128H170.666667a42.666667 42.666667 0 0 0-42.666667 42.666667v256h85.333333V213.333333zM170.666667 896h256v-85.333333H213.333333v-213.333334H128v256a42.666667 42.666667 0 0 0 42.666667 42.666667z m725.333333-42.666667v-256h-85.333333v213.333334h-213.333334v85.333333h256a42.666667 42.666667 0 0 0 42.666667-42.666667zM597.333333 213.333333h213.333334v213.333334h85.333333V170.666667a42.666667 42.666667 0 0 0-42.666667-42.666667h-256v85.333333z" fill="" p-id="2769"></path></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+<g id="surface1">
+<path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity:1;" d="M 5 5 L 10 5 L 10 3 L 4 3 C 3.449219 3 3 3.449219 3 4 L 3 10 L 5 10 Z M 4 21 L 10 21 L 10 19 L 5 19 L 5 14 L 3 14 L 3 20 C 3 20.550781 3.449219 21 4 21 Z M 21 20 L 21 14 L 19 14 L 19 19 L 14 19 L 14 21 L 20 21 C 20.550781 21 21 20.550781 21 20 Z M 14 5 L 19 5 L 19 10 L 21 10 L 21 4 C 21 3.449219 20.550781 3 20 3 L 14 3 Z M 14 5 "/>
+</g>
+</svg>

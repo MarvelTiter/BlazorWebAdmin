@@ -4,7 +4,6 @@ using Project.Constraints.UI.Props;
 
 namespace Project.Constraints.UI.Builders
 {
-    [IgnoreAutoInject]
     public class ButtonComponentBuilder<TComponent> : PropComponentBuilder<TComponent, ButtonProp>, IButtonInput
          where TComponent : IComponent
     {

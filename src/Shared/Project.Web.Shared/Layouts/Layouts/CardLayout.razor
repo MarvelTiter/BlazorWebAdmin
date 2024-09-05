@@ -1,0 +1,22 @@
+﻿@using Project.Constraints
+@using Project.Web.Shared.Layouts.LayoutComponents
+@inherits LayoutBase
+<Section>
+    <Aside>
+        <SideBar @ref=SideBar Class="card">
+            <TopBanner>
+                <Banner OnToggleCollapse="e=>HandleToggleCollapse(e)"></Banner>
+            </TopBanner>
+        </SideBar>
+    </Aside>
+    <Section Vertical Style="height:100vh;">
+         <Header>
+             <NavBar Class="card"></NavBar>
+         </Header>
+         <Main Style="padding:16px;height: 100%;">
+             <AppMain>
+             </AppMain>
+         </Main>
+         @AppConst.Footer
+     </Section>
+ </Section>

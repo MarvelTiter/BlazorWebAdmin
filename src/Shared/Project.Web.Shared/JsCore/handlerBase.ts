@@ -1,23 +1,24 @@
 ﻿declare global {
-    interface Element {
+    interface EventTarget {
         eventUid: any
     }
 }
 let eventUid = 1
 
-export function makeUid(el: Element, uid: any = undefined): any {
+export function makeUid(el: EventTarget, uid: any = undefined): any {
     return ((uid && `${uid}::${eventUid++}`) || el.eventUid || eventUid++);
 }
 
 
 export class HandlerBase {
-    element: Element
+    element: EventTarget | Element
     id: string
     delegate: Function
     type: string
     once: boolean
     drop: Function | undefined
-    constructor(el: Element
+
+    constructor(el: EventTarget | Element
         , eventType: string
         , fn: Function
         , id: string
@@ -30,6 +31,7 @@ export class HandlerBase {
         this.once = once
         this.drop = drop
     }
+
     action(event: any): void {
         if (this.once) {
             this.off()
@@ -37,9 +39,11 @@ export class HandlerBase {
         }
         this.delegate.apply(this.element, [event]);
     }
+
     bind(): void {
     }
 
-    off(): void { }
+    off(): void {
+    }
 
 }

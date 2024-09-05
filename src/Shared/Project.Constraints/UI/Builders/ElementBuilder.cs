@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Project.Constraints.Common;
+using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Props;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -31,6 +32,11 @@ namespace Project.Constraints.UI.Builders
         public ElementBuilder AddContent(RenderFragment content)
         {
             this.content = content;
+            return this;
+        }
+        public ElementBuilder AddText(string? text)
+        {
+            AddContent(text.AsContent());
             return this;
         }
 

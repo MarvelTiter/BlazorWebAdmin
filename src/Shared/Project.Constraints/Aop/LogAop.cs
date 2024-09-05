@@ -1,59 +1,104 @@
-﻿using AspectCore.DynamicProxy;
-using Project.Constraints.Models.Permissions;
+﻿using Project.Constraints.Models.Permissions;
 using Project.Constraints.Services;
 using Project.Constraints.Store;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using AutoAopProxyGenerator;
+using AutoInjectGenerator;
+using static System.Formats.Asn1.AsnWriter;
+using Microsoft.Extensions.Logging;
+
 namespace Project.Constraints.Aop;
 
-public class LogAopAttribute : AbstractInterceptorAttribute
+public class LogAopAttribute : Attribute
 {
-    public override async Task Invoke(AspectContext context, AspectDelegate next)
+    //public override async Task Invoke(AspectContext context, AspectDelegate next)
+    //{
+    //    await next(context);
+    //    var infoAttr = context.ServiceMethod.GetCustomAttribute<LogInfoAttribute>();
+    //    if (infoAttr == null)
+    //    {
+    //        return;
+    //    }
+    //    var result = await GetReturnValue<IQueryResult>(context);
+    //    var store = context.ServiceProvider.GetService<IUserStore>();
+    //    var logService = context.ServiceProvider.GetService<IRunLogService>();
+    //    var userId = store?.UserId ?? GetUserIdFromContext(context);
+    //    //if (infoAttr!.Module == "BasicService")
+    //    //{
+    //    //    var type = context.ServiceMethod.DeclaringType!.GetGenericArguments().First();
+    //    //    infoAttr!.Action = $"[{type.Name}]{infoAttr!.Action}";
+    //    //}
+    //    var l = new RunLog()
+    //    {
+    //        UserId = userId,
+    //        ActionModule = infoAttr!.Module ?? "",
+    //        ActionName = infoAttr!.Action ?? "",
+    //        ActionResult = result?.Success ?? false ? "成功" : "失败",
+    //        ActionMessage = result?.Message ?? "",
+    //    };
+    //    await logService!.WriteLog(l);
+    //}
+
+    //private static async Task<T> GetReturnValue<T>(AspectContext context)
+    //{
+    //    if (context.IsAsync())
+    //    {
+    //        return await context.UnwrapAsyncReturnValue<T>();
+    //    }
+    //    else
+    //    {
+    //        return (T)context.ReturnValue;
+    //    }
+    //}
+
+    //private static string GetUserIdFromContext(AspectContext context)
+    //{
+    //    return (context.Parameters.FirstOrDefault() as UserInfo)?.UserId ?? context.Parameters.FirstOrDefault()?.ToString() ?? "Get UserId Failed";
+    //}
+}
+[AutoInject(ServiceType = typeof(AopLogger))]
+public class AopLogger : IAspectHandler
+{
+    private readonly IUserStore userStore;
+    private readonly ILogger<AopLogger> logger;
+
+    public AopLogger(IUserStore userStore, ILogger<AopLogger> logger)
     {
-        await next(context);
-        var infoAttr = context.ServiceMethod.GetCustomAttribute<LogInfoAttribute>();
-        if (infoAttr == null)
+        this.userStore = userStore;
+        this.logger = logger;
+    }
+    public async Task Invoke(ProxyContext context, Func<Task> process)
+    {
+        logger.LogInformation("AopLogger called before {Name}", context.ServiceMethod?.Name);
+        await process();
+        logger.LogInformation("AopLogger called after {Name}", context.ServiceMethod?.Name);
+        var infoAttr = context.ServiceMethod?.GetCustomAttribute<LogInfoAttribute>();
+        if (infoAttr != null)
         {
-            return;
+            var userId = userStore.UserId ?? GetUserIdFromContext(context);
+            var result = context.ReturnValue as QueryResult;
+            var l = new MinimalLog()
+            {
+                UserId = userId,
+                Module = infoAttr!.Module ?? "",
+                Action = infoAttr!.Action ?? "",
+                Result = result?.Success ?? false ? "成功" : "失败",
+                Message = result?.Message ?? "",
+            };
         }
-        var result = await GetReturnValue<IQueryResult>(context);
-        var store = context.ServiceProvider.GetService<IUserStore>();
-        var logService = context.ServiceProvider.GetService<IRunLogService>();
-        var userId = store?.UserId ?? GetUserIdFromContext(context);
-        //if (infoAttr!.Module == "BasicService")
-        //{
-        //    var type = context.ServiceMethod.DeclaringType!.GetGenericArguments().First();
-        //    infoAttr!.Action = $"[{type.Name}]{infoAttr!.Action}";
-        //}
-        var l = new RunLog()
-        {
-            UserId = userId,
-            ActionModule = infoAttr!.Module ?? "",
-            ActionName = infoAttr!.Action ?? "",
-            ActionResult = result?.Success ?? false ? "成功" : "失败",
-            ActionMessage = result?.Message ?? "",
-        };
-        await logService!.Log(l);
     }
 
-    private static async Task<T> GetReturnValue<T>(AspectContext context)
+    private static string GetUserIdFromContext(ProxyContext context)
     {
-        if (context.IsAsync())
+        if (context.ServiceMethod?.Name == nameof(IAuthService.SignInAsync))
         {
-            return await context.UnwrapAsyncReturnValue<T>();
+            var r = context.ReturnValue as QueryResult<UserInfo>;
+            return r?.Payload?.UserId ?? "Unknow";
         }
-        else
-        {
-            return (T)context.ReturnValue;
-        }
-    }
-
-    private static string GetUserIdFromContext(AspectContext context)
-    {
-        return (context.Parameters.FirstOrDefault() as UserInfo)?.UserId ?? context.Parameters.FirstOrDefault()?.ToString() ?? "Get UserId Failed";
+        return "Unknow";
     }
 }
-
 
 //public class LogAop : Interceptor
 //{

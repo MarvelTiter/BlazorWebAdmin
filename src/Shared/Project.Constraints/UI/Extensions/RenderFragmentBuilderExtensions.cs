@@ -21,7 +21,7 @@ namespace Project.Constraints.UI.Extensions
             return new ElementBuilder(builder, "span");
         }
 
-        public static RenderFragment AsContent(this string content)
+        public static RenderFragment AsContent(this string? content)
         {
             return builder => builder.AddContent(1, content);
         }

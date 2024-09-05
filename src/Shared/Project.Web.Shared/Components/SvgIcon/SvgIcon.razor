@@ -1,11 +1,13 @@
 ﻿@namespace Project.Web.Shared.Components
-<i style="display: flex;align-items: center;" @onclick="handleClick">
+@* @inherits JsComponentBase *@
+<i style="display: flex;align-items: center;" @onclick="handleClick" @ref="icon_wrapper">
     @IconMarkuString
 </i>
 @code {
     [Parameter]
     public string? IconName { get; set; }
-
+    [Inject, NotNull] ISvgIconService? SvgService { get; set; }
+    ElementReference? icon_wrapper;
     MarkupString IconMarkuString;
 
     [Parameter]
@@ -23,16 +25,42 @@
         await OnClick.InvokeAsync();
     }
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
-        await loadSvgData();
-        await base.OnParametersSetAsync();
+        await base.OnInitializedAsync();
+        var result = await SvgService.GetIcon(IconName);
+        loadSvgData(result.Payload);
     }
 
-    async Task loadSvgData()
+    public override async Task SetParametersAsync(ParameterView parameters)
     {
-        if (string.IsNullOrEmpty(IconName)) return;
-        var svgContent = await SvgIconDataCache.GetIconDataByName(IconName);
+        if (parameters.TryGetValue(nameof(IconName), out string? result))
+        {
+            if (!string.Equals(IconName, result)
+            && !string.IsNullOrEmpty(IconName)
+            && !string.IsNullOrEmpty(result))
+            {
+                shouldUpdate = true;
+            }
+        }
+        await base.SetParametersAsync(parameters);
+    }
+    bool shouldUpdate;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // await loadSvgData();
+        await base.OnParametersSetAsync();
+        if (shouldUpdate)
+        {
+            var result = await SvgService.GetIcon(IconName);
+            loadSvgData(result.Payload);
+            shouldUpdate = false;
+        }
+    }
+      
+    void loadSvgData(string? svgContent)
+    {
         if (string.IsNullOrEmpty(svgContent))
         {
             IconMarkuString = new MarkupString($"<span class='iconfont {ClassName} icon-{IconName}'></span>");
@@ -46,3 +74,54 @@
         }
     }
 }
+
+
+
+
+@* <svg id="@Id" class="svg-icon @ClassName" style="@Style" viewBox="@($"0 0 {info?.Width ?? 0} {info?.Height ?? 0}")" width="@Size" height="@Size"
+     @onclick="@handleClick" @attributes="@AdditionalParameters">
+    @((MarkupString)SvgContent)
+</svg>
+@code {
+    [Parameter]
+    public string? IconName { get; set; }
+    ElementReference? icon_wrapper;
+    MarkupString IconMarkuString;
+
+    [Parameter]
+    public string? ClassName { get; set; }
+
+    [Parameter] public string? Style { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter] public string Size { get; set; } = "1em";
+
+    [Parameter] public string? FontSize { get; set; }
+
+    private async Task handleClick()
+    {
+        await OnClick.InvokeAsync();
+    }
+    string SvgContent => info?.Content ?? string.Empty;
+    // protected override async Task OnParametersSetAsync()
+    // {
+    //     await loadSvgData();
+    //     await base.OnParametersSetAsync();
+    // }
+    SvgInfo? info;
+    protected override async ValueTask Init()
+    {
+        // Style ??= $"font-size: {FontSize ?? "18px"}";
+        // var className = $"svg-icon {ClassName}";
+        var result = await InvokeAsync<JsActionResult<SvgInfo>>("getIcon", IconName);
+        if (result.Success)
+        {
+            info = result.Payload;
+            await InvokeAsync(StateHasChanged);
+        }
+        // IconMarkuString = new MarkupString(content);
+        // StateHasChanged();
+    }
+} *@

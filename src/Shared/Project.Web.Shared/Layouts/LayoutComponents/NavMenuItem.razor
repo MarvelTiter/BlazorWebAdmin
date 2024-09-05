@@ -1,0 +1,18 @@
+﻿<div class="nav-menu-item@(FitContent ? " fit-width":"")" @onclick="HandleClick" title="@Title">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool FitContent { get; set; }
+    private Task HandleClick()
+    {
+        if (OnClick.HasDelegate)
+        {
+            return OnClick.InvokeAsync();
+        }
+        return Task.CompletedTask;
+    }
+}

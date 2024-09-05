@@ -1,9 +1,9 @@
-import { BaseComponent } from "../../JsCore/baseComponent"
-import { getComponentById } from "../../JsCore/componentStore"
-import { EventHandler } from "../../JsCore/eventHandler"
-import { GAP } from "../../JsCore/utils"
-import { Bar } from "./Bar"
-import { Thumb } from "./Thumb"
+import {BaseComponent} from "../../JsCore/baseComponent"
+import {getComponentById} from "../../JsCore/componentStore"
+import {EventHandler} from "../../JsCore/eventHandler"
+import {GAP} from "../../JsCore/utils"
+import {Bar} from "./Bar"
+import {Thumb} from "./Thumb"
 
 export class ScrollBar extends BaseComponent {
     root: HTMLElement
@@ -24,7 +24,7 @@ export class ScrollBar extends BaseComponent {
         this.minSize = options.minSize
         this.bar = new Bar(this)
         for (const barOption of options.bars) {
-            const { position, tracker, thumb } = barOption
+            const {position, tracker, thumb} = barOption
             const o = new Thumb(this, position, tracker, thumb)
             this.bar[position] = o
         }
@@ -35,16 +35,23 @@ export class ScrollBar extends BaseComponent {
         this.initEvents()
     }
 
+    // scrollbar, wrap, resize, minSize, always
+    static init(id: string, options: any) {
+        getComponentById(id, () => {
+            return new ScrollBar(options)
+        })
+    }
+
     update() {
         if (!this.wrap) return
-        var offsetHeight = this.wrap.offsetHeight - GAP
-        var offsetWidth = this.wrap.offsetWidth - GAP
-        var scrollHeight = this.wrap.scrollHeight
-        var scrollWidth = this.wrap.scrollWidth
-        var originalHeight = offsetHeight * offsetHeight / scrollHeight
-        var originalWidth = offsetWidth * offsetWidth / scrollWidth
-        var height = Math.max(originalHeight, this.minSize)
-        var width = Math.max(originalWidth, this.minSize)
+        const offsetHeight = this.wrap.offsetHeight - GAP;
+        const offsetWidth = this.wrap.offsetWidth - GAP;
+        const scrollHeight = this.wrap.scrollHeight;
+        const scrollWidth = this.wrap.scrollWidth;
+        const originalHeight = offsetHeight * offsetHeight / scrollHeight;
+        const originalWidth = offsetWidth * offsetWidth / scrollWidth;
+        const height = Math.max(originalHeight, this.minSize);
+        const width = Math.max(originalWidth, this.minSize);
 
         this.ratioY = originalHeight /
             (offsetHeight - originalHeight) /
@@ -90,12 +97,5 @@ export class ScrollBar extends BaseComponent {
         EventHandler.remove(this.wrap, 'scroll')
         EventHandler.remove(this.wrap, 'resize')
         EventHandler.remove(this.resize, 'resize')
-    }
-
-    // scrollbar, wrap, resize, minSize, always
-    static init(id: string, options: any) {
-        getComponentById(id, () => {
-            return new ScrollBar(options)
-        })
     }
 }

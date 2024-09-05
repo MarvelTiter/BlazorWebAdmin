@@ -4,10 +4,11 @@ using Project.Constraints.UI;
 
 namespace Project.Constraints;
 
-[AutoInject]
+//[AutoInject]
 public interface IAppSession
 {
     event Func<Task>? WebApplicationAccessedEvent;
+    event Func<UserInfo, Task>? LoginSuccessEvent;
     NavigationManager Navigator { get; }
     IAppStore AppStore { get; }
     //IAuthenticationStateProvider AuthenticationStateProvider { get; }
@@ -16,4 +17,5 @@ public interface IAppSession
     IUIService UI { get; }
     Action? Update { get; set; }
     Task NotifyWebApplicationAccessedAsync();
+    Task NotifyLoginSuccessAsync();
 }

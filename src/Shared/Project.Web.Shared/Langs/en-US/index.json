@@ -1,0 +1,123 @@
+{
+  "CustomButtons": {
+    "Ok": "Ok",
+    "Cancel": "Cancel",
+    "Close": "Close",
+    "Edit": "Edit",
+    "Delete": "Delete"
+  },
+  "IconSelector": {
+    "Title": "Icon Select",
+    "ButtonText": "Icon Library"
+  },
+  "Login": {
+    "SuccessTips": "Success",
+    "Buttons": {
+      "Login": "Login"
+    },
+    "Placeholder": {
+      "UserName": "user name",
+      "Password": "password"
+    }
+  },
+  "NavMenu": {
+    "TipTitle": {
+      "FullScreen": "Toggle FullScreen",
+      "ClearStorage": "Clear Storage",
+      "LangSelect": "Lang Select",
+      "SysSetting": "SysSetting"
+    },
+    "UserAction": {
+      "ModifyPassword": "Password",
+      "Logout": "Logout"
+    }
+  },
+  "User": {
+    "UserId": "UserId",
+    "UserName": "UserName",
+    "Password": "Password",
+    "Age": "Age",
+    "Sign": "Sign",
+    "LastLogin": "LastLogin",
+    "Roles": "User Roles",
+    "DialogTitle": {
+      "Add": "Add",
+      "Modify": "Modify"
+    }
+  },
+  "UserPwd": {
+    "Title": "Modify Password",
+    "OldPassword": "Old Password",
+    "Password": "Password",
+    "ConfirmPassword": "ConfirmPassword",
+    "OldPasswordError": "旧密码错误",
+    "PasswordDifference": "两次密码不一样"
+  },
+  "RunLog": {
+    "UserId": "UserId",
+    "ActionModule": "Module",
+    "ActionName": "Action",
+    "ActionTime": "Time",
+    "ActionResult": "Result",
+    "ActionMessage": "Remark"
+  },
+  "Role": {
+    "RoleId": "RoleId",
+    "RoleName": "RoleName",
+    "Powers": "Role Powers"
+  },
+  "Power": {
+    "PowerId": "PowerId",
+    "PowerName": "PowerName",
+    "ParentId": "ParentId",
+    "PowerType": "PowerType",
+    "PowerLevel": "PowerLevel",
+    "Icon": "Icon",
+    "Path": "Path",
+    "Sort": "Sort",
+    "GenerateCRUDButton": "Crud",
+    "PermissionSetting": {
+      "AddChild": "AddChild"
+    }
+  },
+  "RouterStore": {
+    "Home": "Dashboard",
+    "OnlineUsers": "Online Users",
+    "BasicSetting": "Setting",
+    "Setting": "SysSetting",
+    "User": "Users",
+    "RolePermission": "Role Permission",
+    "Permission": "Permissions",
+    "OperationLog": "Operation Log"
+  },
+  "TableOptions": {
+    "TableButtons": {
+      "Query": "Search",
+      "AdvancedQuery": "Advanced",
+      "AddCondition": "More",
+      "Export": "Export",
+      "Import": "Import",
+      "ImportTemplate": "Import Template",
+      "Add": "New",
+      "Edit": "Edit",
+      "Delete": "Delete"
+    },
+    "TableTips": {
+      "Total": "Total",
+      "ActionColumn": "Action",
+      "ActionSuccess": "Successfully",
+      "More": "More",
+      "DangerActionConfirmTitle": "this operation cannot be resumed!",
+      "DangerActionConfirmContent": "confirm operation?"
+    },
+    "ConditionSwitch": {
+      "AndAlso": "AndAlso",
+      "OrElse": "OrElse"
+    },
+    "AdvanceCondition": {
+      "AddCondition": "Add",
+      "AddChildCondition": "Add Child",
+      "RemoveCondition": "Remove"
+    }
+  }
+}

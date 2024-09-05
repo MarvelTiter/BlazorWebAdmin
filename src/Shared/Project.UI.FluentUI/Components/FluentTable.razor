@@ -1,0 +1,196 @@
+﻿@using Project.Constraints.UI.Extensions
+@using Project.Web.Shared.ComponentHelper
+@typeparam TData
+@typeparam TQuery where TQuery : IRequest, new()
+
+<FluentCard>
+    <FluentDataGrid TGridItem="TData"
+                    Items="@Datas"
+                    Loading="@Options.Loading"
+                    ResizableColumns
+                    OnRowClick="@OnRowClick"
+                    ItemKey="@Options.RowKey"
+                    Pagination="@pagination">
+        @if (Options.EnableSelection)
+        {
+            <SelectColumn TGridItem="TData"
+                          SelectMode="@DataGridSelectMode.Multiple"
+                          @bind-SelectedItems="@Options.Selected"></SelectColumn>
+        }
+        @foreach (var col in Options.Columns)
+        {
+            <TemplateColumn Title="@(Localizer[col.Label])" Sortable="@col.Sortable">
+                <span>
+                    @CellContentRender(context, col)
+                </span>
+            </TemplateColumn>
+        }
+        @if (Options.Buttons?.Count > 0)
+        {
+            @foreach (var btnGroup in Options.Buttons.GroupBy(btn => btn.Group))
+            {
+                <TemplateColumn Title="@(TableLocalizer[btnGroup.Key])" Align="@Align.Center">
+                    @{
+                        var btns = btnGroup.Where(b => b.CheckVisible(context)).ToList();
+                        if (Options.ActionButtonColumn.HasValue)
+                        {
+                            <MGrid GridColumns="@Options.ActionButtonColumn.Value" Gap="5px">
+                                @foreach (var btn in btns)
+                                {
+                                    @CreateButton(btn, context)
+                                }
+                            </MGrid>
+                        }
+                        else
+                        {
+                            foreach (var btn in btns)
+                            {
+                                @CreateButton(btn, context)
+                            }
+                        }
+                    }
+                </TemplateColumn>
+            }
+        }
+    </FluentDataGrid>
+    <FluentPaginator State="@pagination"
+                     SummaryTemplate="@TotalFragment()"
+                     CurrentPageIndexChanged="@PaginationChanged" />
+</FluentCard>
+
+@code {
+    [Parameter, NotNull] public TableOptions<TData, TQuery>? Options { get; set; }
+    [Inject, NotNull] IStringLocalizer<TData>? Localizer { get; set; }
+    [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
+    [Inject, NotNull] IToastService? Toast { get; set; }
+    [Inject, NotNull] IDialogService? Dialog { get; set; }
+    PaginationState? pagination;
+    IQueryable<TData> Datas => (Options.Result?.Payload ?? []).AsQueryable();
+    int Total => Options.Result?.TotalRecord ?? 0;
+
+    RenderFragment TotalFragment() => $"{TableLocalizer["TableTips.Total"]}：{Options.Result?.TotalRecord}".AsContent();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Options.NotifyChanged = NofityChanged;
+        pagination = new() { ItemsPerPage = Options.Query.PageSize };
+    }
+
+    async Task NofityChanged()
+    {
+        await pagination!.SetTotalItemCountAsync(Total);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    async Task PaginationChanged(int index)
+    {
+        Options.Query.PageIndex = index;
+        await Options.RefreshAsync();
+    }
+
+    Task OnRowClick(FluentDataGridRow<TData> row)
+    {
+        return Options.OnRowClickAsync is not null ? Options.OnRowClickAsync(row.Item!) : Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// 创建按钮
+    /// </summary>
+    /// <param name="definition"></param>
+    /// <param name="context"></param>
+    /// <returns></returns>
+    private RenderFragment CreateButton(TableButton<TData> definition, TData context)
+    {
+        return
+    @<FluentButton OnClick="@(() => InvokeButtonAction(definition, context))">
+        @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
+    </FluentButton>
+    ;
+    }
+
+    private async Task InvokeButtonAction(TableButton<TData> definition, TData data)
+    {
+        if (definition.Danger)
+        {
+            var confirmResult = await Dialog.ShowConfirmationAsync(
+        TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+        , Localizer["CustomButtons.Ok"]
+        , Localizer["CustomButtons.Cancel"]
+        , title: TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+            var r = await confirmResult.Result;
+            if (!r.Cancelled)
+            {
+                await CallButtonAction();
+            }
+        }
+        else
+        {
+            await CallButtonAction();
+        }
+
+        return;
+
+        async Task CallButtonAction()
+        {
+            var result = await definition.Callback.Invoke(data);
+            Options.OnTableButtonClickAsync?.Invoke(definition, result);
+            if (result)
+            {
+                var msg = TableLocalizer["TableTips.ActionSuccess"].Value;
+                Toast.ShowSuccess(msg);
+                if (Options.AutoRefreshData)
+                    await Options.RefreshAsync();
+            }
+        }
+    }
+
+    private static RenderFragment CellContentRender(TData row, ColumnInfo col)
+    {
+        if (col.CellTemplate != null)
+        {
+            return col.CellTemplate.Invoke(new ColumnItemContext(row!, col));
+        }
+
+        var fieldValue = col.GetValue(row!);
+        string? formattedValue = fieldValue?.ToString()?.Trim();
+        if (col.IsEnum || col.EnumValues != null)
+        {
+            if (!string.IsNullOrEmpty(formattedValue))
+            {
+                if (col.EnumValues?.ContainsKey(formattedValue) ?? false)
+                {
+                    formattedValue = col.EnumValues?[formattedValue];
+                }
+            }
+        }
+
+        if (col.ValueFormat != null && fieldValue is not null)
+        {
+            formattedValue = col.ValueFormat.Invoke(fieldValue);
+        }
+
+        if (col.IsEnum || col.UseTag)
+        {
+            var color = col.GetTagColor(formattedValue);
+            return builder => builder.Component<FluentBadge>().SetComponent(c => c.BackgroundColor, color)
+                .SetComponent(c => c.ChildContent, formattedValue.AsContent()).Build();
+            //@<Tag Color="@color">@context.FormattedValue</Tag>;
+        }
+        else if ((col.UnderlyingType ?? col.DataType) == typeof(bool))
+        {
+            return builder => builder.Component<FluentSwitch>().SetComponent(c => c.Disabled, true)
+                .SetComponent(c => c.Value, CastToBool(fieldValue)).Build();
+            //@<Switch Disabled Checked="@CastToBool(context.FieldValue)"></Switch>;
+        }
+
+        return builder => builder.Span().AddContent(formattedValue.AsContent()).Build();
+        //@<span>@context.FormattedValue</span>;
+    }
+
+    private static bool CastToBool(object? v)
+    {
+        if (v is bool b) return b;
+        return false;
+    }
+}

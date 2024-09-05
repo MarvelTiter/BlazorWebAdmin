@@ -32,7 +32,7 @@
             @foreach (var col in Options.Columns)
             {
                 @if (!(col.VisibleExpression?.Invoke(context) ?? col.Visible)) continue;
-                @RenderColumn(col)
+                @RenderColumn(context, col)
             }
 
             @if (Options.Buttons?.Count > 0)
@@ -194,32 +194,32 @@
         return Options.AddRowOptions?.Invoke(row.Data);
     }
 
-    RenderFragment RenderColumn(ColumnInfo col)
+    RenderFragment RenderColumn(TData row, ColumnInfo col)
     {
         if (col.IsEnum)
         {
-            return RenderColumn<Enum>(col);
+            return RenderColumn<Enum>(row, col);
         }
 
         var type = (Nullable.GetUnderlyingType(col.DataType) ?? col.DataType).Name.ToLower();
         return type switch
         {
-            "string" => RenderColumn<string>(col),
-            "int64" => RenderColumn<Int64?>(col),
-            "int32" => RenderColumn<Int32?>(col),
-            "int16" => RenderColumn<Int16?>(col),
-            "single" => RenderColumn<Single?>(col),
-            "double" => RenderColumn<Double?>(col),
-            "bool" => RenderColumn<Boolean?>(col),
-            "datetime" => RenderColumn<DateTime?>(col),
-            _ => RenderColumn<string>(col)
+            "string" => RenderColumn<string>(row, col),
+            "int64" => RenderColumn<Int64?>(row, col),
+            "int32" => RenderColumn<Int32?>(row, col),
+            "int16" => RenderColumn<Int16?>(row, col),
+            "single" => RenderColumn<Single?>(row, col),
+            "double" => RenderColumn<Double?>(row, col),
+            "bool" => RenderColumn<Boolean?>(row, col),
+            "datetime" => RenderColumn<DateTime?>(row, col),
+            _ => RenderColumn<string>(row, col)
         };
     }
 
-    RenderFragment RenderColumn<TColumnData>(ColumnInfo col)
+    RenderFragment RenderColumn<TColumnData>(TData row, ColumnInfo col)
     {
         return
-    @<Column TData="TColumnData" Ellipsis="@col.Ellipsis" Width="@col.Width" Sortable="@col.Sortable" Title="@(Localizer[col.Label])" Fixed="@col.Fixed" DataIndex="@col.PropertyOrFieldName" Grouping="@col.Grouping" GroupBy="data => col.GroupByExpression(data)" OnCell="GetOnCell(col)" CellRender="ColumnRender<TColumnData>(col)">
+    @<Column TData="TColumnData" Ellipsis="@col.Ellipsis" Width="@col.Width" Sortable="@col.Sortable" Title="@(Localizer[col.Label])" Fixed="@col.Fixed" DataIndex="@col.PropertyOrFieldName" Grouping="@col.Grouping" GroupBy="data => col.GroupByExpression(data)" OnCell="GetOnCell(col)" CellRender="ColumnRender<TColumnData>(row, col)">
     </Column>
     ;
     }

@@ -1,8 +1,8 @@
-﻿using Project.Constraints.Store;
+﻿using AutoInjectGenerator;
+using Project.Constraints.Store;
 
 namespace Project.Constraints.Services
 {
-    [AutoInject]
     public interface IWebSettingInitService
     {
         void UpdateUserInfo(UserInfo info);
@@ -12,11 +12,11 @@ namespace Project.Constraints.Services
     [AutoInject]
     public class WebSettingInitService : IWebSettingInitService
     {
-        private readonly ILoginService loginService;
+        private readonly IAuthService authenticationService;
 
-        public WebSettingInitService(ILoginService loginService)
+        public WebSettingInitService(IAuthService authenticationService)
         {
-            this.loginService = loginService;
+            this.authenticationService = authenticationService;
         }
         public void ApplyAppSetting(IAppStore app)
         {

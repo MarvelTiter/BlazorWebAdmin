@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AutoGenMapperGenerator;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Project.Constraints.Models.Permissions
@@ -25,8 +26,26 @@ namespace Project.Constraints.Models.Permissions
         IEnumerable<IPower>? Children { get; set; }
     }
 
+    public class MinimalPower : IPower
+    {
+        [NotNull] public string? PowerId { get; set; }
+        [NotNull] public string? PowerName { get; set; }
+        public string? ParentId { get; set; }
+        public PowerType PowerType { get; set; }
+        public int PowerLevel { get; set; }
+        public string? Icon { get; set; }
+        public string? Path { get; set; }
+        public int Sort { get; set; }
+        public IEnumerable<MinimalPower>? Children { get; set; }
+        IEnumerable<IPower>? IPower.Children { get => Children; set => Children = value?.Cast<MinimalPower>(); }
+        public bool GenerateCRUDButton { get; set; }
+    }
+
+#if (ExcludeDefaultService)
+#else
     [LightTable(Name = "POWERS")]
-    public class Power : IPower
+    [GenMapper]
+    public partial class Power : IPower, IAutoMap
     {
         [ColumnDefinition]
         [Required]
@@ -64,11 +83,12 @@ namespace Project.Constraints.Models.Permissions
         public int Sort { get; set; }
 
         [NotMapped]
-        public IEnumerable<Power>? Children { get; set; }
+        public IEnumerable<Power>? Children { get; set; } = [];
         IEnumerable<IPower>? IPower.Children { get => Children; set => Children = value?.Cast<Power>(); }
 
         [NotMapped]
         [Form]
         public bool GenerateCRUDButton { get; set; }
     }
+#endif
 }

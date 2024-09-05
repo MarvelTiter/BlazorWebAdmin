@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using Project.Constraints
+@using Project.Constraints.Store.Models
+@using System.Globalization;
+@using System.Diagnostics.CodeAnalysis
+@using Project.Web.Shared.Layouts.Layouts
+@inherits LayoutComponentBase
+@implements IDisposable
+@layout AuthorizedLayout
+
+<PageTitle>
+    @($"管理系统 - {Context.RouterStore.Current?.RouteTitle ?? "主页"}")
+</PageTitle>
+
+<div class="page">
+    <CascadingValue Value="this" IsFixed>
+        @if (Context.AppStore.Mode == LayoutMode.Classic)
+        {
+            <ClassicLayout @ref=LayoutBase></ClassicLayout>
+        }
+        else if (Context.AppStore.Mode == LayoutMode.Card)
+        {
+            <CardLayout @ref=LayoutBase></CardLayout>
+        }
+        else if (Context.AppStore.Mode == LayoutMode.Line)
+        {
+            <LineLayout @ref=LayoutBase></LineLayout>
+        }
+        else
+        {
+            <div style="height:100vh; width:100vw;display: flex; align-items: center;justify-content: center;">
+                <h1>Loading</h1>
+            </div>
+        }
+        @* <WebSetting @ref=WebSetting></WebSetting> *@
+    </CascadingValue>
+</div>
+@code {
+    [CascadingParameter, NotNull] IAppSession? Context { get; set; }
+    public LayoutBase? LayoutBase { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        // WebSetting更新页面
+        Context.Update = StateHasChanged;
+    }
+
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     await base.OnAfterRenderAsync(firstRender);
+    //     if (firstRender)
+    //     {
+    //         await Context.NotifyWebApplicationAccessedAsync();
+    //     }
+    // }
+
+    private bool disposedValue;
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+}

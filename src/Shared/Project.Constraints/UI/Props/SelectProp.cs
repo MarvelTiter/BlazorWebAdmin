@@ -2,12 +2,13 @@
 
 namespace Project.Constraints.UI.Props
 {
-    [IgnoreAutoInject]
     public class SelectProp : DefaultProp
     {
         public bool AllowClear { get; set; } = true;
         public bool AllowSearch { get; set; } = true;
         public Expression? LabelExpression { get; set; }
         public Expression? ValueExpression { get; set; }
+        public bool ButtonGroup { get; set; }
+        public bool Mulitple { get; set; }
     }
 }

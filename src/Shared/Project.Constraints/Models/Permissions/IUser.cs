@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AutoGenMapperGenerator;
+using System.ComponentModel.DataAnnotations;
 
 namespace Project.Constraints.Models.Permissions
 {
@@ -16,19 +17,30 @@ namespace Project.Constraints.Models.Permissions
 
     public class UserPwd
     {
+        [Form(Hide = true)]
+        [NotNull]
+        public string? UserId { get; set; }
         [Required]
         [NotNull]
+        [ColumnDefinition]
+        [Form(InputType.Password)]
         public string? OldPassword { get; set; }
         [Required]
         [NotNull]
+        [ColumnDefinition]
+        [Form(InputType.Password)]
         public string? Password { get; set; }
         [Required]
         [NotNull]
+        [ColumnDefinition]
+        [Form(InputType.Password)]
         public string? ConfirmPassword { get; set; }
     }
-
+#if (ExcludeDefaultService)
+#else
     [LightTable(Name = "USER")]
-    public class User : IUser
+    [GenMapper]
+    public partial class User : IUser, IAutoMap
     {
         [ColumnDefinition(Readonly = true)]
         [LightColumn(Name = "USER_ID", PrimaryKey = true)]
@@ -58,4 +70,5 @@ namespace Project.Constraints.Models.Permissions
         [ColumnDefinition(Visible = false)]
         public IEnumerable<string>? Roles { get; set; }
     }
+#endif
 }

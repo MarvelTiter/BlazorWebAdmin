@@ -1,0 +1,110 @@
+﻿@namespace Project.Web.Shared.Components
+@using System.Linq.Expressions
+@using System.ComponentModel.DataAnnotations
+@using MT.Toolkit.StringExtension
+@inherits BasicComponent
+
+<StackPanel>
+    @(UI.BuildSelect<ColumnInfo, string>(this, Columns)
+        .ValueExpression(c => c.PropertyOrFieldName)
+        .LabelExpression(c => Localizer[c.Label].Value)
+        .Bind(() => Item.Name!, NotifyNameChanged)
+        .Style("min-width:120px;")
+        .Render()
+        )
+    @(UI.BuildSelect<CompareType>(this, null)
+        .Bind(() => Item.CompareType)
+        .Style("min-width:80px;")
+        .Render())
+    @ValueInput()
+</StackPanel>
+
+@code {
+    [Parameter, NotNull] public ColumnInfo[]? Columns { get; set; }
+    [Parameter, NotNull] public ConditionUnit? Item { get; set; }
+    [Parameter, NotNull] public IStringLocalizer? Localizer { get; set; }
+    [Parameter, NotNull] public IStringLocalizer? TableLocalizer { get; set; }
+    [Parameter] public EventCallback OnNameChanged { get; set; }
+    Func<object?>? GetCurrentValue;
+
+    RenderFragment ValueInput()
+    {
+        var selectedField = Columns.FirstOrDefault(c => c.PropertyOrFieldName == Item.Name);
+        if (selectedField?.DataType == typeof(DateTime) || selectedField?.DataType == typeof(DateTime?))
+        {
+            GetCurrentValue = () => dateValue;
+            return UI.BuildDatePicker(this).Bind(() => dateValue, NotifyChanged).Style("width:200px;").Render();
+        }
+        else if (selectedField?.EnumValues != null || (selectedField?.IsEnum ?? false))
+        {
+            GetCurrentValue = () => stringValue;
+            return UI.BuildSelect<KeyValuePair<string, string>, string>(this, selectedField.EnumValues!.ToList())
+            .LabelExpression(kv => kv.Value)
+            .ValueExpression(kv => kv.Key)
+            .Bind(() => stringValue!, NotifyChanged)
+            .Style("width:200px;")
+            .Render();
+        }
+        else
+        {
+            GetCurrentValue = () => stringValue;
+            return UI.BuildInput(this).Bind(() => stringValue!, NotifyChanged).Style("width:200px;").Render();
+        }
+    }
+
+    string stringValue = string.Empty;
+    DateTime dateValue = DateTime.Now;
+
+    Task NotifyChanged()
+    {
+        Item.Value = GetCurrentValue?.Invoke();
+        return Task.CompletedTask;
+    }
+
+    Task NotifyNameChanged()
+    {
+        if (OnNameChanged.HasDelegate)
+        {
+            return OnNameChanged.InvokeAsync();
+        }
+        return Task.CompletedTask;
+    }
+
+    // string GetDisplay(CompareType t)
+    // {
+    //     var member = typeof(CompareType).GetMember(Enum.GetName<CompareType>(t)!)[0];
+    //     var attr = Attribute.GetCustomAttribute(member, typeof(DisplayAttribute));
+    //     if (attr is DisplayAttribute display)
+    //     {
+    //         return display.Name!;
+    //     }
+    //     return "";
+    // }
+
+    // bool CheckComparable()
+    // {
+    //     return type switch
+    //     {
+    //         CompareType.GreaterThan => IsNumberOrDateTime(),
+    //         CompareType.GreaterThanOrEqual => IsNumberOrDateTime(),
+    //         CompareType.LessThan => IsNumberOrDateTime(),
+    //         CompareType.LessThanOrEqual => IsNumberOrDateTime(),
+    //         _ => true
+    //     };
+    // }
+    // bool IsNumberOrDateTime()
+    // {
+    //     return selectedField!.DataType == typeof(Int16)
+    //     || selectedField!.DataType == typeof(Int32)
+    //     || selectedField!.DataType == typeof(Int64)
+    //     || selectedField!.DataType == typeof(Single)
+    //     || selectedField!.DataType == typeof(Double)
+    //     || selectedField!.DataType == typeof(DateTime)
+    //     || selectedField!.DataType == typeof(Int16?)
+    //     || selectedField!.DataType == typeof(Int32?)
+    //     || selectedField!.DataType == typeof(Int64?)
+    //     || selectedField!.DataType == typeof(Single?)
+    //     || selectedField!.DataType == typeof(Double?)
+    //     || selectedField!.DataType == typeof(DateTime?);
+    // }
+}

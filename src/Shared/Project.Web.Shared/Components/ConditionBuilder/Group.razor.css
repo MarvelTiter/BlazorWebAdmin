@@ -1,0 +1,16 @@
+﻿.children-wrapper {
+    position: relative;
+}
+
+    .children-wrapper::before {
+        content: '';
+        height: 95%;
+        width: 5px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #ccc;
+        display: inline-block;
+        position: absolute;
+        border-radius: 5px;
+        left: 5px;
+    }

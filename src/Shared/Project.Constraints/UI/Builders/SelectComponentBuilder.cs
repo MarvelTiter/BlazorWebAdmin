@@ -3,7 +3,6 @@ using Project.Constraints.UI.Props;
 
 namespace Project.Constraints.UI.Builders
 {
-    [IgnoreAutoInject]
     public class SelectComponentBuilder<TComponent, TPropModel, TItem, TValue> : BindableComponentBuilder<TComponent, TPropModel, TValue>, IBindableInputComponent<TPropModel, TValue>, ISelectInput<TPropModel, TItem, TValue>
         where TComponent : IComponent
         where TPropModel : DefaultProp, new()

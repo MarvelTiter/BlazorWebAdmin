@@ -7,13 +7,25 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Components\TwoSidePage\**" />
-	  <Content Remove="Components\TwoSidePage\**" />
-	  <EmbeddedResource Remove="Components\TwoSidePage\**" />
-	  <None Remove="Components\TwoSidePage\**" />
+	  <Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
 	</ItemGroup>
-	
+
+
 	<ItemGroup>
+	  <EmbeddedResource Include="Langs\en-US\index.json">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	  <EmbeddedResource Include="Langs\zh-CN\index.json">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- <ProjectReference Include="..\..\..\..\MT.Generators\src\AutoAopProxy.Roslyn\AutoAopProxy.Roslyn.csproj" OutputItemType="Analyzer"/> -->
 		<ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
 	</ItemGroup>
 </Project>

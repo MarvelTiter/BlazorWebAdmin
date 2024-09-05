@@ -1,6 +1,5 @@
 ﻿namespace Project.Constraints;
 
-[AutoInject]
 public interface IDashboardContentProvider
 {
     Type? GetComponentType();

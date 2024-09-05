@@ -7,7 +7,6 @@ namespace Project.Constraints.Store
         event Action DataChangedEvent;
     }
 
-    [AutoInject]
     public interface IRouterStore : IStore, IDisposable
     {
         event Func<TagRoute, Task<bool>>? RouterChangingEvent;
@@ -21,6 +20,7 @@ namespace Project.Constraints.Store
         Task RemoveOther(string link);
         Task Reset();
         Task InitRoutersAsync(UserInfo? userInfo);
-        Type? GetRouteType(string routeUrl); 
+        Type? GetRouteType(string routeUrl);
+        string GetLocalizerString(RouterMeta meta);
     }
 }
