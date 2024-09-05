@@ -8,8 +8,8 @@ namespace Project.Constraints.Page;
 public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisposable
 {
     public const string JS_FUNC_PREFIX = "window.BlazorProject.";
-    private readonly Lazy<string>? idLazy = new(() => $"{Guid.NewGuid():N}");
-    [Inject] [NotNull] protected IJSRuntime? Js { get; set; }
+    private readonly Lazy<string> idLazy = new(() => $"{Guid.NewGuid():N}");
+    [Inject][NotNull] protected IJSRuntime? Js { get; set; }
 
     protected IJSObjectReference? Module { get; set; }
 
@@ -21,19 +21,8 @@ public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisp
     //     }
     // }
     protected bool LoadJs { get; set; } = false;
-
-    protected string ModuleName => GetModuleName();
-    protected string GlobalModuleName => $"{JS_FUNC_PREFIX}{GetModuleName()}";
-
-    protected bool IsLibrary =>
-        GetType().Assembly.GetName().FullName != Assembly.GetEntryAssembly()?.GetName().FullName;
-
-    protected string? ProjectName => GetType().Assembly.GetName().Name;
-    protected string? RelativePath { get; set; }
-
-    public string Id => $"{GetType().Name}_{idLazy.Value}";
-
-    private string GetModuleName()
+    private Lazy<string>? moduleName;
+    protected Lazy<string> ModuleName => moduleName ??= new Lazy<string>(() =>
     {
         var type = GetType();
         if (type.IsGenericType)
@@ -43,7 +32,31 @@ public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisp
         }
 
         return type.Name;
-    }
+    });
+    protected string GlobalModuleName => $"{JS_FUNC_PREFIX}{ModuleName.Value}";
+
+    protected bool IsLibrary =>
+        GetType().Assembly.GetName().FullName != Assembly.GetEntryAssembly()?.GetName().FullName;
+
+    protected string? ProjectName => GetType().Assembly.GetName().Name;
+    protected string? RelativePath { get; set; }
+
+    public string Id => $"{GetType().Name}_{idLazy.Value}";
+
+    //private Lazy<string> GetModuleName()
+    //{
+    //    return new Lazy<string>(() =>
+    //    {
+    //        var type = GetType();
+    //        if (type.IsGenericType)
+    //        {
+    //            var i = type.Name.IndexOf('`');
+    //            return type.Name[..i];
+    //        }
+
+    //        return type.Name;
+    //    });
+    //}
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

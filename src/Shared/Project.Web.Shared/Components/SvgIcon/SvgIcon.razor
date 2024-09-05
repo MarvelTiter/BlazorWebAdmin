@@ -1,9 +1,12 @@
 ﻿@namespace Project.Web.Shared.Components
-@inherits JsComponentBase
-<i style="display: flex;align-items: center;" @onclick="handleClick" @ref="icon_wrapper"></i>
+@* @inherits JsComponentBase *@
+<i style="display: flex;align-items: center;" @onclick="handleClick" @ref="icon_wrapper">
+    @IconMarkuString
+</i>
 @code {
     [Parameter]
     public string? IconName { get; set; }
+    [Inject, NotNull] ISvgIconService? SvgService { get; set; }
     ElementReference? icon_wrapper;
     MarkupString IconMarkuString;
 
@@ -22,30 +25,42 @@
         await OnClick.InvokeAsync();
     }
 
-    // protected override async Task OnParametersSetAsync()
-    // {
-    //     await loadSvgData();
-    //     await base.OnParametersSetAsync();
-    // }
-
-    protected override ValueTask Init()
+    protected override async Task OnInitializedAsync()
     {
-        Style ??= $"font-size: {FontSize ?? "18px"}";
-        var className = $"svg-icon {ClassName}";
-        return InvokeInit(new
-        {
-            Container = icon_wrapper,
-            IconName,
-            ClassName = className,
-            Style,
-            FontSize
-        });
+        await base.OnInitializedAsync();
+        var result = await SvgService.GetIcon(IconName);
+        loadSvgData(result.Payload);
     }
 
-    async Task loadSvgData()
+    public override async Task SetParametersAsync(ParameterView parameters)
     {
-        if (string.IsNullOrEmpty(IconName)) return;
-        var svgContent = await SvgIconDataCache.GetIconDataByName(IconName);
+        if (parameters.TryGetValue(nameof(IconName), out string? result))
+        {
+            if (!string.Equals(IconName, result)
+            && !string.IsNullOrEmpty(IconName)
+            && !string.IsNullOrEmpty(result))
+            {
+                shouldUpdate = true;
+            }
+        }
+        await base.SetParametersAsync(parameters);
+    }
+    bool shouldUpdate;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // await loadSvgData();
+        await base.OnParametersSetAsync();
+        if (shouldUpdate)
+        {
+            var result = await SvgService.GetIcon(IconName);
+            loadSvgData(result.Payload);
+            shouldUpdate = false;
+        }
+    }
+      
+    void loadSvgData(string? svgContent)
+    {
         if (string.IsNullOrEmpty(svgContent))
         {
             IconMarkuString = new MarkupString($"<span class='iconfont {ClassName} icon-{IconName}'></span>");

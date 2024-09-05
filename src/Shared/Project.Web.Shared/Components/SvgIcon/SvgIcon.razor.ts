@@ -1,4 +1,5 @@
 ﻿import { BaseComponent } from "../../JsCore/baseComponent";
+import { getComponentById } from "../../JsCore/componentStore";
 
 export class SvgIcon extends BaseComponent {
     static caches: Map<string, string> = new Map<string, string>()
@@ -54,13 +55,20 @@ export class SvgIcon extends BaseComponent {
             if (this.style) {
                 svgEl.setAttribute('style', this.style)
             }
-            
+
         }
 
     }
 
-    static init(id, options) {
-        new SvgIcon(options)
+    static init(id: string, options: any) {
+        getComponentById(id, () => new SvgIcon(options))
+    }
+    static async reload(id: string, name: string) {
+        const icon: SvgIcon = getComponentById(id)
+        if (icon) {
+            icon.iconName = name
+            await icon.load();
+        }
     }
 }
 

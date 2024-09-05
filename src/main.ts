@@ -11,7 +11,7 @@ import {SplitView} from './Shared/Project.Web.Shared/Components/SplitView/SplitV
 import {WaterMark} from './Shared/Project.Web.Shared/Components/WaterMark/WaterMark.razor.ts'
 import {NavTabs} from './Shared/Project.Web.Shared/Layouts/LayoutComponents/NavTabs.razor.ts'
 import {Downloader} from './Shared/Project.Web.Shared/Components/Downloader/Downloader.razor.ts'
-import {SvgIcon} from './Shared/Project.Web.Shared/Components/SvgIcon/SvgIcon.razor.ts'
+//import {SvgIcon} from './Shared/Project.Web.Shared/Components/SvgIcon/SvgIcon.razor.ts'
 import {ClientHub} from './Shared/Project.Web.Shared/Components/ClientHub/ClientHub.ts'
 
 declare global {
@@ -36,6 +36,6 @@ window.BlazorProject = {
     WaterMark,
     NavTabs,
     Downloader,
-    SvgIcon,
+    //SvgIcon,
     ClientHub
 }

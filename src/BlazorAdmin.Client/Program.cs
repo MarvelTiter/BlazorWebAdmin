@@ -26,6 +26,7 @@ builder.Services.AutoInjectWasm();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IAuthService, AuthServiceApiInvoker>();
 builder.Services.AddScoped<IClientService, ClientServiceApiInvoker>();
+builder.Services.AddScoped<ISvgIconService, SvgIconServiceApiInvoker>();
 #if (ExcludeDefaultService)
 #else
 // builder.Services.AddScoped<IUserService, UserServiceApiInvoker>();

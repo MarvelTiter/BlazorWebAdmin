@@ -1242,66 +1242,6 @@ _Downloader.downloadStream = (_, payload) => __async(_Downloader, null, function
 });
 var Downloader = _Downloader;
 
-// Shared/Project.Web.Shared/Components/SvgIcon/SvgIcon.razor.ts
-var _SvgIcon = class _SvgIcon extends BaseComponent {
-  constructor(options) {
-    super();
-    this.el = options.container;
-    this.iconName = options.iconName;
-    this.className = options.className;
-    this.style = options.style;
-    this.fontSize = options.fontSize;
-    this.load();
-  }
-  static getIcon(name) {
-    return __async(this, null, function* () {
-      if (!name) return "";
-      let icon = _SvgIcon.caches.get(name);
-      if (icon) {
-        return icon;
-      }
-      const response = yield fetch(`/icons/${name}.svg`);
-      icon = yield response.text();
-      if (!_SvgIcon.caches.has(name)) {
-        _SvgIcon.caches.set(name, icon);
-      }
-      return icon;
-    });
-  }
-  static getIconPath(name) {
-    return __async(this, null, function* () {
-      const icon = yield _SvgIcon.getIcon(name);
-      const div = document.createElement("div");
-      div.innerHTML = icon;
-      const svgEl = div.querySelector("svg");
-      return svgEl == null ? void 0 : svgEl.innerHTML;
-    });
-  }
-  load() {
-    return __async(this, null, function* () {
-      const icon = yield _SvgIcon.getIcon(this.iconName);
-      this.el.innerHTML = icon;
-      const svgEl = this.el.getElementsByTagName("svg").item(0);
-      if (svgEl) {
-        if (this.className) {
-          var all = this.className.split(" ");
-          for (const c of all) {
-            if (c == null ? void 0 : c.trim()) svgEl.classList.add(c.trim());
-          }
-        }
-        if (this.style) {
-          svgEl.setAttribute("style", this.style);
-        }
-      }
-    });
-  }
-  static init(id, options) {
-    new _SvgIcon(options);
-  }
-};
-_SvgIcon.caches = /* @__PURE__ */ new Map();
-var SvgIcon = _SvgIcon;
-
 // Shared/Project.Web.Shared/Components/ClientHub/ClientHub.ts
 var ClientHub = class _ClientHub extends BaseComponent {
   constructor(id, options) {
@@ -1402,7 +1342,7 @@ window.BlazorProject = {
   WaterMark,
   NavTabs,
   Downloader,
-  SvgIcon,
+  //SvgIcon,
   ClientHub
 };
 //# sourceMappingURL=blazor-admin-project.js.map
