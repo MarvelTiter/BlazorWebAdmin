@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Project.Constraints.Services;
 using Project.Constraints.UI;
 
 namespace Project.Constraints.Page;
@@ -9,8 +10,8 @@ public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisp
 {
     public const string JS_FUNC_PREFIX = "window.BlazorProject.";
     private readonly Lazy<string> idLazy = new(() => $"{Guid.NewGuid():N}");
-    [Inject][NotNull] protected IJSRuntime? Js { get; set; }
-
+    [Inject, NotNull] protected IJSRuntime? Js { get; set; }
+    [Inject, NotNull] IFileService? FileService { get; set; }
     protected IJSObjectReference? Module { get; set; }
 
     // {
@@ -80,7 +81,8 @@ public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisp
         var path = IsLibrary
             ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}.razor.js"
             : $"./{RelativePath}/{ModuleName}.razor.js";
-        Module = await Js.InvokeAsync<IJSObjectReference>("import", AppConst.GetStatisticsFileWithVersion(path));
+        var versionPath = await FileService.GetStaticFileWithVersionAsync(path);
+        Module = await Js.InvokeAsync<IJSObjectReference>("import", versionPath);
     }
 
     protected virtual ValueTask Init()

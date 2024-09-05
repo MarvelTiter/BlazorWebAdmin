@@ -4,7 +4,7 @@
 public class UserStore : StoreBase, IUserStore
 {
     public UserInfo? UserInfo { get; private set; }
-    public IEnumerable<string> Roles => UserInfo?.Roles ?? [];
+    public string[] Roles => UserInfo?.Roles ?? [];
     public string? UserId => UserInfo?.UserId;
     public string UserDisplayName => GetUserName();
 

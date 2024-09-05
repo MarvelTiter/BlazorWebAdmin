@@ -20,20 +20,20 @@ public static class AppConst
     static List<Assembly> AdditionalPageAssemblies = new List<Assembly>();
     //public static Assembly ServerAssembly { get; set; }
     //public static Assembly ClientAssembly { get; set; }
-    public static string GetStatisticsFileWithVersion(string path)
-    {
-        if (Environment?.IsDevelopment() == true)
-        {
-            return path;
-        }
-        var file = Path.Combine("wwwroot", path);
-        var fi = new FileInfo(file);
-        if (!fi.Exists)
-        {
-            return path;
-        }
-        return $"{path}?v={fi.LastWriteTime:yyMMddHHmmss}";
-    }
+    //public static string GetStatisticsFileWithVersion(string path)
+    //{
+    //    if (Environment?.IsDevelopment() == true)
+    //    {
+    //        return path;
+    //    }
+    //    var file = Path.Combine("wwwroot", path);
+    //    var fi = new FileInfo(file);
+    //    if (!fi.Exists)
+    //    {
+    //        return path;
+    //    }
+    //    return $"{path}?v={fi.LastWriteTime:yyMMddHHmmss}";
+    //}
 
     public static RenderFragment? Footer { get; set; }
     public static List<Assembly> Pages => AdditionalPageAssemblies;
@@ -75,8 +75,8 @@ public static class AppConst
         }
         return Path.Combine([AppDomain.CurrentDomain.BaseDirectory, .. paths]);
     }
-    public static IHostEnvironment? Environment { get; set; }
-    public static IServiceProvider? Services { get; set; }
+    //public static IHostEnvironment? Environment { get; set; }
+    //public static IServiceProvider? Services { get; set; }
 
     static AppConst()
     {

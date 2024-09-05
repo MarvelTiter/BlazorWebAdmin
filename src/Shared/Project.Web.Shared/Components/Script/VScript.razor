@@ -3,6 +3,6 @@
 <script src="@VersionSrc"></script>
 @code {
     [Parameter, NotNull] public string? Src { get; set; }
-
-    string VersionSrc => AppConst.GetStatisticsFileWithVersion(Src);
+    [Inject, NotNull] IFileService? FileService { get; set; }
+    string VersionSrc => FileService.GetStaticFileWithVersion(Src);
 }

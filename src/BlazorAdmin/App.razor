@@ -3,6 +3,7 @@
 @using Microsoft.Extensions.Options
 @using Project.Constraints.Options
 @using Project.Constraints.Store.Models
+@using Project.Web.Shared.Components
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,9 +15,9 @@
     <script src="_content/AntDesign/js/ant-design-blazor.js"></script>
     @* <script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script> *@
 
-    <Project.Web.Shared.Components.Link Href="_content/Project.Web.Shared/css/app.css" />
-    <Project.Web.Shared.Components.Link Href="app.css" />
-    <Project.Web.Shared.Components.Link Href="BlazorAdmin.styles.css" />
+    <VLink Href="_content/Project.Web.Shared/css/app.css" />
+    <VLink Href="app.css" />
+    <VLink Href="BlazorAdmin.styles.css" />
     <HeadOutlet @rendermode="@RenderMode" />
 </head>
 
@@ -25,7 +26,7 @@
     <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></Project.Web.Shared.Components.ReconnectorOutlet>
 
     <script src="_framework/blazor.web.js"></script>
-    <Project.Web.Shared.Components.Script Src="./js//blazor-admin-project.js"></Project.Web.Shared.Components.Script>
+    <VScript Src="./js//blazor-admin-project.js"></VScript>
 </body>
 
 </html>

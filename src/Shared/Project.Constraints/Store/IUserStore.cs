@@ -4,7 +4,7 @@ public interface IUserStore
 {
     // event Func<UserInfo, Task> LoginSuccessEvent;
     UserInfo? UserInfo { get; }
-    IEnumerable<string> Roles { get; }
+    string[] Roles { get; }
     string? UserId { get; }
     string UserDisplayName { get; }
     void SetUser(UserInfo? userInfo);

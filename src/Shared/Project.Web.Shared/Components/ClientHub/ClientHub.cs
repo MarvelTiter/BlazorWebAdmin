@@ -39,7 +39,7 @@ public class ClientHub : JsComponentBase
         client ??= new ClientInfo()
         {
             CircuitId = info[0],
-            UserStore = UserStore,
+            UserInfo = UserStore.UserInfo,
             IpAddress = info[1],
             UserAgent = info[2]
         };

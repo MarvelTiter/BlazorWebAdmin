@@ -61,12 +61,12 @@ namespace Project.AppCore
             app.UseMiddleware<RedirectToLauchUrlMiddleware>();
             app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/download"), a => a.UseMiddleware<FileDownloaderMiddleware>());
             app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/ip.client"), a => a.UseMiddleware<GetClientIpMiddleware>());
-            app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/icons"), a => a.UseMiddleware<IconProviderMiddleware>());
-            var envFunc = app.GetPropertyAccessor<IHostEnvironment>("Environment");
-            AppConst.Environment = envFunc.Invoke(app);
 
-            var serFunc = app.GetPropertyAccessor<IServiceProvider>("Services");
-            AppConst.Services = serFunc.Invoke(app);
+            //var envFunc = app.GetPropertyAccessor<IHostEnvironment>("Environment");
+            //AppConst.Environment = envFunc.Invoke(app);
+
+            //var serFunc = app.GetPropertyAccessor<IServiceProvider>("Services");
+            //AppConst.Services = serFunc.Invoke(app);
         }
     }
 }

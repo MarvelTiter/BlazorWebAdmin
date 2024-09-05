@@ -3,6 +3,7 @@
 <link href="@VersionHref" rel="@Rel" />
 @code {
     [Parameter, NotNull] public string? Href { get; set; }
+    [Inject, NotNull] IFileService? FileService{ get; set; }
     [Parameter] public string Rel { get; set; } = "stylesheet";
-    string VersionHref => AppConst.GetStatisticsFileWithVersion(Href);
+    string VersionHref => FileService.GetStaticFileWithVersion(Href);
 }

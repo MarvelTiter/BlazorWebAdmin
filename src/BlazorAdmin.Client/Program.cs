@@ -27,6 +27,7 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IAuthService, AuthServiceApiInvoker>();
 builder.Services.AddScoped<IClientService, ClientServiceApiInvoker>();
 builder.Services.AddScoped<ISvgIconService, SvgIconServiceApiInvoker>();
+builder.Services.AddScoped<IFileService, FileServiceApiInvoker>();
 #if (ExcludeDefaultService)
 #else
 // builder.Services.AddScoped<IUserService, UserServiceApiInvoker>();
