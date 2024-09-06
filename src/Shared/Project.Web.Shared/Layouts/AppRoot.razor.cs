@@ -11,6 +11,7 @@ public partial class AppRoot : IAsyncDisposable
     [Parameter] [NotNull] public Assembly? AppAssembly { get; set; }
     [Inject] [NotNull] private IAppSession? Context { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter, NotNull] public Type? DefaultLayout { get; set; }
     [Inject] [NotNull] private IServiceProvider? Services { get; set; }
     [Inject] [NotNull] private IProjectSettingService? SettingService { get; set; }
     [Inject] [NotNull] private IJSRuntime? Js { get; set; }

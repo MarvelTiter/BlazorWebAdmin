@@ -22,7 +22,14 @@
 </head>
 
 <body>
-    <Routes @rendermode="@RenderMode" />
+    @if (TokenOption.Value.NeedAuthentication)
+    {
+        <Routes @rendermode="@RenderMode" />
+    }
+    else
+    {
+        <FreeRoutes @rendermode="@RenderMode" />
+    }
     <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></Project.Web.Shared.Components.ReconnectorOutlet>
 
     <script src="_framework/blazor.web.js"></script>
@@ -33,7 +40,8 @@
 
 @code {
     [CascadingParameter, NotNull] public HttpContext? HttpContext { get; set; }
-    [Inject, NotNull] public IOptionsMonitor<AppSetting>? Option { get; set; }
+    [Inject, NotNull] public IOptions<AppSetting>? AppOption { get; set; }
+    [Inject, NotNull] public IOptions<Token>? TokenOption { get; set; }
     IComponentRenderMode? RenderMode
     {
         get
@@ -43,7 +51,7 @@
                 return null;
             }
 
-            return Option.CurrentValue.RunMode switch
+            return AppOption.Value.RunMode switch
             {
                 AppRunMode.Auto => new InteractiveAutoRenderMode(false),
                 AppRunMode.Server => new InteractiveServerRenderMode(false),
@@ -52,10 +60,4 @@
             };
         }
     }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-    }
-
 }

@@ -2,14 +2,16 @@
 
     [Inject, NotNull] NavigationManager? Nav { get; set; }
     [Inject, NotNull] IUIService? UI { get; set; }
-    protected override void OnInitialized()
+    [Inject, NotNull] IAuthenticationStateProvider? StateProvider { get; set; }
+    protected override async void OnInitialized()
     {
         base.OnInitialized();
         try
         {
             @*_ = MsgSrv.Error("登录过期！请重新登录！");*@
-            var redirect = Nav.ToBaseRelativePath(Nav.Uri);
-            Nav.NavigateTo($"/account/login?Redirect={HttpUtility.UrlEncode(redirect)}", true);
+            // var redirect = Nav.ToBaseRelativePath(Nav.Uri);
+            // Nav.NavigateTo($"/account/login?Redirect={HttpUtility.UrlEncode(redirect)}", true);
+            await StateProvider.ClearState();
         }
         catch
         {

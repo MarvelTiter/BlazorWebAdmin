@@ -6,7 +6,7 @@
             <Router AppAssembly="AppAssembly" AdditionalAssemblies="AppConst.Pages">
                 <Found Context="routeData">
                     <CascadingValue Value="@routeData">
-                        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+                        <RouteView RouteData="@routeData" DefaultLayout="@DefaultLayout" />
                     </CascadingValue>
                 </Found>
             </Router>

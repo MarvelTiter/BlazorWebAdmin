@@ -9,19 +9,14 @@ namespace Project.Constraints.Page;
 public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisposable
 {
     public const string JS_FUNC_PREFIX = "window.BlazorProject.";
-    private readonly Lazy<string> idLazy = new(() => $"{Guid.NewGuid():N}");
     [Inject, NotNull] protected IJSRuntime? Js { get; set; }
     [Inject, NotNull] IFileService? FileService { get; set; }
     protected IJSObjectReference? Module { get; set; }
-
-    // {
-    //     get
-    //     {
-    //         id ??= $"{GetType().Name}_{Guid.NewGuid():N}";
-    //         return id;
-    //     }
-    // }
     protected bool LoadJs { get; set; } = false;
+
+    private Lazy<string>? idLazy;
+    public Lazy<string> Id => idLazy ??= new(() => $"{GetType().Name}_{Guid.NewGuid():N}");
+
     private Lazy<string>? moduleName;
     protected Lazy<string> ModuleName => moduleName ??= new Lazy<string>(() =>
     {
@@ -42,7 +37,7 @@ public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisp
     protected string? ProjectName => GetType().Assembly.GetName().Name;
     protected string? RelativePath { get; set; }
 
-    public string Id => $"{GetType().Name}_{idLazy.Value}";
+
 
     //private Lazy<string> GetModuleName()
     //{
@@ -96,7 +91,7 @@ public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisp
         {
             //await (Module?.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled(CancellationToken.None));
             //await (Module?.InvokeVoidAsync("init", [Id, .. args]) ?? ValueTask.FromCanceled(CancellationToken.None));
-            await Js.InvokeVoidAsync($"{GlobalModuleName}.init", [Id, .. args]);
+            await Js.InvokeVoidAsync($"{GlobalModuleName}.init", [Id.Value, .. args]);
         }
         catch
         {
@@ -109,7 +104,7 @@ public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisp
         {
             //await (Module?.InvokeVoidAsync($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled(CancellationToken.None));
             //await (Module?.InvokeVoidAsync(identifier, [Id, .. args]) ?? ValueTask.FromCanceled(CancellationToken.None));
-            await Js.InvokeVoidAsync($"{GlobalModuleName}.{identifier}", [Id, .. args]);
+            await Js.InvokeVoidAsync($"{GlobalModuleName}.{identifier}", [Id.Value, .. args]);
         }
         catch
         {
@@ -123,7 +118,7 @@ public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisp
         {
             //ret = await (Module?.InvokeAsync<T>($"{ModuleName}.{identifier}", arguments.ToArray()) ?? ValueTask.FromCanceled<T>(CancellationToken.None));
             //ret = await (Module?.InvokeAsync<T>(identifier, [Id, .. args]) ?? ValueTask.FromCanceled<T>(CancellationToken.None));
-            ret = await Js.InvokeAsync<T>($"{GlobalModuleName}.{identifier}", [Id, .. args]);
+            ret = await Js.InvokeAsync<T>($"{GlobalModuleName}.{identifier}", [Id.Value, .. args]);
         }
         catch
         {
@@ -151,14 +146,14 @@ public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisp
         {
             if (Module != null)
             {
-                await Module.InvokeVoidAsync("dispose", Id);
+                await Module.InvokeVoidAsync("dispose", Id.Value);
                 await Module.DisposeAsync();
             }
         }
 
         async ValueTask DisposeOnGlobal()
         {
-            await Js.InvokeVoidAsync($"{GlobalModuleName}.dispose", Id);
+            await Js.InvokeVoidAsync($"{GlobalModuleName}.dispose", Id.Value);
         }
     }
 }

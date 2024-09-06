@@ -10,3 +10,13 @@
         @Body
     </CascadingValue>
 </div>
+@code {
+    // [CascadingParameter][NotNull] IAppSession? AppSession { get; set; }
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     await base.OnInitializedAsync();
+    //     await AppSession.RouterStore.InitRoutersAsync(null);
+    //     var url = AppSession.Navigator.ToBaseRelativePath(AppSession.Navigator.Uri);
+    //     // AppSession.Navigator.NavigateTo(url);
+    // }
+}

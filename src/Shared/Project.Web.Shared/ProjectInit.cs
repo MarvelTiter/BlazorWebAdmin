@@ -13,7 +13,7 @@ using Project.Web.Shared.Locales.Extensions;
 namespace Project.Web.Shared;
 public static class ProjectInit
 {
-    public static void AddClientProject(this IServiceCollection services, IConfiguration configuration, Action<ProjectSetting> action, out ProjectSetting setting)
+    public static void AddClientProject(this IServiceCollection services, object builder, IConfiguration configuration, Action<ProjectSetting> action, out ProjectSetting setting)
     {
 
         setting = new ProjectSetting();
@@ -53,6 +53,19 @@ public static class ProjectInit
         AppConst.AddAssembly(typeof(_Imports).Assembly);
 
         services.ConfigureAppSettings(configuration);
+        var useProxy = configuration.GetValue<bool>("AppSetting:UseAspectProxy");
+        if (useProxy)
+        {
+            //if (builder is IHostApplicationBuilder hostAppBuilder)
+            //{
+            //    hostAppBuilder.ConfigureContainer(new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
+            //}else if (builder is WebAssemblyHostBuilder)
+            try
+            {
+                builder.Invoke("ConfigureContainer", new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
+            }
+            catch { }
+        }
     }
 
     private static void InterceptorsInit(IServiceCollection services, ProjectSetting setting)

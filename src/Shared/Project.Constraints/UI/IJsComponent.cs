@@ -2,6 +2,6 @@
 {
     public interface IJsComponent
     {
-        string Id { get; }
+        Lazy<string> Id { get; }
     }
 }

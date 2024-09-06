@@ -1,36 +1,29 @@
 ﻿@using Project.Web.Shared.Layouts.LayoutComponents
 @inherits RootLayout
 @inject IProtectedLocalStorage LocalStorage
-@inject IOptionsMonitor<Token> Token
-@inject IOptionsMonitor<AppSetting> Setting
+@inject IOptions<Token> Token
+@inject IOptions<AppSetting> Setting
 <div @onclick="@HandleRootClick"
      @onkeydown="@HandleKeyDownAction"
      @onkeyup="@HandleKeyUpAction"
      tabindex="0"
      @ref="RootWrapper">
     @* <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
-        <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken">
-            @Body
-        </ActionWatcher>
+    <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken">
+    @Body
+    </ActionWatcher>
     </ActionWatcher> *@
     <CascadingValue Value="this">
         <AuthorizeView>
             <Authorized>
-                <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
+                <ActionWatcher WatchRoot Timeout="@(Token.Value.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
                     @* <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken"> *@
                     @* </ActionWatcher> *@
                     @Body
                 </ActionWatcher>
             </Authorized>
             <NotAuthorized>
-                @if (Token.CurrentValue.NeedAuthentication)
-                {
-                    <RedirectToLogin></RedirectToLogin>
-                }
-                else
-                {
-                    @Body
-                }
+                <RedirectToLogin></RedirectToLogin>
             </NotAuthorized>
         </AuthorizeView>
     </CascadingValue>
@@ -42,9 +35,9 @@
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     // [Inject, NotNull] public ILogger<AuthorizedLayout>? Logger { get; set; }
-    [CascadingParameter] [NotNull] IAppSession? AppSession { get; set; }
-    [Inject] [NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
-    string? LauchUrl => Setting.CurrentValue.LauchUrl;
+    [CascadingParameter][NotNull] IAppSession? AppSession { get; set; }
+    [Inject][NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+    string? LauchUrl => Setting.Value.LauchUrl;
 
     protected override async Task OnInitializedAsync()
     {
@@ -54,37 +47,17 @@
             var state = await authenticationStateTask;
             if (state.User.Identity!.IsAuthenticated)
             {
-                // AppSession.UserStore.
                 await AppSession.NotifyLoginSuccessAsync();
                 await AppSession.RouterStore.InitRoutersAsync(AuthenticationStateProvider?.Current);
-                var url = AppSession.Navigator.ToBaseRelativePath(AppSession.Navigator.Uri);
-                AppSession.Navigator.NavigateTo(url);
             }
             else
             {
                 await AppSession.RouterStore.InitRoutersAsync(null);
             }
+            var url = AppSession.Navigator.ToBaseRelativePath(AppSession.Navigator.Uri);
+            AppSession.Navigator.NavigateTo(url);
         }
     }
-
-    // bool rendered;
-    //
-    // protected override void OnAfterRender(bool firstRender)
-    // {
-    //     base.OnAfterRender(firstRender);
-    //     rendered = true;
-    // }
-
-
-    // async Task UpdateUserToken()
-    // {
-    //     var current = AuthenticationStateProvider?.Current;
-    //     if (rendered && current != null)
-    //     {
-    //         current.ActiveTime = DateTime.Now;
-    //         await LocalStorage.SetAsync("UID", current);
-    //     }
-    // }
 
     async Task NoneOperation()
     {

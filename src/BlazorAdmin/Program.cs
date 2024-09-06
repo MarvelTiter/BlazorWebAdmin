@@ -31,15 +31,18 @@ builder.AddServerProject(setting =>
     //setting.ConfigureAuthService<DefaultAuthenticationService>();
 #if DEBUG
     setting.ConfigureSettingProviderType<CustomSetting>();
-    setting.ConfigureAuthService<DefaultAuthenticationService>();
 #endif
+    setting.ConfigureAuthService<DefaultAuthenticationService>();
 });
-builder.Services.AutoInject();
-
+#if (ExcludeDefaultService)
+#else
 builder.AddDefaultLightOrm(options =>
 {
     options.SetTableContext(new LightOrmTableContext());
 });
+#endif
+
+builder.Services.AutoInject();
 
 builder.Services.AddControllers();
 

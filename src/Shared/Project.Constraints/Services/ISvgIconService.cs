@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Project.Constraints.Services
 {
-    [WebController(Route = "svg", Authorize = true)]
+    [WebController(Route = "svg")]
     [ApiInvokerGenerate]
     public interface ISvgIconService
     {
@@ -15,7 +15,7 @@ namespace Project.Constraints.Services
         Task<QueryResult<string>> GetIcon(string? name);
         Task<QueryCollectionResult<string>> GetAllIcon();
     }
-    [WebController(Route = "file", Authorize = true)]
+    [WebController(Route = "file")]
     [ApiInvokerGenerate]
     public interface IFileService
     {

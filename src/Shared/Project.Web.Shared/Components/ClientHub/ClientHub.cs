@@ -12,7 +12,6 @@ public class ClientHub : JsComponentBase
 
     [Inject] [NotNull] private IUserStore? UserStore { get; set; }
     [Inject, NotNull] private IOptions<AppSetting>? Options { get; set; }
-    private new string Id { get; } = Guid.NewGuid().ToString();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

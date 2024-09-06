@@ -1,5 +1,6 @@
 using BlazorAdmin.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Configuration;
 using Project.Constraints;
 using Project.Constraints.Services;
 using Project.Web.Shared;
@@ -13,7 +14,7 @@ builder.Services.ConfigureHttpClientDefaults(c =>
 //builder.Configuration
 Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
 //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
-builder.Services.AddClientProject(builder.Configuration, setting =>
+builder.Services.AddClientProject(builder,builder.Configuration, setting =>
 {
     setting.App.Id = "Test";
     setting.App.Name = "Demo";
@@ -22,6 +23,7 @@ builder.Services.AddClientProject(builder.Configuration, setting =>
     setting.ConfigureSettingProviderType<CustomSetting>();
 #endif
 }, out _);
+
 builder.Services.AutoInjectWasm();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IAuthService, AuthServiceApiInvoker>();

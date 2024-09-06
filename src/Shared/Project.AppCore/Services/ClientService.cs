@@ -42,6 +42,17 @@ public sealed class ClientService : IClientService, IDisposable
         return Task.FromResult(Result.Success());
     }
 
+    public Task<QueryResult> CheckPermissionAsync(UserInfo? user)
+    {
+        if (user == null)
+        {
+            return Task.FromResult(Result.Fail());
+        }
+        var userAllow = options.Value.ClientHubOptions.AllowUsers.Contains(user.UserId);
+        var roleAllow = Inset(options.Value.ClientHubOptions.AllowRoles, user.Roles);
+        return Task.FromResult(Result.Return(userAllow || roleAllow));
+    }
+
     private async void ClearTimeoutClient()
     {
         while (!tokenSource.IsCancellationRequested)
@@ -65,12 +76,6 @@ public sealed class ClientService : IClientService, IDisposable
         expired.ForEach(id => clients.TryRemove(id, out _));
     }
 
-    // public Task<QueryResult<ClientInfo>> GetClientAsync(string key)
-    // {
-    //     if (!clients.TryGetValue(key, out var client))
-    //     {
-    //     }
-    // }
 
     private static ClientInfo UpdateClient(ClientInfo client)
     {
@@ -102,16 +107,7 @@ public sealed class ClientService : IClientService, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public Task<QueryResult> CheckPermissionAsync(UserInfo? user)
-    {
-        if (user == null)
-        {
-            return Task.FromResult(Result.Fail());
-        }
-        var userAllow = options.Value.ClientHubOptions.AllowUsers.Contains(user.UserId);
-        var roleAllow = Inset(options.Value.ClientHubOptions.AllowRoles, user.Roles);
-        return Task.FromResult(Result.Return(userAllow || roleAllow));
-    }
+    
 
     private static bool Inset<T>(IEnumerable<T> values1, IEnumerable<T> values2)
     {

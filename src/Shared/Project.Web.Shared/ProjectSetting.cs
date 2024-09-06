@@ -4,7 +4,7 @@ namespace Project.Web.Shared;
 
 public class ProjectSetting
 {
-    private Type settingProviderType = typeof(CustomSetting);
+    private Type settingProviderType = typeof(BasicSetting);
     private Type? authServiceType;
     public Type SettingProviderType => settingProviderType;
     public Type? AuthServiceType => authServiceType;

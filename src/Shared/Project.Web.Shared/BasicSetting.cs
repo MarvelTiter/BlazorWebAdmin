@@ -1,11 +1,8 @@
-﻿using Project.Constraints;
-using Project.Constraints.Models.Permissions;
-using Project.Constraints.Store.Models;
-using Project.Web.Shared.Pages;
+﻿using Project.Constraints.Store.Models;
 
 namespace Project.Web.Shared;
 
-public abstract class BasicSetting : IProjectSettingService//, IDisposable
+public class BasicSetting : IProjectSettingService//, IDisposable
 {
     protected UserInfo? CurrentUser { get; set; }
 
