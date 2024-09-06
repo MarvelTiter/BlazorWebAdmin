@@ -102,12 +102,12 @@ public static class Result
 {
     public static QueryResult Success(string msg = "操作成功")
     {
-        return Success<bool>(msg);
+        return Success<object>(msg);
     }
 
     public static QueryResult Fail(string msg = "操作失败")
     {
-        return Fail<bool>(msg);
+        return Fail<object>(msg);
     }
 
     public static QueryResult<T> Success<T>(string msg = "操作成功")
@@ -128,6 +128,18 @@ public static class Result
         };
     }
 
+    public static QueryResult Return(bool success)
+    {
+        if (success)
+        {
+            return Success();
+        }
+        else
+        {
+            return Fail();
+        }
+    }
+
     public static QueryResult<T> Return<T>(bool success)
     {
         if (success)
@@ -142,7 +154,7 @@ public static class Result
             Success = false,
             Message = msg ?? "列表为空",
             TotalRecord = 0,
-            Payload = Enumerable.Empty<T>()
+            Payload = []
         };
     }
 

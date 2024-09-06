@@ -12,19 +12,36 @@ namespace Project.AppCore.Clients
 {
     [Route("/userdashboard")]
     [PageInfo(Icon = "setting", Title = "在线用户", Sort = 999)]
-    public class OnlineUsers : ModelPage<ClientInfo, GenericRequest>
+    public class OnlineUsers : ModelPage<ClientInfo, GenericRequest<ClientInfo>>
     {
         [Inject, NotNull] IClientService? ClientService { get; set; }
-        [Inject, NotNull] IOptions<AppSetting>? AppOptions { get; set; }
+        bool? hasPermission;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
             Options.LoadDataOnLoaded = true;
         }
 
-        protected override Task<QueryCollectionResult<ClientInfo>> OnQueryAsync(GenericRequest query)
+        protected override async Task OnInitializedAsync()
         {
-            return ClientService.GetClientsAsync();
+            var result = await ClientService.CheckPermissionAsync(User.UserInfo);
+            hasPermission = result.Success;
+            await base.OnInitializedAsync();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                await Options.NotifyChanged();
+            }
+        }
+
+        protected override Task<QueryCollectionResult<ClientInfo>> OnQueryAsync(GenericRequest<ClientInfo> query)
+        {
+            return ClientService.GetClientsAsync(query);
         }
 
         [TableButton(Label = "用户信息")]
@@ -36,9 +53,11 @@ namespace Project.AppCore.Clients
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            var userAllow = AppOptions.Value.ClientHubOptions.AllowUsers.Contains(User.UserId);
-            var roleAllow = Inset(AppOptions.Value.ClientHubOptions.AllowRoles, User.Roles);
-            if (userAllow || roleAllow)
+            if (!hasPermission.HasValue)
+            {
+                return;
+            }
+            if (hasPermission.Value)
             {
                 base.BuildRenderTree(builder);
             }
@@ -46,15 +65,6 @@ namespace Project.AppCore.Clients
             {
                 builder.Component<ForbiddenPage>().Build();
             }
-        }
-
-        private static bool Inset<T>(IEnumerable<T> values1, IEnumerable<T> values2)
-        {
-            foreach (var v1 in values1)
-            {
-                return values2.Any(v2 => Equals(v1, v2));
-            }
-            return false;
         }
     }
 }

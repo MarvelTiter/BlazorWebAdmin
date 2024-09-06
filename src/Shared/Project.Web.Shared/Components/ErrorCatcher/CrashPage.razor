@@ -5,31 +5,22 @@
     <p>未处理的异常：请联系管理员</p>
     @if (showDetial)
     {
-        <div style="
-width:fit-content;
-background-color:white;
-padding:10px;
-text-align: left;
-font-size: 14px;
-position:absolute;
-left:50%;
-right:50%;
-z-index: 999;
-border: 1px solid #ccc;
-box-shadow: 0 0 12px 0 rgb(0 0 0 / 20%);
-transform: translate(-50%, -50%);">
+        <div class="exception-wrapper">
+            <p class="exception-message">错误信息: <span style="color:orangered">@Exception?.Message</span></p>
             @if (Options.Value.ShowExceptionDetial)
             {
-
-                <pre>错误信息: <span style="color:orangered">@Exception?.Message</span></pre>
-                <pre>@Exception?.StackTrace</pre>
-
+                <div class="exception-stacktrace">
+                    @foreach (var line in Exception?.StackTrace?.Split(Environment.NewLine) ?? [])
+                    {
+                        <div class="exception-stacktrace-item">@line</div>
+                    }
+                </div>
             }
             else
             {
                 <pre style="font-size:24px;">已禁止显示详细错误信息</pre>
             }
-            <div style="text-align:right;padding-right:20px;"><a @onclick:preventDefault @onclick:stopPropagation @onclick="@(() => showDetial = false)">关闭</a></div>
+            <div class="exception-footer"><a @onclick:preventDefault @onclick:stopPropagation @onclick="@(() => showDetial = false)">关闭</a></div>
         </div>
 
     }

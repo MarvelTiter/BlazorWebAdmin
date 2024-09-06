@@ -60,17 +60,21 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         //DomEvent.OnKeyDown += DomEvent_OnKeyDown;
     }
 
-    protected virtual object SetRowKey(TModel model)
-    {
-        return model!;
-    }
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
+        {
             if (Options.LoadDataOnLoaded)
+            {
                 await Options.RefreshAsync();
+            }
+        }
+    }
+
+    protected virtual object SetRowKey(TModel model)
+    {
+        return model!;
     }
 
     /// <summary>

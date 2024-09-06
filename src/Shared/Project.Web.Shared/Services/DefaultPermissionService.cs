@@ -18,7 +18,7 @@ namespace Project.Web.Shared.Services
         }
         public async Task<QueryCollectionResult<TPower>> GetPowerListAsync(GenericRequest<TPower> req)
         {
-            var list = await context.Repository<TPower>().GetListAsync(req.Expression(), out var total, req.PageIndex, req.PageSize, p => p.Sort);
+            var list = await context.Repository<TPower>().GetListAsync(req.Expression(), out var total, orderByExpression: p => p.Sort);
             return list.CollectionResult((int)total);
         }
 

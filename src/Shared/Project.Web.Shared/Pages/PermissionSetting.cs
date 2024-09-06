@@ -17,7 +17,7 @@ namespace Project.Web.Shared.Pages
         {
             await base.OnInitializedAsync();
             //await InitPowerTree();
-            HideDefaultTableHeader = true;
+            //HideDefaultTableHeader = true;
             Options.Pager = false;
             Options.LoadDataOnLoaded = true;
             Options.TreeChildren = p => p.Children?.Cast<TPower>() ?? [];
@@ -30,7 +30,7 @@ namespace Project.Web.Shared.Pages
         protected override object SetRowKey(TPower model) => model.PowerId;
         protected override async Task<QueryCollectionResult<TPower>> OnQueryAsync(GenericRequest<TPower> query)
         {
-            var result = await PermissionSrv.GetAllPowerAsync();
+            var result = await PermissionSrv.GetPowerListAsync(query);
             var powers = result.Payload.Cast<TPower>();
             result.Payload = GeneratePowerTreeDataAsync(powers);
             return result;
@@ -44,6 +44,10 @@ namespace Project.Web.Shared.Pages
         static List<TPower> GeneratePowerTreeDataAsync(IEnumerable<TPower> all)
         {
             List<TPower> powers = new();
+            if (!all.Any())
+            {
+                return powers;
+            }
             var topLevel = all.Min(p => p.PowerLevel);
             var rootNodes = all.Where(p => p.PowerLevel == topLevel);
             foreach (var item in rootNodes)

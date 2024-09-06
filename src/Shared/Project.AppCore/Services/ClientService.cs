@@ -26,10 +26,14 @@ public sealed class ClientService : IClientService, IDisposable
         return Task.FromResult(clients.Count.Result());
     }
 
-    public Task<QueryCollectionResult<ClientInfo>> GetClientsAsync()
+    public Task<QueryCollectionResult<ClientInfo>> GetClientsAsync(GenericRequest<ClientInfo> query)
     {
         RemoveExpired();
-        return Task.FromResult(clients.Values.CollectionResult());
+        var filted = clients.Values
+            .Where(query.Expression().Compile())
+            .Skip((query.PageIndex - 1) * query.PageSize)
+            .Take(query.PageSize);
+        return Task.FromResult(filted.CollectionResult());
     }
 
     public Task<QueryResult> AddOrUpdateAsync(ClientInfo client)
@@ -96,5 +100,25 @@ public sealed class ClientService : IClientService, IDisposable
     {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
+    }
+
+    public Task<QueryResult> CheckPermissionAsync(UserInfo? user)
+    {
+        if (user == null)
+        {
+            return Task.FromResult(Result.Fail());
+        }
+        var userAllow = options.Value.ClientHubOptions.AllowUsers.Contains(user.UserId);
+        var roleAllow = Inset(options.Value.ClientHubOptions.AllowRoles, user.Roles);
+        return Task.FromResult(Result.Return(userAllow || roleAllow));
+    }
+
+    private static bool Inset<T>(IEnumerable<T> values1, IEnumerable<T> values2)
+    {
+        foreach (var v1 in values1)
+        {
+            return values2.Any(v2 => Equals(v1, v2));
+        }
+        return false;
     }
 }
