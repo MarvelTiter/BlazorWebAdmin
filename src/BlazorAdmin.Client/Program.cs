@@ -1,6 +1,7 @@
 using BlazorAdmin.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
+using MT.Toolkit.ReflectionExtension;
 using Project.Constraints;
 using Project.Constraints.Services;
 using Project.Web.Shared;
@@ -11,10 +12,21 @@ builder.Services.ConfigureHttpClientDefaults(c =>
 {
     c.ConfigureHttpClient(h => { h.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
 });
+
+var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
+if (useProxy)
+{
+    try
+    {
+        builder.ConfigureContainer(new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
+    }
+    catch { }
+}
+
 //builder.Configuration
 Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
 //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
-builder.Services.AddClientProject(builder,builder.Configuration, setting =>
+builder.Services.AddClientProject(builder.Configuration, setting =>
 {
     setting.App.Id = "Test";
     setting.App.Name = "Demo";
@@ -32,7 +44,6 @@ builder.Services.AddScoped<ISvgIconService, SvgIconServiceApiInvoker>();
 builder.Services.AddScoped<IFileService, FileServiceApiInvoker>();
 #if (ExcludeDefaultService)
 #else
-// builder.Services.AddScoped<IUserService, UserServiceApiInvoker>();
 builder.Services.AddScoped<IPermissionService, PermissionServiceApiInvoker>();
 builder.Services.AddScoped<IStandardPermissionService, StandardPermissionServiceApiInvoker>();
 builder.Services.AddScoped<IStandardRunLogService, StandardRunLogServiceApiInvoker>();

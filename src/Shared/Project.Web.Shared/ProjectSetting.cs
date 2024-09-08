@@ -34,7 +34,6 @@ public class ProjectSetting
     //    config.Invoke(TypeInfo);
     //}
 
-    public bool AddFileLogger { get; set; }
     public AppInfo App => AppConst.App;
     //public DbTableType TypeInfo => AppConst.TypeInfo;
 

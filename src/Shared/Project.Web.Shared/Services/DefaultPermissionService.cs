@@ -70,7 +70,7 @@ namespace Project.Web.Shared.Services
             return roles.CollectionResult();
         }
 
-        public async Task<QueryResult<bool>> SaveUserRoleAsync(KeyRelations<string, string> relations)
+        public async Task<QueryResult> SaveUserRoleAsync(KeyRelations<string, string> relations)
         {
             try
             {
@@ -84,16 +84,16 @@ namespace Project.Web.Shared.Services
                     await context.Insert(ur).ExecuteAsync();
                 }
                 await context.CommitTranAsync();
-                return true.Result();
+                return Result.Success();
             }
             catch (Exception ex)
             {
                 await context.RollbackTranAsync();
-                return false.Result().SetMessage(ex.Message);
+                return Result.Fail().SetMessage(ex.Message);
             }
         }
 
-        public async Task<QueryResult<bool>> SaveRolePowerAsync(KeyRelations<string, string> relations)
+        public async Task<QueryResult> SaveRolePowerAsync(KeyRelations<string, string> relations)
         {
             try
             {
@@ -108,40 +108,40 @@ namespace Project.Web.Shared.Services
                     n += ef;
                 }
                 await context.CommitTranAsync();
-                return true.Result();
+                return Result.Success();
             }
             catch (Exception ex)
             {
                 await context.RollbackTranAsync();
-                return false.Result().SetMessage(ex.Message);
+                return Result.Fail().SetMessage(ex.Message);
             }
         }
 
-        public async Task<QueryResult<bool>> UpdatePowerAsync(TPower power)
+        public async Task<QueryResult> UpdatePowerAsync(TPower power)
         {
             var n = await context.Repository<TPower>().UpdateAsync(power, p => p.PowerId == power.PowerId);
-            return (n > 0).Result();
+            return Result.Return(n > 0);
         }
 
-        public async Task<QueryResult<bool>> InsertPowerAsync(TPower power)
+        public async Task<QueryResult> InsertPowerAsync(TPower power)
         {
             var n = await context.Repository<TPower>().InsertAsync(power);
-            return (n > 0).Result();
+            return Result.Return(n > 0);
         }
 
-        public async Task<QueryResult<bool>> UpdateRoleAsync(TRole role)
+        public async Task<QueryResult> UpdateRoleAsync(TRole role)
         {
             var n = await context.Repository<TRole>().UpdateAsync(role, r => r.RoleId == role.RoleId);
-            return (n > 0).Result();
+            return Result.Return(n > 0);
         }
 
-        public async Task<QueryResult<bool>> InsertRoleAsync(TRole role)
+        public async Task<QueryResult> InsertRoleAsync(TRole role)
         {
             var n = await context.Repository<TRole>().InsertAsync(role);
-            return (n > 0).Result();
+            return Result.Return(n > 0);
         }
 
-        public async Task<QueryResult<bool>> DeleteRoleAsync(TRole role)
+        public async Task<QueryResult> DeleteRoleAsync(TRole role)
         {
             try
             {
@@ -150,17 +150,17 @@ namespace Project.Web.Shared.Services
                 await context.Delete<TUserRole>().Where(ur => ur.RoleId == role.RoleId).ExecuteAsync();
                 await context.Delete<TRolePower>().Where(rp => rp.RoleId == role.RoleId).ExecuteAsync();
                 await context.CommitTranAsync();
-                return true.Result();
+                return Result.Success();
             }
             catch (Exception ex)
             {
                 await context.RollbackTranAsync();
-                return false.Result().SetMessage(ex.Message);
+                return Result.Fail().SetMessage(ex.Message);
             }
 
         }
 
-        public async Task<QueryResult<bool>> DeletePowerAsync(TPower power)
+        public async Task<QueryResult> DeletePowerAsync(TPower power)
         {
             try
             {
@@ -168,12 +168,12 @@ namespace Project.Web.Shared.Services
                 await context.Delete<TPower>().Where(p => p.PowerId == power.PowerId || p.ParentId == power.PowerId).ExecuteAsync();
                 await context.Delete<TRolePower>().Where(p => p.PowerId == power.PowerId).ExecuteAsync();
                 await context.CommitTranAsync();
-                return true.Result();
+                return Result.Success();
             }
             catch (Exception ex)
             {
                 await context.RollbackTranAsync();
-                return false.Result().SetMessage(ex.Message);
+                return Result.Fail().SetMessage(ex.Message);
             }
 
         }

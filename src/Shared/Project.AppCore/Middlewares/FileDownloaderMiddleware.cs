@@ -23,7 +23,7 @@ namespace Project.AppCore.Middlewares
             _ = context.Request.Form.TryGetValue("Filename", out var filename);
             _ = context.Request.Form.TryGetValue("Path", out var path);
 
-            var file = Path.Combine(path!, filename!);
+            var file = Path.Combine(AppConst.Workspace, path!, filename!);
             if (System.IO.File.Exists(file))
             {
                 var ext = Path.GetExtension(filename);

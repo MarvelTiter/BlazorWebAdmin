@@ -78,6 +78,9 @@
     "GenerateCRUDButton": "Crud",
     "PermissionSetting": {
       "AddChild": "AddChild"
+    },
+    "Buttons": {
+      "AddRoot": "Add Root"
     }
   },
   "RouterStore": {

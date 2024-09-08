@@ -45,28 +45,28 @@ public interface IPermissionService<TPower, TRole>
     Task<QueryCollectionResult<TRole>> GetUserRolesAsync(string usrId);
 
     [LogInfo(Action = "修改用户角色", Module = "权限控制")]
-    Task<QueryResult<bool>> SaveUserRoleAsync(KeyRelations<string, string> relations);
+    Task<QueryResult> SaveUserRoleAsync(KeyRelations<string, string> relations);
 
     [LogInfo(Action = "修改角色权限", Module = "权限控制")]
-    Task<QueryResult<bool>> SaveRolePowerAsync(KeyRelations<string, string> relations);
+    Task<QueryResult> SaveRolePowerAsync(KeyRelations<string, string> relations);
 
     [LogInfo(Action = "更新权限信息", Module = "权限控制")]
-    Task<QueryResult<bool>> UpdatePowerAsync(TPower power);
+    Task<QueryResult> UpdatePowerAsync(TPower power);
 
     [LogInfo(Action = "新增权限信息", Module = "权限控制")]
-    Task<QueryResult<bool>> InsertPowerAsync(TPower power);
+    Task<QueryResult> InsertPowerAsync(TPower power);
 
     [LogInfo(Action = "删除权限信息", Module = "权限控制")]
-    Task<QueryResult<bool>> DeletePowerAsync(TPower power);
+    Task<QueryResult> DeletePowerAsync(TPower power);
 
     [LogInfo(Action = "修改角色信息", Module = "权限控制")]
-    Task<QueryResult<bool>> UpdateRoleAsync(TRole role);
+    Task<QueryResult> UpdateRoleAsync(TRole role);
 
     [LogInfo(Action = "新增角色", Module = "权限控制")]
-    Task<QueryResult<bool>> InsertRoleAsync(TRole role);
+    Task<QueryResult> InsertRoleAsync(TRole role);
 
     [LogInfo(Action = "删除角色", Module = "权限控制")]
-    Task<QueryResult<bool>> DeleteRoleAsync(TRole role);
+    Task<QueryResult> DeleteRoleAsync(TRole role);
 }
 
 

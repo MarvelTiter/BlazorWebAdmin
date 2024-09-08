@@ -174,7 +174,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         throw new NotImplementedException();
     }
 
-    private async Task DownloadImportTemplate()
+    protected async Task DownloadImportTemplate()
     {
         var service = DownloadServiceProvider.GetService();
         if (service == null) return;

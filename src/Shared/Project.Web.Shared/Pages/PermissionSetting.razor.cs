@@ -6,7 +6,7 @@ using Project.Web.Shared.Pages.Component;
 
 namespace Project.Web.Shared.Pages
 {
-    public class PermissionSetting<TPower, TRole,TPermissionService> : ModelPage<TPower, GenericRequest<TPower>>
+    public partial class PermissionSetting<TPower, TRole, TPermissionService> : ModelPage<TPower, GenericRequest<TPower>>
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
         where TPermissionService : IPermissionService<TPower, TRole>
@@ -17,7 +17,7 @@ namespace Project.Web.Shared.Pages
         {
             await base.OnInitializedAsync();
             //await InitPowerTree();
-            //HideDefaultTableHeader = true;
+            HideDefaultTableHeader = true;
             Options.Pager = false;
             Options.LoadDataOnLoaded = true;
             Options.TreeChildren = p => p.Children?.Cast<TPower>() ?? [];
@@ -25,7 +25,6 @@ namespace Project.Web.Shared.Pages
                 b.Component<PowerIconSelector>()
                 .SetComponent(c => c.Context, ctx)
                 .Build();
-
         }
         protected override object SetRowKey(TPower model) => model.PowerId;
         protected override async Task<QueryCollectionResult<TPower>> OnQueryAsync(GenericRequest<TPower> query)
@@ -72,6 +71,28 @@ namespace Project.Web.Shared.Pages
         }
         #endregion
 
+
+        public async Task AddRootPowerAsync()
+        {
+            var root = new TPower()
+            {
+                PowerId = "ROOT",
+                PowerName = "/",
+                Sort = 1,
+                PowerLevel = 0,
+                PowerType = PowerType.Page
+            };
+            try
+            {
+                _ = await PermissionSrv.InsertPowerAsync(root);
+                await Options.RefreshAsync();
+            }
+            catch (Exception ex)
+            {
+                UI.Error(ex.Message);
+            }
+        }
+
         string[] defaultPageButtons = new[] { "Add", "Modify", "Delete" };
         public bool CanShow(TableButtonContext<TPower> context) => context.Data.PowerType == PowerType.Page;
         public string AddPowerLabel(TableButtonContext<TPower> _) => Localizer["PermissionSetting.AddChild"];
@@ -83,7 +104,7 @@ namespace Project.Web.Shared.Pages
             edit.ParentId = parent.PowerId;
             edit.PowerLevel = parent.PowerLevel + 1;
             edit.Sort = parent.Children?.Count() ?? 0 + 1;
-            var power = await this.ShowEditFormAsync("新增权限", edit, false);
+            var power = await this.ShowEditFormAsync("PermissionSetting.EditPower", edit, false);
             var result = await PermissionSrv.InsertPowerAsync(power);
             if (result.Success)
             {

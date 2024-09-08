@@ -12,7 +12,7 @@ namespace Project.Web.Shared.Pages
         where TPower : class, IPower, new()
         where TRole : class, IRole, new()
         where TUserService : IUserService<TUser>
-        where TPermissionService: IPermissionService<TPower, TRole>
+        where TPermissionService : IPermissionService<TPower, TRole>
     {
         [Inject, NotNull] public TUserService? UserSrv { get; set; }
         [Inject, NotNull] public TPermissionService? PermissionSrv { get; set; }
@@ -65,10 +65,31 @@ namespace Project.Web.Shared.Pages
         {
             var userRoles = await PermissionSrv.GetUserRolesAsync(user.UserId);
             user.Roles = userRoles.Payload?.Select(r => r.RoleId).ToList() ?? [];
-            var n = await this.ShowEditFormAsync(Localizer["User.DialogTitle.Modify"], user);
-            n.OnUserSave(SaveActionType.Update);
-            await UserSrv.UpdateUserAsync(n);
-            await PermissionSrv.SaveUserRoleAsync((n.UserId, n.Roles));
+            //var n = await this.ShowEditFormAsync(Localizer["User.DialogTitle.Modify"], user);
+            var u = await this.ShowEditFormAsync(user, true, option =>
+            {
+                option.Title = Localizer["User.DialogTitle.Modify"];
+                option.PostCheckAsync = (async (u, validate) =>
+                {
+                    if (!validate.Invoke() || u is null)
+                    {
+                        return false;
+                    }
+                    var saveUserResult = await UserSrv.UpdateUserAsync(u);
+                    var saveUserRoleResult = await PermissionSrv.SaveUserRoleAsync((u.UserId, u.Roles));
+                    if (saveUserResult.Success && saveUserRoleResult.Success)
+                    {
+                        UI.Success("用户信息保存成功！");
+                        return true;
+                    }
+                    else
+                    {
+                        UI.Error("保存出错，请重试");
+                        return false;
+                    }
+                });
+            });
+            u.OnUserSave(SaveActionType.Update);
             return true;
         }
 

@@ -1,4 +1,5 @@
 using BlazorAdmin;
+using MT.Toolkit.LogTool;
 using Project.AppCore;
 using Project.AppCore.Services;
 using Project.Constraints;
@@ -34,13 +35,18 @@ builder.AddServerProject(setting =>
 #endif
     setting.ConfigureAuthService<DefaultAuthenticationService>();
 });
-#if (ExcludeDefaultService)
-#else
+//#if (ExcludeDefaultService)
+//#else
+
+//#endif
+builder.Logging.AddLocalFileLogger(config =>
+{
+    config.LogFileSize = 1024 * 1024 * 5;
+});
 builder.AddDefaultLightOrm(options =>
 {
     options.SetTableContext(new LightOrmTableContext());
 });
-#endif
 
 builder.Services.AutoInject();
 

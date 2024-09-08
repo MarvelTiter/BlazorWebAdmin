@@ -18,7 +18,6 @@ namespace Project.Web.Shared.Components
         [Parameter] public int Height { get; set; }
         [Parameter] public RenderFragment<ICameraObject>? DeviceSelectorRender { get; set; }
         [Parameter] public EventCallback<CaptureInfo> OnCapture { get; set; }
-        [Parameter] public bool AutoDownload { get; set; }
         [Parameter] public Resolution? CameraResolution { get; set; }
         [Parameter] public int? CameraWidth { get; set; }
         [Parameter] public int? CameraHeight { get; set; }
@@ -258,13 +257,6 @@ namespace Project.Web.Shared.Components
                 if (OnCapture.HasDelegate)
                 {
                     await OnCapture.InvokeAsync(info);
-                }
-                if (AutoDownload)
-                {
-                    using var fs = File.Open(Path.Combine(AppConst.TempFilePath, $"{filename}.jpeg"), FileMode.Create, FileAccess.Write);
-                    fs.Write(Convert.FromBase64String(result.Payload!));
-                    await fs.FlushAsync();
-                    _ = Js.DownloadFile(filename, "jpeg");
                 }
             }
             else

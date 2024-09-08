@@ -17,6 +17,8 @@ public static class AppConst
 {
     public static AppInfo App { get; set; } = new AppInfo();
 
+    public const string TEMP_FOLDER = "tempfile";
+
     static List<Assembly> AdditionalPageAssemblies = new List<Assembly>();
     //public static Assembly ServerAssembly { get; set; }
     //public static Assembly ClientAssembly { get; set; }
@@ -65,15 +67,21 @@ public static class AppConst
             AdditionalPageAssemblies.Add(item);
         }
     }
-
-    public static readonly string TempFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tempfile");
+    /// <summary>
+    /// 仅支持服务端
+    /// </summary>
+    public static string TempFilePath => OperatingSystem.IsBrowser() ? throw new NotSupportedException() : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, TEMP_FOLDER);
+    /// <summary>
+    /// 仅支持服务端
+    /// </summary>
+    public static string Workspace => OperatingSystem.IsBrowser() ? throw new NotSupportedException() : AppDomain.CurrentDomain.BaseDirectory;
     public static string GetPath(params string[] paths)
     {
-        if (paths?.Length == 0)
+        if (paths?.Length > 0)
         {
-            return TempFilePath;
+            return Path.Combine(paths);
         }
-        return Path.Combine([AppDomain.CurrentDomain.BaseDirectory, .. paths]);
+        return TEMP_FOLDER;
     }
     //public static IHostEnvironment? Environment { get; set; }
     //public static IServiceProvider? Services { get; set; }

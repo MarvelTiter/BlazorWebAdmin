@@ -77,7 +77,10 @@
     "Sort": "排序序号",
     "GenerateCRUDButton": "生成按钮",
     "PermissionSetting": {
-      "AddChild": "新增子项"
+      "AddChild": "新增子项",
+      "AddPower": "添加权限",
+      "EditPower": "编辑权限",
+      "AddRoot": "添加根节点"
     }
   },
   "RouterStore": {
