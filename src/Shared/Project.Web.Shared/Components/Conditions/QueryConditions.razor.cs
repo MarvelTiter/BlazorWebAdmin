@@ -17,14 +17,14 @@ namespace Project.Web.Shared.Components
         void UpdateCondition(int index, ConditionUnit info);
         bool TryGetCondition(int index, out ConditionUnit? unit);
     }
-    public partial class QueryConditions<TItem> : BasicComponent, IQueryCondition
+    public partial class QueryConditions : BasicComponent, IQueryCondition
     {
         [Parameter] public int Column { get; set; } = 5;
         [Parameter] public int? ColumnMinWidth { get; set; }
         [Parameter] public int LabelWidth { get; set; } = 100;
         [Parameter] public string Gap { get; set; } = "5px";
         [Parameter, NotNull] public RenderFragment? ChildContent { get; set; }
-        [Parameter] public IRequest<TItem>? Request { get; set; }
+        [Parameter] public IRequest? Request { get; set; }
         //[Parameter] public EventCallback<ConditionUnit> ConditionChanged { get; set; }
         protected override void OnInitialized()
         {
