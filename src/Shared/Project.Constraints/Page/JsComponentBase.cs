@@ -62,7 +62,7 @@ public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisp
             if (LoadJs)
             {
                 var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
-                RelativePath = attr?.Path ?? $"Components/{ModuleName}";
+                RelativePath = attr?.Path ?? $"Components/{ModuleName.Value}";
                 //var path = 
                 await LoadJsAsync();
             }
@@ -74,8 +74,8 @@ public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisp
     protected virtual async Task LoadJsAsync()
     {
         var path = IsLibrary
-            ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName}.razor.js"
-            : $"./{RelativePath}/{ModuleName}.razor.js";
+            ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName.Value}.razor.js"
+            : $"./{RelativePath}/{ModuleName.Value}.razor.js";
         var versionPath = await FileService.GetStaticFileWithVersionAsync(path);
         Module = await Js.InvokeAsync<IJSObjectReference>("import", versionPath);
     }
