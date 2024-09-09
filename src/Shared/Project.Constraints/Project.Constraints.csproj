@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="AutoAopProxyGenerator" Version="0.0.6" />
+		<PackageReference Include="AutoAopProxyGenerator" Version="0.0.7" />
 		<PackageReference Include="AutoGenMapperGenerator" Version="0.0.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
 	</ItemGroup>
@@ -17,7 +17,7 @@
 		<PackageReference Include="MT.LightORM" Version="2.1.3" />
 		<PackageReference Include="MT.Toolkit" Version="2.0.9" />
 		<PackageReference Include="LightExcel" Version="2.1.1" />
-		<PackageReference Include="AutoInjectGenerator" Version="0.0.3" />
+		<PackageReference Include="AutoInjectGenerator" Version="0.0.4" />
 	</ItemGroup>
 
 </Project>
