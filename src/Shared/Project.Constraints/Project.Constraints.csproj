@@ -14,7 +14,7 @@
 		<PackageReference Include="AutoWasmApiGenerator" Version="0.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.8" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
-		<PackageReference Include="MT.LightORM" Version="2.1.3" />
+		<PackageReference Include="MT.LightORM" Version="2.1.4" />
 		<PackageReference Include="MT.Toolkit" Version="2.0.9" />
 		<PackageReference Include="LightExcel" Version="2.1.1" />
 		<PackageReference Include="AutoInjectGenerator" Version="0.0.4" />
