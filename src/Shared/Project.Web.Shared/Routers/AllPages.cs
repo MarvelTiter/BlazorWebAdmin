@@ -8,22 +8,14 @@ namespace Project.Web.Shared.Routers
 {
     internal static class AllPages
     {
-        public static IList<Assembly> Assemblies { get; }
+        //public static IList<Assembly> Assemblies { get; }
         public static IList<RouterMeta> AllRoutes { get; } = [];
         public static IEnumerable<RouteMenu> RouteMenu { get; } = new List<RouteMenu>();
         static List<RouterMeta> Groups { get; } = [];
         static AllPages()
         {
-            var entryAssembly = Assembly.GetEntryAssembly();
-            if (entryAssembly == null)
-            {
-                Assemblies = new List<Assembly>();
-                return;
-            }
-            var referencedAssemblies = entryAssembly.GetReferencedAssemblies().Select(Assembly.Load);
-            Assemblies = new List<Assembly> { entryAssembly }.Union(referencedAssemblies).ToList();
             List<RouterMeta> routes = new();
-            foreach (var assembly in Assemblies)
+            foreach (var assembly in AppConst.AllAssemblies)
             {
                 routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).SelectMany(GetRouterMeta));
             }

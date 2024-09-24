@@ -49,9 +49,7 @@ public static class ProjectInit
             var p = provider.GetService<IDownloadServiceProvider>()!;
             return p.GetService()!;
         });
-
         AppConst.AddAssembly(typeof(_Imports).Assembly);
-
         services.ConfigureAppSettings(configuration);
 
     }

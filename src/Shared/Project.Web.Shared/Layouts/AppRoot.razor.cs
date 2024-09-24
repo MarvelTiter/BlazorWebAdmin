@@ -8,7 +8,6 @@ namespace Project.Web.Shared.Layouts;
 public partial class AppRoot : IAsyncDisposable
 {
     private readonly List<IAddtionalInterceptor> initActions = [];
-    [Parameter] [NotNull] public Assembly? AppAssembly { get; set; }
     [Inject] [NotNull] private IAppSession? Context { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter, NotNull] public Type? DefaultLayout { get; set; }

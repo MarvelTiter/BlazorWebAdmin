@@ -280,7 +280,7 @@ public class RouterStore : StoreBase, IRouterStore
             return EnableShowUserDashboard(userStore, setting.CurrentValue);
         }
         var used = meta.RouteType == null
-            || AppConst.Pages.IndexOf(meta.RouteType.Assembly) > -1
+            || AppConst.AllAssemblies.IndexOf(meta.RouteType.Assembly) > -1
             || meta.RouteType.Assembly == Assembly.GetEntryAssembly()
             || (meta.RouteType.Assembly.GetName().Name?.EndsWith(".Client") ?? false);
         if (RouteMetaFilterEvent != null)

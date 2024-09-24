@@ -38,7 +38,16 @@ public static class AppConst
     //}
 
     public static RenderFragment? Footer { get; set; }
-    public static List<Assembly> Pages => AdditionalPageAssemblies;
+    private static readonly Lazy<List<Assembly>> allAssemblise = new(() => GetAllAssemblies());
+    private static List<Assembly> GetAllAssemblies()
+    {
+        return [AppAssembly, .. AdditionalAssemblies];
+    }
+
+    public static List<Assembly> AllAssemblies => allAssemblise.Value;
+
+    public static List<Assembly> AdditionalAssemblies => AdditionalPageAssemblies;
+    [NotNull] public static Assembly? AppAssembly { get; set; }
     //public static IEnumerable<Assembly> AllEnableAssembly()
     //{
     //    yield return ServerAssembly;

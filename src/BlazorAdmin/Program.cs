@@ -30,6 +30,8 @@ builder.AddServerProject(setting =>
     // 默认分别为BasicSetting和DefaultAuthenticationService
     //setting.ConfigureSettingProviderType<CustomSetting>();
     //setting.ConfigureAuthService<DefaultAuthenticationService>();
+
+    AppConst.AppAssembly = typeof(BlazorAdmin.Client._Imports).Assembly;
 #if DEBUG
     setting.ConfigureSettingProviderType<CustomSetting>();
 #endif
@@ -71,7 +73,7 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies([.. AppConst.Pages]);
+    .AddAdditionalAssemblies([.. AppConst.AdditionalAssemblies]);
 app.MapControllers();
 
 app.Run();
