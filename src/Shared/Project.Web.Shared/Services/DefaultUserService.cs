@@ -27,14 +27,18 @@ namespace Project.Web.Shared.Services
 
         public async Task<QueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req)
         {
-            var list = await context.Repository<TUser>().GetListAsync(req.Expression(), out var count, req.PageIndex, req.PageSize);
+            var list = await context.Select<TUser>()
+                .Where(req.Expression())
+                .Count(out var count)
+                .Paging(req.PageIndex, req.PageSize)
+                .ToListAsync();
             return list.CollectionResult((int)count);
         }
 
         public async Task<QueryResult> InsertUserAsync(TUser user)
         {
-            var u = await context.Repository<TUser>().InsertAsync(user);
-            return u.Result();
+            var u = await context.Insert(user).ExecuteAsync();
+            return u > 0;
         }
 
         public async Task<QueryResult> ModifyUserPasswordAsync(string uid, string old, string pwd)
@@ -43,17 +47,17 @@ namespace Project.Web.Shared.Services
                 .Set(u => u.Password, pwd)
                 .Where(u => u.UserId == uid && u.Password == old)
                 .ExecuteAsync();
-            return flag.Result();
+            return flag > 0;
         }
 
         public async Task<QueryResult> UpdateUserAsync(TUser user)
         {
-            var flag = await context.Repository<TUser>().UpdateAsync(user, u => u.UserId == user.UserId);
-            return flag.Result();
+            var flag = await context.Update(user).Where( u => u.UserId == user.UserId).ExecuteAsync();
+            return flag > 0;
         }
         public async Task<TUser?> GetUserAsync(string id)
         {
-            var u = await context.Repository<TUser>().GetSingleAsync(u => u.UserId == id);
+            var u = await context.Select<TUser>().Where(u => u.UserId == id).FirstAsync();
             return u;
         }
     }

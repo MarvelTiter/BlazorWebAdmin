@@ -1,4 +1,5 @@
 ﻿using LightExcel;
+using LightORM.Providers.Sqlite.Extensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
@@ -39,7 +40,8 @@ namespace Project.AppCore
             var connStr = builder.Configuration.GetConnectionString("Sqlite")!;
             builder.Services.AddLightOrm(option =>
             {
-                option.SetDatabase(DbBaseType.Sqlite, connStr, SQLiteFactory.Instance).SetWatcher(sql =>
+                option.UseSqlite(connStr);
+                option.SetWatcher(sql =>
                 {
                     sql.DbLog = (s, p) =>
                     {

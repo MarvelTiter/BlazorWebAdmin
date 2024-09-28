@@ -14,14 +14,18 @@ namespace Project.AppCore.Services
 
         public async Task<QueryCollectionResult<TRunLog>> GetRunLogsAsync(GenericRequest<TRunLog> req)
         {
-            var list = await context.Repository<TRunLog>().GetListAsync(req.Expression(), out var total, req.PageIndex, req.PageSize, log => log.LogId, false);
+            var list = await context.Select<TRunLog>().Where(req.Expression())
+                .Count( out var total)
+                .Paging( req.PageIndex, req.PageSize)
+                .OrderByDesc(log => log.LogId)
+                .ToListAsync();
             return list.CollectionResult((int)total);
         }
 
         public async Task<QueryResult> WriteLog(TRunLog log)
         {
-            var i = await context.Repository<TRunLog>().InsertAsync(log);
-            return (i > 0).Result();
+            var i = await context.Insert(log).ExecuteAsync();
+            return i > 0;
         }
     }
 
@@ -47,7 +51,7 @@ namespace Project.AppCore.Services
                 ActionResult = log.Result,
                 ActionMessage = log.Message,
             };
-            var i = await context.Repository<RunLog>().InsertAsync(l);
+            var i = await context.Insert(l).ExecuteAsync();
             return (i > 0).Result();
         }
     }

@@ -38,7 +38,7 @@ namespace Project.AppCore.Services
             ArgumentNullException.ThrowIfNull(context);
             var username = loginForm.UserName;
             var password = loginForm.Password;
-            var u = await context.Repository<User>().GetSingleAsync(u => u.UserId == username);
+            var u = await context.Select<User>().Where(u => u.UserId == username).FirstAsync();
             var userInfo = new UserInfo
             {
                 UserId = username,
@@ -59,8 +59,8 @@ namespace Project.AppCore.Services
                 return result;
             }
 
-            var roles = await context.Repository<UserRole>().GetListAsync(ur => ur.UserId == username);
-            userInfo.Roles = roles.Select(ur => ur.RoleId).ToArray();
+            var roles = await context.Select<UserRole>().Where(ur => ur.UserId == username).ToListAsync(r => r.RoleId);
+            userInfo.Roles = [.. roles];
             return result;
         }
 
@@ -68,7 +68,7 @@ namespace Project.AppCore.Services
         {
             var context = Services.GetService<IExpressionContext>();
             ArgumentNullException.ThrowIfNull(context);
-            var old = await context.Select<User>(u => u.Password)
+            var old = await context.Select<User>()
                 .Where(u => u.UserId == pwd.UserId)
                 .FirstAsync();
             return old?.Password == pwd.OldPassword;

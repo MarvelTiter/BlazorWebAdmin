@@ -2,6 +2,7 @@
 using AutoInjectGenerator;
 using LightORM;
 using AutoAopProxyGenerator;
+using Project.Constraints.Models.Permissions;
 namespace Project.Web.Shared.Services
 {
     public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
@@ -18,7 +19,11 @@ namespace Project.Web.Shared.Services
         }
         public async Task<QueryCollectionResult<TPower>> GetPowerListAsync(GenericRequest<TPower> req)
         {
-            var list = await context.Repository<TPower>().GetListAsync(req.Expression(), out var total, orderByExpression: p => p.Sort);
+            var list = await context.Select<TPower>()
+                .Where(req.Expression())
+                .Count(out var total)
+                .OrderBy(p => p.Sort)
+                .ToListAsync();
             return list.CollectionResult((int)total);
         }
 
@@ -30,31 +35,35 @@ namespace Project.Web.Shared.Services
 
         public async Task<QueryCollectionResult<TRole>> GetRoleListAsync(GenericRequest<TRole> req)
         {
-            var list = await context.Repository<TRole>().GetListAsync(req.Expression(), out var total, req.PageIndex, req.PageSize);
+            var list = await context.Select<TRole>()
+                .Where(req.Expression())
+                .Count(out var total)
+                .Paging(req.PageIndex, req.PageSize)
+                .ToListAsync();
             return list.CollectionResult((int)total);
         }
 
         public async Task<QueryCollectionResult<TRole>> GetAllRoleAsync()
         {
-            var list = await context.Repository<TRole>().GetListAsync(e => true);
+            var list = await context.Select<TRole>().ToListAsync();
             return list.CollectionResult();
         }
 
         public async Task<QueryCollectionResult<TPower>> GetPowerListByUserIdAsync(string usrId)
         {
-            var powers = await context.Select<TPower, TRolePower, TUserRole>(w => new { w.Tb1.PowerId, w.Tb1.PowerName, w.Tb1.ParentId, w.Tb1.PowerType, w.Tb1.PowerLevel, w.Tb1.Icon, w.Tb1.Path, w.Tb1.Sort })
+            var powers = await context.Select<TPower, TRolePower, TUserRole>()
                                       .Distinct()
                                       .InnerJoin<TRolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
                                       .InnerJoin<TUserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
                                       .Where(w => w.Tb3.UserId == usrId)
                                       .OrderBy(w => w.Tb1.Sort)
-                                      .ToListAsync();
+                                      .ToListAsync(w => w.Tb1);
             return powers.CollectionResult();
         }
 
         public async Task<QueryCollectionResult<TPower>> GetPowerListByRoleIdAsync(string roleId)
         {
-            var powers = await context.Select<TPower, TRolePower>()
+            var powers = await context.Select<TPower>()
                                       .InnerJoin<TRolePower>((r, p) => p.PowerId == r.PowerId)
                                       .Where((r, rp) => rp.RoleId == roleId)
                                       .ToListAsync();
@@ -63,7 +72,7 @@ namespace Project.Web.Shared.Services
 
         public async Task<QueryCollectionResult<TRole>> GetUserRolesAsync(string usrId)
         {
-            var roles = await context.Select<TRole, TUserRole>()
+            var roles = await context.Select<TRole>()
                                      .InnerJoin<TUserRole>((r, ur) => r.RoleId == ur.RoleId)
                                      .Where<TUserRole>(ur => ur.UserId == usrId)
                                      .ToListAsync();
@@ -119,25 +128,29 @@ namespace Project.Web.Shared.Services
 
         public async Task<QueryResult> UpdatePowerAsync(TPower power)
         {
-            var n = await context.Repository<TPower>().UpdateAsync(power, p => p.PowerId == power.PowerId);
+            var n = await context.Update(power)
+                .Where(p => p.PowerId == power.PowerId)
+                .ExecuteAsync();
             return Result.Return(n > 0);
         }
 
         public async Task<QueryResult> InsertPowerAsync(TPower power)
         {
-            var n = await context.Repository<TPower>().InsertAsync(power);
+            var n = await context.Insert(power).ExecuteAsync();
             return Result.Return(n > 0);
         }
 
         public async Task<QueryResult> UpdateRoleAsync(TRole role)
         {
-            var n = await context.Repository<TRole>().UpdateAsync(role, r => r.RoleId == role.RoleId);
+            var n = await context.Update(role)
+                .Where(r => r.RoleId == role.RoleId)
+                .ExecuteAsync();
             return Result.Return(n > 0);
         }
 
         public async Task<QueryResult> InsertRoleAsync(TRole role)
         {
-            var n = await context.Repository<TRole>().InsertAsync(role);
+            var n = await context.Insert(role).ExecuteAsync();
             return Result.Return(n > 0);
         }
 
@@ -193,13 +206,23 @@ namespace Project.Web.Shared.Services
         }
         public async Task<QueryCollectionResult<MinimalPower>> GetPowerListByUserIdAsync(string usrId)
         {
-            var powers = await context.Select<Power, RolePower, UserRole>(w => new { w.Tb1.PowerId, w.Tb1.PowerName, w.Tb1.ParentId, w.Tb1.PowerType, w.Tb1.PowerLevel, w.Tb1.Icon, w.Tb1.Path, w.Tb1.Sort })
+            var powers = await context.Select<Power>()
                                       .Distinct()
                                       .InnerJoin<RolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
                                       .InnerJoin<UserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
                                       .Where(w => w.Tb3.UserId == usrId)
                                       .OrderBy(w => w.Tb1.Sort)
-                                      .ToListAsync<MinimalPower>();
+                                      .ToListAsync(w => new MinimalPower
+                                      {
+                                          PowerId = w.Tb1.PowerId,
+                                          PowerName = w.Tb1.PowerName,
+                                          ParentId = w.Tb1.ParentId,
+                                          PowerType = w.Tb1.PowerType,
+                                          PowerLevel = w.Tb1.PowerLevel,
+                                          Icon = w.Tb1.Icon,
+                                          Path = w.Tb1.Path,
+                                          Sort = w.Tb1.Sort
+                                      });
             return powers.CollectionResult();
         }
     }
