@@ -12,7 +12,7 @@ public class UserInfo
     public string? Token { get; set; }
 
     public string[] Roles { get; set; } = [];
-
+    public string[]? UserPowers { get; set; } 
     /// <summary>
     /// 存储用户额外信息
     /// </summary>

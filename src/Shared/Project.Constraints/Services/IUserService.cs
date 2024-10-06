@@ -9,17 +9,22 @@ using Project.Constraints.Models.Request;
 namespace Project.Constraints.Services
 {
     [AddAspectHandler(AspectType = typeof(AopLogger))]
+    [AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
     public partial interface IUserService<TUser> where TUser : IUser
     {
         [IgnoreAspect]
         Task<QueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req);
+
         [LogInfo(Action = "新增用户", Module = "权限控制")]
         Task<QueryResult> InsertUserAsync(TUser user);
+
         [LogInfo(Action = "修改用户", Module = "权限控制")]
         Task<QueryResult> UpdateUserAsync(TUser user);
+
         [LogInfo(Action = "删除用户", Module = "权限控制")]
         Task<QueryResult> DeleteUserAsync(TUser user);
-        [LogInfo(Action = "修改密码", Module = "权限控制")]
+
+        [IgnoreAspect]
         Task<TUser?> GetUserAsync(string id);
     }
 

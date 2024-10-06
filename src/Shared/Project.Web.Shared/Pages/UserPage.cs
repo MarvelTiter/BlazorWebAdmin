@@ -48,9 +48,20 @@ namespace Project.Web.Shared.Pages
 
         protected override async Task<bool> OnAddItemAsync()
         {
-            var user = await this.ShowAddFormAsync(Localizer["User.DialogTitle.Add"]);
+            var user = await this.ShowAddFormAsync(option =>
+            {
+                option.Title = Localizer["User.DialogTitle.Add"];
+                option.PostCheckAsync = async (u, validate) =>
+                {
+                    if (!validate.Invoke() || u is null)
+                    {
+                        return false;
+                    }
+                    var result = await UserSrv.InsertUserAsync(u);
+                    return UI.ShowResult(result);
+                };
+            });
             user.OnUserSave(SaveActionType.Insert);
-            await UserSrv.InsertUserAsync(user);
             return true;
         }
 
@@ -76,17 +87,23 @@ namespace Project.Web.Shared.Pages
                         return false;
                     }
                     var saveUserResult = await UserSrv.UpdateUserAsync(u);
-                    var saveUserRoleResult = await PermissionSrv.SaveUserRoleAsync((u.UserId, u.Roles));
-                    if (saveUserResult.Success && saveUserRoleResult.Success)
-                    {
-                        UI.Success("用户信息保存成功！");
-                        return true;
-                    }
-                    else
-                    {
-                        UI.Error("保存出错，请重试");
-                        return false;
-                    }
+                    //var success = UI.ShowResult(saveUserResult);
+                    //if (success)
+                    //{
+                    //    var saveUserRoleResult = await PermissionSrv.SaveUserRoleAsync((u.UserId, u.Roles));
+                    //    //success = UI.ShowResult()
+                    //}
+                    //if (saveUserResult.Success && saveUserRoleResult.Success)
+                    //{
+                    //    UI.Success("用户信息保存成功！");
+                    //    return true;
+                    //}
+                    //else
+                    //{
+                    //    UI.Error($"更新用户: {saveUserResult.Message} ; 更新用户角色: {saveUserRoleResult.Message}");
+                    //    return false;
+                    //}
+                    return UI.ShowResult(saveUserResult);
                 });
             });
             u.OnUserSave(SaveActionType.Update);
@@ -97,7 +114,7 @@ namespace Project.Web.Shared.Pages
         public async Task<bool> DeleteUser(TUser user)
         {
             var ret = await UserSrv.DeleteUserAsync(user);
-            return ret.Success;
+            return UI.ShowResult(ret);
         }
 
         private async Task UpdateRoles()

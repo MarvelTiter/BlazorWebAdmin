@@ -22,7 +22,7 @@ namespace Project.Constraints.Models.Permissions
         string? Icon { get; set; }
         string? Path { get; set; }
         int Sort { get; set; }
-        bool GenerateCRUDButton { get; set; }
+        //bool GenerateCRUDButton { get; set; }
         IEnumerable<IPower>? Children { get; set; }
     }
 
@@ -38,7 +38,7 @@ namespace Project.Constraints.Models.Permissions
         public int Sort { get; set; }
         public IEnumerable<MinimalPower>? Children { get; set; }
         IEnumerable<IPower>? IPower.Children { get => Children; set => Children = value?.Cast<MinimalPower>(); }
-        public bool GenerateCRUDButton { get; set; }
+        //public bool GenerateCRUDButton { get; set; }
     }
 
 #if (ExcludeDefaultService)
@@ -86,9 +86,9 @@ namespace Project.Constraints.Models.Permissions
         public IEnumerable<Power>? Children { get; set; } = [];
         IEnumerable<IPower>? IPower.Children { get => Children; set => Children = value?.Cast<Power>(); }
 
-        [NotMapped]
-        [Form]
-        public bool GenerateCRUDButton { get; set; }
+        //[NotMapped]
+        //[Form]
+        //public bool GenerateCRUDButton { get; set; }
     }
 #endif
 }

@@ -18,6 +18,7 @@ public interface IPermissionService
 
 
 [AddAspectHandler(AspectType = typeof(AopLogger))]
+[AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
 public interface IPermissionService<TPower, TRole>
     where TPower : IPower
     where TRole : IRole

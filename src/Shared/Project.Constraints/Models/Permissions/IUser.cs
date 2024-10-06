@@ -45,15 +45,18 @@ namespace Project.Constraints.Models.Permissions
         [ColumnDefinition(Readonly = true)]
         [LightColumn(Name = "USER_ID", PrimaryKey = true)]
         [NotNull]
+        [Required]
         public string? UserId { get; set; }
         [ColumnDefinition]
         [LightColumn(Name = "USER_NAME")]
         [NotNull]
+        [Required]
         public string? UserName { get; set; }
         [ColumnDefinition]
         [LightColumn(Name = "PASSWORD")]
         [Form(InputType.Password)]
         [NotNull]
+        [Required]
         public string? Password { get; set; }
         [ColumnDefinition]
         [LightColumn(Name = "AGE")]

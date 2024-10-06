@@ -7,7 +7,7 @@ namespace Project.Web.Shared.Services
 {
     public class DefaultUserService<TUser, TUserRole>
         where TUser : IUser
-        where TUserRole : IUserRole
+        where TUserRole : IUserRole, new()
     {
         private readonly IExpressionContext context;
 
@@ -52,8 +52,26 @@ namespace Project.Web.Shared.Services
 
         public async Task<QueryResult> UpdateUserAsync(TUser user)
         {
-            var flag = await context.Update(user).Where( u => u.UserId == user.UserId).ExecuteAsync();
-            return flag > 0;
+            try
+            {
+                await context.BeginTranAsync();
+                await context.Update(user).Where(u => u.UserId == user.UserId).ExecuteAsync();
+                var usrId = user.UserId;
+                var roles = user.Roles ?? [];
+                await context.Delete<TUserRole>().Where(u => u.UserId == usrId).ExecuteAsync();
+                foreach (var r in roles)
+                {
+                    var ur = new TUserRole() { UserId = usrId, RoleId = r };
+                    await context.Insert(ur).ExecuteAsync();
+                }
+                await context.CommitTranAsync();
+                return Result.Success();
+            }
+            catch (Exception ex)
+            {
+                await context.RollbackTranAsync();
+                return Result.Fail().SetMessage(ex.Message);
+            }
         }
         public async Task<TUser?> GetUserAsync(string id)
         {

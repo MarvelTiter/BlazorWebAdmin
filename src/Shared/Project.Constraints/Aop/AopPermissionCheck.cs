@@ -1,58 +1,49 @@
-﻿using Project.Constraints.Models.Permissions;
-using Project.Constraints.Services;
-using Project.Constraints.Store;
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Project.Constraints.Store;
 using AutoAopProxyGenerator;
 using AutoInjectGenerator;
-using static System.Formats.Asn1.AsnWriter;
-using Microsoft.Extensions.Logging;
 
 namespace Project.Constraints.Aop;
 
-[AutoInject(ServiceType = typeof(AopLogger))]
-public class AopLogger : IAspectHandler
+[AutoInject(ServiceType = typeof(AopPermissionCheck))]
+public class AopPermissionCheck : IAspectHandler
 {
     private readonly IUserStore userStore;
-    private readonly ILogger<AopLogger> logger;
 
-    public AopLogger(IUserStore userStore, ILogger<AopLogger> logger)
+    public AopPermissionCheck(IUserStore userStore)
     {
         this.userStore = userStore;
-        this.logger = logger;
     }
-    public async Task Invoke(ProxyContext context, Func<Task> process)
+    public Task Invoke(ProxyContext context, Func<Task> process)
     {
-        logger.LogInformation("AopLogger called before {Name}", context.ServiceMethod?.Name);
-        await process();
-        logger.LogInformation("AopLogger called after {Name}", context.ServiceMethod?.Name);
-        var infoAttr = context.ServiceMethod?.GetCustomAttribute<LogInfoAttribute>();
-        if (infoAttr != null)
+        var action = FormattedAction(context);
+        if (userStore.UserInfo?.UserPowers == null)
         {
-            var userId = userStore.UserId ?? GetUserIdFromContext(context);
-            var result = context.ReturnValue as QueryResult;
-            var l = new MinimalLog()
-            {
-                UserId = userId,
-                Module = infoAttr!.Module ?? "",
-                Action = infoAttr!.Action ?? "",
-                Result = result?.Success ?? false ? "成功" : "失败",
-                Message = result?.Message ?? "",
-            };
+            return process.Invoke();
+        }
+        if (userStore.UserInfo.UserPowers.Contains(action) == false)
+        {
+            context.SetReturnValue(new QueryResult() { Success = false, Message = "没有权限" });
+            return Task.CompletedTask;
+        }
+        else
+        {
+            return process.Invoke();
         }
     }
 
-    private static string GetUserIdFromContext(ProxyContext context)
+    private static string FormattedAction(ProxyContext context)
     {
-        if (context.ServiceMethod?.Name == nameof(IAuthService.SignInAsync))
+        if (context.ServiceMethod.Name.EndsWith("Async"))
         {
-            var r = context.ReturnValue as QueryResult<UserInfo>;
-            return r?.Payload?.UserId ?? "Unknow";
+            // 去掉末尾5个字符
+            return context.ServiceMethod.Name[..^5];
         }
-        return "Unknow";
+        else
+        {
+            return context.ServiceMethod.Name;
+        }
     }
 }
-
 //public class LogAop : Interceptor
 //{
 //    private readonly IRunLogService logService;

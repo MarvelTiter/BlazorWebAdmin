@@ -226,6 +226,7 @@ public class RouterStore : StoreBase, IRouterStore
     {
         if (userInfo == null) return;
         var result = await settingService.GetUserPowersAsync(userInfo);
+        userInfo.UserPowers = result.Where(p => p.PowerType == PowerType.Button).Select(p => p.PowerId).ToArray();
         var powers = result.Where(p => p.PowerType == PowerType.Page);
         Menus.Clear();
         //if (!setting.CurrentValue.LoadUnregisteredPage)

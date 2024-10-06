@@ -104,28 +104,9 @@ namespace Project.Web.Shared.Pages
             edit.ParentId = parent.PowerId;
             edit.PowerLevel = parent.PowerLevel + 1;
             edit.Sort = parent.Children?.Count() ?? 0 + 1;
-            var power = await this.ShowEditFormAsync("PermissionSetting.EditPower", edit, false);
+            var power = await this.ShowEditFormAsync(Localizer["PermissionSetting.EditPower"], edit, false);
             var result = await PermissionSrv.InsertPowerAsync(power);
-            if (result.Success)
-            {
-                if (power.PowerType == PowerType.Page && power.GenerateCRUDButton)
-                {
-                    foreach (var item in defaultPageButtons)
-                    {
-                        var p = new TPower
-                        {
-                            PowerId = $"{power.PowerId}:{item}",
-                            ParentId = power.PowerId,
-                            PowerName = $"{power.PowerName}:{item}",
-                            PowerType = PowerType.Button,
-                            PowerLevel = power.PowerLevel + 1,
-                        };
-                        await PermissionSrv.InsertPowerAsync(p);
-                    }
-                }
-                return true;
-            }
-            return false;
+            return UI.ShowResult(result);
         }
 
         [EditButton]
@@ -133,14 +114,14 @@ namespace Project.Web.Shared.Pages
         {
             var p = await this.ShowEditFormAsync("编辑权限", node);
             var result = await PermissionSrv.UpdatePowerAsync(p);
-            return result.Success;
+            return UI.ShowResult(result);
         }
 
         [DeleteButton]
         public async Task<bool> DeletePower(TPower node)
         {
             var result = await PermissionSrv.DeletePowerAsync(node);
-            return result.Success;
+            return UI.ShowResult(result);
         }
 
     }
