@@ -106,21 +106,20 @@ namespace Project.Web.Shared.Pages
         }
 
         [EditButton]
-        public async Task<bool> EditRole(TRole role)
+        public async Task<IQueryResult> EditRole(TRole role)
         {
             var powers = await PermissionSrv.GetPowerListByRoleIdAsync(role.RoleId);
             role.Powers = powers.Payload.Select(p => p.PowerId).ToList();
             var newRole = await this.ShowEditFormAsync("编辑角色", role);
-            var result = await PermissionSrv.UpdateRoleAsync(newRole);
-            await PermissionSrv.SaveRolePowerAsync((newRole.RoleId, newRole.Powers));
-            return result.Success;
+            var result1 = await PermissionSrv.UpdateRoleAsync(newRole);
+            var result2 = await PermissionSrv.SaveRolePowerAsync((newRole.RoleId, newRole.Powers));
+            return result1.AndAlso(result2);
         }
 
         [DeleteButton]
-        public async Task<bool> DeleteRole(TRole role)
+        public async Task<IQueryResult> DeleteRole(TRole role)
         {
-            var result = await PermissionSrv.DeleteRoleAsync(role);
-            return result.Success;
+            return await PermissionSrv.DeleteRoleAsync(role);
         }
     }
 }

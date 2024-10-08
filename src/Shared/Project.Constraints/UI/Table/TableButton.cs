@@ -107,7 +107,7 @@ namespace Project.Constraints.UI.Table
         public string? ConfirmTitle { get; set; }
         public string? AdditionalParameter { get; set; }
         public string Group { get; set; } = "TableTips.ActionColumn";
-        [NotNull] public Func<TData, Task<bool>>? Callback { get; set; }
+        [NotNull] public Func<TData, Task<IQueryResult>>? Callback { get; set; }
 
         private Func<TableButtonContext<TData>, bool>? visible;
         private Func<TableButtonContext<TData>, string>? label;
@@ -125,7 +125,7 @@ namespace Project.Constraints.UI.Table
             return label?.Invoke(context);
         }
 
-        public static TableButton<TData> Edit(Func<TData, Task<bool>> action)
+        public static TableButton<TData> Edit(Func<TData, Task<IQueryResult>> action)
         {
             return new TableButton<TData>
             {
@@ -135,7 +135,7 @@ namespace Project.Constraints.UI.Table
             };
         }
 
-        public static TableButton<TData> Delete(Func<TData, Task<bool>> action)
+        public static TableButton<TData> Delete(Func<TData, Task<IQueryResult>> action)
         {
             return new TableButton<TData>
             {

@@ -52,7 +52,7 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     public Func<TData, Dictionary<string, object>?>? AddRowOptions { get; set; }
     public Func<string, IEnumerable<TData>, Task>? ExportIntercept { get; set; }
     public List<TableButton<TData>>? Buttons { get; set; }
-    public Func<TableButton<TData>, bool, Task>? OnTableButtonClickAsync { get; set; }
+    public Func<TableButton<TData>, IQueryResult, Task>? OnTableButtonClickAsync { get; set; }
     public Func<IEnumerable<TData>, Task>? OnSaveExcelAsync { get; set; }
     public Func<IEnumerable<TData>, Task>? OnSelectedChangedAsync { get; set; }
     //public Func<Task> RefreshAsync { get; set; }

@@ -193,6 +193,24 @@ public static class Result
         T def = default;
         return !Equals(value, def);
     }
+
+    public static IQueryResult AndAlso(this IQueryResult self, IQueryResult other)
+    {
+        return new QueryResult
+        {
+            Success = self.Success && other.Success,
+            Message = $"Result1({self.Success}): {self.Message}, Result1({other.Success}): {other.Message}"
+        };
+    }
+
+    public static IQueryResult OrElse(this IQueryResult self, IQueryResult other)
+    {
+        return new QueryResult
+        {
+            Success = self.Success || other.Success,
+            Message = $"Result1({self.Success}): {self.Message}, Result1({other.Success}): {other.Message}"
+        };
+    }
 }
 
 public static class TypedResultExtensionForQueryResult

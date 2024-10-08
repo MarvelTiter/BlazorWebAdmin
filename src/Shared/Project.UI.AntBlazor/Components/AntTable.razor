@@ -148,7 +148,7 @@
                  OnClick="@(() => InvokeButtonAction(definition, context))">
         @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
     </Button>
-    ;
+        ;
     }
 
     private async Task InvokeButtonAction(TableButton<TData> definition, TData data)
@@ -156,8 +156,8 @@
         if (definition.Danger)
         {
             var confirmResult = await ConfirmSrv.Show(
-        TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
-        , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+    TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+    , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
             if (confirmResult == ConfirmResult.OK)
             {
                 await CallButtonAction();
@@ -174,12 +174,16 @@
         {
             var result = await definition.Callback.Invoke(data);
             Options.OnTableButtonClickAsync?.Invoke(definition, result);
-            if (result)
+            if (result.Success)
             {
-                var msg = TableLocalizer["TableTips.ActionSuccess"].Value;
+                var msg = result.Message ?? TableLocalizer["TableTips.ActionSuccess"].Value;
                 _ = MessageSrv.Success(msg);
                 if (Options.AutoRefreshData)
                     await Options.RefreshAsync();
+            }
+            else
+            {
+                _ = MessageSrv.Error(result.Message ?? "Error");
             }
         }
     }

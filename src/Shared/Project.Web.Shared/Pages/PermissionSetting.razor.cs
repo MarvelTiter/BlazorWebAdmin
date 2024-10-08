@@ -98,30 +98,27 @@ namespace Project.Web.Shared.Pages
         public string AddPowerLabel(TableButtonContext<TPower> _) => Localizer["PermissionSetting.AddChild"];
 
         [TableButton(LabelExpression = nameof(AddPowerLabel), VisibleExpression = nameof(CanShow))]
-        public async Task<bool> AddPower(TPower parent)
+        public async Task<IQueryResult> AddPower(TPower parent)
         {
             var edit = new TPower();
             edit.ParentId = parent.PowerId;
             edit.PowerLevel = parent.PowerLevel + 1;
             edit.Sort = parent.Children?.Count() ?? 0 + 1;
             var power = await this.ShowEditFormAsync(Localizer["PermissionSetting.EditPower"], edit, false);
-            var result = await PermissionSrv.InsertPowerAsync(power);
-            return UI.ShowResult(result);
+            return await PermissionSrv.InsertPowerAsync(power);
         }
 
         [EditButton]
-        public async Task<bool> EditPower(TPower node)
+        public async Task<IQueryResult> EditPower(TPower node)
         {
             var p = await this.ShowEditFormAsync("编辑权限", node);
-            var result = await PermissionSrv.UpdatePowerAsync(p);
-            return UI.ShowResult(result);
+            return await PermissionSrv.UpdatePowerAsync(p);
         }
 
         [DeleteButton]
-        public async Task<bool> DeletePower(TPower node)
+        public async Task<IQueryResult> DeletePower(TPower node)
         {
-            var result = await PermissionSrv.DeletePowerAsync(node);
-            return UI.ShowResult(result);
+            return await PermissionSrv.DeletePowerAsync(node);
         }
 
     }

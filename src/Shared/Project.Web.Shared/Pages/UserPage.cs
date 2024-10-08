@@ -58,7 +58,7 @@ namespace Project.Web.Shared.Pages
                         return false;
                     }
                     var result = await UserSrv.InsertUserAsync(u);
-                    return UI.ShowResult(result);
+                    return UI.ShowError(result);
                 };
             });
             user.OnUserSave(SaveActionType.Insert);
@@ -72,7 +72,7 @@ namespace Project.Web.Shared.Pages
         }
 
         [EditButton]
-        public async Task<bool> EditUser(TUser user)
+        public async Task<IQueryResult> EditUser(TUser user)
         {
             var userRoles = await PermissionSrv.GetUserRolesAsync(user.UserId);
             user.Roles = userRoles.Payload?.Select(r => r.RoleId).ToList() ?? [];
@@ -87,34 +87,17 @@ namespace Project.Web.Shared.Pages
                         return false;
                     }
                     var saveUserResult = await UserSrv.UpdateUserAsync(u);
-                    //var success = UI.ShowResult(saveUserResult);
-                    //if (success)
-                    //{
-                    //    var saveUserRoleResult = await PermissionSrv.SaveUserRoleAsync((u.UserId, u.Roles));
-                    //    //success = UI.ShowResult()
-                    //}
-                    //if (saveUserResult.Success && saveUserRoleResult.Success)
-                    //{
-                    //    UI.Success("用户信息保存成功！");
-                    //    return true;
-                    //}
-                    //else
-                    //{
-                    //    UI.Error($"更新用户: {saveUserResult.Message} ; 更新用户角色: {saveUserRoleResult.Message}");
-                    //    return false;
-                    //}
-                    return UI.ShowResult(saveUserResult);
+                    return UI.ShowError(saveUserResult);
                 });
             });
             u.OnUserSave(SaveActionType.Update);
-            return true;
+            return Result.Success();
         }
 
         [DeleteButton]
-        public async Task<bool> DeleteUser(TUser user)
+        public async Task<IQueryResult> DeleteUser(TUser user)
         {
-            var ret = await UserSrv.DeleteUserAsync(user);
-            return UI.ShowResult(ret);
+            return await UserSrv.DeleteUserAsync(user);
         }
 
         private async Task UpdateRoles()
