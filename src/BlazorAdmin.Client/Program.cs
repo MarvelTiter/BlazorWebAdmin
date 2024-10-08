@@ -13,19 +13,12 @@ builder.Services.ConfigureHttpClientDefaults(c =>
     c.ConfigureHttpClient(h => { h.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
 });
 
-var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
-if (useProxy)
-{
-    try
-    {
-        builder.ConfigureContainer(new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
-    }
-    catch { }
-}
+
 
 //builder.Configuration
 Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
 //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
+AppConst.AppAssembly = typeof(BlazorAdmin.Client._Imports).Assembly;
 builder.Services.AddClientProject(builder.Configuration, setting =>
 {
     setting.App.Id = "Test";
@@ -49,4 +42,11 @@ builder.Services.AddScoped<IStandardPermissionService, StandardPermissionService
 builder.Services.AddScoped<IStandardRunLogService, StandardRunLogServiceApiInvoker>();
 builder.Services.AddScoped<IStandardUserService, StandardUserServiceApiInvoker>();
 #endif
+
+var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
+if (useProxy)
+{
+    builder.ConfigureContainer(new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
+}
+
 await builder.Build().RunAsync();

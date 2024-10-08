@@ -1,6 +1,7 @@
 ﻿using Project.Constraints.Store;
 using AutoAopProxyGenerator;
 using AutoInjectGenerator;
+using System.Reflection;
 
 namespace Project.Constraints.Aop;
 
@@ -33,6 +34,11 @@ public class AopPermissionCheck : IAspectHandler
 
     private static string FormattedAction(ProxyContext context)
     {
+        var related = context.ServiceMethod.GetCustomAttribute<RelatedPermissionAttribute>();
+        if (!string.IsNullOrEmpty(related?.PermissionId))
+        {
+            return related.PermissionId;
+        }
         if (context.ServiceMethod.Name.EndsWith("Async"))
         {
             // 去掉末尾5个字符

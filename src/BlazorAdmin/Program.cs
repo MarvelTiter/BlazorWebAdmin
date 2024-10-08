@@ -5,7 +5,6 @@ using Project.AppCore.Services;
 using Project.Constraints;
 using Project.UI.AntBlazor;
 using Project.Web.Shared;
-using _Imports = BlazorAdmin.Client._Imports;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -53,8 +52,6 @@ builder.AddDefaultLightOrm(options =>
 builder.Services.AutoInject();
 
 builder.Services.AddControllers();
-
-//AppConst.AddAssembly(typeof(_Imports));
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

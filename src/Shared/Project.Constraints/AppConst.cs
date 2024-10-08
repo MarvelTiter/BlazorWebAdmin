@@ -97,6 +97,10 @@ public static class AppConst
 
     static AppConst()
     {
+        if (OperatingSystem.IsBrowser())
+        {
+            return;
+        }
         if (!Directory.Exists(TempFilePath))
             Directory.CreateDirectory(TempFilePath);
     }
