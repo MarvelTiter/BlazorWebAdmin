@@ -25,53 +25,6 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
 
     private IUserStore UserStore => appSession.UserStore;
 
-    //{
-    //    try
-    //    {
-    //        var app = await storageService.GetAsync<AppStore>(ConstraintString.APP_STORE_KEY);
-    //        AppStore.ApplySetting(app.Value);
-    //        if (token.CurrentValue.NeedAuthentication)
-    //        {
-    //            var result = await storageService.GetAsync<UserInfo>("UID");
-    //            var diff = DateTime.Now - result.Value?.CreatedTime;
-    //            var actived = DateTime.Now - result.Value?.ActiveTime;
-    //            if (result.Success && (diff?.Days < token.CurrentValue.Expire || actived?.TotalSeconds < token.CurrentValue.LimitedFreeTime))
-    //            {
-    //                //await loginService.UpdateLastLoginTimeAsync(result.Value!);
-    //                return await UpdateState(result.Value);
-    //            }
-    //        }
-    //        return await UpdateState();
-    //    }
-    //    catch (Exception)
-    //    {
-    //        return await UpdateState();
-    //    }
-    //}
-
-    // async Task<AuthenticationState> UpdateState(UserInfo? info = null)
-    // {
-    //     ClaimsIdentity identity;
-    //     if (info != null)
-    //     {
-    //         identity = new ClaimsIdentity();
-    //     }
-    //     else
-    //     {
-    //         identity = new ClaimsIdentity();
-    //     }
-    //     await Store.SetUserAsync(info);
-    //     var user = new ClaimsPrincipal(identity);
-    //     return new AuthenticationState(user);
-    // }
-
-    // public Task IdentifyUser(UserInfo info)
-    // {
-    //     // await storageService.SetAsync("UID", info);
-    //     // NotifyAuthenticationStateChanged(UpdateState(info));
-    //     return Task.CompletedTask;
-    // }
-
     public Task ClearState()
     {
         //appSession.UserStore.ClearUser();
@@ -99,9 +52,4 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
         claims.AddRange(info.Roles.Select(r => new Claim(ClaimTypes.Role, r)));
         return new ClaimsPrincipal(new ClaimsIdentity(claims, nameof(PersistentAuthenticationStateProvider)));
     }
-    //private UserInfo Deserialize(string json)
-    //{
-    //    if (string.IsNullOrEmpty(json)) return null;
-    //    return System.Text.Json.JsonSerializer.Deserialize<UserInfo>(json);
-    //}
 }

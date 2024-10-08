@@ -60,7 +60,7 @@ namespace Project.AppCore
             app.UseMiddleware<RedirectToLauchUrlMiddleware>();
             app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/download"), a => a.UseMiddleware<FileDownloaderMiddleware>());
             app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/ip.client"), a => a.UseMiddleware<GetClientIpMiddleware>());
-
+            app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api") && !ctx.Request.Path.StartsWithSegments("/api/download") && !ctx.Request.Path.StartsWithSegments("/api/svg") && !ctx.Request.Path.StartsWithSegments("/api/file") && !ctx.Request.Path.StartsWithSegments("/api/hub"), a => a.UseMiddleware<SetUserInfoMiddleware>());
             //var envFunc = app.GetPropertyAccessor<IHostEnvironment>("Environment");
             //AppConst.Environment = envFunc.Invoke(app);
 

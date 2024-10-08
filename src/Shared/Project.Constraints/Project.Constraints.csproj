@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="AutoAopProxyGenerator" Version="0.0.7" />
+		<PackageReference Include="AutoAopProxyGenerator" Version="0.0.8" />
 		<PackageReference Include="AutoGenMapperGenerator" Version="0.0.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
 	</ItemGroup>

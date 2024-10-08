@@ -12,9 +12,11 @@ builder.Services.ConfigureHttpClientDefaults(c =>
 {
     c.ConfigureHttpClient(h => { h.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
 });
-
-
-
+var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
+if (useProxy)
+{
+    builder.ConfigureContainer(new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
+}
 //builder.Configuration
 Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
 //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
@@ -43,10 +45,6 @@ builder.Services.AddScoped<IStandardRunLogService, StandardRunLogServiceApiInvok
 builder.Services.AddScoped<IStandardUserService, StandardUserServiceApiInvoker>();
 #endif
 
-var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
-if (useProxy)
-{
-    builder.ConfigureContainer(new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
-}
+var host = builder.Build();
 
-await builder.Build().RunAsync();
+await host.RunAsync();

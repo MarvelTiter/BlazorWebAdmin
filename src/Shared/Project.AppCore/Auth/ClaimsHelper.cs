@@ -12,11 +12,13 @@ public static class ClaimsHelper
         {
             new(ClaimTypes.Name, info.UserId),
             new(ClaimTypes.GivenName, info.UserName!),
+            new (nameof(UserInfo.UserPowers), JsonSerializer.Serialize(info.UserPowers)),
             new(nameof(UserInfo.Token), info.Token ?? ""),
             new(nameof(UserInfo.CreatedTime), $"{info.CreatedTime.ToBinary()}"),
             new(nameof(UserInfo.AdditionalValue), JsonSerializer.Serialize(info.AdditionalValue))
         };
         foreach (var r in info.Roles) claims.Add(new Claim(ClaimTypes.Role, r));
+        foreach (var p in info.UserPowers ?? []) claims.Add(new("Right", p));
         return new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
     }
 
@@ -26,9 +28,10 @@ public static class ClaimsHelper
         var username = principal.FindFirstValue(ClaimTypes.GivenName);
         var token = principal.FindFirstValue(nameof(UserInfo.Token));
         var createdBinary = principal.FindFirstValue(nameof(UserInfo.CreatedTime));
-        var createdTime = DateTime.FromBinary(long.Parse(createdBinary));
+        var createdTime = DateTime.FromBinary(long.Parse(createdBinary!));
         var additionalValue = principal.FindFirstValue(nameof(UserInfo.AdditionalValue)) ?? "{}";
         var roles = principal.FindAll(ClaimTypes.Role).Select(c => c.Value);
+        var powers = principal.FindAll("Right").Select(c => c.Value);
         return new UserInfo
         {
             UserId = name,
@@ -36,6 +39,7 @@ public static class ClaimsHelper
             Token = token,
             CreatedTime = createdTime,
             Roles = [.. roles],
+            UserPowers = [..powers],
             AdditionalValue = JsonSerializer.Deserialize<Dictionary<string, object?>>(additionalValue) ?? []
         };
     }
