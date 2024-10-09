@@ -6,18 +6,18 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="AutoAopProxyGenerator" Version="0.0.8" />
-		<PackageReference Include="AutoGenMapperGenerator" Version="0.0.5" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.8" />
+		<PackageReference Include="AutoAopProxyGenerator" Version="0.0.9" />
+		<PackageReference Include="AutoGenMapperGenerator" Version="0.0.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="AutoWasmApiGenerator" Version="0.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.8" />
+		<PackageReference Include="AutoWasmApiGenerator" Version="0.0.5" />
+		<PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.10" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
-		<PackageReference Include="MT.LightORM" Version="3.0.0" />
-		<PackageReference Include="MT.Toolkit" Version="2.0.9" />
+		<PackageReference Include="MT.LightORM" Version="3.0.1" />
+		<PackageReference Include="MT.Toolkit" Version="2.1.0" />
 		<PackageReference Include="LightExcel" Version="2.1.1" />
-		<PackageReference Include="AutoInjectGenerator" Version="0.0.4" />
+		<PackageReference Include="AutoInjectGenerator" Version="0.0.5" />
 	</ItemGroup>
 
 </Project>

@@ -13,9 +13,10 @@ public class HttpClientApiAuth : IHttpClientHeaderHandler
     {
         this.userStore = userStore;
     }
-    public void SetRequestHeader(HttpRequestMessage request)
+    public Task SetRequestHeaderAsync(HttpRequestMessage request)
     {
         Console.WriteLine($"SetRequestHeader: {userStore.UserId}");
         // request.Headers.Add();
+        return Task.CompletedTask;
     }
 }
