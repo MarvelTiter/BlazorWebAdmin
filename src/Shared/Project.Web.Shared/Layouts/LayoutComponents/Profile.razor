@@ -80,15 +80,15 @@
                 }
                 userPwd.UserId = User.UserInfo.UserId;
                 var pass = await AuthService.CheckUserPasswordAsync(userPwd);
-                if (!pass.Success)
+                if (!pass.IsSuccess)
                 {
                     UI.Error(Localizer["UserPwd.OldPasswordError"]);
                 }
-                return pass.Success;
+                return pass.IsSuccess;
             };
         });
         var result = await AuthService.ModifyUserPasswordAsync(pwd);
-        if (result.Success)
+        if (result.IsSuccess)
         {
             await HandleLogout();
         }

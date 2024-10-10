@@ -36,7 +36,7 @@ public class AopLogger : IAspectHandler
                 UserId = userId,
                 Module = infoAttr!.Module ?? "",
                 Action = infoAttr!.Action ?? "",
-                Result = result?.Success ?? false ? "成功" : "失败",
+                Result = result?.IsSuccess ?? false ? "成功" : "失败",
                 Message = result?.Message ?? "",
             };
         }

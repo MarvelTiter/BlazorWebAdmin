@@ -116,7 +116,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     protected virtual async Task<QueryCollectionResult<TModel>> OnExportAsync(TQuery query)
     {
         if (Options.Result == null) await Options.RefreshAsync();
-        return Options.Result ?? Result.EmptyResult<TModel>();
+        return Options.Result ?? QueryResult.EmptyResult<TModel>();
     }
 
     /// <summary>
@@ -161,7 +161,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         {
             var result = await HandleImportedDataAsync(item);
             total++;
-            if (!result.Success)
+            if (!result.IsSuccess)
             {
                 failed++;
             }

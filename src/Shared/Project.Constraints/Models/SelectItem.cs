@@ -47,7 +47,7 @@ namespace Project.Constraints.Models
     {
         private readonly List<Options<T>> items = new();
         private readonly Lazy<Dictionary<string, string>> lazyDictionary;
-
+        private bool frozen;
         public SelectItem()
         {
             lazyDictionary = new Lazy<Dictionary<string, string>>(() =>
@@ -58,17 +58,32 @@ namespace Project.Constraints.Models
 
         public SelectItem<T> Add(string label, T value)
         {
+            if (frozen) throw new InvalidOperationException();
             items.Add(new Options<T>(label, value));
             return this;
         }
 
-        public SelectItem<T> AddRange(IEnumerable<Options<T>> options)
+        public SelectItem<T> AddRange(IEnumerable<Options<T>> options, bool frozen = false)
         {
+            if (frozen) throw new InvalidOperationException();
             items.AddRange(options);
+            if (!frozen)
+            {
+                Frozen();
+            }
             return this;
         }
 
-        public Dictionary<string, string> EnumValues => lazyDictionary.Value;
+        public void Frozen() => frozen = true;
+
+        public Dictionary<string, string> EnumValues
+        {
+            get
+            {
+                if (!frozen) throw new InvalidOperationException();
+                return lazyDictionary.Value;
+            }
+        }
         public void Clear() => items.Clear();
 
         private class Enumerator : IEnumerator<Options<T>>
@@ -108,6 +123,8 @@ namespace Project.Constraints.Models
         {
             return new Enumerator(items);
         }
+
+        public static implicit operator Dictionary<string, string>(SelectItem<T> options) => options.EnumValues;
     }
 
     public class Options<T>

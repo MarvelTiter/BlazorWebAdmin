@@ -56,7 +56,7 @@ namespace Project.Web.Shared.Components
                 await OnCompleted.InvokeAsync();
             }
 
-            if (OnSuccessed.HasDelegate && result.Success)
+            if (OnSuccessed.HasDelegate && result.IsSuccess)
             {
                 await OnSuccessed.InvokeAsync(result.Payload);
                 return result.Payload;

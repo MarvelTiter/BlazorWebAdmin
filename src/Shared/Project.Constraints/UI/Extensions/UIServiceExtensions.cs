@@ -10,7 +10,7 @@ public static class UIServiceExtensions
 {
     public static bool ShowResult(this IUIService ui, IQueryResult result)
     {
-        if (result.Success)
+        if (result.IsSuccess)
         {
             ui.Success(result.Message ?? "操作成功");
         }
@@ -18,15 +18,15 @@ public static class UIServiceExtensions
         {
             ui.Error(result.Message ?? "出错");
         }
-        return result.Success;
+        return result.IsSuccess;
     }
 
     public static bool ShowError(this IUIService ui, IQueryResult result)
     {
-        if (!result.Success)
+        if (!result.IsSuccess)
         {
             ui.Error(result.Message ?? "出错");
         }
-        return result.Success;
+        return result.IsSuccess;
     }
 }

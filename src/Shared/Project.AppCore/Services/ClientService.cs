@@ -39,18 +39,18 @@ public sealed class ClientService : IClientService, IDisposable
     public Task<QueryResult> AddOrUpdateAsync(ClientInfo client)
     {
         clients.AddOrUpdate(client.CircuitId, client, (_, _) => UpdateClient(client));
-        return Task.FromResult(Result.Success());
+        return Task.FromResult(QueryResult.Success());
     }
 
     public Task<QueryResult> CheckPermissionAsync(UserInfo? user)
     {
         if (user == null)
         {
-            return Task.FromResult(Result.Fail());
+            return Task.FromResult(QueryResult.Fail());
         }
         var userAllow = options.Value.ClientHubOptions.AllowUsers.Contains(user.UserId);
         var roleAllow = Inset(options.Value.ClientHubOptions.AllowRoles, user.Roles);
-        return Task.FromResult(Result.Return(userAllow || roleAllow));
+        return Task.FromResult(QueryResult.Return(userAllow || roleAllow));
     }
 
     private async void ClearTimeoutClient()

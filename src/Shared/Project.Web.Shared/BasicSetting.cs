@@ -20,7 +20,7 @@ public class BasicSetting : IProjectSettingService//, IDisposable
     /// <returns></returns>
     public virtual Task<QueryResult> LoginInterceptorAsync(UserInfo result)
     {
-        return Task.FromResult(Result.Success());
+        return Task.FromResult(QueryResult.Success());
     }
     /// <summary>
     /// <inheritdoc/>

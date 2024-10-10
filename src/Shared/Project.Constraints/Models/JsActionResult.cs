@@ -14,7 +14,7 @@ namespace Project.Constraints.Models
     }
     public class JsActionResult : IQueryResult
     {
-        public bool Success { get; set; }
+        public bool IsSuccess { get; set; }
         public string? Message { get; set; }
         public object? Payload { get; set; }
         public int Code { get; set; }

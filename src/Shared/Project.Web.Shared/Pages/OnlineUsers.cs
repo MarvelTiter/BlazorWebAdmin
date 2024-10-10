@@ -26,7 +26,7 @@ namespace Project.AppCore.Clients
         protected override async Task OnInitializedAsync()
         {
             var result = await ClientService.CheckPermissionAsync(User.UserInfo);
-            hasPermission = result.Success;
+            hasPermission = result.IsSuccess;
             await base.OnInitializedAsync();
         }
 

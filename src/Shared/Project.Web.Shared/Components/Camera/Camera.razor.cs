@@ -141,7 +141,7 @@ namespace Project.Web.Shared.Components
         private async Task<bool> InitDevices()
         {
             var result = await InvokeAsync<JsActionResult<IEnumerable<DeviceInfo>>>("enumerateDevices");
-            if (result.Success)
+            if (result.IsSuccess)
             {
                 Devices = result.Payload ?? [];
                 dropdownDevices.Clear();
@@ -187,9 +187,9 @@ namespace Project.Web.Shared.Components
                 UI.Error("something wrong when try to open the camera");
                 return;
             }
-            if (result.Success && selectedDeviceId != null)
+            if (result.IsSuccess && selectedDeviceId != null)
             {
-                playButtonStatus = result.Success;
+                playButtonStatus = result.IsSuccess;
                 await Storage.SetAsync("previousSelectedDevice", selectedDeviceId);
                 StateHasChanged();
             }
@@ -206,7 +206,7 @@ namespace Project.Web.Shared.Components
             while (hadTried < RetryTimes)
             {
                 result = await InvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, width, height);
-                if (result == null || !result.Success)
+                if (result == null || !result.IsSuccess)
                 {
                     await Task.Delay(100);
                     hadTried++;
@@ -226,9 +226,9 @@ namespace Project.Web.Shared.Components
             {
                 return;
             }
-            if (result.Success)
+            if (result.IsSuccess)
             {
-                playButtonStatus = !result.Success;
+                playButtonStatus = !result.IsSuccess;
             }
             else
             {
@@ -246,7 +246,7 @@ namespace Project.Web.Shared.Components
         {
             CaptureInfo info = new();
             var result = await InvokeAsync<JsActionResult<string>>("capture", InternalRotate);
-            if (result.Success)
+            if (result.IsSuccess)
             {
                 var filename = $"CameraCapture_{DateTime.Now:yyyyMMddHHmmss}";
                 info = new CaptureInfo

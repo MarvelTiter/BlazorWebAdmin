@@ -91,7 +91,7 @@ namespace Project.Web.Shared.Pages
                 });
             });
             u.OnUserSave(SaveActionType.Update);
-            return Result.Success();
+            return QueryResult.Success();
         }
 
         [DeleteButton]

@@ -135,7 +135,7 @@
         {
             var result = await definition.Callback.Invoke(data);
             Options.OnTableButtonClickAsync?.Invoke(definition, result);
-            if (result.Success)
+            if (result.IsSuccess)
             {
                 var msg = result.Message ?? TableLocalizer["TableTips.ActionSuccess"].Value;
                 Toast.ShowSuccess(msg);

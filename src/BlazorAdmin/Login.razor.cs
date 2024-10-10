@@ -57,13 +57,13 @@ public partial class Login : BasicComponent
         using var _ = BooleanStatusManager.New(b => Loading = b, callback: () => InvokeAsync(StateHasChanged));
         //await InvokeAsync(StateHasChanged);
         var result = await AuthService.SignInAsync(model);
-        if (result.Success)
+        if (result.IsSuccess)
         {
             User.SetUser(result.Payload);
             UI.Success(Localizer["Login.SuccessTips"].Value);
             //Root.OnKeyDown -= OnPressEnter;
             var goon = await CustomSetting.LoginInterceptorAsync(result.Payload!);
-            if (goon.Success)
+            if (goon.IsSuccess)
             {
                 await Router.InitRoutersAsync(result.Payload);
                 //await AuthenticationStateProvider.IdentifyUser(result.Payload!);

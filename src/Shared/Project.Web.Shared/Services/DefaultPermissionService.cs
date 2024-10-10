@@ -93,12 +93,12 @@ namespace Project.Web.Shared.Services
                     await context.Insert(ur).ExecuteAsync();
                 }
                 await context.CommitTranAsync();
-                return Result.Success();
+                return QueryResult.Success();
             }
             catch (Exception ex)
             {
                 await context.RollbackTranAsync();
-                return Result.Fail().SetMessage(ex.Message);
+                return QueryResult.Fail().SetMessage(ex.Message);
             }
         }
 
@@ -117,12 +117,12 @@ namespace Project.Web.Shared.Services
                     n += ef;
                 }
                 await context.CommitTranAsync();
-                return Result.Success();
+                return QueryResult.Success();
             }
             catch (Exception ex)
             {
                 await context.RollbackTranAsync();
-                return Result.Fail().SetMessage(ex.Message);
+                return QueryResult.Fail().SetMessage(ex.Message);
             }
         }
 
@@ -131,13 +131,13 @@ namespace Project.Web.Shared.Services
             var n = await context.Update(power)
                 .Where(p => p.PowerId == power.PowerId)
                 .ExecuteAsync();
-            return Result.Return(n > 0);
+            return QueryResult.Return(n > 0);
         }
 
         public async Task<QueryResult> InsertPowerAsync(TPower power)
         {
             var n = await context.Insert(power).ExecuteAsync();
-            return Result.Return(n > 0);
+            return QueryResult.Return(n > 0);
         }
 
         public async Task<QueryResult> UpdateRoleAsync(TRole role)
@@ -145,13 +145,13 @@ namespace Project.Web.Shared.Services
             var n = await context.Update(role)
                 .Where(r => r.RoleId == role.RoleId)
                 .ExecuteAsync();
-            return Result.Return(n > 0);
+            return QueryResult.Return(n > 0);
         }
 
         public async Task<QueryResult> InsertRoleAsync(TRole role)
         {
             var n = await context.Insert(role).ExecuteAsync();
-            return Result.Return(n > 0);
+            return QueryResult.Return(n > 0);
         }
 
         public async Task<QueryResult> DeleteRoleAsync(TRole role)
@@ -163,12 +163,12 @@ namespace Project.Web.Shared.Services
                 await context.Delete<TUserRole>().Where(ur => ur.RoleId == role.RoleId).ExecuteAsync();
                 await context.Delete<TRolePower>().Where(rp => rp.RoleId == role.RoleId).ExecuteAsync();
                 await context.CommitTranAsync();
-                return Result.Success();
+                return QueryResult.Success();
             }
             catch (Exception ex)
             {
                 await context.RollbackTranAsync();
-                return Result.Fail().SetMessage(ex.Message);
+                return QueryResult.Fail().SetMessage(ex.Message);
             }
 
         }
@@ -181,12 +181,12 @@ namespace Project.Web.Shared.Services
                 await context.Delete<TPower>().Where(p => p.PowerId == power.PowerId || p.ParentId == power.PowerId).ExecuteAsync();
                 await context.Delete<TRolePower>().Where(p => p.PowerId == power.PowerId).ExecuteAsync();
                 await context.CommitTranAsync();
-                return Result.Success();
+                return QueryResult.Success();
             }
             catch (Exception ex)
             {
                 await context.RollbackTranAsync();
-                return Result.Fail().SetMessage(ex.Message);
+                return QueryResult.Fail().SetMessage(ex.Message);
             }
 
         }

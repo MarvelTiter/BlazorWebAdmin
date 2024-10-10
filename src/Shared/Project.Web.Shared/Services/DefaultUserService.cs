@@ -65,12 +65,12 @@ namespace Project.Web.Shared.Services
                     await context.Insert(ur).ExecuteAsync();
                 }
                 await context.CommitTranAsync();
-                return Result.Success();
+                return QueryResult.Success();
             }
             catch (Exception ex)
             {
                 await context.RollbackTranAsync();
-                return Result.Fail().SetMessage(ex.Message);
+                return QueryResult.Fail().SetMessage(ex.Message);
             }
         }
         public async Task<TUser?> GetUserAsync(string id)

@@ -46,7 +46,7 @@ namespace Project.AppCore.Services
             };
             
             var result = userInfo.Result(u != null);
-            if (!result.Success)
+            if (!result.IsSuccess)
             {
                 result.Message = $"用户：{username} 不存在";
                 return result;
@@ -55,7 +55,7 @@ namespace Project.AppCore.Services
             if (u!.Password != password)
             {
                 result.Message = "密码错误";
-                result.Success = false;
+                result.IsSuccess = false;
                 return result;
             }
 

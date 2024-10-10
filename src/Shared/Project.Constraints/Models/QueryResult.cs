@@ -4,102 +4,34 @@ namespace Project.Constraints.Models;
 
 public interface IQueryResult
 {
-    bool Success { get; set; }
+    bool IsSuccess { get; set; }
     int Code { get; set; }
     string? Message { get; set; }
     object? Payload { get; set; }
 }
-//public interface IQueryResult<T> : IQueryResult
-//{
-//    new T? Payload { get; set; }
-//}
-
-//public interface IDataTableResult : IQueryResult<DataTable>
-//{
-//    int TotalRecord { get; set; }
-//}
-
-//public interface IQueryCollectionResult<T> : IQueryResult
-//{
-//    int TotalRecord { get; set; }
-//    new IEnumerable<T> Payload { get; set; }
-//}
-public class QueryResult<T> : QueryResult, IQueryResult
-{
-    public new T? Payload { get; set; }
-
-    object? IQueryResult.Payload
-    {
-        get => Payload;
-        set => Payload = (T?)value;
-    }
-
-    public static implicit operator QueryResult<T>(T value)
-    {
-        return new QueryResult<T> { Payload = value, Success = value.ValueEnable() };
-    }
-}
-
-public class DataTableResult : IQueryResult
-{
-    public int TotalRecord { get; set; }
-    public DataTable? Payload { get; set; }
-    public bool Success { get; set; }
-    public int Code { get; set; }
-    public string? Message { get; set; }
-
-    object? IQueryResult.Payload
-    {
-        get => Payload;
-        set => Payload = value as DataTable;
-    }
-}
-
-public class QueryCollectionResult<T> : IQueryResult
-{
-    public int TotalRecord { get; set; }
-    public IEnumerable<T> Payload { get; set; } = [];
-    public bool Success { get; set; }
-    public int Code { get; set; }
-    public string? Message { get; set; }
-
-    object? IQueryResult.Payload
-    {
-        get => Payload;
-        set => Payload = value as IEnumerable<T> ?? [];
-    }
-
-    public static implicit operator QueryCollectionResult<T>(List<T> values)
-    {
-        return new QueryCollectionResult<T> { Payload = values, Success = values.Count > 0 };
-    }
-}
 
 public class QueryResult : IQueryResult
 {
-    public bool Success { get; set; }
+    public bool IsSuccess { get; set; }
     public int Code { get; set; }
     public string? Message { get; set; }
     public object? Payload { get; set; }
 
     public static implicit operator QueryResult(bool value)
     {
-        return new QueryResult { Payload = value, Success = value };
+        return new QueryResult { Payload = value, IsSuccess = value };
     }
 
     public static implicit operator QueryResult(int? value)
     {
-        return new QueryResult { Payload = value, Success = value.HasValue };
+        return new QueryResult { Payload = value, IsSuccess = value.HasValue };
     }
 
     public static implicit operator QueryResult(string? value)
     {
-        return new QueryResult { Payload = value, Success = value.ValueEnable() };
+        return new QueryResult { Payload = value, IsSuccess = value.ValueEnable() };
     }
-}
 
-public static class Result
-{
     public static QueryResult Success(string msg = "操作成功")
     {
         return Success<object>(msg);
@@ -114,7 +46,7 @@ public static class Result
     {
         return new QueryResult<T>
         {
-            Success = true,
+            IsSuccess = true,
             Message = msg
         };
     }
@@ -123,7 +55,7 @@ public static class Result
     {
         return new QueryResult<T>
         {
-            Success = false,
+            IsSuccess = false,
             Message = msg
         };
     }
@@ -151,13 +83,63 @@ public static class Result
     {
         return new QueryCollectionResult<T>
         {
-            Success = false,
+            IsSuccess = false,
             Message = msg ?? "列表为空",
             TotalRecord = 0,
             Payload = []
         };
     }
+}
+public class QueryResult<T> : QueryResult, IQueryResult
+{
+    public new T? Payload { get; set; }
 
+    object? IQueryResult.Payload
+    {
+        get => Payload;
+        set => Payload = (T?)value;
+    }
+
+    public static implicit operator QueryResult<T>(T? value)
+    {
+        return new QueryResult<T> { Payload = value, IsSuccess = value.ValueEnable() };
+    }
+}
+public class DataTableResult : IQueryResult
+{
+    public int TotalRecord { get; set; }
+    public DataTable? Payload { get; set; }
+    public bool IsSuccess { get; set; }
+    public int Code { get; set; }
+    public string? Message { get; set; }
+
+    object? IQueryResult.Payload
+    {
+        get => Payload;
+        set => Payload = value as DataTable;
+    }
+}
+public class QueryCollectionResult<T> : IQueryResult
+{
+    public int TotalRecord { get; set; }
+    public IEnumerable<T> Payload { get; set; } = [];
+    public bool IsSuccess { get; set; }
+    public int Code { get; set; }
+    public string? Message { get; set; }
+
+    object? IQueryResult.Payload
+    {
+        get => Payload;
+        set => Payload = value as IEnumerable<T> ?? [];
+    }
+
+    public static implicit operator QueryCollectionResult<T>(List<T> values)
+    {
+        return new QueryCollectionResult<T> { Payload = values, IsSuccess = values.Count > 0 };
+    }
+}
+public static class QueryResultExtensions
+{
     public static T SetPayload<T>(this T self, object? payload) where T : IQueryResult
     {
         self.Payload = payload!;
@@ -181,16 +163,20 @@ public static class Result
     {
         return new QueryCollectionResult<T>
         {
-            Success = self.Success,
+            IsSuccess = self.IsSuccess,
             Message = self.Message,
             TotalRecord = total,
             Payload = payload
         };
     }
 
-    public static bool ValueEnable<T>(this T value)
+    public static bool ValueEnable<T>(this T? value)
     {
-        T def = default;
+        if (value is null)
+        {
+            return false;
+        }
+        T def = default!;
         return !Equals(value, def);
     }
 
@@ -198,8 +184,8 @@ public static class Result
     {
         return new QueryResult
         {
-            Success = self.Success && other.Success,
-            Message = $"Result1({self.Success}): {self.Message}, Result1({other.Success}): {other.Message}"
+            IsSuccess = self.IsSuccess && other.IsSuccess,
+            Message = $"Result1({self.IsSuccess}): {self.Message}, Result1({other.IsSuccess}): {other.Message}"
         };
     }
 
@@ -207,18 +193,17 @@ public static class Result
     {
         return new QueryResult
         {
-            Success = self.Success || other.Success,
-            Message = $"Result1({self.Success}): {self.Message}, Result1({other.Success}): {other.Message}"
+            IsSuccess = self.IsSuccess || other.IsSuccess,
+            Message = $"Result1({self.IsSuccess}): {self.Message}, Result1({other.IsSuccess}): {other.Message}"
         };
     }
 }
-
 public static class TypedResultExtensionForQueryResult
 {
     public static QueryResult<T> Result<T>(this T payload, bool? success = null)
     {
         var s = success ?? payload != null;
-        return Models.Result.Return<T>(s).SetPayload(payload);
+        return QueryResult.Return<T>(s).SetPayload(payload);
     }
 
     public static DataTableResult TableResult(this DataTable payload, bool? success = null, long? total = 0)
@@ -227,19 +212,18 @@ public static class TypedResultExtensionForQueryResult
         total ??= payload?.Rows.Count ?? 0;
         return new DataTableResult
         {
-            Success = s,
+            IsSuccess = s,
             Payload = payload,
             TotalRecord = (int)total
         };
     }
 }
-
 public static class EnumerableExtensionForQueryResult
 {
     public static QueryCollectionResult<T> CollectionResult<T>(this IEnumerable<T> values, int total = 0)
     {
         if (total == 0) total = values.Count();
-        return Result.Success<T>().CollectionResult(values, total);
+        return QueryResult.Success<T>().CollectionResult(values, total);
     }
 
     public static QueryCollectionResult<T> CollectionResult<T>(this IEnumerable<T> values, long total)

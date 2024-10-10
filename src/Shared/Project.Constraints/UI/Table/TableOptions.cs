@@ -93,9 +93,9 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
         }
         else
         {
-            datas = Models.Result.EmptyResult<TData>();
+            datas = QueryResult.EmptyResult<TData>();
         }
-        var exportDatas = datas.Success ? datas.Payload : Result?.Payload ?? [];
+        var exportDatas = datas.IsSuccess ? datas.Payload : Result?.Payload ?? [];
 
         if (exportDatas.Any() && OnSaveExcelAsync != null)
         {

@@ -43,7 +43,7 @@ namespace Project.Web.Shared.Basic
             {
                 return Data.ToEnumerable().CollectionResult(Total);
             }
-            return Result.EmptyResult<DataRow>();
+            return QueryResult.EmptyResult<DataRow>();
         }
 
         protected virtual Task<DataTableResult> OnQueryAsync(TRequest query) => Task.FromResult<DataTableResult>(null!);

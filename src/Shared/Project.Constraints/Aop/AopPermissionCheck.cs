@@ -23,7 +23,7 @@ public class AopPermissionCheck : IAspectHandler
         }
         if (userStore.UserInfo.UserPowers.Contains(action) == false)
         {
-            context.SetReturnValue(new QueryResult() { Success = false, Message = "没有权限" });
+            context.SetReturnValue(new QueryResult() { IsSuccess = false, Message = "没有权限" });
             return Task.CompletedTask;
         }
         else
