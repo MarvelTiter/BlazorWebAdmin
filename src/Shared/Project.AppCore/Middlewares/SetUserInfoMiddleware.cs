@@ -21,8 +21,11 @@ public class SetUserInfoMiddleware : IMiddleware
     }
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        var u = context.User.GetUserInfo();
-        userStore.SetUser(u);
+        if (context.User.Identity?.IsAuthenticated == true)
+        {
+            var u = context.User.GetUserInfo();
+            userStore.SetUser(u);
+        }
         await next(context);
     }
 }

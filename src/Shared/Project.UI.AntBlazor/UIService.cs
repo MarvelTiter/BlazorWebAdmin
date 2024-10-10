@@ -354,7 +354,7 @@ namespace Project.UI.AntBlazor
                 ChildContent = options.Content,
                 Placement = options.Position.ToString().ToLower(),
             };
-            if (options.Width != null) modal.Width = int.Parse(options.Width);
+            if (options.Width != null) modal.Width = options.Width;
 
             _ = await drawerService.CreateAsync(modal);
 
