@@ -28,7 +28,7 @@ namespace Project.AppCore.Services
 #if (ExcludeDefaultService)
         public virtual Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm) => throw new NotImplementedException();
         
-        public virtual Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd) => Task.FromResult(Result.Success());
+        public virtual Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd) => Task.FromResult(QueryResult.Success());
         
         public virtual Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd) => throw new NotImplementedException();
 #else
