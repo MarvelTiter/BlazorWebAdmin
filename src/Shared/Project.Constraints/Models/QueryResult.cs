@@ -118,6 +118,10 @@ public class DataTableResult : IQueryResult
         get => Payload;
         set => Payload = value as DataTable;
     }
+    public static implicit operator DataTableResult(DataTable? dataTable)
+    {
+        return new DataTableResult() { IsSuccess = dataTable?.Rows.Count > 0, TotalRecord = dataTable?.Rows.Count ?? 0, Payload = dataTable };
+    }
 }
 public class QueryCollectionResult<T> : IQueryResult
 {
@@ -136,6 +140,10 @@ public class QueryCollectionResult<T> : IQueryResult
     public static implicit operator QueryCollectionResult<T>(List<T> values)
     {
         return new QueryCollectionResult<T> { Payload = values, IsSuccess = values.Count > 0 };
+    }
+    public static implicit operator QueryCollectionResult<T>(T[] values)
+    {
+        return new QueryCollectionResult<T> { Payload = values, IsSuccess = values.Length > 0 };
     }
 }
 public static class QueryResultExtensions

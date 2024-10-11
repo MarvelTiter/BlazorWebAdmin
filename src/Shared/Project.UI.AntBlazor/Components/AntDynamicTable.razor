@@ -1,7 +1,7 @@
 ﻿@using Project.Constraints.Models.Request
 @using System.Collections
 @using System.Data
-@typeparam TData
+@using Project.Constraints.UI.Extensions
 @typeparam TRowData
 @typeparam TQuery where TQuery : IRequest, new()
 <Card>
@@ -17,8 +17,10 @@
            @bind-PageSize="@Options.Query.PageSize"
            HidePagination="!Options.Pager">
         <ChildContent>
-
-            <AntTableColumns Source="DataSource" RowData="context"></AntTableColumns>
+            @foreach (var item in Options.Columns)
+            {
+                @BuildColumn(item)   
+            }
 
         </ChildContent>
         <PaginationTemplate Context="pageContext">
@@ -35,7 +37,6 @@
 </Card>
 
 @code {
-    [Parameter, NotNull] public TData? DataSource { get; set; }
     [Parameter, NotNull] public TableOptions<TRowData, TQuery>? Options { get; set; }
 
     [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
@@ -49,6 +50,16 @@
         Options.NotifyChanged = () => InvokeAsync(StateHasChanged);
     }
 
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     await base.OnAfterRenderAsync(firstRender);
+    //     if (firstRender)
+    //     {
+    //         if ()
+    //         await Options.RefreshAsync();
+    //     }
+    // }
+
 
     /// <summary>
     /// table总数
@@ -60,5 +71,13 @@
         Options.Query.PageIndex = e.Page;
         Options.Query.PageSize = e.PageSize;
         await Options.RefreshAsync();
+    }
+
+    RenderFragment BuildColumn(ColumnInfo col)
+    {
+        return builder => builder.Component<PropertyColumn<DataRow, object>>()
+              .SetComponent(c => c.Title, col.Label)
+              .SetComponent(c => c.Property, row => row[col.PropertyOrFieldName])
+              .Build();
     }
 }

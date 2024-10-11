@@ -52,7 +52,7 @@ namespace Project.Web.Shared.Components
                 return;
             }
             var instance = Expression.Constant(Data);
-            var propExp = Expression.Property(instance, Column.Property);
+            var propExp = Expression.Property(instance, Column.PropertyOrFieldName);
             var fragment = GetInputType(Column, propExp);
             if (Edit && Column.Readonly)
                 fragment.Set("disabled", Edit && Column.Readonly);
@@ -68,7 +68,7 @@ namespace Project.Web.Shared.Components
         {
             if (column.IsEnum || column.EnumValues != null)
             {
-                TempValue = column.Property.GetValue(Data)?.ToString() ?? string.Empty;
+                TempValue = column.GetValue(Data)?.ToString() ?? string.Empty;
                 return UI.BuildSelect<KeyValuePair<string, string>, string>(Reciver, Column.EnumValues!)
                     .LabelExpression(kv => kv.Value)
                     .ValueExpression(kv => kv.Key)

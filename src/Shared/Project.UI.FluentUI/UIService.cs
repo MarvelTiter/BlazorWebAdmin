@@ -297,8 +297,7 @@ public class UIService(
                     .Build();
     }
 
-    public RenderFragment BuildDynamicTable<TData, TRowData, TQuery>(TableOptions<TRowData, TQuery> options,
-        TData source) where TQuery : IRequest, new()
+    public RenderFragment BuildDynamicTable<TRowData, TQuery>(TableOptions<TRowData, TQuery> options) where TQuery : IRequest, new()
     {
         return b => b.AddContent(1, "NotImplemented");
     }

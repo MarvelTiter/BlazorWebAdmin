@@ -229,15 +229,13 @@ namespace Project.UI.AntBlazor
             };
         }
 
-        public RenderFragment BuildDynamicTable<TData, TRowData, TQuery>(TableOptions<TRowData, TQuery> options,
-            TData source)
+        public RenderFragment BuildDynamicTable<TRowData, TQuery>(TableOptions<TRowData, TQuery> options)
             where TQuery : IRequest, new()
         {
             return builder =>
             {
-                builder.Component<AntDynamicTable<TData, TRowData, TQuery>>()
+                builder.Component<AntDynamicTable<TRowData, TQuery>>()
                     .SetComponent(c => c.Options, options)
-                    .SetComponent(c => c.DataSource, source)
                     .Build();
             };
         }

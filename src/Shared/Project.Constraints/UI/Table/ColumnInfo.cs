@@ -3,17 +3,29 @@ using Project.Constraints.Common.Attributes;
 using System.Reflection;
 
 namespace Project.Constraints.UI.Table;
-public record ColumnInfo(PropertyInfo Property)
+public record ColumnInfo
 {
+    public ColumnInfo(string label, string propertyName)
+    {
+        DataType = typeof(string);
+        Label = label;
+        PropertyOrFieldName = propertyName;
+    }
+    public ColumnInfo(PropertyInfo Property)
+    {
+        PropertyOrFieldName = Property.Name;
+        DataType = Property.PropertyType;
+    }
+
     [NotNull] public string? Label { get; set; }
-    public string PropertyOrFieldName => Property.Name;
+    public string PropertyOrFieldName { get; }
     public int Index { get; set; }
     public int? Row { get; set; }
     public int? Column { get; set; }
     public bool ShowOnForm { get; set; } = true;
-    public Type DataType => Property.PropertyType;
+    public Type DataType { get; }
     public bool IsEnum => DataType.IsEnum || (UnderlyingType?.IsEnum ?? false);
-    public bool Nullable => (System.Nullable.GetUnderlyingType(DataType) ?? null) != null;
+    public bool Nullable => System.Nullable.GetUnderlyingType(DataType) != null;
     public Type? UnderlyingType => System.Nullable.GetUnderlyingType(DataType);
     public string? Fixed { get; set; }
     public string? Width { get; set; }
@@ -49,9 +61,14 @@ public record ColumnInfo(PropertyInfo Property)
             Grouping = true;
         }
     }
-    public string GetTagColor(object? val)
+
+}
+
+public static class ColumnInfoExtensions
+{
+    public static string GetTagColor(this ColumnInfo column, object? val)
     {
-        if (TagColors?.TryGetValue(val?.ToString() ?? "", out var color) ?? false)
+        if (column.TagColors?.TryGetValue(val?.ToString() ?? "", out var color) ?? false)
         {
             return color;
         }

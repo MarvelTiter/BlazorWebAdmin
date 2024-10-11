@@ -7,9 +7,8 @@ using System.Data;
 
 namespace Project.Web.Shared.Basic
 {
-    public class DataTableView<TRequest> : BasicComponent where TRequest : IRequest, new()
+    public abstract class DataTableView<TRequest> : BasicComponent where TRequest : IRequest, new()
     {
-        [Parameter] public DataTable? Data { get; set; }
         [Parameter] public int Total { get; set; }
         [Parameter] public List<TableButton<DataRow>> Buttons { get; set; } = [];
         [Inject, NotNull] protected IExcelHelper? Excel { get; set; }
@@ -28,25 +27,35 @@ namespace Project.Web.Shared.Basic
             Options.OnSaveExcelAsync = OnSaveExcelAsync;
             Options.ShowExportButton = true;
             Options.OnRowClickAsync = OnRowClickAsync;
+            var columns = SetColumns().ToArray();
+            Options.AddColumns(columns);
         }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                if (Options.LoadDataOnLoaded)
+                {
+                    await Options.RefreshAsync();
+                }
+            }
+        }
+
+        protected abstract IEnumerable<(string Title, string Property)> SetColumns();
 
         protected async Task<QueryCollectionResult<DataRow>> InternalQueryAsync(TRequest query)
         {
             var result = await OnQueryAsync(query);
-            Total = 0;
-            if (result != null)
+            if (result.IsSuccess)
             {
-                Data = result.Payload;
-                Total = result.TotalRecord;
-            }
-            if (Data != null)
-            {
-                return Data.ToEnumerable().CollectionResult(Total);
+                return result.Payload!.AsEnumerable().CollectionResult();
             }
             return QueryResult.EmptyResult<DataRow>();
         }
 
-        protected virtual Task<DataTableResult> OnQueryAsync(TRequest query) => Task.FromResult<DataTableResult>(null!);
+        protected abstract Task<DataTableResult> OnQueryAsync(TRequest query);
 
         /// <summary>
         /// 获取导出数据
@@ -79,6 +88,6 @@ namespace Project.Web.Shared.Basic
 
         public virtual Task OnRowClickAsync(DataRow row) => Task.CompletedTask;
 
-        protected RenderFragment TableFragment => UI.BuildDynamicTable(Options, Data);
+        protected RenderFragment TableFragment => UI.BuildDynamicTable(Options);
     }
 }

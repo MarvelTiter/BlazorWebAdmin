@@ -52,7 +52,7 @@ namespace Project.UI.AntBlazor.Components
         {
             builder.Component<PropertyColumn<DataRow, object>>()
               .SetComponent(c => c.Title, item.ColumnName)
-              .SetComponent(c => c.Property, row => row[item])
+              .SetComponent(c => c.Property, row => row[item.ColumnName])
               .Build();
 
         }

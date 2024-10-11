@@ -13,7 +13,7 @@ namespace Project.Constraints.UI.Extensions
             var options = new TableOptions<DataRow, GenericRequest>();
             options.LoadDataOnLoaded = true;
             options.OnQueryAsync = request => Task.FromResult(dataSource.ToEnumerable().CollectionResult());
-            return service.BuildDynamicTable(options, dataSource);
+            return service.BuildDynamicTable(options);
         }
     }
 }

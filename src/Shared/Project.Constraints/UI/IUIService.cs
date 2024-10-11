@@ -125,11 +125,10 @@ public interface IUIService
     /// <summary>
     /// DataTable 或者 <![CDATA[Dictionary<string, object>]]> 
     /// </summary>
-    /// <typeparam name="TData"></typeparam>
     /// <typeparam name="TQuery"></typeparam>
     /// <param name="dataSource"></param>
     /// <returns></returns>
-    RenderFragment BuildDynamicTable<TData, TRowData, TQuery>(TableOptions<TRowData, TQuery> options, TData source) where TQuery : IRequest, new();
+    RenderFragment BuildDynamicTable<TRowData, TQuery>(TableOptions<TRowData, TQuery> options) where TQuery : IRequest, new();
 
     //RenderFragment BuildTableHeader<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
 

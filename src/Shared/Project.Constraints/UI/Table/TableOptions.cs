@@ -5,7 +5,13 @@ using System.Data;
 using System.Linq.Expressions;
 
 namespace Project.Constraints.UI.Table;
-
+public static class TableOptionsExtensions
+{
+    public static void AddColumns(this TableOptions option, params (string Title, string Property)[] columns)
+    {
+        option.Columns = [..columns.Select(c => new ColumnInfo( c.Title, c.Property))];
+    }
+}
 
 public class TableOptions
 {
