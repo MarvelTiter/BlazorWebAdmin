@@ -148,7 +148,7 @@
                  OnClick="@(() => InvokeButtonAction(definition, context))">
         @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
     </Button>
-        ;
+    ;
     }
 
     private async Task InvokeButtonAction(TableButton<TData> definition, TData data)
@@ -173,6 +173,10 @@
         async Task CallButtonAction()
         {
             var result = await definition.Callback.Invoke(data);
+            if (result is null)
+            {
+                return;
+            }
             Options.OnTableButtonClickAsync?.Invoke(definition, result);
             if (result.IsSuccess)
             {

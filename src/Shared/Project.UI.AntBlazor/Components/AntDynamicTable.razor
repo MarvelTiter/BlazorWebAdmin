@@ -21,7 +21,56 @@
             {
                 @BuildColumn(item)   
             }
-
+            @if (Options.Buttons?.Count > 0)
+            {
+                @foreach (var btnGroup in Options.Buttons.GroupBy(btn => btn.Group))
+                {
+                    <ActionColumn Title=@(TableLocalizer[btnGroup.Key]) Align="@ColumnAlign.Center" Fixed="right" Width="@Options.ActionColumnWidth">
+                        @{
+                            var btns = btnGroup.Where(b => b.CheckVisible(context)).ToList();
+                            if (Options.ActionButtonColumn.HasValue)
+                            {
+                                <Project.Web.Shared.ComponentHelper.MGrid GridColumns="@Options.ActionButtonColumn.Value" Gap="5px">
+                                    @foreach (var btn in btns)
+                                    {
+                                        @CreateButton(btn, context)
+                                    }
+                                </Project.Web.Shared.ComponentHelper.MGrid>
+                            }
+                            else if (btns.Count <= 2)
+                            {
+                                foreach (var btn in btns)
+                                {
+                                    @CreateButton(btn, context)
+                                }
+                            }
+                            else
+                            {
+                                var first = btns[0];
+                                @CreateButton(first, context)
+                                <Dropdown>
+                                    <Overlay>
+                                        <Menu>
+                                            @for (var i = 1; i < btns.Count; i++)
+                                            {
+                                                var btn = btns[i];
+                                                <MenuItem>
+                                                    @CreateButton(btn, context)
+                                                </MenuItem>
+                                            }
+                                        </Menu>
+                                    </Overlay>
+                                    <ChildContent>
+                                        <a @onclick:preventDefault>
+                                            @TableLocalizer["TableTips.More"] <Icon Type="down" />
+                                        </a>
+                                    </ChildContent>
+                                </Dropdown>
+                            }
+                        }
+                    </ActionColumn>
+                }
+            }
         </ChildContent>
         <PaginationTemplate Context="pageContext">
             <Pagination Class="@pageContext.PaginationClass"
@@ -40,7 +89,8 @@
     [Parameter, NotNull] public TableOptions<TRowData, TQuery>? Options { get; set; }
 
     [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
-
+    [Inject, NotNull] ConfirmService? ConfirmSrv { get; set; }
+    [Inject, NotNull] MessageService? MessageSrv { get; set; }
     IEnumerable<TRowData> Datas => Options.Result?.Payload ?? Enumerable.Empty<TRowData>();
     int Total => Options.Result?.TotalRecord ?? 0;
 
@@ -50,15 +100,60 @@
         Options.NotifyChanged = () => InvokeAsync(StateHasChanged);
     }
 
-    // protected override async Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     await base.OnAfterRenderAsync(firstRender);
-    //     if (firstRender)
-    //     {
-    //         if ()
-    //         await Options.RefreshAsync();
-    //     }
-    // }
+    private RenderFragment CreateButton(TableButton<TRowData> definition, TRowData context)
+    {
+        return
+    @<Button Type="@definition.ButtonType"
+                 Size="@ButtonSize.Small"
+                 Danger="@definition.Danger"
+                 Icon="@definition.Icon"
+                 OnClickStopPropagation
+                 OnClick="@(() => InvokeButtonAction(definition, context))">
+        @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
+    </Button>
+    ;
+    }
+
+    private async Task InvokeButtonAction(TableButton<TRowData> definition, TRowData data)
+    {
+        if (definition.Danger)
+        {
+            var confirmResult = await ConfirmSrv.Show(
+    TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+    , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+            if (confirmResult == ConfirmResult.OK)
+            {
+                await CallButtonAction();
+            }
+        }
+        else
+        {
+            await CallButtonAction();
+        }
+
+        return;
+
+        async Task CallButtonAction()
+        {
+            var result = await definition.Callback.Invoke(data);
+            if (result is null)
+            {
+                return;
+            }
+            Options.OnTableButtonClickAsync?.Invoke(definition, result);
+            if (result.IsSuccess)
+            {
+                var msg = result.Message ?? TableLocalizer["TableTips.ActionSuccess"].Value;
+                _ = MessageSrv.Success(msg);
+                if (Options.AutoRefreshData)
+                    await Options.RefreshAsync();
+            }
+            else
+            {
+                _ = MessageSrv.Error(result.Message ?? "Error");
+            }
+        }
+    }
 
 
     /// <summary>

@@ -8,6 +8,7 @@ public interface IQueryResult
     int Code { get; set; }
     string? Message { get; set; }
     object? Payload { get; set; }
+
 }
 
 public class QueryResult : IQueryResult
@@ -16,6 +17,8 @@ public class QueryResult : IQueryResult
     public int Code { get; set; }
     public string? Message { get; set; }
     public object? Payload { get; set; }
+
+    #region implicit operator
 
     public static implicit operator QueryResult(bool value)
     {
@@ -32,6 +35,9 @@ public class QueryResult : IQueryResult
         return new QueryResult { Payload = value, IsSuccess = value.ValueEnable() };
     }
 
+    #endregion
+
+    #region static helper
     public static QueryResult Success(string msg = "操作成功")
     {
         return Success<object>(msg);
@@ -89,6 +95,13 @@ public class QueryResult : IQueryResult
             Payload = []
         };
     }
+
+    public static IQueryResult? Null()
+    {
+        return null;
+    }
+
+    #endregion
 }
 public class QueryResult<T> : QueryResult, IQueryResult
 {
@@ -205,6 +218,11 @@ public static class QueryResultExtensions
             Message = $"Result1({self.IsSuccess}): {self.Message}, Result1({other.IsSuccess}): {other.Message}"
         };
     }
+
+    public static Task<T?> AsTask<T>(this T? result) where T : IQueryResult
+    {
+        return Task.FromResult<T?>(result);
+    }
 }
 public static class TypedResultExtensionForQueryResult
 {
@@ -212,6 +230,11 @@ public static class TypedResultExtensionForQueryResult
     {
         var s = success ?? payload != null;
         return QueryResult.Return<T>(s).SetPayload(payload);
+    }
+
+    public static QueryResult Result(this bool success)
+    {
+        return QueryResult.Return(success);
     }
 
     public static DataTableResult TableResult(this DataTable payload, bool? success = null, long? total = 0)

@@ -60,8 +60,12 @@ namespace Project.Web.Shared.Components
         }
 
 
-        public static MethodInfo builder = typeof(InputBuilderHelper).GetMethod(nameof(BinderExpressionBuilder))!;
-
+        private readonly static MethodInfo builder = typeof(InputBuilderHelper).GetMethod(nameof(BinderExpressionBuilder))!;
+        private readonly static MethodInfo? buildInput = typeof(IUIService).GetMethod(nameof(IUIService.BuildInput));
+        private readonly static MethodInfo? buildNumberInput = typeof(IUIService).GetMethod(nameof(IUIService.BuildNumberInput));
+        private readonly static MethodInfo? buildSwitch = typeof(IUIService).GetMethod(nameof(IUIService.BuildSwitch));
+        private readonly static MethodInfo? buildDatepicker = typeof(IUIService).GetMethod(nameof(IUIService.BuildDatePicker));
+        private readonly static MethodInfo? buildPassword = typeof(IUIService).GetMethod(nameof(IUIService.BuildPassword));
         static readonly ConcurrentDictionary<ColumnInfo, Func<IUIService, object, Expression, IUIComponent>> builderCaches = new();
 
         public IUIComponent GetInputType(ColumnInfo column, Expression propertyExpression)
@@ -85,19 +89,19 @@ namespace Project.Web.Shared.Components
                   switch (InputBuilderHelper.GetInputType(propertyType, col))
                   {
                       case InputType.Text:
-                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildInput));
+                          builderMethod = buildInput;
                           break;
                       case InputType.Number:
-                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildNumberInput))?.MakeGenericMethod(propertyType);
+                          builderMethod = buildNumberInput?.MakeGenericMethod(propertyType);
                           break;
                       case InputType.Boolean:
-                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildSwitch));
+                          builderMethod = buildSwitch;
                           break;
                       case InputType.DatePicker:
-                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildDatePicker))?.MakeGenericMethod(propertyType);
+                          builderMethod = buildDatepicker;
                           break;
                       case InputType.Password:
-                          builderMethod = typeof(IUIService).GetMethod(nameof(IUIService.BuildPassword));
+                          builderMethod = buildPassword;
                           break;
                   }
                   ArgumentNullException.ThrowIfNull(builderMethod);

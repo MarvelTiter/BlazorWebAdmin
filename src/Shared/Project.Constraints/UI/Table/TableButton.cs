@@ -4,10 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 namespace Project.Constraints.UI.Table
 {
     /// <summary>
-    /// 委托签名
-    /// <code>
-    /// public Task&lt;bool&gt; ButtonMethodImpl(TData data)
-    /// </code>
+    /// 委托签名<code><![CDATA[public Task<IQueryResult?> MethodImpl(TData data)]]></code>
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class TableButtonAttribute : Attribute
@@ -40,10 +37,7 @@ namespace Project.Constraints.UI.Table
     }
 
     /// <summary>
-    /// 委托签名
-    /// <code>
-    /// public Task&lt;bool&gt; EditMethodImpl(TData data)
-    /// </code>
+    /// 委托签名<code><![CDATA[public Task<IQueryResult?> MethodImpl(TData data)]]></code>
     /// </summary>
     public class EditButton : TableButtonAttribute
     {
@@ -54,10 +48,7 @@ namespace Project.Constraints.UI.Table
         }
     }
     /// <summary>
-    /// 委托签名
-    /// <code>
-    /// public Task&lt;bool&gt; DeleteMethodImpl(TData data)
-    /// </code>
+    /// 委托签名<code><![CDATA[public Task<IQueryResult?> MethodImpl(TData data)]]></code>
     /// </summary>
     public class DeleteButton : TableButtonAttribute
     {
@@ -77,10 +68,7 @@ namespace Project.Constraints.UI.Table
     }
 
     /// <summary>
-    /// 委托签名
-    /// <code>
-    /// public Task&lt;bool&gt; MethodImpl(TData data)
-    /// </code>
+    /// 委托签名<code><![CDATA[public Task<IQueryResult?> MethodImpl(TData data)]]></code>
     /// </summary>
     public class TableButton<TData>
     {
@@ -107,7 +95,7 @@ namespace Project.Constraints.UI.Table
         public string? ConfirmTitle { get; set; }
         public string? AdditionalParameter { get; set; }
         public string Group { get; set; } = "TableTips.ActionColumn";
-        [NotNull] public Func<TData, Task<IQueryResult>>? Callback { get; set; }
+        [NotNull] public Func<TData, Task<IQueryResult?>>? Callback { get; set; }
 
         private Func<TableButtonContext<TData>, bool>? visible;
         private Func<TableButtonContext<TData>, string>? label;
@@ -125,7 +113,7 @@ namespace Project.Constraints.UI.Table
             return label?.Invoke(context);
         }
 
-        public static TableButton<TData> Edit(Func<TData, Task<IQueryResult>> action)
+        public static TableButton<TData> Edit(Func<TData, Task<IQueryResult?>> action)
         {
             return new TableButton<TData>
             {
@@ -135,7 +123,7 @@ namespace Project.Constraints.UI.Table
             };
         }
 
-        public static TableButton<TData> Delete(Func<TData, Task<IQueryResult>> action)
+        public static TableButton<TData> Delete(Func<TData, Task<IQueryResult?>> action)
         {
             return new TableButton<TData>
             {

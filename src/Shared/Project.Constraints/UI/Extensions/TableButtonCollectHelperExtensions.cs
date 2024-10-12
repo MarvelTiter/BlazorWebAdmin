@@ -21,7 +21,7 @@ namespace Project.Constraints.UI.Extensions
                 var btnOptions = method.GetCustomAttribute<TableButtonAttribute>()!;
                 ArgumentNullException.ThrowIfNull(btnOptions.Label ?? btnOptions.LabelExpression);
                 var btn = new TableButton<TModel>(btnOptions);
-                btn.Callback = method.CreateDelegate<Func<TModel, Task<IQueryResult>>>(instance);
+                btn.Callback = method.CreateDelegate<Func<TModel, Task<IQueryResult?>>>(instance);
                 if (btnOptions.LabelExpression != null)
                 {
                     var le = type.GetMethod(btnOptions.LabelExpression);

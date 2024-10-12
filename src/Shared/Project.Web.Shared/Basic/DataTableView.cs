@@ -10,7 +10,6 @@ namespace Project.Web.Shared.Basic
     public abstract class DataTableView<TRequest> : BasicComponent where TRequest : IRequest, new()
     {
         [Parameter] public int Total { get; set; }
-        [Parameter] public List<TableButton<DataRow>> Buttons { get; set; } = [];
         [Inject, NotNull] protected IExcelHelper? Excel { get; set; }
         [Inject, NotNull] protected IDownloadService? DownloadService { get; set; }
 
@@ -21,7 +20,7 @@ namespace Project.Web.Shared.Basic
             base.OnInitialized();
             Options.AutoRefreshData = true;
             Options.RowKey = r => r;
-            Options.Buttons = [.. this.CollectButtons<DataRow>(), .. Buttons];
+            Options.Buttons = [.. this.CollectButtons<DataRow>()];
             Options.OnQueryAsync = InternalQueryAsync;
             Options.OnExportAsync = OnExportAsync;
             Options.OnSaveExcelAsync = OnSaveExcelAsync;

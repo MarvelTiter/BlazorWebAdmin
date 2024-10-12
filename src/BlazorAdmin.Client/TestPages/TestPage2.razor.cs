@@ -3,6 +3,7 @@ using Project.Constraints.Common.Attributes;
 using Project.Constraints.Models;
 using Project.Constraints.Models.Request;
 using Project.Constraints.UI;
+using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Table;
 using Project.Web.Shared.Basic;
 using System.Data;
@@ -25,6 +26,12 @@ namespace BlazorAdmin.Client.TestPages
         {
             base.OnInitialized();
             Options.LoadDataOnLoaded = true;
+        }
+        [TableButton(Label = "测试")]
+        public Task<IQueryResult?> RowBtnTest(DataRow data)
+        {
+            UI.Success(data["姓名"]?.ToString() ?? "");
+            return QueryResult.Null().AsTask();
         }
         protected override IEnumerable<(string Title, string Property)> SetColumns()
         {
