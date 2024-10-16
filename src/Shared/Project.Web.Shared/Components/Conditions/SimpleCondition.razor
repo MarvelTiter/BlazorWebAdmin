@@ -30,9 +30,17 @@
     [Parameter] public TData? Value { get; set; }
     [Parameter] public EventCallback<TData> ValueChanged { get; set; }
     [Parameter] public Dictionary<string, string>? EnumValues { get; set; }
+
     string? stringValue = null;
     DateTime? dateValue = DateTime.Today;
-
+    bool dateMode = false;
+    bool isString = false;
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        dateMode = typeof(TData) == typeof(DateTime);
+        isString = typeof(TData) == typeof(string);
+    }
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
@@ -47,7 +55,11 @@
     {
         if (ValueChanged.HasDelegate)
         {
-            return ValueChanged.InvokeAsync(Value);
+            if (dateMode && dateValue.HasValue)
+            {
+                stringValue = dateValue.Value.ToString();
+            }
+            return TryParseValue();
         }
 
         return Task.CompletedTask;
