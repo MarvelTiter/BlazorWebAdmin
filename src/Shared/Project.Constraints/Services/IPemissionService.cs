@@ -12,14 +12,19 @@ namespace Project.Constraints.Services;
 [ApiInvokerGenerate]
 public interface IPermissionService
 {
-    Task<QueryCollectionResult<MinimalPower>> GetPowerListByUserIdAsync(string usrId);
+    /// <summary>
+    /// 初始化用户菜单
+    /// </summary>
+    /// <param name="usrId"></param>
+    /// <returns></returns>
+    Task<QueryCollectionResult<MinimalPower>> GetUserPowersAsync(string usrId);
 }
 
 
 
 [AddAspectHandler(AspectType = typeof(AopLogger))]
 [AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
-public interface IPermissionService<TPower, TRole>
+public interface IPermissionService<TPower, TRole> : IPermissionService
     where TPower : IPower
     where TRole : IRole
 {

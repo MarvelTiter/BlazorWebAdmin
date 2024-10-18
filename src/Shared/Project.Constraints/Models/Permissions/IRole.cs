@@ -3,6 +3,7 @@ using AutoGenMapperGenerator;
 
 namespace Project.Constraints.Models.Permissions
 {
+    [LangName("Role")]
     public interface IRole
     {
         [NotNull] string? RoleId { get; set; }

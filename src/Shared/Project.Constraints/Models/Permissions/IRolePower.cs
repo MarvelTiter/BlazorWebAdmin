@@ -2,6 +2,7 @@
 
 namespace Project.Constraints.Models.Permissions
 {
+    [LangName("RolePower")]
     public interface IRolePower
     {
         [NotNull] string? RoleId { get; set; }

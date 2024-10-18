@@ -28,7 +28,7 @@ namespace Project.Web.Shared.Components
         [Parameter] public ColumnInfo? Field { get; set; }
         [Parameter] public object? DefaultValue { get; set; }
         public int Index { get; set; }
-        DateTime dateValue = DateTime.Now;
+        DateTime? dateValue = DateTime.Now;
         string stringValue = string.Empty;
 
         protected override void OnInitialized()
@@ -74,11 +74,11 @@ namespace Project.Web.Shared.Components
                 {
                     if (DateConfig.Value == DateType.InDay)
                     {
-                        return CreateTuple((dateValue.DayStart(), CompareType.GreaterThanOrEqual), (dateValue.DayEnd(), CompareType.LessThan));
+                        return CreateTuple((dateValue?.DayStart(), CompareType.GreaterThanOrEqual), (dateValue?.DayEnd(), CompareType.LessThan));
                     }
                     else
                     {
-                        var d = DateConfig.Value == DateType.DayStart ? dateValue.DayStart() : dateValue.DayEnd();
+                        var d = DateConfig.Value == DateType.DayStart ? dateValue?.DayStart() : dateValue?.DayEnd();
                         return CreateTuple((d, Compare));
                     }
                 }
@@ -127,7 +127,7 @@ namespace Project.Web.Shared.Components
             {
                 if (Parent!.TryGetCondition(Index + count, out var c))
                 {
-                    c!.Value = validValue;
+                    c!.Value = value.Item1;
                 }
                 else
                 {

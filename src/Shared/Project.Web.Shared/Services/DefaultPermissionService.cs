@@ -83,7 +83,7 @@ namespace Project.Web.Shared.Services
         {
             try
             {
-                await context.BeginTranAsync();
+                context.BeginTran();
                 var usrId = relations.Main;
                 var roles = relations.Slaves ?? [];
                 await context.Delete<TUserRole>().Where(u => u.UserId == usrId).ExecuteAsync();
@@ -106,7 +106,7 @@ namespace Project.Web.Shared.Services
         {
             try
             {
-                await context.BeginTranAsync();
+                context.BeginTran();
                 var roleId = relations.Main;
                 var powers = relations.Slaves ?? [];
                 var n = await context.Delete<TRolePower>().Where(r => r.RoleId == roleId).ExecuteAsync();
@@ -158,7 +158,7 @@ namespace Project.Web.Shared.Services
         {
             try
             {
-                await context.BeginTranAsync();
+                context.BeginTran();
                 await context.Delete<TRole>().Where(r => r.RoleId == role.RoleId).ExecuteAsync();
                 await context.Delete<TUserRole>().Where(ur => ur.RoleId == role.RoleId).ExecuteAsync();
                 await context.Delete<TRolePower>().Where(rp => rp.RoleId == role.RoleId).ExecuteAsync();
@@ -177,7 +177,7 @@ namespace Project.Web.Shared.Services
         {
             try
             {
-                await context.BeginTranAsync();
+                context.BeginTran();
                 await context.Delete<TPower>().Where(p => p.PowerId == power.PowerId || p.ParentId == power.PowerId).ExecuteAsync();
                 await context.Delete<TRolePower>().Where(p => p.PowerId == power.PowerId).ExecuteAsync();
                 await context.CommitTranAsync();
@@ -188,28 +188,13 @@ namespace Project.Web.Shared.Services
                 await context.RollbackTranAsync();
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
-
         }
-    }
-
-#if(ExcludeDefaultService)
-#else
-    [AutoInject(Group = "SERVER")]
-    public class PermissionService : IPermissionService
-
-    {
-        private readonly IExpressionContext context;
-
-        public PermissionService(IExpressionContext context)
+        public async Task<QueryCollectionResult<MinimalPower>> GetUserPowersAsync(string usrId)
         {
-            this.context = context;
-        }
-        public async Task<QueryCollectionResult<MinimalPower>> GetPowerListByUserIdAsync(string usrId)
-        {
-            var powers = await context.Select<Power>()
+            var powers = await context.Select<TPower>()
                                       .Distinct()
-                                      .InnerJoin<RolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
-                                      .InnerJoin<UserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
+                                      .InnerJoin<TRolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
+                                      .InnerJoin<TUserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
                                       .Where(w => w.Tb3.UserId == usrId)
                                       .OrderBy(w => w.Tb1.Sort)
                                       .ToListAsync(w => new MinimalPower
@@ -227,7 +212,43 @@ namespace Project.Web.Shared.Services
         }
     }
 
+#if(ExcludeDefaultService)
+#else
+    //[AutoInject(Group = "SERVER")]
+    //public class PermissionService : IPermissionService
+
+    //{
+    //    private readonly IExpressionContext context;
+
+    //    public PermissionService(IExpressionContext context)
+    //    {
+    //        this.context = context;
+    //    }
+    //    public async Task<QueryCollectionResult<MinimalPower>> GetPowerListByUserIdAsync(string usrId)
+    //    {
+    //        var powers = await context.Select<Power>()
+    //                                  .Distinct()
+    //                                  .InnerJoin<RolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
+    //                                  .InnerJoin<UserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
+    //                                  .Where(w => w.Tb3.UserId == usrId)
+    //                                  .OrderBy(w => w.Tb1.Sort)
+    //                                  .ToListAsync(w => new MinimalPower
+    //                                  {
+    //                                      PowerId = w.Tb1.PowerId,
+    //                                      PowerName = w.Tb1.PowerName,
+    //                                      ParentId = w.Tb1.ParentId,
+    //                                      PowerType = w.Tb1.PowerType,
+    //                                      PowerLevel = w.Tb1.PowerLevel,
+    //                                      Icon = w.Tb1.Icon,
+    //                                      Path = w.Tb1.Path,
+    //                                      Sort = w.Tb1.Sort
+    //                                  });
+    //        return powers.CollectionResult();
+    //    }
+    //}
+
     [AutoInject(ServiceType = typeof(IStandardPermissionService), Group = "SERVER")]
+    [AutoInject(ServiceType = typeof(IPermissionService), Group = "SERVER")]
     [GenAspectProxy]
     public class StandardPermissionService : DefaultPermissionService<Power, Role, RolePower, UserRole>, IStandardPermissionService
     {

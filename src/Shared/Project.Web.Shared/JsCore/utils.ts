@@ -1,11 +1,11 @@
 ﻿export interface IJsActionResult {
-    success: boolean,
+    isSuccess: boolean,
     message: string | undefined,
     payload: any
 }
 export function success(msg: string | undefined, payload?: any): IJsActionResult {
     return {
-        success: true,
+        isSuccess: true,
         message: msg,
         payload: payload
     }
@@ -13,7 +13,7 @@ export function success(msg: string | undefined, payload?: any): IJsActionResult
 
 export function failed(msg: string | undefined): IJsActionResult {
     return {
-        success: false,
+        isSuccess: false,
         message: msg,
         payload: null
     }

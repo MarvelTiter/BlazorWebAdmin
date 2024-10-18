@@ -18,7 +18,7 @@ namespace Project.Web.Shared.Services
 
         public async Task<QueryResult> DeleteUserAsync(TUser user)
         {
-            await context.BeginTranAsync();
+            context.BeginTran();
             await context.Delete<TUser>().Where(u => u.UserId == user.UserId).ExecuteAsync();
             await context.Delete<TUserRole>().Where(ur => ur.UserId == user.UserId).ExecuteAsync();
             await context.CommitTranAsync();
@@ -54,7 +54,7 @@ namespace Project.Web.Shared.Services
         {
             try
             {
-                await context.BeginTranAsync();
+                context.BeginTran();
                 await context.Update(user).Where(u => u.UserId == user.UserId).ExecuteAsync();
                 var usrId = user.UserId;
                 var roles = user.Roles ?? [];
