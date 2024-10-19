@@ -35,18 +35,7 @@ public class AopPermissionCheck : IAspectHandler
     private static string FormattedAction(ProxyContext context)
     {
         var related = context.ServiceMethod.GetCustomAttribute<RelatedPermissionAttribute>();
-        if (!string.IsNullOrEmpty(related?.PermissionId))
-        {
-            return related.PermissionId;
-        }
-        if (context.ServiceMethod.Name.EndsWith("Async"))
-        {
-            // 去掉末尾5个字符
-            return context.ServiceMethod.Name[..^5];
-        }
-        else
-        {
-            return context.ServiceMethod.Name;
-        }
+        string? p = !string.IsNullOrEmpty(related?.PermissionId) ? related.PermissionId : context.ServiceMethod.Name;
+        return p.EndsWith("Async") ? p[..^5] : p;
     }
 }

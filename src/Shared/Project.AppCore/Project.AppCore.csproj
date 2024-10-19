@@ -8,7 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="LightORM.Providers.Sqlite" Version="0.0.2" />
+		<PackageReference Include="LightORM.Providers.Sqlite" Version="0.0.4" />
 	</ItemGroup>
 
 	<ItemGroup>

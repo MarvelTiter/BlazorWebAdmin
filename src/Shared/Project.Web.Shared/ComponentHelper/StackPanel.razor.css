@@ -1,5 +1,6 @@
 ﻿.stack-panel-wrapper {
     display: flex;
+    flex-wrap: wrap;
 }
 
     .stack-panel-wrapper.row {

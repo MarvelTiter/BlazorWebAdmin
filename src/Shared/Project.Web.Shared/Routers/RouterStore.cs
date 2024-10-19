@@ -62,12 +62,12 @@ public class RouterStore : StoreBase, IRouterStore
 
     public string CurrentUrl
     {
-        get => navigationManager.ToBaseRelativePath(navigationManager.Uri);
+        get => "/" + navigationManager.ToBaseRelativePath(navigationManager.Uri);
     }
-    private static string RemoveFirstSlash(string url)
+    private static string AttachFirstSlash(string url)
     {
-        if (url.StartsWith('/')) return url[1..];
-        return url;
+        if (url.StartsWith('/')) return url;
+        return "/" + url;
     }
     TagRoute? preview;
     public async Task RouteDataChangedHandleAsync(RouteData routeData)
@@ -76,10 +76,10 @@ public class RouterStore : StoreBase, IRouterStore
         {
             // TODO 可能有BUG，先观察观察
             if (Menus.Count == 0) return;
-            RouterMeta? meta = Menus.FirstOrDefault(r => RemoveFirstSlash(r.RouteUrl) == CurrentUrl);
+            RouterMeta? meta = Menus.FirstOrDefault(r => AttachFirstSlash(r.RouteUrl) == CurrentUrl);
             if (meta == null)
             {
-                meta = AllPages.AllRoutes.FirstOrDefault(r => RemoveFirstSlash(r.RouteUrl) == CurrentUrl);
+                meta = AllPages.AllRoutes.FirstOrDefault(r => AttachFirstSlash(r.RouteUrl) == CurrentUrl);
                 if (meta != null)
                     meta.Cache = false;
             }
@@ -243,7 +243,7 @@ public class RouterStore : StoreBase, IRouterStore
         var result = await settingService.GetUserPowersAsync(userInfo);
         userInfo.UserPowers = result.Where(p => p.PowerType == PowerType.Button).Select(p => p.PowerId).ToArray();
         var powers = result.Where(p => p.PowerType == PowerType.Page);
-        
+
         foreach (var pow in powers)
         {
             var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteUrl == pow.Path);

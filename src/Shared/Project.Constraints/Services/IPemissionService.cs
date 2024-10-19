@@ -50,11 +50,9 @@ public interface IPermissionService<TPower, TRole> : IPermissionService
     [IgnoreAspect]
     Task<QueryCollectionResult<TRole>> GetUserRolesAsync(string usrId);
 
-    [LogInfo(Action = "修改用户角色", Module = "权限控制")]
-    Task<QueryResult> SaveUserRoleAsync(KeyRelations<string, string> relations);
-
     [LogInfo(Action = "修改角色权限", Module = "权限控制")]
-    Task<QueryResult> SaveRolePowerAsync(KeyRelations<string, string> relations);
+    [RelatedPermission(PermissionId = nameof(UpdateRoleAsync))]
+    Task<QueryResult> SaveRoleWithPowersAsync(TRole role);
 
     [LogInfo(Action = "更新权限信息", Module = "权限控制")]
     Task<QueryResult> UpdatePowerAsync(TPower power);

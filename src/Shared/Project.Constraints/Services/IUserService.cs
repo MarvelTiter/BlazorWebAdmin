@@ -17,6 +17,9 @@ namespace Project.Constraints.Services
 
         [LogInfo(Action = "新增用户", Module = "权限控制")]
         Task<QueryResult> InsertUserAsync(TUser user);
+        [LogInfo(Action = "修改用户角色", Module = "权限控制")]
+        [RelatedPermission(PermissionId = nameof(UpdateUserAsync))]
+        Task<QueryResult> SaveUserWithRolesAsync(TUser user);
 
         [LogInfo(Action = "修改用户", Module = "权限控制")]
         Task<QueryResult> UpdateUserAsync(TUser user);

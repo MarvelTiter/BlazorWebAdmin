@@ -98,11 +98,11 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     }
 
     /// <summary>
-    ///     处理新增
+    /// 处理新增
     /// </summary>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    protected virtual Task<bool> OnAddItemAsync()
+    protected virtual Task<IQueryResult?> OnAddItemAsync()
     {
         throw new NotImplementedException();
     }

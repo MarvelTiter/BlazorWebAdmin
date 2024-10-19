@@ -11,10 +11,52 @@
 <pre>
     @jsonResult
 </pre>
+<p>可收起，Flex布局</p>
+<Project.Web.Shared.Components.QueryConditions LabelWidth="80" ColumnMinWidth="280">
+    <Header>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        @UI.BuildButton(this).Text("查询").Render()
+        @UI.BuildButton(this).Text("查询").Render()
+    </Header>
 
+    <ChildContent>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="日期" @bind-Value="@dateTime"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+    </ChildContent>
+</Project.Web.Shared.Components.QueryConditions>
+<p>不可收起，Grid布局</p>
+<Project.Web.Shared.Components.QueryConditions LabelWidth="80" ColumnMinWidth="280">
+    <ChildContent>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="日期" @bind-Value="@dateTime"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.EmptyCondition>
+            @UI.BuildButton(this).Text("查询").Render()
+            @UI.BuildButton(this).Text("查询").Render()
+        </Project.Web.Shared.Components.EmptyCondition>
+    </ChildContent>
+</Project.Web.Shared.Components.QueryConditions>
 @code {
     ConditionUnit condition = new();
-
+    DateTime? dateTime;
     public void BuildExpression()
     {
         // ToJson();
