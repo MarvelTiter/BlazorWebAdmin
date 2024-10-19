@@ -3,7 +3,7 @@
 @inherits ConditionBase
 
 <MGridContent ColSpan="@ColSpan" RowSpan="@RowSpan">
-    <span class="conditions" style="@Style">
+    <span class="conditions" style="@Style;min-width:@(Parent.ColumnMinWidth.HasValue ? $"{Parent.ColumnMinWidth}px": "unset")">
         <span class="label" style="min-width:@($"{LabelWidth ?? Parent.LabelWidth}px");">
             @Label
         </span>
@@ -11,7 +11,7 @@
         {
             @ChildContent
         }
-        else if (typeof(TData) == typeof(DateTime))
+        else if (typeof(TData) == typeof(DateTime) || typeof(TData) == typeof(DateTime?))
         {
             @(UI.BuildDatePicker(this).Bind(() => dateValue, NotifyChanged).Render())
         }

@@ -2,6 +2,7 @@
 using AutoInjectGenerator;
 using AutoWasmApiGenerator;
 using LightORM;
+using Project.Constraints.Models.Permissions;
 
 namespace Project.Web.Shared.Services
 {
@@ -16,16 +17,16 @@ namespace Project.Web.Shared.Services
             this.context = context;
         }
 
-        public async Task<QueryResult> DeleteUserAsync(TUser user)
+        public virtual async Task<QueryResult> DeleteUserAsync(TUser user)
         {
-            await context.BeginTranAsync();
+            context.BeginTran();
             await context.Delete<TUser>().Where(u => u.UserId == user.UserId).ExecuteAsync();
             await context.Delete<TUserRole>().Where(ur => ur.UserId == user.UserId).ExecuteAsync();
             await context.CommitTranAsync();
             return true.Result();
         }
 
-        public async Task<QueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req)
+        public virtual async Task<QueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req)
         {
             var list = await context.Select<TUser>()
                 .Where(req.Expression())
@@ -35,13 +36,13 @@ namespace Project.Web.Shared.Services
             return list.CollectionResult((int)count);
         }
 
-        public async Task<QueryResult> InsertUserAsync(TUser user)
+        public virtual async Task<QueryResult> InsertUserAsync(TUser user)
         {
             var u = await context.Insert(user).ExecuteAsync();
             return u > 0;
         }
 
-        public async Task<QueryResult> ModifyUserPasswordAsync(string uid, string old, string pwd)
+        public virtual async Task<QueryResult> ModifyUserPasswordAsync(string uid, string old, string pwd)
         {
             var flag = await context.Update<TUser>()
                 .Set(u => u.Password, pwd)
@@ -49,12 +50,11 @@ namespace Project.Web.Shared.Services
                 .ExecuteAsync();
             return flag > 0;
         }
-
-        public async Task<QueryResult> UpdateUserAsync(TUser user)
+        public virtual async Task<QueryResult> SaveUserWithRolesAsync(TUser user)
         {
             try
             {
-                await context.BeginTranAsync();
+                context.BeginTran();
                 await context.Update(user).Where(u => u.UserId == user.UserId).ExecuteAsync();
                 var usrId = user.UserId;
                 var roles = user.Roles ?? [];
@@ -73,7 +73,12 @@ namespace Project.Web.Shared.Services
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
         }
-        public async Task<TUser?> GetUserAsync(string id)
+        public virtual async Task<QueryResult> UpdateUserAsync(TUser user)
+        {
+            var n = await context.Update(user).Where(u => u.UserId == user.UserId).ExecuteAsync();
+            return n > 0;
+        }
+        public virtual async Task<TUser?> GetUserAsync(string id)
         {
             var u = await context.Select<TUser>().Where(u => u.UserId == id).FirstAsync();
             return u;

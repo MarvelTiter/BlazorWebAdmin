@@ -11,7 +11,7 @@ namespace Project.Constraints.Models.Permissions
         [Display(Name = "按钮")]
         Button
     }
-
+    [LangName("Power")]
     public interface IPower
     {
         [NotNull] string? PowerId { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.Constraints.Common.Attributes;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
@@ -43,7 +44,7 @@ namespace Project.Web.Shared.Locales.EmbeddedJson
         {
             var cultureInfo = CultureInfo.CurrentUICulture;
             var typeInfo = resourceSource.GetTypeInfo();
-            return CreateLocalizer(typeInfo.Name, cultureInfo);
+            return CreateLocalizer(FindLangName(resourceSource) ?? typeInfo.Name, cultureInfo);
         }
 
         public IStringLocalizer Create(string baseName, string location)
@@ -58,5 +59,11 @@ namespace Project.Web.Shared.Locales.EmbeddedJson
         }
 
         private static string GetCacheKey(string resourceName, CultureInfo cultureInfo) => resourceName + ';' + cultureInfo.Name;
+
+        private static string? FindLangName(Type resource)
+        {
+            var a = resource.GetCustomAttribute<LangNameAttribute>() ?? resource.GetInterfaces().Select(t => t.GetCustomAttribute<LangNameAttribute>()).Where(t => t is not null).FirstOrDefault();
+            return a?.Name;
+        }
     }
 }

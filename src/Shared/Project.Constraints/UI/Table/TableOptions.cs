@@ -50,7 +50,7 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     public Func<TData, object> RowKey { get; set; } = d => d!;
     public Func<TData, IEnumerable<TData>> TreeChildren { get; set; } = t => [];
     public IEnumerable<TData> Selected { get; set; } = [];
-    public Func<Task<bool>>? OnAddItemAsync { get; set; }
+    public Func<Task<IQueryResult?>>? OnAddItemAsync { get; set; }
     public Func<TQuery, Task<QueryCollectionResult<TData>>>? OnQueryAsync { get; set; }
     public Func<TQuery, Task<QueryCollectionResult<TData>>>? OnExportAsync { get; set; }
     public Func<Stream, Task>? OnImportAsync { get; set; }

@@ -17,7 +17,7 @@ namespace Project.Web.Shared.Services
         {
             this.context = context;
         }
-        public async Task<QueryCollectionResult<TPower>> GetPowerListAsync(GenericRequest<TPower> req)
+        public virtual async Task<QueryCollectionResult<TPower>> GetPowerListAsync(GenericRequest<TPower> req)
         {
             var list = await context.Select<TPower>()
                 .Where(req.Expression())
@@ -27,13 +27,13 @@ namespace Project.Web.Shared.Services
             return list.CollectionResult((int)total);
         }
 
-        public async Task<QueryCollectionResult<TPower>> GetAllPowerAsync()
+        public virtual async Task<QueryCollectionResult<TPower>> GetAllPowerAsync()
         {
             var list = await context.Select<TPower>().OrderBy(e => e.Sort).ToListAsync();
             return list.CollectionResult();
         }
 
-        public async Task<QueryCollectionResult<TRole>> GetRoleListAsync(GenericRequest<TRole> req)
+        public virtual async Task<QueryCollectionResult<TRole>> GetRoleListAsync(GenericRequest<TRole> req)
         {
             var list = await context.Select<TRole>()
                 .Where(req.Expression())
@@ -43,13 +43,13 @@ namespace Project.Web.Shared.Services
             return list.CollectionResult((int)total);
         }
 
-        public async Task<QueryCollectionResult<TRole>> GetAllRoleAsync()
+        public virtual async Task<QueryCollectionResult<TRole>> GetAllRoleAsync()
         {
             var list = await context.Select<TRole>().ToListAsync();
             return list.CollectionResult();
         }
 
-        public async Task<QueryCollectionResult<TPower>> GetPowerListByUserIdAsync(string usrId)
+        public virtual async Task<QueryCollectionResult<TPower>> GetPowerListByUserIdAsync(string usrId)
         {
             var powers = await context.Select<TPower, TRolePower, TUserRole>()
                                       .Distinct()
@@ -61,7 +61,7 @@ namespace Project.Web.Shared.Services
             return powers.CollectionResult();
         }
 
-        public async Task<QueryCollectionResult<TPower>> GetPowerListByRoleIdAsync(string roleId)
+        public virtual async Task<QueryCollectionResult<TPower>> GetPowerListByRoleIdAsync(string roleId)
         {
             var powers = await context.Select<TPower>()
                                       .InnerJoin<TRolePower>((r, p) => p.PowerId == r.PowerId)
@@ -70,7 +70,7 @@ namespace Project.Web.Shared.Services
             return powers.CollectionResult();
         }
 
-        public async Task<QueryCollectionResult<TRole>> GetUserRolesAsync(string usrId)
+        public virtual async Task<QueryCollectionResult<TRole>> GetUserRolesAsync(string usrId)
         {
             var roles = await context.Select<TRole>()
                                      .InnerJoin<TUserRole>((r, ur) => r.RoleId == ur.RoleId)
@@ -79,54 +79,43 @@ namespace Project.Web.Shared.Services
             return roles.CollectionResult();
         }
 
-        public async Task<QueryResult> SaveUserRoleAsync(KeyRelations<string, string> relations)
+        public virtual async Task<QueryResult> SaveRoleWithPowersAsync(TRole role)
         {
             try
             {
-                await context.BeginTranAsync();
-                var usrId = relations.Main;
-                var roles = relations.Slaves ?? [];
-                await context.Delete<TUserRole>().Where(u => u.UserId == usrId).ExecuteAsync();
-                foreach (var r in roles)
-                {
-                    var ur = new TUserRole() { UserId = usrId, RoleId = r };
-                    await context.Insert(ur).ExecuteAsync();
-                }
-                await context.CommitTranAsync();
-                return QueryResult.Success();
-            }
-            catch (Exception ex)
-            {
-                await context.RollbackTranAsync();
-                return QueryResult.Fail().SetMessage(ex.Message);
-            }
-        }
+                context.BeginTran();
+                var n = await context.Update(role)
+                    .Where(r => r.RoleId == role.RoleId)
+                    .ExecuteAsync();
 
-        public async Task<QueryResult> SaveRolePowerAsync(KeyRelations<string, string> relations)
-        {
-            try
-            {
-                await context.BeginTranAsync();
-                var roleId = relations.Main;
-                var powers = relations.Slaves ?? [];
-                var n = await context.Delete<TRolePower>().Where(r => r.RoleId == roleId).ExecuteAsync();
+                var roleId = role.RoleId;
+                string[] powers = [.. role.Powers];
+                var d = await context.Delete<TRolePower>().Where(r => r.RoleId == roleId).ExecuteAsync();
+                var i = 0;
                 foreach (var p in powers)
                 {
                     var rp = new TRolePower() { RoleId = roleId, PowerId = p };
                     var ef = await context.Insert<TRolePower>(rp).ExecuteAsync();
-                    n += ef;
+                    i += ef;
                 }
-                await context.CommitTranAsync();
-                return QueryResult.Success();
+                if (n == 1 && d > 0 && i == powers.Length)
+                {
+                    await context.CommitTranAsync();
+                    return QueryResult.Success();
+                }
+                else
+                {
+                    await context.RollbackTranAsync();
+                    return QueryResult.Fail();
+                }
             }
             catch (Exception ex)
             {
-                await context.RollbackTranAsync();
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
         }
 
-        public async Task<QueryResult> UpdatePowerAsync(TPower power)
+        public virtual async Task<QueryResult> UpdatePowerAsync(TPower power)
         {
             var n = await context.Update(power)
                 .Where(p => p.PowerId == power.PowerId)
@@ -134,31 +123,31 @@ namespace Project.Web.Shared.Services
             return QueryResult.Return(n > 0);
         }
 
-        public async Task<QueryResult> InsertPowerAsync(TPower power)
+        public virtual async Task<QueryResult> InsertPowerAsync(TPower power)
         {
             var n = await context.Insert(power).ExecuteAsync();
             return QueryResult.Return(n > 0);
         }
 
-        public async Task<QueryResult> UpdateRoleAsync(TRole role)
+        public virtual async Task<QueryResult> UpdateRoleAsync(TRole role)
         {
             var n = await context.Update(role)
                 .Where(r => r.RoleId == role.RoleId)
                 .ExecuteAsync();
-            return QueryResult.Return(n > 0);
+            return n > 0;
         }
 
-        public async Task<QueryResult> InsertRoleAsync(TRole role)
+        public virtual async Task<QueryResult> InsertRoleAsync(TRole role)
         {
             var n = await context.Insert(role).ExecuteAsync();
             return QueryResult.Return(n > 0);
         }
 
-        public async Task<QueryResult> DeleteRoleAsync(TRole role)
+        public virtual async Task<QueryResult> DeleteRoleAsync(TRole role)
         {
             try
             {
-                await context.BeginTranAsync();
+                context.BeginTran();
                 await context.Delete<TRole>().Where(r => r.RoleId == role.RoleId).ExecuteAsync();
                 await context.Delete<TUserRole>().Where(ur => ur.RoleId == role.RoleId).ExecuteAsync();
                 await context.Delete<TRolePower>().Where(rp => rp.RoleId == role.RoleId).ExecuteAsync();
@@ -173,11 +162,11 @@ namespace Project.Web.Shared.Services
 
         }
 
-        public async Task<QueryResult> DeletePowerAsync(TPower power)
+        public virtual async Task<QueryResult> DeletePowerAsync(TPower power)
         {
             try
             {
-                await context.BeginTranAsync();
+                context.BeginTran();
                 await context.Delete<TPower>().Where(p => p.PowerId == power.PowerId || p.ParentId == power.PowerId).ExecuteAsync();
                 await context.Delete<TRolePower>().Where(p => p.PowerId == power.PowerId).ExecuteAsync();
                 await context.CommitTranAsync();
@@ -188,28 +177,13 @@ namespace Project.Web.Shared.Services
                 await context.RollbackTranAsync();
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
-
         }
-    }
-
-#if(ExcludeDefaultService)
-#else
-    [AutoInject(Group = "SERVER")]
-    public class PermissionService : IPermissionService
-
-    {
-        private readonly IExpressionContext context;
-
-        public PermissionService(IExpressionContext context)
+        public virtual async Task<QueryCollectionResult<MinimalPower>> GetUserPowersAsync(string usrId)
         {
-            this.context = context;
-        }
-        public async Task<QueryCollectionResult<MinimalPower>> GetPowerListByUserIdAsync(string usrId)
-        {
-            var powers = await context.Select<Power>()
+            var powers = await context.Select<TPower>()
                                       .Distinct()
-                                      .InnerJoin<RolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
-                                      .InnerJoin<UserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
+                                      .InnerJoin<TRolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
+                                      .InnerJoin<TUserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
                                       .Where(w => w.Tb3.UserId == usrId)
                                       .OrderBy(w => w.Tb1.Sort)
                                       .ToListAsync(w => new MinimalPower
@@ -227,7 +201,10 @@ namespace Project.Web.Shared.Services
         }
     }
 
+#if (ExcludeDefaultService)
+#else
     [AutoInject(ServiceType = typeof(IStandardPermissionService), Group = "SERVER")]
+    [AutoInject(ServiceType = typeof(IPermissionService), Group = "SERVER")]
     [GenAspectProxy]
     public class StandardPermissionService : DefaultPermissionService<Power, Role, RolePower, UserRole>, IStandardPermissionService
     {

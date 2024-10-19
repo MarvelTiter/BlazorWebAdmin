@@ -6,15 +6,13 @@ namespace Project.Web.Shared;
 public class CustomSetting : BasicSetting, IProjectSettingService
 {
     private readonly IWatermarkServiceFactory watermarkServiceFactory;
-    private readonly IPermissionService permissionService;
 
     public CustomSetting(IWatermarkServiceFactory watermarkServiceFactory
-        , IPermissionService permissionService)
+        , IServiceProvider services) : base(services)
     {
         this.watermarkServiceFactory = watermarkServiceFactory;
-        this.permissionService = permissionService;
     }
-    
+
     public override Task LoginSuccessAsync(UserInfo result)
     {
         Console.WriteLine($"LoginSuccessAsync: {result.UserName}");
@@ -33,11 +31,5 @@ public class CustomSetting : BasicSetting, IProjectSettingService
         var service = watermarkServiceFactory.GetWatermarkService();
         service.UpdateWaterMarkAsync(CurrentUser?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), route.RouteTitle);
         return Task.FromResult(true);
-    }
-
-    public override async Task<IEnumerable<MinimalPower>> GetUserPowersAsync(UserInfo info)
-    {
-        var result = await permissionService.GetPowerListByUserIdAsync(info.UserId);
-        return result.Payload;
     }
 }

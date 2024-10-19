@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Project.Constraints.Models.Permissions
 {
+    [LangName("User")]
     public interface IUser
     {
         [NotNull] public string? UserId { get; set; }

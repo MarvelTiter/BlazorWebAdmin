@@ -45,10 +45,10 @@ namespace Project.AppCore.Clients
         }
 
         [TableButton(Label = "用户信息")]
-        public async Task<bool> ShowUserInfo(ClientInfo info)
+        public Task<IQueryResult?> ShowUserInfo(ClientInfo info)
         {
-            _ = await UI.ShowDialogAsync<JsonDisplay, ClientInfo>("用户信息", info, width: "50%");
-            return true;
+            _ = UI.ShowDialogAsync<JsonDisplay, ClientInfo>("用户信息", info, width: "50%");
+            return QueryResult.Null().AsTask();
         }
 
         protected override void BuildRenderTree(RenderTreeBuilder builder)

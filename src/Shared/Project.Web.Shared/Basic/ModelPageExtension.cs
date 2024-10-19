@@ -37,4 +37,23 @@ public static class ModelPageExtension
         var n = await page.UI.ShowFormDialogAsync(null, page.Options.Columns, false, config);
         return n;
     }
+
+    public static RenderFragment AddButton<TModel, TQuery>(this ModelPage<TModel, TQuery> page)
+        where TQuery : IRequest, new()
+        where TModel : class, new()
+    {
+        return page.UI.BuildButton(page).Text("ÐÂÔö").Primary().OnClick(async () =>
+        {
+            if (page.Options?.OnAddItemAsync == null)
+            {
+                return;
+            }
+            var result = await page.Options.OnAddItemAsync();
+            if (result is null) return;
+            if (page.UI.ShowError(result))
+            {
+                await page.Options.RefreshAsync();
+            }
+        }).Render();
+    }
 }

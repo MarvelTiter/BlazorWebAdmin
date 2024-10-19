@@ -1,5 +1,12 @@
 ﻿@namespace Project.Web.Shared.Components
 @inherits ConditionBase
 <MGridContent ColSpan="@ColSpan" RowSpan="@RowSpan">
-    @ChildContent
+    <span class="conditions" style="@Style;min-width:@(Parent.ColumnMinWidth.HasValue ? $"{Parent.ColumnMinWidth}px": "unset")">
+        <span class="label" style="min-width:@($"{LabelWidth ?? Parent.LabelWidth}px");">
+            @Label
+        </span
+        <span>
+            @ChildContent
+        </span>
+    </span>
 </MGridContent>

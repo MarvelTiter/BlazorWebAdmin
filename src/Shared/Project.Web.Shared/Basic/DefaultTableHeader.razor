@@ -104,8 +104,9 @@
         {
             return;
         }
-        var success = await Options.OnAddItemAsync();
-        if (success)
+        var result = await Options.OnAddItemAsync();
+        if (result is null) return;
+        if (UI.ShowError(result))
         {
             await Options.RefreshAsync();
         }

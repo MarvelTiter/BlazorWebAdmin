@@ -46,7 +46,7 @@ namespace Project.Web.Shared.Pages
             return await UserSrv.GetUserListAsync(query);
         }
 
-        protected override async Task<bool> OnAddItemAsync()
+        protected override async Task<IQueryResult?> OnAddItemAsync()
         {
             var user = await this.ShowAddFormAsync(option =>
             {
@@ -62,7 +62,7 @@ namespace Project.Web.Shared.Pages
                 };
             });
             user.OnUserSave(SaveActionType.Insert);
-            return true;
+            return QueryResult.Success();
         }
 
         protected override async Task<QueryResult> HandleImportedDataAsync(TUser data)
@@ -86,7 +86,7 @@ namespace Project.Web.Shared.Pages
                     {
                         return false;
                     }
-                    var saveUserResult = await UserSrv.UpdateUserAsync(u);
+                    var saveUserResult = await UserSrv.SaveUserWithRolesAsync(u);
                     return UI.ShowError(saveUserResult);
                 });
             });

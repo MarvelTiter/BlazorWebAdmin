@@ -12,14 +12,19 @@ namespace Project.Constraints.Services;
 [ApiInvokerGenerate]
 public interface IPermissionService
 {
-    Task<QueryCollectionResult<MinimalPower>> GetPowerListByUserIdAsync(string usrId);
+    /// <summary>
+    /// 初始化用户菜单
+    /// </summary>
+    /// <param name="usrId"></param>
+    /// <returns></returns>
+    Task<QueryCollectionResult<MinimalPower>> GetUserPowersAsync(string usrId);
 }
 
 
 
 [AddAspectHandler(AspectType = typeof(AopLogger))]
 [AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
-public interface IPermissionService<TPower, TRole>
+public interface IPermissionService<TPower, TRole> : IPermissionService
     where TPower : IPower
     where TRole : IRole
 {
@@ -45,11 +50,9 @@ public interface IPermissionService<TPower, TRole>
     [IgnoreAspect]
     Task<QueryCollectionResult<TRole>> GetUserRolesAsync(string usrId);
 
-    [LogInfo(Action = "修改用户角色", Module = "权限控制")]
-    Task<QueryResult> SaveUserRoleAsync(KeyRelations<string, string> relations);
-
     [LogInfo(Action = "修改角色权限", Module = "权限控制")]
-    Task<QueryResult> SaveRolePowerAsync(KeyRelations<string, string> relations);
+    [RelatedPermission(PermissionId = nameof(UpdateRoleAsync))]
+    Task<QueryResult> SaveRoleWithPowersAsync(TRole role);
 
     [LogInfo(Action = "更新权限信息", Module = "权限控制")]
     Task<QueryResult> UpdatePowerAsync(TPower power);

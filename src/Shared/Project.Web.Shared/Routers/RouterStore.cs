@@ -64,6 +64,11 @@ public class RouterStore : StoreBase, IRouterStore
     {
         get => "/" + navigationManager.ToBaseRelativePath(navigationManager.Uri);
     }
+    private static string AttachFirstSlash(string url)
+    {
+        if (url.StartsWith('/')) return url;
+        return "/" + url;
+    }
     TagRoute? preview;
     public async Task RouteDataChangedHandleAsync(RouteData routeData)
     {
@@ -71,10 +76,10 @@ public class RouterStore : StoreBase, IRouterStore
         {
             // TODO 可能有BUG，先观察观察
             if (Menus.Count == 0) return;
-            RouterMeta? meta = Menus.FirstOrDefault(r => r.RouteUrl == CurrentUrl);
+            RouterMeta? meta = Menus.FirstOrDefault(r => AttachFirstSlash(r.RouteUrl) == CurrentUrl);
             if (meta == null)
             {
-                meta = AllPages.AllRoutes.FirstOrDefault(r => r.RouteUrl == CurrentUrl);
+                meta = AllPages.AllRoutes.FirstOrDefault(r => AttachFirstSlash(r.RouteUrl) == CurrentUrl);
                 if (meta != null)
                     meta.Cache = false;
             }
@@ -175,7 +180,7 @@ public class RouterStore : StoreBase, IRouterStore
         pages.Add("/", new TagRoute
         {
             RouteUrl = "/",
-            RouteId = "Home",
+            RouteId = "Dashboard",
             RouteTitle = "主页",
             Icon = "home",
             Pin = true
@@ -188,6 +193,16 @@ public class RouterStore : StoreBase, IRouterStore
         try
         {
             await Reset();
+            Menus.Clear();
+            Menus.Add(new()
+            {
+                RouteId = "Dashboard",
+                RouteUrl = "/",
+                Icon = "home",
+                Group = "ROOT",
+                Cache = true,
+                RouteTitle = "主页",
+            });
             if (userInfo != null && setting.CurrentValue.LoadPageFromDatabase)
             {
                 await InitRoutersAsyncByUser(userInfo);
@@ -228,28 +243,23 @@ public class RouterStore : StoreBase, IRouterStore
         var result = await settingService.GetUserPowersAsync(userInfo);
         userInfo.UserPowers = result.Where(p => p.PowerType == PowerType.Button).Select(p => p.PowerId).ToArray();
         var powers = result.Where(p => p.PowerType == PowerType.Page);
-        Menus.Clear();
-        //if (!setting.CurrentValue.LoadUnregisteredPage)
-        //{
-        //    Menus.Add(new()
-        //    {
-        //        RouteId = "Home",
-        //        RouteUrl = "/",
-        //        Icon = "home",
-        //        Group = "ROOT",
-        //        Cache = true,
-        //        RouteTitle = "主页",
-        //    });
-        //}
+
         foreach (var pow in powers)
         {
             var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteUrl == pow.Path);
-            meta ??= new RouterMeta();
+            meta ??= new RouterMeta()
+            {
+                RouteUrl = pow.Path,
+                RouteId = pow.PowerId
+            };
+            if (Menus.Any(m => m.RouteUrl == meta.RouteUrl && m.RouteId == meta.RouteId))
+            {
+                continue;
+            }
             var enable = await OnRouteMetaFilterAsync(meta);
             if (!enable)
                 continue;
             meta.RouteTitle = pow.PowerName;
-            meta.RouteId = pow.PowerId;
             meta.Icon = pow.Icon;
             meta.Group = pow.ParentId;
             meta.Sort = pow.Sort;

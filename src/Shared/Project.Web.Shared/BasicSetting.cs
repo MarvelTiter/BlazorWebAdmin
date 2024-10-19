@@ -1,13 +1,20 @@
-﻿using Project.Constraints.Store.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project.Constraints.Store.Models;
 
 namespace Project.Web.Shared;
 
 public class BasicSetting : IProjectSettingService//, IDisposable
 {
+    private readonly IServiceProvider services;
+
     protected UserInfo? CurrentUser { get; set; }
 
     //public abstract Task<QueryResult<UserInfo>> GetUserInfoAsync(string username, string password);
     //public abstract Task<int> UpdateLoginInfo(UserInfo info);
+    public BasicSetting(IServiceProvider services)
+    {
+        this.services = services;
+    }
     public virtual Task LoginSuccessAsync(UserInfo result)
     {
         CurrentUser = result;
@@ -37,7 +44,16 @@ public class BasicSetting : IProjectSettingService//, IDisposable
     /// <param name="info"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public virtual Task<IEnumerable<MinimalPower>> GetUserPowersAsync(UserInfo info) => Task.FromResult<IEnumerable<MinimalPower>>([]);
+    public virtual async Task<IEnumerable<MinimalPower>> GetUserPowersAsync(UserInfo info)
+    {
+        var permissionService = services.GetService<IPermissionService>();
+        if (permissionService == null)
+        {
+            return [];
+        }
+        var result = await permissionService.GetUserPowersAsync(info.UserId);
+        return result.Payload;
+    }
 
     /// <summary>
     /// <inheritdoc/>

@@ -98,11 +98,11 @@ namespace Project.Web.Shared.Pages
         }
         #endregion
 
-        protected override async Task<bool> OnAddItemAsync()
+        protected override async Task<IQueryResult?> OnAddItemAsync()
         {
             var role = await this.ShowAddFormAsync("新增角色");
-            await PermissionSrv.InsertRoleAsync(role);
-            return true;
+            var result = await PermissionSrv.InsertRoleAsync(role);
+            return result;
         }
 
         [EditButton]
@@ -111,9 +111,9 @@ namespace Project.Web.Shared.Pages
             var powers = await PermissionSrv.GetPowerListByRoleIdAsync(role.RoleId);
             role.Powers = powers.Payload.Select(p => p.PowerId).ToList();
             var newRole = await this.ShowEditFormAsync("编辑角色", role);
-            var result1 = await PermissionSrv.UpdateRoleAsync(newRole);
-            var result2 = await PermissionSrv.SaveRolePowerAsync((newRole.RoleId, newRole.Powers));
-            return result1.AndAlso(result2);
+            var result1 = await PermissionSrv.SaveRoleWithPowersAsync(newRole);
+            //var result2 = await PermissionSrv.SaveRolePowerAsync((newRole.RoleId, newRole.Powers));
+            return result1;
         }
 
         [DeleteButton]
