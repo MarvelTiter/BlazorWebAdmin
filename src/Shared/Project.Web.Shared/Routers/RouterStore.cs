@@ -64,8 +64,9 @@ public class RouterStore : StoreBase, IRouterStore
     {
         get => "/" + navigationManager.ToBaseRelativePath(navigationManager.Uri);
     }
-    private static string AttachFirstSlash(string url)
+    private static string? AttachFirstSlash(string? url)
     {
+        if (url is null) return null;
         if (url.StartsWith('/')) return url;
         return "/" + url;
     }

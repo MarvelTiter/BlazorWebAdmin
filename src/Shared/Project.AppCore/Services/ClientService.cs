@@ -33,7 +33,7 @@ public sealed class ClientService : IClientService, IDisposable
             .Where(query.Expression().Compile())
             .Skip((query.PageIndex - 1) * query.PageSize)
             .Take(query.PageSize);
-        return Task.FromResult(filted.CollectionResult());
+        return Task.FromResult(filted.CollectionResult(clients.Count));
     }
 
     public Task<QueryResult> AddOrUpdateAsync(ClientInfo client)
