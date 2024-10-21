@@ -81,36 +81,38 @@ namespace Project.Web.Shared.Services
 
         public virtual async Task<QueryResult> SaveRoleWithPowersAsync(TRole role)
         {
+            using var scoped = context.CreateScoped();
             try
             {
-                context.BeginTran();
-                var n = await context.Update(role)
+                //context.BeginTran();
+                var n = await scoped.Update(role)
                     .Where(r => r.RoleId == role.RoleId)
                     .ExecuteAsync();
 
                 var roleId = role.RoleId;
                 string[] powers = [.. role.Powers];
-                var d = await context.Delete<TRolePower>().Where(r => r.RoleId == roleId).ExecuteAsync();
+                var d = await scoped.Delete<TRolePower>().Where(r => r.RoleId == roleId).ExecuteAsync();
                 var i = 0;
                 foreach (var p in powers)
                 {
                     var rp = new TRolePower() { RoleId = roleId, PowerId = p };
-                    var ef = await context.Insert<TRolePower>(rp).ExecuteAsync();
+                    var ef = await scoped.Insert<TRolePower>(rp).ExecuteAsync();
                     i += ef;
                 }
                 if (n == 1 && d > 0 && i == powers.Length)
                 {
-                    await context.CommitTranAsync();
+                    await scoped.CommitTranAsync();
                     return QueryResult.Success();
                 }
                 else
                 {
-                    await context.RollbackTranAsync();
+                    await scoped.RollbackTranAsync();
                     return QueryResult.Fail();
                 }
             }
             catch (Exception ex)
             {
+                await scoped.RollbackTranAsync();
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
         }

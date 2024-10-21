@@ -52,24 +52,25 @@ namespace Project.Web.Shared.Services
         }
         public virtual async Task<QueryResult> SaveUserWithRolesAsync(TUser user)
         {
+            using var scoped = context.CreateScoped();
             try
             {
-                context.BeginTran();
-                await context.Update(user).Where(u => u.UserId == user.UserId).ExecuteAsync();
+                //context.BeginTran();
+                await scoped.Update(user).Where(u => u.UserId == user.UserId).ExecuteAsync();
                 var usrId = user.UserId;
                 var roles = user.Roles ?? [];
-                await context.Delete<TUserRole>().Where(u => u.UserId == usrId).ExecuteAsync();
+                await scoped.Delete<TUserRole>().Where(u => u.UserId == usrId).ExecuteAsync();
                 foreach (var r in roles)
                 {
                     var ur = new TUserRole() { UserId = usrId, RoleId = r };
-                    await context.Insert(ur).ExecuteAsync();
+                    await scoped.Insert(ur).ExecuteAsync();
                 }
-                await context.CommitTranAsync();
+                await scoped.CommitTranAsync();
                 return QueryResult.Success();
             }
             catch (Exception ex)
             {
-                await context.RollbackTranAsync();
+                await scoped.RollbackTranAsync();
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
         }

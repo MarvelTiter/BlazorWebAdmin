@@ -21,7 +21,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
       <ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
     </ItemGroup>
 
