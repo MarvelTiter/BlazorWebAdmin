@@ -39,6 +39,7 @@
     "Age": "年龄",
     "Sign": "签名",
     "LastLogin": "最后登录",
+    "ExpiryDate": "过期时间",
     "Roles": "用户角色",
     "DialogTitle": {
       "Add": "新增用户",

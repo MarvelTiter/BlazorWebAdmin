@@ -223,7 +223,7 @@ public class RouterStore : StoreBase, IRouterStore
     {
         foreach (var meta in AllPages.AllRoutes.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
         {
-            if (Menus.Any(m => m.RouteUrl == meta.RouteUrl && m.RouteId == meta.RouteId))
+            if (Menus.Any(m => AttachFirstSlash(m.RouteUrl) == meta.RouteUrl && m.RouteId == meta.RouteId))
             {
                 continue;
             }
@@ -247,7 +247,7 @@ public class RouterStore : StoreBase, IRouterStore
 
         foreach (var pow in powers)
         {
-            var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteUrl == pow.Path);
+            var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteUrl == AttachFirstSlash(pow.Path));
             meta ??= new RouterMeta()
             {
                 RouteUrl = pow.Path,

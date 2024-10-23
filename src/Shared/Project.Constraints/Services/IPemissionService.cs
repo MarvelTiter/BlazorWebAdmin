@@ -8,8 +8,8 @@ using Project.Constraints.Models.Request;
 
 namespace Project.Constraints.Services;
 
-[WebController(Route = "permission", Authorize = true)]
-[ApiInvokerGenerate]
+//[WebController(Route = "permission", Authorize = true)]
+//[ApiInvokerGenerate]
 public interface IPermissionService
 {
     /// <summary>
@@ -20,10 +20,6 @@ public interface IPermissionService
     Task<QueryCollectionResult<MinimalPower>> GetUserPowersAsync(string usrId);
 }
 
-
-
-[AddAspectHandler(AspectType = typeof(AopLogger))]
-[AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
 public interface IPermissionService<TPower, TRole> : IPermissionService
     where TPower : IPower
     where TRole : IRole
@@ -78,6 +74,8 @@ public interface IPermissionService<TPower, TRole> : IPermissionService
 #else
 [WebController(Route = "default/permission", Authorize = true)]
 [ApiInvokerGenerate]
+[AddAspectHandler(AspectType = typeof(AopLogger))]
+[AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
 public interface IStandardPermissionService : IPermissionService<Power, Role>
 {
 }

@@ -8,8 +8,6 @@ using Project.Constraints.Models.Request;
 
 namespace Project.Constraints.Services
 {
-    [AddAspectHandler(AspectType = typeof(AopLogger))]
-    [AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
     public partial interface IUserService<TUser> where TUser : IUser
     {
         [IgnoreAspect]
@@ -44,6 +42,8 @@ namespace Project.Constraints.Services
 
     [WebController(Route = "user", Authorize = true)]
     [ApiInvokerGenerate]
+    [AddAspectHandler(AspectType = typeof(AopLogger))]
+    [AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
     public interface IStandardUserService : IUserService<User>
     {
 

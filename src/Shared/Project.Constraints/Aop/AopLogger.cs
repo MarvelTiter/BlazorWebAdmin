@@ -15,11 +15,13 @@ public class AopLogger : IAspectHandler
 {
     private readonly IUserStore userStore;
     private readonly ILogger<AopLogger> logger;
+    private readonly IRunLogService runLogService;
 
-    public AopLogger(IUserStore userStore, ILogger<AopLogger> logger)
+    public AopLogger(IUserStore userStore, ILogger<AopLogger> logger, IRunLogService runLogService)
     {
         this.userStore = userStore;
         this.logger = logger;
+        this.runLogService = runLogService;
     }
     public async Task Invoke(ProxyContext context, Func<Task> process)
     {
@@ -36,9 +38,10 @@ public class AopLogger : IAspectHandler
                 UserId = userId,
                 Module = infoAttr!.Module ?? "",
                 Action = infoAttr!.Action ?? "",
-                Result = result?.IsSuccess ?? false ? "成功" : "失败",
+                Result = result?.IsSuccess ?? true ? "成功" : "失败",
                 Message = result?.Message ?? "",
             };
+            await runLogService.WriteLog(l);
         }
     }
 

@@ -69,6 +69,10 @@ namespace Project.Constraints.Models.Permissions
         [LightColumn(Name = "LAST_LOGIN")]
         [Form(Hide = true)]
         public DateTime? LastLogin { get; set; }
+        [ColumnDefinition]
+        [LightColumn(Name = "EXPIRY_DATE")]
+        public DateTime? ExpiryDate { get; set; }
+        
 
         [Ignore]
         [ColumnDefinition(Visible = false)]

@@ -65,7 +65,7 @@ namespace Project.AppCore
                 && !ctx.Request.Path.StartsWithSegments("/api/svg") 
                 && !ctx.Request.Path.StartsWithSegments("/api/file") 
                 && !ctx.Request.Path.StartsWithSegments("/api/hub")
-                && !ctx.Request.Path.StartsWithSegments("/api/account")
+                && !ctx.Request.Path.StartsWithSegments("/api/account/login")
             , a => a.UseMiddleware<SetUserInfoMiddleware>());
         }
     }

@@ -7,7 +7,7 @@ using Project.Constraints.Models.Request;
 
 namespace Project.Constraints.Services
 {
-    public interface IRunLogService<TRunLog> where TRunLog : IRunLog
+    public interface IRunLogService<TRunLog> : IRunLogService where TRunLog : IRunLog
     {
         Task<QueryCollectionResult<TRunLog>> GetRunLogsAsync(GenericRequest<TRunLog> runLog);
         Task<QueryResult> WriteLog(TRunLog log);

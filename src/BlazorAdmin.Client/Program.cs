@@ -39,7 +39,7 @@ builder.Services.AddScoped<ISvgIconService, SvgIconServiceApiInvoker>();
 builder.Services.AddScoped<IFileService, FileServiceApiInvoker>();
 #if (ExcludeDefaultService)
 #else
-builder.Services.AddScoped<IPermissionService, PermissionServiceApiInvoker>();
+builder.Services.AddScoped<IPermissionService, StandardPermissionServiceApiInvoker>();
 builder.Services.AddScoped<IStandardPermissionService, StandardPermissionServiceApiInvoker>();
 builder.Services.AddScoped<IStandardRunLogService, StandardRunLogServiceApiInvoker>();
 builder.Services.AddScoped<IStandardUserService, StandardUserServiceApiInvoker>();
