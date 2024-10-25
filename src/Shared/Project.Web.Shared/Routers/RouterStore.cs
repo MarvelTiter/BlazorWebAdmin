@@ -11,8 +11,24 @@ using Project.Constraints.UI.Extensions;
 using Project.Web.Shared.Components;
 using Project.Web.Shared.Store;
 using System.Reflection;
-
+using static Project.Web.Shared.Routers.RouterStoreExtensions;
 namespace Project.Web.Shared.Routers;
+
+public static class RouterStoreExtensions
+{
+    public static bool CompareUrl(this IRouterStore store, string? url)
+    {
+        return CompareUrl(store.CurrentUrl, url);
+    }
+
+    public static bool CompareUrl(string? url1, string? url2)
+    {
+        if (string.IsNullOrEmpty(url1) || string.IsNullOrEmpty(url2)) return false;
+        if (!url1.StartsWith('/')) url1 = '/' + url1;
+        if (!url2.StartsWith('/')) url2 = '/' + url2;
+        return url1 == url2;
+    }
+}
 
 [AutoInject(ServiceType = typeof(IRouterStore))]
 public class RouterStore : StoreBase, IRouterStore
@@ -60,16 +76,14 @@ public class RouterStore : StoreBase, IRouterStore
         Menus.Clear();
     }
 
-    public string CurrentUrl
-    {
-        get => "/" + navigationManager.ToBaseRelativePath(navigationManager.Uri);
-    }
+    public string CurrentUrl => '/' + navigationManager.ToBaseRelativePath(navigationManager.Uri);
     private static string? AttachFirstSlash(string? url)
     {
-        if (url is null) return null;
+        if (string.IsNullOrEmpty(url)) return null;
         if (url.StartsWith('/')) return url;
         return "/" + url;
     }
+
     TagRoute? preview;
     public async Task RouteDataChangedHandleAsync(RouteData routeData)
     {
@@ -77,17 +91,17 @@ public class RouterStore : StoreBase, IRouterStore
         {
             // TODO 可能有BUG，先观察观察
             if (Menus.Count == 0) return;
-            RouterMeta? meta = Menus.FirstOrDefault(r => AttachFirstSlash(r.RouteUrl) == CurrentUrl);
+            RouterMeta? meta = Menus.FirstOrDefault(r => CompareUrl(r.RouteUrl, CurrentUrl));
             if (meta == null)
             {
-                meta = AllPages.AllRoutes.FirstOrDefault(r => AttachFirstSlash(r.RouteUrl) == CurrentUrl);
+                meta = AllPages.AllRoutes.FirstOrDefault(r => CompareUrl(r.RouteUrl, CurrentUrl));
                 if (meta != null)
                     meta.Cache = false;
             }
             tag = new TagRoute
             {
                 RouteId = meta?.RouteId,
-                RouteUrl = meta?.RouteUrl ?? CurrentUrl,
+                RouteUrl = AttachFirstSlash(meta?.RouteUrl ?? CurrentUrl),
                 RouteTitle = meta?.RouteTitle ?? "",
                 Icon = meta?.Icon ?? "",
                 Pin = meta?.Pin ?? false,
@@ -178,14 +192,17 @@ public class RouterStore : StoreBase, IRouterStore
     public Task Reset()
     {
         pages.Clear();
-        pages.Add("/", new TagRoute
+        var homeTag = new TagRoute
         {
             RouteUrl = "/",
             RouteId = "Dashboard",
             RouteTitle = "主页",
             Icon = "home",
-            Pin = true
-        });
+            Pin = true,
+            IsActive = true
+        };
+        pages.Add("/", homeTag);
+        preview = homeTag;
         return Task.CompletedTask;
     }
     //TODO 获取权限列表
@@ -223,7 +240,7 @@ public class RouterStore : StoreBase, IRouterStore
     {
         foreach (var meta in AllPages.AllRoutes.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
         {
-            if (Menus.Any(m => AttachFirstSlash(m.RouteUrl) == meta.RouteUrl && m.RouteId == meta.RouteId))
+            if (Menus.Any(m => CompareUrl(m.RouteUrl, meta.RouteUrl) && m.RouteId == meta.RouteId))
             {
                 continue;
             }
@@ -247,7 +264,7 @@ public class RouterStore : StoreBase, IRouterStore
 
         foreach (var pow in powers)
         {
-            var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteUrl == AttachFirstSlash(pow.Path));
+            var meta = AllPages.AllRoutes.FirstOrDefault(m => CompareUrl(pow.Path, m.RouteUrl));
             meta ??= new RouterMeta()
             {
                 RouteUrl = pow.Path,

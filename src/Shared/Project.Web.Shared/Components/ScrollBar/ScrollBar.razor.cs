@@ -25,8 +25,8 @@ namespace Project.Web.Shared.Components
         [Parameter] public string? ViewClass { get; set; }
         [Parameter] public string? ViewStyle { get; set; }
         [Parameter] public string? WrapStyle { get; set; }
-        [Parameter] public int? Height { get; set; }
-        [Parameter] public int? MaxHeight { get; set; }
+        [Parameter] public string? Height { get; set; }
+        [Parameter] public string? MaxHeight { get; set; }
         //[Parameter] public EventCallback<ScrollArgs> OnScroll { get; set; }
         [Parameter] public int MinSize { get; set; }
         [Parameter] public int BarWidth { get; set; } = 6;

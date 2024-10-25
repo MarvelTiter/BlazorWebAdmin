@@ -7,17 +7,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
+		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
 	</ItemGroup>
 
 
 	<ItemGroup>
-	  <EmbeddedResource Include="Langs\en-US\index.json">
-	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	  </EmbeddedResource>
-	  <EmbeddedResource Include="Langs\zh-CN\index.json">
-	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-	  </EmbeddedResource>
+		<EmbeddedResource Include="Langs\en-US\index.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Langs\zh-CN\index.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -25,7 +25,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- <ProjectReference Include="..\..\..\..\MT.Generators\src\AutoAopProxy.Roslyn\AutoAopProxy.Roslyn.csproj" OutputItemType="Analyzer"/> -->
 		<ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
 	</ItemGroup>
 </Project>

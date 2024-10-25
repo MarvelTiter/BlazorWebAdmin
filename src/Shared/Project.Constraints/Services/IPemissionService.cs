@@ -17,6 +17,7 @@ public interface IPermissionService
     /// </summary>
     /// <param name="usrId"></param>
     /// <returns></returns>
+    [IgnoreAspect]
     Task<QueryCollectionResult<MinimalPower>> GetUserPowersAsync(string usrId);
 }
 
@@ -68,7 +69,6 @@ public interface IPermissionService<TPower, TRole> : IPermissionService
     [LogInfo(Action = "删除角色", Module = "权限控制")]
     Task<QueryResult> DeleteRoleAsync(TRole role);
 }
-
 
 #if (ExcludeDefaultService)
 #else

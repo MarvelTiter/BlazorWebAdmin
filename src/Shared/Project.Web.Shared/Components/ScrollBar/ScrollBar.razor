@@ -35,8 +35,8 @@
 
     StyleBuilder WrapSls => StyleBuilder.Default
     .AddStyleBase(WrapStyle!, () => WrapStyle != null)
-    .AddStyle("height", () => Height > 0 ? Height.ToPixel() : "100vh", () => Height.HasValue)
-    .AddStyle("max-height", () => MaxHeight.ToPixel(), () => MaxHeight.HasValue);
+    .AddStyle("height", () => Height!, () => !string.IsNullOrEmpty(Height))
+    .AddStyle("max-height", () => MaxHeight!, () => !string.IsNullOrEmpty(MaxHeight));
 
     StyleBuilder ViewSls => StyleBuilder.Default
     .AddStyleBase(ViewStyle!, () => ViewStyle != null);
