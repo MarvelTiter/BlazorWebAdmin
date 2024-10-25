@@ -8,14 +8,14 @@
             {
                 @if (!item.Cache) continue;
                 var actived = Router.CompareUrl(item.RouteUrl);
-                <div class="nav_top @(item.IsActive ? "active":"")" @oncontextmenu="e => OpenContextMenu(e, item)">
+                <div class="nav_top @(actived ? "active":"")" @oncontextmenu="e => OpenContextMenu(e, item)">
                     <NavLink href="@item.RouteUrl" Match="NavLinkMatch.All">
                         <div style="display:flex;padding:0 5px 0 5px;align-items: center;">
                             <span>
                                 <SvgIcon IconName="@item.Icon" ClassName="top-link-icon"></SvgIcon>
                             </span>
                             <span @oncontextmenu:preventDefault>@Router.GetLocalizerString(item)</span>
-                            @if (item.IsActive && !item.Pin)
+                            @if (actived && !item.Pin)
                             {
                                 <span style="padding-left:5px;" @onclick="e => CloseTag(item)" @onclick:stopPropagation @onclick:preventDefault>
                                     X
