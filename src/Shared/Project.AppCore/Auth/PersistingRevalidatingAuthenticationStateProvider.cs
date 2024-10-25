@@ -9,8 +9,10 @@ using Project.Constraints;
 
 namespace Project.AppCore.Auth;
 
+// 使用AutoInject特性自动注入服务
 [AutoInject(Group = "SERVER", ServiceType = typeof(IAuthenticationStateProvider))]
 [AutoInject(Group = "SERVER", ServiceType = typeof(AuthenticationStateProvider))]
+// 类声明，继承自RevalidatingServerAuthenticationStateProvider并实现IAuthenticationStateProvider接口
 public sealed class PersistingRevalidatingAuthenticationStateProvider : RevalidatingServerAuthenticationStateProvider,
     IAuthenticationStateProvider
 {
@@ -35,42 +37,37 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
         }
     }
 
+    // 重写RevalidationInterval属性，设置验证间隔时间为30分钟
     protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(30);
 
+    // 提供当前用户信息的属性
     public UserInfo? Current => app.UserStore.UserInfo;
 
-    // public Task IdentifyUser(UserInfo info)
-    // {
-    //     throw new NotImplementedException();
-    // }
-
+    // 清除认证状态的方法
     public Task ClearState()
     {
-        //var t = Task.FromResult(new AuthenticationState(new(new ClaimsIdentity())));
-        //SetAuthenticationState(t);
-
-        //app.UserStore.ClearUser();
-        //await httpContextAccessor.HttpContext.SignOutAsync();
         var redirect = app.Navigator.ToBaseRelativePath(app.Navigator.Uri);
         app.Navigator.NavigateTo($"/api/account/logout?Redirect={HttpUtility.UrlEncode(redirect)}", true);
         return Task.CompletedTask;
     }
 
+    // 重写ValidateAuthenticationStateAsync方法，始终返回true
     protected override Task<bool> ValidateAuthenticationStateAsync(AuthenticationState authenticationState,
         CancellationToken cancellationToken)
     {
         return Task.FromResult(true);
     }
 
+    // 处理认证状态变化的事件处理方法
     private void OnAuthenticationStateChanged(Task<AuthenticationState> task)
     {
         authenticationStateTask = task;
     }
 
+    // 持久化认证状态的方法
     private async Task OnPersistingAsync()
     {
         if (authenticationStateTask is null)
-            //throw new UnreachableException($"Authentication state not set in {nameof(OnPersistingAsync)}().");
             return;
 
         var authenticationState = await authenticationStateTask;
@@ -83,6 +80,7 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
         }
     }
 
+    // 重写Dispose方法，释放资源
     protected override void Dispose(bool disposing)
     {
         subscription.Dispose();
