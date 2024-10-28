@@ -305,11 +305,14 @@ namespace Project.UI.AntBlazor
                 OkText = localizer[options.OkText ?? "CustomButtons.Ok"].Value,
                 CancelText = localizer[options.CancelText ?? "CustomButtons.Cancel"].Value,
                 Maximizable = true,
+                Draggable = true,
+                DragInViewport = true,
                 OnOk = e => options.OnOk?.Invoke(),
                 OnCancel = e => options.OnClose?.Invoke(),
             };
 
             if (options.Width != null) modal.Width = options.Width;
+            if (options.Top != null) modal.Style = $"top: {options.Top}";
             if (options.ShowFooter && options.Footer != null) modal.Footer = options.Footer;
             else if (!options.ShowFooter) modal.Footer = null;
 

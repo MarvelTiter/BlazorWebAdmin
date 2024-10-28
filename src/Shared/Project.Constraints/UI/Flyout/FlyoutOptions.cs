@@ -6,6 +6,7 @@ public class FlyoutOptions
 {
     public string? Title { get; set; }
     public string? Width { get; set; }
+    public string? Top { get; set; }
     public string? OkText { get; set; }
     public string? CancelText { get; set; }
     public Func<Task>? OnOk { get; set; }

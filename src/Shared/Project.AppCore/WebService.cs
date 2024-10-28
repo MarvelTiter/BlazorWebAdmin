@@ -35,24 +35,6 @@ namespace Project.AppCore
             }
         }
 
-        public static void AddDefaultLightOrm(this IHostApplicationBuilder builder, Action<ExpressionSqlOptions>? action = null)
-        {
-            var connStr = builder.Configuration.GetConnectionString("Sqlite")!;
-            builder.Services.AddLightOrm(option =>
-            {
-                option.UseSqlite(connStr);
-                option.SetWatcher(sql =>
-                {
-                    sql.DbLog = (s, p) =>
-                    {
-                        Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{s}\n");
-                    };
-                });
-
-                action?.Invoke(option);
-            });
-        }
-
         public static void UseProject(this IApplicationBuilder app)
         {
             app.UseMiddleware<CheckBrowserEnabledMiddleware>();
@@ -60,10 +42,10 @@ namespace Project.AppCore
             app.UseMiddleware<RedirectToLauchUrlMiddleware>();
             app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/download"), a => a.UseMiddleware<FileDownloaderMiddleware>());
             app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/ip.client"), a => a.UseMiddleware<GetClientIpMiddleware>());
-            app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api") 
-                && !ctx.Request.Path.StartsWithSegments("/api/download") 
-                && !ctx.Request.Path.StartsWithSegments("/api/svg") 
-                && !ctx.Request.Path.StartsWithSegments("/api/file") 
+            app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api")
+                && !ctx.Request.Path.StartsWithSegments("/api/download")
+                && !ctx.Request.Path.StartsWithSegments("/api/svg")
+                && !ctx.Request.Path.StartsWithSegments("/api/file")
                 && !ctx.Request.Path.StartsWithSegments("/api/hub")
                 && !ctx.Request.Path.StartsWithSegments("/api/account/login")
             , a => a.UseMiddleware<SetUserInfoMiddleware>());

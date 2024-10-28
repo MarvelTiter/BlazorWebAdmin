@@ -1,4 +1,6 @@
 using BlazorAdmin;
+using LightORM;
+using LightORM.Providers.Sqlite.Extensions;
 using MT.Toolkit.LogTool;
 using Project.AppCore;
 using Project.AppCore.Services;
@@ -44,9 +46,19 @@ builder.Logging.AddLocalFileLogger(config =>
 {
     config.LogFileSize = 1024 * 1024 * 5;
 });
-builder.AddDefaultLightOrm(options =>
+
+var connStr = builder.Configuration.GetConnectionString("Sqlite")!;
+builder.Services.AddLightOrm(option =>
 {
-    options.SetTableContext(new LightOrmTableContext());
+    option.UseSqlite(connStr);
+    option.SetTableContext(new LightOrmTableContext());
+    option.SetWatcher(sql =>
+    {
+        sql.DbLog = (s, p) =>
+        {
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{s}\n");
+        };
+    });
 });
 
 builder.Services.AutoInject();
