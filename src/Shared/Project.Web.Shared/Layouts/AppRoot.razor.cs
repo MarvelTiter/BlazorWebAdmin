@@ -4,18 +4,16 @@ using Microsoft.JSInterop;
 using Project.Web.Shared.Store;
 
 namespace Project.Web.Shared.Layouts;
-
 public partial class AppRoot : IAsyncDisposable
 {
     private readonly List<IAddtionalInterceptor> initActions = [];
+    private bool loading = true;
     [Inject] [NotNull] private IAppSession? Context { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter, NotNull] public Type? DefaultLayout { get; set; }
     [Inject] [NotNull] private IServiceProvider? Services { get; set; }
     [Inject] [NotNull] private IProjectSettingService? SettingService { get; set; }
-    [Inject] [NotNull] private IJSRuntime? Js { get; set; }
     [Inject] [NotNull] private IProtectedLocalStorage? LocalStorage { get; set; }
-
     public ValueTask DisposeAsync()
     {
         Context.RouterStore.RouterChangingEvent -= SettingService.RouterChangingAsync;
@@ -37,7 +35,7 @@ public partial class AppRoot : IAsyncDisposable
 
     protected override void OnInitialized()
     {
-        base.OnInitialized();
+        Context.OnLoadedAsync += Context_OnLoadedAsync;
         Context.RouterStore.RouterChangingEvent += SettingService.RouterChangingAsync;
         Context.RouterStore.RouteMetaFilterEvent += SettingService.RouteMetaFilterAsync;
         Context.LoginSuccessEvent += SettingService.LoginSuccessAsync;
@@ -53,6 +51,14 @@ public partial class AppRoot : IAsyncDisposable
             Context.LoginSuccessEvent += additional.LoginSuccessAsync;
             Context.WebApplicationAccessedEvent += additional.AfterWebApplicationAccessedAsync;
         }
+        base.OnInitialized();
+    }
+
+    private Task Context_OnLoadedAsync()
+    {
+        Context.OnLoadedAsync -= Context_OnLoadedAsync;
+        loading = false;
+        return InvokeAsync(StateHasChanged);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -60,10 +66,6 @@ public partial class AppRoot : IAsyncDisposable
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            //Context.Navigator.NavigateTo("/test4");
-            // var c = await Js.InvokeUtilsAsync<string[]>("getClient");
-            // Context.UserStore.Ip = c[0];
-            // Context.UserStore.UserAgent = c[1];
             await Context.NotifyWebApplicationAccessedAsync();
             var app = await LocalStorage.GetAsync<AppStore>(ConstraintString.APP_STORE_KEY);
             if (app.Success) Context.AppStore.ApplySetting(app.Value);

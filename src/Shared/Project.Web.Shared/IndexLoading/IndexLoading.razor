@@ -1,0 +1,14 @@
+﻿@namespace Project.Web.Shared.Components
+@if (Loading)
+{
+
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+        <div class="load_title">@Title</div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Loading { get; set; }
+    [Parameter] public string Title { get; set; } = "正在加载，请耐心等待!";
+}

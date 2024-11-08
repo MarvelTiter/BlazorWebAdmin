@@ -6,11 +6,14 @@ namespace Project.Web.Shared;
 public class CustomSetting : BasicSetting, IProjectSettingService
 {
     private readonly IWatermarkServiceFactory watermarkServiceFactory;
+    private readonly IUserStore userStore;
 
     public CustomSetting(IWatermarkServiceFactory watermarkServiceFactory
+        , IUserStore userStore
         , IServiceProvider services) : base(services)
     {
         this.watermarkServiceFactory = watermarkServiceFactory;
+        this.userStore = userStore;
     }
 
     public override Task LoginSuccessAsync(UserInfo result)
@@ -19,6 +22,7 @@ public class CustomSetting : BasicSetting, IProjectSettingService
         return base.LoginSuccessAsync(result);
     }
 
+    private UserInfo? CurrentUser => userStore.UserInfo;
     public override Task AfterWebApplicationAccessed()
     {
         var service = watermarkServiceFactory.GetWatermarkService();

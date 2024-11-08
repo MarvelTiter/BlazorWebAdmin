@@ -9,6 +9,8 @@ namespace Project.Web.Shared.Store
         , IUserStore userStore
         , IUIService ui) : IAppSession
     {
+        private bool webAccessedDone;
+        private bool loginEventDone;
         //private readonly IServiceProvider provider = provider;
         public NavigationManager Navigator { get; } = navigationManager;
         public IAppStore AppStore { get; } = appStore;
@@ -18,23 +20,45 @@ namespace Project.Web.Shared.Store
         public IUIService UI { get; } = ui;
         public Action? Update { get; set; }
 
+        public event Func<Task>? OnLoadedAsync;
+
         public event Func<Task>? WebApplicationAccessedEvent;
-        public Task NotifyWebApplicationAccessedAsync()
+        public async Task NotifyWebApplicationAccessedAsync()
         {
             if (WebApplicationAccessedEvent != null)
             {
-                return WebApplicationAccessedEvent();
+                foreach (Func<Task> item in WebApplicationAccessedEvent.GetInvocationList().Cast<Func<Task>>())
+                {
+                    await item.Invoke();
+                }
+                //await WebApplicationAccessedEvent.Invoke();
             }
-            return Task.CompletedTask;
+            webAccessedDone = true;
+            await InvokeInit();
         }
 
         public event Func<UserInfo, Task>? LoginSuccessEvent;
 
-        public Task NotifyLoginSuccessAsync()
+        public async Task NotifyLoginSuccessAsync()
         {
             if (LoginSuccessEvent != null)
             {
-                return LoginSuccessEvent(UserStore.UserInfo!);
+                // TODO 等待异步事件
+                foreach (Func<UserInfo, Task> item in LoginSuccessEvent.GetInvocationList().Cast<Func<UserInfo, Task>>())
+                {
+                    await item.Invoke(UserStore.UserInfo!);
+                }
+                //await LoginSuccessEvent.Invoke(UserStore.UserInfo!);
+            }
+            loginEventDone = true;
+            await InvokeInit();
+        }
+
+        private Task InvokeInit()
+        {
+            if (loginEventDone && webAccessedDone)
+            {
+                return OnLoadedAsync?.Invoke() ?? Task.CompletedTask;
             }
             return Task.CompletedTask;
         }

@@ -9,6 +9,7 @@ public interface IAppSession
 {
     event Func<Task>? WebApplicationAccessedEvent;
     event Func<UserInfo, Task>? LoginSuccessEvent;
+    event Func<Task>? OnLoadedAsync;
     NavigationManager Navigator { get; }
     IAppStore AppStore { get; }
     //IAuthenticationStateProvider AuthenticationStateProvider { get; }
