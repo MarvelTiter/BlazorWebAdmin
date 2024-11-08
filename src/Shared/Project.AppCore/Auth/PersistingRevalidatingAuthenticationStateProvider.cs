@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http;
 using Project.Constraints;
+using Project.Constraints.Store;
 
 namespace Project.AppCore.Auth;
 
@@ -16,24 +17,27 @@ namespace Project.AppCore.Auth;
 public sealed class PersistingRevalidatingAuthenticationStateProvider : RevalidatingServerAuthenticationStateProvider,
     IAuthenticationStateProvider
 {
-    private readonly IAppSession app;
+    private readonly IUserStore userStore;
+    private readonly NavigationManager navigation;
     private readonly PersistentComponentState state;
     private readonly PersistingComponentStateSubscription subscription;
     private Task<AuthenticationState>? authenticationStateTask;
 
     public PersistingRevalidatingAuthenticationStateProvider(ILoggerFactory loggerFactory
         , PersistentComponentState persistentComponentState
-        , IAppSession app
+        , IUserStore userStore
+        , NavigationManager navigation
         , IHttpContextAccessor httpContextAccessor) : base(loggerFactory)
     {
         state = persistentComponentState;
-        this.app = app;
+        this.userStore = userStore;
+        this.navigation = navigation;
         AuthenticationStateChanged += OnAuthenticationStateChanged;
         subscription = state.RegisterOnPersisting(OnPersistingAsync, RenderMode.InteractiveWebAssembly);
         if (httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true)
         {
             var u = httpContextAccessor.HttpContext.User.GetUserInfo();
-            app.UserStore.SetUser(u);
+            userStore.SetUser(u);
         }
     }
 
@@ -41,13 +45,13 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
     protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(30);
 
     // 提供当前用户信息的属性
-    public UserInfo? Current => app.UserStore.UserInfo;
+    public UserInfo? Current => userStore.UserInfo;
 
     // 清除认证状态的方法
     public Task ClearState()
     {
-        var redirect = app.Navigator.ToBaseRelativePath(app.Navigator.Uri);
-        app.Navigator.NavigateTo($"/api/account/logout?Redirect={HttpUtility.UrlEncode(redirect)}", true);
+        var redirect = navigation.ToBaseRelativePath(navigation.Uri);
+        navigation.NavigateTo($"/api/account/logout?Redirect={HttpUtility.UrlEncode(redirect)}", true);
         return Task.CompletedTask;
     }
 

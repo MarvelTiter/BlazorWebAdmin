@@ -11,7 +11,9 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
         Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
 
     // 应用会话接口，用于获取用户信息
-    private readonly IAppSession appSession;
+    private readonly IUserStore  userStore;
+    private readonly NavigationManager navigation;
+
     // 身份验证状态任务，初始为未认证状态
     private readonly Task<AuthenticationState> authenticationStateTask = defaultUnauthenticatedTask;
     // 日志记录接口，用于记录身份验证信息
@@ -19,33 +21,32 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
 
     // 构造函数，初始化PersistentAuthenticationStateProvider
     public PersistentAuthenticationStateProvider(PersistentComponentState state
-        , IAppSession appSession
+        , IUserStore userStore
+        , NavigationManager navigation
         , ILogger<IAuthenticationStateProvider> logger)
     {
-        this.appSession = appSession;
+        this.userStore = userStore;
+        this.navigation = navigation;
         this.logger = logger;
 
         // 从持久化状态中获取用户信息，如果存在，则设置用户信息并更新认证状态
         if (!state.TryTakeFromJson<UserInfo>(nameof(UserInfo), out var u) || u is null) return;
-        UserStore.SetUser(u);
+        userStore.SetUser(u);
         authenticationStateTask = Task.FromResult(new AuthenticationState(BuildClaims(u)));
     }
-
-    // 用户存储属性，用于获取当前用户信息
-    private IUserStore UserStore => appSession.UserStore;
 
     // 清除认证状态的方法，包括清除用户信息和执行登出重定向
     public Task ClearState()
     {
         //appSession.UserStore.ClearUser();
         //await httpContextAccessor.HttpContext.SignOutAsync();
-        var redirect = appSession.Navigator.ToBaseRelativePath(appSession.Navigator.Uri);
-        appSession.Navigator.NavigateTo($"/api/account/logout?Redirect={HttpUtility.UrlEncode(redirect)}", true);
+        var redirect = navigation.ToBaseRelativePath(navigation.Uri);
+        navigation.NavigateTo($"/api/account/logout?Redirect={HttpUtility.UrlEncode(redirect)}", true);
         return Task.CompletedTask;
     }
 
     // 获取当前用户信息的方法
-    public UserInfo? Current => UserStore.UserInfo;
+    public UserInfo? Current => userStore.UserInfo;
 
     // 获取当前认证状态的方法
     public override Task<AuthenticationState> GetAuthenticationStateAsync()
