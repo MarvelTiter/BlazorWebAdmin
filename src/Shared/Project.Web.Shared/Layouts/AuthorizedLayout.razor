@@ -6,6 +6,8 @@
 <div @onclick="@HandleRootClick"
      @onkeydown="@HandleKeyDownAction"
      @onkeyup="@HandleKeyUpAction"
+     id="app"
+     class="dark"
      tabindex="0"
      @ref="RootWrapper">
     @* <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
