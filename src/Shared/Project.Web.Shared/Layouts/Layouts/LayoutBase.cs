@@ -22,7 +22,10 @@ public class LayoutBase : BasicComponent
     {
         App.Collapsed = newState;
         SideBar?.ToggleCollapse();
-        await Storage.SetAsync(ConstraintString.APP_STORE_KEY, App);
+        if (Context.Loaded)
+        {
+            await Storage.SetAsync(ConstraintString.APP_STORE_KEY, App);
+        }
     }
 
     //public void UpdateCollapse(bool state)

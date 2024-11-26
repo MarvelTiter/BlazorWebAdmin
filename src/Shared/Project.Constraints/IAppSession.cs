@@ -11,6 +11,7 @@ public interface IAppSession
     event Func<UserInfo, Task>? LoginSuccessEvent;
     event Func<Task>? OnLoadedAsync;
     NavigationManager Navigator { get; }
+    public bool Loaded { get; set; }
     IAppStore AppStore { get; }
     //IAuthenticationStateProvider AuthenticationStateProvider { get; }
     IRouterStore RouterStore { get; }

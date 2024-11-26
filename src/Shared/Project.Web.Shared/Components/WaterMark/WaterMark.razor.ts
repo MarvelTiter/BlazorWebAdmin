@@ -71,6 +71,13 @@ function createDiv(): HTMLElement {
     return d;
 }
 
+function getFontColor(color: string) {
+    if (color) return color;
+    const cssParameters = getComputedStyle(document.documentElement)
+    const value = cssParameters.getPropertyValue('--watermark-color')
+    return value
+}
+
 function drawMask({
     top,
     width,
@@ -111,6 +118,7 @@ function drawMask({
     let fontWeight = 'normal';
     let textAlign: CanvasTextAlign = 'start';
     let fontStyle = 'normal';
+    const color = getFontColor(fontColor)
     const markSize = Number(fontSize) * ratio;
     for (var i = 0; i < contents.length; i++) {
         let text = contents[i];
@@ -118,7 +126,7 @@ function drawMask({
         ctx.font = `${fontStyle} normal ${fontWeight} ${markSize}px/${markHeight}px ${fontFamily}`;
         ctx.textAlign = textAlign;
         ctx.textBaseline = 'top';
-        ctx.fillStyle = fontColor;
+        ctx.fillStyle = color;
         ctx.fillText(text, 0, top * ratio);
     }
     return canvas.toDataURL();

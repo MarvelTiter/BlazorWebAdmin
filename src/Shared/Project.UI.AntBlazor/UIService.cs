@@ -38,7 +38,12 @@ namespace Project.UI.AntBlazor
         // private readonly INotificationService notificationService = notificationService;
 
         public IServiceProvider ServiceProvider { get; } = services;
+        public string MainStyle()
+        {
+            throw new NotImplementedException();
+        }
 
+        public string DarkStyle() => "_content/AntDesign/css/ant-design-blazor.dark.css";
         public IBindableInputComponent<DefaultProp, string> BuildInput(object reciver)
         {
             return new BindableComponentBuilder<Input<string>, DefaultProp, string>() { Receiver = reciver };

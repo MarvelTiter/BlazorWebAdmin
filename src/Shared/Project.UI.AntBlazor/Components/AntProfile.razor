@@ -1,7 +1,8 @@
 <Popover Trigger="@(new AntDesign.Trigger[] { AntDesign.Trigger.Click})">
     <ChildContent>
-        <div style="display: flex;height: 100%;padding: 0 10px;align-items: center; cursor: pointer;user-select: none;color: #000;">
-            <img style="box-sizing: border-box;height: 25px;width: 25px;border-radius: 50%;" src="/_content/Project.Web.Shared/assets/avator.png" />
+        <div style="display: flex;height: 100%;padding: 0 10px;align-items: center; cursor: pointer;user-select: none;">
+            @* <img style="box-sizing: border-box;height: 25px;width: 25px;border-radius: 50%;" src="/_content/Project.Web.Shared/assets/avator.png" /> *@
+            <SvgIcon IconName="user"></SvgIcon>
             <span style="padding-left: 6px;white-space: nowrap;">@User.UserInfo?.UserName</span>
         </div>
     </ChildContent>

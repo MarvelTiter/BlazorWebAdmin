@@ -4,16 +4,15 @@
     height: 100%;
     margin-left: auto;
     overflow: hidden;
+    background-color: var(--background-color);
 }
 
 
     .nav-menu.card {
-        background-color: #fff;
         border-radius: 4px;
-        box-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
+        box-shadow: var(--border-shadow);
     }
 
     .nav-menu.line {
-        background-color: #fff;
         padding-left: 16px;
     }
