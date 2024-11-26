@@ -19,6 +19,7 @@ namespace Project.Web.Shared.Store
         public IUserStore UserStore { get; } = userStore;
         public IUIService UI { get; } = ui;
         public Action? Update { get; set; }
+        public bool Loaded { get; set; }
 
         public event Func<Task>? OnLoadedAsync;
 

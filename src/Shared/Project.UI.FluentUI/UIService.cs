@@ -26,6 +26,15 @@ public class UIService(
     IServiceProvider services
 ) : IUIService
 {
+    public string MainStyle()
+    {
+        throw new NotImplementedException();
+    }
+
+    public string DarkStyle()
+    {
+        throw new NotImplementedException();
+    }
     public void Message(MessageType type, string message)
     {
         switch (type)
@@ -396,4 +405,6 @@ public class UIService(
     {
         return collapsed ? 42 : 240;
     }
+
+    
 }

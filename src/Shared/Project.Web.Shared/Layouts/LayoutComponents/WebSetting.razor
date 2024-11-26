@@ -1,6 +1,7 @@
 ﻿@using System.Diagnostics.CodeAnalysis;
 @using Project.Constraints.Store.Models
 @using Project.Web.Shared.ComponentHelper
+@using Project.Web.Shared.Utils
 @inherits BasicComponent
 <MCard Title="页面布局">
     <div style="display:flex;">
@@ -28,8 +29,19 @@
         </div>
     </div>
 </MCard>
+
+<MCard Title="主题设置">
+    <div>
+        @(UI.BuildRadioGroup<ThemeMode, ThemeMode>(this, modes)
+                    .LabelExpression(i => FormatLabel(i))
+                    .ValueExpression(i => i)
+                    .Bind(() => DarkMode)
+                    .Render())
+    </div>
+</MCard>
 @code {
     [Inject, NotNull] IProtectedLocalStorage? Storage { get; set; }
+    [Inject, NotNull] IJSRuntime? Js { get; set; }
     LayoutMode Mode
     {
         get => App.Mode ?? LayoutMode.Classic;
@@ -41,9 +53,37 @@
             SaveSetting();
         }
     }
+    ThemeMode[] modes = [ThemeMode.Light, ThemeMode.Dark, ThemeMode.OS];
+    ThemeMode DarkMode
+    {
+        get => App.Theme;
+        set
+        {
+            App.Theme = value;
+            Context.Update?.Invoke();
+            ChangeTheme(value);
+            SaveSetting();
+        }
+    }
+
     async void SaveSetting()
     {
         await Storage.SetAsync(ConstraintString.APP_STORE_KEY, App);
     }
 
+    async void ChangeTheme(ThemeMode theme)
+    {
+        await Js.InvokeUtilsAsync("setTheme", $"{theme}".ToLower(), Context.UI.DarkStyle());
+    }
+
+    static string FormatLabel(ThemeMode theme)
+    {
+        return theme switch
+        {
+            ThemeMode.Light => "亮色",
+            ThemeMode.Dark => "暗色",
+            ThemeMode.OS => "跟随系统",
+            _ => ""
+        };
+    }
 }

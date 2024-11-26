@@ -6,6 +6,7 @@
 <div @onclick="@HandleRootClick"
      @onkeydown="@HandleKeyDownAction"
      @onkeyup="@HandleKeyUpAction"
+     id="app"
      tabindex="0"
      @ref="RootWrapper">
     @* <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
@@ -20,6 +21,7 @@
                     @* <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken"> *@
                     @* </ActionWatcher> *@
                     @Body
+                    <IndexLoading Loading="@(!AppSession.Loaded)" Title="正在初始化..."></IndexLoading>
                 </ActionWatcher>
             </Authorized>
             <NotAuthorized>

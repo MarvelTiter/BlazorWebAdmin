@@ -2,16 +2,17 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
 using Project.Web.Shared.Store;
+using Project.Web.Shared.Utils;
 
 namespace Project.Web.Shared.Layouts;
 public partial class AppRoot : IAsyncDisposable
 {
     private readonly List<IAddtionalInterceptor> initActions = [];
-    private bool loading = true;
     [Inject] [NotNull] private IAppSession? Context { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter, NotNull] public Type? DefaultLayout { get; set; }
     [Inject] [NotNull] private IServiceProvider? Services { get; set; }
+    [Inject] [NotNull] private IJSRuntime? Js { get; set; }
     [Inject] [NotNull] private IProjectSettingService? SettingService { get; set; }
     [Inject] [NotNull] private IProtectedLocalStorage? LocalStorage { get; set; }
     public ValueTask DisposeAsync()
@@ -57,7 +58,7 @@ public partial class AppRoot : IAsyncDisposable
     private Task Context_OnLoadedAsync()
     {
         Context.OnLoadedAsync -= Context_OnLoadedAsync;
-        loading = false;
+        Context.Loaded = true;
         return InvokeAsync(StateHasChanged);
     }
 
@@ -68,7 +69,11 @@ public partial class AppRoot : IAsyncDisposable
         {
             await Context.NotifyWebApplicationAccessedAsync();
             var app = await LocalStorage.GetAsync<AppStore>(ConstraintString.APP_STORE_KEY);
-            if (app.Success) Context.AppStore.ApplySetting(app.Value);
+            if (app.Success)
+            {
+                Context.AppStore.ApplySetting(app.Value);
+                await Js.InvokeUtilsAsync("setTheme", $"{app.Value!.Theme}".ToLower(), Context.UI.DarkStyle());
+            }
         }
     }
 }

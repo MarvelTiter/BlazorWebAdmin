@@ -8,19 +8,19 @@
 
 /*经典布局*/
 .classic {
-    background: #fff;
+    background: var(--side-bar-bg);
     height: 100vh;
-    box-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
+    box-shadow: var(--border-shadow);
     overflow: hidden;
     transition: width .3s ease;
 }
 
 /*卡片式布局*/
 .card {
-    background: #fff;
-    margin: 16px 0 16px 16px;
+    background: var(--side-bar-bg);
+    margin: 16px 1px 16px 16px;
     height: calc(100vh - 32px);
-    box-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
+    box-shadow: var(--border-shadow);
     border-radius: 4px;
     overflow: hidden;
     transition: width .3s ease;
