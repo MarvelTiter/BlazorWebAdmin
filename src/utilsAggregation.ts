@@ -1,4 +1,4 @@
-
+import  { setTheme }  from './themeManager.ts'
 function closeWin() {
     window.close()
 }
@@ -29,43 +29,7 @@ async function getClient() {
     return [ip, navigator.userAgent]
 }
 
-function setDarkStyleSheet(href: string) {
-    const link: HTMLLinkElement = document.querySelector('link[data-dark]')!
-    if (link) {
-        link.href = href
-    }
-    //document.head.appendChild(link)
-}
 
-function removeDarkStyleSheet(href: string) {
-    for (const link of document.querySelectorAll('link')) {
-        if (link.getAttribute('href')?.match(href)) {
-            link.removeAttribute('href')
-            break;
-        }
-    }
-}
-
-function setTheme(theme: string, url: string) {
-    if (theme === 'os') {
-        followOsTheme(url)
-    } else {
-        changeTheme(theme, url)
-    }
-}
-
-function changeTheme(theme: string, url: string) {
-    document.documentElement.dataset.theme = theme
-    if (theme === 'dark') {
-        setDarkStyleSheet(url)
-    } else {
-        removeDarkStyleSheet(url)
-    }
-}
-
-function followOsTheme(url: string) {
-
-}
 
 export default {
     closeWin,

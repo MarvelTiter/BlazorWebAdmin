@@ -1,0 +1,38 @@
+@using Project.Web.Shared.Utils
+@inherits JsComponentBase
+<div>
+    @(UI.BuildRadioGroup<ThemeMode, ThemeMode>(this, modes)
+        .LabelExpression(i => FormatLabel(i))
+        .ValueExpression(i => i)
+        .Bind(() => Current, NotifyChanged)
+        .Render())
+</div>
+
+@code {
+    readonly ThemeMode[] modes = [ThemeMode.Light, ThemeMode.Dark, ThemeMode.OS];
+    [Parameter] public ThemeMode Current { get; set; }
+    [Parameter] public EventCallback<ThemeMode> OnThemeChanged { get; set; }
+
+    private async Task NotifyChanged()
+    {
+        if (OnThemeChanged.HasDelegate)
+        {
+            await OnThemeChanged.InvokeAsync(Current);
+        }
+
+        await Js.InvokeUtilsAsync("setTheme", $"{Current}".ToLower(), Context.UI.DarkStyle());
+    }
+
+
+    static string FormatLabel(ThemeMode theme)
+    {
+        return theme switch
+        {
+            ThemeMode.Light => "亮色",
+            ThemeMode.Dark => "暗色",
+            ThemeMode.OS => "跟随系统",
+            _ => ""
+        };
+    }
+
+}

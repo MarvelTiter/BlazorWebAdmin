@@ -1,0 +1,31 @@
+@using Project.Constraints.Store.Models
+<div style="display:flex;">
+    <div class="layout-type" @onclick="@(async _ => await NotifyChanged(LayoutMode.Classic))">
+        <div style="width: 15px;height: 100%;background: #ccc;">
+        </div>
+        <div style="display:flex;flex-direction:column;flex: 1;">
+            <div style="width: 100%;height: 5px;background: #c0c0c0;"></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="layout-type" @onclick="@(async _ => await NotifyChanged(LayoutMode.Card))">
+        <div style="width: 15px;height: 94%;background: #ccc;margin: 2px 0px 2px 2px;">
+        </div>
+        <div style="display:flex;flex-direction:column;flex: 1;">
+            <div style="width: 97%;height: 5px;background: #c0c0c0;margin-top: 2px;margin-left: 2px;"></div>
+            <div></div>
+        </div>
+    </div>
+    <div class="layout-type" @onclick="@(async _ => await NotifyChanged(LayoutMode.Line))">
+        <div style="display:flex;flex-direction:column;flex: 1;">
+            <div style="width: 100%;height: 5px;background: #c0c0c0;"></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback<LayoutMode> OnLayoutChanged { get; set; }
+
+    private  Task NotifyChanged(LayoutMode mode) => !OnLayoutChanged.HasDelegate ? Task.CompletedTask : OnLayoutChanged.InvokeAsync(mode);
+}
