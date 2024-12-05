@@ -26,15 +26,11 @@ public class UIService(
     IServiceProvider services
 ) : IUIService
 {
-    public string MainStyle()
-    {
-        throw new NotImplementedException();
-    }
+    public string MainStyle() => string.Empty;
 
-    public string DarkStyle()
-    {
-        throw new NotImplementedException();
-    }
+    public string DarkStyle() => string.Empty;
+
+    public string UIFrameworkJs() => "_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js";
     public void Message(MessageType type, string message)
     {
         switch (type)
@@ -343,7 +339,7 @@ public class UIService(
 
     public RenderFragment BuildLoginForm(Func<LoginFormModel, Task> handleLogin)
     {
-        return b => b.AddContent(1, "NotImplemented");
+        return b => b.Component<FluentLogin>().SetComponent(c => c.HandleLogin, handleLogin).Build();
     }
 
     public IBindableInputComponent<DefaultProp, string[]> BuildTree<TData>(object revicer, TreeOptions<TData> options)

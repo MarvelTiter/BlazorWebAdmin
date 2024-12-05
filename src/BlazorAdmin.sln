@@ -26,10 +26,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypeScriptPackup", "TypeScr
 	ProjectSection(SolutionItems) = preProject
 		main.ts = main.ts
 		package.json = package.json
+		themeManager.ts = themeManager.ts
 		tsconfig.json = tsconfig.json
 		tsup.config.ts = tsup.config.ts
 		utilsAggregation.ts = utilsAggregation.ts
-		themeManager.ts = themeManager.ts
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorAdmin.Client", "BlazorAdmin.Client\BlazorAdmin.Client.csproj", "{1D658FD0-24FE-4F9A-9C25-8CCA537BB3AD}"

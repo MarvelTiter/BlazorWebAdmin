@@ -69,6 +69,7 @@ public interface IUIService
 {
     string MainStyle();
     string DarkStyle();
+    string UIFrameworkJs();
     void Message(MessageType type, string message);
     void Notify(MessageType type, string title, string message);
     void Alert(MessageType type, string title, string message);

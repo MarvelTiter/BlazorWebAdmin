@@ -5,7 +5,6 @@ namespace Project.Web.Shared.Pages;
 public partial class Dashboard
 {
     private Type? homeType;
-    private bool IsWasm;
     [Inject] [NotNull] private IPageLocatorService? Locator { get; set; }
 
     private Task Update()
@@ -24,12 +23,6 @@ public partial class Dashboard
         homeType = Locator.GetDashboardType();
     }
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-        IsWasm = OperatingSystem.IsBrowser();
-    }
-
     private RenderFragment CurrentRenderMode()
     {
 #if DEBUG
@@ -37,9 +30,9 @@ public partial class Dashboard
         return b => b.Span().AddContent(s =>
         {
             s.AddContent(0, "RenderMode: ");
-            s.AddContent(1, IsWasm ? "WebAssembly" : "Server");
-            s.AddContent(2,
-                UI.BuildButton(this).OnClick(() => IsWasm = OperatingSystem.IsBrowser()).Text("刷新").Render());
+            s.AddContent(1, RendererInfo.Name);
+            s.AddContent(2, UI.BuildButton(this).OnClick(StateHasChanged).Text("刷新").Render());
+            
         }).Build();
 #else
         return b => b.Span().Build();

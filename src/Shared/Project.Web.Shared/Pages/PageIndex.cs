@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Project.Constraints.Common.Attributes;
 using Project.Constraints.PageHelper;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Project.Web.Shared.Pages
 {
-    
+
     public abstract class SystemPageIndex : ComponentBase, IPageAction
     {
         [Inject, NotNull] IProjectSettingService? SettingProvider { get; set; }

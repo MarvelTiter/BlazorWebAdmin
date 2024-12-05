@@ -10,6 +10,7 @@ using Project.Constraints;
 using Project.Web.Shared;
 using Project.Web.Shared.Locales.Extensions;
 using System.Data.SQLite;
+using Microsoft.AspNetCore.Routing;
 
 namespace Project.AppCore
 {
@@ -35,10 +36,9 @@ namespace Project.AppCore
             }
         }
 
-        public static void UseProject(this IApplicationBuilder app)
+        public static void UseProject(this WebApplication app)
         {
             app.UseMiddleware<CheckBrowserEnabledMiddleware>();
-            app.UseStaticFiles();
             app.UseMiddleware<RedirectToLauchUrlMiddleware>();
             app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/download"), a => a.UseMiddleware<FileDownloaderMiddleware>());
             app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/ip.client"), a => a.UseMiddleware<GetClientIpMiddleware>());
