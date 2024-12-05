@@ -195,7 +195,7 @@ public class RouterStore : StoreBase, IRouterStore
         var homeTag = new TagRoute
         {
             RouteUrl = "/",
-            RouteId = "Dashboard",
+            RouteId = "Home",
             RouteTitle = "主页",
             Icon = "home",
             Pin = true,
@@ -214,7 +214,7 @@ public class RouterStore : StoreBase, IRouterStore
             Menus.Clear();
             Menus.Add(new()
             {
-                RouteId = "Dashboard",
+                RouteId = "Home",
                 RouteUrl = "/",
                 Icon = "home",
                 Group = "ROOT",

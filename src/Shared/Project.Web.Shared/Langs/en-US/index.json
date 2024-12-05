@@ -88,10 +88,10 @@
     "OnlineUsers": "Online Users",
     "BasicSetting": "Setting",
     "Setting": "SysSetting",
-    "User": "Users",
-    "RolePermission": "Role Permission",
-    "Permission": "Permissions",
-    "OperationLog": "Operation Log"
+    "UserIndex": "Users",
+    "RolePermissionIndex": "Role Permission",
+    "PermissionIndex": "Permissions",
+    "RunLogIndex": "Operation Log"
   },
   "TableOptions": {
     "TableButtons": {

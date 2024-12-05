@@ -5,7 +5,6 @@ using MT.Toolkit.LogTool;
 using Project.AppCore;
 using Project.AppCore.Services;
 using Project.Constraints;
-using Project.UI.AntBlazor;
 using Project.Web.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +17,7 @@ builder.Services.AddRazorComponents()
     })
     .AddInteractiveWebAssemblyComponents();
 
-Extensions.AddAntDesignUI(builder.Services);
+Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
 //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 //builder.Services.AddAntDesignUI();
 //builder.Services.AddFluentUI();
@@ -27,8 +26,8 @@ builder.AddServerProject(setting =>
     setting.App.Id = "Test";
     setting.App.Name = "Demo";
     setting.App.Company = "Marvel";
-    // 配置 IProjectSettingService和IAuthService
-    // 默认分别为BasicSetting和DefaultAuthenticationService
+    // 閰嶇疆 IProjectSettingService鍜孖AuthService
+    // 榛樿鍒嗗埆涓築asicSetting鍜孌efaultAuthenticationService
     //setting.ConfigureSettingProviderType<CustomSetting>();
     //setting.ConfigureAuthService<DefaultAuthenticationService>();
 
@@ -72,7 +71,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", true);
     app.UseWebAssemblyDebugging();
 }
-
+app.MapStaticAssets();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

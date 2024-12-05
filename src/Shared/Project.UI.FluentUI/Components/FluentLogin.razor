@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Localization
+@using Project.Constraints.Models
+@using Project.Constraints.Utils
+<EditForm Model="LoginModel" OnSubmit="DoLogin" FormName="login" Enhance>
+    <div>
+        <FluentTextField @bind-Value="@LoginModel.UserName" placeholder="@Localizer["Login.Placeholder.UserName"].Value" type="text" tabindex="1">
+            <FluentIcon Value="@(new Icons.Regular.Size16.Person())" Slot="start" />
+        </FluentTextField>
+    </div>
+    <div>
+        <FluentTextField TextFieldType="TextFieldType.Password" @bind-Value="LoginModel.Password" placeholder="@Localizer["Login.Placeholder.Password"].Value" tabindex="2">
+            <FluentIcon Value="@(new Icons.Regular.Size16.LockClosed())" Slot="start" />
+        </FluentTextField>
+    </div>
+    <div>
+        <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit">
+            @Localizer["Login.Buttons.Login"]
+        </FluentButton>
+    </div>
+</EditForm>
+
+@code {
+
+    [Inject, NotNull] IStringLocalizer? Localizer { get; set; }
+    [SupplyParameterFromForm] public LoginFormModel LoginModel { get; set; } = new();
+    [Parameter, NotNull] public Func<LoginFormModel, Task>? HandleLogin { get; set; }
+
+    bool loading = false;
+
+    private async Task DoLogin()
+    {
+        using var _ = BooleanStatusManager.New(b => loading = b);
+        // await Task.Yield();
+        if (HandleLogin != null)
+        {
+            await HandleLogin.Invoke(LoginModel);
+        }
+    }
+}
