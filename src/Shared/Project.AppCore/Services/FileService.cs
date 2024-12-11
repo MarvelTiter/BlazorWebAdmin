@@ -23,7 +23,7 @@ namespace Project.AppCore.Services
             {
                 return path;
             }
-            return $"{path}?v={fi.LastWriteTime:yyMMddHHmmss}";
+            return $"{path}?v={fi.LastWriteTimeUtc:yyMMddHHmmssfff}";
         }
 
         public Task<string> GetStaticFileWithVersionAsync(string path)

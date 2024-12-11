@@ -71,7 +71,6 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", true);
     app.UseWebAssemblyDebugging();
 }
-app.MapStaticAssets();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();

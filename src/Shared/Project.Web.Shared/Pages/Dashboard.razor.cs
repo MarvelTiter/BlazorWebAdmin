@@ -5,7 +5,7 @@ namespace Project.Web.Shared.Pages;
 public partial class Dashboard
 {
     private Type? homeType;
-    [Inject] [NotNull] private IPageLocatorService? Locator { get; set; }
+    [Inject][NotNull] private IPageLocatorService? Locator { get; set; }
 
     private Task Update()
     {
@@ -22,7 +22,7 @@ public partial class Dashboard
         base.OnInitialized();
         homeType = Locator.GetDashboardType();
     }
-
+    string RenderMode => OperatingSystem.IsBrowser() ? "WebAssembly" : "Server";
     private RenderFragment CurrentRenderMode()
     {
 #if DEBUG
@@ -30,9 +30,9 @@ public partial class Dashboard
         return b => b.Span().AddContent(s =>
         {
             s.AddContent(0, "RenderMode: ");
-            s.AddContent(1, RendererInfo.Name);
+            s.AddContent(1, RenderMode);
             s.AddContent(2, UI.BuildButton(this).OnClick(StateHasChanged).Text("刷新").Render());
-            
+
         }).Build();
 #else
         return b => b.Span().Build();

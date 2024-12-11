@@ -39,6 +39,7 @@ namespace Project.AppCore
         public static void UseProject(this WebApplication app)
         {
             app.UseMiddleware<CheckBrowserEnabledMiddleware>();
+            app.UseStaticFiles();
             app.UseMiddleware<RedirectToLauchUrlMiddleware>();
             app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/download"), a => a.UseMiddleware<FileDownloaderMiddleware>());
             app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/ip.client"), a => a.UseMiddleware<GetClientIpMiddleware>());

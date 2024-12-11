@@ -5,6 +5,7 @@
 @using Project.Constraints.Store.Models
 @using Project.Constraints.UI
 @using Project.Web.Shared.Components
+@using Project.AppCore
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,12 +13,15 @@
     <meta charset="utf-8" no-antblazor-js no-antblazor-css />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
-    <link href="@Assets[UIService.MainStyle()]" rel="stylesheet">
+    @* <link href="@Assets[UIService.MainStyle()]" rel="stylesheet"> *@
+    <VLink Href="@UIService.MainStyle()"></VLink>
     <link data-dark rel="stylesheet">
-    <script src="@Assets[UIService.UIFrameworkJs()]"></script>
-
-    <link href="@Assets["app.css"]" rel="stylesheet" />
-    <link href="@Assets["BlazorAdmin.styles.css"]" rel="stylesheet" />
+    @* <script src="@Assets[UIService.UIFrameworkJs()]"></script> *@
+    <VScript Src="@UIService.UIFrameworkJs()"></VScript>
+    @* <link href="@Assets["app.css"]" rel="stylesheet" /> *@
+    <VLink Href="app.css"></VLink>
+    @* <link href="@Assets["BlazorAdmin.styles.css"]" rel="stylesheet" /> *@
+    <VLink Href="BlazorAdmin.styles.css"></VLink>
     <HeadOutlet @rendermode="@RenderMode" />
 </head>
 
@@ -32,8 +36,10 @@
     }
     <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></Project.Web.Shared.Components.ReconnectorOutlet>
 
-    <script src="@Assets["_framework/blazor.web.js"]"></script>
-    <script src="@Assets["js/blazor-admin-project.js"]"></script>
+    @* <script src="@Assets["_framework/blazor.web.js"]"></script> *@
+    <VScript Src="_framework/blazor.web.js"></VScript>
+    @* <script src="@Assets["js/blazor-admin-project.js"]"></script> *@
+    <VScript Src="js/blazor-admin-project.js"></VScript>
 </body>
 
 </html>
