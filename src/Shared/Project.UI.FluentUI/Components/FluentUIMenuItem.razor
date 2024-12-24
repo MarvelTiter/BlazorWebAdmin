@@ -2,6 +2,7 @@
 @using System.Linq
 @using Microsoft.FluentUI.AspNetCore.Components
 @using Microsoft.JSInterop
+@using Project.Constraints.Services
 @using Project.Constraints.Store
 @using Project.Constraints.Store.Models
 @using Project.Web.Shared.Components
@@ -14,7 +15,7 @@
         @* <span class="fluent-ui-menu-title">
             <SvgIcon ClassName="nav-icon" IconName="@Route.Icon"></SvgIcon>
         </span> *@
-            <span>@RouterStore.GetLocalizerString(Route)</span>
+        <span>@RouterStore.GetLocalizerString(Route)</span>
     </FluentNavLink>
 }
 else
@@ -38,12 +39,12 @@ else
 <style>
     .fluent-ui-menu-title {
         display: flex;
-        gap:0.3em;
+        gap: 0.3em;
     }
 
-    .fluent-ui-menu-title .nav-icon{
+        .fluent-ui-menu-title .nav-icon {
             color: rgb(64, 158, 255);
-    }
+        }
 </style>
 
 @code {
@@ -51,7 +52,7 @@ else
 
     [Inject, NotNull] IRouterStore? RouterStore { get; set; }
     [Inject, NotNull] IJSRuntime? Js { get; set; }
-
+    [Inject, NotNull] ISvgIconService? SvgIconService { get; set; }
     // public RouteMenu Current => Route;
     // public RouteMenu Current => onlyOneChildren ? Children.First() : Route;
 
@@ -66,7 +67,7 @@ else
         await base.OnInitializedAsync();
         if (!string.IsNullOrEmpty(Route.Icon))
         {
-            Svg = await Js.GetCustomIcon(Route.Icon);
+            Svg = await SvgIconService.GetCustomIcon(Route.Icon);
             await InvokeAsync(StateHasChanged);
         }
     }

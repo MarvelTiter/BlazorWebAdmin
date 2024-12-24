@@ -26,7 +26,7 @@ public class UIService(
     IServiceProvider services
 ) : IUIService
 {
-    public string MainStyle() => string.Empty;
+    public string MainStyle() => string.Empty;//"_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css";
 
     public string DarkStyle() => string.Empty;
 
@@ -402,5 +402,5 @@ public class UIService(
         return collapsed ? 42 : 240;
     }
 
-    
+
 }
