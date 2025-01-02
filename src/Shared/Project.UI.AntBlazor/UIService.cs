@@ -136,10 +136,10 @@ namespace Project.UI.AntBlazor
 
                     switch (self)
                     {
-                        case { Model: { ButtonType: Constraints.UI.ButtonType.Primary } }:
-                            self.SetComponent(b => b.Type, "primary");
+                        case { Model.ButtonType: Constraints.UI.ButtonType.Primary }:
+                            self.SetComponent(b => b.Type, AntDesign.ButtonType.Primary);
                             break;
-                        case { Model: { ButtonType: Constraints.UI.ButtonType.Danger } }:
+                        case { Model.ButtonType: Constraints.UI.ButtonType.Danger }:
                             self.SetComponent(b => b.Danger, true);
                             break;
                     }
@@ -358,13 +358,26 @@ namespace Project.UI.AntBlazor
             {
                 Title = options.Title,
                 ChildContent = options.Content,
-                Placement = options.Position.ToString().ToLower(),
+                Placement = C(options.Position),
             };
             if (options.Width != null) modal.Width = options.Width;
 
             _ = await drawerService.CreateAsync(modal);
 
             return default!;
+
+            static DrawerPlacement C(Position position)
+            {
+                return position switch
+                {
+                    Position.Left => DrawerPlacement.Left,
+                    Position.Right => DrawerPlacement.Right,
+                    Position.Top => DrawerPlacement.Top,
+                    Position.Bottom => DrawerPlacement.Bottom,
+                    _ => throw new ArgumentOutOfRangeException(nameof(position), position, null)
+                };
+            }
+
         }
 
         public IUIComponent<CardProp> BuildCard()

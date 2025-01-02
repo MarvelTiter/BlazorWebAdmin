@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+#pragma warning disable IDE0130
 namespace Project.Web.Shared.Components;
 
 public class FontIcon : ComponentBase

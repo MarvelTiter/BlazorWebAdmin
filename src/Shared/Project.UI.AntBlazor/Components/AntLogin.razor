@@ -2,18 +2,18 @@
 @using Microsoft.Extensions.Localization
 @using Project.Constraints.Models
 @using Project.Constraints.Utils
-<Form Model="LoginModel" Method="post" OnFinish="DoLogin" Name="login">
+<Form Model="LoginModel" Method="@HttpMethod.Post" OnFinish="DoLogin" Name="login">
     <FormItem>
-        <Input @bind-Value="@LoginModel.UserName" placeholder="@Localizer["Login.Placeholder.UserName"].Value" type="text" tabindex="1">
+        <Input @bind-Value="@LoginModel.UserName" Placeholder="@Localizer["Login.Placeholder.UserName"].Value" Type="@InputType.Text" tabindex="1">
         <Prefix>
-            <Icon Type="user" Theme="outline" />
+            <Icon Type="user" Theme="IconThemeType.Outline" />
         </Prefix>
         </Input>
     </FormItem>
     <FormItem>
         <InputPassword @bind-Value="LoginModel.Password" placeholder="@Localizer["Login.Placeholder.Password"].Value" tabindex="2">
             <Prefix>
-                <Icon Type="lock" Theme="outline" />
+                <Icon Type="lock" Theme="IconThemeType.Outline" />
             </Prefix>
         </InputPassword>
     </FormItem>

@@ -1,18 +1,20 @@
-﻿using AutoInjectGenerator;
-using Microsoft.JSInterop;
-using Project.Constraints.Store;
+﻿using Microsoft.JSInterop;
 using Project.Constraints.Store.Models;
-using System.Collections.Concurrent;
 using System.Text;
 using System.Text.Json;
 
 namespace Project.Web.Shared.Store
 {
+    /// <summary>
+    /// Constructs an instance of <see cref="ProtectedBrowserStorage"/>.
+    /// </summary>
+    /// <param name="storeName">The name of the store in which the data should be stored.</param>
+    /// <param name="jsRuntime">The <see cref="IJSRuntime"/>.</param>
     [AutoInject]
     /// <summary>
     /// https://source.dot.net/#Microsoft.AspNetCore.Components.Server/ProtectedBrowserStorage/ProtectedLocalStorage.cs,2ced327c1fc4a5f4
     /// </summary>
-    public class MyProtectedLocalStorage : IProtectedLocalStorage
+    public class MyProtectedLocalStorage(IJSRuntime jsRuntime) : IProtectedLocalStorage
     {
 
         public static readonly JsonSerializerOptions Options = new()
@@ -21,27 +23,7 @@ namespace Project.Web.Shared.Store
             PropertyNameCaseInsensitive = true,
         };
 
-        private readonly IJSRuntime _jsRuntime;
-        //private readonly IDataProtectionProvider _dataProtectionProvider;
-        //private readonly ConcurrentDictionary<string, IDataProtector> _cachedDataProtectorsByPurpose
-        //    = new ConcurrentDictionary<string, IDataProtector>(StringComparer.Ordinal);
-
-        /// <summary>
-        /// Constructs an instance of <see cref="ProtectedBrowserStorage"/>.
-        /// </summary>
-        /// <param name="storeName">The name of the store in which the data should be stored.</param>
-        /// <param name="jsRuntime">The <see cref="IJSRuntime"/>.</param>
-        public MyProtectedLocalStorage(IJSRuntime jsRuntime)
-        {
-            //// Performing data protection on the client would give users a false sense of security, so we'll prevent this.
-            //if (OperatingSystem.IsBrowser())
-            //{
-            //    throw new PlatformNotSupportedException($"{GetType()} cannot be used when running in a browser.");
-            //}
-
-            _jsRuntime = jsRuntime ?? throw new ArgumentNullException(nameof(jsRuntime));
-            //_dataProtectionProvider = dataProtectionProvider ?? throw new ArgumentNullException(nameof(dataProtectionProvider));
-        }
+        private readonly IJSRuntime _jsRuntime = jsRuntime ?? throw new ArgumentNullException(nameof(jsRuntime));
 
         //public ValueTask SetAsync(string key, object value)
         //    => SetAsync(CreatePurposeFromKey(key), key, value);
@@ -67,7 +49,7 @@ namespace Project.Web.Shared.Store
 
         public ValueTask DeleteAsync(string key) => _jsRuntime.InvokeVoidAsync("localStorage.removeItem", key);
 
-        private string Protect(object value)
+        private static string Protect(object value)
         {
             var json = JsonSerializer.Serialize(value, options: Options);
             //var protector = GetOrCreateCachedProtector(purpose);
@@ -75,7 +57,7 @@ namespace Project.Web.Shared.Store
             //return protector.Protect(json);
         }
 
-        private TValue Unprotect<TValue>(string protectedJson)
+        private static TValue Unprotect<TValue>(string protectedJson)
         {
             //var protector = GetOrCreateCachedProtector(purpose);
             //var json = protector.Unprotect(protectedJson);

@@ -22,7 +22,8 @@ public partial class Dashboard
         base.OnInitialized();
         homeType = Locator.GetDashboardType();
     }
-    string RenderMode => OperatingSystem.IsBrowser() ? "WebAssembly" : "Server";
+
+    static string RenderMode => OperatingSystem.IsBrowser() ? "WebAssembly" : "Server";
     private RenderFragment CurrentRenderMode()
     {
 #if DEBUG

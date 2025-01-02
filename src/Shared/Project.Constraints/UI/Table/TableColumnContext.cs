@@ -21,23 +21,23 @@ namespace Project.Constraints.UI.Table
             {
                 var props = type.GetProperties();
                 var heads = props.Select(p => (Prop: p, Column: p.GetColumnDefinition()));
-                List<ColumnInfo> columns = new List<ColumnInfo>();
-                foreach (var col in heads)
+                List<ColumnInfo> columns = [];
+                foreach (var (Prop, Column) in heads)
                 {
-                    if (col.Column == null)
+                    if (Column == null)
                     {
                         continue;
                     }
-                    var column = col.Prop.GenerateColumn(col.Column);
-                    column.ValueGetter = col.Prop.GetPropertyAccessor<object>();
-                    column.ValueSetter = col.Prop.GetPropertySetter();
+                    var column = Prop.GenerateColumn(Column);
+                    column.ValueGetter = Prop.GetPropertyAccessor<object>();
+                    column.ValueSetter = Prop.GetPropertySetter();
                     columns.Add(column);
                 }
                 if (columns.Any(c => c.Index != 0))
                 {
                     columns.Sort((a, b) => a.Index - b.Index);
                 }
-                return new TableColumns(columns.ToArray());
+                return new TableColumns([.. columns]);
             }) with
             { };
             return tc.Columns;
@@ -55,6 +55,7 @@ namespace Project.Constraints.UI.Table
                 Index = head.Sort,
                 Fixed = head.Fixed,
                 Width = head.Width,
+                Align = head.Align,
                 Visible = head.Visible,
                 Ellipsis = head.Ellipsis,
                 Readonly = head.Readonly,
@@ -118,7 +119,7 @@ namespace Project.Constraints.UI.Table
 
         public static Dictionary<string, string> ParseDictionary(Type enumType)
         {
-            Dictionary<string, string> dict = new();
+            Dictionary<string, string> dict = [];
             foreach (var member in Enum.GetValues(enumType).Cast<Enum>())
             {
                 var name = Enum.GetName(enumType, member)!;

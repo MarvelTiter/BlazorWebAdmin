@@ -23,9 +23,9 @@ public partial class Login : BasicComponent
     [Inject] [NotNull] public IAuthService? AuthService { get; set; }
     [Inject] [NotNull] private IStringLocalizer<Login>? Localizer { get; set; }
     [Inject] [NotNull] private IProjectSettingService? CustomSetting { get; set; }
-    [Inject] [NotNull] private ILogger<Login>? Logger { get; set; }
+    //[Inject] [NotNull] private ILogger<Login>? Logger { get; set; }
     [Inject] [NotNull] private IOptionsMonitor<Token>? TokenOption { get; set; }
-    [CascadingParameter] [NotNull] private IDomEventHandler? Root { get; set; }
+    //[CascadingParameter] [NotNull] private IDomEventHandler? Root { get; set; }
     [CascadingParameter] [NotNull] private HttpContext? HttpContext { get; set; }
     public bool Loading { get; set; }
     public string? Redirect { get; set; }

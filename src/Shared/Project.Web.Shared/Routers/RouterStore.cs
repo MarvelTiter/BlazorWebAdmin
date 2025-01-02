@@ -31,35 +31,14 @@ public static class RouterStoreExtensions
 }
 
 [AutoInject(ServiceType = typeof(IRouterStore))]
-public class RouterStore : StoreBase, IRouterStore
-{
-    private readonly IProjectSettingService settingService;
-    private readonly NavigationManager navigationManager;
-    private readonly IUserStore userStore;
-    private readonly IStringLocalizer<RouterStore> localizer;
-    private readonly IOptionsMonitor<CultureOptions> options;
-    private readonly ILogger<RouterStore> logger;
-    private readonly IOptionsMonitor<AppSetting> setting;
-
-    public RouterStore(IProjectSettingService settingService
+public class RouterStore(IProjectSettingService settingService
         , NavigationManager navigationManager
         , IUserStore userStore
         , IStringLocalizer<RouterStore> localizer
         , IOptionsMonitor<CultureOptions> options
         , ILogger<RouterStore> logger
-        , IOptionsMonitor<AppSetting> setting)
-    {
-        this.settingService = settingService;
-        this.navigationManager = navigationManager;
-        this.userStore = userStore;
-        this.localizer = localizer;
-        this.options = options;
-        this.logger = logger;
-        this.setting = setting;
-
-    }
-
-
+        , IOptionsMonitor<AppSetting> setting) : StoreBase, IRouterStore
+{
     readonly Dictionary<string, TagRoute> pages = new();
 
     public List<TagRoute> TopLinks => [.. pages.Values];

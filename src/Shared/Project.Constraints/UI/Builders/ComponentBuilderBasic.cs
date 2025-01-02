@@ -60,10 +60,7 @@ namespace Project.Constraints.UI.Builders
 
         public IUIComponent TrySet(string key, object value)
         {
-            if (!parameters.ContainsKey(key))
-            {
-                parameters.Add(key, value);
-            }
+            parameters.TryAdd(key, value);
             return this;
         }
 

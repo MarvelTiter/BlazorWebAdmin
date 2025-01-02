@@ -30,8 +30,9 @@ builder.AddServerProject(setting =>
     // 默认分别为BasicSetting和DefaultAuthenticationService
     //setting.ConfigureSettingProviderType<CustomSetting>();
     //setting.ConfigureAuthService<DefaultAuthenticationService>();
-
-    AppConst.AppAssembly = typeof(BlazorAdmin.Client._Imports).Assembly;
+    var appAssembly  = typeof(BlazorAdmin.Client._Imports).Assembly;
+    AppConst.AppAssembly = appAssembly;
+    AppConst.AddAssembly(appAssembly);
 #if DEBUG
     setting.ConfigureSettingProviderType<CustomSetting>();
 #endif

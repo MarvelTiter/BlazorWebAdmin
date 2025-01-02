@@ -29,6 +29,7 @@ public record ColumnInfo
     public Type? UnderlyingType => System.Nullable.GetUnderlyingType(DataType);
     public string? Fixed { get; set; }
     public string? Width { get; set; }
+    public string? Align { get; set; }
     public bool Readonly { get; set; }
     public bool Ellipsis { get; set; }
     public bool Visible { get; set; } = true;

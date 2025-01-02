@@ -61,9 +61,11 @@ namespace Project.Web.Shared.Routers
             var g = Groups.FirstOrDefault(g => g.RouteId == groupInfo.Id);
             if (g == null)
             {
-                g = new RouterMeta();
-                g.RouteId = groupInfo.Id;
-                g.RouteTitle = groupInfo.Name;
+                g = new RouterMeta
+                {
+                    RouteId = groupInfo.Id,
+                    RouteTitle = groupInfo.Name
+                };
                 if (groupInfo.Icon != null)
                     g.Icon = groupInfo.Icon;
                 g.Sort = groupInfo.Sort;

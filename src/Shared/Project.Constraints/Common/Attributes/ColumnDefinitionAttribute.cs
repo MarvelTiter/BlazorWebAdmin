@@ -42,6 +42,7 @@ public class ColumnDefinitionAttribute : Attribute
     public bool Sortable { get; set; }
     public string? Fixed { get; }
     public string? Width { get; }
+    public string? Align { get; set; }
     /// <summary>
     /// 设置Tag颜色
     /// </summary>

@@ -12,18 +12,11 @@
     }
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class PageGroupAttribute : Attribute
+    public class PageGroupAttribute(string id, string name, int sort) : Attribute
     {
-        public string Id { get; }
-        public string Name { get; }
+        public string Id { get; } = id;
+        public string Name { get; } = name;
         public string? Icon { get; set; }
-        public int Sort { get; }
-
-        public PageGroupAttribute(string id, string name, int sort)
-        {
-            Id = id;
-            Name = name;
-            Sort = sort;
-        }
+        public int Sort { get; } = sort;
     }
 }

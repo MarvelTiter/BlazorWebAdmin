@@ -25,7 +25,7 @@
             {
                 @foreach (var btnGroup in Options.Buttons.GroupBy(btn => btn.Group))
                 {
-                    <ActionColumn Title=@(TableLocalizer[btnGroup.Key]) Align="@ColumnAlign.Center" Fixed="right" Width="@Options.ActionColumnWidth">
+                    <ActionColumn Title=@(TableLocalizer[btnGroup.Key]) Align="@ColumnAlign.Center" Fixed="ColumnFixPlacement.Right" Width="@Options.ActionColumnWidth">
                         @{
                             var btns = btnGroup.Where(b => b.CheckVisible(context)).ToList();
                             if (Options.ActionButtonColumn.HasValue)
@@ -103,7 +103,7 @@
     private RenderFragment CreateButton(TableButton<TRowData> definition, TRowData context)
     {
         return
-    @<Button Type="@definition.ButtonType"
+    @<Button Type="@Utils.GetButtonType(definition.ButtonType)"
                  Size="@ButtonSize.Small"
                  Danger="@definition.Danger"
                  Icon="@definition.Icon"
@@ -172,7 +172,10 @@
     {
         return builder => builder.Component<PropertyColumn<DataRow, object>>()
               .SetComponent(c => c.Title, col.Label)
+              .SetComponent(c => c.Align, ColumnAlign.Center)
               .SetComponent(c => c.Property, row => row[col.PropertyOrFieldName])
               .Build();
     }
+
+    
 }
