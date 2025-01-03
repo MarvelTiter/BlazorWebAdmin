@@ -1,4 +1,5 @@
 using Project.Constraints.UI.Extensions;
+using Project.Web.Shared.Utils;
 
 namespace Project.Web.Shared.Pages;
 
@@ -21,6 +22,7 @@ public partial class Dashboard
     {
         base.OnInitialized();
         homeType = Locator.GetDashboardType();
+        FontAwesomeHelper.AllIcons();
     }
 
     static string RenderMode => OperatingSystem.IsBrowser() ? "WebAssembly" : "Server";

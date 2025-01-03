@@ -35,8 +35,8 @@
 </WaterMark>
 
 
-<Project.Web.Shared.Components.IconSelector @bind-Value=selectedUser></Project.Web.Shared.Components.IconSelector>
-
+<Project.Web.Shared.Components.IconSelector @bind-Value="@selectedIcon"></Project.Web.Shared.Components.IconSelector>
+<MIcon IconName="@selectedIcon"></MIcon>
 
 <MModal @bind-Visible=visible Title="测试">
     <h1>Modal Content</h1>
@@ -45,7 +45,7 @@
     [Inject, NotNull] IDownloadServiceProvider? DownloadProvider { get; set; }
     [Inject, NotNull] IWatermarkServiceFactory? WatermarkServiceFactory { get; set; }
     string[] checkedUsers = [];
-    string selectedUser = string.Empty;
+    string selectedIcon = string.Empty;
     bool visible;
     
     Task Changed2(string[] values)

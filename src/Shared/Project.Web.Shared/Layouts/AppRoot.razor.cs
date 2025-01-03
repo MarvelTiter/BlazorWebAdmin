@@ -1,20 +1,46 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
+using Project.Constraints.UI;
 using Project.Web.Shared.Store;
 using Project.Web.Shared.Utils;
 
 namespace Project.Web.Shared.Layouts;
-public partial class AppRoot : IAsyncDisposable
+public partial class AppRoot : IDomEventHandler, IThemeChangedBroadcast, IAsyncDisposable
 {
+    public event Func<MouseEventArgs, Task>? BodyClickEvent;
+    public event Func<KeyboardEventArgs, Task>? OnKeyDown;
+    public event Func<KeyboardEventArgs, Task>? OnKeyUp;
+    public event Func<Task>? OnThemeChanged;
     private readonly List<IAddtionalInterceptor> initActions = [];
-    [Inject] [NotNull] private IAppSession? Context { get; set; }
+    [Inject][NotNull] private IAppSession? Context { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter, NotNull] public Type? DefaultLayout { get; set; }
-    [Inject] [NotNull] private IServiceProvider? Services { get; set; }
-    [Inject] [NotNull] private IJSRuntime? Js { get; set; }
-    [Inject] [NotNull] private IProjectSettingService? SettingService { get; set; }
-    [Inject] [NotNull] private IProtectedLocalStorage? LocalStorage { get; set; }
+    [Inject][NotNull] private IServiceProvider? Services { get; set; }
+    [Inject][NotNull] private IJSRuntime? Js { get; set; }
+    [Inject][NotNull] private IProjectSettingService? SettingService { get; set; }
+    [Inject][NotNull] private IProtectedLocalStorage? LocalStorage { get; set; }
+
+    public Task NotifyThemeChangedAsync()
+    {
+        return OnThemeChanged?.Invoke() ?? Task.CompletedTask;
+    }
+    protected Task HandleRootClick(MouseEventArgs e)
+    {
+        return BodyClickEvent?.Invoke(e) ?? Task.CompletedTask;
+    }
+
+    protected Task HandleKeyDownAction(KeyboardEventArgs e)
+    {
+        return OnKeyDown?.Invoke(e) ?? Task.CompletedTask;
+    }
+
+    protected Task HandleKeyUpAction(KeyboardEventArgs e)
+    {
+        return OnKeyUp?.Invoke(e) ?? Task.CompletedTask;
+    }
+
     public ValueTask DisposeAsync()
     {
         Context.RouterStore.RouterChangingEvent -= SettingService.RouterChangingAsync;

@@ -1,21 +1,27 @@
 ﻿@* 使用services.AddCascadingAuthenticationState();代替 *@
 @* <CascadingAuthenticationState> *@
 <CascadingValue Value="Context">
-    <ErrorCatcher>
-        <CascadingValue Value="this" IsFixed="true">
-            <Router AppAssembly="AppConst.AppAssembly" AdditionalAssemblies="AppConst.AdditionalAssemblies">
-                <Found Context="routeData">
-                    <CascadingValue Value="@routeData">
-                        <RouteView RouteData="@routeData" DefaultLayout="@DefaultLayout" />
-                    </CascadingValue>
-                </Found>
-            </Router>
-        </CascadingValue>
-    </ErrorCatcher>
-    <WaterMark ProvideService></WaterMark>
-    <WebAdminReconnector></WebAdminReconnector>
-    <Downloader/>
-    <ClientHub/>
-    @Context.UI.RenderContainer()
+    <CascadingValue Value="this" IsFixed="true">
+        <div id="app-root"
+             @onclick="@HandleRootClick"
+             @onkeydown="@HandleKeyDownAction"
+             @onkeyup="@HandleKeyUpAction"
+             tabindex="0">
+            <ErrorCatcher>
+                <Router AppAssembly="AppConst.AppAssembly" AdditionalAssemblies="AppConst.AdditionalAssemblies">
+                    <Found Context="routeData">
+                        <CascadingValue Value="@routeData">
+                            <RouteView RouteData="@routeData" DefaultLayout="@DefaultLayout" />
+                        </CascadingValue>
+                    </Found>
+                </Router>
+            </ErrorCatcher>
+            <WaterMark ProvideService></WaterMark>
+            <WebAdminReconnector></WebAdminReconnector>
+            <Downloader />
+            <ClientHub />
+            @Context.UI.RenderContainer()
+        </div>
+    </CascadingValue>
 </CascadingValue>
 @* </CascadingAuthenticationState> *@

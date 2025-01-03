@@ -14,8 +14,10 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        options.Content =@<SvgIcon IconName="language"
-         ClassName="nav-menu-icon" />
+        options.Content =@<span style="display:flex">
+        <MIcon IconName="svg-language"
+               ClassName="nav-menu-icon" />
+    </span>
     ;
         options.Actions = Options.SupportedCulture.Select(l => new ActionInfo()
             {

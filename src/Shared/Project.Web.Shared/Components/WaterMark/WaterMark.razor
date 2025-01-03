@@ -10,6 +10,7 @@
 }
 @code {
     [Inject, NotNull] IWatermarkServiceFactory? WatermarkFactory { get; set; }
+    [CascadingParameter, NotNull] IDomEventHandler? DomEventHandler { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string[]? Contents { get; set; }
     [Parameter] public int Top { get; set; } = 20;
@@ -19,7 +20,7 @@
     [Parameter] public int Rotate { get; set; } = -22;
     [Parameter] public float Alpha { get; set; } = 1f;
     [Parameter] public int FontSize { get; set; } = 14;
-    [Parameter] public string? FontColor { get; set; } 
+    [Parameter] public string? FontColor { get; set; }
     [Parameter] public int LineSpace { get; set; } = 16;
     [Parameter] public bool ProvideService { get; set; }
     [Parameter] public string? ServiceKey { get; set; }
@@ -35,6 +36,7 @@
             else
                 WatermarkFactory.RegisterKeyedWatermarkService(ServiceKey, this);
         }
+        DomEventHandler.OnThemeChanged += RefreshWaterMark;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -47,6 +49,12 @@
                 DrawMask(Contents);
             }
         }
+    }
+
+    private Task RefreshWaterMark()
+    {
+        _ = InvokeVoidAsync("refreshWatermark");
+        return Task.CompletedTask;
     }
 
     public Task UpdateWaterMarkAsync(params string?[] contents)

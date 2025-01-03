@@ -9,7 +9,7 @@ namespace BlazorAdmin.Client.TestPages
 {
 #if DEBUG
     [Route("/test3")]
-    [PageInfo(Id = "TestPage3", Title = "测试3", GroupId = "test")]
+    [PageInfo(Title = "测试3", GroupId = "test")]
     //[Layout(typeof(NotAuthorizedLayout))]
 #endif
     public partial class TestPage3

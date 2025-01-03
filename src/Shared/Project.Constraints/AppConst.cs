@@ -18,6 +18,7 @@ public static class AppConst
     public static AppInfo App { get; set; } = new AppInfo();
 
     public const string TEMP_FOLDER = "tempfile";
+    public const string CUSTOM_SVG_PREFIX = "svg-";
 
     static List<Assembly> AdditionalPageAssemblies = new List<Assembly>();
     //public static Assembly ServerAssembly { get; set; }

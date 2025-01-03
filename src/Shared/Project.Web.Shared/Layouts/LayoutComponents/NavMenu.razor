@@ -1,34 +1,34 @@
 ﻿@using System.Diagnostics.CodeAnalysis;
 @using Microsoft.AspNetCore.Components.Authorization
 @using Project.Constraints.Options;
+@using System.Globalization
 @inherits BasicComponent
 @inject IProtectedLocalStorage LocalStorage
 <div class="nav-menu @Class">
     @*全屏按钮*@
     <NavMenuItem OnClick="ToggleFullScreen" Title="@Localizer["NavMenu.TipTitle.FullScreen"]">
         <FullScreen @ref="fullscreen"></FullScreen>
-        <SvgIcon IconName="fullscreen"
-                 ClassName="nav-menu-icon" />
+        <MIcon IconName="svg-fullscreen"
+               ClassName="nav-menu-icon" />
     </NavMenuItem>
     @if (CultureOptions.CurrentValue.Enabled)
     {
-        @*语言选择*@
         <NavMenuItem Title="@Localizer["NavMenu.TipTitle.LangSelect"]">
             <LanguageSelect Options="CultureOptions.CurrentValue"></LanguageSelect>
         </NavMenuItem>
     }
     @*登录用户*@
     <Profile @ref=profile></Profile>
-    
+
     @*清除LocalStorage*@
     <NavMenuItem OnClick="@ClearLocalStorage" Title="@Localizer["NavMenu.TipTitle.ClearStorage"]">
-        <SvgIcon IconName="clear"
-                 ClassName="nav-menu-icon" />
+        <MIcon IconName="svg-clear"
+               ClassName="nav-menu-icon" />
     </NavMenuItem>
     @*系统设置*@
     <NavMenuItem OnClick="@OpenSetting" Title="@Localizer["NavMenu.TipTitle.SysSetting"]">
-        <SvgIcon IconName="setting">
-        </SvgIcon>
+        <MIcon IconName="svg-setting" ClassName="nav-menu-icon">
+        </MIcon>
     </NavMenuItem>
 </div>
 
@@ -41,17 +41,36 @@
     [Inject, NotNull] IOptionsMonitor<Token>? Token { get; set; }
     [Inject, NotNull] ILanguageService? LanguageService { get; set; }
 
-    async Task ToggleFullScreen()
+    private async Task ToggleFullScreen()
     {
         await fullscreen!.Toggle();
     }
+    // private bool showLanguageSetting;
+    // private void ShowLanguageSetting()
+    // {
+    //     showLanguageSetting = true;
+    // }
+    // string current = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "";
+    // private Task ToggleLang()
+    // {
+    //     if (current != CultureInfo.DefaultThreadCurrentUICulture?.Name)
+    //     {
+    //         var culture = CultureInfo.GetCultureInfo(current);
+    //         App.AppLanguage = current;
+    //         Storage.SetAsync(ConstraintString.APP_STORE_KEY, App);
+    //         Language.SetLanguage(current);
+    //         Navigator.NavigateTo(Navigator.Uri);
+    //     }
+    //     showLanguageSetting = false;
+    //     return Task.CompletedTask;
+    // }
 
-    async void OpenSetting()
+    private async void OpenSetting()
     {
         await UI.ShowDrawerAsync<WebSetting>("", 500);
     }
 
-    async Task ClearLocalStorage()
+    private async Task ClearLocalStorage()
     {
         await LocalStorage.Clear();
         // await (profile?.HandleLogout() ?? Task.CompletedTask);

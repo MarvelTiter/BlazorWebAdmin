@@ -1,0 +1,22 @@
+﻿.icons-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 2em);
+    max-height: 50vh;
+    overflow-y: scroll;
+    font-size: 2em;
+    align-items: center;
+    justify-content: center;
+}
+
+    .icons-wrapper span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        margin:1px;
+    }
+
+        .icons-wrapper span.selected {
+            color: var(--major-color);
+            box-shadow: var(--border-shadow);
+        }

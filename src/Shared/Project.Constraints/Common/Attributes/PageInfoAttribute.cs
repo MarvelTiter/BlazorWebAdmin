@@ -3,6 +3,15 @@
     [AttributeUsage(AttributeTargets.Class)]
     public class PageInfoAttribute : Attribute
     {
+        public PageInfoAttribute(string id)
+        {
+            Id = id;
+        }
+        public PageInfoAttribute()
+        {
+            
+        }
+
         public string? Id { get; set; }
         public string? Title { get; set; }
         public string? Icon { get; set; }

@@ -176,7 +176,7 @@ public class RouterStore(IProjectSettingService settingService
             RouteUrl = "/",
             RouteId = "Home",
             RouteTitle = "主页",
-            Icon = "home",
+            Icon = "svg-home",
             Pin = true,
             IsActive = true
         };
@@ -195,7 +195,7 @@ public class RouterStore(IProjectSettingService settingService
             {
                 RouteId = "Home",
                 RouteUrl = "/",
-                Icon = "home",
+                Icon = "svg-home",
                 Group = "ROOT",
                 Cache = true,
                 RouteTitle = "主页",
@@ -243,13 +243,13 @@ public class RouterStore(IProjectSettingService settingService
 
         foreach (var pow in powers)
         {
-            var meta = AllPages.AllRoutes.FirstOrDefault(m => CompareUrl(pow.Path, m.RouteUrl));
+            var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteId == pow.PowerId);
             meta ??= new RouterMeta()
             {
                 RouteUrl = pow.Path,
                 RouteId = pow.PowerId
             };
-            if (Menus.Any(m => m.RouteUrl == meta.RouteUrl && m.RouteId == meta.RouteId))
+            if (Menus.Any(m => m.RouteId == meta.RouteId))
             {
                 continue;
             }
@@ -269,15 +269,20 @@ public class RouterStore(IProjectSettingService settingService
 
     private async Task<bool> OnRouterChangingAsync(TagRoute tag)
     {
+        bool enable = true;
         if (IsUserDashboard(tag))
         {
-            return EnableShowUserDashboard(userStore, setting.CurrentValue);
+            enable = EnableShowUserDashboard(userStore, setting.CurrentValue);
         }
         if (RouterChangingEvent != null)
         {
-            return await RouterChangingEvent.Invoke(tag);
+            //return await RouterChangingEvent.Invoke(tag);
+            foreach (Func<TagRoute, Task<bool>> item in RouterChangingEvent.GetInvocationList().Cast<Func<TagRoute, Task<bool>>>())
+            {
+                enable = enable && await item.Invoke(tag);
+            }
         }
-        return true;
+        return enable;
     }
 
     public event Func<RouterMeta, Task<bool>>? RouteMetaFilterEvent;

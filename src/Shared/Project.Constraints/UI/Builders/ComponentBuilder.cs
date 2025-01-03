@@ -34,11 +34,18 @@ namespace Project.Constraints.UI.Builders
             return Set(prop.Name, value!);
         }
 
+        public CustomComponentBuilder<TComponent> SetContent(RenderFragment content)
+        {
+            return Set("ChildContent", content);
+        }
+
         private CustomComponentBuilder<TComponent> Set(string key, object value)
         {
             parameters[key] = value;
             return this;
         }
+
+        
 
         public void Build(Action<object>? capture = null)
         {

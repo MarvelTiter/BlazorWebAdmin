@@ -11,16 +11,21 @@
 <MCard Title="主题设置">
     <ThemeManager Current="App.Theme" OnThemeChanged="OnThemeChanged"></ThemeManager>
 </MCard>
+
+@* <MCard Title="语言设置"> *@
+@*     <LanguageSelector></LanguageSelector> *@
+@* </MCard> *@
+
 @code {
     [Inject, NotNull] IProtectedLocalStorage? Storage { get; set; }
-    
+    [CascadingParameter, NotNull] IThemeChangedBroadcast? Broadcast { get; set; }
     private async Task OnThemeChanged(ThemeMode mode)
     {
         App.Theme = mode;
         Context.Update?.Invoke();
         await SaveSetting();
     }
-    
+
     private async Task OnLayoutChanged(LayoutMode mode)
     {
         App.Mode = mode;
@@ -31,6 +36,7 @@
     async Task SaveSetting()
     {
         await Storage.SetAsync(ConstraintString.APP_STORE_KEY, App);
+        await Broadcast.NotifyThemeChangedAsync();
     }
- 
+
 }

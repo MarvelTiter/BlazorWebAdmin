@@ -14,7 +14,7 @@ namespace Project.Web.Shared.Routers
         static List<RouterMeta> Groups { get; } = [];
         static AllPages()
         {
-            List<RouterMeta> routes = new();
+            List<RouterMeta> routes = [];
             foreach (var assembly in AppConst.AllAssemblies)
             {
                 routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).SelectMany(GetRouterMeta));
