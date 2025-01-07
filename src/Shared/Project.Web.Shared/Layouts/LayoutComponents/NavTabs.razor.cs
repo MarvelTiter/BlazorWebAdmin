@@ -11,7 +11,7 @@ namespace Project.Web.Shared.Layouts.LayoutComponents
         private string contextmenuLeft = "";
         private string contextmenuTop = "";
         private TagRoute? current;
-        [CascadingParameter, NotNull] public IDomEventHandler? RootLayout { get; set; }
+        [CascadingParameter, NotNull] public IAppDomEventHandler? RootLayout { get; set; }
         [Parameter] public string? Class { get; set; }
         private int navMenuWidth = 200;
         protected override void OnInitialized()

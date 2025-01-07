@@ -52,10 +52,10 @@
 
     }
 
-    protected override ValueTask DisposeAsync(bool disposing)
+    protected override ValueTask OnDisposeAsync()
     {
         Navigator.LocationChanged -= LocationChangedEventHandler;
-        return base.DisposeAsync(disposing);
+        return base.OnDisposeAsync();
     }
 
     // public override Task SetParametersAsync(ParameterView parameters)

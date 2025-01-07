@@ -7,7 +7,7 @@ using Project.Web.Shared.Store;
 using Project.Web.Shared.Utils;
 
 namespace Project.Web.Shared.Layouts;
-public partial class AppRoot : IDomEventHandler, IThemeChangedBroadcast, IAsyncDisposable
+public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsyncDisposable
 {
     public event Func<MouseEventArgs, Task>? BodyClickEvent;
     public event Func<KeyboardEventArgs, Task>? OnKeyDown;

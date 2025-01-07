@@ -2,7 +2,7 @@
 
 namespace Project.Constraints.UI;
 
-public interface IDomEventHandler
+public interface IAppDomEventHandler
 {
     event Func<MouseEventArgs, Task> BodyClickEvent;
     event Func<KeyboardEventArgs, Task> OnKeyDown;

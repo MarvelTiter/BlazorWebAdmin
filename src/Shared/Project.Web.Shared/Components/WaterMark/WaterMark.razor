@@ -10,7 +10,7 @@
 }
 @code {
     [Inject, NotNull] IWatermarkServiceFactory? WatermarkFactory { get; set; }
-    [CascadingParameter, NotNull] IDomEventHandler? DomEventHandler { get; set; }
+    [CascadingParameter, NotNull] IAppDomEventHandler? DomEventHandler { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public string[]? Contents { get; set; }
     [Parameter] public int Top { get; set; } = 20;
@@ -87,4 +87,9 @@
         });
     }
 
+    protected override ValueTask OnDisposeAsync()
+    {
+        DomEventHandler.OnThemeChanged -= RefreshWaterMark;
+        return base.OnDisposeAsync();
+    }
 }
