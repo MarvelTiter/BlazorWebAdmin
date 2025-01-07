@@ -60,10 +60,12 @@ export class WaterMark extends BaseComponent {
     static refreshWatermark(id: string) {
         const com = getComponentById(id)
         if (com) {
-            com.setWatermark(com.options);
+            // 下一帧再重新绘制
+            window.requestAnimationFrame(() => {
+                com.setWatermark(com.options);
+            })
         }
     }
-
 }
 
 function createDiv(): HTMLElement {
