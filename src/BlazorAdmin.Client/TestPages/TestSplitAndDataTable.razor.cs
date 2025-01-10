@@ -13,9 +13,9 @@ namespace BlazorAdmin.Client.TestPages
 {
 #if DEBUG
     [Route("/test2")]
-    [PageInfo(Title = "测试2", GroupId = "test")]
+    [PageInfo(Title = "Split测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
 #endif
-    public partial class TestPage2
+    public partial class TestSplitAndDataTable
     {
         [Inject, NotNull] IUIService? UI { get; set; }
     }

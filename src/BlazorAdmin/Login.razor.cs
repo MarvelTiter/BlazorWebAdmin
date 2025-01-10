@@ -36,8 +36,8 @@ public partial class Login : BasicComponent
         var full = Navigator.ToAbsoluteUri(Navigator.Uri);
         Redirect = HttpUtility.ParseQueryString(full.Query).Get(nameof(Redirect));
         //Root.OnKeyDown += OnPressEnter;
-        var refer = HttpContext.Request.Headers.Referer.ToString();
-        if (!string.IsNullOrEmpty(refer)) UI.Error("登录凭证超时，请重新登录");
+        //var refer = HttpContext.Request.Headers.Referer.ToString();
+        //if (!string.IsNullOrEmpty(refer)) UI.Error("登录凭证超时，请重新登录");
     }
 
     //private async Task OnPressEnter(KeyboardEventArgs e)
@@ -74,7 +74,6 @@ public partial class Login : BasicComponent
                     //cookie过期是单独指cookie，这里的是指
                     ExpiresUtc = TimeProvider.System.GetUtcNow().Add(TokenOption.CurrentValue.Expire)
                 });
-
                 if (string.IsNullOrEmpty(Redirect)) Redirect = "/";
                 Navigator.NavigateTo(Redirect, true);
             }

@@ -1,6 +1,4 @@
-﻿
-using AutoInjectGenerator;
-
+﻿#pragma warning disable IDE0130
 namespace Project.Web.Shared.Components;
 [AutoInject]
 public sealed class WatermarkServiceFactory : IWatermarkServiceFactory

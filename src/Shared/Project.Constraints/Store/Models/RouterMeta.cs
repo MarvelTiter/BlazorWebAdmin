@@ -14,6 +14,7 @@ namespace Project.Constraints.Store.Models
         public int Sort { get; set; }
         public bool HasPageInfo { get; set; }
         public bool Cache { get; set; } = true;
+        public bool ForceShowOnNavMenu { get; set; }
         [NotNull] public Type? RouteType { get; set; }
         public bool Equals(RouterMeta? x, RouterMeta? y)
         {

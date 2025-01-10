@@ -9,7 +9,9 @@ namespace Project.Constraints.Models.Permissions
         [Display(Name = "页面")]
         Page,
         [Display(Name = "按钮")]
-        Button
+        Button,
+        [Display(Name = "接口")]
+        Api,
     }
     [LangName("Power")]
     public interface IPower
@@ -20,7 +22,7 @@ namespace Project.Constraints.Models.Permissions
         PowerType PowerType { get; set; }
         int PowerLevel { get; set; }
         string? Icon { get; set; }
-        string? Path { get; set; }
+        //string? Path { get; set; }
         int Sort { get; set; }
         //bool GenerateCRUDButton { get; set; }
         IEnumerable<IPower>? Children { get; set; }
@@ -47,7 +49,7 @@ namespace Project.Constraints.Models.Permissions
     [GenMapper]
     public partial class Power : IPower, IAutoMap
     {
-        [ColumnDefinition]
+        [ColumnDefinition(Readonly = true)]
         [Required]
         [LightColumn(Name = "POWER_ID", PrimaryKey = true)]
         [NotNull]
@@ -74,9 +76,11 @@ namespace Project.Constraints.Models.Permissions
         [ColumnDefinition]
         [LightColumn(Name = "ICON")]
         public string? Icon { get; set; }
-        [ColumnDefinition]
-        [LightColumn(Name = "PATH")]
-        public string? Path { get; set; }
+
+        //[ColumnDefinition]
+        //[LightColumn(Name = "PATH")]
+        //public string? Path { get; set; }
+
         [ColumnDefinition]
         [LightColumn(Name = "SORT")]
         [Form(Hide = true)]

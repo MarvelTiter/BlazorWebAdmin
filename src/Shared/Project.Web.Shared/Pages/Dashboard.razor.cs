@@ -22,7 +22,6 @@ public partial class Dashboard
     {
         base.OnInitialized();
         homeType = Locator.GetDashboardType();
-        FontAwesomeHelper.AllIcons();
     }
 
     static string RenderMode => OperatingSystem.IsBrowser() ? "WebAssembly" : "Server";

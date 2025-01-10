@@ -7,15 +7,15 @@
     <ScrollBar>
         @foreach (var item in Router.TopLinks)
         {
-            if (item.Body == null) continue;
-            <ErrorCatcher ShowMessage>
-                <div id=@item.RouteUrl style="@(Router.CompareUrl(item.RouteUrl) ? "display: block;":"display: none;")">
-                    <!-- 在路由页面中获取当前页的信息 -->
-                    <CascadingValue Value="item">
+            if (item.Body == null && !item.Rendered) continue;
+            <div id=@item.RouteUrl style="@(Router.Compare(item) ? "display: block;":"display: none;")">
+                <CascadingValue Value="item">
+                    <ErrorCatcher ShowMessage>
+                        <!-- 在路由页面中获取当前页的信息 -->
                         @item.Body
-                    </CascadingValue>
-                </div>
-            </ErrorCatcher>
+                    </ErrorCatcher>
+                </CascadingValue>
+            </div>
         }
     </ScrollBar>
 }
@@ -27,6 +27,7 @@
     {
         base.OnInitialized();
         Navigator.LocationChanged += LocationChangedEventHandler;
+        // Router.DataChangedEvent += StateHasChanged;
     }
 
     // protected override async Task OnInitializedAsync()
@@ -55,6 +56,7 @@
     protected override ValueTask OnDisposeAsync()
     {
         Navigator.LocationChanged -= LocationChangedEventHandler;
+        Router.DataChangedEvent -= StateHasChanged;
         return base.OnDisposeAsync();
     }
 

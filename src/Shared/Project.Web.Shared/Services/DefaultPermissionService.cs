@@ -90,7 +90,7 @@ namespace Project.Web.Shared.Services
                     .ExecuteAsync();
 
                 var roleId = role.RoleId;
-                string[] powers = [.. role.Powers];
+                string[] powers = [.. role.Powers?.Distinct()];
                 var d = await scoped.Delete<TRolePower>().Where(r => r.RoleId == roleId).ExecuteAsync();
                 var i = 0;
                 foreach (var p in powers)
@@ -99,7 +99,7 @@ namespace Project.Web.Shared.Services
                     var ef = await scoped.Insert<TRolePower>(rp).ExecuteAsync();
                     i += ef;
                 }
-                if (n == 1 && d > 0 && i == powers.Length)
+                if (n == 1 && i == powers.Length)
                 {
                     await scoped.CommitTranAsync();
                     return QueryResult.Success();
@@ -141,8 +141,35 @@ namespace Project.Web.Shared.Services
 
         public virtual async Task<QueryResult> InsertRoleAsync(TRole role)
         {
-            var n = await context.Insert(role).ExecuteAsync();
-            return QueryResult.Return(n > 0);
+            using var scoped = context.CreateScoped();
+            try
+            {
+                var n = await context.Insert(role).ExecuteAsync();
+                var roleId = role.RoleId;
+                string[] powers = [.. role.Powers?.Distinct()];
+                var i = 0;
+                foreach (var p in powers)
+                {
+                    var rp = new TRolePower() { RoleId = roleId, PowerId = p };
+                    var ef = await scoped.Insert(rp).ExecuteAsync();
+                    i += ef;
+                }
+                if (n == 1 && i == powers.Length)
+                {
+                    await scoped.CommitTranAsync();
+                    return QueryResult.Success();
+                }
+                else
+                {
+                    await scoped.RollbackTranAsync();
+                    return QueryResult.Fail();
+                }
+            }
+            catch (Exception ex)
+            {
+                await scoped.RollbackTranAsync();
+                return QueryResult.Fail().SetMessage(ex.Message);
+            }
         }
 
         public virtual async Task<QueryResult> DeleteRoleAsync(TRole role)
@@ -196,7 +223,7 @@ namespace Project.Web.Shared.Services
                                           PowerType = w.Tb1.PowerType,
                                           PowerLevel = w.Tb1.PowerLevel,
                                           Icon = w.Tb1.Icon,
-                                          Path = w.Tb1.Path,
+                                          //Path = w.Tb1.Path,
                                           Sort = w.Tb1.Sort
                                       });
             return powers.CollectionResult();

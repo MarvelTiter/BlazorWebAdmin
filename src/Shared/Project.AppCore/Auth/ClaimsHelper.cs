@@ -9,6 +9,8 @@ namespace Project.AppCore.Auth;
 /// </summary>
 public static class ClaimsHelper
 {
+    const string USER_POWER = "POWER";
+    const string USER_MENU = "MENU";
     /// <summary>
     /// 根据用户信息构建一个<see cref="ClaimsPrincipal"/>对象。
     /// </summary>
@@ -21,7 +23,7 @@ public static class ClaimsHelper
         {
             new(ClaimTypes.Name, info.UserId),
             new(ClaimTypes.GivenName, info.UserName!),
-            new(nameof(UserInfo.UserPowers), JsonSerializer.Serialize(info.UserPowers)),
+            //new(nameof(UserInfo.UserPowers), JsonSerializer.Serialize(info.UserPowers)),
             new(nameof(UserInfo.Token), info.Token ?? ""),
             new(nameof(UserInfo.CreatedTime), $"{info.CreatedTime.ToBinary()}"),
             new(nameof(UserInfo.AdditionalValue), JsonSerializer.Serialize(info.AdditionalValue))
@@ -30,7 +32,10 @@ public static class ClaimsHelper
         claims.AddRange(info.Roles.Select(r => new Claim(ClaimTypes.Role, r)));
 
         // 遍历用户权限，为每个权限添加一个声明
-        claims.AddRange((info.UserPowers ?? []).Select(p => new Claim("Right", p)));
+        claims.AddRange(info.UserPowers.Select(p => new Claim(USER_POWER, p)));
+
+        // 遍历用户菜单，为每个菜单添加一个声明 
+        claims.AddRange(info.UserPages.Select(p => new Claim(USER_MENU, p)));
 
         // 返回一个新的ClaimsPrincipal对象，包含所有声明
         return new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
@@ -51,7 +56,8 @@ public static class ClaimsHelper
         var createdTime = DateTime.FromBinary(long.Parse(createdBinary!));
         var additionalValue = principal.FindFirstValue(nameof(UserInfo.AdditionalValue)) ?? "{}";
         var roles = principal.FindAll(ClaimTypes.Role).Select(c => c.Value);
-        var powers = principal.FindAll("Right").Select(c => c.Value);
+        var powers = principal.FindAll(USER_POWER).Select(c => c.Value);
+        var pages = principal.FindAll(USER_MENU).Select(c => c.Value);
 
         // 构建并返回一个UserInfo对象
         return new UserInfo
@@ -61,7 +67,8 @@ public static class ClaimsHelper
             Token = token,
             CreatedTime = createdTime,
             Roles = [.. roles],
-            UserPowers = [..powers],
+            UserPowers = [.. powers],
+            UserPages = [.. pages],
             AdditionalValue = JsonSerializer.Deserialize<Dictionary<string, object?>>(additionalValue) ?? []
         };
     }

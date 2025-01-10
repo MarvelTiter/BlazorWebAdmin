@@ -24,8 +24,7 @@
 
 .content {
     position: relative;
-    box-shadow: 0px 12px 10px rgb(0 0 0 / 10%);
-    background: white;
+    box-shadow: var(--border-shadow);
     padding: 10px;
 }
 
@@ -34,8 +33,12 @@
     right: -52px;
     top: 50%;
     transform: translateY(-50%);
-    background: rgb(64 158 255 / 0.6);
-    border-radius: 24px;
-    box-shadow: 0px 0px 10px 7px rgb(64 158 255 / 30%);
+    background: rgb(255 255 255 / 0.6);
+    border-radius: 26px;
+    box-shadow: var(--border-shadow);
     cursor: pointer;
+    font-size: 48px;
+    width: 52px;
+    height: 52px;
+    display: flex;
 }

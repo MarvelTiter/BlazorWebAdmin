@@ -38,12 +38,12 @@
     </div>
         ;
 
-    IEnumerable<string> FaIcons => string.IsNullOrEmpty(filter) ? Utils.FontAwesomeHelper.AllIcons() : Utils.FontAwesomeHelper.AllIcons().Where(i => i.Contains(filter, StringComparison.InvariantCultureIgnoreCase));
+    IEnumerable<string> Fa47Icons => string.IsNullOrEmpty(filter) ? Utils.FontAwesomeHelper.AllIcons() : Utils.FontAwesomeHelper.AllIcons().Where(i => i.Contains(filter, StringComparison.InvariantCultureIgnoreCase));
 
     RenderFragment FontAwesomeContent =>
     @<div>
         <div class="icons-wrapper">
-            @foreach (var item in FaIcons)
+            @foreach (var item in Fa47Icons)
         {
             <span @onclick="e => HandleClickEvent(item)" class="@(innerValue==item? "selected":"")">
                 <FontIcon IconName="@item"></FontIcon>

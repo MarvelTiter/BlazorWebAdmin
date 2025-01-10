@@ -6,13 +6,17 @@
         <div class="tags_box @Class" style="--tags_box-theme-color: @App.MainThemeColor;display:flex;height:50px;">
             @foreach (var item in Router.TopLinks)
             {
-                @if (!item.Cache) continue;
                 var actived = Router.CompareUrl(item.RouteUrl);
                 <div class="nav_top @(actived ? "active":"")" @oncontextmenu="e => OpenContextMenu(e, item)">
                     <NavLink href="@item.RouteUrl" Match="NavLinkMatch.All">
                         <div style="display:flex;padding:0 5px 0 5px;align-items: center;">
                             <MIcon IconName="@item.Icon" ClassName="top-link-icon"></MIcon>
-                            <span @oncontextmenu:preventDefault>@Router.GetLocalizerString(item)</span>
+                            <span @oncontextmenu:preventDefault>
+                                @{
+                                    item.Title ??= @Router.GetLocalizerString(item).AsContent();
+                                }
+                                @item.Title
+                            </span>
                             @if (actived && !item.Pin)
                             {
                                 <span style="padding-left:5px;" @onclick="e => CloseTag(item)" @onclick:stopPropagation @onclick:preventDefault>
@@ -27,7 +31,8 @@
     </HorizontalScroll>
 </div>
 <ul class="@ContextmenuClass.Class" style="left:@contextmenuLeft;top:@contextmenuTop">
-    <li @onclick="e => CloseOther()">除此之外全部关闭</li>
-    <li @onclick="e => CloseAll()">关闭全部选项卡</li>
-    <li @onclick="e => CloseSelf()">关闭</li>
+    @* <li @onclick="@ReLoad">刷新</li> *@
+    <li @onclick="@CloseOther">除此之外全部关闭</li>
+    <li @onclick="@CloseAll">关闭全部选项卡</li>
+    <li @onclick="@CloseSelf">关闭</li>
 </ul>

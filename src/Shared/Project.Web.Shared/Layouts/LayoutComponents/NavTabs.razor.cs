@@ -61,6 +61,13 @@ namespace Project.Web.Shared.Layouts.LayoutComponents
             return CloseMenu();
         }
 
+        //private async Task ReLoad()
+        //{
+        //    if (current == null) return;
+        //    await Router.Reload();
+        //    await CloseMenu();
+        //}
+
         private async Task CloseOther()
         {
             if (current == null) return;

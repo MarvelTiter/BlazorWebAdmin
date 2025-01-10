@@ -12,13 +12,14 @@ namespace Project.Constraints.Store
         event Func<TagRoute, Task<bool>>? RouterChangingEvent;
         event Func<RouterMeta, Task<bool>>? RouteMetaFilterEvent;
         List<TagRoute> TopLinks { get; }
-        List<RouteMenu> Menus { get; set; }
+        IEnumerable<RouteMenu> Menus { get; }
         TagRoute? Current { get; }
         string CurrentUrl { get; }
         Task RouteDataChangedHandleAsync(Microsoft.AspNetCore.Components.RouteData routeData);
         void Remove(string link);
         Task RemoveOther(string link);
         Task Reset();
+        //Task Reload();
         Task InitRoutersAsync(UserInfo? userInfo);
         Type? GetRouteType(string routeUrl);
         string GetLocalizerString(RouterMeta meta);

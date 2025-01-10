@@ -8,7 +8,7 @@
 
 	<ItemGroup>
 		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
-		<Content Remove="wwwroot\css\font-awesome.css" />
+		<Content Remove="wwwroot\css\font-awesome4.7.min.css" />
 	</ItemGroup>
 
 
@@ -19,7 +19,7 @@
 		<EmbeddedResource Include="Langs\zh-CN\index.json">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
-		<EmbeddedResource Include="wwwroot\css\font-awesome.css" />
+		<EmbeddedResource Include="wwwroot\css\font-awesome4.7.min.css" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,0 +1,13 @@
+﻿@page "/param/{Id}"
+@using Project.Constraints.Common.Attributes
+@using Project.Constraints.PageHelper
+@* @implements IRoutePageTitle *@
+@attribute [TagTitle("路由参数")]
+接收的路由参数: @Id
+@code {
+    [Parameter] public string? Id { get; set; }
+    public RenderFragment GetTitle()
+    {
+        return $"路由参数{Id}".AsContent();
+    }
+}
