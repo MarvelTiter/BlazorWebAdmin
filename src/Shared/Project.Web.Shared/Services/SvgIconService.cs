@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Project.Web.Shared.Services
 {
@@ -23,7 +24,6 @@ namespace Project.Web.Shared.Services
             var names = _nameCache.Keys;
             return Task.FromResult(names.CollectionResult());
         }
-
         public async Task<QueryResult<string>> GetIcon(string? name)
         {
             if (string.IsNullOrEmpty(name))
@@ -40,6 +40,8 @@ namespace Project.Web.Shared.Services
 
 
         static bool loaded;
+
+        //private static string IconFullName(string name) => name.StartsWith(AppConst.CUSTOM_SVG_PREFIX) ? name : $"{AppConst.CUSTOM_SVG_PREFIX}{name}";
 
         private static async Task<string> ReadIconData(string name, IHostEnvironment environment)
         {
@@ -75,6 +77,7 @@ namespace Project.Web.Shared.Services
             foreach (var f in files)
             {
                 var name = Path.GetFileNameWithoutExtension(f);
+                if (!name.StartsWith(AppConst.CUSTOM_SVG_PREFIX)) continue;
                 _nameCache.TryAdd(name, f);
             }
             loaded = true;

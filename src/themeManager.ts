@@ -26,9 +26,6 @@ function changeTheme(theme: string, url: string) {
     }
 }
 
-function followOsTheme(url: string) {
-}
-
 function getOsThemeChangedHandler(url: string): () => void {
     const darkUrl = url
     return function () {

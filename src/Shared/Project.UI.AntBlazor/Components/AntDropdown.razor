@@ -1,5 +1,5 @@
 ﻿@using System.Diagnostics.CodeAnalysis
-<Dropdown Trigger=@(new Trigger[]{Trigger.Click}) Style="display:unset;" HiddenMode=@Options.HiddenMode>
+<Dropdown Trigger=@(new Trigger[]{Trigger.Click}) HiddenMode=@Options.HiddenMode>
     <Overlay>
         <Menu>
             @foreach (var item in Options.Actions ?? [])
@@ -18,8 +18,3 @@
 @code {
     [Parameter, NotNull] public DropdownOptions? Options { get; set; }
 }
-<style>
-    .ant-menu-title-content {
-        flex: 1;
-    }
-</style>

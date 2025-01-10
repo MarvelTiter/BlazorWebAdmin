@@ -1,0 +1,14 @@
+﻿@using Project.Constraints.Common.Attributes
+@using Project.Constraints.UI
+@page "/testtabs"
+@attribute [PageInfo(Title = "Tab测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
+@inject IUIService UI
+@(UI.BuildTabs()
+    .AddTab<TestGrid>("测试1")
+    .AddTab<TestStackPanel>("测试2")
+    .AddTab("测试3", "测试3".AsContent())
+    .Render()
+    )
+@code {
+
+}

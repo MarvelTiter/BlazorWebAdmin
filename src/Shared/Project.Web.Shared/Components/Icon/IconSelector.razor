@@ -1,0 +1,87 @@
+﻿@namespace Project.Web.Shared.Components
+@using Microsoft.Extensions.Localization
+@using Project.Constraints.Page
+@inherits BasicComponent
+@UI.BuildButton(this).Text(Localizer["IconSelector.ButtonText"]).Primary().OnClick(OpenModal).Render()
+<MModal Title="@Localizer["IconSelector.Title"]" @bind-Visible="visible" Width="50vw" HideDefaultFooter>
+    @UI.BuildInput(this).Bind(() => filter).Render()
+    <span>Selected: @innerValue</span>
+    @(UI.BuildTabs()
+        .AddTab("FontAwesome", FontAwesomeContent)
+        .AddTab("自定义SVG", CustomSvgContent)
+        .Render()
+        )
+    <div style="text-align:center;margin-top:1em;">
+        @UI.BuildButton(this).Primary().Text(Localizer["CustomButtons.Ok"]).OnClick(Confirm).Render()
+    </div>
+</MModal>
+@code {
+    string[] icons = [];
+    string filter = string.Empty;
+    string innerValue = string.Empty;
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+    [Parameter] public EventCallback OnChanged { get; set; }
+    [Inject, NotNull] IStringLocalizer? Localizer { get; set; }
+    [Inject, NotNull] ISvgIconService? SvgService { get; set; }
+    private bool visible;
+    RenderFragment CustomSvgContent =>
+    @<div>
+        <div class="icons-wrapper">
+            @foreach (var item in icons)
+        {
+            <span @onclick="e => HandleClickEvent(item)" class="@(innerValue==item? "selected":"")">
+                <SvgIcon IconName="@item"></SvgIcon>
+            </span>
+        }
+        </div>
+    </div>
+        ;
+
+    IEnumerable<string> Fa47Icons => string.IsNullOrEmpty(filter) ? Utils.FontAwesomeHelper.AllIcons() : Utils.FontAwesomeHelper.AllIcons().Where(i => i.Contains(filter, StringComparison.InvariantCultureIgnoreCase));
+
+    RenderFragment FontAwesomeContent =>
+    @<div>
+        <div class="icons-wrapper">
+            @foreach (var item in Fa47Icons)
+        {
+            <span @onclick="e => HandleClickEvent(item)" class="@(innerValue==item? "selected":"")">
+                <FontIcon IconName="@item"></FontIcon>
+            </span>
+        }
+        </div>
+    </div>
+    ;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        innerValue = Value ?? string.Empty;
+        var result = await SvgService.GetAllIcon();
+        icons = result.Payload.ToArray();
+    }
+
+    private void OpenModal()
+    {
+        visible = true;
+    }
+
+    private void HandleClickEvent(string iconName)
+    {
+        innerValue = iconName;
+        //StateHasChanged();
+    }
+
+    private async Task Confirm()
+    {
+        if (ValueChanged.HasDelegate)
+        {
+            await ValueChanged.InvokeAsync(innerValue);
+        }
+        if (OnChanged.HasDelegate)
+        {
+            await OnChanged.InvokeAsync(innerValue);
+        }
+        visible = false;
+    }
+}

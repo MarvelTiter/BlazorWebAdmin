@@ -5,11 +5,8 @@ using Project.Constraints.UI;
 
 namespace Project.Web.Shared.Layouts
 {
-    public partial class RootLayout : IDomEventHandler, IDisposable
+    public partial class RootLayout : IDisposable
     {
-        public event Func<MouseEventArgs, Task>? BodyClickEvent;
-        public event Func<KeyboardEventArgs, Task>? OnKeyDown;
-        public event Func<KeyboardEventArgs, Task>? OnKeyUp;
         protected ElementReference? RootWrapper { get; set; }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -21,20 +18,6 @@ namespace Project.Web.Shared.Layouts
             }
         }
 
-        protected Task HandleRootClick(MouseEventArgs e)
-        {
-            return BodyClickEvent?.Invoke(e) ?? Task.CompletedTask;
-        }
-
-        protected Task HandleKeyDownAction(KeyboardEventArgs e)
-        {
-            return OnKeyDown?.Invoke(e) ?? Task.CompletedTask;
-        }
-
-        protected Task HandleKeyUpAction(KeyboardEventArgs e)
-        {
-            return OnKeyUp?.Invoke(e) ?? Task.CompletedTask;
-        }
 
         private bool disposedValue;
         protected virtual void Dispose(bool disposing)
@@ -58,5 +41,7 @@ namespace Project.Web.Shared.Layouts
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+
     }
 }

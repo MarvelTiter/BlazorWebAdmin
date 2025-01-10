@@ -5,11 +5,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Project.Constraints.Store;
 using Project.Constraints.UI;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-
+#pragma warning disable IDE0130
 namespace Project.Web.Shared.Components
 {
-    public class ErrorCatcher : ErrorBoundaryBase, IExceptionHandler
+    public class ErrorCatcher : ErrorBoundaryBase//, IExceptionHandler
     {
         /// <summary>
         /// 
@@ -18,16 +19,9 @@ namespace Project.Web.Shared.Components
         [NotNull]
         private ILogger<ErrorCatcher>? Logger { get; set; }
 
-        [Inject]
-        [NotNull]
-        private IErrorBoundaryLogger? ErrorBoundaryLogger { get; set; }
-
         [Parameter] public bool ShowMessage { get; set; }
         [Inject, NotNull] IRouterStore? Router { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        protected Exception? Exception { get; set; }
+
 
         public event Func<Exception, Task>? OnHandleExcetionAsync;
         public event Action<Exception>? OnHandleExcetion;
@@ -37,34 +31,48 @@ namespace Project.Web.Shared.Components
             base.OnInitialized();
             ErrorContent ??= RenderException();
         }
-
+        //CrashPage? crashPage;
         private RenderFragment<Exception> RenderException()
         {
             return ex => new RenderFragment(builder =>
             {
                 builder.OpenComponent<CrashPage>(0);
                 builder.AddAttribute(1, nameof(CrashPage.Exception), ex);
+                //builder.AddComponentReferenceCapture(2, obj =>
+                //{
+                //    crashPage = obj as CrashPage;
+                //    StateHasChanged();
+                //});
                 builder.CloseComponent();
             });
         }
-
+        //int errorTimes = 0;
+        //const int MAX_ERRORTIMES = 3;
+        //const int ERROR_OCCUR_INTERVAL = 1000;
+        //Stopwatch sw = new Stopwatch();
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
-            builder.OpenComponent<CascadingValue<IExceptionHandler>>(0);
-            builder.AddAttribute(1, nameof(CascadingValue<IExceptionHandler>.Value), this);
-            builder.AddAttribute(2, nameof(CascadingValue<IExceptionHandler>.IsFixed), true);
-            var content = ChildContent;
+            //builder.OpenComponent<CascadingValue<IExceptionHandler>>(0);
+            //builder.AddAttribute(1, nameof(CascadingValue<IExceptionHandler>.Value), this);
+            //builder.AddAttribute(2, nameof(CascadingValue<IExceptionHandler>.IsFixed), true);
             if (CurrentException != null)
             {
+                //Logger.LogInformation("{RouteUrl} Rendered: {Rendered}", Router.Current?.RouteUrl, Router.Current?.Rendered);
                 if (Router.Current != null)
                 {
                     //不保存状态
-                    Router.Current.Cache = false;
+                    //Router.Current.Rendered = false;
+                    Router.Current.Panic = true;
                 }
-                content = ErrorContent!.Invoke(CurrentException);
+
+                builder.AddContent(0, ErrorContent!.Invoke(CurrentException));
             }
-            builder.AddAttribute(3, nameof(CascadingValue<IExceptionHandler>.ChildContent), content);
-            builder.CloseComponent();
+            else
+            {
+                builder.AddContent(0, ChildContent);
+            }
+            //builder.AddAttribute(3, nameof(CascadingValue<IExceptionHandler>.ChildContent), content);
+            //builder.CloseComponent();
         }
 
         /// <summary>
@@ -73,9 +81,18 @@ namespace Project.Web.Shared.Components
         protected override void OnParametersSet()
         {
             base.OnParametersSet();
-            Exception = null;
             Recover();
         }
+        //bool rendered;
+        //protected override void OnAfterRender(bool firstRender)
+        //{
+        //    base.OnAfterRender(firstRender);
+        //    if (firstRender)
+        //    {
+        //        var ex = CurrentException;
+        //        rendered = true;
+        //    }
+        //}
 
         [Inject, NotNull] public IUIService? UI { get; set; }
         /// <summary>
@@ -87,7 +104,7 @@ namespace Project.Web.Shared.Components
             if (exception is not JSException && ShowMessage)
             {
                 UI.Notify(MessageType.Error, "程序异常", exception.Message);
-                Logger.LogError(exception, exception.Message);
+                Logger.LogError(exception, "{Message}", exception.Message);
             }
             OnHandleExcetion?.Invoke(exception);
             if (OnHandleExcetionAsync != null)
@@ -97,9 +114,9 @@ namespace Project.Web.Shared.Components
             return Task.CompletedTask;
         }
 
-        public Task HandleExceptionAsync(Exception exception)
-        {
-            return OnErrorAsync(exception);
-        }
+        //public Task HandleExceptionAsync(Exception exception)
+        //{
+        //    return OnErrorAsync(exception);
+        //}
     }
 }

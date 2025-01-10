@@ -1,0 +1,50 @@
+﻿@using Project.Web.Shared.ComponentHelper
+<StackPanel IsVertial="@isVertial" HorizontalAlign="@h" VertialAlign="@v">
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:80px;">测试</p>
+    <p class="stack-item" style="height:30px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+</StackPanel>
+
+<StackPanel IsVertial="@isVertial" HorizontalAlign="@h" VertialAlign="@v" Gap="20">
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:80px;">测试</p>
+    <p class="stack-item" style="height:30px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+    <p class="stack-item" style="height:50px;">测试</p>
+</StackPanel>
+
+<p>是否垂直@(UI.BuildSwitch(this).Bind(() => isVertial).Render())</p>
+<p>垂直对齐@(UI.BuildRadioGroup<string, string>(this, vertial).LabelExpression(s => s).ValueExpression(v => v).Bind(() => v).Render())</p>
+<p>水平对齐@(UI.BuildRadioGroup<string, string>(this, horizontal).LabelExpression(s => s).ValueExpression(v => v).Bind(() => h).Render())</p>
+@UI.BuildButton(this).Text("PostCheck").Primary().OnClick(OpenDialog).Render()
+<br/>
+IsBrowser: @OperatingSystem.IsBrowser()
+
+<Project.Web.Shared.Components.CameraTest></Project.Web.Shared.Components.CameraTest>
+
+@code {
+    bool isVertial = false;
+    string v = "top";
+    string h = "left";
+    string[] vertial = ["top", "middle", "bottom"];
+    string[] horizontal = ["left", "center", "right"];
+}
+
+@* <style> *@
+@*     .stack-item { *@
+@*         display: block; *@
+@*         border: 1px solid black; *@
+@*     } *@
+@* </style> *@

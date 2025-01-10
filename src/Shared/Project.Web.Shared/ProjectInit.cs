@@ -37,7 +37,7 @@ public static class ProjectInit
         AppConst.SetFooter($@"
         <footer style=""text-align:center"">
              <span>{AppConst.App.Id} ©2023-{DateTime.Now:yyyy} Powered By </span>
-             <a href=""#"" target="""" _blank"""">{AppConst.App.Company}</a>
+             <a target="""" _blank"""">{AppConst.App.Company}</a>
              <span>{AppConst.App.Version}</span>
          </footer>
 ");

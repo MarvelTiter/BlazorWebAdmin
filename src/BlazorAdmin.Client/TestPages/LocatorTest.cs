@@ -8,13 +8,11 @@ using System.Diagnostics.CodeAnalysis;
 namespace BlazorAdmin.Client.TestPages
 {
 #if DEBUG
-    [Route("/test5")]
-    [PageInfo(Id = "TestPage5", Title = "Locator测试5", GroupId = "test")]
+    [Route("/testlocator")]
+    [PageInfo(Title = "Locator测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
 #endif
     public class LocatorTest : PageIndex
     {
-        [Inject, NotNull] IUIService? UI { get; set; }
-
         protected override Type? GetPageType(IPageLocatorService pageLocator)
         {
             return pageLocator.GetPage("LocatorTest");

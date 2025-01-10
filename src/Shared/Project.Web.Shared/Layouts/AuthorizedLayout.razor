@@ -3,11 +3,7 @@
 @inject IProtectedLocalStorage LocalStorage
 @inject IOptions<Token> Token
 @inject IOptions<AppSetting> Setting
-<div @onclick="@HandleRootClick"
-     @onkeydown="@HandleKeyDownAction"
-     @onkeyup="@HandleKeyUpAction"
-     id="app"
-     tabindex="0"
+<div id="app"
      @ref="RootWrapper">
     @* <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
     <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken">

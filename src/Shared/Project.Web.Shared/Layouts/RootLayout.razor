@@ -1,10 +1,10 @@
 ﻿@inherits LayoutComponentBase
-<div id="root"
-     @onclick="@HandleRootClick"
-     @onkeydown="@HandleKeyDownAction"
-     @onkeyup="@HandleKeyUpAction"
+@* @onclick="@HandleRootClick" *@
+@* @onkeydown="@HandleKeyDownAction" *@
+@* @onkeyup="@HandleKeyUpAction" *@
+<div id="app"
      @ref="RootWrapper">
-    <CascadingValue Value=this IsFixed>
+    <CascadingValue Value="this" IsFixed>
         @Body
     </CascadingValue>
 </div>

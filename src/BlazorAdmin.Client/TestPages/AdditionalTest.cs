@@ -5,14 +5,8 @@ using Project.Constraints.Store.Models;
 namespace BlazorAdmin.Client.TestPages
 {
     [AutoInject(ServiceType = typeof(IAddtionalInterceptor))]
-    public class AdditionalTest : IAddtionalInterceptor
+    public class AdditionalTest(IPageLocatorService pageLocator) : IAddtionalInterceptor
     {
-        private readonly IPageLocatorService pageLocator;
-
-        public AdditionalTest(IPageLocatorService pageLocator)
-        {
-            this.pageLocator = pageLocator;
-        }
         public Task<bool> RouterChangingAsync(TagRoute route)
         {
             Console.WriteLine($"AdditionalTest: RouterChangingAsync: {route.RouteUrl}");
@@ -21,7 +15,7 @@ namespace BlazorAdmin.Client.TestPages
 
         public Task AfterWebApplicationAccessedAsync()
         {
-            pageLocator.SetPage<TestPage2>("LocatorTest");
+            pageLocator.SetPage<TestSplitAndDataTable>("LocatorTest");
             return Task.CompletedTask;
         }
     }

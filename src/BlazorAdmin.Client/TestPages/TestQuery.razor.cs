@@ -5,10 +5,10 @@ namespace BlazorAdmin.Client.TestPages
 {
 #if DEBUG
     [Route("/test4")]
-    [PageInfo(Id = "TestPage4", Title = "测试4", GroupId = "test")]
+    [PageInfo(Title = "Query测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
     //[Layout(typeof(NotAuthorizedLayout))]
 #endif
-    public partial class TestPage4
+    public partial class TestQuery
     {
     }
 }

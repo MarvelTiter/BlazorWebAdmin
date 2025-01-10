@@ -1,0 +1,29 @@
+﻿@using System.Globalization
+@inherits BasicComponent
+
+@(UI.BuildSelect<LangInfo, string>(this, Options.CurrentValue.SupportedCulture)
+    .ValueExpression(l => l.Culture)
+    .LabelExpression(l => l.Name)
+    .Bind(() => current, ToggleLang)
+    .Render()
+)
+
+@code {
+    [Inject, NotNull] IProtectedLocalStorage? Storage { get; set; }
+    [Inject, NotNull] public IOptionsMonitor<CultureOptions>? Options { get; set; }
+    [Inject, NotNull] public ILanguageService? Language { get; set; }
+
+    string current = CultureInfo.DefaultThreadCurrentUICulture?.Name ?? "";
+    private Task ToggleLang()
+    {
+        if (current != CultureInfo.DefaultThreadCurrentUICulture?.Name)
+        {
+            var culture = CultureInfo.GetCultureInfo(current);
+            App.AppLanguage = current;
+            Storage.SetAsync(ConstraintString.APP_STORE_KEY, App);
+            Language.SetLanguage(current);
+            Navigator.NavigateTo(Navigator.Uri);
+        }
+        return Task.CompletedTask;
+    }
+}

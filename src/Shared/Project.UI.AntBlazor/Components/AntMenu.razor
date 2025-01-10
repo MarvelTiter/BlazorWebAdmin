@@ -1,9 +1,12 @@
-﻿<Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed="@Collapsed" Style="flex: 1;">
-    @foreach (var item in Router.Menus.Where(m => m.Group == "ROOT"))
-    {
-        <AntMenuItem Route=item></AntMenuItem>
-    }
-</Menu>
+﻿@* 需要套一个元素才能让 ::deep 选择到 *@
+<div>
+    <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed="@Collapsed" Style="flex: 1;">
+        @foreach (var item in Router.Menus.Where(m => m.Group == "ROOT"))
+        {
+            <AntMenuItem Route=item></AntMenuItem>
+        }
+    </Menu>
+</div>
 
 @code {
     [Parameter, NotNull] public IRouterStore? Router { get; set; }

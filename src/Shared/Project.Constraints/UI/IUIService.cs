@@ -21,10 +21,13 @@ public interface IUIComponent
     IUIComponent AdditionalParameters(Dictionary<string, object> parameters);
     RenderFragment Render();
 }
+
 public interface IUIComponent<TPropModel> : IUIComponent
 {
+    TPropModel Model { get; set; }
     IUIComponent<TPropModel> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value);
 }
+
 public interface IClickable<TReturn>
 {
     TReturn OnClick(Action callback);
@@ -43,7 +46,6 @@ public interface IBindableInputComponent<TPropModel, TValue> : IUIComponent<TPro
     IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, Func<Task>? onchange);
     //IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null);
 }
-
 
 public interface IButtonInput : IUIComponent<ButtonProp>, IClickable<IButtonInput>;
 
@@ -65,6 +67,7 @@ public enum ButtonType
     Danger,
     Success,
 }
+
 public interface IUIService
 {
     string MainStyle();
@@ -77,6 +80,9 @@ public interface IUIService
     Task<TReturn> ShowDialogAsync<TReturn>(FlyoutOptions<TReturn> options);
     Task<TReturn> ShowDrawerAsync<TReturn>(FlyoutDrawerOptions<TReturn> options);
     IServiceProvider ServiceProvider { get; }
+    //RenderFragment BuildIcon(string name);
+
+    IUIComponent<TabsProp> BuildTabs();
 
     /// <summary>
     /// 生成输入框

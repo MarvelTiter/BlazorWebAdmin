@@ -46,6 +46,8 @@ namespace Project.Web.Shared.Pages
     }
 
     [Route("/user/index")]
+    [PageGroup("BasicSetting", "BasicSetting", 2, Icon = "fa fa-cog")]
+    [PageInfo(Title = "用户管理", Icon = "svg-user", Sort = 1, GroupId = "BasicSetting")]
     public class UserIndex : SystemPageIndex
     {
         public override Type? GetPageType(IPageLocatorService customSetting)
@@ -55,6 +57,7 @@ namespace Project.Web.Shared.Pages
     }
 
     [Route("/operationlog")]
+    [PageInfo(Title = "操作日志", Icon = "svg-log", Sort = 2, GroupId = "BasicSetting")]
     public class RunLogIndex : SystemPageIndex
     {
         public override Type? GetPageType(IPageLocatorService customSetting)
@@ -63,7 +66,19 @@ namespace Project.Web.Shared.Pages
         }
     }
 
+    [Route("/rolepermission")]
+    [PageGroup("SysSetting", "SysSetting", 2, Icon = "fa fa-cog")]
+    [PageInfo(Id = "RolePermission", Title = "权限分配", Icon = "svg-assign_permissions", Sort = 1, GroupId = "SysSetting")]
+    public class RolePermissionIndex : SystemPageIndex
+    {
+        public override Type? GetPageType(IPageLocatorService customSetting)
+        {
+            return customSetting.GetRolePermissionPageType();
+        }
+    }
+
     [Route("/permission")]
+    [PageInfo(Id = "Permission", Title = "权限设置", Icon = "svg-rights", Sort = 2, GroupId = "SysSetting")]
     public class PermissionIndex : SystemPageIndex
     {
         public override Type? GetPageType(IPageLocatorService customSetting)
@@ -72,12 +87,4 @@ namespace Project.Web.Shared.Pages
         }
     }
 
-    [Route("/rolepermission")]
-    public class RolePermissionIndex : SystemPageIndex
-    {
-        public override Type? GetPageType(IPageLocatorService customSetting)
-        {
-            return customSetting.GetRolePermissionPageType();
-        }
-    }
 }

@@ -87,7 +87,7 @@
     "Home": "Dashboard",
     "OnlineUsers": "Online Users",
     "BasicSetting": "Setting",
-    "Setting": "SysSetting",
+    "SysSetting": "SysSetting",
     "UserIndex": "Users",
     "RolePermissionIndex": "Role Permission",
     "PermissionIndex": "Permissions",

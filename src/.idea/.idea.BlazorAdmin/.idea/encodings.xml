@@ -2,5 +2,6 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/BlazorAdmin/Program.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Shared/Project.UI.AntBlazor/Components/AntProfile.razor" charset="GB18030" />
   </component>
 </project>

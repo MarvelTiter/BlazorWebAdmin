@@ -1,4 +1,5 @@
-@import "css/font-awesome.min.css";
+@import "_content/Project.Web.Shared/css/font-awesome4.7.min.css";
+
 h1:focus {
     outline: none;
 }
@@ -80,9 +81,8 @@ html, body {
     fill: currentColor;
 }
 
-.nav-icon {
-    width: 1em;
-    height: 1em;
+.nav-menu-icon {
+    font-size: 18px;
 }
 
 .top-link-icon {
@@ -144,4 +144,3 @@ html[data-set='dark'] * {
 #app {
     background-color: var(--bg);
 }
-

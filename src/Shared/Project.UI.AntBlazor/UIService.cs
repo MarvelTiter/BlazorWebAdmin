@@ -16,9 +16,6 @@ using Project.Constraints.UI.Tree;
 using Project.UI.AntBlazor.Components;
 using System.Linq.Expressions;
 using OneOf;
-using Project.Web.Shared.ComponentHelper;
-using System.Data;
-using Project.Constraints.Common;
 using Microsoft.Extensions.DependencyInjection;
 using AutoInjectGenerator;
 
@@ -32,17 +29,17 @@ namespace Project.UI.AntBlazor
         INotificationService notificationService,
         IServiceProvider services) : IUIService
     {
-        // private readonly ModalService modalService = modalService;
-        // private readonly IMessageService messageService = messageService;
-        // private readonly DrawerService drawerService = drawerService;
-        // private readonly INotificationService notificationService = notificationService;
-
         public IServiceProvider ServiceProvider { get; } = services;
         public string MainStyle() => "_content/AntDesign/css/ant-design-blazor.css";
 
         public string DarkStyle() => "_content/AntDesign/css/ant-design-blazor.dark.css";
 
         public string UIFrameworkJs() => "_content/AntDesign/js/ant-design-blazor.js";
+
+        //public RenderFragment BuildIcon(string name)
+        //{
+        //    return builder => builder.Component<Icon>().SetComponent(c => c.Type, name).Build();
+        //}
 
         public IBindableInputComponent<DefaultProp, string> BuildInput(object reciver)
         {
@@ -477,6 +474,15 @@ namespace Project.UI.AntBlazor
             return builder => { builder.Component<AntPopover>().SetComponent(c => c.Options, options).Build(); };
         }
 
+        public IUIComponent<PopoverOptions> BuildPopover()
+        {
+            return new PropComponentBuilder<AntPopover, PopoverOptions>(
+                self =>
+                {
+                    self.SetComponent(p => p.Options, self.Model);
+                });
+        }
+
         public IUIComponent<ModalProp> BuildModal()
         {
             return new PropComponentBuilder<Modal, ModalProp>(self =>
@@ -500,6 +506,24 @@ namespace Project.UI.AntBlazor
         public RenderFragment RenderContainer()
         {
             return b => b.Component<AntContainer>().Build();
+        }
+
+        public IUIComponent<TabsProp> BuildTabs()
+        {
+            return new PropComponentBuilder<Tabs, TabsProp>(self =>
+            {
+                void tabContent(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder b)
+                {
+                    foreach (var item in self.Model.TabContents)
+                    {
+                        b.Component<TabPane>()
+                        .SetComponent(p => p.Tab, item.Title)
+                        .SetComponent(p => p.TabTemplate, item.TitleTemplate)
+                        .SetContent(item.Content ?? "".AsContent()).Build();
+                    }
+                }
+                self.SetComponent(m => m.ChildContent, tabContent);
+            });
         }
 
         public int GetMenuWidth(bool collapsed)

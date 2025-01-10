@@ -11,7 +11,9 @@
     }
     @if (ShowCollapseButton)
     {
-        <SvgIcon ClassName="menu-collapse-icon" IconName="@IconName" OnClick="ToggleMenu" Style="cursor:pointer;"></SvgIcon>
+        <span @onclick="ToggleMenu" style="cursor:pointer;">
+            <MIcon ClassName="menu-collapse-icon" IconName="@IconName"></MIcon>
+        </span>
     }
 </div>
 
@@ -21,7 +23,7 @@
     [Parameter] public string? Class { get; set; }
     [Inject, NotNull] public IOptionsMonitor<AppSetting>? Config { get; set; }
     private bool collapse = false;
-    private string IconName => collapse ? "expand_menu" : "collapse_menu";
+    private string IconName => collapse ? "fa fa-indent" : "fa fa-outdent";//"svg-expand_menu" : "svg-collapse_menu";
 
     protected override void OnInitialized()
     {

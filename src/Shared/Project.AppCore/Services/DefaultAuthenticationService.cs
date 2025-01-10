@@ -1,16 +1,7 @@
 ﻿using AutoAopProxyGenerator;
-using AutoInjectGenerator;
-using LightORM;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Project.Constraints.Models.Permissions;
-using Project.Constraints.Store;
-using Project.Web.Shared.Pages;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.AppCore.Services
 {
@@ -44,7 +35,7 @@ namespace Project.AppCore.Services
                 UserId = username,
                 UserName = u?.UserName ?? "",
             };
-            
+
             var result = userInfo.Result(u != null);
             if (!result.IsSuccess)
             {
@@ -60,7 +51,11 @@ namespace Project.AppCore.Services
             }
 
             var roles = await context.Select<UserRole>().Where(ur => ur.UserId == username).ToListAsync(r => r.RoleId);
+            var projSetting = Services.GetService<IProjectSettingService>();
+            var powers = await projSetting!.GetUserPowersAsync(userInfo);
             userInfo.Roles = [.. roles];
+            userInfo.UserPowers = [.. powers.Where(p => p.PowerType != PowerType.Page).Select(p => p.PowerId)];
+            userInfo.UserPages = [.. powers.Where(p => p.PowerType == PowerType.Page).Select(p => p.PowerId)];
             return result;
         }
 

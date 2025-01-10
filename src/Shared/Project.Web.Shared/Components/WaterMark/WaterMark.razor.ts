@@ -1,6 +1,5 @@
 import { BaseComponent } from "../../JsCore/baseComponent";
 import { getComponentById } from "../../JsCore/componentStore";
-
 export class WaterMark extends BaseComponent {
     wrapper: HTMLElement
     options?: any
@@ -35,7 +34,7 @@ export class WaterMark extends BaseComponent {
         });
     }
 
-    setWatermark(options) {
+    setWatermark(options: any | undefined) {
         if (this.mask) {
             this.mask.remove();
         }
@@ -46,17 +45,27 @@ export class WaterMark extends BaseComponent {
         this.mask.style.backgroundImage = `url(${url})`;
         this.wrapper.appendChild(this.mask);
     }
+
     dispose() {
         this.ob.disconnect();
     }
 
-    static setWatermark(id, wrapper, options) {
+    static setWatermark(id: string, wrapper: HTMLElement, options: any) {
         let com = getComponentById(id, () => {
             return new WaterMark(wrapper)
         })
         com.setWatermark(options);
     }
 
+    static refreshWatermark(id: string) {
+        const com = getComponentById(id)
+        if (com) {
+            // 下一帧再重新绘制
+            window.requestAnimationFrame(() => {
+                com.setWatermark(com.options);
+            })
+        }
+    }
 }
 
 function createDiv(): HTMLElement {

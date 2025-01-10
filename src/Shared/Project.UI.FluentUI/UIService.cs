@@ -31,6 +31,10 @@ public class UIService(
     public string DarkStyle() => string.Empty;
 
     public string UIFrameworkJs() => "_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js";
+    public RenderFragment BuildIcon(string name)
+    {
+        throw new NotImplementedException();
+    }
     public void Message(MessageType type, string message)
     {
         switch (type)
@@ -402,5 +406,8 @@ public class UIService(
         return collapsed ? 42 : 240;
     }
 
-
+    public IUIComponent<TabsProp> BuildTabs()
+    {
+        throw new NotImplementedException();
+    }
 }

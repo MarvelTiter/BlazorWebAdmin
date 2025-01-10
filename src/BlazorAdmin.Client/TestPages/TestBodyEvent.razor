@@ -1,0 +1,33 @@
+﻿@page "/testbodyevent"
+@using Project.Constraints.Common.Attributes
+@using System.Diagnostics.CodeAnalysis
+@using Project.Constraints.UI
+@attribute [PageInfo(Title = "BodyEvent测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
+@implements IAsyncDisposable
+<div style="display:flex;flex-direction:column;gap:5px;">
+    @foreach (var item in keys)
+    {
+        <span @key="@item.Item1">@($"{item.Item1:yyyy-MM-dd HH:mm:ss}") => @item.Item2</span>
+    }
+</div>
+@code {
+    [CascadingParameter, NotNull] public IAppDomEventHandler? AppDom { get; set; }
+    List<(DateTime, string)> keys = [];
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        AppDom.OnKeyDown += HandleKeyDown;
+    }
+
+    Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        keys.Add((DateTime.Now, e.Key));
+        return InvokeAsync(StateHasChanged);
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        AppDom.OnKeyDown -= HandleKeyDown;
+        return ValueTask.CompletedTask;
+    }
+}

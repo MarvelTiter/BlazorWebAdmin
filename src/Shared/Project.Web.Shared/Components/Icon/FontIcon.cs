@@ -12,11 +12,11 @@ public class FontIcon : ComponentBase
     [Parameter]
     public string HtmlTag { get; set; } = "i";
     [Parameter]
-    public string? Icon { get; set; }
+    public string? IconName { get; set; }
     [Parameter]
     public string? ClassName { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalParameters { get; set; } = [];
-    string IconClass => $"{Icon} {ClassName}";
+    string IconClass => $"{IconName} {ClassName}";
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, HtmlTag);

@@ -1,5 +1,6 @@
 ﻿namespace Project.Constraints.UI.Props
 {
+    [AttributeUsage(AttributeTargets.Property)]
     public class PropNameAttribute : Attribute
     {
         public PropNameAttribute(string name)

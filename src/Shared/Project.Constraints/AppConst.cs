@@ -18,8 +18,9 @@ public static class AppConst
     public static AppInfo App { get; set; } = new AppInfo();
 
     public const string TEMP_FOLDER = "tempfile";
+    public const string CUSTOM_SVG_PREFIX = "svg-";
 
-    static List<Assembly> AdditionalPageAssemblies = new List<Assembly>();
+    private readonly static List<Assembly> additionalPageAssemblies = [];
     //public static Assembly ServerAssembly { get; set; }
     //public static Assembly ClientAssembly { get; set; }
     //public static string GetStatisticsFileWithVersion(string path)
@@ -44,9 +45,9 @@ public static class AppConst
         return [AppAssembly, .. AdditionalAssemblies];
     }
 
-    public static List<Assembly> AllAssemblies => allAssemblise.Value;
+    public static List<Assembly> AllAssemblies => allAssemblise.Value.Distinct().ToList();
 
-    public static List<Assembly> AdditionalAssemblies => AdditionalPageAssemblies;
+    public static List<Assembly> AdditionalAssemblies => additionalPageAssemblies;
     [NotNull] public static Assembly? AppAssembly { get; set; }
     //public static IEnumerable<Assembly> AllEnableAssembly()
     //{
@@ -65,7 +66,7 @@ public static class AppConst
     {
         foreach (var item in types)
         {
-            AdditionalPageAssemblies.Add(item.Assembly);
+            additionalPageAssemblies.Add(item.Assembly);
         }
     }
 
@@ -73,7 +74,7 @@ public static class AppConst
     {
         foreach (var item in asms)
         {
-            AdditionalPageAssemblies.Add(item);
+            additionalPageAssemblies.Add(item);
         }
     }
     /// <summary>

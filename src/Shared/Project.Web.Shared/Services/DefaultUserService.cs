@@ -38,8 +38,26 @@ namespace Project.Web.Shared.Services
 
         public virtual async Task<QueryResult> InsertUserAsync(TUser user)
         {
-            var u = await context.Insert(user).ExecuteAsync();
-            return u > 0;
+            using var scoped = context.CreateScoped();
+            try
+            {
+                var u = await context.Insert(user).ExecuteAsync();
+                var roles = user.Roles ?? [];
+                var usrId = user.UserId;
+                await scoped.Delete<TUserRole>().Where(u => u.UserId == usrId).ExecuteAsync();
+                foreach (var r in roles)
+                {
+                    var ur = new TUserRole() { UserId = usrId, RoleId = r };
+                    await scoped.Insert(ur).ExecuteAsync();
+                }
+                await scoped.CommitTranAsync();
+                return QueryResult.Success();
+            }
+            catch (Exception ex)
+            {
+                await scoped.RollbackTranAsync();
+                return QueryResult.Fail().SetMessage(ex.Message);
+            }
         }
 
         public virtual async Task<QueryResult> ModifyUserPasswordAsync(string uid, string old, string pwd)

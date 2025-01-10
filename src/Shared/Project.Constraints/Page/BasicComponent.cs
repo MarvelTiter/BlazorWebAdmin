@@ -25,7 +25,7 @@ public class BasicComponent : ComponentBase, IAsyncDisposable
         return ValueTask.CompletedTask;
     }
 
-    protected virtual async ValueTask DisposeAsync(bool disposing)
+    protected async ValueTask DisposeAsync(bool disposing)
     {
         if (!disposedValue)
         {
@@ -43,8 +43,9 @@ public class BasicComponent : ComponentBase, IAsyncDisposable
         }
     }
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        return DisposeAsync(disposing: true);
+        await DisposeAsync(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }
