@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Project.Constraints.Store.Models;
 using Project.Constraints.UI;
+using Project.Web.Shared.Components;
 
 namespace Project.Web.Shared.Layouts.LayoutComponents
 {
@@ -11,14 +12,26 @@ namespace Project.Web.Shared.Layouts.LayoutComponents
         private string contextmenuLeft = "";
         private string contextmenuTop = "";
         private TagRoute? current;
+        private HorizontalScroll? horizontalScroll;
+        private ElementReference? leftButton;
+        private ElementReference? rightButton;
         [CascadingParameter, NotNull] public IAppDomEventHandler? RootLayout { get; set; }
         [Parameter] public string? Class { get; set; }
         private int navMenuWidth = 200;
+
         protected override void OnInitialized()
         {
             base.OnInitialized();
             Router.DataChangedEvent += StateHasChanged;
+            // Router.RouterChangingEvent += RouterOnRouterChangingEvent;
         }
+
+        // private async Task<bool> RouterOnRouterChangingEvent(TagRoute arg)
+        // {
+        //     await InvokeVoidAsync("checkActiveChanged", arg.RouteId);
+        //     return true;
+        // }
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             await base.OnAfterRenderAsync(firstRender);
@@ -26,6 +39,17 @@ namespace Project.Web.Shared.Layouts.LayoutComponents
             {
                 navMenuWidth = await InvokeAsync<int>("getMenuWidth");
             }
+        }
+
+        protected override async ValueTask Init()
+        {
+            var scrollWrap = horizontalScroll?.GetWrapElementRef();
+            await InvokeVoidAsync("init", new
+            {
+                tabsContainer = scrollWrap,
+                leftButton,
+                rightButton,
+            });
         }
 
         private ClassHelper ContextmenuClass => ClassHelper.Default.AddClass("context").AddClass("open", () => showContextmenu);
@@ -47,9 +71,9 @@ namespace Project.Web.Shared.Layouts.LayoutComponents
             }
         }
 
-        private void OpenContextMenu(MouseEventArgs e, TagRoute current)
+        private void OpenContextMenu(MouseEventArgs e, TagRoute route)
         {
-            this.current = current;
+            current = route;
             contextmenuLeft = $"{e.ClientX + 10}px";
             contextmenuTop = $"{e.ClientY + 10}px";
             showContextmenu = true;

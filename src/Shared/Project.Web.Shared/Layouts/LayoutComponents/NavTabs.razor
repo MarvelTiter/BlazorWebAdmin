@@ -2,12 +2,15 @@
 @using Project.Web.Shared.Routers
 @inherits JsComponentBase
 <div style="flex:1;width:calc(100% - @(navMenuWidth + 16)px)">
-    <HorizontalScroll>
-        <div class="tags_box @Class" style="--tags_box-theme-color: @App.MainThemeColor;display:flex;height:50px;">
+    <div class="tags-box @Class" style="--tags_box-theme-color: @App.MainThemeColor;display:flex;height:50px;">
+        <div class="nav-top arrow hidden left" @ref="@leftButton">
+            <MIcon IconName="svg-left"></MIcon>
+        </div>
+        <HorizontalScroll style="display: flex; flex:1;" @ref="@horizontalScroll">
             @foreach (var item in Router.TopLinks)
             {
                 var actived = Router.CompareUrl(item.RouteUrl);
-                <div class="nav_top @(actived ? "active":"")" @oncontextmenu="e => OpenContextMenu(e, item)">
+                <div class="nav-top @(actived ? "active" : "")" data-id="@item.RouteId" @oncontextmenu="e => OpenContextMenu(e, item)">
                     <NavLink href="@item.RouteUrl" Match="NavLinkMatch.All">
                         <div style="display:flex;padding:0 5px 0 5px;align-items: center;">
                             <MIcon IconName="@item.Icon" ClassName="top-link-icon"></MIcon>
@@ -19,7 +22,8 @@
                             </span>
                             @if (actived && !item.Pin)
                             {
-                                <span style="padding-left:5px;" @onclick="e => CloseTag(item)" @onclick:stopPropagation @onclick:preventDefault>
+                                <span style="padding-left:5px;" @onclick="e => CloseTag(item)" @onclick:stopPropagation
+                                      @onclick:preventDefault>
                                     X
                                 </span>
                             }
@@ -27,8 +31,11 @@
                     </NavLink>
                 </div>
             }
+        </HorizontalScroll>
+        <div class="nav-top arrow hidden right" @ref="@rightButton">
+            <MIcon IconName="svg-right"></MIcon>
         </div>
-    </HorizontalScroll>
+    </div>
 </div>
 <ul class="@ContextmenuClass.Class" style="left:@contextmenuLeft;top:@contextmenuTop">
     @* <li @onclick="@ReLoad">刷新</li> *@

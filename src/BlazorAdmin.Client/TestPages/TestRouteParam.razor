@@ -1,9 +1,22 @@
 ﻿@page "/testrouteparam"
 @using Project.Constraints.Common.Attributes
 @attribute [PageInfo(Title = "路由参数测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
-<NavLink href="/param/123">路由参数123</NavLink>
-<NavLink href="/param/456">路由参数456</NavLink>
-<NavLink href="/param/789">路由参数789</NavLink>
+@inject NavigationManager Navigation
+<span class="nav-p" @onclick="@(e => NavigateTo("123"))">路由参数123</span>
+<span class="nav-p" @onclick="@(e => NavigateTo("456"))">路由参数456</span>
+<span class="nav-p" @onclick="@(e => NavigateTo("789"))">路由参数789</span>
+<p>
+    <NavLink href="/param/123">路由参数123</NavLink>
+</p>
+<p>
+    <NavLink href="/param/456">路由参数456</NavLink>
+</p>
+<p>
+    <NavLink href="/param/789">路由参数789</NavLink>
+</p>
 @code {
-    
+    public void NavigateTo(string id)
+    {
+        Navigation.NavigateTo($"/param/{id}", replace: true);
+    }
 }
