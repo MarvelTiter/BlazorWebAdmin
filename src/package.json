@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build": "tsup",
-    "build:pub":"tsup --minify terser"
+    "build:pub": "tsup --minify terser"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,8 @@
     "terser": "^5.31.1",
     "tsup": "^8.1.0",
     "typescript": "^5.5.2"
+  },
+  "dependencies": {
+    "blazor-admin": "file:"
   }
 }

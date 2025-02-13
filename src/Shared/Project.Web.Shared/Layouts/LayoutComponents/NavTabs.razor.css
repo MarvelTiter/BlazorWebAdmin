@@ -8,8 +8,11 @@
         color: var(--major-color);
         font-weight: 600;
     }
+
+
+
 /* 标签样式 */
-.tags_box .nav_top {
+.tags-box .nav-top {
     color: var(--font-color);
     display: flex;
     align-items: center;
@@ -21,8 +24,11 @@
     user-select: none;
     transition: all .2s;
     -webkit-transition: all .2s;
+    position: relative;
 }
-    .tags_box .nav_top.active::before {
+
+    /* 激活的标签的前面的点 */
+    .tags-box .nav-top.active::before {
         content: '';
         background: var(--major-color);
         display: inline-block;
@@ -33,43 +39,85 @@
         margin-right: 2px;
     }
 
+    /*激活的标签的下横线*/
+    .tags-box .nav-top.active::after {
+        content: '';
+        position: absolute;
+        /*减去padding的宽度*/
+        width: calc(100% - 40px);
+        height: 80%;
+        border-bottom: var(--major-color) 2px solid;
+        pointer-events: none;
+    }
+
+    .tags-box .nav-top.arrow {
+        width: 2em;
+        padding: 0;
+        transition: 0.2s all ease-in-out;
+    }
+
+        .tags-box .nav-top.arrow:not(.forbidden):hover {
+            transform: scale(1.5);
+        }
+
+        .tags-box .nav-top.arrow.hidden {
+            display: none;
+        }
+
+        .tags-box .nav-top.arrow.forbidden {
+            cursor: not-allowed;
+        }
+
+
 /* card 布局样式 */
-.tags_box.card {
-/*    box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);*/
+.tags-box.card {
     padding: 3px;
     flex: 1;
 }
-    .tags_box.card .nav_top.active {
-        background-color: var(--background-color);
-        color: var(--major-color);
-        box-shadow: var(--border-shadow);
-        border-radius: 4px;
+
+    .tags-box.card .nav-top {
+        /*background-color: var(--background-color);*/
     }
 
+        .tags-box.card .nav-top.active {
+            background-color: var(--background-color);
+            color: var(--major-color);
+            box-shadow: var(--border-shadow);
+            border-radius: 4px;
+        }
+
 /* classic 布局样式 */
-.tags_box.classic {
+.tags-box.classic {
     box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
     flex: 1;
 }
-    .tags_box.classic .nav_top.active {
+
+    .tags-box.classic .nav-top.active {
         background-color: #f5f5f5;
         color: rgb(64, 158, 255);
     }
-html[data-theme='dark'] .tags_box.classic {
+        /*classic布局不显示下横线*/
+        .tags-box.classic .nav-top.active::after {
+            width: 0;
+        }
+
+html[data-theme='dark'] .tags-box.classic {
     background-color: var(--background-color);
 }
-    html[data-theme='dark'] .tags_box.classic .nav_top.active {
+
+    html[data-theme='dark'] .tags-box.classic .nav-top.active {
         background-color: var(--background-color);
         color: rgb(64, 158, 255);
     }
-        html[data-theme='dark'] .tags_box.classic .nav_top.active * {
+
+        html[data-theme='dark'] .tags-box.classic .nav-top.active * {
             color: rgb(64, 158, 255);
         }
 
 /* 右键菜单样式 */
 .context {
     padding: 10px;
-/*    border: 1px solid #d8dce5;*/
+    /*    border: 1px solid #d8dce5;*/
     background-color: var(--background-color);
     border-radius: 10px;
     position: absolute;

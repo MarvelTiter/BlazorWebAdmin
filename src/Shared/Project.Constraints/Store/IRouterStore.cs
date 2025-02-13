@@ -15,6 +15,7 @@ namespace Project.Constraints.Store
         IEnumerable<RouteMenu> Menus { get; }
         TagRoute? Current { get; }
         string CurrentUrl { get; }
+        void GoTo(string uri);
         Task RouteDataChangedHandleAsync(Microsoft.AspNetCore.Components.RouteData routeData);
         void Remove(string link);
         Task RemoveOther(string link);

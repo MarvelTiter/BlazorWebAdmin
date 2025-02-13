@@ -9,6 +9,7 @@ using Project.Web.Shared.Components;
 using Project.Web.Shared.Store;
 using System.Reflection;
 using static Project.Web.Shared.Routers.RouterStoreExtensions;
+
 namespace Project.Web.Shared.Routers;
 
 public static class RouterStoreExtensions
@@ -30,23 +31,37 @@ public static class RouterStoreExtensions
         if (!url2.StartsWith('/')) url2 = '/' + url2;
         return url1 == url2;
     }
+
+    public static void NavigateToPreiousPage(this IRouterStore store)
+    {
+        if (store.Current is null) return;
+        var currentIndex = store.TopLinks.IndexOf(store.Current);
+        if (currentIndex == 0) return;
+        var previousUri = store.TopLinks[currentIndex - 1].RouteUrl;
+        store.GoTo(previousUri);
+    }
+
+    public static void NavigateToNextPage(this IRouterStore store)
+    {
+        if (store.Current is null) return;
+        var currentIndex = store.TopLinks.IndexOf(store.Current);
+        if (currentIndex == store.TopLinks.Count - 1) return;
+        var nextUri = store.TopLinks[currentIndex + 1].RouteUrl;
+        store.GoTo(nextUri);
+    }
+
 }
 
 [AutoInject(ServiceType = typeof(IRouterStore))]
-public class RouterStore(IProjectSettingService settingService
-        , NavigationManager navigationManager
-        , IUserStore userStore
-        , IStringLocalizer<RouterStore> localizer
-        , IOptionsMonitor<CultureOptions> options
-        , ILogger<RouterStore> logger
-        , IOptionsMonitor<AppSetting> setting) : StoreBase, IRouterStore
+public class RouterStore(IProjectSettingService settingService, NavigationManager navigationManager, IUserStore userStore, IStringLocalizer<RouterStore> localizer, IOptionsMonitor<CultureOptions> options, ILogger<RouterStore> logger, IOptionsMonitor<AppSetting> setting) : StoreBase, IRouterStore
 {
     readonly Dictionary<string, TagRoute> pages = [];
+
     //private FrozenDictionary<string, RouteMenu>? frozenMenus;
     private List<RouteMenu> menus = [];
     public List<TagRoute> TopLinks => [.. pages.Values];
 
-    public IEnumerable<RouteMenu> Menus => menus;// frozenMenus?.Values ?? [];
+    public IEnumerable<RouteMenu> Menus => menus; // frozenMenus?.Values ?? [];
 
     public int Count { get; set; }
 
@@ -66,9 +81,11 @@ public class RouterStore(IProjectSettingService settingService
             {
                 return '/' + url[0..url.IndexOf('?')];
             }
+
             return '/' + url;
         }
     }
+
     private static string? AttachFirstSlash(string? url)
     {
         if (string.IsNullOrEmpty(url)) return null;
@@ -77,6 +94,7 @@ public class RouterStore(IProjectSettingService settingService
     }
 
     TagRoute? preview;
+
     public async Task RouteDataChangedHandleAsync(RouteData routeData)
     {
         if (!pages.TryGetValue(CurrentUrl, out var tag))
@@ -90,6 +108,7 @@ public class RouterStore(IProjectSettingService settingService
                 if (meta != null)
                     meta.Cache = false;
             }
+
             tag = new TagRoute
             {
                 RouteId = meta?.RouteId ?? CurrentUrl,
@@ -113,12 +132,14 @@ public class RouterStore(IProjectSettingService settingService
             // 不允许导航到此页面
             tag.Body ??= b => b.Component<ForbiddenPage>().Build();
         }
+
         if (preview != null)
         {
             if (preview.Panic || !preview.Cache)
             {
                 preview.Body = null;
             }
+
             if (!preview.Rendered && preview.RouteUrl != CurrentUrl)
             {
                 preview.Drop();
@@ -128,6 +149,7 @@ public class RouterStore(IProjectSettingService settingService
                 preview.SetActive(false);
             }
         }
+
         //preview?.SetActive(false);
         tag.SetActive(true);
         preview = tag;
@@ -138,19 +160,20 @@ public class RouterStore(IProjectSettingService settingService
     {
         var pagetype = routeData.PageType;
         var routeValues = routeData.RouteValues;
+
         void RenderForLastValue(RenderTreeBuilder builder)
-        {   //dont reference RouteData again
+        {
+            //dont reference RouteData again
             builder.OpenComponent(0, pagetype);
             foreach (KeyValuePair<string, object?> routeValue in routeValues)
             {
                 builder.AddAttribute(1, routeValue.Key, routeValue.Value);
             }
-            builder.AddComponentReferenceCapture(2, obj =>
-            {
-                CollectPageAdditionalInfo(route, obj);
-            });
+
+            builder.AddComponentReferenceCapture(2, obj => { CollectPageAdditionalInfo(route, obj); });
             builder.CloseComponent();
         }
+
         return RenderForLastValue;
     }
 
@@ -164,7 +187,7 @@ public class RouterStore(IProjectSettingService settingService
             {
                 route.Title = page.GetTitle();
             }
-            if (route.RouteTitle is null)
+            else if (route.RouteTitle is null)
             {
                 var tta = obj.GetType().GetCustomAttribute<TagTitleAttribute>();
                 if (tta != null)
@@ -176,6 +199,7 @@ public class RouterStore(IProjectSettingService settingService
                     route.Title = CurrentUrl.AsContent();
                 }
             }
+
             NotifyChanged();
         }
     }
@@ -186,6 +210,7 @@ public class RouterStore(IProjectSettingService settingService
         {
             p.Drop();
         }
+
         pages.Remove(link);
     }
 
@@ -200,6 +225,7 @@ public class RouterStore(IProjectSettingService settingService
             }
             //return localizer[meta.RouteId];
         }
+
         return meta.RouteTitle;
     }
 
@@ -213,8 +239,10 @@ public class RouterStore(IProjectSettingService settingService
             {
                 p.Drop();
             }
+
             pages.Remove(key);
         }
+
         NotifyChanged();
         return Task.CompletedTask;
     }
@@ -225,9 +253,15 @@ public class RouterStore(IProjectSettingService settingService
         {
             return Task.CompletedTask;
         }
+
         Current.Drop();
-        navigationManager.NavigateTo(CurrentUrl);
+        GoTo(CurrentUrl);
         return Task.CompletedTask;
+    }
+
+    public void GoTo(string uri)
+    {
+        navigationManager.NavigateTo(uri);
     }
 
     public Task Reset()
@@ -246,6 +280,7 @@ public class RouterStore(IProjectSettingService settingService
         preview = homeTag;
         return Task.CompletedTask;
     }
+
     public async Task InitRoutersAsync(UserInfo? userInfo)
     {
         try
@@ -276,6 +311,7 @@ public class RouterStore(IProjectSettingService settingService
             {
                 savedInfos = [.. await settingService.GetUserPowersAsync(userInfo)];
             }
+
             foreach (var meta in AllPages.Pages.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
             {
                 if (!menus.Any(m => m.RouteId == meta.RouteId))
@@ -294,10 +330,12 @@ public class RouterStore(IProjectSettingService settingService
                             meta.RouteTitle = savedMeta.PowerName;
                             meta.Sort = savedMeta.Sort;
                         }
+
                         menus.Add(new RouteMenu(meta));
                     }
                 }
             }
+
             //menus.Sort((a, b) => a.Sort - b.Sort);
             this.menus = [.. menus.OrderBy(m => m.Sort)];
             //frozenMenus = menus.OrderByDescending(a => a.Sort).ToDictionary(m => m.RouteId, m => m).ToFrozenDictionary();
@@ -366,6 +404,7 @@ public class RouterStore(IProjectSettingService settingService
         {
             enable = EnableShowUserDashboard(userStore, setting.CurrentValue);
         }
+
         if (RouterChangingEvent != null)
         {
             //return await RouterChangingEvent.Invoke(tag);
@@ -374,25 +413,29 @@ public class RouterStore(IProjectSettingService settingService
                 enable = enable && await item.Invoke(tag);
             }
         }
+
         return enable;
     }
 
     public event Func<RouterMeta, Task<bool>>? RouteMetaFilterEvent;
+
     private async Task<bool> OnRouteMetaFilterAsync(RouterMeta meta)
     {
         if (IsUserDashboard(meta))
         {
             return EnableShowUserDashboard(userStore, setting.CurrentValue);
         }
+
         var used = meta.RouteType == null
-            || AppConst.AllAssemblies.IndexOf(meta.RouteType.Assembly) > -1
-            || meta.RouteType.Assembly == Assembly.GetEntryAssembly()
-            || (meta.RouteType.Assembly.GetName().Name?.EndsWith(".Client") ?? false);
+                   || AppConst.AllAssemblies.IndexOf(meta.RouteType.Assembly) > -1
+                   || meta.RouteType.Assembly == Assembly.GetEntryAssembly()
+                   || (meta.RouteType.Assembly.GetName().Name?.EndsWith(".Client") ?? false);
         if (RouteMetaFilterEvent != null)
         {
             var enable = await RouteMetaFilterEvent.Invoke(meta);
             return used && enable;
         }
+
         return used;
     }
 

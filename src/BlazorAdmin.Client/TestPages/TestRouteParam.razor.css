@@ -1,0 +1,7 @@
+﻿.nav-p {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px 12px;
+    display: inline-flex;
+    cursor: pointer;
+}
