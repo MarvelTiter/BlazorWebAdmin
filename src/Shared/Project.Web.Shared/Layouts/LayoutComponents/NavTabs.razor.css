@@ -8,9 +8,9 @@
         color: var(--major-color);
         font-weight: 600;
     }
-    
- 
-    
+
+
+
 /* 标签样式 */
 .tags-box .nav-top {
     color: var(--font-color);
@@ -50,18 +50,24 @@
         pointer-events: none;
     }
 
-.tags-box .nav-top.arrow {
-    width: 2em;
-    padding:0;
-    transition: 0.2s all ease-in-out;
-}
-.tags-box .nav-top.arrow:hover > *{
-    transform: scale(1.5);
-}
+    .tags-box .nav-top.arrow {
+        width: 2em;
+        padding: 0;
+        transition: 0.2s all ease-in-out;
+    }
 
-.tags-box .nav-top.arrow.hidden {
-    display: none;
-}
+        .tags-box .nav-top.arrow:not(.forbidden):hover {
+            transform: scale(1.5);
+        }
+
+        .tags-box .nav-top.arrow.hidden {
+            display: none;
+        }
+
+        .tags-box .nav-top.arrow.forbidden {
+            cursor: not-allowed;
+        }
+
 
 /* card 布局样式 */
 .tags-box.card {
@@ -72,12 +78,13 @@
     .tags-box.card .nav-top {
         /*background-color: var(--background-color);*/
     }
-    .tags-box.card .nav-top.active {
-        background-color: var(--background-color);
-        color: var(--major-color);
-        box-shadow: var(--border-shadow);
-        border-radius: 4px;
-    }
+
+        .tags-box.card .nav-top.active {
+            background-color: var(--background-color);
+            color: var(--major-color);
+            box-shadow: var(--border-shadow);
+            border-radius: 4px;
+        }
 
 /* classic 布局样式 */
 .tags-box.classic {

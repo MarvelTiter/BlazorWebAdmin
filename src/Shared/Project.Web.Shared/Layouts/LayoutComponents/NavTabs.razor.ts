@@ -1,6 +1,6 @@
-import {BaseComponent} from "../../JsCore/baseComponent.ts";
-import {getComponentById} from "../../JsCore/componentStore.ts";
-import {EventHandler} from "../../JsCore/eventHandler.ts";
+import { BaseComponent } from "../../JsCore/baseComponent.ts";
+import { getComponentById } from "../../JsCore/componentStore.ts";
+import { EventHandler } from "../../JsCore/eventHandler.ts";
 
 export class NavTabs extends BaseComponent {
     tabsContainer: HTMLElement
@@ -39,7 +39,7 @@ export class NavTabs extends BaseComponent {
                 }
             }
         })
-        this.observer.observe(this.tabsContainer, {childList: true, attributes: true, subtree: true})
+        this.observer.observe(this.tabsContainer, { childList: true, attributes: true, subtree: true })
     }
 
     sizeChanged() {
@@ -52,7 +52,6 @@ export class NavTabs extends BaseComponent {
             this.leftButton.classList.add('hidden')
             this.rightButton.classList.add('hidden')
         }
-
     }
 
     checkActiveChanged(target: HTMLElement | undefined) {
@@ -60,44 +59,58 @@ export class NavTabs extends BaseComponent {
             target === undefined ?
                 this.tabsContainer.querySelector<HTMLElement>('.nav-top.active')
                 : (target.classList.contains('active') ? target : null)
-        if (this.activeTab) {
-            this.fixedPosition()
-        }
+
         if (activeTab === null) return
         if (this.activeTab !== activeTab) {
-            // console.log('active changed')
             this.activeTab = activeTab
-            window['activeTab'] = this.activeTab
+            //console.log('active changed', this.activeTab)
+            this.fixedPosition()
+            this.setButtonState()
+        } else if (this.activeTab) {
             this.fixedPosition()
         }
-        // console.log('active tab', this.activedTab)
     }
 
     fixedPosition() {
         if (!this.activeTab) return
-        const totalWidth = this.tabsContainer.scrollWidth
-        const winWidth = this.tabsContainer.clientWidth
-        const scrollLeft = this.tabsContainer.scrollLeft
-        if (winWidth === totalWidth) return
-        const width = this.activeTab.clientWidth
-        const left = this.activeTab.offsetLeft
         const rect = this.activeTab.getBoundingClientRect()
         const box = this.tabsContainer.getBoundingClientRect()
-        console.log(`offsetLeft: ${left}, clientWidth: ${width}, totalWidth: ${totalWidth}, viewportWidth: ${winWidth}, scrollLeft: ${scrollLeft})`)
-        console.log('activeTab BoundingClientRect', rect)
-        console.log('tabsContainer BoundingClientRect', box)
-        if (left + width > winWidth) {
-            console.log('右边遮挡')
-            this.tabsContainer.scrollTo({
-                left: left + width,
-                behavior: "smooth"
-            })
-        } else if (totalWidth - left > winWidth) {
-            console.log('左边遮挡')
-            this.tabsContainer.scrollTo({
-                left,
-                behavior: "smooth"
-            })
+        //console.log('rect:', rect, 'box:', box)
+        // 判断是否左侧被遮挡
+        if (rect.left < box.left) {
+            this.tabsContainer.scrollBy({
+                left: rect.left - box.left,
+                behavior: 'smooth'
+            });
+        }
+        // 判断是否右侧被遮挡
+        else if (rect.right > box.right) {
+            this.tabsContainer.scrollBy({
+                left: rect.right - box.right,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    setButtonState() {
+        const allTabs = this.tabsContainer.querySelectorAll<HTMLElement>('.nav-top')
+        const max = allTabs.length
+        let current = 0
+        allTabs.forEach((e, i) => {
+            if (e === this.activeTab) {
+                current = i
+            }
+        })
+        if (current === 0) {
+            this.leftButton.classList.add('forbidden')
+        } else {
+            this.leftButton.classList.remove('forbidden')
+        }
+
+        if (current === max - 1) {
+            this.rightButton.classList.add('forbidden')
+        } else {
+            this.rightButton.classList.remove('forbidden')
         }
     }
 

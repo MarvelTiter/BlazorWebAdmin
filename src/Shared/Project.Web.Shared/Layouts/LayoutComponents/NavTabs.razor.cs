@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Project.Constraints.Store.Models;
 using Project.Constraints.UI;
 using Project.Web.Shared.Components;
+using Project.Web.Shared.Routers;
 
 namespace Project.Web.Shared.Layouts.LayoutComponents
 {
@@ -70,6 +71,10 @@ namespace Project.Web.Shared.Layouts.LayoutComponents
                     Navigator.NavigateTo(Router.TopLinks[0].RouteUrl);
             }
         }
+
+        private void NavPrev() => Router.NavigateToPreiousPage();
+
+        public void NavNext() => Router.NavigateToNextPage();
 
         private void OpenContextMenu(MouseEventArgs e, TagRoute route)
         {

@@ -3,10 +3,10 @@
 @inherits JsComponentBase
 <div style="flex:1;width:calc(100% - @(navMenuWidth + 16)px)">
     <div class="tags-box @Class" style="--tags_box-theme-color: @App.MainThemeColor;display:flex;height:50px;">
-        <div class="nav-top arrow hidden left" @ref="@leftButton">
+        <div class="nav-top arrow hidden left forbidden" @ref="@leftButton" @onclick="@NavPrev">
             <MIcon IconName="svg-left"></MIcon>
         </div>
-        <HorizontalScroll style="display: flex; flex:1;" @ref="@horizontalScroll">
+        <HorizontalScroll style="display: flex; flex:1;" data-max-index="@Router.TopLinks.Count" @ref="@horizontalScroll">
             @foreach (var item in Router.TopLinks)
             {
                 var actived = Router.CompareUrl(item.RouteUrl);
@@ -32,7 +32,7 @@
                 </div>
             }
         </HorizontalScroll>
-        <div class="nav-top arrow hidden right" @ref="@rightButton">
+        <div class="nav-top arrow hidden right" @ref="@rightButton" @onclick="@NavNext">
             <MIcon IconName="svg-right"></MIcon>
         </div>
     </div>

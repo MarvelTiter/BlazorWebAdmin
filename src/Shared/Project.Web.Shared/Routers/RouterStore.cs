@@ -31,6 +31,25 @@ public static class RouterStoreExtensions
         if (!url2.StartsWith('/')) url2 = '/' + url2;
         return url1 == url2;
     }
+
+    public static void NavigateToPreiousPage(this IRouterStore store)
+    {
+        if (store.Current is null) return;
+        var currentIndex = store.TopLinks.IndexOf(store.Current);
+        if (currentIndex == 0) return;
+        var previousUri = store.TopLinks[currentIndex - 1].RouteUrl;
+        store.GoTo(previousUri);
+    }
+
+    public static void NavigateToNextPage(this IRouterStore store)
+    {
+        if (store.Current is null) return;
+        var currentIndex = store.TopLinks.IndexOf(store.Current);
+        if (currentIndex == store.TopLinks.Count - 1) return;
+        var nextUri = store.TopLinks[currentIndex + 1].RouteUrl;
+        store.GoTo(nextUri);
+    }
+
 }
 
 [AutoInject(ServiceType = typeof(IRouterStore))]
@@ -236,8 +255,13 @@ public class RouterStore(IProjectSettingService settingService, NavigationManage
         }
 
         Current.Drop();
-        navigationManager.NavigateTo(CurrentUrl);
+        GoTo(CurrentUrl);
         return Task.CompletedTask;
+    }
+
+    public void GoTo(string uri)
+    {
+        navigationManager.NavigateTo(uri);
     }
 
     public Task Reset()
