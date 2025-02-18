@@ -17,6 +17,10 @@ public static class ProjectInit
     {
 
         setting = new ProjectSetting();
+        setting.ConfigurePage(locator =>
+        {
+            locator.SetLoginPageType<DefaultLogin>();
+        });
 #if (ExcludeDefaultService)
 #else
         //set default
@@ -66,28 +70,19 @@ public static class ProjectInit
     internal static void ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
     {
         //var services = builder.Services;
-        services.AddOptions();
-        services.Configure<AppSetting>(opt =>
-        {
-            configuration.GetSection(nameof(AppSetting)).Bind(opt);
-        });
-        services.Configure<CultureOptions>(opt =>
-        {
-            configuration.GetSection(nameof(CultureOptions)).Bind(opt);
-        });
-        services.Configure<Token>(opt =>
-        {
-            configuration.GetSection(nameof(Token)).Bind(opt);
-        });
+        //services.AddOptions();
+        services.Configure<AppSetting>(configuration.GetSection(nameof(AppSetting)));
+        services.Configure<CultureOptions>(configuration.GetSection(nameof(CultureOptions)));
+        services.Configure<Token>(configuration.GetSection(nameof(Token)));
     }
 
     public static T ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration, string? propertyName = null)
       where T : class, new()
     {
         var name = propertyName ?? typeof(T).Name;
-        var section = configuration.GetSection(name);
-        services.Configure<T>(section.Bind);
+        services.Configure<T>(configuration.GetSection(name));
         var option = new T();
+        var section = configuration.GetSection(name);
         section.Bind(option);
         return option;
     }

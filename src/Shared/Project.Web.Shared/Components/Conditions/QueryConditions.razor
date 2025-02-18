@@ -3,26 +3,35 @@
 @using Project.Constraints.Page
 @inherits BasicComponent
 <CascadingValue Value="this">
-    @if (Header is null)
-    {
-        <div @attributes="@AdditionalParameters" style="margin-bottom:@Gap.ToPixel()">
-            <MGrid MinWidth=@ColumnMinWidth GridColumns="@Column" Gap="@Gap.ToPixel()">
-                @ChildContent
-            </MGrid>
-        </div>
-    }
-    else
-    {
-        <div @attributes="@AdditionalParameters" style="margin-bottom:@Gap.ToPixel()">
-            <StackPanel Gap="@Gap">
-                @Header
-                @UI.BuildButton(this).OnClick(() => expand = !expand).Text(expand ? "收起" : "展开").Render()
-            </StackPanel>
-            <div style="margin-top:@Gap.ToPixel(); display:@(expand ? "block":"none");">
-                <StackPanel Gap="@Gap">
-                    @ChildContent
-                </StackPanel>
-            </div>
-        </div>
-    }
+	@if (StackLayout || Header is not null)
+	{
+		<div @attributes="@AdditionalParameters" style="margin-bottom:@Gap.ToPixel()">
+			@if (Header is not null)
+			{
+				<StackPanel Gap="@Gap">
+					@Header
+					@UI.BuildButton(this).OnClick(() => expand = !expand).Text(expand ? "收起" : "展开").Render()
+				</StackPanel>
+				<div style="margin-top:@Gap.ToPixel(); display:@(expand ? "block":"none");">
+					<StackPanel Gap="@Gap" Wrap>
+						@ChildContent
+					</StackPanel>
+				</div>
+			}
+			else
+			{
+				<StackPanel Gap="@Gap">
+					@ChildContent
+				</StackPanel>
+			}
+		</div>
+	}
+	else
+	{
+		<div @attributes="@AdditionalParameters" style="margin-bottom:@Gap.ToPixel()">
+			<MGrid MinWidth=@ColumnWidth GridColumns="@Column" Gap="@Gap.ToPixel()">
+				@ChildContent
+			</MGrid>
+		</div>
+	}
 </CascadingValue>

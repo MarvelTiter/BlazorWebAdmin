@@ -7,11 +7,14 @@ using System.Diagnostics.CodeAnalysis;
 namespace Project.Web.Shared.Pages
 {
 
-    public abstract class SystemPageIndex : ComponentBase, IPageAction
+    public abstract class SystemPageIndex<TPage> : BasicComponent, IPageAction
+        where TPage : SystemPageIndex<TPage>
     {
-        [Inject, NotNull] IProjectSettingService? SettingProvider { get; set; }
+        //[Inject, NotNull] IProjectSettingService? SettingProvider { get; set; }
         [Inject, NotNull] IPageLocatorService? Locator { get; set; }
         protected Type? PageType { get; set; }
+        protected virtual bool CascadingSelf => true;
+        protected virtual bool CascadingFixed => true;
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -23,12 +26,32 @@ namespace Project.Web.Shared.Pages
         {
             if (PageType != null)
             {
-                builder.OpenComponent(0, PageType);
-                builder.AddComponentReferenceCapture(1, obj =>
+                if (CascadingSelf)
                 {
-                    page = obj as IPageAction;
-                });
-                builder.CloseComponent();
+                    builder.OpenComponent<CascadingValue<TPage>>(0);
+                    builder.AddAttribute(1, nameof(CascadingValue<TPage>.Name), typeof(TPage).Name);
+                    builder.AddAttribute(2, nameof(CascadingValue<TPage>.Value), this);
+                    builder.AddAttribute(3, nameof(CascadingValue<TPage>.IsFixed), CascadingFixed);
+                    builder.AddAttribute(4, nameof(CascadingValue<TPage>.ChildContent), (RenderFragment)(child =>
+                    {
+                        child.OpenComponent(0, PageType);
+                        child.AddComponentReferenceCapture(1, obj =>
+                        {
+                            page = obj as IPageAction;
+                        });
+                        child.CloseComponent();
+                    }));
+                    builder.CloseComponent();
+                }
+                else
+                {
+                    builder.OpenComponent(0, PageType);
+                    builder.AddComponentReferenceCapture(1, obj =>
+                    {
+                        page = obj as IPageAction;
+                    });
+                    builder.CloseComponent();
+                }
             }
         }
 
@@ -44,12 +67,14 @@ namespace Project.Web.Shared.Pages
                 await page.OnHiddenAsync();
         }
     }
-
+#if (ExcludeDefaultPages)
+#else
     [Route("/user/index")]
     [PageGroup("BasicSetting", "BasicSetting", 2, Icon = "fa fa-cog")]
     [PageInfo(Title = "用户管理", Icon = "svg-user", Sort = 1, GroupId = "BasicSetting")]
-    public class UserIndex : SystemPageIndex
+    public class UserIndex : SystemPageIndex<UserIndex>
     {
+        protected override bool CascadingSelf => false;
         public override Type? GetPageType(IPageLocatorService customSetting)
         {
             return customSetting.GetUserPageType();
@@ -58,8 +83,9 @@ namespace Project.Web.Shared.Pages
 
     [Route("/operationlog")]
     [PageInfo(Title = "操作日志", Icon = "svg-log", Sort = 2, GroupId = "BasicSetting")]
-    public class RunLogIndex : SystemPageIndex
+    public class RunLogIndex : SystemPageIndex<RunLogIndex>
     {
+        protected override bool CascadingSelf => false;
         public override Type? GetPageType(IPageLocatorService customSetting)
         {
             return customSetting.GetRunLogPageType();
@@ -69,8 +95,9 @@ namespace Project.Web.Shared.Pages
     [Route("/rolepermission")]
     [PageGroup("SysSetting", "SysSetting", 2, Icon = "fa fa-cog")]
     [PageInfo(Id = "RolePermission", Title = "权限分配", Icon = "svg-assign_permissions", Sort = 1, GroupId = "SysSetting")]
-    public class RolePermissionIndex : SystemPageIndex
+    public class RolePermissionIndex : SystemPageIndex<RunLogIndex>
     {
+        protected override bool CascadingSelf => false;
         public override Type? GetPageType(IPageLocatorService customSetting)
         {
             return customSetting.GetRolePermissionPageType();
@@ -79,12 +106,13 @@ namespace Project.Web.Shared.Pages
 
     [Route("/permission")]
     [PageInfo(Id = "Permission", Title = "权限设置", Icon = "svg-rights", Sort = 2, GroupId = "SysSetting")]
-    public class PermissionIndex : SystemPageIndex
+    public class PermissionIndex : SystemPageIndex<RunLogIndex>
     {
+        protected override bool CascadingSelf => false;
         public override Type? GetPageType(IPageLocatorService customSetting)
         {
             return customSetting.GetPermissionPageType();
         }
     }
-
+#endif
 }

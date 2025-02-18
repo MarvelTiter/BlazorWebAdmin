@@ -11,7 +11,8 @@ namespace Project.Web.Shared.Components
     {
         int Column { get; set; }
         int LabelWidth { get; set; }
-        int? ColumnMinWidth { get; set; }
+        int? ContentWidth { get; set; }
+        int? ColumnWidth { get; set; }
         int IndexFixed { get; set; }
         void AddCondition(ICondition condition);
         IList<ICondition> Conditions { get; set; }
@@ -21,13 +22,15 @@ namespace Project.Web.Shared.Components
     public partial class QueryConditions : BasicComponent, IQueryCondition
     {
         [Parameter] public int Column { get; set; } = 5;
-        [Parameter] public int? ColumnMinWidth { get; set; }
+        [Parameter] public int? ColumnWidth { get; set; }
         [Parameter] public int LabelWidth { get; set; } = 100;
+        [Parameter] public int? ContentWidth { get; set; }
         [Parameter] public int Gap { get; set; } = 8;
         [Parameter] public RenderFragment? Header { get; set; }
         [Parameter] public RenderFragment? HeaderButtons { get; set; }
         [Parameter, NotNull] public RenderFragment? ChildContent { get; set; }
         [Parameter] public IRequest? Request { get; set; }
+        [Parameter] public bool StackLayout { get; set; }
         //[Parameter] public EventCallback<ConditionUnit> ConditionChanged { get; set; }
         private bool expand;
         protected override void OnInitialized()

@@ -13,5 +13,10 @@ namespace Project.Web.Shared.Components
         [Parameter] public (int Start, int End) ColSpan { get; set; }
         [Parameter] public (int Start, int End) RowSpan { get; set; }
         [Parameter] public int? LabelWidth { get; set; }
+        [Parameter] public int? ContentWidth { get; set; }
+        private int? FinalContentWidth => ContentWidth ?? Parent.ContentWidth;
+        protected string ContentWidthStyle => FinalContentWidth.HasValue ? $"{FinalContentWidth}px" : "unset";
+        protected string LabelWidthStyle => $"{LabelWidth ?? Parent.LabelWidth}px";
+        protected string ColumnWidthStyle => Parent.ColumnWidth.HasValue ? $"{Parent.ColumnWidth}px" : "unset";
     }
 }

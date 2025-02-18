@@ -23,7 +23,7 @@
                 @UI.BuildButton(this).OnClick(Stop).Text("关闭").Primary().Set("Disabled", !playButtonStatus).Render()
             </div>
             <div style="margin-top:10px;">
-                @UI.BuildSelect(this, Resolutions).Bind(() => resolution).Set("Style", "width:200px;").Render()
+                @UI.BuildSelect(this, CameraOptions.ResolutionOptions).Bind(() => resolution).Set("Style", "width:200px;").Render()
                 @UI.BuildButton(this).OnClick(() => Rotate++).Text("+90°").Primary().Set("Disabled", !playButtonStatus).Render()
                 @UI.BuildButton(this).OnClick(() => Rotate--).Text("-90°").Primary().Set("Disabled", !playButtonStatus).Render()
                 @UI.BuildButton(this).OnClick(Capture).Text("拍照").Primary().Set("Disabled", !playButtonStatus).Render()

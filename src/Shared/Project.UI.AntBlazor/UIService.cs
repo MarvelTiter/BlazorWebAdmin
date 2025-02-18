@@ -311,6 +311,7 @@ namespace Project.UI.AntBlazor
                 DragInViewport = true,
                 OnOk = e => options.OnOk?.Invoke(),
                 OnCancel = e => options.OnClose?.Invoke(),
+                DefaultMaximized = options.FullScreen
             };
 
             if (options.Width != null) modal.Width = options.Width;

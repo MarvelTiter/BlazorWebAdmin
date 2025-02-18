@@ -44,7 +44,7 @@ namespace Project.Web.Shared.Components
         {
             await base.OnInitializedAsync();
             var result = await SvgService.GetIcon(IconName);
-            loadSvgData(result.Payload);
+            LoadSvgData(result.Payload);
         }
 
         public override async Task SetParametersAsync(ParameterView parameters)
@@ -71,12 +71,12 @@ namespace Project.Web.Shared.Components
             if (shouldUpdate)
             {
                 var result = await SvgService.GetIcon(IconName);
-                loadSvgData(result.Payload);
+                LoadSvgData(result.Payload);
                 shouldUpdate = false;
             }
         }
 
-        void loadSvgData(string? svgContent)
+        private void LoadSvgData(string? svgContent)
         {
             if (string.IsNullOrEmpty(svgContent))
             {

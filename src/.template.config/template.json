@@ -32,11 +32,17 @@
         }
     ],
     "symbols": {
-        "ExcludeDefaultService":{
+        "ExcludeDefaultService": {
             "type": "parameter",
-            "datatype":"bool",
+            "datatype": "bool",
             "defaultValue": "false",
             "description": "默认页面是否去除默认的服务实现(需要自己实现服务)"
+        },
+        "ExcludeDefaultPages": {
+            "type": "parameter",
+            "datatype": "bool",
+            "defaultValue": "false",
+            "description": "是否去除默认的页面"
         }
     }
 }

@@ -1,28 +1,30 @@
 ﻿@namespace Project.Web.Shared.Components
 @inherits ConditionBase
 <MGridContent ColSpan="@ColSpan" RowSpan="@RowSpan">
-    <span class="conditions" style="@Style;min-width:@(Parent.ColumnMinWidth.HasValue ? $"{Parent.ColumnMinWidth}px": "unset")">
-        <span class="label" style="min-width:@($"{LabelWidth ?? Parent.LabelWidth}px");">
+    <span class="condition" style="@Style;min-width:@(ColumnWidthStyle);max-width:@(ColumnWidthStyle);">
+        <span class="label" style="min-width:@(LabelWidthStyle);max-width:@(LabelWidthStyle);">
             @Label
         </span>
-        @if (Field != null && ChildContent == null)
-        {
-            if (Field.DataType == typeof(DateTime) || Field.DataType == typeof(DateTime?))
+        <span class="content" style="min-width:@(ContentWidthStyle);max-width:@(ContentWidthStyle);">
+            @if (Field != null && ChildContent == null)
             {
-                @(UI.BuildDatePicker(this).Bind(() => dateValue, NotifyChanged).Render())
-            }
-            else if (Field?.EnumValues != null || (Field?.IsEnum ?? false))
-            {
-                @(UI.BuildDictionarySelect(this, Field.EnumValues!).Bind(() => stringValue, NotifyChanged).Render())
+                if (Field.DataType == typeof(DateTime) || Field.DataType == typeof(DateTime?))
+                {
+                    @(UI.BuildDatePicker(this).Bind(() => dateValue, NotifyChanged).Render())
+                }
+                else if (Field?.EnumValues != null || (Field?.IsEnum ?? false))
+                {
+                    @(UI.BuildDictionarySelect(this, Field.EnumValues!).Bind(() => stringValue, NotifyChanged).Render())
+                }
+                else
+                {
+                    @UI.BuildInput(this).Bind(() => stringValue, NotifyChanged).Render()
+                }
             }
             else
             {
-                @UI.BuildInput(this).Bind(() => stringValue, NotifyChanged).Render()
+                @ChildContent
             }
-        }
-        else
-        {
-            @ChildContent
-        }
+        </span>
     </span>
 </MGridContent>
