@@ -12,6 +12,7 @@ namespace Project.Web.Shared.Components
     {
         [Inject, NotNull] public IProtectedLocalStorage? Storage { get; set; }
         [Inject, NotNull] public IOptionsMonitor<AppSetting>? AppOptions { get; set; }
+        [Inject, NotNull] public ICameraOptions? CameraOptions { get; set; }
         [Parameter] public bool AutoPlay { get; set; }
         [Parameter] public bool EnableClip { get; set; }
         [Parameter] public int Width { get; set; }
@@ -57,30 +58,16 @@ namespace Project.Web.Shared.Components
             public string Content { get; set; }
         }
         private SelectItem<string> dropdownDevices = new SelectItem<string>();
-        public SelectItem<Resolution> Resolutions { get; } = new SelectItem<Resolution>();
+        // [Resolution.QVGA, Resolution.VGA,Resolution.HD,Resolution.FullHD, Resolution.Television4K, Resolution.Cinema4K, Resolution.A4]
         public IEnumerable<DeviceInfo> Devices { get; set; } = Enumerable.Empty<DeviceInfo>();
 
-        static void AddResolution(SelectItem<Resolution> items, Resolution item)
-        {
-            items.Add(item.Name, item);
-        }
+       
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            AddResolution(Resolutions, Resolution.QVGA);
-            AddResolution(Resolutions, Resolution.VGA);
-            AddResolution(Resolutions, Resolution.HD);
-            AddResolution(Resolutions, Resolution.FullHD);
-            AddResolution(Resolutions, Resolution.Television4K);
-            AddResolution(Resolutions, Resolution.Cinema4K);
-            AddResolution(Resolutions, Resolution.A4);
-
-            foreach (var item in AppOptions.CurrentValue.CameraResolutions ?? [])
-            {
-                AddResolution(Resolutions, item);
-            }
-        }
+        //protected override void OnInitialized()
+        //{
+        //    base.OnInitialized();
+        //    TryAddCustomResolution(AppOptions.CurrentValue.CameraResolutions ?? []);
+        //}
 
         protected override void OnParametersSet()
         {

@@ -1,0 +1,16 @@
+﻿@inject IOptionsMonitor<AppSetting> AppOptions
+<PageTitle>登录</PageTitle>
+<div class="login-container" style="background-image: url('/_content/Project.Web.Shared/assets/login_bg.png');background-size:cover;">
+    <div class="title-container">
+        <div class="title-position">
+            @*style="background-image: url('assets/logo.png')"*@
+            <h3 class="title">@AppOptions.CurrentValue.AppTitle</h3>
+        </div>
+    </div>
+    <div class="login-form">
+        @LoginPage.UI.BuildLoginForm(LoginPage.HandleLogin)
+    </div>
+</div>
+@code {
+    [CascadingParameter(Name = "Login"), NotNull] public ILoginPage? LoginPage { get; set; }
+}

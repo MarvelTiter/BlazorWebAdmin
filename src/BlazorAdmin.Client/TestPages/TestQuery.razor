@@ -12,7 +12,7 @@
     @jsonResult
 </pre>
 <p>可收起，Flex布局</p>
-<Project.Web.Shared.Components.QueryConditions LabelWidth="80" ColumnMinWidth="280">
+<Project.Web.Shared.Components.QueryConditions LabelWidth="80" ContentWidth="200">
     <Header>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
@@ -21,8 +21,8 @@
     </Header>
 
     <ChildContent>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称123" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称22" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
@@ -35,7 +35,7 @@
     </ChildContent>
 </Project.Web.Shared.Components.QueryConditions>
 <p>不可收起，Grid布局</p>
-<Project.Web.Shared.Components.QueryConditions LabelWidth="80" ColumnMinWidth="280">
+<Project.Web.Shared.Components.QueryConditions LabelWidth="65" ColumnWidth="200">
     <ChildContent>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
@@ -48,7 +48,7 @@
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.EmptyCondition>
+        <Project.Web.Shared.Components.EmptyCondition LabelWidth="0">
             @UI.BuildButton(this).Text("查询").Render()
             @UI.BuildButton(this).Text("查询").Render()
         </Project.Web.Shared.Components.EmptyCondition>

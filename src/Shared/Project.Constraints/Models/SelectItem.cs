@@ -55,7 +55,7 @@ namespace Project.Constraints.Models
                 return this.ParseEnumValues();
             });
         }
-
+        public bool Contains(string label, Func<T, bool> predicate) => items.Find(o => o.Label == label && predicate.Invoke(o.Value)) != null;
         public SelectItem<T> Add(string label, T value)
         {
             if (frozen) throw new InvalidOperationException();
@@ -75,7 +75,7 @@ namespace Project.Constraints.Models
         }
 
         public void Frozen() => frozen = true;
-
+        public bool IsFrozen => frozen;
         public Dictionary<string, string> EnumValues
         {
             get

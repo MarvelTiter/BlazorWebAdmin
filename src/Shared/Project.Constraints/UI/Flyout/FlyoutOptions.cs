@@ -14,6 +14,7 @@ public class FlyoutOptions
     public RenderFragment? Content { get; set; }
     public RenderFragment? Footer { get; set; }
     public bool ShowFooter { get; set; } = true;
+    public bool FullScreen { get; set; }
 }
 
 public class PopoverOptions

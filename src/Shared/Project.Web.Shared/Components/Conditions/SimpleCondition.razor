@@ -3,26 +3,28 @@
 @inherits ConditionBase
 
 <MGridContent ColSpan="@ColSpan" RowSpan="@RowSpan">
-    <span class="conditions" style="@Style;min-width:@(Parent.ColumnMinWidth.HasValue ? $"{Parent.ColumnMinWidth}px": "unset")">
-        <span class="label" style="min-width:@($"{LabelWidth ?? Parent.LabelWidth}px");">
+    <span class="condition" style="@Style;min-width:@(ColumnWidthStyle);max-width:@(ColumnWidthStyle);">
+        <span class="label" style="min-width:@(LabelWidthStyle);max-width:@(LabelWidthStyle);">
             @Label
         </span>
-        @if (ChildContent != null)
-        {
-            @ChildContent
-        }
-        else if (typeof(TData) == typeof(DateTime) || typeof(TData) == typeof(DateTime?))
-        {
-            @(UI.BuildDatePicker(this).Bind(() => dateValue, NotifyChanged).Render())
-        }
-        else if (EnumValues != null)
-        {
-            @(UI.BuildDictionarySelect(this, EnumValues).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => stringValue!, TryParseValue).Render())
-        }
-        else
-        {
-            @(UI.BuildInput(this).Bind(() => stringValue!, NotifyChanged).Render())
-        }
+        <span class="content" style="min-width:@(ContentWidthStyle);max-width@(ContentWidthStyle);">
+            @if (ChildContent != null)
+            {
+                @ChildContent
+            }
+            else if (typeof(TData) == typeof(DateTime) || typeof(TData) == typeof(DateTime?))
+            {
+                @(UI.BuildDatePicker(this).Bind(() => dateValue, NotifyChanged).Render())
+            }
+            else if (EnumValues != null)
+            {
+                @(UI.BuildDictionarySelect(this, EnumValues).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => stringValue!, TryParseValue).Render())
+            }
+            else
+            {
+                @(UI.BuildInput(this).Bind(() => stringValue!, NotifyChanged).Render())
+            }
+        </span>
     </span>
 </MGridContent>
 
