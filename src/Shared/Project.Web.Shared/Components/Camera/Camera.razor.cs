@@ -57,9 +57,9 @@ namespace Project.Web.Shared.Components
             public string Filename { get; set; }
             public string Content { get; set; }
         }
-        private SelectItem<string> dropdownDevices = new SelectItem<string>();
+        private readonly SelectItem<string> dropdownDevices = [];
         // [Resolution.QVGA, Resolution.VGA,Resolution.HD,Resolution.FullHD, Resolution.Television4K, Resolution.Cinema4K, Resolution.A4]
-        public IEnumerable<DeviceInfo> Devices { get; set; } = Enumerable.Empty<DeviceInfo>();
+        public IEnumerable<DeviceInfo> Devices { get; set; } = [];
 
        
 

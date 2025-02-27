@@ -15,14 +15,13 @@ namespace BlazorAdmin.Client.TestPages
     public partial class TestStackPanel
     {
         [Inject, NotNull] IUIService? UI { get; set; }
-        class RefInt()
+        class RefInt(int value)
         {
-            public int Value { get; set; }
+            public int Value { get; set; } = value;
         }
         async Task OpenDialog()
         {
-            var refInt = new RefInt();
-            refInt.Value = 1;
+            RefInt refInt = new(1);
             await UI.ShowDialogAsync(val => builder =>
             {
                 builder.Div().AddContent(b =>

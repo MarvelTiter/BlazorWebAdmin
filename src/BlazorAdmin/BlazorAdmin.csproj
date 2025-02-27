@@ -13,8 +13,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" />
+		<PackageReference Include="LightORM.Providers.Sqlite" Version="0.0.5" />
 	</ItemGroup>
-
 	<ItemGroup>
 	  <ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
 	  <ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
