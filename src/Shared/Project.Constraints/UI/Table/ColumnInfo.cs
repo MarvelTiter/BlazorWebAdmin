@@ -43,6 +43,7 @@ public record ColumnInfo
     public Dictionary<string, string>? TagColors { get; set; }
     public InputType? InputType { get; set; }
     public Func<object, string>? ValueFormat { get; set; }
+    public string? Format { get; set; }
     public Func<string, Dictionary<string, object>>? AddCellOptions { get; set; }
     public RenderFragment<ColumnItemContext>? CellTemplate { get; set; }
     public RenderFragment<ColumnItemContext>? FormTemplate { get; set; }

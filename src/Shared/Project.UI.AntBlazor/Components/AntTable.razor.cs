@@ -1,9 +1,10 @@
-using AntDesign;
+﻿using AntDesign;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
 using Project.Constraints.Models.Request;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Table;
+using System.Globalization;
 
 namespace Project.UI.AntBlazor.Components;
 
@@ -32,6 +33,10 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
         if (col.ValueFormat != null && context.FieldValue is not null)
         {
             formattedValue = col.ValueFormat.Invoke(context.FieldValue);
+        }
+        else if (col.Format is not null && context.FieldValue is IFormattable ft)
+        {
+            formattedValue = ft.ToString(col.Format, CultureInfo.CurrentUICulture);
         }
 
         if (formattedValue != null)

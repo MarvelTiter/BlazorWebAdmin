@@ -143,7 +143,10 @@ public class QueryCollectionResult<T> : IQueryResult
     public bool IsSuccess { get; set; }
     public int Code { get; set; }
     public string? Message { get; set; }
-
+    /// <summary>
+    /// 当实际返回数据量与<see cref="TotalRecord"/>相同，触发分页时，不主动查询数据
+    /// </summary>
+    public bool IsPagingResult { get; set; }
     object? IQueryResult.Payload
     {
         get => Payload;
@@ -182,12 +185,14 @@ public static class QueryResultExtensions
     public static QueryCollectionResult<T> CollectionResult<T>(this IQueryResult self, IEnumerable<T> payload,
         int total)
     {
+        var isPaging = total != payload.Count();
         return new QueryCollectionResult<T>
         {
             IsSuccess = self.IsSuccess,
             Message = self.Message,
             TotalRecord = total,
-            Payload = payload
+            Payload = payload,
+            IsPagingResult = isPaging
         };
     }
 

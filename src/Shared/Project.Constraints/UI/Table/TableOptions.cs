@@ -7,9 +7,13 @@ using System.Linq.Expressions;
 namespace Project.Constraints.UI.Table;
 public static class TableOptionsExtensions
 {
-    public static void AddColumns(this TableOptions option, params (string Title, string Property)[] columns)
+    public static void AddColumns(this TableOptions option, (string Title, string Property)[] columns, Action<ColumnInfo>? action = null)
     {
-        option.Columns = [..columns.Select(c => new ColumnInfo( c.Title, c.Property))];
+        option.Columns = [..columns.Select(c => {
+            var col = new ColumnInfo( c.Title, c.Property);
+            action?.Invoke(col);
+            return col;
+        })];
     }
 }
 

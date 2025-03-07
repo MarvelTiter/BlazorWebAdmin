@@ -50,6 +50,7 @@ public class ColumnDefinitionAttribute : Attribute
     public bool Readonly { get; set; }
     public bool Visible { get; set; } = true;
     public bool Ellipsis { get; set; }
+    public string? Format { get; set; }
 }
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]

@@ -60,7 +60,8 @@ namespace Project.Constraints.UI.Table
                 Ellipsis = head.Ellipsis,
                 Readonly = head.Readonly,
                 UseTag = head.UseTag,
-                Sortable = head.Sortable
+                Sortable = head.Sortable,
+                Format = head.Format
             };
 
             var formAttr = self.GetCustomAttribute<FormAttribute>();
