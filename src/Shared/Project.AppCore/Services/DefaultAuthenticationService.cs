@@ -91,8 +91,11 @@ namespace Project.AppCore.Services
 
             // var ctx = httpContextAccessor.HttpContext.User;
             await ctx.SignOutAsync();
+            // 解码了
             var redirect = ctx.Request.Query["Redirect"];
-            ctx.Response.Redirect($"/account/login?Redirect={redirect}");
+            // 重新编码
+            var encoded = Uri.EscapeDataString(redirect!);// System.Web.HttpUtility.HtmlEncode(redirect);
+            ctx.Response.Redirect($"/account/login?Redirect={encoded}");
         }
     }
 }

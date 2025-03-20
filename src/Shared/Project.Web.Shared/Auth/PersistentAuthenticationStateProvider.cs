@@ -40,8 +40,9 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
     {
         //appSession.UserStore.ClearUser();
         //await httpContextAccessor.HttpContext.SignOutAsync();
-        var redirect = navigation.ToBaseRelativePath(navigation.Uri);
-        navigation.NavigateTo($"/api/account/logout?Redirect={HttpUtility.UrlEncode(redirect)}", true);
+        var redirect = navigation.ToAbsoluteUri(navigation.Uri);
+        var encoded = Uri.EscapeDataString(redirect.PathAndQuery);
+        navigation.NavigateTo($"/api/account/logout?Redirect={encoded}", true);
         return Task.CompletedTask;
     }
 

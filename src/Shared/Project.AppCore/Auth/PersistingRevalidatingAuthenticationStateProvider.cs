@@ -50,8 +50,9 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
     // 清除认证状态的方法
     public Task ClearState()
     {
-        var redirect = navigation.ToBaseRelativePath(navigation.Uri);
-        navigation.NavigateTo($"/api/account/logout?Redirect={HttpUtility.UrlEncode(redirect)}", true);
+        var redirect = navigation.ToAbsoluteUri(navigation.Uri);
+        var encoded = Uri.EscapeDataString(redirect.PathAndQuery);
+        navigation.NavigateTo($"/api/account/logout?Redirect={encoded}", true);
         return Task.CompletedTask;
     }
 

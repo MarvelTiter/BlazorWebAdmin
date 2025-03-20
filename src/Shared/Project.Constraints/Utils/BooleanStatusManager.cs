@@ -23,14 +23,17 @@ namespace Project.Constraints.Utils
             callback?.Invoke().GetAwaiter().GetResult();
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected virtual async void Dispose(bool disposing)
         {
             if (!disposedValue)
             {
                 if (disposing)
                 {
                     setter.Invoke(!init);
-                    callback?.Invoke().GetAwaiter().GetResult();
+                    if (callback is not null)
+                    {
+                        await callback();
+                    }
                 }
                 disposedValue = true;
             }
