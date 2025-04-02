@@ -1,0 +1,15 @@
+﻿<h3>TestCronExpression</h3>
+
+@UI.BuildInput(this).Bind(() => cronExpressionString).Render()
+
+<h2>
+    @UI.BuildButton(this).OnClick(Next).Text("下一次执行时间").Render()
+    @UI.BuildButton(this).OnClick(NextTen).Text("连续10次").Render()
+</h2>
+@UI.BuildButton(this).Text("创建任务").OnClick(CreateTask).Render()
+
+@foreach(var i in values)
+{
+    <p>@($"基准: {i.Item1:yyyy-MM-dd HH:mm:ss}") -> @($"下一次: {i.Item2:yyyy-MM-dd HH:mm:ss}")</p>
+}
+
