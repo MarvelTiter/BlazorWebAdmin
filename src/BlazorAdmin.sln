@@ -21,14 +21,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunBuild", "RunBuild\RunBuild.csproj", "{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypeScriptPackup", "TypeScriptPackup", "{0F196314-3413-403C-B39E-DDD6CA938D34}"
-	ProjectSection(SolutionItems) = preProject
-		main.ts = main.ts
-		package.json = package.json
-		themeManager.ts = themeManager.ts
-		tsconfig.json = tsconfig.json
-		tsup.config.ts = tsup.config.ts
-		utilsAggregation.ts = utilsAggregation.ts
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.UI.FluentUI", "Shared\Project.UI.FluentUI\Project.UI.FluentUI.csproj", "{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}"
 EndProject

@@ -1,4 +1,4 @@
-using BlazorAdmin;
+﻿using BlazorAdmin;
 using LightORM;
 using LightORM.Providers.Sqlite.Extensions;
 using MT.Toolkit.LogTool;
@@ -6,7 +6,8 @@ using Project.AppCore;
 using Project.AppCore.Services;
 using Project.Constraints;
 using Project.Web.Shared;
-
+using MT.LightTask;
+using BlazorAdmin.Client.TestPages.Tasks;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -65,8 +66,19 @@ builder.Services.AutoInject();
 
 builder.Services.AddControllers();
 
+builder.Services.AddLightTask();
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
+app.UseLightTask(c =>
+{
+    c.AddTask("测试1", (sp, token) =>
+    {
+        Console.WriteLine($"Task测试1: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+        return Task.CompletedTask;
+    }, b => b.WithCron("*/12 * * * * ?"));
+});
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", true);
