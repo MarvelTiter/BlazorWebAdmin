@@ -222,6 +222,8 @@
             "double" => RenderColumn<Double?>(row, col),
             "bool" => RenderColumn<Boolean?>(row, col),
             "datetime" => RenderColumn<DateTime?>(row, col),
+            "datetimeoffset" => RenderColumn<DateTimeOffset?>(row, col),
+            "timespan" => RenderColumn<TimeSpan?>(row, col),
             _ => RenderColumn<string>(row, col)
         };
     }

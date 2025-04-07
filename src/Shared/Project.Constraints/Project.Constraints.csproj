@@ -12,8 +12,8 @@
 		<PackageReference Include="AutoWasmApiGenerator" Version="0.1.1" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
 		<PackageReference Include="MT.LightORM" Version="3.1.4" />
-		<PackageReference Include="MT.LightTask" Version="0.0.1" />
-		<PackageReference Include="MT.Toolkit" Version="2.1.7" />
+		<PackageReference Include="MT.LightTask" Version="0.0.3" />
+		<PackageReference Include="MT.Toolkit" Version="2.1.8" />
 		<PackageReference Include="LightExcel" Version="2.1.1" />
 	</ItemGroup>
 	<ItemGroup>

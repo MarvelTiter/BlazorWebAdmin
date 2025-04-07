@@ -22,7 +22,7 @@
 
     <ChildContent>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称123" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称22" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称22" @bind-Value="@condition.Name" EnumValues="@options"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
@@ -38,7 +38,7 @@
 <Project.Web.Shared.Components.QueryConditions LabelWidth="65" ColumnWidth="200">
     <ChildContent>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name" EnumValues="@options"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
         <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
@@ -57,6 +57,14 @@
 @code {
     ConditionUnit condition = new();
     DateTime? dateTime;
+    Dictionary<string, string> options = new()
+    {
+            ["test1"] = "test1",
+            ["test2"] = "test2",
+            ["test3"] = "test3",
+            ["test4"] = "test4",
+            ["test5"] = "test5",
+    };
     public void BuildExpression()
     {
         // ToJson();

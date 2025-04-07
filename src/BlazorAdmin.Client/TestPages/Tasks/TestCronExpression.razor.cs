@@ -15,6 +15,7 @@ public partial class TestCronExpression
 {
     [Inject, NotNull] IUIService? UI { get; set; }
     [Inject, NotNull] ITaskCenter? Tc { get; set; }
+    private string taskName = "测试";
     private string cronExpressionString = "0 5-10 19 ? * SAT";
     private CronExpression? exp;
     private List<(DateTimeOffset, DateTimeOffset)> values = [];
@@ -43,6 +44,7 @@ public partial class TestCronExpression
 
     private void CreateTask()
     {
-        Tc.AddTask<TestTask>("测试2", b => b.WithCron("*/5 * * * * ?"));
+        // "0 */10 * * * ?"
+        Tc.AddTask<TestTask>(taskName, b => b.WithCron(cronExpressionString));
     }
 }

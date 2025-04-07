@@ -30,6 +30,9 @@ public class TableOptions
     public bool ShowAddButton { get; set; }
     public bool ShowExportButton { get; set; }
     public bool ShowImportButton { get; set; }
+    /// <summary>
+    /// 设置按钮列的宽度，默认170
+    /// </summary>
     public string ActionColumnWidth { get; set; } = "170";
     /// <summary>
     /// 启用grid布局
