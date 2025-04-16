@@ -1,84 +1,89 @@
 ﻿@namespace Project.Web.Shared.Components
+@using Project.Constraints.Utils
 @typeparam TData
 @inherits ConditionBase
 
 <MGridContent ColSpan="@ColSpan" RowSpan="@RowSpan">
-    <span class="condition" style="@Style;min-width:@(ColumnWidthStyle);max-width:@(ColumnWidthStyle);">
-        <span class="label" style="min-width:@(LabelWidthStyle);max-width:@(LabelWidthStyle);">
-            @Label
-        </span>
-        <span class="content" style="min-width:@(ContentWidthStyle);max-width@(ContentWidthStyle);">
-            @if (ChildContent != null)
-            {
-                @ChildContent
-            }
-            else if (typeof(TData) == typeof(DateTime) || typeof(TData) == typeof(DateTime?))
-            {
-                @(UI.BuildDatePicker(this).Bind(() => dateValue, NotifyChanged).Render())
-            }
-            else if (EnumValues != null)
-            {
-                @(UI.BuildDictionarySelect(this, EnumValues).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => stringValue!, TryParseValue).Render())
-            }
-            else
-            {
-                @(UI.BuildInput(this).Bind(() => stringValue!, NotifyChanged).Render())
-            }
-        </span>
-    </span>
+	<span class="condition" style="@Style;min-width:@(ColumnWidthStyle);max-width:@(ColumnWidthStyle);">
+		<span class="label" style="min-width:@(LabelWidthStyle);max-width:@(LabelWidthStyle);">
+			@Label
+		</span>
+		<span class="content" style="min-width:@(ContentWidthStyle);max-width@(ContentWidthStyle);">
+			@if (ChildContent != null)
+			{
+				@ChildContent
+			}
+			else if (typeof(TData) == typeof(DateTime) || typeof(TData) == typeof(DateTime?))
+			{
+				@(UI.BuildDatePicker(this).Bind(() => dateValue, NotifyChanged).Render())
+			}
+			else if (EnumValues != null)
+			{
+				@(UI.BuildDictionarySelect(this, EnumValues).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key).Bind(() => stringValue!, TryParseValue).Render())
+			}
+			else
+			{
+				@(UI.BuildInput(this).Bind(() => stringValue!, NotifyChanged).Render())
+			}
+		</span>
+	</span>
 </MGridContent>
 
 @code {
-    [Parameter] public TData? Value { get; set; }
-    [Parameter] public EventCallback<TData> ValueChanged { get; set; }
-    [Parameter] public Dictionary<string, string>? EnumValues { get; set; }
+	[Parameter] public TData? Value { get; set; }
+	[Parameter] public EventCallback<TData> ValueChanged { get; set; }
+	[Parameter] public Dictionary<string, string>? EnumValues { get; set; }
 
-    string? stringValue = null;
-    DateTime? dateValue = DateTime.Today;
-    bool dateMode = false;
-    bool isString = false;
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        dateMode = typeof(TData) == typeof(DateTime);
-        isString = typeof(TData) == typeof(string);
-    }
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-        if (firstRender)
-        {
-            stringValue = Value?.ToString();
-            StateHasChanged();
-        }
-    }
+	string? stringValue = null;
+	DateTime? dateValue = DateTime.Today;
+	bool dateMode = false;
+	bool isString = false;
+	protected override void OnInitialized()
+	{
+		base.OnInitialized();
+		dateMode = typeof(TData) == typeof(DateTime);
+		isString = typeof(TData) == typeof(string);
+		if (typeof(TData).IsEnum)
+		{
+			EnumValues = EnumHelper<TData>.ParseDictionary();
+		}
+	}
+	protected override void OnAfterRender(bool firstRender)
+	{
+		base.OnAfterRender(firstRender);
+		if (firstRender)
+		{
+			stringValue = Value?.ToString();
+			StateHasChanged();
+		}
+	}
 
-    Task NotifyChanged()
-    {
-        if (ValueChanged.HasDelegate)
-        {
-            if (dateMode && dateValue.HasValue)
-            {
-                stringValue = dateValue.Value.ToString();
-            }
-            return TryParseValue();
-        }
+	Task NotifyChanged()
+	{
+		if (ValueChanged.HasDelegate)
+		{
+			if (dateMode && dateValue.HasValue)
+			{
+				stringValue = dateValue.Value.ToString();
+			}
+			return TryParseValue();
+		}
 
-        return Task.CompletedTask;
-    }
+		return Task.CompletedTask;
+	}
 
-    Task TryParseValue()
-    {
-        if (!string.IsNullOrEmpty(stringValue))
-        {
-            var v = stringValue.ConvertTo<TData>();
-            if (ValueChanged.HasDelegate)
-            {
-                return ValueChanged.InvokeAsync(v);
-            }
-        }
+	Task TryParseValue()
+	{
+		if (!string.IsNullOrEmpty(stringValue))
+		{
+			var v = stringValue.ConvertTo<TData>();
+			if (ValueChanged.HasDelegate)
+			{
+				return ValueChanged.InvokeAsync(v);
+			}
+		}
 
-        return ValueChanged.InvokeAsync(default);
-    }
+		return ValueChanged.InvokeAsync(default);
+	}
 
 }

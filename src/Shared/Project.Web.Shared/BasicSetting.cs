@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Project.Constraints.Models;
 using Project.Constraints.Store.Models;
 
 namespace Project.Web.Shared;
@@ -56,6 +57,9 @@ public class BasicSetting : IProjectSettingService//, IDisposable
             return [];
         }
         var result = await permissionService.GetUserPowersAsync(info.UserId);
+        var powers = result.Payload;
+        info.UserPowers = [.. powers.Where(p => p.PowerType != PowerType.Page).Select(p => p.PowerId)];
+        info.UserPages = [.. powers.Where(p => p.PowerType == PowerType.Page).Select(p => p.PowerId)];
         return result.Payload;
     }
 

@@ -70,7 +70,7 @@ namespace Project.Web.Shared.Pages
 #if (ExcludeDefaultPages)
 #else
     [Route("/user/index")]
-    [PageGroup("BasicSetting", "BasicSetting", 2, Icon = "fa fa-cog")]
+    [PageGroup("BasicSetting", "BasicSetting", 1, Icon = "fa fa-cog")]
     [PageInfo(Title = "用户管理", Icon = "svg-user", Sort = 1, GroupId = "BasicSetting")]
     public class UserIndex : SystemPageIndex<UserIndex>
     {
