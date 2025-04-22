@@ -45,14 +45,14 @@ internal static class AllPages
             ForceShowOnNavMenu = info?.ForceShowOnNavMenu ?? false
         };
     }
-    static bool HasGroup(PageInfoAttribute? pageInfo)
-    {
-        if (pageInfo == null || pageInfo.GroupId == null)
-        {
-            return true;
-        }
-        return Groups.Any(g => g.RouteId == pageInfo.GroupId);
-    }
+    //static bool HasGroup(PageInfoAttribute? pageInfo)
+    //{
+    //    if (pageInfo == null || pageInfo.GroupId == null)
+    //    {
+    //        return true;
+    //    }
+    //    return Groups.Any(g => g.RouteId == pageInfo.GroupId);
+    //}
     private static void TryAddGroup(PageGroupAttribute groupInfo)
     {
         var g = Groups.Find(g => g.RouteId == groupInfo.Id);

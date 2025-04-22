@@ -11,23 +11,17 @@ using Microsoft.Extensions.Logging;
 namespace Project.Constraints.Aop;
 
 [AutoInject(ServiceType = typeof(AopLogger))]
-public class AopLogger : IAspectHandler
+public class AopLogger(IUserStore userStore, ILogger<AopLogger> logger, IServiceProvider provider) : IAspectHandler
 {
-    private readonly IUserStore userStore;
-    private readonly ILogger<AopLogger> logger;
-    private readonly IRunLogService runLogService;
+    private readonly IRunLogService? runLogService = provider.GetService<IRunLogService>();
 
-    public AopLogger(IUserStore userStore, ILogger<AopLogger> logger, IRunLogService runLogService)
-    {
-        this.userStore = userStore;
-        this.logger = logger;
-        this.runLogService = runLogService;
-    }
     public async Task Invoke(ProxyContext context, Func<Task> process)
     {
         logger.LogInformation("AopLogger called before {Name}", context.ServiceMethod?.Name);
         await process();
         logger.LogInformation("AopLogger called after {Name}", context.ServiceMethod?.Name);
+        if (runLogService is null)
+            return;
         var infoAttr = context.ServiceMethod?.GetCustomAttribute<LogInfoAttribute>();
         if (infoAttr != null)
         {

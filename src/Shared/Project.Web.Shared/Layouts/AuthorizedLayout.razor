@@ -46,11 +46,11 @@
             if (state.User.Identity!.IsAuthenticated)
             {
                 await AppSession.NotifyLoginSuccessAsync();
-                await AppSession.RouterStore.InitRoutersAsync(AuthenticationStateProvider?.Current);
+                await AppSession.RouterStore.InitMenusAsync(AuthenticationStateProvider?.Current);
             }
             else
             {
-                await AppSession.RouterStore.InitRoutersAsync(null);
+                await AppSession.RouterStore.InitMenusAsync(null);
             }
             var url = AppSession.Navigator.ToBaseRelativePath(AppSession.Navigator.Uri);
             AppSession.Navigator.NavigateTo(url);

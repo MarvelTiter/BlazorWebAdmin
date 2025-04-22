@@ -74,7 +74,7 @@ namespace Project.Web.Shared.Services
         {
             var roles = await context.Select<TRole>()
                                      .InnerJoin<TUserRole>((r, ur) => r.RoleId == ur.RoleId)
-                                     .Where<TUserRole>(ur => ur.UserId == usrId)
+                                     .Where((r, ur) => ur.UserId == usrId)
                                      .ToListAsync();
             return roles.CollectionResult();
         }

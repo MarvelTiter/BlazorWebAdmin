@@ -67,7 +67,7 @@ public class Login : SystemPageIndex<Login>, ILoginPage
             var goon = await CustomSetting.LoginInterceptorAsync(result.Payload!);
             if (goon.IsSuccess)
             {
-                await Router.InitRoutersAsync(result.Payload);
+                await Router.InitMenusAsync(result.Payload);
                 await HttpContext.SignInAsync(result.Payload!.BuildClaims(), new AuthenticationProperties
                 {
                     IsPersistent = true,

@@ -45,6 +45,6 @@ public partial class TestCronExpression
     private void CreateTask()
     {
         // "0 */10 * * * ?"
-        Tc.AddTask<TestTask>(taskName, b => b.WithCron(cronExpressionString));
+        Tc.AddTask<TestTask>(taskName, b => b.WithCron(cronExpressionString).Build());
     }
 }

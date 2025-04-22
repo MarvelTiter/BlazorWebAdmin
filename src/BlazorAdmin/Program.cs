@@ -76,7 +76,7 @@ app.UseLightTask(c =>
     {
         Console.WriteLine($"Task测试1: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
         return Task.CompletedTask;
-    }, b => b.WithCron("*/12 * * * * ?"));
+    }, b => b.WithCron("*/12 * * * * ?").Build());
 });
 
 if (!app.Environment.IsDevelopment())

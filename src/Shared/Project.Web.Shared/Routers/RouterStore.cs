@@ -5,6 +5,7 @@ using Project.Constraints.Options;
 using Project.Constraints.PageHelper;
 using Project.Constraints.Store.Models;
 using Project.Constraints.UI.Extensions;
+using Project.Constraints.Utils;
 using Project.Web.Shared.Components;
 using Project.Web.Shared.Store;
 using System.Reflection;
@@ -53,7 +54,13 @@ public static class RouterStoreExtensions
 }
 
 [AutoInject(ServiceType = typeof(IRouterStore))]
-public class RouterStore(IProjectSettingService settingService, NavigationManager navigationManager, IUserStore userStore, IStringLocalizer<RouterStore> localizer, IOptionsMonitor<CultureOptions> options, ILogger<RouterStore> logger, IOptionsMonitor<AppSetting> setting) : StoreBase, IRouterStore
+public class RouterStore(IProjectSettingService settingService
+    , NavigationManager navigationManager
+    , IUserStore userStore
+    , IStringLocalizer<RouterStore> localizer
+    , IOptionsMonitor<CultureOptions> options
+    , ILogger<RouterStore> logger
+    , IOptionsMonitor<AppSetting> setting) : StoreBase, IRouterStore
 {
     readonly Dictionary<string, TagRoute> pages = [];
 
@@ -281,12 +288,12 @@ public class RouterStore(IProjectSettingService settingService, NavigationManage
         return Task.CompletedTask;
     }
 
-    public async Task InitRoutersAsync(UserInfo? userInfo)
+    public async Task InitMenusAsync(UserInfo? userInfo)
     {
         try
         {
             await Reset();
-            List<RouteMenu> menus = [];
+            this.menus = [];
             //menus.Clear();
             menus.Add(new()
             {
@@ -306,7 +313,7 @@ public class RouterStore(IProjectSettingService settingService, NavigationManage
             //    await InitRoutersByDefault();
             //}
 
-            MinimalPower[] savedInfos = [];
+            IPower[] savedInfos = [];
             if (userInfo is not null)
             {
                 savedInfos = [.. await settingService.GetUserPowersAsync(userInfo)];
@@ -314,86 +321,26 @@ public class RouterStore(IProjectSettingService settingService, NavigationManage
 
             foreach (var meta in AllPages.Pages.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
             {
-                if (!menus.Any(m => m.RouteId == meta.RouteId))
+                if (menus.Any(m => m.RouteId == meta.RouteId)) continue;
+                var enable = await OnRouteMetaFilterAsync(meta);
+                if (!enable && !meta.ForceShowOnNavMenu)
+                    continue;
+                var savedMeta = savedInfos.FirstOrDefault(p => p.PowerId == meta.RouteId);
+                if (savedMeta != null)
                 {
-                    var enable = await OnRouteMetaFilterAsync(meta);
-                    if (!enable)
-                        continue;
-                    if (userInfo?.UserPages.Contains(meta.RouteId) == true
-                        || meta.ForceShowOnNavMenu
-                        || setting.CurrentValue.LoadUnregisteredPage)
-                    {
-                        if (savedInfos.Length > 0 && savedInfos.Any(p => p.PowerId == meta.RouteId))
-                        {
-                            var savedMeta = savedInfos.First(p => p.PowerId == meta.RouteId);
-                            meta.Icon = savedMeta.Icon;
-                            meta.RouteTitle = savedMeta.PowerName;
-                            meta.Sort = savedMeta.Sort;
-                        }
-
-                        menus.Add(new RouteMenu(meta));
-                    }
+                    meta.Icon = savedMeta.Icon;
+                    meta.RouteTitle = savedMeta.PowerName;
+                    meta.Sort = savedMeta.Sort;
                 }
+                menus.Add(new RouteMenu(meta));
             }
-
-            //menus.Sort((a, b) => a.Sort - b.Sort);
-            this.menus = [.. menus.OrderBy(m => m.Sort)];
-            //frozenMenus = menus.OrderByDescending(a => a.Sort).ToDictionary(m => m.RouteId, m => m).ToFrozenDictionary();
+            this.menus.Sort((a, b) => a.Sort -b.Sort);
         }
         catch (Exception ex)
         {
             logger.LogError("{Message}", ex.Message);
         }
     }
-
-    //private async Task InitRoutersByDefault(List<RouteMenu> menus)
-    //{
-    //    foreach (var meta in AllPages.AllRoutes.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
-    //    {
-    //        if (!menus.Any(m => m.RouteId == meta.RouteId))
-    //        {
-    //            var enable = await OnRouteMetaFilterAsync(meta);
-    //            if (!enable)
-    //                continue;
-    //            //var title = GetLocalizerString(meta);
-    //            //if (title == meta.RouteId)
-    //            //    title = meta.RouteTitle;
-    //            //meta.RouteTitle = title;
-    //            menus.Add(new RouteMenu(meta));
-    //        }
-    //    }
-    //}
-
-    //private async Task InitRoutersAsyncByUser(UserInfo? userInfo, List<RouteMenu> menus)
-    //{
-    //    if (userInfo == null) return;
-    //    var result = await settingService.GetUserPowersAsync(userInfo);
-    //    userInfo.UserPowers = result.Where(p => p.PowerType == PowerType.Button).Select(p => p.PowerId).ToArray();
-    //    var powers = result.Where(p => p.PowerType == PowerType.Page);
-
-    //    foreach (var pow in powers)
-    //    {
-    //        var meta = AllPages.AllRoutes.FirstOrDefault(m => m.RouteId == pow.PowerId);
-    //        meta ??= new RouterMeta()
-    //        {
-    //            RouteUrl = pow.Path,
-    //            RouteId = pow.PowerId
-    //        };
-    //        if (menus.Any(m => m.RouteId == meta.RouteId))
-    //        {
-    //            continue;
-    //        }
-    //        var enable = await OnRouteMetaFilterAsync(meta);
-    //        if (!enable)
-    //            continue;
-    //        meta.RouteTitle = pow.PowerName;
-    //        meta.Icon = pow.Icon;
-    //        meta.Group = pow.ParentId;
-    //        meta.Sort = pow.Sort;
-    //        meta.Cache = true;
-    //        menus.Add(new(meta));
-    //    }
-    //}
 
     public event Func<TagRoute, Task<bool>>? RouterChangingEvent;
 
@@ -405,16 +352,9 @@ public class RouterStore(IProjectSettingService settingService, NavigationManage
             enable = EnableShowUserDashboard(userStore, setting.CurrentValue);
         }
 
-        if (RouterChangingEvent != null)
-        {
-            //return await RouterChangingEvent.Invoke(tag);
-            foreach (Func<TagRoute, Task<bool>> item in RouterChangingEvent.GetInvocationList().Cast<Func<TagRoute, Task<bool>>>())
-            {
-                enable = enable && await item.Invoke(tag);
-            }
-        }
+        var pass = await RouterChangingEvent.InvokeAsync(tag);
 
-        return enable;
+        return enable && pass;
     }
 
     public event Func<RouterMeta, Task<bool>>? RouteMetaFilterEvent;
@@ -430,13 +370,10 @@ public class RouterStore(IProjectSettingService settingService, NavigationManage
                    || AppConst.AllAssemblies.IndexOf(meta.RouteType.Assembly) > -1
                    || meta.RouteType.Assembly == Assembly.GetEntryAssembly()
                    || (meta.RouteType.Assembly.GetName().Name?.EndsWith(".Client") ?? false);
-        if (RouteMetaFilterEvent != null)
-        {
-            var enable = await RouteMetaFilterEvent.Invoke(meta);
-            return used && enable;
-        }
 
-        return used;
+        bool pass = await RouteMetaFilterEvent.InvokeAsync(meta);
+
+        return used && pass;
     }
 
     private static bool IsUserDashboard(RouterMeta meta)

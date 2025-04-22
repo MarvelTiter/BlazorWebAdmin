@@ -21,7 +21,12 @@ namespace Project.Constraints.Store
         Task RemoveOther(string link);
         Task Reset();
         //Task Reload();
-        Task InitRoutersAsync(UserInfo? userInfo);
+        /// <summary>
+        /// 初始化菜单
+        /// </summary>
+        /// <param name="userInfo"></param>
+        /// <returns></returns>
+        Task InitMenusAsync(UserInfo? userInfo);
         Type? GetRouteType(string routeUrl);
         string GetLocalizerString(RouterMeta meta);
     }

@@ -1,4 +1,5 @@
 ﻿using Project.Constraints.UI;
+using Project.Constraints.Utils;
 
 namespace Project.Web.Shared.Store
 {
@@ -26,14 +27,7 @@ namespace Project.Web.Shared.Store
         public event Func<Task>? WebApplicationAccessedEvent;
         public async Task NotifyWebApplicationAccessedAsync()
         {
-            if (WebApplicationAccessedEvent != null)
-            {
-                foreach (Func<Task> item in WebApplicationAccessedEvent.GetInvocationList().Cast<Func<Task>>())
-                {
-                    await item.Invoke();
-                }
-                //await WebApplicationAccessedEvent.Invoke();
-            }
+            await WebApplicationAccessedEvent.InvokeAsync();
             webAccessedDone = true;
             await InvokeInit();
         }
@@ -42,15 +36,7 @@ namespace Project.Web.Shared.Store
 
         public async Task NotifyLoginSuccessAsync()
         {
-            if (LoginSuccessEvent != null)
-            {
-                // TODO 等待异步事件
-                foreach (Func<UserInfo, Task> item in LoginSuccessEvent.GetInvocationList().Cast<Func<UserInfo, Task>>())
-                {
-                    await item.Invoke(UserStore.UserInfo!);
-                }
-                //await LoginSuccessEvent.Invoke(UserStore.UserInfo!);
-            }
+            await LoginSuccessEvent.InvokeAsync(UserStore.UserInfo!);
             loginEventDone = true;
             await InvokeInit();
         }

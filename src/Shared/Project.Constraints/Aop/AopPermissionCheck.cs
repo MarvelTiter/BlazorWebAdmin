@@ -6,14 +6,8 @@ using System.Reflection;
 namespace Project.Constraints.Aop;
 
 [AutoInject(ServiceType = typeof(AopPermissionCheck))]
-public class AopPermissionCheck : IAspectHandler
+public class AopPermissionCheck(IUserStore userStore) : IAspectHandler
 {
-    private readonly IUserStore userStore;
-
-    public AopPermissionCheck(IUserStore userStore)
-    {
-        this.userStore = userStore;
-    }
     public Task Invoke(ProxyContext context, Func<Task> process)
     {
         var action = FormattedAction(context);

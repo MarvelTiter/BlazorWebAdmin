@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Project.Constraints.Models;
+using Project.Constraints.Options;
 using Project.Constraints.Store.Models;
 
 namespace Project.Web.Shared;
@@ -7,12 +9,15 @@ namespace Project.Web.Shared;
 /// <summary>
 /// 提供基本设置功能的服务类，实现自定义用户信息和权限处理
 /// </summary>
-public class BasicSetting : IProjectSettingService//, IDisposable
+public class BasicSetting : IProjectSettingService //, IDisposable
 {
     /// <summary>
     /// 服务提供者，用于解析其他服务
     /// </summary>
     private readonly IServiceProvider services;
+
+    protected IUserStore UserStore { get; }
+    protected IOptionsMonitor<AppSetting> AppSetting { get; }
 
     /// <summary>
     /// 构造函数，接收服务提供者
@@ -21,6 +26,8 @@ public class BasicSetting : IProjectSettingService//, IDisposable
     public BasicSetting(IServiceProvider services)
     {
         this.services = services;
+        UserStore = services.GetRequiredService<IUserStore>();
+        AppSetting = services.GetRequiredService<IOptionsMonitor<AppSetting>>();
     }
 
     /// <summary>
@@ -56,8 +63,9 @@ public class BasicSetting : IProjectSettingService//, IDisposable
         {
             return [];
         }
+
         var result = await permissionService.GetUserPowersAsync(info.UserId);
-        var powers = result.Payload;
+        MinimalPower[] powers = [..result.Payload];
         info.UserPowers = [.. powers.Where(p => p.PowerType != PowerType.Page).Select(p => p.PowerId)];
         info.UserPages = [.. powers.Where(p => p.PowerType == PowerType.Page).Select(p => p.PowerId)];
         return result.Payload;
@@ -75,5 +83,16 @@ public class BasicSetting : IProjectSettingService//, IDisposable
     /// </summary>
     /// <param name="meta">路由元数据</param>
     /// <returns>是否允许显示路由</returns>
-    public virtual Task<bool> RouteMetaFilterAsync(RouterMeta meta) => Task.FromResult(true);
+    public virtual Task<bool> RouteMetaFilterAsync(RouterMeta meta)
+    {
+        if (AppSetting.CurrentValue.LoadPageFromDatabase)
+        {
+            var has = Array.IndexOf(UserStore.UserInfo.UserPages, meta.RouteId) > -1;
+            return Task.FromResult(has);
+        }
+        else
+        {
+            return Task.FromResult(true);
+        }
+    }
 }

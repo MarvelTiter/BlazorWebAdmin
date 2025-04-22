@@ -5,15 +5,16 @@
      @ref="RootWrapper">
     <CascadingValue Value="this" IsFixed>
         @Body
+        <IndexLoading Loading="@(!AppSession.Loaded)" Title="正在初始化..."></IndexLoading>
     </CascadingValue>
 </div>
 @code {
-    // [CascadingParameter][NotNull] IAppSession? AppSession { get; set; }
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     await base.OnInitializedAsync();
-    //     await AppSession.RouterStore.InitRoutersAsync(null);
-    //     var url = AppSession.Navigator.ToBaseRelativePath(AppSession.Navigator.Uri);
-    //     // AppSession.Navigator.NavigateTo(url);
-    // }
+    [CascadingParameter][NotNull] IAppSession? AppSession { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await AppSession.RouterStore.InitMenusAsync(null);
+        var url = AppSession.Navigator.ToBaseRelativePath(AppSession.Navigator.Uri);
+        AppSession.Navigator.NavigateTo(url);
+    }
 }

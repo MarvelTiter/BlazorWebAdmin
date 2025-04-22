@@ -16,6 +16,7 @@
             Pin = meta.Pin;
             Group = meta.Group;
             Cache = meta.Cache;
+            Sort = meta.Sort;
         }
         public IEnumerable<RouteMenu>? Children { get; set; }
         public bool HasChildren => Children != null && Children.Any();

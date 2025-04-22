@@ -13,12 +13,13 @@ namespace Project.Constraints.Services;
 public interface IPermissionService
 {
     /// <summary>
-    /// 初始化用户菜单
+    /// 初始化用户菜单，不使用IPower，主要是考虑生成对应接口时，调用接口反序列化需要具体的类型
     /// </summary>
     /// <param name="usrId"></param>
     /// <returns></returns>
     [IgnoreAspect]
     Task<QueryCollectionResult<MinimalPower>> GetUserPowersAsync(string usrId);
+    // Task<QueryCollectionResult<IPower>> GetUserPowersAsync(string usrId);
 }
 
 public interface IPermissionService<TPower, TRole> : IPermissionService
