@@ -21,7 +21,7 @@ using Project.Web.Shared.Pages;
 namespace BlazorAdmin;
 
 [Route("/account/login")]
-[Layout(typeof(NotAuthorizedLayout))]
+[Layout(typeof(RootLayout))]
 [ExcludeFromInteractiveRouting]
 public class Login : SystemPageIndex<Login>, ILoginPage
 {
