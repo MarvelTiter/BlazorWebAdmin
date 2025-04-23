@@ -10,6 +10,25 @@ namespace Project.UI.AntBlazor.Components;
 
 public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
 {
+    private RenderFragment<GroupResult<TData>>? GroupTitle()
+    {
+        if (Options.GroupTitleTemplate is null)
+        {
+            return null;
+        }
+
+        return ctx => Options.GroupTitleTemplate.Invoke(new Grouping<object, TData>(ctx.Key, [..ctx.Items]));
+    }
+
+    private RenderFragment<GroupResult<TData>> GroupFooter()
+    {
+        if (Options.GroupFooterTemplate is null)
+        {
+            return null;
+        }
+        return ctx => Options.GroupFooterTemplate.Invoke(new Grouping<object, TData>(ctx.Key, [..ctx.Items]));
+    }
+
     private static RenderFragment CellContentRender<TProp>(TData row, ColumnInfo col, CellData<TProp> context)
     {
         if (col.CellTemplate != null)

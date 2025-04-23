@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Constraints.PageHelper;
+using Project.Constraints.UI.Extensions;
 
 namespace Project.Web.Shared.Pages
 {

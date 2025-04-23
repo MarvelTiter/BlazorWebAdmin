@@ -16,9 +16,20 @@ namespace Project.Constraints.UI.Extensions
             return new ElementBuilder(builder, "div");
         }
 
+        public static ElementBuilder Div(this RenderTreeBuilder builder, RenderFragment content)
+        {
+            return new ElementBuilder(builder, "div")
+                .AddContent(content);
+        }
+
         public static ElementBuilder Span(this RenderTreeBuilder builder)
         {
             return new ElementBuilder(builder, "span");
+        }
+        
+        public static ElementBuilder Span(this RenderTreeBuilder builder, string content)
+        {
+            return builder.Span().AddText(content);
         }
 
         public static ElementBuilder P(this RenderTreeBuilder builder)

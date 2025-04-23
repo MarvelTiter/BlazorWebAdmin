@@ -95,7 +95,7 @@ namespace Project.Web.Shared.Pages
     [Route("/rolepermission")]
     [PageGroup("SysSetting", "SysSetting", 2, Icon = "fa fa-cog")]
     [PageInfo(Id = "RolePermission", Title = "权限分配", Icon = "svg-assign_permissions", Sort = 1, GroupId = "SysSetting")]
-    public class RolePermissionIndex : SystemPageIndex<RunLogIndex>
+    public class RolePermissionIndex : SystemPageIndex<RolePermissionIndex>
     {
         protected override bool CascadingSelf => false;
         public override Type? GetPageType(IPageLocatorService customSetting)
@@ -106,7 +106,7 @@ namespace Project.Web.Shared.Pages
 
     [Route("/permission")]
     [PageInfo(Id = "Permission", Title = "权限设置", Icon = "svg-rights", Sort = 2, GroupId = "SysSetting")]
-    public class PermissionIndex : SystemPageIndex<RunLogIndex>
+    public class PermissionIndex : SystemPageIndex<PermissionIndex>
     {
         protected override bool CascadingSelf => false;
         public override Type? GetPageType(IPageLocatorService customSetting)

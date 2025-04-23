@@ -60,7 +60,7 @@ public record ColumnInfo
         set
         {
             groupByExpression = value;
-            Grouping = true;
+            Grouping = value != null;
         }
     }
 
