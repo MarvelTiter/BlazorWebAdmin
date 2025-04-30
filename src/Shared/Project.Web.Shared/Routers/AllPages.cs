@@ -1,10 +1,11 @@
 ﻿using Project.Constraints.Common.Attributes;
 using Project.Constraints.Store.Models;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Project.Web.Shared.Routers;
 
-internal static class AllPages
+internal static partial class AllPages
 {
     public static IList<RouterMeta> Pages { get; } = [];
     public static List<RouterMeta> Groups { get; } = [];
@@ -20,7 +21,7 @@ internal static class AllPages
 
     private static IEnumerable<RouterMeta> GetRouterMeta(Type t)
     {
-        var routerAttr = t.GetCustomAttribute<RouteAttribute>();
+        var routerAttr = t.GetCustomAttribute<RouteAttribute>()!;
         var info = t.GetCustomAttribute<PageInfoAttribute>();
         var groupInfo = t.GetCustomAttribute<PageGroupAttribute>();
 
@@ -31,20 +32,30 @@ internal static class AllPages
         }
         //ArgumentOutOfRangeException.ThrowIfEqual(false, HasGroup(info), $"invalid groupId ({info!.GroupId})");
         TryForceShowGroup(info);
-        yield return new()
+        if (CheckPathTemplate(routerAttr.Template))
         {
-            RouteId = info?.Id ?? t.Name,
-            RouteTitle = info?.Title ?? t.Name,
-            RouteUrl = routerAttr!.Template,
-            Icon = info?.Icon,
-            Pin = info?.Pin ?? false,
-            Group = info?.GroupId ?? groupInfo?.Id ?? "ROOT",
-            Sort = info?.Sort ?? 0,
-            HasPageInfo = info != null,
-            RouteType = t,
-            ForceShowOnNavMenu = info?.ForceShowOnNavMenu ?? false
-        };
+            yield return new()
+            {
+                RouteId = info?.Id ?? t.Name,
+                RouteTitle = info?.Title ?? t.Name,
+                RouteUrl = routerAttr.Template,
+                Icon = info?.Icon,
+                Pin = info?.Pin ?? false,
+                Group = info?.GroupId ?? groupInfo?.Id ?? "ROOT",
+                Sort = info?.Sort ?? 0,
+                HasPageInfo = info != null,
+                RouteType = t,
+                ForceShowOnNavMenu = info?.ForceShowOnNavMenu ?? false
+            };
+        }
+
     }
+
+    private static bool CheckPathTemplate(string template)
+    {
+        return !MatchPathParameter().Match(template).Success;
+    }
+
     //static bool HasGroup(PageInfoAttribute? pageInfo)
     //{
     //    if (pageInfo == null || pageInfo.GroupId == null)
@@ -87,4 +98,7 @@ internal static class AllPages
             g.ForceShowOnNavMenu = pageInfo?.ForceShowOnNavMenu ?? false;
         }
     }
+
+    [GeneratedRegex(@"\{[^{}]+\}")]
+    private static partial Regex MatchPathParameter();
 }

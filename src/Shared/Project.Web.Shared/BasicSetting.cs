@@ -87,7 +87,7 @@ public class BasicSetting : IProjectSettingService //, IDisposable
     {
         if (AppSetting.CurrentValue.LoadPageFromDatabase)
         {
-            var has = Array.IndexOf(UserStore.UserInfo.UserPages, meta.RouteId) > -1;
+            var has = Array.IndexOf(UserStore.UserInfo?.UserPages ?? [], meta.RouteId) > -1;
             return Task.FromResult(has);
         }
         else

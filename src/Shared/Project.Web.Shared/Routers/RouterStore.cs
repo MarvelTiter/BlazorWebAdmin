@@ -84,10 +84,10 @@ public class RouterStore(IProjectSettingService settingService
         get
         {
             var url = navigationManager.ToBaseRelativePath(navigationManager.Uri);
-            if (url.IndexOf('?') > 0)
-            {
-                return '/' + url[0..url.IndexOf('?')];
-            }
+            //if (url.IndexOf('?') > 0)
+            //{
+            //    return '/' + url[0..url.IndexOf('?')];
+            //}
 
             return '/' + url;
         }

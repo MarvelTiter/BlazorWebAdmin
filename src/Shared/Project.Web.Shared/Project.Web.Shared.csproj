@@ -8,7 +8,6 @@
 
 	<ItemGroup>
 		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
-		<Content Remove="wwwroot\css\font-awesome4.7.min.css" />
 	</ItemGroup>
 
 
