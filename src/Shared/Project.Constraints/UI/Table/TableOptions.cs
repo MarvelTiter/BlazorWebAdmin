@@ -31,7 +31,6 @@ public class Grouping<TKey, TElement>(TKey key, TElement[]? items)
 
 public class TableOptions
 {
-    public bool Pager { get; set; } = true;
     public string? ScrollX { get; set; }
     public Func<Task> NotifyChanged { get; set; } = () => Task.CompletedTask;
     public bool Loading { get; set; }
@@ -60,6 +59,8 @@ public class TableOptions
 
 public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest, new()
 {
+    private bool pager = true;
+
     public TableOptions()
     {
         Query = new TQuery();
@@ -67,7 +68,15 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
             return;
         Columns = typeof(TData).GenerateColumns();
     }
-
+    public bool Pager
+    {
+        get => pager;
+        set
+        {
+            pager = value;
+            Query.PageSize = value ? 10 : int.MaxValue;
+        }
+    }
     public TQuery Query { get; set; }
     public QueryCollectionResult<TData>? Result { get; set; }
     public Func<TData, object> RowKey { get; set; } = d => d!;
