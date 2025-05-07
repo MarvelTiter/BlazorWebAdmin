@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Web;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
@@ -8,15 +9,11 @@ using Project.AppCore.Auth;
 using Project.Constraints.Common.Attributes;
 using Project.Constraints.Models;
 using Project.Constraints.Options;
-using Project.Constraints.Page;
 using Project.Constraints.Services;
-using Project.Constraints.UI;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.Utils;
 using Project.Web.Shared.Layouts;
 using Project.Web.Shared.Pages;
-
-//using Microsoft.AspNetCore.Authentication;
 
 namespace BlazorAdmin;
 
@@ -43,17 +40,6 @@ public class Login : SystemPageIndex<Login>, ILoginPage
         //if (!string.IsNullOrEmpty(refer)) UI.Error("登录凭证超时，请重新登录");
     }
 
-    //private async Task OnPressEnter(KeyboardEventArgs e)
-    //{
-    //    //Console.WriteLine("OnPressEnter: " + e.Key);
-    //    if (e.Key == "Enter")
-    //    {
-    //        if (Loading) return;
-
-    //        await HandleLogin();
-    //    }
-    //}
-
     public async Task HandleLogin(LoginFormModel model)
     {
         //Loading = true;
@@ -68,12 +54,14 @@ public class Login : SystemPageIndex<Login>, ILoginPage
             if (goon.IsSuccess)
             {
                 await Router.InitMenusAsync(result.Payload);
-                await HttpContext.SignInAsync(result.Payload!.BuildClaims(), new AuthenticationProperties
+                var principal = result.Payload!.BuildClaims();
+                var properties = new AuthenticationProperties
                 {
                     IsPersistent = true,
                     //cookie过期是单独指cookie，这里的是指
                     ExpiresUtc = TimeProvider.System.GetUtcNow().Add(TokenOption.CurrentValue.Expire)
-                });
+                };
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
                 if (string.IsNullOrEmpty(Redirect)) Redirect = "/";
                 Navigator.NavigateTo(Redirect, true);
             }

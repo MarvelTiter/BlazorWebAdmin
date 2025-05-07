@@ -34,9 +34,9 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
         this.navigation = navigation;
         AuthenticationStateChanged += OnAuthenticationStateChanged;
         subscription = state.RegisterOnPersisting(OnPersistingAsync, RenderMode.InteractiveWebAssembly);
-        if (httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true)
+        if (httpContextAccessor.HttpContext?.User.GetCookieClaimsIdentity(out var identity) == true && identity!.IsAuthenticated == true)
         {
-            var u = httpContextAccessor.HttpContext.User.GetUserInfo();
+            var u = identity.GetUserInfo();
             userStore.SetUser(u);
         }
     }
@@ -78,9 +78,14 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
         var authenticationState = await authenticationStateTask;
         var principal = authenticationState.User;
 
-        if (principal.Identity?.IsAuthenticated == true)
+        //if (principal.Identity?.IsAuthenticated == true)
+        //{
+        //    var u = principal.GetUserInfo();
+        //    state.PersistAsJson(nameof(UserInfo), u);
+        //}
+        if (principal.GetCookieClaimsIdentity(out var identity) && identity!.IsAuthenticated == true)
         {
-            var u = principal.GetUserInfo();
+            var u = identity.GetUserInfo();
             state.PersistAsJson(nameof(UserInfo), u);
         }
     }

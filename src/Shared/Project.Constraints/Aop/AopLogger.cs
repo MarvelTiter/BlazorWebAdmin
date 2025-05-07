@@ -32,8 +32,8 @@ public class AopLogger(IUserStore userStore, ILogger<AopLogger> logger, IService
                 UserId = userId,
                 Module = infoAttr!.Module ?? "",
                 Action = infoAttr!.Action ?? "",
-                Result = result?.IsSuccess ?? true ? "成功" : "失败",
-                Message = result?.Message ?? "",
+                Result = result?.IsSuccess ?? context.Status == ExecuteStatus.Executed ? "成功" : "失败",
+                Message = result?.Message ?? "操作成功",
             };
             await runLogService.WriteLog(l);
         }

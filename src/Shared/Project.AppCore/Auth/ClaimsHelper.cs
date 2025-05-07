@@ -46,15 +46,15 @@ public static class ClaimsHelper
     /// </summary>
     /// <param name="principal">包含用户声明的<see cref="ClaimsPrincipal"/>对象。</param>
     /// <returns>一个<see cref="UserInfo"/>对象，包含从<paramref name="principal"/>提取的用户信息。</returns>
-    public static UserInfo GetUserInfo(this ClaimsPrincipal principal)
+    public static UserInfo GetUserInfo(this ClaimsIdentity principal)
     {
         // 从声明中提取用户信息
-        var name = principal.Identity?.Name!;
-        var username = principal.FindFirstValue(ClaimTypes.GivenName);
-        var token = principal.FindFirstValue(nameof(UserInfo.Token));
-        var createdBinary = principal.FindFirstValue(nameof(UserInfo.CreatedTime));
+        var name = principal.Name!;
+        var username = principal.FindFirst(ClaimTypes.GivenName)!.Value;
+        var token = principal.FindFirst(nameof(UserInfo.Token))!.Value;
+        var createdBinary = principal.FindFirst(nameof(UserInfo.CreatedTime))!.Value;
         var createdTime = DateTime.FromBinary(long.Parse(createdBinary!));
-        var additionalValue = principal.FindFirstValue(nameof(UserInfo.AdditionalValue)) ?? "{}";
+        var additionalValue = principal.FindFirst(nameof(UserInfo.AdditionalValue))?.Value ?? "{}";
         var roles = principal.FindAll(ClaimTypes.Role).Select(c => c.Value);
         var powers = principal.FindAll(USER_POWER).Select(c => c.Value);
         var pages = principal.FindAll(USER_MENU).Select(c => c.Value);

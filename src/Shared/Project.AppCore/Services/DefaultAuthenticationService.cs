@@ -1,5 +1,6 @@
 ﻿using AutoAopProxyGenerator;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Project.Constraints.Models.Permissions;
 
@@ -90,7 +91,7 @@ namespace Project.AppCore.Services
             }
 
             // var ctx = httpContextAccessor.HttpContext.User;
-            await ctx.SignOutAsync();
+            await ctx.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             // 解码了
             var redirect = ctx.Request.Query["Redirect"];
             // 重新编码

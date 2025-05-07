@@ -1,4 +1,5 @@
 ﻿using AutoInjectGenerator;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Project.AppCore.Auth;
 using Project.Constraints.Store;
@@ -21,9 +22,19 @@ public class SetUserInfoMiddleware : IMiddleware
     }
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        if (context.User.Identity?.IsAuthenticated == true)
+        //if (context.User.Identity?.IsAuthenticated == true)
+        //{
+        //    foreach (var identity in context.User.Identities)
+        //    {
+        //        if (identity.AuthenticationType != CookieAuthenticationDefaults.AuthenticationScheme)
+        //            continue;
+        //        var u = context.User.GetUserInfo();
+        //        userStore.SetUser(u);
+        //    }
+        //}
+        if (context.User.GetCookieClaimsIdentity(out var identity) && identity!.IsAuthenticated == true)
         {
-            var u = context.User.GetUserInfo();
+            var u = identity.GetUserInfo();
             userStore.SetUser(u);
         }
         await next(context);
