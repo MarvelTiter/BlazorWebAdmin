@@ -1,4 +1,5 @@
-using BlazorAdmin.Client;
+﻿using BlazorAdmin.Client;
+using BlazorAdmin.Client.HttpClientHandlers;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using MT.Toolkit.ReflectionExtension;
@@ -10,7 +11,11 @@ using Project.Web.Shared;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.ConfigureHttpClientDefaults(c =>
 {
-    c.ConfigureHttpClient(h => { h.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); });
+    //c.AddHttpMessageHandler<GeneratedApiHandler>();
+    c.ConfigureHttpClient(h =>
+    {
+        h.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+    });
 });
 var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
 if (useProxy)

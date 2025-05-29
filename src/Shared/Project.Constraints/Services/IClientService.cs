@@ -4,7 +4,6 @@ using Project.Constraints.Models.Request;
 namespace Project.Constraints.Services;
 
 [WebController(Route = "hub")]
-[ApiInvokerGenerate]
 public interface IClientService
 {
     Task<QueryResult<int>> GetCountAsync();

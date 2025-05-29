@@ -4,7 +4,7 @@ public class UserInfo
 {
     public string UserId { get; set; } = string.Empty;
     public string? UserName { get; set; }
-
+    public string PasswordHash { get; set; } = string.Empty;
     /// <summary>
     /// 框架内Api
     /// </summary>
@@ -22,4 +22,5 @@ public class UserInfo
     public DateTime CreatedTime { get; set; } = DateTime.Now;
     // public DateTime ActiveTime { get; set; } = DateTime.Now;
     public static UserInfo Visitor => new UserInfo() { UserId = $"{Guid.NewGuid():N}", UserName = "游客" };
+
 }

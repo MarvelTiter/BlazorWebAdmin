@@ -8,37 +8,37 @@ export class ClientHub extends BaseComponent {
     id: string
     timer: number | undefined
     interval: number
-    dotnetRef: any
+    // dotnetRef: any
     otherClients: string[] = []
     ip: string | undefined
-    uuid:string
+    uuid: string
 
     constructor(id: string, options: any) {
         super();
         this.channel = new BroadcastChannel("admin_project_ClientHub")
         this.id = id
         this.uuid = getUUID()
-        const {interval, dotnetRef} = options
+        const {interval} = options
         this.interval = interval
-        this.dotnetRef = dotnetRef
+        // this.dotnetRef = dotnetRef
     }
 
     static async init(id: string, options: any) {
         var hub: ClientHub = getComponentById(id, () => new ClientHub(id, options))
-        const response = await fetch('/ip.client')
-        const ip = await response.text()
-        hub.ip = ip
+        // const response = await fetch('/ip.client')
+        // const ip = await response.text()
+        // hub.ip = ip
         await hub.init()
     }
 
     async init() {
-         //当前是否有正在发送心跳的ClientHub，如果没有，将当前实例设置为发送心跳的ClientHub
+        //当前是否有正在发送心跳的ClientHub，如果没有，将当前实例设置为发送心跳的ClientHub
         const main = localStorage.getItem(this.mainKey)
         if (!main) {
             localStorage.setItem(this.mainKey, this.id)
         }
         EventHandler.listen(this.channel, 'message', e => this.receive(e))
-        window.onunload = e => this.dispose()
+        EventHandler.listen(window, "unload", e => this.dispose())
         await this.send()
         this.timer = window.setInterval(async () => {
             await this.send()
@@ -47,7 +47,7 @@ export class ClientHub extends BaseComponent {
 
     async send() {
         // 广播通知其他ClientHub
-        this.channel.postMessage({ id: this.id, action: 'ping' })
+        this.channel.postMessage({id: this.id, action: 'ping'})
         // 检查当前是否有正在发送心跳的ClientHub
         let mainId = localStorage.getItem(this.mainKey)
         if (!mainId || this.otherClients.length === 0) {
@@ -56,7 +56,11 @@ export class ClientHub extends BaseComponent {
         }
         if (mainId == this.id) {
             // 只有保存在localStorage中的组件id才能发送心跳
-            await this.dotnetRef.invokeMethodAsync("Tick", [this.uuid, this.ip, navigator.userAgent])
+            // await this.dotnetRef.invokeMethodAsync("Tick", [this.uuid, this.ip, navigator.userAgent])
+            // const form = new FormData()
+            // form.append('id', this.id)
+            // form.append('agent', navigator.userAgent)
+            await fetch('/client.heart.beat?id=' + this.id)
         }
     }
 
@@ -78,11 +82,11 @@ export class ClientHub extends BaseComponent {
     dispose() {
         window.clearInterval(this.timer)
         EventHandler.remove(this.channel, 'message')
+        EventHandler.remove(window, "unload")
         this.channel.postMessage({id: this.id, action: 'dispose'})
         this.channel.close();
     }
 }
-
 
 
 function getUUID() {

@@ -226,6 +226,7 @@
             "datetime" => RenderColumn<DateTime?>(row, col),
             "datetimeoffset" => RenderColumn<DateTimeOffset?>(row, col),
             "timespan" => RenderColumn<TimeSpan?>(row, col),
+            "decimal" => RenderColumn<Decimal?>(row, col),
             _ => RenderColumn<string>(row, col)
         };
     }

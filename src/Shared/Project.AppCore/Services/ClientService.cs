@@ -2,6 +2,9 @@ using AutoInjectGenerator;
 using Microsoft.Extensions.Options;
 using Project.Constraints.Options;
 using System.Collections.Concurrent;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 
 namespace Project.AppCore.Services;
 
@@ -12,13 +15,16 @@ public sealed class ClientService : IClientService, IDisposable
     private readonly CancellationTokenSource tokenSource = new();
     private readonly Task clearTimeoutClientTask;
     private readonly IOptions<AppSetting> options;
+    private readonly IHttpContextAccessor httpContextAccessor;
     private bool disposedValue;
 
-    public ClientService(IOptions<AppSetting> options)
+    public ClientService(IOptions<AppSetting> options
+        , IHttpContextAccessor httpContextAccessor)
     {
         clearTimeoutClientTask = new Task(ClearTimeoutClient, tokenSource.Token, TaskCreationOptions.LongRunning);
         clearTimeoutClientTask.Start();
         this.options = options;
+        this.httpContextAccessor = httpContextAccessor;
     }
 
     public Task<QueryResult<int>> GetCountAsync()
@@ -48,6 +54,7 @@ public sealed class ClientService : IClientService, IDisposable
         {
             return Task.FromResult(QueryResult.Fail());
         }
+
         var userAllow = options.Value.ClientHubOptions.AllowUsers.Contains(user.UserId);
         var roleAllow = Inset(options.Value.ClientHubOptions.AllowRoles, user.Roles);
         return Task.FromResult(QueryResult.Return(userAllow || roleAllow));
@@ -64,14 +71,13 @@ public sealed class ClientService : IClientService, IDisposable
             }
             catch
             {
-
             }
         }
     }
 
     private void RemoveExpired()
     {
-        // 距离上一次的心跳超过超时限制时间
+        // 璺濈涓婁竴娆＄殑蹇冭烦瓒呰繃瓒呮椂闄愬埗鏃堕棿
         var expired = clients.Values.Where(c => DateTime.Now - c.BeatTime > options.Value.ClientHubOptions.ClearTimeoutLimit).Select(c => c.CircuitId).ToList();
         expired.ForEach(id => clients.TryRemove(id, out _));
     }
@@ -93,9 +99,11 @@ public sealed class ClientService : IClientService, IDisposable
                 {
                     tokenSource.Cancel();
                 }
+
                 tokenSource.Dispose();
                 clearTimeoutClientTask.Dispose();
             }
+
             disposedValue = true;
         }
     }
@@ -107,7 +115,6 @@ public sealed class ClientService : IClientService, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    
 
     private static bool Inset<T>(IEnumerable<T> values1, IEnumerable<T> values2)
     {
@@ -115,6 +122,7 @@ public sealed class ClientService : IClientService, IDisposable
         {
             return values2.Any(v2 => Equals(v1, v2));
         }
+
         return false;
     }
 }

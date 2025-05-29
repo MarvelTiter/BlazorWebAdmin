@@ -41,25 +41,6 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
         return OnKeyUp?.Invoke(e) ?? Task.CompletedTask;
     }
 
-    public ValueTask DisposeAsync()
-    {
-        Context.RouterStore.RouterChangingEvent -= SettingService.RouterChangingAsync;
-        Context.RouterStore.RouteMetaFilterEvent -= SettingService.RouteMetaFilterAsync;
-        Context.LoginSuccessEvent -= SettingService.LoginSuccessAsync;
-        Context.WebApplicationAccessedEvent -= SettingService.AfterWebApplicationAccessed;
-
-        foreach (var additional in initActions)
-        {
-            Context.LoginSuccessEvent -= additional.LoginSuccessAsync;
-            Context.RouterStore.RouteMetaFilterEvent -= additional.RouteMetaFilterAsync;
-            Context.RouterStore.RouterChangingEvent -= additional.RouterChangingAsync;
-            Context.WebApplicationAccessedEvent -= additional.AfterWebApplicationAccessedAsync;
-        }
-
-        GC.SuppressFinalize(this);
-        return ValueTask.CompletedTask;
-    }
-
     protected override void OnInitialized()
     {
         Context.OnLoadedAsync += Context_OnLoadedAsync;
@@ -101,5 +82,24 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
                 await Js.InvokeUtilsAsync("setTheme", $"{app.Value!.Theme}".ToLower(), Context.UI.DarkStyle());
             }
         }
+    }
+    
+    public ValueTask DisposeAsync()
+    {
+        Context.RouterStore.RouterChangingEvent -= SettingService.RouterChangingAsync;
+        Context.RouterStore.RouteMetaFilterEvent -= SettingService.RouteMetaFilterAsync;
+        Context.LoginSuccessEvent -= SettingService.LoginSuccessAsync;
+        Context.WebApplicationAccessedEvent -= SettingService.AfterWebApplicationAccessed;
+
+        foreach (var additional in initActions)
+        {
+            Context.LoginSuccessEvent -= additional.LoginSuccessAsync;
+            Context.RouterStore.RouteMetaFilterEvent -= additional.RouteMetaFilterAsync;
+            Context.RouterStore.RouterChangingEvent -= additional.RouterChangingAsync;
+            Context.WebApplicationAccessedEvent -= additional.AfterWebApplicationAccessedAsync;
+        }
+
+        GC.SuppressFinalize(this);
+        return ValueTask.CompletedTask;
     }
 }

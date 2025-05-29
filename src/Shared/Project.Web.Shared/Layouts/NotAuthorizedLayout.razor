@@ -13,6 +13,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        await AppSession.NotifyLoginSuccessAsync();
         await AppSession.RouterStore.InitMenusAsync(null);
         var url = AppSession.Navigator.ToBaseRelativePath(AppSession.Navigator.Uri);
         AppSession.Navigator.NavigateTo(url);

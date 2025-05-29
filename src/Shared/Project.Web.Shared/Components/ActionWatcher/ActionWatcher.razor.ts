@@ -56,7 +56,7 @@ export class ActionWatcher extends BaseComponent {
             console.log('id is not defined')
             return
         }
-        var watcher = getComponentById(id, () => {
+        const watcher = getComponentById(id, () => {
             return new ActionWatcher(options);
         });
         watcher.start();

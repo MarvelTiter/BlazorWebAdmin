@@ -59,5 +59,7 @@ namespace Project.Constraints.Services
         /// </summary>
         /// <returns></returns>
         Task AfterWebApplicationAccessed();
+        
+        TimeSpan RevalidationInterval { get; }
     }
 }

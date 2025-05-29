@@ -24,7 +24,6 @@ namespace Project.Constraints.Services
 #if (ExcludeDefaultService)
 #else
     [WebController(Route = "runlog", Authorize = true)]
-    [ApiInvokerGenerate]
     public interface IStandardRunLogService : IRunLogService<RunLog> { }
 #endif
 }

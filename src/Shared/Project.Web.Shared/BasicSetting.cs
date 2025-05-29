@@ -29,6 +29,8 @@ public class BasicSetting : IProjectSettingService //, IDisposable
         UserStore = services.GetRequiredService<IUserStore>();
         AppSetting = services.GetRequiredService<IOptionsMonitor<AppSetting>>();
     }
+    
+    public virtual TimeSpan RevalidationInterval => TimeSpan.FromMinutes(5);
 
     /// <summary>
     /// 在登录成功后调用此方法以设置当前用户信息

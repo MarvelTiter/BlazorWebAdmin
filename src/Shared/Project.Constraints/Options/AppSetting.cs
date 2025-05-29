@@ -10,7 +10,7 @@ public sealed class AppSetting
     public AppRunMode RunMode { get; set; } = AppRunMode.Server;
     public string? AppLanguage { get; set; }
     public string? LauchUrl { get; set; }
-    public bool LoadUnregisteredPage { get; set; }
+    // public bool LoadUnregisteredPage { get; set; }
     public bool LoadPageFromDatabase { get; set; } = true;
     public bool UseAspectProxy { get; set; }
     public bool ShowExceptionDetial { get; set; }

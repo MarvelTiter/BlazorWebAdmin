@@ -1,5 +1,4 @@
-﻿@using BlazorAdmin.Client
-@using System.Diagnostics.CodeAnalysis
+﻿@using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Options
 @using Project.Constraints.Options
 @using Project.Constraints.Store.Models
@@ -28,11 +27,11 @@
 <body>
     @if (TokenOption.Value.NeedAuthentication)
     {
-        <Routes @rendermode="@RenderMode" />
+        <BlazorAdmin.Client.Routes @rendermode="@RenderMode" />
     }
     else
     {
-        <FreeRoutes @rendermode="@RenderMode" />
+        <BlazorAdmin.Client.FreeRoutes @rendermode="@RenderMode" />
     }
     <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></Project.Web.Shared.Components.ReconnectorOutlet>
 

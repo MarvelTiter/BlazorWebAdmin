@@ -5,7 +5,8 @@ using System.Reflection;
 
 namespace Project.Constraints.Aop;
 
-[AutoInject(ServiceType = typeof(AopPermissionCheck))]
+// [AutoInject(ServiceType = typeof(AopPermissionCheck))]
+[AutoInjectSelf]
 public class AopPermissionCheck(IUserStore userStore) : IAspectHandler
 {
     public Task Invoke(ProxyContext context, Func<Task> process)

@@ -74,7 +74,6 @@ public interface IPermissionService<TPower, TRole> : IPermissionService
 #if (ExcludeDefaultService)
 #else
 [WebController(Route = "default/permission", Authorize = true)]
-[ApiInvokerGenerate]
 [AddAspectHandler(AspectType = typeof(AopLogger))]
 [AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
 public interface IStandardPermissionService : IPermissionService<Power, Role>

@@ -11,8 +11,13 @@
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
-		<!-- OutputItemType="Analyzer" --> 
-		<ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
+		<!-- OutputItemType="Analyzer" -->
+	</ItemGroup>
+
+	
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Project.Web.Shared\Project.Web.Shared.csproj" />
 	</ItemGroup>
 </Project>
 

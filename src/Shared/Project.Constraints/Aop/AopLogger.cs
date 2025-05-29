@@ -10,7 +10,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Project.Constraints.Aop;
 
-[AutoInject(ServiceType = typeof(AopLogger))]
+// [AutoInject(ServiceType = typeof(AopLogger))]
+[AutoInjectSelf]
 public class AopLogger(IUserStore userStore, ILogger<AopLogger> logger, IServiceProvider provider) : IAspectHandler
 {
     private readonly IRunLogService? runLogService = provider.GetService<IRunLogService>();

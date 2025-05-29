@@ -7,7 +7,7 @@ namespace Project.Web.Shared.Components;
 public class ClientHub : JsComponentBase
 {
     // [CascadingParameter] public Task<AuthenticationState>? AuthenticationState { get; set; }
-    private ClientInfo? client;
+    // private ClientInfo? client;
     [Inject] [NotNull] private IClientService? ClientService { get; set; }
 
     [Inject] [NotNull] private IUserStore? UserStore { get; set; }
@@ -21,7 +21,7 @@ public class ClientHub : JsComponentBase
             await InvokeAsync<string[]>("init", new
             {
                 interval = Options.Value.ClientHubOptions.ClientSendFrequency.TotalMilliseconds,
-                dotnetRef = DotNetObjectReference.Create(this)
+                // dotnetRef = DotNetObjectReference.Create(this)
             });
             //client = new ClientInfo(Id)
             //{
@@ -32,16 +32,17 @@ public class ClientHub : JsComponentBase
         }
     }
 
-    [JSInvokable("Tick")]
-    public async Task SendBeatAsync(string[] info)
-    {
-        client ??= new ClientInfo()
-        {
-            CircuitId = info[0],
-            UserInfo = UserStore.UserInfo,
-            IpAddress = info[1],
-            UserAgent = info[2]
-        };
-        await ClientService.AddOrUpdateAsync(client);
-    }
+    // [JSInvokable("Tick")]
+    // public async Task SendBeatAsync(string[] info)
+    // {
+    //     client ??= new ClientInfo()
+    //     {
+    //         CircuitId = info[0],
+    //         UserInfo = UserStore.UserInfo,
+    //         IpAddress = info[1],
+    //         UserAgent = info[2],
+    //         Mode = OperatingSystem.IsBrowser() ? "WebAssembly" : "Server"
+    //     };
+    //     await ClientService.AddOrUpdateAsync(client);
+    // }
 }

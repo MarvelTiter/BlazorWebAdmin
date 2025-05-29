@@ -20,20 +20,19 @@ function openWindow(url: string, width: number, height: number, target?: string)
     window.open(url, target, features)
 }
 
-async function getClient() {
-    if (window.opener !== null) {
-        return [null, null]
-    }
-    const response = await fetch('/ip.client')
-    const ip = await response.text()
-    return [ip, navigator.userAgent]
-}
+// async function getClient() {
+//     if (window.opener !== null) {
+//         return [null, null]
+//     }
+//     const response = await fetch('/ip.client')
+//     const ip = await response.text()
+//     return [ip, navigator.userAgent]
+// }
 
 
 
 export default {
     closeWin,
     openWindow,
-    getClient,
     setTheme
 }

@@ -3,7 +3,8 @@ using MT.LightTask;
 
 namespace BlazorAdmin.Client.TestPages.Tasks
 {
-    [AutoInject(ServiceType = typeof(TestTask))]
+    // [AutoInject(ServiceType = typeof(TestTask))]
+    [AutoInjectSelf]
     public class TestTask : ITask
     {
         public Task ExecuteAsync(CancellationToken cancellationToken = default)

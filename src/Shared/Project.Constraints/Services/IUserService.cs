@@ -41,7 +41,6 @@ namespace Project.Constraints.Services
     // }
 
     [WebController(Route = "user", Authorize = true)]
-    [ApiInvokerGenerate]
     [AddAspectHandler(AspectType = typeof(AopLogger))]
     [AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
     public interface IStandardUserService : IUserService<User>

@@ -36,7 +36,7 @@ namespace Project.Web.Shared.Store
 
         public async Task NotifyLoginSuccessAsync()
         {
-            await LoginSuccessEvent.InvokeAsync(UserStore.UserInfo!);
+            await LoginSuccessEvent.InvokeAsync(UserStore.UserInfo ?? UserInfo.Visitor);
             loginEventDone = true;
             await InvokeInit();
         }

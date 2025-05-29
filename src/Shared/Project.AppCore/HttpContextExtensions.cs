@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Endpoints;
 using Microsoft.AspNetCore.Http;
 using Project.Constraints.Common.Attributes;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 namespace Project.AppCore;
@@ -28,7 +29,7 @@ public static class HttpContextExtensions
 
 public static class ClaimsPrincipalExtensions
 {
-    public static bool GetCookieClaimsIdentity(this ClaimsPrincipal user, out ClaimsIdentity? identity)
+    public static bool GetCookieClaimsIdentity(this ClaimsPrincipal user, [NotNullWhen(true)] out ClaimsIdentity? identity)
     {
         foreach (var item in user.Identities)
         {

@@ -37,7 +37,7 @@ builder.AddServerProject(setting =>
 #if DEBUG
     setting.ConfigureSettingProviderType<CustomSetting>();
 #endif
-    setting.ConfigureAuthService<DefaultAuthenticationService>();
+    setting.ConfigureAuthService<BlazorAdminAuthenticationService>();
 });
 //#if (ExcludeDefaultService)
 //#else
@@ -65,11 +65,12 @@ builder.Services.AddLightOrm(option =>
 builder.Services.AutoInject();
 
 builder.Services.AddControllers();
-
+#if DEBUG
 builder.Services.AddLightTask();
-
+#endif
 var app = builder.Build();
 // Configure the HTTP request pipeline.
+#if DEBUG
 app.UseLightTask(c =>
 {
     c.AddTask("测试1", (sp, token) =>
@@ -77,7 +78,9 @@ app.UseLightTask(c =>
         Console.WriteLine($"Task测试1: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
         return Task.CompletedTask;
     }, b => b.WithCron("*/12 * * * * ?").Build());
+    c.AddTask<TestTask>("Task测试2", b => b.WithCron("*/12 * * * * ?").Build());
 });
+#endif
 
 if (!app.Environment.IsDevelopment())
 {
@@ -89,11 +92,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseProject();
 app.UseAntiforgery();
+app.MapControllers();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies([.. AppConst.AdditionalAssemblies]);
-app.MapControllers();
+
 
 app.Run();

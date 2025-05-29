@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Http;
 using Project.Constraints;
 using Project.Constraints.Store;
+using Project.Constraints.Utils;
 
 namespace Project.AppCore.Auth;
 
@@ -19,6 +20,9 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
 {
     private readonly IUserStore userStore;
     private readonly NavigationManager navigation;
+    private readonly IAuthService authService;
+    private readonly IProjectSettingService settingService;
+    private readonly ILogger<PersistingRevalidatingAuthenticationStateProvider> logger;
     private readonly PersistentComponentState state;
     private readonly PersistingComponentStateSubscription subscription;
     private Task<AuthenticationState>? authenticationStateTask;
@@ -27,11 +31,17 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
         , PersistentComponentState persistentComponentState
         , IUserStore userStore
         , NavigationManager navigation
+        , IAuthService authService
+        , IProjectSettingService settingService
+        , ILogger<PersistingRevalidatingAuthenticationStateProvider> logger
         , IHttpContextAccessor httpContextAccessor) : base(loggerFactory)
     {
         state = persistentComponentState;
         this.userStore = userStore;
         this.navigation = navigation;
+        this.authService = authService;
+        this.settingService = settingService;
+        this.logger = logger;
         AuthenticationStateChanged += OnAuthenticationStateChanged;
         subscription = state.RegisterOnPersisting(OnPersistingAsync, RenderMode.InteractiveWebAssembly);
         if (httpContextAccessor.HttpContext?.User.GetCookieClaimsIdentity(out var identity) == true && identity!.IsAuthenticated == true)
@@ -41,8 +51,16 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
         }
     }
 
-    // 重写RevalidationInterval属性，设置验证间隔时间为30分钟
-    protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(30);
+    // 重写RevalidationInterval属性，设置验证间隔时间为5分钟
+    protected override TimeSpan RevalidationInterval => settingService.RevalidationInterval;
+
+    // 重写ValidateAuthenticationStateAsync方法
+    protected override async Task<bool> ValidateAuthenticationStateAsync(AuthenticationState authenticationState,
+        CancellationToken cancellationToken)
+    {
+        var ok = await authService.CheckUserStatusAsync(Current);
+        return ok;
+    }
 
     // 提供当前用户信息的属性
     public UserInfo? Current => userStore.UserInfo;
@@ -56,12 +74,6 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
         return Task.CompletedTask;
     }
 
-    // 重写ValidateAuthenticationStateAsync方法，始终返回true
-    protected override Task<bool> ValidateAuthenticationStateAsync(AuthenticationState authenticationState,
-        CancellationToken cancellationToken)
-    {
-        return Task.FromResult(true);
-    }
 
     // 处理认证状态变化的事件处理方法
     private void OnAuthenticationStateChanged(Task<AuthenticationState> task)
@@ -78,11 +90,6 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
         var authenticationState = await authenticationStateTask;
         var principal = authenticationState.User;
 
-        //if (principal.Identity?.IsAuthenticated == true)
-        //{
-        //    var u = principal.GetUserInfo();
-        //    state.PersistAsJson(nameof(UserInfo), u);
-        //}
         if (principal.GetCookieClaimsIdentity(out var identity) && identity!.IsAuthenticated == true)
         {
             var u = identity.GetUserInfo();
