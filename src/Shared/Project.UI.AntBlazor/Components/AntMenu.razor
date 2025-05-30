@@ -1,6 +1,6 @@
 ﻿@* 需要套一个元素才能让 ::deep 选择到 *@
 <div>
-    <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed="@Collapsed" Style="flex: 1;">
+    <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed="@Collapsed" Style="flex: 1;line-height: 50px;">
         @foreach (var item in Router.Menus.Where(m => m.Group == "ROOT"))
         {
             <AntMenuItem Route=item></AntMenuItem>
@@ -12,6 +12,5 @@
     [Parameter, NotNull] public IRouterStore? Router { get; set; }
     [Parameter] public bool Horizontal { get; set; }
     [Parameter, NotNull] public IAppStore? App { get; set; }
-
     bool Collapsed => Horizontal ? false : App.Collapsed;
 }

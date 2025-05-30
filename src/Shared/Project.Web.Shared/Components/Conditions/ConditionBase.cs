@@ -3,7 +3,7 @@ using Project.Constraints.Page;
 
 namespace Project.Web.Shared.Components
 {
-    public class ConditionBase : BasicComponent, ICondition
+    public class ConditionBase : AppComponentBase, ICondition
     {
         [CascadingParameter, NotNull] public IQueryCondition? Parent { get; set; }
         [Parameter] public string? Label { get; set; }

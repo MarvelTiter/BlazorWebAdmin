@@ -11,15 +11,13 @@
     </div>
     @if (!Native)
     {
-        @*<Thumb />
-    <Thumb Vertical />*@
         <div @ref="HorizontalTracker" class="scrollbar__bar is-horizontal">
             <div @ref="HorizontalThumb" style="@BarStyle(false).Style"
-             class="scrollbar__thumb" />
+                 class="scrollbar__thumb"></div>
         </div>
         <div @ref="VerticalTracker" class="scrollbar__bar is-vertical">
             <div @ref="VerticalThumb" style="@BarStyle(true).Style"
-             class="scrollbar__thumb" />
+                 class="scrollbar__thumb"></div>
         </div>
     }
 </div>

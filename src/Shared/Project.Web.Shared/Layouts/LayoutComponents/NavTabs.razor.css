@@ -88,7 +88,7 @@
 
 /* classic 布局样式 */
 .tags-box.classic {
-    box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+    /*box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);*/
     flex: 1;
 }
 

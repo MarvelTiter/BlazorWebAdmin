@@ -1,25 +1,26 @@
 ﻿using AutoInjectGenerator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders.Physical;
-using Project.AppCore.Auth;
+using Microsoft.Extensions.Options;
 using Project.Constraints;
+using Project.Constraints.Options;
 using System.Text;
 
 namespace Project.AppCore.Middlewares
 {
     [AutoInject(ServiceType = typeof(FileDownloaderMiddleware), LifeTime = InjectLifeTime.Singleton)]
-    public class FileDownloaderMiddleware : IMiddleware
+    public class FileDownloaderMiddleware(IOptionsMonitor<Token> tokenOption) : IMiddleware
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-
             //_ = context.Request.Form.TryGetValue("Token", out var t);
             //var token = JwtTokenHelper.ReadToken(t!);
-            if (context.User.Identity?.IsAuthenticated == false)
+            if (context.User.Identity?.IsAuthenticated == false && tokenOption.CurrentValue.NeedAuthentication)
             {
                 context.Response.StatusCode = 403;
                 return;
             }
+
             _ = context.Request.Form.TryGetValue("Filename", out var filename);
             _ = context.Request.Form.TryGetValue("Path", out var path);
 
@@ -41,6 +42,7 @@ namespace Project.AppCore.Middlewares
             }
             //await next(context);
         }
+
         /* text/html ： HTML格式
            text/plain ：纯文本格式
            text/xml ： XML格式

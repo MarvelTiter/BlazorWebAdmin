@@ -7,7 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Project.Web.Shared.Pages
 {
 
-    public abstract class SystemPageIndex<TPage> : BasicComponent, IPageAction
+    public abstract class SystemPageIndex<TPage> : AppComponentBase, IRoutePage
         where TPage : SystemPageIndex<TPage>
     {
         //[Inject, NotNull] IProjectSettingService? SettingProvider { get; set; }
@@ -21,7 +21,7 @@ namespace Project.Web.Shared.Pages
             PageType = GetPageType(Locator);
         }
         public abstract Type? GetPageType(IPageLocatorService customSetting);
-        IPageAction? page;
+        IRoutePage? page;
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             if (PageType != null)
@@ -37,7 +37,7 @@ namespace Project.Web.Shared.Pages
                         child.OpenComponent(0, PageType);
                         child.AddComponentReferenceCapture(1, obj =>
                         {
-                            page = obj as IPageAction;
+                            page = obj as IRoutePage;
                         });
                         child.CloseComponent();
                     }));
@@ -48,24 +48,14 @@ namespace Project.Web.Shared.Pages
                     builder.OpenComponent(0, PageType);
                     builder.AddComponentReferenceCapture(1, obj =>
                     {
-                        page = obj as IPageAction;
+                        page = obj as IRoutePage;
                     });
                     builder.CloseComponent();
                 }
             }
         }
 
-        public async Task OnShowAsync()
-        {
-            if (page != null)
-                await page.OnShowAsync();
-        }
-
-        public async Task OnHiddenAsync()
-        {
-            if (page != null)
-                await page.OnHiddenAsync();
-        }
+        public void OnClose() => page?.OnClose();
     }
 #if (ExcludeDefaultPages)
 #else

@@ -1,7 +1,7 @@
 ﻿@using Project.Web.Shared.ComponentHelper
 @using System.Diagnostics.CodeAnalysis
 @typeparam TRole where TRole : class, IRole, new()
-@inherits BasicComponent
+@inherits AppComponentBase
 <div style="margin:10px 0;">
     @foreach (var item in roleDefs)
     {

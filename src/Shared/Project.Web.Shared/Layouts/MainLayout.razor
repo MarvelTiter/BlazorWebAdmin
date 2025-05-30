@@ -16,15 +16,21 @@
     <CascadingValue Value="this" IsFixed>
         @if (Context.AppStore.Mode == LayoutMode.Classic)
         {
-            <ClassicLayout @ref=LayoutBase></ClassicLayout>
+            <ClassicLayout @ref=LayoutBase>
+                @Body
+            </ClassicLayout>
         }
         else if (Context.AppStore.Mode == LayoutMode.Card)
         {
-            <CardLayout @ref=LayoutBase></CardLayout>
+            <CardLayout @ref=LayoutBase>
+                @Body
+            </CardLayout>
         }
         else if (Context.AppStore.Mode == LayoutMode.Line)
         {
-            <LineLayout @ref=LayoutBase></LineLayout>
+            <LineLayout @ref=LayoutBase>
+                @Body
+            </LineLayout>
         }
         else
         {

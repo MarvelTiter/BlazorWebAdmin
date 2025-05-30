@@ -74,7 +74,7 @@ namespace Project.Web.Shared.Layouts.LayoutComponents
 
         private void NavPrev() => Router.NavigateToPreiousPage();
 
-        public void NavNext() => Router.NavigateToNextPage();
+        private void NavNext() => Router.NavigateToNextPage();
 
         private void OpenContextMenu(MouseEventArgs e, TagRoute route)
         {

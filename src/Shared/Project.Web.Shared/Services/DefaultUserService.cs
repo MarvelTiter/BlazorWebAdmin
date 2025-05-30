@@ -19,11 +19,20 @@ namespace Project.Web.Shared.Services
 
         public virtual async Task<QueryResult> DeleteUserAsync(TUser user)
         {
-            context.BeginTran();
-            await context.Delete<TUser>().Where(u => u.UserId == user.UserId).ExecuteAsync();
-            await context.Delete<TUserRole>().Where(ur => ur.UserId == user.UserId).ExecuteAsync();
-            await context.CommitTranAsync();
-            return true.Result();
+            using var scoped = context.CreateMainDbScoped();
+            try
+            {
+                await scoped.BeginTransactionAsync();
+                await scoped.Delete<TUser>().Where(u => u.UserId == user.UserId).ExecuteAsync();
+                await scoped.Delete<TUserRole>().Where(ur => ur.UserId == user.UserId).ExecuteAsync();
+                await scoped.CommitTransactionAsync();
+                return true.Result();
+            }
+            catch (Exception e)
+            {
+                await scoped.RollbackTransactionAsync();
+                throw;
+            }
         }
 
         public virtual async Task<QueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req)
@@ -38,9 +47,10 @@ namespace Project.Web.Shared.Services
 
         public virtual async Task<QueryResult> InsertUserAsync(TUser user)
         {
-            using var scoped = context.CreateScoped();
+            using var scoped = context.CreateMainDbScoped();
             try
             {
+                await scoped.BeginTransactionAsync();
                 var u = await context.Insert(user).ExecuteAsync();
                 var roles = user.Roles ?? [];
                 var usrId = user.UserId;
@@ -50,12 +60,13 @@ namespace Project.Web.Shared.Services
                     var ur = new TUserRole() { UserId = usrId, RoleId = r };
                     await scoped.Insert(ur).ExecuteAsync();
                 }
-                await scoped.CommitTranAsync();
+
+                await scoped.CommitTransactionAsync();
                 return QueryResult.Success();
             }
             catch (Exception ex)
             {
-                await scoped.RollbackTranAsync();
+                await scoped.RollbackTransactionAsync();
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
         }
@@ -68,12 +79,13 @@ namespace Project.Web.Shared.Services
                 .ExecuteAsync();
             return flag > 0;
         }
+
         public virtual async Task<QueryResult> SaveUserWithRolesAsync(TUser user)
         {
-            using var scoped = context.CreateScoped();
+            using var scoped = context.CreateMainDbScoped();
             try
             {
-                //context.BeginTran();
+                await scoped.BeginTransactionAsync();
                 await scoped.Update(user).Where(u => u.UserId == user.UserId).ExecuteAsync();
                 var usrId = user.UserId;
                 var roles = user.Roles ?? [];
@@ -83,20 +95,23 @@ namespace Project.Web.Shared.Services
                     var ur = new TUserRole() { UserId = usrId, RoleId = r };
                     await scoped.Insert(ur).ExecuteAsync();
                 }
-                await scoped.CommitTranAsync();
+
+                await scoped.CommitTransactionAsync();
                 return QueryResult.Success();
             }
             catch (Exception ex)
             {
-                await scoped.RollbackTranAsync();
+                await scoped.RollbackTransactionAsync();
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
         }
+
         public virtual async Task<QueryResult> UpdateUserAsync(TUser user)
         {
             var n = await context.Update(user).Where(u => u.UserId == user.UserId).ExecuteAsync();
             return n > 0;
         }
+
         public virtual async Task<TUser?> GetUserAsync(string id)
         {
             var u = await context.Select<TUser>().Where(u => u.UserId == id).FirstAsync();

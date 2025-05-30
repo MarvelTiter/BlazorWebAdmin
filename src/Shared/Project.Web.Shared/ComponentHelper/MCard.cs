@@ -4,7 +4,7 @@ using Project.Constraints.Page;
 
 namespace Project.Web.Shared.ComponentHelper
 {
-    public class MCard : BasicComponent
+    public class MCard : AppComponentBase
     {
         [Parameter] public string? Title { get; set; }
         [Parameter] public RenderFragment? TitleTemplate { get; set; }
@@ -21,7 +21,7 @@ namespace Project.Web.Shared.ComponentHelper
         }
     }
 
-    public class MRow : BasicComponent
+    public class MRow : AppComponentBase
     {
         [Parameter] public RenderFragment? ChildContent { get; set; }
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -34,7 +34,7 @@ namespace Project.Web.Shared.ComponentHelper
         }
     }
 
-    public class MCol : BasicComponent
+    public class MCol : AppComponentBase
     {
         [Parameter] public RenderFragment? ChildContent { get; set; }
         [Parameter] public int ColSpan { get; set; }

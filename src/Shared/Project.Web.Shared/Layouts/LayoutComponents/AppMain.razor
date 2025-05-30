@@ -1,34 +1,48 @@
-﻿@using Project.Web.Shared.Components
+﻿@using System.Buffers
+@using Project.Web.Shared.Components
 @using System.Diagnostics.CodeAnalysis
 @using Project.Web.Shared.Routers
-@inherits BasicComponent
-@if (Context != null)
-{
-    <ScrollBar>
-        @foreach (var item in Router.TopLinks)
+@* @inherits AppComponentBase *@
+@* @if (Context != null) *@
+@* { *@
+@* } *@
+<ScrollBar>
+    @* @foreach (var item in Router.TopLinks)
         {
             if (item.Body == null && !item.Rendered) continue;
-            <div id=@item.RouteUrl style="@(Router.Compare(item) ? "display: block;":"display: none;")">
+            <div id=@item.RouteUrl style="@(Router.Compare(item) ? "display: block;" : "display: none;")">
                 <CascadingValue Value="item">
                     <ErrorCatcher ShowMessage>
                         <!-- 在路由页面中获取当前页的信息 -->
-                        @item.Body
+                        <div class="old">
+
+                            @item.Body
+                        </div>
                     </ErrorCatcher>
                 </CascadingValue>
             </div>
-        }
-    </ScrollBar>
-}
+        } *@
+    <ErrorCatcher ShowMessage>
+        <!-- 在路由页面中获取当前页的信息 -->
+        <div class="new">
+            @ChildContent
+        </div>
+    </ErrorCatcher>
+</ScrollBar>
 
 @code {
-    [CascadingParameter] public RouteData? RouteData { get; set; }
-    [Inject, NotNull] ILogger<AppMain>? Logger { get; set; }
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        Navigator.LocationChanged += LocationChangedEventHandler;
-        // Router.DataChangedEvent += StateHasChanged;
-    }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    // [Inject, NotNull] ILogger<AppMain>? Logger { get; set; }
+    // IDisposable? disposable;
+
+    // protected override void OnInitialized()
+    // {
+    //     base.OnInitialized();
+    //     // disposable = Navigator.RegisterLocationChangingHandler(LocationChangingAsync);
+    //     // Router.DataChangedEvent += StateHasChanged;
+    //     // Navigator.LocationChanged += LocationChangedEventHandler;
+    // }
 
     // protected override async Task OnInitializedAsync()
     // {
@@ -36,29 +50,33 @@
     //     await Router.RouteDataChangedHandleAsync(RouteData);
     // }
 
-    private async void LocationChangedEventHandler(object? sender, LocationChangedEventArgs e)
-    {
-        try
-        {
-            if (RouteData != null && Context != null)
-            {
-                await Router.RouteDataChangedHandleAsync(RouteData);
-                _ = InvokeAsync(StateHasChanged);
-            }
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "LocationChangedEventHandler");
-        }
+    // private ValueTask LocationChangingAsync(LocationChangingContext context)
+    // {
+    //     return Router.LocationChanging(context.TargetLocation);
+    // }
 
-    }
+    // private void LocationChangedEventHandler(object? sender, LocationChangedEventArgs e)
+    // {
+    //     try
+    //     {
+    //         if (RouteData != null && Context != null)
+    //         {
+    //             Router.RouteDataChangedHandle(RouteData);
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Logger.LogError(ex, "LocationChangedEventHandler");
+    //     }
+    // }
 
-    protected override ValueTask OnDisposeAsync()
-    {
-        Navigator.LocationChanged -= LocationChangedEventHandler;
-        Router.DataChangedEvent -= StateHasChanged;
-        return base.OnDisposeAsync();
-    }
+    // protected override ValueTask OnDisposeAsync()
+    // {
+    //     Navigator.LocationChanged -= LocationChangedEventHandler;
+    //     Router.DataChangedEvent -= StateHasChanged;
+    //     disposable?.Dispose();
+    //     return base.OnDisposeAsync();
+    // }
 
     // public override Task SetParametersAsync(ParameterView parameters)
     // {

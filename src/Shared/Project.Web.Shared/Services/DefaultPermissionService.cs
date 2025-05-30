@@ -81,10 +81,10 @@ namespace Project.Web.Shared.Services
 
         public virtual async Task<QueryResult> SaveRoleWithPowersAsync(TRole role)
         {
-            using var scoped = context.CreateScoped();
+            using var scoped = context.CreateMainDbScoped();
             try
             {
-                //context.BeginTran();
+                await scoped.BeginTransactionAsync();
                 var n = await scoped.Update(role)
                     .Where(r => r.RoleId == role.RoleId)
                     .ExecuteAsync();
@@ -101,18 +101,18 @@ namespace Project.Web.Shared.Services
                 }
                 if (n == 1 && i == powers.Length)
                 {
-                    await scoped.CommitTranAsync();
+                    await scoped.CommitTransactionAsync();
                     return QueryResult.Success();
                 }
                 else
                 {
-                    await scoped.RollbackTranAsync();
+                    await scoped.RollbackTransactionAsync();
                     return QueryResult.Fail();
                 }
             }
             catch (Exception ex)
             {
-                await scoped.RollbackTranAsync();
+                await scoped.RollbackTransactionAsync();
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
         }
@@ -141,9 +141,10 @@ namespace Project.Web.Shared.Services
 
         public virtual async Task<QueryResult> InsertRoleAsync(TRole role)
         {
-            using var scoped = context.CreateScoped();
+            using var scoped = context.CreateMainDbScoped();
             try
             {
+                await scoped.BeginTransactionAsync();
                 var n = await context.Insert(role).ExecuteAsync();
                 var roleId = role.RoleId;
                 string[] powers = [.. role.Powers?.Distinct()];
@@ -156,36 +157,37 @@ namespace Project.Web.Shared.Services
                 }
                 if (n == 1 && i == powers.Length)
                 {
-                    await scoped.CommitTranAsync();
+                    await scoped.CommitTransactionAsync();
                     return QueryResult.Success();
                 }
                 else
                 {
-                    await scoped.RollbackTranAsync();
+                    await scoped.RollbackTransactionAsync();
                     return QueryResult.Fail();
                 }
             }
             catch (Exception ex)
             {
-                await scoped.RollbackTranAsync();
+                await scoped.RollbackTransactionAsync();
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
         }
 
         public virtual async Task<QueryResult> DeleteRoleAsync(TRole role)
         {
+            using var scoped = context.CreateMainDbScoped();
             try
             {
-                context.BeginTran();
-                await context.Delete<TRole>().Where(r => r.RoleId == role.RoleId).ExecuteAsync();
-                await context.Delete<TUserRole>().Where(ur => ur.RoleId == role.RoleId).ExecuteAsync();
-                await context.Delete<TRolePower>().Where(rp => rp.RoleId == role.RoleId).ExecuteAsync();
-                await context.CommitTranAsync();
+                await scoped.BeginTransactionAsync();
+                await scoped.Delete<TRole>().Where(r => r.RoleId == role.RoleId).ExecuteAsync();
+                await scoped.Delete<TUserRole>().Where(ur => ur.RoleId == role.RoleId).ExecuteAsync();
+                await scoped.Delete<TRolePower>().Where(rp => rp.RoleId == role.RoleId).ExecuteAsync();
+                await scoped.CommitTransactionAsync();
                 return QueryResult.Success();
             }
             catch (Exception ex)
             {
-                await context.RollbackTranAsync();
+                await scoped.RollbackTransactionAsync();
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
 
@@ -193,17 +195,18 @@ namespace Project.Web.Shared.Services
 
         public virtual async Task<QueryResult> DeletePowerAsync(TPower power)
         {
+            using var scoped = context.CreateMainDbScoped();
             try
             {
-                context.BeginTran();
-                await context.Delete<TPower>().Where(p => p.PowerId == power.PowerId || p.ParentId == power.PowerId).ExecuteAsync();
-                await context.Delete<TRolePower>().Where(p => p.PowerId == power.PowerId).ExecuteAsync();
-                await context.CommitTranAsync();
+                await scoped.BeginTransactionAsync();
+                await scoped.Delete<TPower>().Where(p => p.PowerId == power.PowerId || p.ParentId == power.PowerId).ExecuteAsync();
+                await scoped.Delete<TRolePower>().Where(p => p.PowerId == power.PowerId).ExecuteAsync();
+                await scoped.CommitTransactionAsync();
                 return QueryResult.Success();
             }
             catch (Exception ex)
             {
-                await context.RollbackTranAsync();
+                await scoped.RollbackTransactionAsync();
                 return QueryResult.Fail().SetMessage(ex.Message);
             }
         }

@@ -2,7 +2,7 @@
 @using System.Linq.Expressions
 @using System.ComponentModel.DataAnnotations
 @using MT.Toolkit.StringExtension
-@inherits BasicComponent
+@inherits AppComponentBase
 
 <StackPanel>
     @(UI.BuildSelect<ColumnInfo, string>(this, Columns)

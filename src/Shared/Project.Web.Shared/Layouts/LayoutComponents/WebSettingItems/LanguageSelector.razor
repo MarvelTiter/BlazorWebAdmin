@@ -1,5 +1,5 @@
 ﻿@using System.Globalization
-@inherits BasicComponent
+@inherits AppComponentBase
 
 @(UI.BuildSelect<LangInfo, string>(this, Options.CurrentValue.SupportedCulture)
     .ValueExpression(l => l.Culture)

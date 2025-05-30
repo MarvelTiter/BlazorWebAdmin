@@ -6,7 +6,7 @@ using Project.Constraints.UI;
 
 namespace Project.Constraints.Page;
 
-public abstract class JsComponentBase : BasicComponent, IJsComponent, IAsyncDisposable
+public abstract class JsComponentBase : AppComponentBase, IJsComponent, IAsyncDisposable
 {
     public const string JS_FUNC_PREFIX = "window.BlazorProject.";
     [Inject, NotNull] protected IJSRuntime? Js { get; set; }

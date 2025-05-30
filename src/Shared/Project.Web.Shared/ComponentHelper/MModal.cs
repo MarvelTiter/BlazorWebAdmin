@@ -5,7 +5,7 @@ using Project.Constraints.UI.Flyout;
 
 namespace Project.Web.Shared.ComponentHelper
 {
-    public class MModal : BasicComponent
+    public class MModal : AppComponentBase
     {
         [Parameter] public bool Visible { get; set; }
         [Parameter] public EventCallback<bool> VisibleChanged { get; set; }

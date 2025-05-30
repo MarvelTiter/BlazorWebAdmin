@@ -1,7 +1,7 @@
 ﻿@page "/camera/test"
 @namespace Project.Web.Shared.Components
 @using Project.Constraints.Page
-@inherits BasicComponent
+@inherits AppComponentBase
 @* @attribute [PageInfo(Title = "Camera测试")] *@
 <Camera Width="400" Height="300" OnCapture="handleCapture" @ref=camera PreviewRotate PhotoFormat="image/jpeg" Quality="0.7">
     @* <DeviceSelectorRender>

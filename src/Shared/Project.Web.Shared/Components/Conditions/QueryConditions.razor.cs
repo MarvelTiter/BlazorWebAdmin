@@ -19,7 +19,7 @@ namespace Project.Web.Shared.Components
         void UpdateCondition(int index, ConditionUnit info);
         bool TryGetCondition(int index, out ConditionUnit? unit);
     }
-    public partial class QueryConditions : BasicComponent, IQueryCondition
+    public partial class QueryConditions : AppComponentBase, IQueryCondition
     {
         [Parameter] public int Column { get; set; } = 5;
         [Parameter] public int? ColumnWidth { get; set; }

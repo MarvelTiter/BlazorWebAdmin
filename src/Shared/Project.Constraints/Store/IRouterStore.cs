@@ -1,4 +1,5 @@
-﻿using Project.Constraints.Store.Models;
+﻿using Microsoft.AspNetCore.Components;
+using Project.Constraints.Store.Models;
 
 namespace Project.Constraints.Store
 {
@@ -9,17 +10,22 @@ namespace Project.Constraints.Store
 
     public interface IRouterStore : IStore, IDisposable
     {
-        event Func<TagRoute, Task<bool>>? RouterChangingEvent;
-        event Func<RouterMeta, Task<bool>>? RouteMetaFilterEvent;
+        IDisposable RegisterRouterChangingHandler(Func<TagRoute, Task<bool>> handler);
+        IDisposable RegisterRouterMetaFilterHandler(Func<RouterMeta, Task<bool>> handler);
+
         List<TagRoute> TopLinks { get; }
         IEnumerable<RouteMenu> Menus { get; }
         TagRoute? Current { get; }
+        WeakReference<object?> CurrentPageInstance { get; }
+        bool LastRouterChangingCheck { get; }
         string CurrentUrl { get; }
         void GoTo(string uri);
-        Task RouteDataChangedHandleAsync(Microsoft.AspNetCore.Components.RouteData routeData);
+        ValueTask LocationChangingHandlerAsync(string url);
+        void CollectPageAdditionalInfo(object pageInstance);
         void Remove(string link);
         Task RemoveOther(string link);
         Task Reset();
+
         //Task Reload();
         /// <summary>
         /// 初始化菜单

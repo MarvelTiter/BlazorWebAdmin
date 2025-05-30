@@ -1,7 +1,7 @@
 ﻿@namespace Project.Web.Shared.Components
 @using Microsoft.Extensions.Localization
 @using Project.Constraints.Page
-@inherits BasicComponent
+@inherits AppComponentBase
 @UI.BuildButton(this).Text(Localizer["IconSelector.ButtonText"]).Primary().OnClick(OpenModal).Render()
 <MModal Title="@Localizer["IconSelector.Title"]" @bind-Visible="visible" Width="50vw" HideDefaultFooter>
     @UI.BuildInput(this).Bind(() => filter).Render()

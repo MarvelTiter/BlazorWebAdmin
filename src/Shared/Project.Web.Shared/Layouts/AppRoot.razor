@@ -1,4 +1,5 @@
-﻿@* 使用services.AddCascadingAuthenticationState();代替 *@
+﻿@using Project.Web.Shared.Layouts.LayoutComponents
+@* 使用services.AddCascadingAuthenticationState();代替 *@
 @* <CascadingAuthenticationState> *@
 <CascadingValue Value="Context">
     <CascadingValue Value="this" IsFixed="true">
@@ -10,16 +11,14 @@
             <ErrorCatcher>
                 <Router AppAssembly="AppConst.AppAssembly" AdditionalAssemblies="AppConst.AdditionalAssemblies">
                     <Found Context="routeData">
-                        <CascadingValue Value="@routeData">
-                            <RouteView RouteData="@routeData" DefaultLayout="@DefaultLayout" />
-                        </CascadingValue>
+                        <CatchObjectRefRouteView RouteData="@routeData" DefaultLayout="@DefaultLayout"/>
                     </Found>
                 </Router>
             </ErrorCatcher>
             <WaterMark ProvideService></WaterMark>
             <WebAdminReconnector></WebAdminReconnector>
-            <Downloader />
-            <ClientHub />
+            <Downloader/>
+            <ClientHub/>
             @Context.UI.RenderContainer()
         </div>
     </CascadingValue>

@@ -7,7 +7,7 @@ using System.Data;
 
 namespace Project.Web.Shared.Basic
 {
-    public abstract class DataTableView<TRequest> : BasicComponent where TRequest : IRequest, new()
+    public abstract class DataTableView<TRequest> : AppComponentBase where TRequest : IRequest, new()
     {
         [Parameter] public int Total { get; set; }
         [Inject, NotNull] protected IExcelHelper? Excel { get; set; }
