@@ -1,4 +1,4 @@
-using AutoInjectGenerator;
+﻿using AutoInjectGenerator;
 using Microsoft.Extensions.Options;
 using Project.Constraints.Options;
 using System.Collections.Concurrent;
@@ -15,7 +15,6 @@ public sealed class ClientService : IClientService, IDisposable
     private readonly CancellationTokenSource tokenSource = new();
     private readonly Task clearTimeoutClientTask;
     private readonly IOptions<AppSetting> options;
-    private readonly IHttpContextAccessor httpContextAccessor;
     private bool disposedValue;
 
     public ClientService(IOptions<AppSetting> options
@@ -24,7 +23,6 @@ public sealed class ClientService : IClientService, IDisposable
         clearTimeoutClientTask = new Task(ClearTimeoutClient, tokenSource.Token, TaskCreationOptions.LongRunning);
         clearTimeoutClientTask.Start();
         this.options = options;
-        this.httpContextAccessor = httpContextAccessor;
     }
 
     public Task<QueryResult<int>> GetCountAsync()

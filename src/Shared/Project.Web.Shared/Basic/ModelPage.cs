@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using AutoPageStateContainerGenerator;
 using LightExcel;
 using Microsoft.AspNetCore.Components.Rendering;
 using Project.Constraints.Store.Models;
@@ -16,7 +17,9 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     [Inject][NotNull] private ILogger<ModelPage<TModel, TQuery>>? Logger { get; set; }
     [CascadingParameter] private IAppDomEventHandler? DomEvent { get; set; }
     [CascadingParameter] private TagRoute? RouteInfo { get; set; }
-    public TableOptions<TModel, TQuery> Options { get; set; } = new();
+
+    [SaveState]
+    public virtual TableOptions<TModel, TQuery> Options { get; set; } = new();
     protected bool HideDefaultTableHeader { get; set; }
 
     protected RenderFragment TableFragment => builder =>
