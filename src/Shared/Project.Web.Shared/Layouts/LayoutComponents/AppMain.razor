@@ -8,7 +8,7 @@
         @foreach (var item in Router.TopLinks)
         {
             if (item.Body == null && !item.Rendered) continue;
-            <div id=@item.RouteUrl style="@(Router.Compare(item) ? "display: block;":"display: none;")">
+            <div id=@item.RouteUrl style="@(Router.Compare(item) ? "display: block;" : "display: none;")">
                 <CascadingValue Value="item">
                     <ErrorCatcher ShowMessage>
                         <!-- 在路由页面中获取当前页的信息 -->
@@ -17,12 +17,18 @@
                 </CascadingValue>
             </div>
         }
+        <ErrorCatcher ShowMessage>
+            <!-- 在路由页面中获取当前页的信息 -->
+            @Body
+        </ErrorCatcher>
     </ScrollBar>
 }
 
 @code {
     [CascadingParameter] public RouteData? RouteData { get; set; }
     [Inject, NotNull] ILogger<AppMain>? Logger { get; set; }
+    RenderFragment? Body { get; set; }
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -42,7 +48,7 @@
         {
             if (RouteData != null && Context != null)
             {
-                await Router.RouteDataChangedHandleAsync(RouteData);
+                Body = await Router.RenderBody(RouteData);
                 _ = InvokeAsync(StateHasChanged);
             }
         }
@@ -50,7 +56,6 @@
         {
             Logger.LogError(ex, "LocationChangedEventHandler");
         }
-
     }
 
     protected override ValueTask OnDisposeAsync()

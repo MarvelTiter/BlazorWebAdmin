@@ -1,4 +1,5 @@
-﻿using Project.Constraints.Store.Models;
+﻿using Microsoft.AspNetCore.Components;
+using Project.Constraints.Store.Models;
 
 namespace Project.Constraints.Store
 {
@@ -17,6 +18,7 @@ namespace Project.Constraints.Store
         string CurrentUrl { get; }
         void GoTo(string uri);
         Task RouteDataChangedHandleAsync(Microsoft.AspNetCore.Components.RouteData routeData);
+        Task<RenderFragment> RenderBody(RouteData routeData);
         void Remove(string link);
         Task RemoveOther(string link);
         Task Reset();

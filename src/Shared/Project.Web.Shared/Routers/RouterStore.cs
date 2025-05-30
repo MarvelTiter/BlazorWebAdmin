@@ -50,17 +50,10 @@ public static class RouterStoreExtensions
         var nextUri = store.TopLinks[currentIndex + 1].RouteUrl;
         store.GoTo(nextUri);
     }
-
 }
 
 [AutoInject(ServiceType = typeof(IRouterStore))]
-public class RouterStore(IProjectSettingService settingService
-    , NavigationManager navigationManager
-    , IUserStore userStore
-    , IStringLocalizer<RouterStore> localizer
-    , IOptionsMonitor<CultureOptions> options
-    , ILogger<RouterStore> logger
-    , IOptionsMonitor<AppSetting> setting) : StoreBase, IRouterStore
+public class RouterStore(IProjectSettingService settingService, NavigationManager navigationManager, IUserStore userStore, IStringLocalizer<RouterStore> localizer, IOptionsMonitor<CultureOptions> options, ILogger<RouterStore> logger, IOptionsMonitor<AppSetting> setting) : StoreBase, IRouterStore
 {
     readonly Dictionary<string, TagRoute> pages = [];
 
@@ -161,6 +154,69 @@ public class RouterStore(IProjectSettingService settingService
         tag.SetActive(true);
         preview = tag;
         NotifyChanged();
+    }
+
+    public async Task<RenderFragment> RenderBody(RouteData routeData)
+    {
+        if (!pages.TryGetValue(CurrentUrl, out var tag))
+        {
+            // TODO 可能有BUG，先观察观察
+            if (menus.Count == 0) return null;
+            RouterMeta? meta = menus.FirstOrDefault(r => CompareUrl(r.RouteUrl, CurrentUrl));
+            if (meta == null)
+            {
+                meta = AllPages.Pages.FirstOrDefault(r => CompareUrl(r.RouteUrl, CurrentUrl));
+                if (meta != null)
+                    meta.Cache = false;
+            }
+
+            tag = new TagRoute
+            {
+                RouteId = meta?.RouteId ?? CurrentUrl,
+                RouteUrl = AttachFirstSlash(meta?.RouteUrl ?? CurrentUrl),
+                RouteTitle = meta?.RouteTitle,
+                Icon = meta?.Icon ?? "",
+                Pin = meta?.Pin ?? false,
+                Cache = meta?.Cache ?? false,
+            };
+            pages[CurrentUrl] = tag;
+        }
+
+        RenderFragment body;
+        var enable = await OnRouterChangingAsync(tag);
+        if (enable)
+        {
+            body = CreateBody(tag, routeData);
+            tag.Panic = false;
+        }
+        else
+        {
+            // 不允许导航到此页面
+            body = b => b.Component<ForbiddenPage>().Build();
+        }
+
+        if (preview != null)
+        {
+            if (preview.Panic || !preview.Cache)
+            {
+                preview.Body = null;
+            }
+
+            if (!preview.Rendered && preview.RouteUrl != CurrentUrl)
+            {
+                preview.Drop();
+            }
+            else
+            {
+                preview.SetActive(false);
+            }
+        }
+
+        //preview?.SetActive(false);
+        tag.SetActive(true);
+        preview = tag;
+        NotifyChanged();
+        return body;
     }
 
     private RenderFragment CreateBody(TagRoute? route, RouteData routeData)
@@ -332,9 +388,11 @@ public class RouterStore(IProjectSettingService settingService
                     meta.RouteTitle = savedMeta.PowerName;
                     meta.Sort = savedMeta.Sort;
                 }
+
                 menus.Add(new RouteMenu(meta));
             }
-            this.menus.Sort((a, b) => a.Sort -b.Sort);
+
+            this.menus.Sort((a, b) => a.Sort - b.Sort);
         }
         catch (Exception ex)
         {
