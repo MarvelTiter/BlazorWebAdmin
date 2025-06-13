@@ -9,11 +9,11 @@ namespace Project.Constraints.Page;
 /// <summary>
 /// 自定义页面
 /// </summary>
-public abstract class PageIndex : ComponentBase, IPageAction
+public abstract class PageIndex : ComponentBase, IRoutePage
 {
     [Inject, NotNull] IPageLocatorService? PageLocator { get; set; }
     protected abstract Type? GetPageType(IPageLocatorService pageLocator);
-    IPageAction? page;
+    IRoutePage? page;
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         var type = GetPageType(PageLocator);
@@ -22,26 +22,17 @@ public abstract class PageIndex : ComponentBase, IPageAction
             builder.OpenComponent(0, type);
             builder.AddComponentReferenceCapture(1, obj =>
             {
-                page = obj as IPageAction;
+                page = obj as IRoutePage;
             });
             builder.CloseComponent();
         }
     }
 
-    public Task OnShowAsync()
+    public Task OnCloseAsync()
     {
         if (page != null)
         {
-            return page.OnShowAsync();
-        }
-        return Task.CompletedTask;
-    }
-
-    public Task OnHiddenAsync()
-    {
-        if (page != null)
-        {
-            return page.OnHiddenAsync();
+            return page.OnCloseAsync();
         }
         return Task.CompletedTask;
     }

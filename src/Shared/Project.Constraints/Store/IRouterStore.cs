@@ -15,10 +15,11 @@ namespace Project.Constraints.Store
         List<TagRoute> TopLinks { get; }
         IEnumerable<RouteMenu> Menus { get; }
         TagRoute? Current { get; }
+        RenderFragment? CurrentContent { get; }
         string CurrentUrl { get; }
         void GoTo(string uri);
         Task RouteDataChangedHandleAsync(Microsoft.AspNetCore.Components.RouteData routeData);
-        Task<RenderFragment> RenderBody(RouteData routeData);
+        //Task<RenderFragment> RenderBody(RouteData routeData);
         void Remove(string link);
         Task RemoveOther(string link);
         Task Reset();

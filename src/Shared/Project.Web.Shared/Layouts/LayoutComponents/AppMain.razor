@@ -1,25 +1,31 @@
-﻿@using Project.Web.Shared.Components
+﻿@using System.Buffers
+@using Project.Web.Shared.Components
 @using System.Diagnostics.CodeAnalysis
 @using Project.Web.Shared.Routers
 @inherits BasicComponent
 @if (Context != null)
 {
     <ScrollBar>
-        @foreach (var item in Router.TopLinks)
+        @* @foreach (var item in Router.TopLinks)
         {
             if (item.Body == null && !item.Rendered) continue;
             <div id=@item.RouteUrl style="@(Router.Compare(item) ? "display: block;" : "display: none;")">
                 <CascadingValue Value="item">
                     <ErrorCatcher ShowMessage>
                         <!-- 在路由页面中获取当前页的信息 -->
-                        @item.Body
+                        <div class="old">
+
+                            @item.Body
+                        </div>
                     </ErrorCatcher>
                 </CascadingValue>
             </div>
-        }
+        } *@
         <ErrorCatcher ShowMessage>
             <!-- 在路由页面中获取当前页的信息 -->
-            @Body
+            <div class="new">
+                @Router.CurrentContent
+            </div>
         </ErrorCatcher>
     </ScrollBar>
 }
@@ -27,13 +33,13 @@
 @code {
     [CascadingParameter] public RouteData? RouteData { get; set; }
     [Inject, NotNull] ILogger<AppMain>? Logger { get; set; }
-    RenderFragment? Body { get; set; }
-
+    IDisposable? disposable;
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        // disposable = Navigator.RegisterLocationChangingHandler(LocationChangingAsync);
+        Router.DataChangedEvent += StateHasChanged;
         Navigator.LocationChanged += LocationChangedEventHandler;
-        // Router.DataChangedEvent += StateHasChanged;
     }
 
     // protected override async Task OnInitializedAsync()
@@ -42,19 +48,29 @@
     //     await Router.RouteDataChangedHandleAsync(RouteData);
     // }
 
+    // private async ValueTask LocationChangingAsync(LocationChangingContext context)
+    // {
+    //     if (RouteData is not null && Context is not null)
+    //         await Router.RenderBody(RouteData);
+    // }
+
     private async void LocationChangedEventHandler(object? sender, LocationChangedEventArgs e)
     {
         try
         {
             if (RouteData != null && Context != null)
             {
-                Body = await Router.RenderBody(RouteData);
-                _ = InvokeAsync(StateHasChanged);
+                await Router.RouteDataChangedHandleAsync(RouteData);
+                await InvokeAsync(StateHasChanged);
             }
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "LocationChangedEventHandler");
+        }
+        finally
+        {
+            Logger.LogInformation("LocationChangedEventHandler");
         }
     }
 
@@ -62,6 +78,7 @@
     {
         Navigator.LocationChanged -= LocationChangedEventHandler;
         Router.DataChangedEvent -= StateHasChanged;
+        disposable?.Dispose();
         return base.OnDisposeAsync();
     }
 
