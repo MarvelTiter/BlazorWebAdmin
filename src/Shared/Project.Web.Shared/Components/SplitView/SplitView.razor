@@ -28,7 +28,7 @@
     /// </summary>
     [Parameter] public string Max { get; set; } = "70%";
     StyleBuilder SeparatorStyle => StyleBuilder.Default.AddStyle("width", () => $"{SeparatorWidth}px", () => Direction == "row")
-    .AddStyle("height", () => $"{SeparatorWidth}px", () => Direction == "column");
+        .AddStyle("height", () => $"{SeparatorWidth}px", () => Direction == "column");
 
     ElementReference? separator;
     ElementReference? panel1;

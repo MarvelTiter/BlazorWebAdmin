@@ -1,42 +1,41 @@
-﻿namespace Project.Web.Shared.Store
+﻿namespace Project.Web.Shared.Store;
+
+public abstract class StoreBase : IDisposable
 {
-    public abstract class StoreBase : IDisposable
+    private bool disposedValue;
+
+    public event Action? DataChangedEvent;
+    protected void NotifyChanged()
     {
-        private bool disposedValue;
+        DataChangedEvent?.Invoke();
+    }
 
-        public event Action? DataChangedEvent;
-        protected void NotifyChanged()
+    protected virtual void Release()
+    {
+
+    }
+
+    protected virtual void SetNull()
+    {
+
+    }
+
+    protected void Dispose(bool disposing)
+    {
+        if (!disposedValue)
         {
-            DataChangedEvent?.Invoke();
-        }
-
-        protected virtual void Release()
-        {
-
-        }
-
-        protected virtual void SetNull()
-        {
-
-        }
-
-        protected void Dispose(bool disposing)
-        {
-            if (!disposedValue)
+            if (disposing)
             {
-                if (disposing)
-                {
-                    Release();
-                }
-                SetNull();
-                disposedValue = true;
+                Release();
             }
+            SetNull();
+            disposedValue = true;
         }
+    }
 
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

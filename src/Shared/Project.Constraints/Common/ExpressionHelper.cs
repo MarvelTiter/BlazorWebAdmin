@@ -6,30 +6,29 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Constraints.Common
+namespace Project.Constraints.Common;
+
+public static class ExpressionHelper
 {
-    public static class ExpressionHelper
+    public static Expression<Func<T, bool>> AndCondition<T>(this Expression<Func<T, bool>> self, Expression<Func<T, bool>> other)
     {
-        public static Expression<Func<T, bool>> AndCondition<T>(this Expression<Func<T, bool>> self, Expression<Func<T, bool>> other)
-        {
-            var p = self.Parameters;
-            var body = Expression.AndAlso(self.Body, other.Body);
-            return Expression.Lambda<Func<T, bool>>(body, p);
-        }
-        public static PropertyInfo ExtractProperty<T, TValue>(this Expression<Func<T, TValue>> selector)
-        {
-            ArgumentNullException.ThrowIfNull(selector);
+        var p = self.Parameters;
+        var body = Expression.AndAlso(self.Body, other.Body);
+        return Expression.Lambda<Func<T, bool>>(body, p);
+    }
+    public static PropertyInfo ExtractProperty<T, TValue>(this Expression<Func<T, TValue>> selector)
+    {
+        ArgumentNullException.ThrowIfNull(selector);
 
-            if (selector.Body is not MemberExpression body || body.Member is not PropertyInfo prop)
-                throw new ArgumentException($"The parameter selector '{selector}' does not resolve to a public property on the type '{typeof(T)}'.", nameof(selector));
+        if (selector.Body is not MemberExpression body || body.Member is not PropertyInfo prop)
+            throw new ArgumentException($"The parameter selector '{selector}' does not resolve to a public property on the type '{typeof(T)}'.", nameof(selector));
 
-            var type = typeof(T);
-            var propertyInfo = prop.DeclaringType != type
-                             ? type.GetProperty(prop.Name, prop.PropertyType)
-                             : prop;
+        var type = typeof(T);
+        var propertyInfo = prop.DeclaringType != type
+            ? type.GetProperty(prop.Name, prop.PropertyType)
+            : prop;
 
-            ArgumentNullException.ThrowIfNull(propertyInfo);
-            return propertyInfo;
-        }
+        ArgumentNullException.ThrowIfNull(propertyInfo);
+        return propertyInfo;
     }
 }

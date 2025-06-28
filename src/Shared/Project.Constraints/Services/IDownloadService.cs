@@ -1,8 +1,7 @@
-﻿namespace Project.Constraints.Services
+﻿namespace Project.Constraints.Services;
+
+public interface IDownloadService
 {
-    public interface IDownloadService
-    {
-        Task DownloadFileAsync(string filename, params string[] paths);
-        Task DownloadStreamAsync(string filename, Stream stream);
-    }
+    Task DownloadFileAsync(string filename, params string[] paths);
+    Task DownloadStreamAsync(string filename, Stream stream);
 }

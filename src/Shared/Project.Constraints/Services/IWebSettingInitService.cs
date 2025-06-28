@@ -1,31 +1,30 @@
 ﻿using AutoInjectGenerator;
 using Project.Constraints.Store;
 
-namespace Project.Constraints.Services
+namespace Project.Constraints.Services;
+
+public interface IWebSettingInitService
 {
-    public interface IWebSettingInitService
+    void UpdateUserInfo(UserInfo info);
+    void ApplyAppSetting(IAppStore app);
+}
+
+[AutoInject]
+public class WebSettingInitService : IWebSettingInitService
+{
+    private readonly IAuthService authenticationService;
+
+    public WebSettingInitService(IAuthService authenticationService)
     {
-        void UpdateUserInfo(UserInfo info);
-        void ApplyAppSetting(IAppStore app);
+        this.authenticationService = authenticationService;
+    }
+    public void ApplyAppSetting(IAppStore app)
+    {
+        throw new NotImplementedException();
     }
 
-    [AutoInject]
-    public class WebSettingInitService : IWebSettingInitService
+    public void UpdateUserInfo(UserInfo info)
     {
-        private readonly IAuthService authenticationService;
-
-        public WebSettingInitService(IAuthService authenticationService)
-        {
-            this.authenticationService = authenticationService;
-        }
-        public void ApplyAppSetting(IAppStore app)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateUserInfo(UserInfo info)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

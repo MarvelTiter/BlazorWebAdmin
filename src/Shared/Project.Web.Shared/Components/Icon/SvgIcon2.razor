@@ -36,8 +36,8 @@
         if (parameters.TryGetValue(nameof(IconName), out string? result))
         {
             if (!string.Equals(IconName, result)
-            && !string.IsNullOrEmpty(IconName)
-            && !string.IsNullOrEmpty(result))
+                && !string.IsNullOrEmpty(IconName)
+                && !string.IsNullOrEmpty(result))
             {
                 shouldUpdate = true;
             }

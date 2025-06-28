@@ -1,6 +1,5 @@
-﻿namespace Project.Web.Shared.Locales.Services
+﻿namespace Project.Web.Shared.Locales.Services;
+
+public class JsonLocalizationOptions
 {
-    public class JsonLocalizationOptions
-    {
-    }
 }

@@ -1,7 +1,6 @@
-namespace Project.AppCore
-{
-    public class Program
-    {
+namespace Project.AppCore;
 
-    }
+public class Program
+{
+
 }

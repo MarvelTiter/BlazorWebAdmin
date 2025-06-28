@@ -10,7 +10,7 @@
         .AddTab("FontAwesome", FontAwesomeContent)
         .AddTab("自定义SVG", CustomSvgContent)
         .Render()
-        )
+    )
     <div style="text-align:center;margin-top:1em;">
         @UI.BuildButton(this).Primary().Text(Localizer["CustomButtons.Ok"]).OnClick(Confirm).Render()
     </div>
@@ -26,31 +26,31 @@
     [Inject, NotNull] ISvgIconService? SvgService { get; set; }
     private bool visible;
     RenderFragment CustomSvgContent =>
-    @<div>
-        <div class="icons-wrapper">
-            @foreach (var item in icons)
-        {
-            <span @onclick="e => HandleClickEvent(item)" class="@(innerValue==item? "selected":"")">
-                <SvgIcon IconName="@item"></SvgIcon>
-            </span>
-        }
+        @<div>
+            <div class="icons-wrapper">
+                @foreach (var item in icons)
+                {
+                    <span @onclick="e => HandleClickEvent(item)" class="@(innerValue==item? "selected":"")">
+                        <SvgIcon IconName="@item"></SvgIcon>
+                    </span>
+                }
+            </div>
         </div>
-    </div>
-        ;
+    ;
 
     IEnumerable<string> Fa47Icons => string.IsNullOrEmpty(filter) ? Utils.FontAwesomeHelper.AllIcons() : Utils.FontAwesomeHelper.AllIcons().Where(i => i.Contains(filter, StringComparison.InvariantCultureIgnoreCase));
 
     RenderFragment FontAwesomeContent =>
-    @<div>
-        <div class="icons-wrapper">
-            @foreach (var item in Fa47Icons)
-        {
-            <span @onclick="e => HandleClickEvent(item)" class="@(innerValue==item? "selected":"")">
-                <FontIcon IconName="@item"></FontIcon>
-            </span>
-        }
+        @<div>
+            <div class="icons-wrapper">
+                @foreach (var item in Fa47Icons)
+                {
+                    <span @onclick="e => HandleClickEvent(item)" class="@(innerValue==item? "selected":"")">
+                        <FontIcon IconName="@item"></FontIcon>
+                    </span>
+                }
+            </div>
         </div>
-    </div>
     ;
 
     protected override async Task OnInitializedAsync()

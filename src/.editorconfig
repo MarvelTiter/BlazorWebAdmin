@@ -8,3 +8,4 @@
 
 # IDE0008: 使用显式类型
 dotnet_diagnostic.IDE0008.severity = none
+csharp_style_namespace_declarations = file_scoped:suggestion
