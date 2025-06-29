@@ -206,57 +206,6 @@ public partial class RouterStore : StoreBase, IRouterStore
         }
     }
 
-    // public void RouteDataChangedHandle(RouteData routeData)
-    // {
-    //     if (lastRouterChangingCheck)
-    //     {
-    //         CurrentContent = CreateBody(Current, routeData);
-    //     }
-    //     else
-    //     {
-    //         // 不允许导航到此页面
-    //         CurrentContent = b => b.Component<ForbiddenPage>().Build();
-    //     }
-    //
-    //     // if (preview != null)
-    //     // {
-    //     //     if (!preview.Rendered && preview.RouteUrl != CurrentUrl)
-    //     //     {
-    //     //         preview.Drop();
-    //     //     }
-    //     //     else
-    //     //     {
-    //     //         preview.SetActive(false);
-    //     //     }
-    //     // }
-    //     preview?.TrySetDisactive(CurrentPageInstance);
-    //     Current?.SetActive(true);
-    //     preview = Current;
-    //     NotifyChanged();
-    // }
-
-    // private RenderFragment CreateBody(TagRoute? route, RouteData routeData)
-    // {
-    //     return builder =>
-    //     {
-    //         builder.OpenComponent(0, routeData.PageType);
-    //         foreach (KeyValuePair<string, object?> routeValue in routeData.RouteValues)
-    //         {
-    //             builder.AddAttribute(1, routeValue.Key, routeValue.Value);
-    //         }
-    //
-    //         builder.AddComponentReferenceCapture(2, obj => { CollectPageAdditionalInfo(route, obj); });
-    //         builder.CloseComponent();
-    //     };
-    //
-    //     // void RenderForLastValue(RenderTreeBuilder builder)
-    //     // {
-    //     //     //dont reference RouteData again
-    //     // }
-    //     //
-    //     // return RenderForLastValue;
-    // }
-
     public void CollectPageAdditionalInfo(object obj)
     {
         CurrentPageInstance.SetTarget(obj);
@@ -283,6 +232,7 @@ public partial class RouterStore : StoreBase, IRouterStore
             }
         }
 
+        // Current.Rendered = true;
         NotifyChanged();
     }
 

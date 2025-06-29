@@ -8,13 +8,13 @@
              @onkeydown="@HandleKeyDownAction"
              @onkeyup="@HandleKeyUpAction"
              tabindex="0">
-            <ErrorCatcher>
-                <Router AppAssembly="AppConst.AppAssembly" AdditionalAssemblies="AppConst.AdditionalAssemblies">
-                    <Found Context="routeData">
+            <Router AppAssembly="AppConst.AppAssembly" AdditionalAssemblies="AppConst.AdditionalAssemblies">
+                <Found Context="routeData">
+                    <ErrorCatcher>
                         <CatchObjectRefRouteView RouteData="@routeData" DefaultLayout="@DefaultLayout"/>
-                    </Found>
-                </Router>
-            </ErrorCatcher>
+                    </ErrorCatcher>
+                </Found>
+            </Router>
             <WaterMark ProvideService></WaterMark>
             <WebAdminReconnector></WebAdminReconnector>
             <Downloader/>

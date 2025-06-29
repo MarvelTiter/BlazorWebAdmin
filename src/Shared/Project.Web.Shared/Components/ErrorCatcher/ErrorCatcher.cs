@@ -1,12 +1,7 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
-using Project.Constraints.Store;
 using Project.Constraints.UI;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+
 #pragma warning disable IDE0130
 namespace Project.Web.Shared.Components;
 
@@ -32,7 +27,7 @@ public class ErrorCatcher : ErrorBoundaryBase//, IExceptionHandler
         ErrorContent ??= RenderException();
     }
     //CrashPage? crashPage;
-    private RenderFragment<Exception> RenderException()
+    private static RenderFragment<Exception> RenderException()
     {
         return ex => new RenderFragment(builder =>
         {
@@ -52,27 +47,20 @@ public class ErrorCatcher : ErrorBoundaryBase//, IExceptionHandler
     //Stopwatch sw = new Stopwatch();
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        //builder.OpenComponent<CascadingValue<IExceptionHandler>>(0);
-        //builder.AddAttribute(1, nameof(CascadingValue<IExceptionHandler>.Value), this);
-        //builder.AddAttribute(2, nameof(CascadingValue<IExceptionHandler>.IsFixed), true);
         if (CurrentException != null)
         {
-            //Logger.LogInformation("{RouteUrl} Rendered: {Rendered}", Router.Current?.RouteUrl, Router.Current?.Rendered);
-            if (Router.Current != null)
-            {
-                //不保存状态
-                //Router.Current.Rendered = false;
-                Router.Current.Panic = true;
-            }
-
+            if (Router.Current == null) return;
+            Router.Current.Panic = true;
+            Router.Current.Exception = CurrentException;
+            Console.WriteLine(CurrentException.StackTrace);
+            // 如果是生命周期内发生的异常，不应该Recover，反之需要Recover
+            // Recover();
             builder.AddContent(0, ErrorContent!.Invoke(CurrentException));
         }
         else
         {
             builder.AddContent(0, ChildContent);
         }
-        //builder.AddAttribute(3, nameof(CascadingValue<IExceptionHandler>.ChildContent), content);
-        //builder.CloseComponent();
     }
 
     /// <summary>
@@ -81,7 +69,7 @@ public class ErrorCatcher : ErrorBoundaryBase//, IExceptionHandler
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        Recover();
+        // Recover();
     }
     //bool rendered;
     //protected override void OnAfterRender(bool firstRender)

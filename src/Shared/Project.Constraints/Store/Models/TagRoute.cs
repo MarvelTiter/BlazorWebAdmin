@@ -11,6 +11,8 @@ public class TagRoute : RouterMeta
     public RenderFragment? Title { get; set; }
     public bool IsActive { get; set; }
     public bool Panic { get; set; }
+    public Exception? Exception { get; set; }
+    // public bool Rendered { get; set; }
 }
 
 public static class TagRouteHelper
@@ -18,18 +20,8 @@ public static class TagRouteHelper
     public static void SetActive(this TagRoute route, bool active)
     {
         if (active) route.ActiveTime = DateTime.Now;
-        //if (route.IsActive != active && route.PageRef is IPageAction page)
-        //{
-        //    if (active)
-        //    {
-        //        await page.OnShowAsync();
-        //    }
-        //    else
-        //    {
-        //        await page.OnHiddenAsync();
-        //    }
-        //}
         route.IsActive = active;
+        // route.Rendered = active;
     }
 
     public static void TrySetDisactive(this TagRoute route, WeakReference<object?> pageInstance)
