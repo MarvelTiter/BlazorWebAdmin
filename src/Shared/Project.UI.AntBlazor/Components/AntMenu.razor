@@ -1,6 +1,9 @@
 ﻿@* 需要套一个元素才能让 ::deep 选择到 *@
 <div>
-    <Menu Theme="@MenuTheme.Light" Mode="@(Horizontal?MenuMode.Horizontal :MenuMode.Inline)" InlineCollapsed="@Collapsed" Style="flex: 1;line-height: 50px;">
+    <Menu Theme="@MenuTheme.Light" 
+          Mode="@(Horizontal ? MenuMode.Horizontal : MenuMode.Inline)"
+          InlineCollapsed="@Collapsed" 
+          Style="flex: 1;height: 50px;background-color: var(--background-color);">
         @foreach (var item in Router.Menus.Where(m => m.Group == "ROOT"))
         {
             <AntMenuItem Route=item></AntMenuItem>

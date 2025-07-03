@@ -12,7 +12,7 @@ public class TagRoute : RouterMeta
     public bool IsActive { get; set; }
     public bool Panic { get; set; }
     public Exception? Exception { get; set; }
-    // public bool Rendered { get; set; }
+    public bool Rendered { get; set; }
 }
 
 public static class TagRouteHelper

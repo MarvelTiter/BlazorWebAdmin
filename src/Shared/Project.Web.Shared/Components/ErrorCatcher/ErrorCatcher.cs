@@ -5,7 +5,7 @@ using Project.Constraints.UI;
 #pragma warning disable IDE0130
 namespace Project.Web.Shared.Components;
 
-public class ErrorCatcher : ErrorBoundaryBase//, IExceptionHandler
+public class ErrorCatcher : ErrorBoundaryBase //, IExceptionHandler
 {
     /// <summary>
     /// 
@@ -26,6 +26,7 @@ public class ErrorCatcher : ErrorBoundaryBase//, IExceptionHandler
         base.OnInitialized();
         ErrorContent ??= RenderException();
     }
+
     //CrashPage? crashPage;
     private static RenderFragment<Exception> RenderException()
     {
@@ -41,6 +42,7 @@ public class ErrorCatcher : ErrorBoundaryBase//, IExceptionHandler
             builder.CloseComponent();
         });
     }
+
     //int errorTimes = 0;
     //const int MAX_ERRORTIMES = 3;
     //const int ERROR_OCCUR_INTERVAL = 1000;
@@ -50,11 +52,13 @@ public class ErrorCatcher : ErrorBoundaryBase//, IExceptionHandler
         if (CurrentException != null)
         {
             if (Router.Current == null) return;
-            Router.Current.Panic = true;
             Router.Current.Exception = CurrentException;
-            Console.WriteLine(CurrentException.StackTrace);
-            // 如果是生命周期内发生的异常，不应该Recover，反之需要Recover
-            // Recover();
+            if (IsLifecycleError(CurrentException))
+            {
+                Logger.LogInformation("{RouteUrl} Panic!",Router.Current.RouteUrl);
+                Router.Current.Panic = true;
+            }
+
             builder.AddContent(0, ErrorContent!.Invoke(CurrentException));
         }
         else
@@ -64,25 +68,48 @@ public class ErrorCatcher : ErrorBoundaryBase//, IExceptionHandler
     }
 
     /// <summary>
+    /// 判断是否是组件生命周期函数内发生的异常
+    /// </summary>
+    /// <param name="ex"></param>
+    /// <returns></returns>
+    private static bool IsLifecycleError(Exception ex)
+    {
+        if (ex is AggregateException aggregateException)
+        {
+            ex = aggregateException.InnerException;
+        }
+        var stackTrace = ex.StackTrace ?? "";
+
+        // 检查是否是生命周期方法中的错误
+        return stackTrace.Contains("Microsoft.AspNetCore.Components.ComponentBase.CallOn") ||
+               stackTrace.Contains("Microsoft.AspNetCore.Components.ComponentBase.RunInitAndSetParametersAsync") ||
+               stackTrace.Contains("OnInitialized") ||
+               stackTrace.Contains("OnParametersSet") ||
+               stackTrace.Contains("OnAfterRender");
+    }
+
+    /// <summary>
     /// OnParametersSet 方法
     /// </summary>
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        // Recover();
+        Recover();
     }
+
     //bool rendered;
-    //protected override void OnAfterRender(bool firstRender)
-    //{
-    //    base.OnAfterRender(firstRender);
-    //    if (firstRender)
-    //    {
-    //        var ex = CurrentException;
-    //        rendered = true;
-    //    }
-    //}
+    // protected override void OnAfterRender(bool firstRender)
+    // {
+    //     base.OnAfterRender(firstRender);
+    //     if (firstRender)
+    //     {
+    //         if (Router.Current == null) return;
+    //         Router.Current.Rendered = true;
+    //     }
+    // }
 
     [Inject, NotNull] public IUIService? UI { get; set; }
+
     /// <summary>
     /// OnErrorAsync 方法
     /// </summary>
@@ -94,11 +121,13 @@ public class ErrorCatcher : ErrorBoundaryBase//, IExceptionHandler
             UI.Notify(MessageType.Error, "程序异常", exception.Message);
             Logger.LogError(exception, "{Message}", exception.Message);
         }
+
         OnHandleExcetion?.Invoke(exception);
         if (OnHandleExcetionAsync != null)
         {
             return OnHandleExcetionAsync(exception);
         }
+
         return Task.CompletedTask;
     }
 

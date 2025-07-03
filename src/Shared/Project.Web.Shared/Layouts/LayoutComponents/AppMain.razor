@@ -7,86 +7,12 @@
 @* { *@
 @* } *@
 <ScrollBar>
-    @* @foreach (var item in Router.TopLinks)
-        {
-            if (item.Body == null && !item.Rendered) continue;
-            <div id=@item.RouteUrl style="@(Router.Compare(item) ? "display: block;" : "display: none;")">
-                <CascadingValue Value="item">
-                    <ErrorCatcher ShowMessage>
-                        <!-- 在路由页面中获取当前页的信息 -->
-                        <div class="old">
-
-                            @item.Body
-                        </div>
-                    </ErrorCatcher>
-                </CascadingValue>
-            </div>
-        } *@
     <ErrorCatcher ShowMessage>
         <!-- 在路由页面中获取当前页的信息 -->
-        <div class="new">
             @ChildContent
-        </div>
     </ErrorCatcher>
 </ScrollBar>
 
 @code {
-
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    // [Inject, NotNull] ILogger<AppMain>? Logger { get; set; }
-    // IDisposable? disposable;
-
-    // protected override void OnInitialized()
-    // {
-    //     base.OnInitialized();
-    //     // disposable = Navigator.RegisterLocationChangingHandler(LocationChangingAsync);
-    //     // Router.DataChangedEvent += StateHasChanged;
-    //     // Navigator.LocationChanged += LocationChangedEventHandler;
-    // }
-
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     await base.OnInitializedAsync();
-    //     await Router.RouteDataChangedHandleAsync(RouteData);
-    // }
-
-    // private ValueTask LocationChangingAsync(LocationChangingContext context)
-    // {
-    //     return Router.LocationChanging(context.TargetLocation);
-    // }
-
-    // private void LocationChangedEventHandler(object? sender, LocationChangedEventArgs e)
-    // {
-    //     try
-    //     {
-    //         if (RouteData != null && Context != null)
-    //         {
-    //             Router.RouteDataChangedHandle(RouteData);
-    //         }
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Logger.LogError(ex, "LocationChangedEventHandler");
-    //     }
-    // }
-
-    // protected override ValueTask OnDisposeAsync()
-    // {
-    //     Navigator.LocationChanged -= LocationChangedEventHandler;
-    //     Router.DataChangedEvent -= StateHasChanged;
-    //     disposable?.Dispose();
-    //     return base.OnDisposeAsync();
-    // }
-
-    // public override Task SetParametersAsync(ParameterView parameters)
-    // {
-    //     if (parameters.TryGetValue(nameof(RouteData), out RouteData? routeData))
-    //     {
-    //         if (routeData != null && Context != null)
-    //         {
-    //             _ = Router.RouteDataChangedHandleAsync(routeData);
-    //         }
-    //     }
-    //     return base.SetParametersAsync(parameters);
-    // }
 }

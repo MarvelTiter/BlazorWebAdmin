@@ -40,13 +40,13 @@ public class CatchObjectRefRouteView : RouteView
             return;
         }
 
-        // if (RouterStore.Current?.Panic == true)
-        // {
-        //     builder.Component<CrashPage>()
-        //         .SetComponent(c => c.Exception, RouterStore.Current.Exception)
-        //         .Build();
-        //     return;
-        // }
+        if (RouterStore.Current?.Panic == true)
+        {
+            builder.Component<CrashPage>()
+                .SetComponent(c => c.Exception, RouterStore.Current.Exception)
+                .Build();
+            return;
+        }
 
         builder.OpenComponent(0, RouteData.PageType);
         foreach (var kvp in RouteData.RouteValues)

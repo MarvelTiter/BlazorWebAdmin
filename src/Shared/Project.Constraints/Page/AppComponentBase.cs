@@ -12,7 +12,7 @@ public class AppComponentBase : ComponentBase, IAsyncDisposable
     private bool disposedValue;
     private IDisposable? _disposable;
 
-    [CascadingParameter, NotNull] public IAppSession? Context { get; set; }
+    [Inject, NotNull] public IAppSession? Context { get; set; }
 
     //[Inject] public IProjectSettingService AppSettingService { get; set; }
     [Parameter(CaptureUnmatchedValues = true)]
@@ -41,6 +41,7 @@ public class AppComponentBase : ComponentBase, IAsyncDisposable
     public IRouterStore Router => Context.RouterStore;
     public IUserStore User => Context.UserStore;
     public NavigationManager Navigator => Context.Navigator;
+    
     [Inject, NotNull] public IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
     private async ValueTask LeavingAsync(LocationChangingContext context)

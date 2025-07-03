@@ -42,7 +42,7 @@
     </CascadingValue>
 </div>
 @code {
-    [CascadingParameter, NotNull] IAppSession? Context { get; set; }
+    [Inject, NotNull] IAppSession? Context { get; set; }
     public LayoutBase? LayoutBase { get; set; }
 
     protected override void OnInitialized()
