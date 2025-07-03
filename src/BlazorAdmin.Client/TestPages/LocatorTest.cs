@@ -5,17 +5,15 @@ using Project.Constraints.Services;
 using Project.Constraints.UI;
 using System.Diagnostics.CodeAnalysis;
 
-namespace BlazorAdmin.Client.TestPages
-{
+namespace BlazorAdmin.Client.TestPages;
 #if DEBUG
-    [Route("/testlocator")]
-    [PageInfo(Title = "Locator测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
+[Route("/testlocator")]
+[PageInfo(Title = "Locator测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
 #endif
-    public class LocatorTest : PageIndex
+public class LocatorTest : PageIndex
+{
+    protected override Type? GetPageType(IPageLocatorService pageLocator)
     {
-        protected override Type? GetPageType(IPageLocatorService pageLocator)
-        {
-            return pageLocator.GetPage("LocatorTest");
-        }
+        return pageLocator.GetPage("LocatorTest");
     }
 }

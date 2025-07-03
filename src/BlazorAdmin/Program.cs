@@ -1,4 +1,5 @@
-﻿using BlazorAdmin;
+﻿using AutoPageStateContainerGenerator;
+using BlazorAdmin;
 using LightORM;
 using LightORM.Providers.Sqlite.Extensions;
 using MT.Toolkit.LogTool;
@@ -52,19 +53,15 @@ var connStr = builder.Configuration.GetConnectionString("Sqlite")!;
 builder.Services.AddLightOrm(option =>
 {
     option.UseSqlite(connStr);
-    option.SetTableContext(new LightOrmTableContext());
-    option.SetWatcher(sql =>
-    {
-        sql.DbLog = (s, p) =>
-        {
-            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss} Sql => \n{s}\n");
-        };
-    });
+    option.SetTableContext<LightOrmTableContext>();
+    option.UseInterceptor<LightOrmSqlTrace>();
 });
 
 builder.Services.AutoInject();
 
 builder.Services.AddControllers();
+
+builder.Services.AddStateContainers();
 #if DEBUG
 builder.Services.AddLightTask();
 #endif

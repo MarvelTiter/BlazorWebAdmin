@@ -21,7 +21,7 @@
 
     Task HandleKeyDown(KeyboardEventArgs e)
     {
-        keys.Add((DateTime.Now, e.Key));
+        keys.Add((DateTime.Now, $"Key: {e.Key}, Code: {e.Code}"));
         return InvokeAsync(StateHasChanged);
     }
 

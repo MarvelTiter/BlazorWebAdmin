@@ -1,8 +1,7 @@
-﻿namespace Project.Constraints.Models
+﻿namespace Project.Constraints.Models;
+
+public enum SaveActionType
 {
-    public enum SaveActionType
-    {
-        Insert,
-        Update,
-    }
+    Insert,
+    Update,
 }

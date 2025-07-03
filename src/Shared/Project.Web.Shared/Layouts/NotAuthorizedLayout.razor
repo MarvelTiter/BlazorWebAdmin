@@ -9,7 +9,7 @@
     </CascadingValue>
 </div>
 @code {
-    [CascadingParameter][NotNull] IAppSession? AppSession { get; set; }
+    [Inject,NotNull] IAppSession? AppSession { get; set; }
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();

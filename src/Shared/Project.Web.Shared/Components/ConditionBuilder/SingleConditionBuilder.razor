@@ -2,7 +2,7 @@
 @using System.Linq.Expressions
 @using System.ComponentModel.DataAnnotations
 @using MT.Toolkit.StringExtension
-@inherits BasicComponent
+@inherits AppComponentBase
 
 <StackPanel>
     @(UI.BuildSelect<ColumnInfo, string>(this, Columns)
@@ -11,7 +11,7 @@
         .Bind(() => Item.Name!, NotifyNameChanged)
         .Style("min-width:120px;")
         .Render()
-        )
+    )
     @(UI.BuildSelect<CompareType>(this, null)
         .Bind(() => Item.CompareType)
         .Style("min-width:80px;")
@@ -39,11 +39,11 @@
         {
             GetCurrentValue = () => stringValue;
             return UI.BuildSelect<KeyValuePair<string, string>, string>(this, selectedField.EnumValues!.ToList())
-            .LabelExpression(kv => kv.Value)
-            .ValueExpression(kv => kv.Key)
-            .Bind(() => stringValue!, NotifyChanged)
-            .Style("width:200px;")
-            .Render();
+                .LabelExpression(kv => kv.Value)
+                .ValueExpression(kv => kv.Key)
+                .Bind(() => stringValue!, NotifyChanged)
+                .Style("width:200px;")
+                .Render();
         }
         else
         {

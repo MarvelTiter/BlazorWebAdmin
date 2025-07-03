@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Constraints.Common
+namespace Project.Constraints.Common;
+
+public class ConstraintString
 {
-    public class ConstraintString
-    {
-        public const string APP_STORE_KEY = "APP_SETTING";
-    }
+    public const string APP_STORE_KEY = "APP_SETTING";
 }

@@ -9,89 +9,99 @@ using Project.Constraints.Utils;
 using Project.Web.Shared.Components;
 using Project.Web.Shared.Store;
 using System.Reflection;
+using Microsoft.AspNetCore.Components.Routing;
 using static Project.Web.Shared.Routers.RouterStoreExtensions;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Project.Web.Shared.Routers;
 
-public static class RouterStoreExtensions
+public partial class RouterStore
 {
-    public static bool CompareUrl(this IRouterStore store, string? url)
+    private readonly AsyncHandlerManager<TagRoute, bool> routerChangingHandlerManager = new();
+
+    public IDisposable RegisterRouterChangingHandler(Func<TagRoute, Task<bool>> handler)
     {
-        return CompareUrl(store.CurrentUrl, url);
+        return routerChangingHandlerManager.RegisterHandler(handler);
     }
 
-    public static bool Compare(this IRouterStore store, TagRoute other)
+    private async Task<bool> OnRouterChangingAsync(TagRoute tag)
     {
-        return store.Current == other;
+        bool enable = true;
+        if (IsUserDashboard(tag))
+        {
+            enable = EnableShowUserDashboard(userStore, setting.CurrentValue);
+        }
+
+        bool pass = true;
+        await routerChangingHandlerManager.NotifyInvokeHandlers(tag, (_, newValue) =>
+        {
+            pass = pass && newValue;
+            return pass;
+        });
+
+        return enable && pass;
     }
 
-    public static bool CompareUrl(string? url1, string? url2)
+    private readonly AsyncHandlerManager<RouterMeta, bool> routerMetaFilterHandlerManager = new();
+
+    public IDisposable RegisterRouterMetaFilterHandler(Func<RouterMeta, Task<bool>> handler)
     {
-        if (string.IsNullOrEmpty(url1) || string.IsNullOrEmpty(url2)) return false;
-        if (!url1.StartsWith('/')) url1 = '/' + url1;
-        if (!url2.StartsWith('/')) url2 = '/' + url2;
-        return url1 == url2;
+        return routerMetaFilterHandlerManager.RegisterHandler(handler);
     }
 
-    public static void NavigateToPreiousPage(this IRouterStore store)
+    private async Task<bool> OnRouteMetaFilterAsync(RouterMeta meta)
     {
-        if (store.Current is null) return;
-        var currentIndex = store.TopLinks.IndexOf(store.Current);
-        if (currentIndex == 0) return;
-        var previousUri = store.TopLinks[currentIndex - 1].RouteUrl;
-        store.GoTo(previousUri);
-    }
+        if (IsUserDashboard(meta))
+        {
+            return EnableShowUserDashboard(userStore, setting.CurrentValue);
+        }
 
-    public static void NavigateToNextPage(this IRouterStore store)
-    {
-        if (store.Current is null) return;
-        var currentIndex = store.TopLinks.IndexOf(store.Current);
-        if (currentIndex == store.TopLinks.Count - 1) return;
-        var nextUri = store.TopLinks[currentIndex + 1].RouteUrl;
-        store.GoTo(nextUri);
-    }
+        var used = meta.RouteType == null
+                   || AppConst.AllAssemblies.IndexOf(meta.RouteType.Assembly) > -1
+                   || meta.RouteType.Assembly == Assembly.GetEntryAssembly()
+                   || (meta.RouteType.Assembly.GetName().Name?.EndsWith(".Client") ?? false);
 
+        bool pass = true;
+        await routerMetaFilterHandlerManager.NotifyInvokeHandlers(meta, (_, newValue) =>
+        {
+            pass = pass && newValue;
+            return pass;
+        });
+
+        return used && pass;
+    }
 }
 
 [AutoInject(ServiceType = typeof(IRouterStore))]
-public class RouterStore(IProjectSettingService settingService
-    , NavigationManager navigationManager
-    , IUserStore userStore
-    , IStringLocalizer<RouterStore> localizer
-    , IOptionsMonitor<CultureOptions> options
-    , ILogger<RouterStore> logger
-    , IOptionsMonitor<AppSetting> setting) : StoreBase, IRouterStore
+public partial class RouterStore : StoreBase, IRouterStore
 {
-    readonly Dictionary<string, TagRoute> pages = [];
+    private readonly Dictionary<string, TagRoute> pages = [];
 
     //private FrozenDictionary<string, RouteMenu>? frozenMenus;
     private List<RouteMenu> menus = [];
+
+
     public List<TagRoute> TopLinks => [.. pages.Values];
 
     public IEnumerable<RouteMenu> Menus => menus; // frozenMenus?.Values ?? [];
 
     public int Count { get; set; }
 
-    public TagRoute? Current => pages.TryGetValue(CurrentUrl, out TagRoute? value) ? value : null;
+    private TagRoute? current;
+    public TagRoute? Current => current ?? pages.GetValueOrDefault("/");
+
+    public RenderFragment? CurrentContent { get; private set; }
+
+    public WeakReference<object?> CurrentPageInstance { get; set; } = new WeakReference<object?>(null);
+    public bool LastRouterChangingCheck => lastRouterChangingCheck;
 
     protected override void Release()
     {
         pages.Clear();
     }
 
-    public string CurrentUrl
-    {
-        get
-        {
-            var url = navigationManager.ToBaseRelativePath(navigationManager.Uri);
-            //if (url.IndexOf('?') > 0)
-            //{
-            //    return '/' + url[0..url.IndexOf('?')];
-            //}
-
-            return '/' + url;
-        }
-    }
+    public string CurrentUrl => '/' + navigationManager.ToBaseRelativePath(navigationManager.Uri);
 
     private static string? AttachFirstSlash(string? url)
     {
@@ -100,140 +110,150 @@ public class RouterStore(IProjectSettingService settingService
         return "/" + url;
     }
 
-    TagRoute? preview;
+    private TagRoute? preview;
+    private readonly IProjectSettingService settingService;
+    private readonly NavigationManager navigationManager;
+    private readonly IUserStore userStore;
+    private readonly IStringLocalizer<RouterStore> localizer;
+    private readonly IOptionsMonitor<CultureOptions> options;
+    private readonly ILogger<RouterStore> logger;
+    private readonly IOptionsMonitor<AppSetting> setting;
 
-    public async Task RouteDataChangedHandleAsync(RouteData routeData)
+    public RouterStore(IProjectSettingService settingService, NavigationManager navigationManager, IUserStore userStore, IStringLocalizer<RouterStore> localizer, IOptionsMonitor<CultureOptions> options, ILogger<RouterStore> logger, IOptionsMonitor<AppSetting> setting)
     {
-        if (!pages.TryGetValue(CurrentUrl, out var tag))
+        this.settingService = settingService;
+        this.navigationManager = navigationManager;
+        this.userStore = userStore;
+        this.localizer = localizer;
+        this.options = options;
+        this.logger = logger;
+        this.setting = setting;
+        // disposable = this.navigationManager.RegisterLocationChangingHandler(LocationChangingAsync);
+        this.navigationManager.LocationChanged += NavigationManager_LocationChanged;
+    }
+
+    // private ValueTask LocationChangingAsync(LocationChangingContext context)
+    // {
+    //     return LocationChanging(context.TargetLocation);
+    // }
+
+    private bool lastRouterChangingCheck = true;
+
+    private void NavigationManager_LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        try
+        {
+            preview = current;
+        }
+        finally
+        {
+            NotifyChanged();
+        }
+    }
+
+    public async ValueTask LocationChangingHandlerAsync(string url)
+    {
+        url = string.IsNullOrEmpty(url) ? "/" : ParsedUriPathAndQuery(url);
+
+        if (!pages.TryGetValue(url, out var tag))
         {
             // TODO 可能有BUG，先观察观察
             if (menus.Count == 0) return;
-            RouterMeta? meta = menus.FirstOrDefault(r => CompareUrl(r.RouteUrl, CurrentUrl));
+            RouterMeta? meta = menus.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
             if (meta == null)
             {
-                meta = AllPages.Pages.FirstOrDefault(r => CompareUrl(r.RouteUrl, CurrentUrl));
+                meta = AllPages.Pages.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
                 if (meta != null)
                     meta.Cache = false;
             }
 
             tag = new TagRoute
             {
-                RouteId = meta?.RouteId ?? CurrentUrl,
-                RouteUrl = AttachFirstSlash(meta?.RouteUrl ?? CurrentUrl),
+                RouteId = meta?.RouteId ?? url,
+                RouteUrl = AttachFirstSlash(meta?.RouteUrl ?? url),
                 RouteTitle = meta?.RouteTitle,
                 Icon = meta?.Icon ?? "",
                 Pin = meta?.Pin ?? false,
                 Cache = meta?.Cache ?? false,
             };
-            pages[CurrentUrl] = tag;
+            pages[url] = tag;
         }
 
-        var enable = await OnRouterChangingAsync(tag);
-        if (enable)
+        current = tag;
+        lastRouterChangingCheck = await OnRouterChangingAsync(tag);
+        if (lastRouterChangingCheck && preview is not null)
         {
-            tag.Body ??= CreateBody(tag, routeData);
-            tag.Panic = false;
-        }
-        else
-        {
-            // 不允许导航到此页面
-            tag.Body ??= b => b.Component<ForbiddenPage>().Build();
+            preview.TrySetDisactive(CurrentPageInstance);
         }
 
-        if (preview != null)
+        return;
+
+        static string ParsedUriPathAndQuery(string url)
         {
-            if (preview.Panic || !preview.Cache)
+            if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var parsedUri)) throw new Exception();
+            // 如果是绝对路径，返回 PathAndQuery（如 "/permission?x=1"）
+            var parsed = parsedUri.IsAbsoluteUri
+                ? parsedUri.PathAndQuery
+                :
+                // 已经是相对路径，直接返回
+                parsedUri.OriginalString;
+            if (!parsed.StartsWith('/'))
             {
-                preview.Body = null;
+                parsed = '/' + parsed;
             }
 
-            if (!preview.Rendered && preview.RouteUrl != CurrentUrl)
+            return parsed;
+        }
+    }
+
+    public void CollectPageAdditionalInfo(object obj)
+    {
+        CurrentPageInstance.SetTarget(obj);
+        if (Current is null) return;
+        if (obj is IRoutePage page)
+        {
+            var title = page.GetTitle();
+            if (!string.IsNullOrEmpty(title))
             {
-                preview.Drop();
+                Current.RouteTitle ??= title;
+                Current.Title = title.AsContent();
+            }
+        }
+        else if (Current.RouteTitle is null)
+        {
+            var tta = obj.GetType().GetCustomAttribute<TagTitleAttribute>();
+            if (tta != null)
+            {
+                Current.Title = tta.Title.AsContent();
             }
             else
             {
-                preview.SetActive(false);
+                Current.Title = CurrentUrl.AsContent();
             }
         }
 
-        //preview?.SetActive(false);
-        tag.SetActive(true);
-        preview = tag;
+        // Current.Rendered = true;
         NotifyChanged();
-    }
-
-    private RenderFragment CreateBody(TagRoute? route, RouteData routeData)
-    {
-        var pagetype = routeData.PageType;
-        var routeValues = routeData.RouteValues;
-
-        void RenderForLastValue(RenderTreeBuilder builder)
-        {
-            //dont reference RouteData again
-            builder.OpenComponent(0, pagetype);
-            foreach (KeyValuePair<string, object?> routeValue in routeValues)
-            {
-                builder.AddAttribute(1, routeValue.Key, routeValue.Value);
-            }
-
-            builder.AddComponentReferenceCapture(2, obj => { CollectPageAdditionalInfo(route, obj); });
-            builder.CloseComponent();
-        }
-
-        return RenderForLastValue;
-    }
-
-    private void CollectPageAdditionalInfo(TagRoute? route, object obj)
-    {
-        if (route != null)
-        {
-            route.PageRef = obj;
-            route.Rendered = true;
-            if (obj is IRoutePageTitle page)
-            {
-                route.Title = page.GetTitle();
-            }
-            else if (route.RouteTitle is null)
-            {
-                var tta = obj.GetType().GetCustomAttribute<TagTitleAttribute>();
-                if (tta != null)
-                {
-                    route.Title = tta.Title.AsContent();
-                }
-                else
-                {
-                    route.Title = CurrentUrl.AsContent();
-                }
-            }
-
-            NotifyChanged();
-        }
     }
 
     public void Remove(string link)
     {
-        if (pages.TryGetValue(link, out var p))
-        {
-            p.Drop();
-        }
+        // if (pages.TryGetValue(link, out var p))
+        // {
+        //     p.Drop();
+        // }
 
         pages.Remove(link);
     }
 
     public string GetLocalizerString(RouterMeta meta)
     {
-        if (options.CurrentValue.Enabled)
-        {
-            var l = localizer[meta.RouteId];
-            if (!string.Equals(l, meta.RouteId))
-            {
-                return l;
-            }
+        if (!options.CurrentValue.Enabled) 
+            return meta.RouteTitle;
+        var l = localizer[meta.RouteId];
+        return !string.Equals(l, meta.RouteId) ? l :
             //return localizer[meta.RouteId];
-        }
-
-        return meta.RouteTitle;
+            meta.RouteTitle;
     }
 
     public Task RemoveOther(string link)
@@ -242,10 +262,10 @@ public class RouterStore(IProjectSettingService settingService
         foreach (var key in removeKeys)
         {
             if (pages[key].Pin) continue;
-            if (pages.TryGetValue(key, out var p))
-            {
-                p.Drop();
-            }
+            // if (pages.TryGetValue(key, out var p))
+            // {
+            //     p.Drop();
+            // }
 
             pages.Remove(key);
         }
@@ -332,48 +352,16 @@ public class RouterStore(IProjectSettingService settingService
                     meta.RouteTitle = savedMeta.PowerName;
                     meta.Sort = savedMeta.Sort;
                 }
+
                 menus.Add(new RouteMenu(meta));
             }
-            this.menus.Sort((a, b) => a.Sort -b.Sort);
+
+            this.menus.Sort((a, b) => a.Sort - b.Sort);
         }
         catch (Exception ex)
         {
             logger.LogError("{Message}", ex.Message);
         }
-    }
-
-    public event Func<TagRoute, Task<bool>>? RouterChangingEvent;
-
-    private async Task<bool> OnRouterChangingAsync(TagRoute tag)
-    {
-        bool enable = true;
-        if (IsUserDashboard(tag))
-        {
-            enable = EnableShowUserDashboard(userStore, setting.CurrentValue);
-        }
-
-        var pass = await RouterChangingEvent.InvokeAsync(tag);
-
-        return enable && pass;
-    }
-
-    public event Func<RouterMeta, Task<bool>>? RouteMetaFilterEvent;
-
-    private async Task<bool> OnRouteMetaFilterAsync(RouterMeta meta)
-    {
-        if (IsUserDashboard(meta))
-        {
-            return EnableShowUserDashboard(userStore, setting.CurrentValue);
-        }
-
-        var used = meta.RouteType == null
-                   || AppConst.AllAssemblies.IndexOf(meta.RouteType.Assembly) > -1
-                   || meta.RouteType.Assembly == Assembly.GetEntryAssembly()
-                   || (meta.RouteType.Assembly.GetName().Name?.EndsWith(".Client") ?? false);
-
-        bool pass = await RouteMetaFilterEvent.InvokeAsync(meta);
-
-        return used && pass;
     }
 
     private static bool IsUserDashboard(RouterMeta meta)

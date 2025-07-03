@@ -4,17 +4,16 @@ using Microsoft.Extensions.Localization;
 using Project.Web.Shared.Locales.EmbeddedJson;
 using Project.Web.Shared.Locales.Services;
 
-namespace Project.Web.Shared.Locales.Extensions
+namespace Project.Web.Shared.Locales.Extensions;
+
+public static class AddJsonLocalesExtensions
 {
-    public static class AddJsonLocalesExtensions
+    public static IServiceCollection AddJsonLocales(this IServiceCollection services)
     {
-        public static IServiceCollection AddJsonLocales(this IServiceCollection services)
-        {
-            services.TryAddSingleton<IStringLocalizerFactory, EmbeddedJsonLocalizerFactory>();
-            services.AddScoped<ILanguageService, LanguageService>();
-            services.TryAddTransient(typeof(IStringLocalizer<>), typeof(InteractiveLocalizer<>));
-            services.TryAddTransient(typeof(IStringLocalizer), typeof(InteractiveLocalizer<object>));
-            return services;
-        }
+        services.TryAddSingleton<IStringLocalizerFactory, EmbeddedJsonLocalizerFactory>();
+        services.AddScoped<ILanguageService, LanguageService>();
+        services.TryAddTransient(typeof(IStringLocalizer<>), typeof(InteractiveLocalizer<>));
+        services.TryAddTransient(typeof(IStringLocalizer), typeof(InteractiveLocalizer<object>));
+        return services;
     }
 }

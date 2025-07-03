@@ -2,10 +2,10 @@
 @using Project.Constraints.Models.Request
 @using Project.Constraints.UI
 @using Project.Constraints.Utils
+@using Project.Web.Shared.Layouts
 @inject IUIService UI
 <h3>TestPage4</h3>
-
-
+@layout AuthorizedLayout
 @* @UI.BuildButton(this).Text("生成").OnClick(BuildExpression).Render() *@
 @UI.BuildButton(this).Text("Dialog").OnClick(Open).Render()
 <pre>
@@ -89,4 +89,5 @@
             throw new Exception("太大啦");
         }
     }
+
 }

@@ -22,7 +22,7 @@
             .Bind(() => Item.Name!)
             .Style("min-width:150px;")
             .Render()
-            )
+        )
         @(UI.BuildSelect<CompareType>(this, null)
             .Bind(() => Item.CompareType)
             .Style("width:80px;")
@@ -118,27 +118,27 @@
         {
             GetCurrentValue = () => dateValue;
             return UI.BuildDatePicker(this)
-            .Bind(() => dateValue, NotifyChanged)
-            .Style("width:200px;")
-            .Render();
+                .Bind(() => dateValue, NotifyChanged)
+                .Style("width:200px;")
+                .Render();
         }
         else if (selectedField?.EnumValues != null || (selectedField?.IsEnum ?? false))
         {
             GetCurrentValue = () => stringValue;
             return UI.BuildSelect<KeyValuePair<string, string>, string>(this, selectedField.EnumValues!.ToList())
-            .LabelExpression(kv => kv.Value)
-            .ValueExpression(kv => kv.Key)
-            .Bind(() => stringValue!, NotifyChanged)
-            .Style("width:200px;")
-            .Render();
+                .LabelExpression(kv => kv.Value)
+                .ValueExpression(kv => kv.Key)
+                .Bind(() => stringValue!, NotifyChanged)
+                .Style("width:200px;")
+                .Render();
         }
         else
         {
             GetCurrentValue = () => stringValue;
             return UI.BuildInput(this)
-            .Bind(() => stringValue!, NotifyChanged)
-            .Style("width:200px;")
-            .Render();
+                .Bind(() => stringValue!, NotifyChanged)
+                .Style("width:200px;")
+                .Render();
         }
     }
 

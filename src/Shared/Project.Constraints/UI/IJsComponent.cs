@@ -1,7 +1,6 @@
-﻿namespace Project.Constraints.UI
+﻿namespace Project.Constraints.UI;
+
+public interface IJsComponent
 {
-    public interface IJsComponent
-    {
-        Lazy<string> Id { get; }
-    }
+    Lazy<string> Id { get; }
 }

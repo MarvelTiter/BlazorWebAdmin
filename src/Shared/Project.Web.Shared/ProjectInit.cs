@@ -26,10 +26,10 @@ public static class ProjectInit
         //set default
         setting.ConfigurePage(locator =>
         {
-            locator.SetUserPageType<UserPage<User, Power, Role, IStandardUserService, IStandardPermissionService>>();
-            locator.SetRunLogPageType<OperationLog<RunLog, IStandardRunLogService>>();
-            locator.SetPermissionPageType<PermissionSetting<Power, Role, IStandardPermissionService>>();
-            locator.SetRolePermissionPageType<RolePermission<Power, Role, IStandardPermissionService>>();
+            locator.SetUserPageType<DefaultUserPage>();
+            locator.SetRunLogPageType<DefaultOperationLog>();
+            locator.SetPermissionPageType<DefaultPermissionSetting>();
+            locator.SetRolePermissionPageType<DefaultRolePermission>();
         });
 #endif
         action.Invoke(setting);

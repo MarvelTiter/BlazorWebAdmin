@@ -11,15 +11,13 @@
     </div>
     @if (!Native)
     {
-        @*<Thumb />
-    <Thumb Vertical />*@
         <div @ref="HorizontalTracker" class="scrollbar__bar is-horizontal">
             <div @ref="HorizontalThumb" style="@BarStyle(false).Style"
-             class="scrollbar__thumb" />
+                 class="scrollbar__thumb"></div>
         </div>
         <div @ref="VerticalTracker" class="scrollbar__bar is-vertical">
             <div @ref="VerticalThumb" style="@BarStyle(true).Style"
-             class="scrollbar__thumb" />
+                 class="scrollbar__thumb"></div>
         </div>
     }
 </div>
@@ -30,19 +28,19 @@
         .AddClass("scrollbar_wrap")
         .AddClass("scrollbar_wrap--hidden-default", () => !Native);
     ClassHelper ResizeKls => ClassHelper.Default
-    .AddClass("scroll_bar_view")
-    .AddClass(ViewClass);
+        .AddClass("scroll_bar_view")
+        .AddClass(ViewClass);
 
     StyleBuilder WrapSls => StyleBuilder.Default
-    .AddStyleBase(WrapStyle!, () => WrapStyle != null)
-    .AddStyle("height", () => Height!, () => !string.IsNullOrEmpty(Height))
-    .AddStyle("max-height", () => MaxHeight!, () => !string.IsNullOrEmpty(MaxHeight));
+        .AddStyleBase(WrapStyle!, () => WrapStyle != null)
+        .AddStyle("height", () => Height!, () => !string.IsNullOrEmpty(Height))
+        .AddStyle("max-height", () => MaxHeight!, () => !string.IsNullOrEmpty(MaxHeight));
 
     StyleBuilder ViewSls => StyleBuilder.Default
-    .AddStyleBase(ViewStyle!, () => ViewStyle != null);
+        .AddStyleBase(ViewStyle!, () => ViewStyle != null);
 
     StyleBuilder BarStyle(bool vertical) => StyleBuilder.Default
-    .AddStyle("width", () => BarWidth.ToPixel(), () => vertical)
-    .AddStyle("height", () => BarWidth.ToPixel(), () => !vertical)
-    .AddStyle("background-color", () => BarColor);
+        .AddStyle("width", () => BarWidth.ToPixel(), () => vertical)
+        .AddStyle("height", () => BarWidth.ToPixel(), () => !vertical)
+        .AddStyle("background-color", () => BarColor);
 }

@@ -5,13 +5,13 @@ using Project.Web.Shared.Layouts.LayoutComponents;
 
 namespace Project.Web.Shared.Layouts.Layouts;
 
-public class ContainerBase : BasicComponent
+public class ContainerBase : AppComponentBase
 {
     [Parameter] public string? Class { get; set; }
     [Parameter] public string? Style { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
 }
-public class LayoutBase : BasicComponent
+public class LayoutBase : AppComponentBase
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Inject, NotNull] public IProtectedLocalStorage? Storage { get; set; }

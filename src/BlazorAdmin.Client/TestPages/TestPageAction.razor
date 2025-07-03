@@ -4,7 +4,6 @@
 @using Project.Constraints.PageHelper
 @using Project.Constraints.UI
 @attribute [PageInfo(Title = "PageAction测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
-@implements IPageAction
 <div style="display:flex;flex-direction:column;gap:5px;">
     @foreach (var item in contents)
     {
@@ -14,15 +13,5 @@
 @code {
     List<(DateTime, string)> contents = [];
 
-    public Task OnShowAsync()
-    {
-        contents.Add((DateTime.Now, "PageShow"));
-        return InvokeAsync(StateHasChanged);
-    }
 
-    public Task OnHiddenAsync()
-    {
-        contents.Add((DateTime.Now, "PageHidden"));
-        return Task.CompletedTask;
-    }
 }

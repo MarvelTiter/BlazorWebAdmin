@@ -1,74 +1,18 @@
-﻿@using Project.Web.Shared.Components
+﻿@using System.Buffers
+@using Project.Web.Shared.Components
 @using System.Diagnostics.CodeAnalysis
 @using Project.Web.Shared.Routers
-@inherits BasicComponent
-@if (Context != null)
-{
-    <ScrollBar>
-        @foreach (var item in Router.TopLinks)
-        {
-            if (item.Body == null && !item.Rendered) continue;
-            <div id=@item.RouteUrl style="@(Router.Compare(item) ? "display: block;":"display: none;")">
-                <CascadingValue Value="item">
-                    <ErrorCatcher ShowMessage>
-                        <!-- 在路由页面中获取当前页的信息 -->
-                        @item.Body
-                    </ErrorCatcher>
-                </CascadingValue>
-            </div>
-        }
-    </ScrollBar>
-}
+@* @inherits AppComponentBase *@
+@* @if (Context != null) *@
+@* { *@
+@* } *@
+<ScrollBar>
+    <ErrorCatcher ShowMessage>
+        <!-- 在路由页面中获取当前页的信息 -->
+            @ChildContent
+    </ErrorCatcher>
+</ScrollBar>
 
 @code {
-    [CascadingParameter] public RouteData? RouteData { get; set; }
-    [Inject, NotNull] ILogger<AppMain>? Logger { get; set; }
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        Navigator.LocationChanged += LocationChangedEventHandler;
-        // Router.DataChangedEvent += StateHasChanged;
-    }
-
-    // protected override async Task OnInitializedAsync()
-    // {
-    //     await base.OnInitializedAsync();
-    //     await Router.RouteDataChangedHandleAsync(RouteData);
-    // }
-
-    private async void LocationChangedEventHandler(object? sender, LocationChangedEventArgs e)
-    {
-        try
-        {
-            if (RouteData != null && Context != null)
-            {
-                await Router.RouteDataChangedHandleAsync(RouteData);
-                _ = InvokeAsync(StateHasChanged);
-            }
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "LocationChangedEventHandler");
-        }
-
-    }
-
-    protected override ValueTask OnDisposeAsync()
-    {
-        Navigator.LocationChanged -= LocationChangedEventHandler;
-        Router.DataChangedEvent -= StateHasChanged;
-        return base.OnDisposeAsync();
-    }
-
-    // public override Task SetParametersAsync(ParameterView parameters)
-    // {
-    //     if (parameters.TryGetValue(nameof(RouteData), out RouteData? routeData))
-    //     {
-    //         if (routeData != null && Context != null)
-    //         {
-    //             _ = Router.RouteDataChangedHandleAsync(routeData);
-    //         }
-    //     }
-    //     return base.SetParametersAsync(parameters);
-    // }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 }

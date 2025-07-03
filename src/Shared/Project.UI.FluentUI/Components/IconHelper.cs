@@ -10,20 +10,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.UI.FluentUI.Components
+namespace Project.UI.FluentUI.Components;
+
+public static class IconHelper
 {
-    public static class IconHelper
+    private static readonly ConcurrentDictionary<string, Icon> fluentIcons = new();
+    public static async Task<Icon> GetCustomIcon(this ISvgIconService service, string name, IconVariant variant = IconVariant.Regular, IconSize size = IconSize.Custom)
     {
-        private static readonly ConcurrentDictionary<string, Icon> fluentIcons = new();
-        public static async Task<Icon> GetCustomIcon(this ISvgIconService service, string name, IconVariant variant = IconVariant.Regular, IconSize size = IconSize.Custom)
+        if (!fluentIcons.TryGetValue(name, out var icon))
         {
-            if (!fluentIcons.TryGetValue(name, out var icon))
-            {
-                var svgPath = await service.GetIcon(name);
-                icon = new Icon(name, variant, size, svgPath.Payload ?? string.Empty);
-                fluentIcons[name] = icon;
-            }
-            return icon;
+            var svgPath = await service.GetIcon(name);
+            icon = new Icon(name, variant, size, svgPath.Payload ?? string.Empty);
+            fluentIcons[name] = icon;
         }
+        return icon;
     }
 }

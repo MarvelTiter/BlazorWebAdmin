@@ -5,28 +5,27 @@
 @using Project.Constraints.Store.Models
 @using Project.Constraints.UI
 @using Project.Web.Shared.Routers
-@inherits BasicComponent
+@using Project.Web.Shared.ComponentHelper
+@inherits AppComponentBase
 @inject ILogger<TestException> Logger
 @attribute [PageInfo(Title = "Exception测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
 异常测评：@(UI.BuildButton(this).Text("触发异常").OnClick(() => ThrowException("ButtonClick")).Render())
-生命周期异常：@(UI.BuildButton(this).Text("触发异常").OnClick(() => Navigator.NavigateTo("/testexception?LifeTime=1")).Render())
-生命周期异常：@(UI.BuildButton(this).Text("触发异常ForceLoad").OnClick(() => Navigator.NavigateTo("/testexception?LifeTime=1", true)).Render())
+<MCard Title="生命周期异常">
+    <p>@(UI.BuildButton(this).Text("触发OnInitialized异常").OnClick(() => Navigator.NavigateTo("/testexception?LifeTime=1", true)).Render())</p>
+    <p>@(UI.BuildButton(this).Text("触发OnParametersSet异常").OnClick(() => Navigator.NavigateTo("/testexception?LifeTime=2")).Render())</p>
+    <p>@(UI.BuildButton(this).Text("触发OnAfterRender异常").OnClick(() => Navigator.NavigateTo("/testexception?LifeTime=3")).Render())</p>
+    <p>@(UI.BuildButton(this).Text("触发OnInitializedAsync异常").OnClick(() => Navigator.NavigateTo("/testexception?LifeTime=4",true)).Render())</p>
+    <p>@(UI.BuildButton(this).Text("触发OnParametersSetAsync异常").OnClick(() => Navigator.NavigateTo("/testexception?LifeTime=5")).Render())</p>
+    <p>@(UI.BuildButton(this).Text("触发OnAfterRenderAsync异常").OnClick(() => Navigator.NavigateTo("/testexception?LifeTime=6")).Render())</p>
+</MCard>
+
 @code {
-    [CascadingParameter] public TagRoute? Route { get; set; }
     [SupplyParameterFromQuery] public int LifeTime { get; set; }
-    void ThrowException(string state)
+
+    private static void ThrowException(string state)
     {
-        Logger.LogInformation("{state} {RouteUrl}", state, Route?.RouteUrl);
         throw new NotImplementedException(state);
     }
-
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        if (LifeTime == 1)
-            ThrowException("OnParametersSet");
-    }
-
 
     protected override void OnInitialized()
     {
@@ -35,19 +34,40 @@
             ThrowException("OnInitialized");
     }
 
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (LifeTime == 2)
+            ThrowException("OnParametersSet");
+    }
+
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-        if (LifeTime == 1)
+        if (LifeTime == 3)
             ThrowException("OnAfterRender");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (LifeTime == 4)
+            ThrowException("OnInitializedAsync");
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        if (LifeTime == 5)
+            ThrowException("OnParametersSetAsync");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);
-        if (firstRender)
+        if (firstRender && LifeTime == 6)
         {
-            // ThrowException("OnAfterRenderAsync");
+            ThrowException("OnAfterRenderAsync");
         }
     }
 

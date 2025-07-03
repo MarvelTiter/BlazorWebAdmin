@@ -2,7 +2,7 @@
 @using Project.Constraints.UI.Table
 @using Project.Web.Shared.Utils
 @using System.Linq.Expressions
-@inherits BasicComponent
+@inherits AppComponentBase
 @typeparam TData
 @typeparam TQuery where TQuery : IRequest, new()
 
@@ -12,7 +12,9 @@
             @if (Options?.EnabledAdvancedQuery ?? false)
             {
                 @* <ConditionBuilder Columns=@Options.Columns @bind-Info="conditionInfo" Localizer="Localizer" TableLocalizer="TableLocalizer" OnChanged="CacheInfo" @ref=insRef></ConditionBuilder> *@
-                <SingleConditionBuilder Item="@Options.Query.Condition" Columns="@Options.Columns" OnNameChanged="CacheInfo" Localizer="Localizer" TableLocalizer="TableLocalizer"></SingleConditionBuilder>
+                <SingleConditionBuilder Item="@Options.Query.Condition" Columns="@Options.Columns"
+                                        OnNameChanged="CacheInfo" Localizer="Localizer"
+                                        TableLocalizer="TableLocalizer"></SingleConditionBuilder>
             }
             @UI.BuildButton(this).OnClick(Search).Text(TableLocalizer["TableButtons.Query"]).Primary().Render()
             @if (Options?.EnabledAdvancedQuery ?? false)
@@ -30,7 +32,8 @@
             @if (Options?.ShowImportButton == true)
             {
                 <label for="@($"{typeof(TData).Name}_import")">
-                    <InputFile id="@($"{typeof(TData).Name}_import")" hidden OnChange="ImportAsync" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></InputFile>
+                    <InputFile id="@($"{typeof(TData).Name}_import")" hidden OnChange="ImportAsync"
+                               accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></InputFile>
                     @UI.BuildFakeButton(new() { ButtonType = ButtonType.Primary, Text = TableLocalizer["TableButtons.Import"] })
                 </label>
                 @UI.BuildButton(this).Primary().Text(TableLocalizer["TableButtons.ImportTemplate"]).OnClick(DownloadImportTemplate).Render()
@@ -44,7 +47,8 @@
 </div>
 @if (Options?.EnabledAdvancedQuery ?? false)
 {
-    <MModal @bind-Visible="AdvanceModalVisible" Title=@TableLocalizer["TableButtons.AdvancedQuery"] Width="800px" HideDefaultFooter>
+    <MModal @bind-Visible="AdvanceModalVisible" Title=@TableLocalizer["TableButtons.AdvancedQuery"] Width="800px"
+            HideDefaultFooter>
         <AdvanceQuery TData=TData
                       Localizer="Localizer"
                       TableLocalizer="TableLocalizer"
@@ -55,6 +59,7 @@
         </AdvanceQuery>
     </MModal>
 }
+
 @code {
     [Parameter, NotNull] public TableOptions<TData, TQuery>? Options { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
@@ -62,16 +67,19 @@
     [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
     [Inject, NotNull] IProtectedLocalStorage? LocalStorage { get; set; }
     [Parameter] public EventCallback DownloadImportTemplate { get; set; }
+
     private bool AdvanceModalVisible = false;
+
     // ElementReference? elementReference;
     readonly string cache_key = $"TableOptions_{typeof(TData).Name}_ConditionAction";
+
     async Task CacheInfo()
     {
         var storageValue = new ConditionStorage()
-            {
-                Name = Options.Query.Condition.Name,
-                CompareType = Options.Query.Condition.CompareType
-            };
+        {
+            Name = Options.Query.Condition.Name,
+            CompareType = Options.Query.Condition.CompareType
+        };
         await LocalStorage.SetAsync(cache_key, storageValue);
     }
 
@@ -87,14 +95,12 @@
                 {
                     Options.Query.Condition.Name = result.Value!.Name;
                     Options.Query.Condition.CompareType = result.Value!.CompareType;
-                    await InvokeAsync(StateHasChanged);
                 }
             }
-            catch
+            finally
             {
-
+                await InvokeAsync(StateHasChanged);
             }
-
         }
     }
 
@@ -104,6 +110,7 @@
         {
             return;
         }
+
         var result = await Options.OnAddItemAsync();
         if (result is null) return;
         if (UI.ShowError(result))
@@ -112,7 +119,7 @@
         }
     }
 
-    public async Task Search()
+    private async Task Search()
     {
         if (Options == null)
         {
@@ -123,18 +130,19 @@
         await Options.RefreshAsync();
     }
 
-    public async Task Export()
+    private async Task Export()
     {
         if (Options == null)
         {
             return;
         }
+
         Options.Query.ExpressionSolveType = SolveType.TopOnly;
         await Options.ExportAsync();
     }
 
 
-    public async void AdvanceExport()
+    public async Task AdvanceExport()
     {
         if (Options == null)
         {
@@ -165,10 +173,11 @@
             return;
         }
         // 10m
-        using var fileStream = e.File.OpenReadStream(1024 * 1000 * 10);
+        await using var fileStream = e.File.OpenReadStream(1024 * 1000 * 10);
         using var ms = new MemoryStream();
         await fileStream.CopyToAsync(ms);
         await (Options.OnImportAsync?.Invoke(ms) ?? Task.CompletedTask);
     }
+
 }
 

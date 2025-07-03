@@ -1,4 +1,5 @@
-﻿using BlazorAdmin.Client;
+﻿using AutoPageStateContainerGenerator;
+using BlazorAdmin.Client;
 using BlazorAdmin.Client.HttpClientHandlers;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,7 +36,7 @@ builder.Services.AddClientProject(builder.Configuration, setting =>
     setting.ConfigureSettingProviderType<CustomSetting>();
 #endif
 }, out _);
-
+builder.Services.AddStateContainers();
 builder.Services.AutoInjectWasm();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<IAuthService, AuthServiceApiInvoker>();

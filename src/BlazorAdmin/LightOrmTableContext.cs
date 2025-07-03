@@ -1,9 +1,8 @@
 ﻿using LightORM;
 
-namespace BlazorAdmin
+namespace BlazorAdmin;
+
+[LightORMTableContext]
+public partial class LightOrmTableContext : ITableContext
 {
-    [LightORMTableContext]
-    public partial class LightOrmTableContext : ITableContext
-    {
-    }
 }

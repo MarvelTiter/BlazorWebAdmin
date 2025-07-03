@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Web.Shared.Components.Conditions
-{
-    public class DateCondition : SimpleCondition<DateTime>
-    {
+namespace Project.Web.Shared.Components.Conditions;
 
-    }
+public class DateCondition : SimpleCondition<DateTime>
+{
+
 }

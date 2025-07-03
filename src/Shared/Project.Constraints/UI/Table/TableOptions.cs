@@ -36,6 +36,7 @@ public class TableOptions
     public bool Loading { get; set; }
     public bool EnableSelection { get; set; }
     public bool LoadDataOnLoaded { get; set; }
+    public bool FirstRender { get; set; } = true;
     public bool EnabledAdvancedQuery { get; set; } = true;
     public bool EnableRowClick { get; set; }
     public bool ShowAddButton { get; set; }
