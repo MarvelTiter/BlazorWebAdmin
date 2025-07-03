@@ -8,7 +8,6 @@ using Project.AppCore.Services;
 using Project.Constraints;
 using Project.Web.Shared;
 using MT.LightTask;
-using BlazorAdmin.Client.TestPages.Tasks;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -28,20 +27,23 @@ builder.AddServerProject(setting =>
     setting.App.Id = "Test";
     setting.App.Name = "Demo";
     setting.App.Company = "Marvel";
-    // 配置 IProjectSettingService和IAuthService
-    // 默认分别为BasicSetting和DefaultAuthenticationService
-    //setting.ConfigureSettingProviderType<CustomSetting>();
-    //setting.ConfigureAuthService<DefaultAuthenticationService>();
     var appAssembly  = typeof(BlazorAdmin.Client._Imports).Assembly;
     AppConst.AppAssembly = appAssembly;
-    AppConst.AddAssembly(appAssembly);
+    /*
+     * 配置IProjectSettingService和IAuthService(如果需要)
+     */
 #if DEBUG
     setting.ConfigureSettingProviderType<CustomSetting>();
-#endif
     setting.ConfigureAuthService<BlazorAdminAuthenticationService>();
+#endif
+#if (ExcludeDefaultService)
+    // setting.ConfigureSettingProviderType<YourSetting>();
+    setting.ConfigureSettingProviderType<BasicSetting>();
+    // setting.ConfigureAuthService<YourAuthenticationService>();
+    throw new NotImplementedException();
+#endif
+
 });
-//#if (ExcludeDefaultService)
-//#else
 
 //#endif
 builder.Logging.AddLocalFileLogger(config =>
@@ -75,7 +77,7 @@ app.UseLightTask(c =>
         Console.WriteLine($"Task测试1: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
         return Task.CompletedTask;
     }, b => b.WithCron("*/12 * * * * ?").Build());
-    c.AddTask<TestTask>("Task测试2", b => b.WithCron("*/12 * * * * ?").Build());
+    c.AddTask<BlazorAdmin.Client.TestPages.Tasks.TestTask>("Task测试2", b => b.WithCron("*/12 * * * * ?").Build());
 });
 #endif
 

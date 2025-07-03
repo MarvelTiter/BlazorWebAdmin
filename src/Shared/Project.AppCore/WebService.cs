@@ -6,6 +6,7 @@ using Project.AppCore.Middlewares;
 using Project.Constraints;
 using Project.Constraints.Utils;
 using Project.Web.Shared;
+using System.Reflection;
 
 namespace Project.AppCore;
 
@@ -13,6 +14,7 @@ public static class WebService
 {
     public static void AddServerProject(this IHostApplicationBuilder builder, Action<ProjectSetting> action)
     {
+        ScanRazorLibraryAssembly();
         builder.Services.AddClientProject(builder.Configuration, action, out var setting);
         ArgumentNullException.ThrowIfNull(setting.AuthServiceType);
         //var setting = new ProjectSetting();
@@ -47,7 +49,19 @@ public static class WebService
             builder.ConfigureContainer(new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
         }
     }
-
+    private static void ScanRazorLibraryAssembly()
+    {
+        var entry = Assembly.GetEntryAssembly();
+        var additionAssemblys = entry?.GetReferencedAssemblies().Select(Assembly.Load);
+        foreach (var item in additionAssemblys ?? [])
+        {
+            var hasPage = item.ExportedTypes.Any(t => t.GetCustomAttribute<Microsoft.AspNetCore.Components.RouteAttribute>() is not null);
+            if (hasPage)
+            {
+                AppConst.AddAssembly(item);
+            }
+        }
+    }
     public static void UseProject(this WebApplication app)
     {
         app.UseMiddleware<CheckBrowserEnabledMiddleware>();

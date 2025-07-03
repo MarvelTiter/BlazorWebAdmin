@@ -1,5 +1,4 @@
-﻿#if NET8_0
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Endpoints;
 using Microsoft.AspNetCore.Http;
 using Project.Constraints.Common.Attributes;
@@ -8,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
 namespace Project.AppCore;
+
 
 public static class HttpContextExtensions
 {
@@ -25,7 +25,7 @@ public static class HttpContextExtensions
                 static pageType => !pageType.IsDefined(typeof(ExcludeFromInteractiveRoutingAttribute), true));
     }
 }
-#endif
+
 
 public static class ClaimsPrincipalExtensions
 {
