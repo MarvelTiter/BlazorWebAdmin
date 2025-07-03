@@ -1,4 +1,4 @@
-{
+﻿{
   "CustomButtons": {
     "Ok": "确定",
     "Cancel": "取消",
@@ -65,22 +65,22 @@
   "Role": {
     "RoleId": "角色ID",
     "RoleName": "角色名称",
-    "Powers": "角色权限"
+    "Permissions": "角色权限"
   },
-  "Power": {
-    "PowerId": "权限ID",
-    "PowerName": "权限名称",
+  "Permission": {
+    "PermissionId": "权限ID",
+    "PermissionName": "权限名称",
     "ParentId": "父级权限",
-    "PowerType": "权限类型",
-    "PowerLevel": "权限等级",
+    "PermissionType": "权限类型",
+    "PermissionLevel": "权限等级",
     "Icon": "图标",
     "Path": "路径",
     "Sort": "排序序号",
     "GenerateCRUDButton": "生成按钮",
     "PermissionSetting": {
       "AddChild": "新增子项",
-      "AddPower": "添加权限",
-      "EditPower": "编辑权限",
+      "AddPermission": "添加权限",
+      "EditPermission": "编辑权限",
       "AddRoot": "添加根节点"
     }
   },

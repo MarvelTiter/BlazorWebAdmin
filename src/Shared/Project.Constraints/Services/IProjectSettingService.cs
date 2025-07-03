@@ -38,7 +38,7 @@ public interface IProjectSettingService
     /// </summary>
     /// <param name="info"></param>
     /// <returns></returns>
-    Task<IEnumerable<MinimalPower>> GetUserPowersAsync(UserInfo info);
+    Task<IEnumerable<MinimalPermission>> GetUserPowersAsync(UserInfo info);
 
     /// <summary>
     /// 导航钩子

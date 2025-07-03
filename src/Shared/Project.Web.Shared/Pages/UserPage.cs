@@ -10,7 +10,7 @@ namespace Project.Web.Shared.Pages;
 
 public class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : ModelPage<TUser, GenericRequest<TUser>>
     where TUser : class, IUser, new()
-    where TPower : class, IPower, new()
+    where TPower : class, IPermission, new()
     where TRole : class, IRole, new()
     where TUserService : IUserService<TUser>
     where TPermissionService : IPermissionService<TPower, TRole>
@@ -111,7 +111,7 @@ public class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : 
 #if (ExcludeDefaultService)
 #else
 [StateContainer]
-public partial class DefaultUserPage : UserPage<User, Power, Role, IStandardUserService, IStandardPermissionService>
+public partial class DefaultUserPage : UserPage<User, Permission, Role, IStandardUserService, IStandardPermissionService>
 {
 }
 #endif

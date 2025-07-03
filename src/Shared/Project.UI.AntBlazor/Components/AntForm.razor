@@ -1,10 +1,10 @@
 ﻿@using AntDesign.Internal
 @using Project.Constraints.UI.Form
 @typeparam TData where TData : class, new()
-<Form Model="@Options.Data" LabelAlign=@AntLabelAlignType.Right LabelColSpan="@Options.LabelSpan" OnFinish=OnFinish @ref=form WrapperColSpan="@Options.WrapperSpan">
+<Form Model="@Options.Data" LabelAlign="@AntLabelAlignType.Right" LabelColSpan="@Options.LabelSpan" OnFinish=OnFinish @ref=form WrapperColSpan="@Options.WrapperSpan">
     @foreach (var row in Options.GetRows())
     {
-        var colSpan = 24 / row.Count();
+        var colSpan = 24 / row.Length;
         var lblSpan = GetLabelSpan(colSpan);
         <GridRow>
             @foreach (var col in row)

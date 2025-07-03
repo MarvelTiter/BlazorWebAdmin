@@ -333,7 +333,7 @@ public partial class RouterStore : StoreBase, IRouterStore
             //    await InitRoutersByDefault();
             //}
 
-            IPower[] savedInfos = [];
+            IPermission[] savedInfos = [];
             if (userInfo is not null)
             {
                 savedInfos = [.. await settingService.GetUserPowersAsync(userInfo)];
@@ -345,11 +345,11 @@ public partial class RouterStore : StoreBase, IRouterStore
                 var enable = await OnRouteMetaFilterAsync(meta);
                 if (!enable && !meta.ForceShowOnNavMenu)
                     continue;
-                var savedMeta = savedInfos.FirstOrDefault(p => p.PowerId == meta.RouteId);
+                var savedMeta = savedInfos.FirstOrDefault(p => p.PermissionId == meta.RouteId);
                 if (savedMeta != null)
                 {
                     meta.Icon = savedMeta.Icon;
-                    meta.RouteTitle = savedMeta.PowerName;
+                    meta.RouteTitle = savedMeta.PermissionName;
                     meta.Sort = savedMeta.Sort;
                 }
 

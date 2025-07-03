@@ -1,7 +1,7 @@
-﻿@typeparam TPower where TPower : class, IPower, new()
+﻿@typeparam TPermission where TPermission : class, IPermission, new()
 @typeparam TRole where TRole : class, IRole, new()
-@typeparam TPermissionService where TPermissionService : IPermissionService<TPower, TRole>
-@inherits ModelPage<TPower, GenericRequest<TPower>>
+@typeparam TPermissionService where TPermissionService : IPermissionService<TPermission, TRole>
+@inherits ModelPage<TPermission, GenericRequest<TPermission>>
 <DefaultTableHeader Options="@(Options)" DownloadImportTemplate="@DownloadImportTemplate">
     @UI.BuildButton(this).Primary().Text(Localizer["PermissionSetting.AddRoot"]).OnClick(AddRootPowerAsync).Render()
 </DefaultTableHeader>

@@ -4,11 +4,15 @@ using AutoGenMapperGenerator;
 namespace Project.Constraints.Models.Permissions;
 
 [LangName("Role")]
+[SupplyColumnDefinition]
 public interface IRole
 {
+    [ColumnDefinition(Readonly = true)]
     [NotNull] string? RoleId { get; set; }
+    [ColumnDefinition]
     [NotNull] string? RoleName { get; set; }
-    IEnumerable<string>? Powers { get; set; }
+    [ColumnDefinition(Visible = false)]
+    IEnumerable<string>? Permissions { get; set; }
 }
 #if (ExcludeDefaultService)
 #else
@@ -16,17 +20,14 @@ public interface IRole
 [GenMapper]
 public partial class Role : IRole, IAutoMap
 {
-    [ColumnDefinition(Readonly = true)]
     [LightColumn(Name = "ROLE_ID", PrimaryKey = true)]
     [NotNull]
     public string? RoleId { get; set; }
-    [ColumnDefinition]
     [LightColumn(Name = "ROLE_NAME")]
     [NotNull]
     public string? RoleName { get; set; }
 
-    [ColumnDefinition(Visible = false)]
     [Ignore]
-    public IEnumerable<string>? Powers { get; set; }
+    public IEnumerable<string>? Permissions { get; set; }
 }
 #endif

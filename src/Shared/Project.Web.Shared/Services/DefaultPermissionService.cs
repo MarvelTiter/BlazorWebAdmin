@@ -6,9 +6,9 @@ using Project.Constraints.Models.Permissions;
 namespace Project.Web.Shared.Services;
 
 public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
-    where TPower : class, IPower, new()
+    where TPower : class, IPermission, new()
     where TRole : class, IRole, new()
-    where TRolePower : class, IRolePower, new()
+    where TRolePower : class, IRolePermission, new()
     where TUserRole : class, IUserRole, new()
 {
     private readonly IExpressionContext context;
@@ -17,7 +17,7 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
     {
         this.context = context;
     }
-    public virtual async Task<QueryCollectionResult<TPower>> GetPowerListAsync(GenericRequest<TPower> req)
+    public virtual async Task<QueryCollectionResult<TPower>> GetPermissionListAsync(GenericRequest<TPower> req)
     {
         var list = await context.Select<TPower>()
             .Where(req.Expression())
@@ -27,7 +27,7 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
         return list.CollectionResult((int)total);
     }
 
-    public virtual async Task<QueryCollectionResult<TPower>> GetAllPowerAsync()
+    public virtual async Task<QueryCollectionResult<TPower>> GetAllPermissionAsync()
     {
         var list = await context.Select<TPower>().OrderBy(e => e.Sort).ToListAsync();
         return list.CollectionResult();
@@ -49,11 +49,11 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
         return list.CollectionResult();
     }
 
-    public virtual async Task<QueryCollectionResult<TPower>> GetPowerListByUserIdAsync(string usrId)
+    public virtual async Task<QueryCollectionResult<TPower>> GetPermissionListByUserIdAsync(string usrId)
     {
         var powers = await context.Select<TPower, TRolePower, TUserRole>()
             .Distinct()
-            .InnerJoin<TRolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
+            .InnerJoin<TRolePower>(w => w.Tb1.PermissionId == w.Tb2.PermissionId)
             .InnerJoin<TUserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
             .Where(w => w.Tb3.UserId == usrId)
             .OrderBy(w => w.Tb1.Sort)
@@ -61,10 +61,10 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
         return powers.CollectionResult();
     }
 
-    public virtual async Task<QueryCollectionResult<TPower>> GetPowerListByRoleIdAsync(string roleId)
+    public virtual async Task<QueryCollectionResult<TPower>> GetPermissionListByRoleIdAsync(string roleId)
     {
         var powers = await context.Select<TPower>()
-            .InnerJoin<TRolePower>((r, p) => p.PowerId == r.PowerId)
+            .InnerJoin<TRolePower>((r, p) => p.PermissionId == r.PermissionId)
             .Where((r, rp) => rp.RoleId == roleId)
             .ToListAsync();
         return powers.CollectionResult();
@@ -79,7 +79,7 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
         return roles.CollectionResult();
     }
 
-    public virtual async Task<QueryResult> SaveRoleWithPowersAsync(TRole role)
+    public virtual async Task<QueryResult> SaveRoleWithPermissionsAsync(TRole role)
     {
         using var scoped = context.CreateMainDbScoped();
         try
@@ -90,12 +90,12 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
                 .ExecuteAsync();
 
             var roleId = role.RoleId;
-            string[] powers = [.. role.Powers?.Distinct()];
+            string[] powers = [.. role.Permissions?.Distinct()];
             var d = await scoped.Delete<TRolePower>().Where(r => r.RoleId == roleId).ExecuteAsync();
             var i = 0;
             foreach (var p in powers)
             {
-                var rp = new TRolePower() { RoleId = roleId, PowerId = p };
+                var rp = new TRolePower() { RoleId = roleId, PermissionId = p };
                 var ef = await scoped.Insert<TRolePower>(rp).ExecuteAsync();
                 i += ef;
             }
@@ -117,15 +117,15 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
         }
     }
 
-    public virtual async Task<QueryResult> UpdatePowerAsync(TPower power)
+    public virtual async Task<QueryResult> UpdatePermissionAsync(TPower power)
     {
         var n = await context.Update(power)
-            .Where(p => p.PowerId == power.PowerId)
+            .Where(p => p.PermissionId == power.PermissionId)
             .ExecuteAsync();
         return QueryResult.Return(n > 0);
     }
 
-    public virtual async Task<QueryResult> InsertPowerAsync(TPower power)
+    public virtual async Task<QueryResult> InsertPermissionAsync(TPower power)
     {
         var n = await context.Insert(power).ExecuteAsync();
         return QueryResult.Return(n > 0);
@@ -147,11 +147,11 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
             await scoped.BeginTransactionAsync();
             var n = await context.Insert(role).ExecuteAsync();
             var roleId = role.RoleId;
-            string[] powers = [.. role.Powers?.Distinct()];
+            string[] powers = [.. role.Permissions?.Distinct()];
             var i = 0;
             foreach (var p in powers)
             {
-                var rp = new TRolePower() { RoleId = roleId, PowerId = p };
+                var rp = new TRolePower() { RoleId = roleId, PermissionId = p };
                 var ef = await scoped.Insert(rp).ExecuteAsync();
                 i += ef;
             }
@@ -193,14 +193,14 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
 
     }
 
-    public virtual async Task<QueryResult> DeletePowerAsync(TPower power)
+    public virtual async Task<QueryResult> DeletePermissionAsync(TPower power)
     {
         using var scoped = context.CreateMainDbScoped();
         try
         {
             await scoped.BeginTransactionAsync();
-            await scoped.Delete<TPower>().Where(p => p.PowerId == power.PowerId || p.ParentId == power.PowerId).ExecuteAsync();
-            await scoped.Delete<TRolePower>().Where(p => p.PowerId == power.PowerId).ExecuteAsync();
+            await scoped.Delete<TPower>().Where(p => p.PermissionId == power.PermissionId || p.ParentId == power.PermissionId).ExecuteAsync();
+            await scoped.Delete<TRolePower>().Where(p => p.PermissionId == power.PermissionId).ExecuteAsync();
             await scoped.CommitTransactionAsync();
             return QueryResult.Success();
         }
@@ -210,21 +210,21 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
             return QueryResult.Fail().SetMessage(ex.Message);
         }
     }
-    public virtual async Task<QueryCollectionResult<MinimalPower>> GetUserPowersAsync(string usrId)
+    public virtual async Task<QueryCollectionResult<MinimalPermission>> GetUserPermissionsAsync(string usrId)
     {
         var powers = await context.Select<TPower>()
             .Distinct()
-            .InnerJoin<TRolePower>(w => w.Tb1.PowerId == w.Tb2.PowerId)
+            .InnerJoin<TRolePower>(w => w.Tb1.PermissionId == w.Tb2.PermissionId)
             .InnerJoin<TUserRole>(w => w.Tb2.RoleId == w.Tb3.RoleId)
             .Where(w => w.Tb3.UserId == usrId)
             .OrderBy(w => w.Tb1.Sort)
-            .ToListAsync(w => new MinimalPower
+            .ToListAsync(w => new MinimalPermission
             {
-                PowerId = w.Tb1.PowerId,
-                PowerName = w.Tb1.PowerName,
+                PermissionId = w.Tb1.PermissionId,
+                PermissionName = w.Tb1.PermissionName,
                 ParentId = w.Tb1.ParentId,
-                PowerType = w.Tb1.PowerType,
-                PowerLevel = w.Tb1.PowerLevel,
+                PermissionType = w.Tb1.PermissionType,
+                PermissionLevel = w.Tb1.PermissionLevel,
                 Icon = w.Tb1.Icon,
                 //Path = w.Tb1.Path,
                 Sort = w.Tb1.Sort
@@ -238,7 +238,7 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
 [AutoInject(ServiceType = typeof(IStandardPermissionService), Group = "SERVER")]
 [AutoInject(ServiceType = typeof(IPermissionService), Group = "SERVER")]
 [GenAspectProxy]
-public class StandardPermissionService : DefaultPermissionService<Power, Role, RolePower, UserRole>, IStandardPermissionService
+public class StandardPermissionService : DefaultPermissionService<Permission, Role, RolePower, UserRole>, IStandardPermissionService
 {
     public StandardPermissionService(IExpressionContext context) : base(context)
     {

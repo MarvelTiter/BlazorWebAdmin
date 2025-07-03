@@ -4,11 +4,17 @@ using System.ComponentModel.DataAnnotations;
 namespace Project.Constraints.Models.Permissions;
 
 [LangName("User")]
+[SupplyColumnDefinition]
 public interface IUser
 {
+    [ColumnDefinition(Readonly = true)]
     [NotNull] public string? UserId { get; set; }
+    [ColumnDefinition]
     [NotNull] public string? UserName { get; set; }
+    [ColumnDefinition]
+    [Form(InputType.Password)]
     [NotNull] public string? Password { get; set; }
+    [ColumnDefinition(Visible = false)]
     public IEnumerable<string>? Roles { get; set; }
     public void OnUserSave(SaveActionType type)
     {
@@ -43,19 +49,15 @@ public class UserPwd
 [GenMapper]
 public partial class User : IUser, IAutoMap
 {
-    [ColumnDefinition(Readonly = true)]
     [LightColumn(Name = "USER_ID", PrimaryKey = true)]
     [NotNull]
     [Required]
     public string? UserId { get; set; }
-    [ColumnDefinition]
     [LightColumn(Name = "USER_NAME")]
     [NotNull]
     [Required]
     public string? UserName { get; set; }
-    [ColumnDefinition]
     [LightColumn(Name = "PASSWORD")]
-    [Form(InputType.Password)]
     [NotNull]
     [Required]
     public string? Password { get; set; }
@@ -72,10 +74,8 @@ public partial class User : IUser, IAutoMap
     [ColumnDefinition]
     [LightColumn(Name = "EXPIRY_DATE")]
     public DateTime? ExpiryDate { get; set; }
-        
 
     [Ignore]
-    [ColumnDefinition(Visible = false)]
     public IEnumerable<string>? Roles { get; set; }
 }
 #endif

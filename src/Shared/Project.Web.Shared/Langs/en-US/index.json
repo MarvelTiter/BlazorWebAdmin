@@ -1,4 +1,4 @@
-{
+﻿{
   "CustomButtons": {
     "Ok": "Ok",
     "Cancel": "Cancel",
@@ -64,22 +64,22 @@
   "Role": {
     "RoleId": "RoleId",
     "RoleName": "RoleName",
-    "Powers": "Role Powers"
+    "Permissions": "Role Permissions"
   },
-  "Power": {
-    "PowerId": "PowerId",
-    "PowerName": "PowerName",
+  "Permission": {
+    "PermissionId": "PermissionId",
+    "PermissionName": "PermissionName",
     "ParentId": "ParentId",
-    "PowerType": "PowerType",
-    "PowerLevel": "PowerLevel",
+    "PermissionType": "PermissionType",
+    "PermissionLevel": "PermissionLevel",
     "Icon": "Icon",
     "Path": "Path",
     "Sort": "Sort",
-    "GenerateCRUDButton": "Crud",
+    "GenerateCRUDButton": "Create Crud",
     "PermissionSetting": {
-      "AddChild": "AddChild"
-    },
-    "Buttons": {
+      "AddChild": "Add Child",
+      "AddPermission": "Add Permission",
+      "EditPermission": "Edit Permission",
       "AddRoot": "Add Root"
     }
   },

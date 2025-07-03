@@ -1,14 +1,22 @@
 ﻿
 namespace Project.Constraints.Models.Permissions;
-
+[SupplyColumnDefinition]
 public interface IRunLog
 {
     [NotNull] int? LogId { get; set; }
+    [ColumnDefinition]
     string? UserId { get; set; }
+    [ColumnDefinition(UseTag = true)]
     string? ActionModule { get; set; }
+    [ColumnDefinition]
     string? ActionName { get; set; }
+    [ColumnDefinition]
     DateTime ActionTime { get; init; }
+    [ColumnDefinition(UseTag = true)]
+    [ColumnTag("成功", "Green")]
+    [ColumnTag("失败", "Red")]
     string? ActionResult { get; set; }
+    [ColumnDefinition]
     string? ActionMessage { get; set; }
 }
 
@@ -30,29 +38,21 @@ public class RunLog : IRunLog
     public int? LogId { get; set; }
 
     [LightColumn(Name = "USER_ID")]
-    [ColumnDefinition]
     public string? UserId { get; set; }
 
     [LightColumn(Name = "ACTION_MODULE")]
-    [ColumnDefinition(UseTag = true)]
     public string? ActionModule { get; set; }
 
     [LightColumn(Name = "ACTION_NAME")]
-    [ColumnDefinition]
     public string? ActionName { get; set; }
 
     [LightColumn(Name = "ACTION_TIME")]
-    [ColumnDefinition]
     public DateTime ActionTime { get; init; } = DateTime.Now;
 
     [LightColumn(Name = "ACTION_RESULT")]
-    [ColumnDefinition(UseTag = true)]
-    [ColumnTag("成功", "Green")]
-    [ColumnTag("失败", "Red")]
     public string? ActionResult { get; set; }
 
     [LightColumn(Name = "ACTION_MESSAGE")]
-    [ColumnDefinition]
     public string? ActionMessage { get; set; }
 }
 #endif

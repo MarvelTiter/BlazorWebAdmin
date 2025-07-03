@@ -1,12 +1,12 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 @using Project.Constraints.UI.Tree
-@typeparam TPower where TPower : class, IPower, new()
+@typeparam TPower where TPower : class, IPermission, new()
 <MTree DataSource="Options?.Datas ?? []"
        CheckedKeys="selectedKeys"
        CheckedKeysChanged="UpdateSelected"
        IncludeIndeterminate
-       TitleExpression="x => x.Data.PowerName"
-       KeyExpression="x => x.Data.PowerId"
+       TitleExpression="x => x.Data.PermissionName"
+       KeyExpression="x => x.Data.PermissionId"
        ChildrenExpression="x => x.Children"
        TNode="TreeData<TPower>">
 </MTree>

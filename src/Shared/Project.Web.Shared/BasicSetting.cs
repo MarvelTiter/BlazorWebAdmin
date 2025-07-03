@@ -58,7 +58,7 @@ public class BasicSetting : IProjectSettingService //, IDisposable
     /// <param name="info">用户信息</param>
     /// <returns>用户权限的集合</returns>
     /// <exception cref="NotImplementedException">如果未实现权限服务</exception>
-    public virtual async Task<IEnumerable<MinimalPower>> GetUserPowersAsync(UserInfo info)
+    public virtual async Task<IEnumerable<MinimalPermission>> GetUserPowersAsync(UserInfo info)
     {
         var permissionService = services.GetService<IPermissionService>();
         if (permissionService == null)
@@ -66,10 +66,10 @@ public class BasicSetting : IProjectSettingService //, IDisposable
             return [];
         }
 
-        var result = await permissionService.GetUserPowersAsync(info.UserId);
-        MinimalPower[] powers = [..result.Payload];
-        info.UserPowers = [.. powers.Where(p => p.PowerType != PowerType.Page).Select(p => p.PowerId)];
-        info.UserPages = [.. powers.Where(p => p.PowerType == PowerType.Page).Select(p => p.PowerId)];
+        var result = await permissionService.GetUserPermissionsAsync(info.UserId);
+        MinimalPermission[] powers = [..result.Payload];
+        info.UserPowers = [.. powers.Where(p => p.PermissionType != PermissionType.Page).Select(p => p.PermissionId)];
+        info.UserPages = [.. powers.Where(p => p.PermissionType == PermissionType.Page).Select(p => p.PermissionId)];
         return result.Payload;
     }
 

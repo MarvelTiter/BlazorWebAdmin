@@ -8,23 +8,23 @@ using Project.Web.Shared.Pages.Component;
 
 namespace Project.Web.Shared.Pages;
 
-public class RolePermission<TPower, TRole, TPermissionService> : ModelPage<TRole, GenericRequest<TRole>>
-    where TPower : class, IPower, new()
+public class RolePermission<TPermission, TRole, TPermissionService> : ModelPage<TRole, GenericRequest<TRole>>
+    where TPermission : class, IPermission, new()
     where TRole : class, IRole, new()
-    where TPermissionService : IPermissionService<TPower, TRole>
+    where TPermissionService : IPermissionService<TPermission, TRole>
 {
-    IEnumerable<TPower> allPower = [];
+    IEnumerable<TPermission> allPower = [];
     [Inject, NotNull] public TPermissionService? PermissionSrv { get; set; }
-    [Inject, NotNull] public IStringLocalizer<TPower>? Localizer { get; set; }
+    [Inject, NotNull] public IStringLocalizer<TPermission>? Localizer { get; set; }
     [Inject, NotNull] public IOptionsMonitor<CultureOptions>? CultureSetting { get; set; }
 
-    TreeOptions<TPower>? options;
+    TreeOptions<TPermission>? options;
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         Options.LoadDataOnLoaded = true;
-        Options.GetColumn(p => p.Powers).FormTemplate = ctx => b =>
-            b.Component<AssignRolePowers<TPower>>()
+        Options.GetColumn(p => p.Permissions).FormTemplate = ctx => b =>
+            b.Component<AssignRolePowers<TPermission>>()
                 .SetComponent(c => c.Context, ctx)
                 .SetComponent(c => c.Options, options)
                 .Build();
@@ -51,7 +51,7 @@ public class RolePermission<TPower, TRole, TPermissionService> : ModelPage<TRole
     /// <returns></returns>
     async Task GetAllPowersAsync()
     {
-        var result = await PermissionSrv.GetAllPowerAsync();
+        var result = await PermissionSrv.GetAllPermissionAsync();
         allPower = result.Payload;
     }
     /// <summary>
@@ -60,18 +60,18 @@ public class RolePermission<TPower, TRole, TPermissionService> : ModelPage<TRole
     /// <returns></returns>
     Task GeneratePowerTreeDataAsync()
     {
-        List<TreeData<TPower>> powerTreeNodes = new();
-        var rootNodes = allPower.Where(p => p.PowerId == "ROOT");
+        List<TreeData<TPermission>> powerTreeNodes = new();
+        var rootNodes = allPower.Where(p => p.PermissionId == "ROOT");
         foreach (var item in rootNodes)
         {
-            var n = new TreeData<TPower>(item)
+            var n = new TreeData<TPermission>(item)
             {
                 Children = FindChildren(allPower, item)
             };
             powerTreeNodes.Add(n);
         }
-        options = new TreeOptions<TPower>(powerTreeNodes);
-        options.KeyExpression = p => p.PowerId;
+        options = new TreeOptions<TPermission>(powerTreeNodes);
+        options.KeyExpression = p => p.PermissionId;
         //if (CultureSetting.CurrentValue.Enabled)
         //{
         //    options.TitleExpression = p => Localizer[p.PowerId].Value;
@@ -79,16 +79,16 @@ public class RolePermission<TPower, TRole, TPermissionService> : ModelPage<TRole
         //else
         //{
         //}
-        options.TitleExpression = p => p.PowerName;
+        options.TitleExpression = p => p.PermissionName;
         return Task.CompletedTask;
 
-        List<TreeData<TPower>> FindChildren(IEnumerable<TPower> all, TPower parent)
+        List<TreeData<TPermission>> FindChildren(IEnumerable<TPermission> all, TPermission parent)
         {
-            var children = all.Where(p => p.ParentId == parent.PowerId);
-            List<TreeData<TPower>> childNodes = new();
+            var children = all.Where(p => p.ParentId == parent.PermissionId);
+            List<TreeData<TPermission>> childNodes = new();
             foreach (var child in children)
             {
-                var n1 = new TreeData<TPower>(child)
+                var n1 = new TreeData<TPermission>(child)
                 {
                     Children = FindChildren(all, child)
                 };
@@ -109,10 +109,10 @@ public class RolePermission<TPower, TRole, TPermissionService> : ModelPage<TRole
     [EditButton]
     public async Task<IQueryResult> EditRole(TRole role)
     {
-        var powers = await PermissionSrv.GetPowerListByRoleIdAsync(role.RoleId);
-        role.Powers = powers.Payload.Select(p => p.PowerId).ToList();
+        var powers = await PermissionSrv.GetPermissionListByRoleIdAsync(role.RoleId);
+        role.Permissions = powers.Payload.Select(p => p.PermissionId).ToList();
         var newRole = await this.ShowEditFormAsync("编辑角色", role);
-        var result1 = await PermissionSrv.SaveRoleWithPowersAsync(newRole);
+        var result1 = await PermissionSrv.SaveRoleWithPermissionsAsync(newRole);
         //var result2 = await PermissionSrv.SaveRolePowerAsync((newRole.RoleId, newRole.Powers));
         return result1;
     }
@@ -126,7 +126,7 @@ public class RolePermission<TPower, TRole, TPermissionService> : ModelPage<TRole
 #if (ExcludeDefaultService)
 #else
 [StateContainer]
-public partial class DefaultRolePermission : RolePermission<Power, Role, IStandardPermissionService>
+public partial class DefaultRolePermission : RolePermission<Permission, Role, IStandardPermissionService>
 {
 }
 #endif
