@@ -72,7 +72,8 @@ public static class TableColumnContext
             Readonly = head.Readonly,
             UseTag = head.UseTag,
             Sortable = head.Sortable,
-            Format = head.Format
+            Format = head.Format,
+            Searchable = head.Searchable,
         };
 
         var formAttr = self.GetCustomAttribute<FormAttribute>() ?? upper?.GetCustomAttribute<FormAttribute>();

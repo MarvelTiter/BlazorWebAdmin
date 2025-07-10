@@ -51,6 +51,7 @@ public class ColumnDefinitionAttribute : Attribute
     public bool Visible { get; set; } = true;
     public bool Ellipsis { get; set; }
     public string? Format { get; set; }
+    public bool Searchable { get; set; } = true;
 }
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]

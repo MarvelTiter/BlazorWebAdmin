@@ -1,7 +1,7 @@
 ﻿@namespace Project.Web.Shared.Components
 @inherits JsComponentBase
-<div class="split-view @(Direction)" style="display:flex; flex-direction: @Direction">
-    <div class="view-content view-content-first" style="width: @(InitWidth.HasValue? $"{InitWidth.Value}px":"50%");" @ref="panel1">
+<div class="split-view @(Direction)" style="display:flex; flex-direction: @Direction ;gap:@Gap">
+    <div class="view-content view-content-first" style="width: @(InitWidth ?? "50%");" @ref="panel1">
         @FirstContent
     </div>
     <div class="split-view-separator" style="@SeparatorStyle.Style" @ref="separator"></div>
@@ -13,12 +13,13 @@
 @code {
     [Parameter] public RenderFragment? FirstContent { get; set; }
     [Parameter] public RenderFragment? SecondContent { get; set; }
+    [Parameter] public string Gap { get; set; } = "5px";
     /// <summary>
     /// column / row
     /// </summary>
     [Parameter] public string Direction { get; set; } = "row";
     [Parameter] public int SeparatorWidth { get; set; } = 10;
-    [Parameter] public int? InitWidth { get; set; }
+    [Parameter] public string? InitWidth { get; set; }
     /// <summary>
     /// % or px
     /// </summary>

@@ -34,6 +34,10 @@ public record ColumnInfo
     public bool Ellipsis { get; set; }
     public bool Visible { get; set; } = true;
     /// <summary>
+    /// 是否可作为查询条件
+    /// </summary>
+    public bool Searchable { get; set; } = true;
+    /// <summary>
     /// 参数是行数据对象
     /// </summary>
     public Func<object?, bool>? VisibleExpression { get; set; }
