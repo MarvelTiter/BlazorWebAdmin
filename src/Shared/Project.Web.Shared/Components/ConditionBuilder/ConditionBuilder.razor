@@ -42,7 +42,7 @@
         LinkOptions.Add(TableLocalizer?["ConditionSwitch.AndAlso"] ?? "并且", LinkType.AndAlso);
         LinkOptions.Add(TableLocalizer?["ConditionSwitch.OrElse"] ?? "或者", LinkType.OrElse);
         base.OnInitialized();
-        Columns = typeof(TModel).GenerateColumns();
+        Columns = [.. typeof(TModel).GenerateColumns().Where(c => c.Searchable)];
         Condition ??= new();
         Condition.LinkType = LinkType.None;
     }

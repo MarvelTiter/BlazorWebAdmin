@@ -4,7 +4,7 @@
 }
 
 .view-content {
-    padding: 10px;
+/*    padding: 10px;*/
 }
 
 .split-view.row .view-content-first {
@@ -13,10 +13,10 @@
 }
 
 .split-view-separator {
-    box-shadow: rgba(0,0,0,.1) 0px 0px 12px 0px;
+    box-shadow: var(--border-shadow);
     display: flex;
     align-items: center;
-    border: 1px solid #ccc;
+    /*    border: 1px solid #ccc;*/
 }
 
 .split-view.column .split-view-separator:hover {

@@ -5,7 +5,7 @@
 @inherits AppComponentBase
 
 <StackPanel>
-    @(UI.BuildSelect<ColumnInfo, string>(this, Columns)
+    @(UI.BuildSelect<ColumnInfo, string>(this, SearchableColumns)
         .ValueExpression(c => c.PropertyOrFieldName)
         .LabelExpression(c => Localizer[c.Label].Value)
         .Bind(() => Item.Name!, NotifyNameChanged)
@@ -25,7 +25,14 @@
     [Parameter, NotNull] public IStringLocalizer? Localizer { get; set; }
     [Parameter, NotNull] public IStringLocalizer? TableLocalizer { get; set; }
     [Parameter] public EventCallback OnNameChanged { get; set; }
+    private ColumnInfo[] SearchableColumns = [];
     Func<object?>? GetCurrentValue;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        SearchableColumns = [.. Columns.Where(c => c.Searchable)];
+    }
 
     RenderFragment ValueInput()
     {
