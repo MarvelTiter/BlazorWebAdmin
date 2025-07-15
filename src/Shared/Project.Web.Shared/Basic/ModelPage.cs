@@ -18,7 +18,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     [CascadingParameter] private IAppDomEventHandler? DomEvent { get; set; }
     [CascadingParameter] private TagRoute? RouteInfo { get; set; }
 
-    [SaveState]
+    [SaveState(Init = "new()")]
     public virtual TableOptions<TModel, TQuery> Options { get; set; } = new();
     protected bool HideDefaultTableHeader { get; set; }
 

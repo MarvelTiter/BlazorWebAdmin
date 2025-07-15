@@ -17,9 +17,15 @@ public static class RouterStoreExtensions
     public static bool CompareUrl(string? url1, string? url2)
     {
         if (string.IsNullOrEmpty(url1) || string.IsNullOrEmpty(url2)) return false;
-        if (!url1.StartsWith('/')) url1 = '/' + url1;
-        if (!url2.StartsWith('/')) url2 = '/' + url2;
-        return url1 == url2;
+        return string.Equals(NormalizeUrl(url1), NormalizeUrl(url2));
+
+        static string NormalizeUrl(string url)
+        {
+            if (!url.StartsWith('/'))
+                url = '/' + url;
+            // 统一解码
+            return Uri.UnescapeDataString(url);
+        }
     }
 
     public static void NavigateToPreiousPage(this IRouterStore store)

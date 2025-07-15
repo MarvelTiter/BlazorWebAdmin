@@ -202,7 +202,7 @@ public partial class RouterStore : StoreBase, IRouterStore
                 parsed = '/' + parsed;
             }
 
-            return parsed;
+            return Uri.UnescapeDataString(parsed);
         }
     }
 
