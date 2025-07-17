@@ -248,7 +248,7 @@ public partial class RouterStore : StoreBase, IRouterStore
 
     public string GetLocalizerString(RouterMeta meta)
     {
-        if (!options.CurrentValue.Enabled) 
+        if (!options.CurrentValue.Enabled)
             return meta.RouteTitle;
         var l = localizer[meta.RouteId];
         return !string.Equals(l, meta.RouteId) ? l :
@@ -360,7 +360,7 @@ public partial class RouterStore : StoreBase, IRouterStore
         }
         catch (Exception ex)
         {
-            logger.LogError("{Message}", ex.Message);
+            logger.LogError(ex, "InitMenusAsync异常: {Message}", ex.Message);
         }
     }
 
