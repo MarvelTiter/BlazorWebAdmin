@@ -63,7 +63,7 @@ public class Login : SystemPageIndex<Login>, ILoginPage
                 };
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
                 if (string.IsNullOrEmpty(Redirect)) Redirect = "/";
-                Navigator.NavigateTo(Redirect, true);
+                HttpContext.Response.Redirect(Redirect);
             }
             else
             {
