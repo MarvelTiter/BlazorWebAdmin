@@ -15,14 +15,17 @@ public sealed class ClientService : IClientService, IDisposable
     private readonly CancellationTokenSource tokenSource = new();
     private readonly Task clearTimeoutClientTask;
     private readonly IOptions<AppSetting> options;
+    private readonly ILogger<ClientService> logger;
     private bool disposedValue;
 
     public ClientService(IOptions<AppSetting> options
-        , IHttpContextAccessor httpContextAccessor)
+        , IHttpContextAccessor httpContextAccessor
+        , ILogger<ClientService> logger)
     {
         clearTimeoutClientTask = new Task(ClearTimeoutClient, tokenSource.Token, TaskCreationOptions.LongRunning);
         clearTimeoutClientTask.Start();
         this.options = options;
+        this.logger = logger;
     }
 
     public Task<QueryResult<int>> GetCountAsync()
@@ -42,7 +45,8 @@ public sealed class ClientService : IClientService, IDisposable
 
     public Task<QueryResult> AddOrUpdateAsync(ClientInfo client)
     {
-        clients.AddOrUpdate(client.CircuitId, client, (_, _) => UpdateClient(client));
+        logger.LogInformation("收到客户端心跳: {CircuitId}", client.CircuitId);
+        clients.AddOrUpdate(client.CircuitId, client, UpdateClient);
         return Task.FromResult(QueryResult.Success());
     }
 
@@ -81,7 +85,7 @@ public sealed class ClientService : IClientService, IDisposable
     }
 
 
-    private static ClientInfo UpdateClient(ClientInfo client)
+    private static ClientInfo UpdateClient(string key, ClientInfo client)
     {
         client.BeatTime = DateTime.Now;
         return client;

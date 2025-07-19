@@ -7,6 +7,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Components\IconSelector\**" />
+	  <Content Remove="Components\IconSelector\**" />
+	  <EmbeddedResource Remove="Components\IconSelector\**" />
+	  <None Remove="Components\IconSelector\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
 	</ItemGroup>
 
@@ -27,10 +34,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Project.Constraints\Project.Constraints.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Components\IconSelector\" />
 	</ItemGroup>
 
 </Project>
