@@ -1,4 +1,4 @@
-import {BaseComponent} from "../../JsCore/baseComponent.ts";
+﻿import {BaseComponent} from "../../JsCore/baseComponent.ts";
 import {EventHandler} from "../../JsCore/eventHandler.ts";
 import {getComponentById} from "../../JsCore/componentStore.ts";
 
@@ -60,7 +60,7 @@ export class ClientHub extends BaseComponent {
             // const form = new FormData()
             // form.append('id', this.id)
             // form.append('agent', navigator.userAgent)
-            await fetch('/client.heart.beat?id=' + this.id)
+            await fetch('/client.heart.beat?id=' + this.uuid)
         }
     }
 

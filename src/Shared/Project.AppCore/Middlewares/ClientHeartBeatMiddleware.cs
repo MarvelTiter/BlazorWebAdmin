@@ -1,4 +1,4 @@
-using AutoInjectGenerator;
+﻿using AutoInjectGenerator;
 using Microsoft.AspNetCore.Http;
 using Project.Constraints.Utils;
 
@@ -15,8 +15,8 @@ public class ClientHeartBeatMiddleware : IMiddleware
         var clientService = context.RequestServices.GetRequiredService<IClientService>();
 
         var id = context.Request.Query["id"];
-        var agent = context.Request.Headers["UserAgent"];
-        
+        var agent = context.Request.Headers.UserAgent;
+
         await clientService.AddOrUpdateAsync(new()
         {
             CircuitId = id,
@@ -24,25 +24,28 @@ public class ClientHeartBeatMiddleware : IMiddleware
             UserInfo = user,
             UserAgent = agent
         });
-        
+
         return;
 
         string GetClientIp()
         {
-            string ip;
             var headers = context.Request.Headers;
-            if (headers.TryGetValue("X-Forwarded-For", out var value))
+            // 检查多个可能的代理头
+            var proxyHeaders = new[] { "X-Forwarded-For", "X-Real-IP", "CF-Connecting-IP" };
+            foreach (var header in proxyHeaders)
             {
-                ip = value.ToString().Split(',')
-                    .FirstOrDefault(s => !string.IsNullOrWhiteSpace(s))?
-                    .Trim();
-            }
-            else
-            {
-                ip = context.Connection.RemoteIpAddress.ToIpString();
+                if (headers.TryGetValue(header, out var value))
+                {
+                    var ips = value.ToString().Split(',', StringSplitOptions.RemoveEmptyEntries);
+                    if (ips.Length > 0)
+                    {
+                        return ips[0].Trim();
+                    }
+                }
             }
 
-            return ip;
+            // 回退到连接远程IP
+            return context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
         }
     }
 }
