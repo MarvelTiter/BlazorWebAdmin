@@ -2,7 +2,7 @@
 using BlazorAdmin;
 using LightORM;
 using LightORM.Providers.Sqlite.Extensions;
-using MT.Toolkit.LogTool;
+using LoggerProviderExtensions;
 using Project.AppCore;
 using Project.AppCore.Services;
 using Project.Constraints;

@@ -185,13 +185,13 @@
             if (result.IsSuccess)
             {
                 var msg = result.Message ?? TableLocalizer["TableTips.ActionSuccess"].Value;
-                _ = MessageSrv.Success(msg);
+                MessageSrv.Success(msg);
                 if (Options.AutoRefreshData)
                     await Options.RefreshAsync();
             }
             else
             {
-                _ = MessageSrv.Error(result.Message ?? "Error");
+                MessageSrv.Error(result.Message ?? "Error");
             }
         }
     }

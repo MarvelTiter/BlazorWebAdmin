@@ -86,12 +86,11 @@ public class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : 
                 {
                     return false;
                 }
-
+                u.OnUserSave(SaveActionType.Update);
                 var saveUserResult = await UserSrv.SaveUserWithRolesAsync(u);
                 return UI.ShowError(saveUserResult);
             });
         });
-        u.OnUserSave(SaveActionType.Update);
         return QueryResult.Success();
     }
 
