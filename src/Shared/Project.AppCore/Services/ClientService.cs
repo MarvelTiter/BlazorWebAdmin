@@ -46,7 +46,7 @@ public sealed class ClientService : IClientService, IDisposable
     public Task<QueryResult> AddOrUpdateAsync(ClientInfo client)
     {
         logger.LogInformation("收到客户端心跳: {CircuitId}", client.CircuitId);
-        clients.AddOrUpdate(client.CircuitId, client, UpdateClient);
+        clients.AddOrUpdate(client.CircuitId, AddClient, UpdateClient,client);
         return Task.FromResult(QueryResult.Success());
     }
 
@@ -84,10 +84,14 @@ public sealed class ClientService : IClientService, IDisposable
         expired.ForEach(id => clients.TryRemove(id, out _));
     }
 
-
-    private static ClientInfo UpdateClient(string key, ClientInfo client)
+    private static ClientInfo AddClient(string key, ClientInfo newClient)
     {
-        client.BeatTime = DateTime.Now;
+        return newClient;
+    }
+
+    private static ClientInfo UpdateClient(string key, ClientInfo client, ClientInfo newClient)
+    {
+        client.Update(newClient);
         return client;
     }
 

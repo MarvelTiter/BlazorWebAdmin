@@ -1,7 +1,6 @@
 ﻿using Project.Constraints.Store;
 
 namespace Project.Constraints.Models;
-
 public class ClientInfo
 {
     //[ColumnDefinition("Id", width: "50", Ellipsis = true)]
@@ -24,4 +23,12 @@ public class ClientInfo
 
     [ColumnDefinition("UserAgent", Ellipsis = true)]
     public string? UserAgent { get; set; }
+
+    public void Update(ClientInfo clientInfo)
+    {
+        IpAddress = clientInfo.IpAddress;
+        BeatTime = DateTime.Now;
+        UserInfo = clientInfo.UserInfo;
+        UserAgent = clientInfo.UserAgent;
+    }
 }
