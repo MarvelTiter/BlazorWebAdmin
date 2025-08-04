@@ -139,3 +139,31 @@ public class BlazorAdminAuthenticationService(IServiceProvider services) : Defau
     }
 }
 #endif
+
+public class FreeAuthenticationService(IServiceProvider services) : DefaultAuthenticationService(services)
+{
+    public override Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd)
+    {
+        return Task.FromResult<QueryResult>(true);
+    }
+
+    public override Task<bool> CheckUserStatusAsync(UserInfo? userInfo)
+    {
+        return Task.FromResult(true);
+    }
+
+    public override Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd)
+    {
+        return Task.FromResult<QueryResult>(true);
+    }
+
+    protected override Task<(bool Success, string Message, UserInfo Payload)> CreateUserInfoAsync(LoginFormModel loginForm)
+    {
+        return Task.FromResult((true, "", UserInfo.Visitor));
+    }
+
+    protected override Task<IList<string>> GetUserRolesAsync(UserInfo userInfo)
+    {
+        return Task.FromResult<IList<string>>([]);
+    }
+}

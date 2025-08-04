@@ -43,6 +43,12 @@
             "datatype": "bool",
             "defaultValue": "false",
             "description": "是否去除默认的页面"
+        },
+        "UseClientProject": {
+            "type": "parameter",
+            "datatype": "bool",
+            "defaultValue": "true",
+            "description": "是否使用.Client项目"
         }
     }
 }

@@ -25,14 +25,8 @@
 </head>
 
 <body>
-    @if (TokenOption.Value.NeedAuthentication)
-    {
-        <BlazorAdmin.Client.Routes @rendermode="@RenderMode" />
-    }
-    else
-    {
-        <BlazorAdmin.Client.FreeRoutes @rendermode="@RenderMode" />
-    }
+
+    <Routers NeedAuthentication="@TokenOption.Value.NeedAuthentication" RenderMode="@RenderMode"></Routers>
     <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></Project.Web.Shared.Components.ReconnectorOutlet>
 
     @* <script src="@Assets["_framework/blazor.web.js"]"></script> *@

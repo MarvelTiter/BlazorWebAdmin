@@ -15,11 +15,19 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" />
 		<PackageReference Include="LightORM.Providers.Sqlite" Version="0.0.8" />
 	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
-	  <ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
-	</ItemGroup>
 	
+	<!--#if(UseClientProject)-->
+	<ItemGroup>
+		<ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
+		<ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
+	</ItemGroup>
+	<!--#endif-->
+	<!--#if(!UseClientProject)-->
+	<ItemGroup>
+		<ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
+		<ProjectReference Include="..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
+	</ItemGroup>
+	<!--#endif-->
 	<ItemGroup>
 		<Content Update="appsettings.Development.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

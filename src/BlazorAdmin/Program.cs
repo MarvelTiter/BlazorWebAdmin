@@ -27,7 +27,16 @@ builder.AddServerProject(setting =>
     setting.App.Id = "Test";
     setting.App.Name = "Demo";
     setting.App.Company = "Marvel";
+#if DEBUG
+    var appAssembly = typeof(BlazorAdmin.Client._Imports).Assembly;
+#else
+#if (UseClientProject)
     var appAssembly  = typeof(BlazorAdmin.Client._Imports).Assembly;
+#endif
+#if (!UseClientProject)
+    var appAssembly = typeof(BlazorAdmin._Imports).Assembly;
+#endif
+#endif
     AppConst.AppAssembly = appAssembly;
     /*
      * 配置IProjectSettingService和IAuthService(如果需要)
