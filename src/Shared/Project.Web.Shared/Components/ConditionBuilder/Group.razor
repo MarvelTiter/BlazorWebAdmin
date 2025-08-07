@@ -33,7 +33,7 @@
             @UI.BuildButton(this).Text(TableLocalizer["AdvanceCondition.AddCondition"]).Primary().OnClick(AddSibling).Render()
         }
         @UI.BuildButton(this).Text(TableLocalizer["AdvanceCondition.AddChildCondition"]).Primary().OnClick(AddChild).Render()
-        @UI.BuildButton(this).Text(TableLocalizer["AdvanceCondition.RemoveCondition"]).Primary().OnClick(Remove).Render()
+        @UI.BuildButton(this).Text(TableLocalizer["AdvanceCondition.RemoveCondition"]).SetButtonType(ButtonType.Danger).OnClick(Remove).Render()
     </StackPanel>
 
     @if (Item.Children.Count > 0)
@@ -46,7 +46,7 @@
                     .Bind(() => Item.LinkChildren)
                     .Set(p => p.ButtonGroup, true)
                     .Render())
-                @UI.BuildButton(this).Text(TableLocalizer["AdvanceCondition.RemoveCondition"]).Primary().OnClick(RemoveChildren).Render()
+            @UI.BuildButton(this).Text(TableLocalizer["AdvanceCondition.RemoveCondition"]).Primary().SetButtonType(ButtonType.Danger).OnClick(RemoveChildren).Render()
             </div>
             <div style=@($"border:1px solid #ccc; padding: 8px {Indent}px; margin-left:{Indent}px;")>
                 @foreach (var item in Item.Children)
