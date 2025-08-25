@@ -18,15 +18,15 @@ using Project.Web.Shared.Pages;
 namespace BlazorAdmin;
 
 [Route("/account/login")]
-[Layout(typeof(RootLayout))]
+[Layout(typeof(BlankLayout))]
 [ExcludeFromInteractiveRouting]
 public class Login : SystemPageIndex<Login>, ILoginPage
 {
-    [Inject] [NotNull] public IAuthService? AuthService { get; set; }
-    [Inject] [NotNull] private IStringLocalizer<Login>? Localizer { get; set; }
-    [Inject] [NotNull] private IProjectSettingService? CustomSetting { get; set; }
-    [Inject] [NotNull] private IOptionsMonitor<Token>? TokenOption { get; set; }
-    [CascadingParameter] [NotNull] private HttpContext? HttpContext { get; set; }
+    [Inject, NotNull] public IServiceProvider? Provider { get; set; }
+    [Inject, NotNull] private IStringLocalizer<Login>? Localizer { get; set; }
+    [Inject, NotNull] private IProjectSettingService? CustomSetting { get; set; }
+    [Inject, NotNull] private IOptionsMonitor<Token>? TokenOption { get; set; }
+    [CascadingParameter, NotNull] private HttpContext? HttpContext { get; set; }
     public bool Loading { get; set; }
     public string? Redirect { get; set; }
 
@@ -45,7 +45,13 @@ public class Login : SystemPageIndex<Login>, ILoginPage
         //Loading = true;
         using var _ = BooleanStatusManager.New(b => Loading = b, callback: () => InvokeAsync(StateHasChanged));
         //await InvokeAsync(StateHasChanged);
-        var result = await AuthService.SignInAsync(model);
+        var authService = Provider.GetService<IAuthService>();
+        if (authService is null)
+        {
+            UI.Error("未配置登录功能!");
+            return;
+        }
+        var result = await authService.SignInAsync(model);
         if (result.IsSuccess)
         {
             User.SetUser(result.Payload);

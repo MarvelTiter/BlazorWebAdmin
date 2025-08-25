@@ -20,7 +20,11 @@ public class UserInfo
     public Dictionary<string, object?> AdditionalValue { get; set; } = [];
 
     public DateTime CreatedTime { get; set; } = DateTime.Now;
-    // public DateTime ActiveTime { get; set; } = DateTime.Now;
-    public static UserInfo Visitor => new UserInfo() { UserId = $"{Guid.NewGuid():N}", UserName = "游客" };
-
+    public bool IsVistor { get; private set; } = false;
+    public static UserInfo Visitor => new()
+    {
+        UserId = $"{Guid.NewGuid():N}",
+        UserName = "游客",
+        IsVistor = true
+    };
 }

@@ -3,6 +3,7 @@
 @inject IProtectedLocalStorage LocalStorage
 @inject IOptions<Token> Token
 @inject IOptions<AppSetting> Setting
+@attribute [Obsolete]
 <div id="app"
      @ref="RootWrapper">
     @* <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
@@ -15,8 +16,6 @@
             <Authorized>
                 <ActionWatcher WatchRoot Timeout="@(Token.Value.LimitedFreeTime * 1000)"
                                Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
-                    @* <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken"> *@
-                    @* </ActionWatcher> *@
                     @Body
                     <IndexLoading Loading="@(!AppSession.Loaded)" Title="正在初始化..."></IndexLoading>
                 </ActionWatcher>

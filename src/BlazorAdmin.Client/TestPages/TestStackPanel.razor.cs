@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace BlazorAdmin.Client.TestPages;
 #if DEBUG
 [Route("/test3")]
-[PageInfo(Title = "StackPanel测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
+[PageInfo(Title = "StackPanel测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 //[Layout(typeof(NotAuthorizedLayout))]
 #endif
 public partial class TestStackPanel

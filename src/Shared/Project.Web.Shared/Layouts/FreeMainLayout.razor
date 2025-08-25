@@ -7,7 +7,7 @@
 @inherits LayoutComponentBase
 @implements IDisposable
 @layout NotAuthorizedLayout
-
+@attribute [Obsolete]
 <PageTitle>
     @($"管理系统 - {Context.RouterStore.Current?.RouteTitle ?? "主页"}")
 </PageTitle>

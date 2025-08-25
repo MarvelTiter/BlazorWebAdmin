@@ -12,7 +12,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace BlazorAdmin.Client.TestPages;
 #if DEBUG
 [Route("/test2")]
-[PageInfo(Title = "Split测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
+[PageInfo(Title = "Split测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 #endif
 public partial class TestSplitAndDataTable
 {

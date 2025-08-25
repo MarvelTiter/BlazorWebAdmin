@@ -14,7 +14,7 @@ public class BasicSetting : IProjectSettingService //, IDisposable
     /// <summary>
     /// 服务提供者，用于解析其他服务
     /// </summary>
-    private readonly IServiceProvider services;
+    protected IServiceProvider ServiceProvider { get; }
 
     protected IUserStore UserStore { get; }
     protected IOptionsMonitor<AppSetting> AppSetting { get; }
@@ -25,11 +25,11 @@ public class BasicSetting : IProjectSettingService //, IDisposable
     /// <param name="services">服务提供者</param>
     public BasicSetting(IServiceProvider services)
     {
-        this.services = services;
+        ServiceProvider = services;
         UserStore = services.GetRequiredService<IUserStore>();
         AppSetting = services.GetRequiredService<IOptionsMonitor<AppSetting>>();
     }
-    
+
     public virtual TimeSpan RevalidationInterval => TimeSpan.FromMinutes(5);
 
     /// <summary>
@@ -60,14 +60,14 @@ public class BasicSetting : IProjectSettingService //, IDisposable
     /// <exception cref="NotImplementedException">如果未实现权限服务</exception>
     public virtual async Task<IEnumerable<MinimalPermission>> GetUserPowersAsync(UserInfo info)
     {
-        var permissionService = services.GetService<IPermissionService>();
+        var permissionService = ServiceProvider.GetService<IPermissionService>();
         if (permissionService == null)
         {
             return [];
         }
 
         var result = await permissionService.GetUserPermissionsAsync(info.UserId);
-        MinimalPermission[] powers = [..result.Payload];
+        MinimalPermission[] powers = [.. result.Payload];
         info.UserPowers = [.. powers.Where(p => p.PermissionType != PermissionType.Page).Select(p => p.PermissionId)];
         info.UserPages = [.. powers.Where(p => p.PermissionType == PermissionType.Page).Select(p => p.PermissionId)];
         return result.Payload;
@@ -87,14 +87,15 @@ public class BasicSetting : IProjectSettingService //, IDisposable
     /// <returns>是否允许显示路由</returns>
     public virtual Task<bool> RouteMetaFilterAsync(RouterMeta meta)
     {
-        if (AppSetting.CurrentValue.LoadPageFromDatabase)
-        {
-            var has = Array.IndexOf(UserStore.UserInfo?.UserPages ?? [], meta.RouteId) > -1;
-            return Task.FromResult(has);
-        }
-        else
-        {
-            return Task.FromResult(true);
-        }
+        //if (AppSetting.CurrentValue.LoadPageFromDatabase)
+        //{
+        //    var has = Array.IndexOf(UserStore.UserInfo?.UserPages ?? [], meta.RouteId) > -1;
+        //    return Task.FromResult(has);
+        //}
+        //else
+        //{
+        //    return Task.FromResult(true);
+        //}
+        return Task.FromResult(true);
     }
 }

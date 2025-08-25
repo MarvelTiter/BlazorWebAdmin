@@ -21,6 +21,7 @@ public class PageInfoAttribute : Attribute
     /// <summary>
     /// 强制显示在菜单
     /// </summary>
+    [Obsolete]
     public bool ForceShowOnNavMenu { get; set; }
 }
 

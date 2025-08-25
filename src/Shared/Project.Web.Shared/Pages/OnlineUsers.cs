@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Rendering;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Rendering;
 using Project.Constraints.Common.Attributes;
 using Project.Constraints.UI.Extensions;
 using Project.Web.Shared.Components;
@@ -8,6 +9,7 @@ namespace Project.Web.Shared.Pages;
 
 [Route("/userdashboard")]
 [PageInfo(Icon = "svg-setting", Title = "在线用户", Sort = 999)]
+[Authorize(Roles = "Admin")]
 public class OnlineUsers : ModelPage<ClientInfo, GenericRequest<ClientInfo>>
 {
     [Inject, NotNull] IClientService? ClientService { get; set; }

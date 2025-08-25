@@ -1,8 +1,9 @@
-﻿@using Project.Constraints.Page
+﻿@using Microsoft.Extensions.DependencyInjection
+@using Project.Constraints.Page
 @using Project.Constraints.Services
 @using Project.Constraints.UI.Dropdown
 @using Project.Web.Shared.Utils;
-@inject IAuthService AuthService
+@inject IServiceProvider Provider
 @inject IStringLocalizer<Profile> Localizer
 @inherits AppComponentBase
 
@@ -24,46 +25,29 @@
 
 @code {
     EventCallback PasswordModifyHandler;
-
+    private IAuthService? authService;
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        authService ??= Provider.GetService<IAuthService>();
         PasswordModifyHandler = EventCallback.Factory.Create(this, HandlePwdModify);
-        //     options.Content =@<div class="wrapper">
-        //     <img class="avatar" src="/_content/Project.Web.Shared/assets/avator.png" />
-        //     <span class="name">@DisplayName</span>
-        // </div>
-        ;
-
-        // options.UserName = DisplayName;
-
-        // options.Actions = new List<ActionInfo>();
-        // options.Actions.Add(new ActionInfo
-        //     {
-        //         OnClick = EventCallback.Factory.Create(this, HandlePwdModify),
-        //         Label = Localizer["NavMenu.UserAction.ModifyPassword"]
-        //     });
-
-        // options.Actions.Add(new ActionInfo
-        //     {
-        //         OnClick = EventCallback.Factory.Create(this, HandleLogout),
-        //         Label = Localizer["NavMenu.UserAction.Logout"]
-        //     });
     }
 
     public async Task HandleLogout()
     {
-        // await AuthService.SignOutAsync();
-        // User.ClearUser();
+        if (authService is null)
+        {
+            UI.AlertError("不支持的操作", "未配置登录服务!");
+            return;
+        }
         await AuthenticationStateProvider.ClearState();
-        // Navigator.NavigateTo("/logout", true);
-        // await InvokeAsync(StateHasChanged);
-        // Context.Update?.Invoke();
     }
 
     async Task HandlePwdModify()
     {
         if (User.UserInfo == null)
+            return;
+        if (authService == null)
             return;
         var pwd = await UI.ShowDialogAsync<ModifyUserPassword, UserPwd>(config: config =>
         {
@@ -79,7 +63,7 @@
                     return false;
                 }
                 userPwd.UserId = User.UserInfo.UserId;
-                var pass = await AuthService.CheckUserPasswordAsync(userPwd);
+                var pass = await authService.CheckUserPasswordAsync(userPwd);
                 if (!pass.IsSuccess)
                 {
                     UI.Error(Localizer["UserPwd.OldPasswordError"]);
@@ -87,7 +71,7 @@
                 return pass.IsSuccess;
             };
         });
-        var result = await AuthService.ModifyUserPasswordAsync(pwd);
+        var result = await authService.ModifyUserPasswordAsync(pwd);
         if (result.IsSuccess)
         {
             await HandleLogout();

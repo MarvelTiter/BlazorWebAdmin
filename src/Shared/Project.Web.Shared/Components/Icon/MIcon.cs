@@ -17,15 +17,17 @@ public class MIcon : ComponentBase
     public string? ClassName { get; set; }
     [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalParameters { get; set; } = [];
 
+    [Parameter] public EventCallback OnClick { get; set; }
+
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         if (IconName?.StartsWith(AppConst.CUSTOM_SVG_PREFIX) == true)
         {
             builder.OpenComponent<SvgIcon>(0);
-            builder.AddAttribute(1, nameof(SvgIcon.HtmlTag), HtmlTag);
             builder.AddAttribute(2, nameof(SvgIcon.IconName), IconName);
             builder.AddAttribute(3, nameof(SvgIcon.ClassName), ClassName);
             builder.AddAttribute(4, nameof(SvgIcon.AdditionalParameters), AdditionalParameters);
+            builder.AddAttribute(5, nameof(SvgIcon.OnClick), OnClick);
             builder.CloseComponent();
         }
         else if (IconName?.StartsWith("fa fa-") == true)
@@ -35,6 +37,7 @@ public class MIcon : ComponentBase
             builder.AddAttribute(2, nameof(FontIcon.IconName), IconName);
             builder.AddAttribute(3, nameof(FontIcon.ClassName), ClassName);
             builder.AddAttribute(4, nameof(FontIcon.AdditionalParameters), AdditionalParameters);
+            builder.AddAttribute(5, nameof(FontIcon.OnClick), OnClick);
             builder.CloseComponent();
         }
     }

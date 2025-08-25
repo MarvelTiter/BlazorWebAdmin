@@ -103,13 +103,6 @@ public partial class RouterStore : StoreBase, IRouterStore
 
     public string CurrentUrl => '/' + navigationManager.ToBaseRelativePath(navigationManager.Uri);
 
-    private static string? AttachFirstSlash(string? url)
-    {
-        if (string.IsNullOrEmpty(url)) return null;
-        if (url.StartsWith('/')) return url;
-        return "/" + url;
-    }
-
     private TagRoute? preview;
     private readonly IProjectSettingService settingService;
     private readonly NavigationManager navigationManager;
@@ -119,7 +112,13 @@ public partial class RouterStore : StoreBase, IRouterStore
     private readonly ILogger<RouterStore> logger;
     private readonly IOptionsMonitor<AppSetting> setting;
 
-    public RouterStore(IProjectSettingService settingService, NavigationManager navigationManager, IUserStore userStore, IStringLocalizer<RouterStore> localizer, IOptionsMonitor<CultureOptions> options, ILogger<RouterStore> logger, IOptionsMonitor<AppSetting> setting)
+    public RouterStore(IProjectSettingService settingService
+        , NavigationManager navigationManager
+        , IUserStore userStore
+        , IStringLocalizer<RouterStore> localizer
+        , IOptionsMonitor<CultureOptions> options
+        , ILogger<RouterStore> logger
+        , IOptionsMonitor<AppSetting> setting)
     {
         this.settingService = settingService;
         this.navigationManager = navigationManager;
@@ -128,14 +127,8 @@ public partial class RouterStore : StoreBase, IRouterStore
         this.options = options;
         this.logger = logger;
         this.setting = setting;
-        // disposable = this.navigationManager.RegisterLocationChangingHandler(LocationChangingAsync);
         this.navigationManager.LocationChanged += NavigationManager_LocationChanged;
     }
-
-    // private ValueTask LocationChangingAsync(LocationChangingContext context)
-    // {
-    //     return LocationChanging(context.TargetLocation);
-    // }
 
     private bool lastRouterChangingCheck = true;
 
@@ -201,8 +194,14 @@ public partial class RouterStore : StoreBase, IRouterStore
             {
                 parsed = '/' + parsed;
             }
-
             return Uri.UnescapeDataString(parsed);
+        }
+
+        static string? AttachFirstSlash(string? url)
+        {
+            if (string.IsNullOrEmpty(url)) return null;
+            if (url.StartsWith('/')) return url;
+            return "/" + url;
         }
     }
 
@@ -324,15 +323,7 @@ public partial class RouterStore : StoreBase, IRouterStore
                 Cache = true,
                 RouteTitle = "主页",
             });
-            //if (userInfo != null && setting.CurrentValue.LoadPageFromDatabase)
-            //{
-            //    await InitRoutersAsyncByUser(userInfo);
-            //}
-            //if (setting.CurrentValue.LoadUnregisteredPage)
-            //{
-            //    await InitRoutersByDefault();
-            //}
-
+           
             IPermission[] savedInfos = [];
             if (userInfo is not null)
             {
@@ -343,8 +334,16 @@ public partial class RouterStore : StoreBase, IRouterStore
             {
                 if (menus.Any(m => m.RouteId == meta.RouteId)) continue;
                 var enable = await OnRouteMetaFilterAsync(meta);
-                if (!enable && !meta.ForceShowOnNavMenu)
+                if (!enable)
                     continue;
+                // 没登录
+                if (userInfo is null)
+                {
+                    if (!meta.IsAllowAnonymous)
+                    {
+                        continue;
+                    }
+                }
                 var savedMeta = savedInfos.FirstOrDefault(p => p.PermissionId == meta.RouteId);
                 if (savedMeta != null)
                 {
@@ -352,11 +351,11 @@ public partial class RouterStore : StoreBase, IRouterStore
                     meta.RouteTitle = savedMeta.PermissionName;
                     meta.Sort = savedMeta.Sort;
                 }
-
                 menus.Add(new RouteMenu(meta));
             }
 
             this.menus.Sort((a, b) => a.Sort - b.Sort);
+            NotifyChanged();
         }
         catch (Exception ex)
         {

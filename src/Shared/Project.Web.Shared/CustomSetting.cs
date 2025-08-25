@@ -1,4 +1,5 @@
-﻿using Project.Constraints.Store.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project.Constraints.Store.Models;
 using Project.Web.Shared.Components;
 
 namespace Project.Web.Shared;
@@ -23,11 +24,15 @@ public class CustomSetting : BasicSetting, IProjectSettingService
     }
 
     private UserInfo? CurrentUser => userStore.UserInfo;
-    public override Task AfterWebApplicationAccessed()
+    public override async Task AfterWebApplicationAccessed()
     {
+        if (userStore.UserInfo is null)
+        {
+            var authService = ServiceProvider.GetRequiredService<IAuthenticationStateProvider>();
+            await authService.ClearState();
+        }
         var service = watermarkServiceFactory.GetWatermarkService();
-        service.UpdateWaterMarkAsync(CurrentUser?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-        return Task.CompletedTask;
+        await service.UpdateWaterMarkAsync(CurrentUser?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
     }
 
     public override Task<bool> RouterChangingAsync(TagRoute route)

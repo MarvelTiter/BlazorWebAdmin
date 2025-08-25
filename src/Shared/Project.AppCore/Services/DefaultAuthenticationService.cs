@@ -104,7 +104,7 @@ public class BlazorAdminAuthenticationService(IServiceProvider services) : Defau
 
     protected override async Task<IList<string>> GetUserRolesAsync(UserInfo userInfo)
     {
-        var context = Services.GetService<IExpressionContext>()!;
+        var context = Services.GetRequiredService<IExpressionContext>();
         var roles = await context.Select<UserRole>().Where(ur => ur.UserId == userInfo.UserId).ToListAsync(r => r.RoleId);
         return roles;
     }
@@ -112,7 +112,7 @@ public class BlazorAdminAuthenticationService(IServiceProvider services) : Defau
     public override async Task<bool> CheckUserStatusAsync(UserInfo? userInfo)
     {
         if (userInfo is null) return false;
-        var context = Services.GetService<IExpressionContext>()!;
+        var context = Services.GetRequiredService<IExpressionContext>();
         //var config = Services.GetService<IOptionsMonitor<Token>>()!;
         var u = await context.Select<User>().Where(u => u.UserId == userInfo.UserId).FirstAsync();
         return u?.Password.ToHash() == userInfo.PasswordHash;
@@ -120,8 +120,7 @@ public class BlazorAdminAuthenticationService(IServiceProvider services) : Defau
 
     public override async Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd)
     {
-        var context = Services.GetService<IExpressionContext>();
-        ArgumentNullException.ThrowIfNull(context);
+        var context = Services.GetRequiredService<IExpressionContext>();
         var old = await context.Select<User>()
             .Where(u => u.UserId == pwd.UserId)
             .FirstAsync();
@@ -130,8 +129,7 @@ public class BlazorAdminAuthenticationService(IServiceProvider services) : Defau
 
     public override async Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd)
     {
-        var context = Services.GetService<IExpressionContext>();
-        ArgumentNullException.ThrowIfNull(context);
+        var context = Services.GetRequiredService<IExpressionContext>();
         var r = await context.Update<User>().Set(u => u.Password, pwd.Password)
             .Where(u => u.UserId == pwd.UserId)
             .ExecuteAsync();

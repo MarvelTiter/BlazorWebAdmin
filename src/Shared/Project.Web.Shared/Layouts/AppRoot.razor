@@ -11,14 +11,21 @@
         <Router AppAssembly="AppConst.AppAssembly" AdditionalAssemblies="AppConst.AdditionalAssemblies">
             <Found Context="routeData">
                 <ErrorCatcher>
-                    <CatchObjectRefRouteView RouteData="@routeData" DefaultLayout="@DefaultLayout"/>
+                    <ActionWatcher WatchRoot Timeout="@(Token.Value.LimitedFreeTime * 1000)"
+                                   Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
+                        <CatchObjectRefAuthorizedRouteView RouteData="@routeData" DefaultLayout="@DefaultLayout">
+                            <NotAuthorized>
+                                <Project.Web.Shared.Pages.NotAuthorizedPage />
+                            </NotAuthorized>
+                        </CatchObjectRefAuthorizedRouteView>
+                    </ActionWatcher>
                 </ErrorCatcher>
             </Found>
         </Router>
         <WaterMark ProvideService></WaterMark>
         <WebAdminReconnector></WebAdminReconnector>
-        <Downloader/>
-        <ClientHub/>
+        <Downloader />
+        <ClientHub />
         @Context.UI.RenderContainer()
     </div>
 </CascadingValue>
