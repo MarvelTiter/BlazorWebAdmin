@@ -54,8 +54,8 @@ public static class ClaimsHelper
         var name = principal.Name!;
         var username = principal.FindFirst(ClaimTypes.GivenName)!.Value;
         var token = principal.FindFirst(nameof(UserInfo.Token))!.Value;
-        var pwdHash = principal.FindFirst(nameof(UserInfo.PasswordHash))?.Value;
-        var createdBinary = principal.FindFirst(nameof(UserInfo.CreatedTime)).Value;
+        var pwdHash = principal.FindFirst(nameof(UserInfo.PasswordHash))?.Value ?? "";
+        var createdBinary = principal.FindFirst(nameof(UserInfo.CreatedTime))!.Value;
         var createdTime = DateTime.FromBinary(long.Parse(createdBinary!));
         var additionalValue = principal.FindFirst(nameof(UserInfo.AdditionalValue))?.Value ?? "{}";
         var roles = principal.FindAll(ClaimTypes.Role).Select(c => c.Value);

@@ -1,4 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components.Rendering;
+using Project.Constraints.Common.Attributes;
+using Project.Constraints.PageHelper;
+using Project.Constraints.Store.Models;
+using Project.Constraints.UI.Extensions;
+using Project.Web.Shared.Components;
+using Project.Web.Shared.Pages;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -6,11 +12,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Project.Constraints.Common.Attributes;
-using Project.Constraints.PageHelper;
-using Project.Constraints.Store.Models;
-using Project.Constraints.UI.Extensions;
-using Project.Web.Shared.Components;
 
 namespace Project.Web.Shared.Layouts.LayoutComponents;
 
@@ -36,7 +37,7 @@ public class CatchObjectRefRouteView : RouteView
     {
         if (!RouterStore.LastRouterChangingCheck)
         {
-            builder.Component<ForbiddenPage>().Build();
+            builder.Component<NotAuthorizedPage>().Build();
             return;
         }
 

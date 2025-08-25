@@ -1,7 +1,7 @@
 ﻿@using Project.Constraints.Common.Attributes
 @using Project.Web.Shared.Components
 @page "/testicon"
-@attribute [PageInfo(Title = "Icon测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
+@attribute [PageInfo(Title = "Icon测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 
 <Project.Web.Shared.Components.IconSelector @bind-Value="@selectedIcon"></Project.Web.Shared.Components.IconSelector>
 <MIcon IconName="@selectedIcon"></MIcon>

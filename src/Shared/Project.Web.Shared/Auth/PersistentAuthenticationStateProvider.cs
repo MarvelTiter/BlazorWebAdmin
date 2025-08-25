@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 using Project.Constraints.Utils;
 
 namespace Project.Web.Shared.Auth;
@@ -17,7 +18,7 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
     private readonly IUserStore userStore;
     private readonly NavigationManager navigation;
     private readonly IProjectSettingService settingService;
-    private readonly IAuthService authService;
+    private readonly IAuthService? authService;
 
     private CancellationTokenSource? roopTokenSource;
 
@@ -32,13 +33,13 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
         , IUserStore userStore
         , NavigationManager navigation
         , IProjectSettingService settingService
-        , IAuthService authService
-        , ILogger<IAuthenticationStateProvider> logger)
+        , ILogger<IAuthenticationStateProvider> logger
+        , IServiceProvider provider)
     {
         this.userStore = userStore;
         this.navigation = navigation;
         this.settingService = settingService;
-        this.authService = authService;
+        this.authService = provider.GetService<IAuthService>();
         this.logger = logger;
 
         // 从持久化状态中获取用户信息，如果存在，则设置用户信息并更新认证状态
@@ -78,6 +79,10 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
     {
         try
         {
+            if (authService is null)
+            {
+                return;
+            }
             var authenticationState = await task;
             if (authenticationState.User.Identity?.IsAuthenticated == true)
             {

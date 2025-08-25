@@ -4,11 +4,14 @@
 @using Project.Web.Shared.Components
 @if (!HasChildren)
 {
-    <MenuItem RouterLink="@Current.RouteUrl" RouterMatch="NavLinkMatch.All" Title="@RouterStore.GetLocalizerString(Route)">
-        <IconTemplate>
-            <MIcon ClassName="nav-icon" IconName="@Current.Icon"></MIcon>
-        </IconTemplate>
-    </MenuItem>
+    @if (!Route.IsGroupHeader)
+    {
+        <MenuItem RouterLink="@Current.RouteUrl" RouterMatch="NavLinkMatch.All" Title="@RouterStore.GetLocalizerString(Route)">
+            <IconTemplate>
+                <MIcon ClassName="nav-icon" IconName="@Current.Icon"></MIcon>
+            </IconTemplate>
+        </MenuItem>
+    }
 }
 else
 {

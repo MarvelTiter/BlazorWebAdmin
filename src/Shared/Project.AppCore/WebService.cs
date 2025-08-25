@@ -16,11 +16,12 @@ public static class WebService
     {
         ScanRazorLibraryAssembly();
         builder.Services.AddClientProject(builder.Configuration, action, out var setting);
-        ArgumentNullException.ThrowIfNull(setting.AuthServiceType);
         //var setting = new ProjectSetting();
         //action.Invoke(setting);
-
-        builder.Services.AddScoped(typeof(IAuthService), setting.AuthServiceType);
+        if (setting.AuthServiceType is not null)
+        {
+            builder.Services.AddScoped(typeof(IAuthService), setting.AuthServiceType);
+        }
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
         {
@@ -79,17 +80,17 @@ public static class WebService
         app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/client.heart.beat"), a => a.UseMiddleware<ClientHeartBeatMiddleware>());
     }
 
-    private static async Task ValidateCookiePrincipal(CookieValidatePrincipalContext context)
-    {
-        var authService = context.HttpContext.RequestServices.GetRequiredService<IAuthService>();
-        if (context.Principal?.GetCookieClaimsIdentity(out var identity) == true)
-        {
-            var u = identity.GetUserInfo();
-            var ok = await authService.CheckUserStatusAsync(u);
-            if (!ok)
-            {
-                context.RejectPrincipal();
-            }
-        }
-    }
+    //private static async Task ValidateCookiePrincipal(CookieValidatePrincipalContext context)
+    //{
+    //    var authService = context.HttpContext.RequestServices.GetRequiredService<IAuthService>();
+    //    if (context.Principal?.GetCookieClaimsIdentity(out var identity) == true)
+    //    {
+    //        var u = identity.GetUserInfo();
+    //        var ok = await authService.CheckUserStatusAsync(u);
+    //        if (!ok)
+    //        {
+    //            context.RejectPrincipal();
+    //        }
+    //    }
+    //}
 }

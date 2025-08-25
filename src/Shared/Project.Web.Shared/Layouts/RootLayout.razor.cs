@@ -8,6 +8,7 @@ namespace Project.Web.Shared.Layouts;
 public partial class RootLayout : IDisposable
 {
     protected ElementReference? RootWrapper { get; set; }
+    [Inject][NotNull] private IAppSession? Context { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await base.OnAfterRenderAsync(firstRender);

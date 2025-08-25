@@ -1,0 +1,97 @@
+﻿.bg {
+/*    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100%;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    padding: 40px;
+    text-align: center;
+}
+
+.icon {
+    font-size: 80px;
+    color: #ff4757;
+    margin-bottom: 20px;
+}
+
+h1 {
+    color: #2f3542;
+    margin-bottom: 15px;
+    font-size: 28px;
+}
+
+p {
+    color: #747d8c;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 16px;
+}
+
+.btn-primary {
+    background-color: #5352ed;
+    color: white;
+}
+
+    .btn-primary:hover {
+        background-color: #3742fa;
+    }
+
+.btn-secondary {
+    background-color: transparent;
+    color: #5352ed;
+    border: 1px solid #5352ed;
+}
+
+    .btn-secondary:hover {
+        background-color: #f1f2f6;
+    }
+
+.contact {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f2f6;
+}
+
+    .contact a {
+        color: #5352ed;
+        text-decoration: none;
+    }
+
+        .contact a:hover {
+            text-decoration: underline;
+        }
+
+@media (max-width: 576px) {
+    .container {
+        padding: 30px 20px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}

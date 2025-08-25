@@ -5,6 +5,8 @@
 <div id="app"
      @ref="RootWrapper">
     <CascadingValue Value="this" IsFixed>
-        @Body
+        <IndexLoading Loading="@(!Context.Loaded)" Title="正在初始化...">
+            @Body
+        </IndexLoading>
     </CascadingValue>
 </div>

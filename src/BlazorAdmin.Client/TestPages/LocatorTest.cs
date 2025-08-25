@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace BlazorAdmin.Client.TestPages;
 #if DEBUG
 [Route("/testlocator")]
-[PageInfo(Title = "Locator测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
+[PageInfo(Title = "Locator测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 #endif
 public class LocatorTest : PageIndex
 {

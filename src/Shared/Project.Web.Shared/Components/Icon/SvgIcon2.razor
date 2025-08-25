@@ -1,5 +1,6 @@
 ﻿@namespace Project.Web.Shared.Components
 @* @inherits JsComponentBase *@
+@attribute [Obsolete("建议使用 MIcon 组件替代", true)]
 <i style="display: flex;align-items: center;" @onclick="handleClick">
     @IconMarkuString
 </i>
@@ -27,8 +28,8 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var result = await SvgService.GetIcon(IconName);
-        loadSvgData(result.Payload);
+        var result = await SvgService.GetIconAsync(IconName);
+        loadSvgData(result.Payload?.OriginalContent);
     }
 
     public override async Task SetParametersAsync(ParameterView parameters)
@@ -52,12 +53,12 @@
         await base.OnParametersSetAsync();
         if (shouldUpdate)
         {
-            var result = await SvgService.GetIcon(IconName);
-            loadSvgData(result.Payload);
+            var result = await SvgService.GetIconAsync(IconName);
+            loadSvgData(result.Payload?.OriginalContent);
             shouldUpdate = false;
         }
     }
-      
+
     void loadSvgData(string? svgContent)
     {
         if (string.IsNullOrEmpty(svgContent))

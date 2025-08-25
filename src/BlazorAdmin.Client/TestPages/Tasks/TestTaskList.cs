@@ -11,7 +11,7 @@ namespace BlazorAdmin.Client.TestPages.Tasks;
 
 #if DEBUG
 [Route("/testtasklist")]
-[PageInfo(Title = "任务列表测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
+[PageInfo(Title = "任务列表测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 //[Layout(typeof(NotAuthorizedLayout))]
 #endif
 public class TestTaskList : ModelPage<TaskInfo, GenericRequest<TaskInfo>>

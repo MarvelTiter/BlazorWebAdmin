@@ -24,14 +24,15 @@ internal static partial class AllPages
         var routerAttr = t.GetCustomAttribute<RouteAttribute>()!;
         var info = t.GetCustomAttribute<PageInfoAttribute>();
         var groupInfo = t.GetCustomAttribute<PageGroupAttribute>();
-
+        var authorizeAttr = t.GetCustomAttribute<Microsoft.AspNetCore.Authorization.AuthorizeAttribute>();
+        var allowAnonymousAttr = t.GetCustomAttribute<Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute>();
         if (groupInfo != null)
         {
             ArgumentNullException.ThrowIfNull(info, $"{nameof(PageGroupAttribute)} should used with {nameof(PageInfoAttribute)}");
             TryAddGroup(groupInfo);
         }
         //ArgumentOutOfRangeException.ThrowIfEqual(false, HasGroup(info), $"invalid groupId ({info!.GroupId})");
-        TryForceShowGroup(info);
+        //TryForceShowGroup(info);
         if (CheckPathTemplate(routerAttr.Template))
         {
             yield return new()
@@ -45,10 +46,10 @@ internal static partial class AllPages
                 Sort = info?.Sort ?? 0,
                 HasPageInfo = info != null,
                 RouteType = t,
-                ForceShowOnNavMenu = info?.ForceShowOnNavMenu ?? false
+                //ForceShowOnNavMenu = info?.ForceShowOnNavMenu ?? false,
+                IsAllowAnonymous = allowAnonymousAttr != null || authorizeAttr is null,
             };
         }
-
     }
 
     private static bool CheckPathTemplate(string template)
@@ -56,14 +57,6 @@ internal static partial class AllPages
         return !MatchPathParameter().Match(template).Success;
     }
 
-    //static bool HasGroup(PageInfoAttribute? pageInfo)
-    //{
-    //    if (pageInfo == null || pageInfo.GroupId == null)
-    //    {
-    //        return true;
-    //    }
-    //    return Groups.Any(g => g.RouteId == pageInfo.GroupId);
-    //}
     private static void TryAddGroup(PageGroupAttribute groupInfo)
     {
         var g = Groups.Find(g => g.RouteId == groupInfo.Id);
@@ -79,6 +72,8 @@ internal static partial class AllPages
             g.Sort = groupInfo.Sort;
             g.Group = "ROOT";
             g.HasPageInfo = true;
+            g.IsAllowAnonymous = true;
+            g.IsGroupHeader = true;
             Groups.Add(g);
         }
         else
@@ -90,14 +85,14 @@ internal static partial class AllPages
         }
     }
 
-    private static void TryForceShowGroup(PageInfoAttribute? pageInfo)
-    {
-        var g = Groups.Find(g => g.RouteId == pageInfo?.GroupId);
-        if (g is not null && !g.ForceShowOnNavMenu)
-        {
-            g.ForceShowOnNavMenu = pageInfo?.ForceShowOnNavMenu ?? false;
-        }
-    }
+    //private static void TryForceShowGroup(PageInfoAttribute? pageInfo)
+    //{
+    //    var g = Groups.Find(g => g.RouteId == pageInfo?.GroupId);
+    //    if (g is not null && !g.ForceShowOnNavMenu)
+    //    {
+    //        g.ForceShowOnNavMenu = pageInfo?.ForceShowOnNavMenu ?? false;
+    //    }
+    //}
 
     [GeneratedRegex(@"\{[^{}]+\}")]
     private static partial Regex MatchPathParameter();

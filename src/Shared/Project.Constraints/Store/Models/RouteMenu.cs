@@ -17,6 +17,7 @@ public class RouteMenu : RouterMeta
         Group = meta.Group;
         Cache = meta.Cache;
         Sort = meta.Sort;
+        IsGroupHeader = meta.IsGroupHeader;
     }
     public IEnumerable<RouteMenu>? Children { get; set; }
     public bool HasChildren => Children != null && Children.Any();

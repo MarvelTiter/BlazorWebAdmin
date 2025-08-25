@@ -9,7 +9,14 @@
 <ScrollBar>
     <ErrorCatcher ShowMessage>
         <!-- 在路由页面中获取当前页的信息 -->
-            @ChildContent
+        @ChildContent
+        @* <AuthorizeView>
+            <Authorized>
+            </Authorized>
+            <NotAuthorized>
+                未授权
+            </NotAuthorized>
+        </AuthorizeView> *@
     </ErrorCatcher>
 </ScrollBar>
 

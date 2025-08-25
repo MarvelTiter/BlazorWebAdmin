@@ -20,9 +20,8 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
 {
     private readonly IUserStore userStore;
     private readonly NavigationManager navigation;
-    private readonly IAuthService authService;
+    private readonly IAuthService? authService;
     private readonly IProjectSettingService settingService;
-    private readonly ILogger<PersistingRevalidatingAuthenticationStateProvider> logger;
     private readonly PersistentComponentState state;
     private readonly PersistingComponentStateSubscription subscription;
     private Task<AuthenticationState>? authenticationStateTask;
@@ -31,17 +30,15 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
         , PersistentComponentState persistentComponentState
         , IUserStore userStore
         , NavigationManager navigation
-        , IAuthService authService
         , IProjectSettingService settingService
-        , ILogger<PersistingRevalidatingAuthenticationStateProvider> logger
-        , IHttpContextAccessor httpContextAccessor) : base(loggerFactory)
+        , IHttpContextAccessor httpContextAccessor
+        , IServiceProvider provider) : base(loggerFactory)
     {
         state = persistentComponentState;
         this.userStore = userStore;
         this.navigation = navigation;
-        this.authService = authService;
+        this.authService = provider.GetService<IAuthService>();
         this.settingService = settingService;
-        this.logger = logger;
         AuthenticationStateChanged += OnAuthenticationStateChanged;
         subscription = state.RegisterOnPersisting(OnPersistingAsync, RenderMode.InteractiveWebAssembly);
         if (httpContextAccessor.HttpContext?.User.GetCookieClaimsIdentity(out var identity) == true && identity!.IsAuthenticated == true)
@@ -58,6 +55,8 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
     protected override async Task<bool> ValidateAuthenticationStateAsync(AuthenticationState authenticationState,
         CancellationToken cancellationToken)
     {
+        if (authService is null)
+            return true;
         var ok = await authService.CheckUserStatusAsync(Current);
         return ok;
     }

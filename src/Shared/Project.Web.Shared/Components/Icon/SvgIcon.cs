@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Rendering;
+using Project.Constraints.UI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,19 +11,9 @@ namespace Project.Web.Shared.Components;
 
 public class SvgIcon : ComponentBase
 {
-    protected override void BuildRenderTree(RenderTreeBuilder builder)
-    {
-        //builder.OpenElement(0, HtmlTag);
-        //if (OnClick.HasDelegate)
-        //{
-        //    builder.AddAttribute(1, "onclick", OnClick);
-        //}
-
-        //builder.AddContent(2, IconMarkuString);
-        //builder.CloseComponent();
-        builder.AddContent(0, IconMarkuString);
-    }
-
+    //private MarkupString IconMarkuString;
+    private SvgParsingResult? svgData;
+    [Obsolete]
     [Parameter] public string HtmlTag { get; set; } = "i";
     [Parameter] public string? IconName { get; set; }
 
@@ -30,7 +21,6 @@ public class SvgIcon : ComponentBase
     public Dictionary<string, object> AdditionalParameters { get; set; } = [];
 
     [Inject, NotNull] ISvgIconService? SvgService { get; set; }
-    private MarkupString IconMarkuString;
 
     [Parameter] public string? ClassName { get; set; }
 
@@ -43,8 +33,9 @@ public class SvgIcon : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var result = await SvgService.GetIcon(IconName);
-        LoadSvgData(result.Payload);
+        var result = await SvgService.GetIconAsync(IconName);
+        //LoadSvgData(result.Payload?.OriginalContent);
+        svgData = result.Payload;
     }
 
     public override async Task SetParametersAsync(ParameterView parameters)
@@ -70,24 +61,44 @@ public class SvgIcon : ComponentBase
         await base.OnParametersSetAsync();
         if (shouldUpdate)
         {
-            var result = await SvgService.GetIcon(IconName);
-            LoadSvgData(result.Payload);
+            var result = await SvgService.GetIconAsync(IconName);
+            //LoadSvgData(result.Payload?.OriginalContent);
+            svgData = result.Payload;
             shouldUpdate = false;
         }
     }
 
-    private void LoadSvgData(string? svgContent)
+    //private void LoadSvgData(string? svgContent)
+    //{
+    //    if (string.IsNullOrEmpty(svgContent))
+    //    {
+    //        IconMarkuString = new MarkupString($"<span class='iconfont {ClassName} icon-{IconName}'></span>");
+    //    }
+    //    else
+    //    {
+    //        //var style = Style ?? $"font-size: {FontSize ?? "18px"}";
+    //        var insertIndex = svgContent.IndexOf("<svg") + 4;
+    //        svgContent = svgContent.Insert(insertIndex, $" class='svg-icon {ClassName}' style='{Style}'");
+    //        IconMarkuString = new MarkupString(svgContent);
+    //    }
+    //}
+
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (string.IsNullOrEmpty(svgContent))
+        if (svgData is not null)
         {
-            IconMarkuString = new MarkupString($"<span class='iconfont {ClassName} icon-{IconName}'></span>");
-        }
-        else
-        {
-            //var style = Style ?? $"font-size: {FontSize ?? "18px"}";
-            var insertIndex = svgContent.IndexOf("<svg") + 4;
-            svgContent = svgContent.Insert(insertIndex, $" class='svg-icon {ClassName}' style='{Style}'");
-            IconMarkuString = new MarkupString(svgContent);
+            builder.OpenElement(0, "svg");
+            builder.AddMultipleAttributes(1, svgData.Attributes);
+            if (OnClick.HasDelegate)
+            {
+                builder.AddAttribute(2, "onclick", OnClick);
+                //builder.AddAttribute(2, "style", "cursor:pointer");
+            }
+            builder.AddAttribute(3, "class", $"svg-icon {ClassName}");
+            if (!string.IsNullOrEmpty(Style))
+                builder.AddAttribute(4, "style", Style);
+            builder.AddMarkupContent(5, svgData.InnerContent);
+            builder.CloseElement();
         }
     }
 }

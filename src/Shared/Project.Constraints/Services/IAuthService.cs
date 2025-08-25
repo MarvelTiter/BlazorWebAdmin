@@ -15,6 +15,10 @@ public interface IAuthService
     [LogInfo(Module = "登录模块", Action = "用户登录")]
     Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm);
 
+    /// <summary>
+    /// 不能直接调用。退出登录请使用<see cref="IAuthenticationStateProvider.ClearState"/>
+    /// </summary>
+    /// <returns></returns>
     [WebMethod(Method = WebMethod.Get, Route = "logout")]
     [LogInfo(Module = "登录模块", Action = "用户登出")]
     Task SignOutAsync();

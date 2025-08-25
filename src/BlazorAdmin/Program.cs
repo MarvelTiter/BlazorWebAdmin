@@ -47,9 +47,8 @@ builder.AddServerProject(setting =>
 #endif
 #if (ExcludeDefaultService)
     // setting.ConfigureSettingProviderType<YourSetting>();
-    setting.ConfigureSettingProviderType<BasicSetting>();
+    // setting.ConfigureSettingProviderType<BasicSetting>();
     // setting.ConfigureAuthService<YourAuthenticationService>();
-    throw new NotImplementedException();
 #endif
 
 });

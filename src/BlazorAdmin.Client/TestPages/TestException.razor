@@ -8,7 +8,7 @@
 @using Project.Web.Shared.ComponentHelper
 @inherits AppComponentBase
 @inject ILogger<TestException> Logger
-@attribute [PageInfo(Title = "Exception测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
+@attribute [PageInfo(Title = "Exception测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 异常测评：@(UI.BuildButton(this).Text("触发异常").OnClick(() => ThrowException("ButtonClick")).Render())
 <MCard Title="生命周期异常">
     <p>@(UI.BuildButton(this).Text("触发OnInitialized异常").OnClick(() => Navigator.NavigateTo("/testexception?LifeTime=1", true)).Render())</p>

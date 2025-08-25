@@ -1,0 +1,26 @@
+﻿@page "/Account/AccessDenied"
+@inject NavigationManager Navigator
+@code {
+    public string? Redirect { get; set; }
+    [CascadingParameter] public Task<AuthenticationState> AuthState { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var full = Navigator.ToAbsoluteUri(Navigator.Uri);
+        Redirect = HttpUtility.ParseQueryString(full.Query).Get("ReturnUrl");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthState is not null)
+        {
+            var authState = await AuthState;
+            if (authState.User.Identity?.IsAuthenticated == true && !string.IsNullOrWhiteSpace(Redirect))
+            {
+                Navigator.NavigateTo(Redirect);
+            }
+        }
+        await base.OnInitializedAsync();
+    }
+}

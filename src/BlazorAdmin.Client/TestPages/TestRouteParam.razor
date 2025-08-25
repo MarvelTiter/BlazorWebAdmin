@@ -1,6 +1,6 @@
 ﻿@page "/testrouteparam"
 @using Project.Constraints.Common.Attributes
-@attribute [PageInfo(Title = "路由参数测试", Icon = "fa fa-question-circle-o", ForceShowOnNavMenu = true, GroupId = "test")]
+@attribute [PageInfo(Title = "路由参数测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 @inject NavigationManager Navigation
 <span class="nav-p" @onclick="@(e => NavigateTo("中文123"))">中文参数123</span>
 <span class="nav-p" @onclick="@(e => NavigateTo("中文456"))">中文参数456</span>
