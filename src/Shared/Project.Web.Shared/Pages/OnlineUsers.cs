@@ -9,7 +9,7 @@ namespace Project.Web.Shared.Pages;
 
 [Route("/userdashboard")]
 [PageInfo(Icon = "svg-setting", Title = "在线用户", Sort = 999)]
-[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin, admin", Policy = "AdminPolicy")]
 public class OnlineUsers : ModelPage<ClientInfo, GenericRequest<ClientInfo>>
 {
     [Inject, NotNull] IClientService? ClientService { get; set; }

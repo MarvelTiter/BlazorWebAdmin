@@ -38,7 +38,13 @@ builder.Services.AddClientProject(builder.Configuration, setting =>
 }, out _);
 builder.Services.AddStateContainers();
 builder.Services.AutoInjectWasm();
-builder.Services.AddAuthorizationCore();
+builder.Services.AddAuthorizationCore(o =>
+{
+    o.AddPolicy("AdminPolicy", policy =>
+    {
+        policy.RequireUserName("admin");
+    });
+});
 builder.Services.AddScoped<IAuthService, AuthServiceApiInvoker>();
 builder.Services.AddScoped<IClientService, ClientServiceApiInvoker>();
 builder.Services.AddScoped<ISvgIconService, SvgIconServiceApiInvoker>();

@@ -115,7 +115,14 @@ public class BlazorAdminAuthenticationService(IServiceProvider services) : Defau
         var context = Services.GetRequiredService<IExpressionContext>();
         //var config = Services.GetService<IOptionsMonitor<Token>>()!;
         var u = await context.Select<User>().Where(u => u.UserId == userInfo.UserId).FirstAsync();
-        return u?.Password.ToHash() == userInfo.PasswordHash;
+
+        var passwordEqual = u?.Password.ToHash() == userInfo.PasswordHash;
+
+        var roles = await context.Select<UserRole>().Where(ur => ur.UserId == userInfo.UserId).ToListAsync(r => r.RoleId);
+        
+        var rolesChanged = roles.Count != userInfo.Roles.Length || roles.Except(userInfo.Roles).Any();
+
+        return passwordEqual && !rolesChanged;
     }
 
     public override async Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd)

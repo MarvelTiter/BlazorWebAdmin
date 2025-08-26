@@ -44,6 +44,13 @@ public static class WebService
                 }
             };
         });
+        builder.Services.AddAuthorizationCore(o =>
+        {
+            o.AddPolicy("AdminPolicy", policy =>
+            {
+                policy.RequireUserName("admin");
+            });
+        });
         var useProxy = builder.Configuration.GetValue<bool>("AppSetting:UseAspectProxy");
         if (useProxy)
         {

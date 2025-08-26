@@ -15,9 +15,17 @@ builder.Services.AddRazorComponents()
     .AddHubOptions(option =>
     {
         option.MaximumReceiveMessageSize = 1024 * 1024 * 2;
-    })
-    .AddInteractiveWebAssemblyComponents();
-
+#if DEBUG
+    }).AddInteractiveWebAssemblyComponents();
+#else
+#if (UseClientProject)
+    }).AddInteractiveWebAssemblyComponents();
+#endif
+#if (!UseClientProject)
+    // }).AddInteractiveWebAssemblyComponents();
+    });
+#endif
+#endif
 Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
 //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 //builder.Services.AddAntDesignUI();
@@ -103,7 +111,15 @@ app.MapControllers();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
+#if DEBUG
+#else
+#if (UseClientProject)
     .AddInteractiveWebAssemblyRenderMode()
+#endif
+#if (!UseClientProject)
+    //.AddInteractiveWebAssemblyRenderMode()
+#endif
+#endif
     .AddAdditionalAssemblies([.. AppConst.AdditionalAssemblies]);
 
 

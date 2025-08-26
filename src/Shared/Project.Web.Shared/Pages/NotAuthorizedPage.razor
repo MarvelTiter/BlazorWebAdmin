@@ -1,11 +1,13 @@
-﻿<div class="bg">
+﻿@inherits AppComponentBase
+
+<div class="bg">
     <div class="container">
         <div class="icon">🚫</div>
         <h1>权限不足</h1>
         <p>抱歉，您没有足够的权限访问此页面。这可能是因为：</p>
-        <ul style="text-align: left; color: #747d8c; margin-bottom: 25px; padding-left: 20px;">
+        <ul style="text-align: left; color: #747d8c; margin-bottom: 25px; padding-left: 80px;">
             <li>您的账户权限级别不够</li>
-            <li>您尚未登录或会话已过期</li>
+            <li>您尚未登录或权限变更 @(UI.BuildButton(this).Primary().Text("重新登录").OnClick(ReLogin).Render())</li>
             <li>此资源需要特殊授权</li>
         </ul>
 
@@ -14,3 +16,10 @@
         </div>
     </div>
 </div>
+
+@code{
+    private async Task ReLogin()
+    {
+        await AuthenticationStateProvider.ClearState();
+    }
+}

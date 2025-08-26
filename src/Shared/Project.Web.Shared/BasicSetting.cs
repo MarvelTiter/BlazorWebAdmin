@@ -30,7 +30,7 @@ public class BasicSetting : IProjectSettingService //, IDisposable
         AppSetting = services.GetRequiredService<IOptionsMonitor<AppSetting>>();
     }
 
-    public virtual TimeSpan RevalidationInterval => TimeSpan.FromMinutes(5);
+    public virtual TimeSpan RevalidationInterval => TimeSpan.FromMinutes(2);
 
     /// <summary>
     /// 在登录成功后调用此方法以设置当前用户信息
