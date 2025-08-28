@@ -19,13 +19,13 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
     public event Func<KeyboardEventArgs, Task>? OnKeyUp;
     public event Func<Task>? OnThemeChanged;
     private readonly List<IAddtionalInterceptor> initActions = [];
-    [Inject][NotNull] private IAppSession? Context { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter, NotNull] public Type? DefaultLayout { get; set; }
-    [Inject][NotNull] private IServiceProvider? Services { get; set; }
-    [Inject][NotNull] private IJSRuntime? Js { get; set; }
-    [Inject][NotNull] private IProjectSettingService? SettingService { get; set; }
-    [Inject][NotNull] private IProtectedLocalStorage? LocalStorage { get; set; }
+    [Inject, NotNull] private IAppSession? Context { get; set; }
+    [Inject, NotNull] private IServiceProvider? Services { get; set; }
+    [Inject, NotNull] private IJSRuntime? Js { get; set; }
+    [Inject, NotNull] private IProjectSettingService? SettingService { get; set; }
+    [Inject, NotNull] private IProtectedLocalStorage? LocalStorage { get; set; }
     [Inject, NotNull] IOptions<Token>? Token { get; set; }
     [Inject, NotNull] private ILogger<AppRoot>? Logger { get; set; }
     [Inject, NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
@@ -59,7 +59,7 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
     protected override void OnInitialized()
     {
         Context.RouterStore.DataChangedEvent += StateHasChanged;
-        loadedHandler = Context.RegisterLoadedHandler(Context_OnLoadedAsync);
+        loadedHandler = Context.RegisterLoadedHandler(OnLoadedAsync);
         registerHandlers.Add(Context.RouterStore.RegisterRouterChangingHandler(SettingService.RouterChangingAsync));
         registerHandlers.Add(Context.RouterStore.RegisterRouterMetaFilterHandler(SettingService.RouteMetaFilterAsync));
         registerHandlers.Add(Context.RegisterLoginSuccessHandler(SettingService.LoginSuccessAsync));
@@ -89,12 +89,12 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
             {
                 await Context.NotifyLoginSuccessAsync();
             }
-            await Context.RouterStore.InitMenusAsync(AuthenticationStateProvider?.Current);
+            await Context.RouterStore.InitMenusAsync(AuthenticationStateProvider.Current);
         }
     }
     private async Task NoneOperation()
     {
-        if (Context.AppStore.Working)
+        if (Context.AppStore.Working || AuthenticationStateProvider.AuthService is null)
         {
             return;
         }
@@ -110,7 +110,7 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
         return Context.RouterStore.LocationChangingHandlerAsync(context.TargetLocation);
     }
 
-    private Task Context_OnLoadedAsync()
+    private Task OnLoadedAsync()
     {
         loadedHandler?.Dispose();
         Context.Loaded = true;

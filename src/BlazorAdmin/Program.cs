@@ -8,6 +8,7 @@ using Project.AppCore.Services;
 using Project.Constraints;
 using Project.Web.Shared;
 using MT.LightTask;
+using Project.Constraints.Services;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -37,6 +38,10 @@ builder.AddServerProject(setting =>
     setting.App.Company = "Marvel";
 #if DEBUG
     var appAssembly = typeof(BlazorAdmin.Client._Imports).Assembly;
+    setting.ConfigurePage(locator =>
+    {
+        locator.SetDashboardType<BlazorAdmin.Client.TestPages.TestDashboard>();
+    });
 #else
 #if (UseClientProject)
     var appAssembly  = typeof(BlazorAdmin.Client._Imports).Assembly;

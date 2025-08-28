@@ -1,0 +1,36 @@
+﻿@using Project.Constraints.Page
+@using Project.Constraints.PageHelper
+@using Project.Web.Shared.ComponentHelper
+@using Project.Web.Shared.Components
+@inherits AppComponentBase
+@implements IRoutePage
+<JsTimer Interval="1000" Callback="Update"></JsTimer>
+<MCard>
+    <h1>测试主页</h1>
+</MCard>
+<MCard>
+    <h2>
+        会话创建时间<FontIcon IconName="fa fa-comment"></FontIcon>: @(User?.UserInfo?.CreatedTime.ToString("yyyy-MM-dd HH:mm:ss"))
+    </h2>
+</MCard>
+<MCard>
+    <h2>
+        会话持续时间<FontIcon IconName="fa fa-comment"></FontIcon>: @((DateTime.Now - User?.UserInfo?.CreatedTime)?.ToString("dd\\-hh\\:mm\\:ss"))
+    </h2>
+</MCard>
+
+@code {
+    private Task Update()
+    {
+        // if (User?.UserInfo != null)
+        // {
+        //     User.UserInfo.ActiveTime = DateTime.Now;
+        // }
+
+        return InvokeAsync(StateHasChanged);
+    }
+    public string? GetTitle()
+    {
+        return "测试主页";
+    }
+}

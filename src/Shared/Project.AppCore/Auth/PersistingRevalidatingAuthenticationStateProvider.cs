@@ -20,7 +20,6 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
 {
     private readonly IUserStore userStore;
     private readonly NavigationManager navigation;
-    private readonly IAuthService? authService;
     private readonly IProjectSettingService settingService;
     private readonly PersistentComponentState state;
     private readonly PersistingComponentStateSubscription subscription;
@@ -37,8 +36,8 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
         state = persistentComponentState;
         this.userStore = userStore;
         this.navigation = navigation;
-        this.authService = provider.GetService<IAuthService>();
         this.settingService = settingService;
+        AuthService = provider.GetService<IAuthService>();
         AuthenticationStateChanged += OnAuthenticationStateChanged;
         subscription = state.RegisterOnPersisting(OnPersistingAsync, RenderMode.InteractiveWebAssembly);
         if (httpContextAccessor.HttpContext?.User.GetCookieClaimsIdentity(out var identity) == true && identity!.IsAuthenticated == true)
@@ -47,6 +46,7 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
             userStore.SetUser(u);
         }
     }
+    public IAuthService? AuthService { get; }
 
     // 重写RevalidationInterval属性，设置验证间隔时间为5分钟
     protected override TimeSpan RevalidationInterval => settingService.RevalidationInterval;
@@ -55,9 +55,9 @@ public sealed class PersistingRevalidatingAuthenticationStateProvider : Revalida
     protected override async Task<bool> ValidateAuthenticationStateAsync(AuthenticationState authenticationState,
         CancellationToken cancellationToken)
     {
-        if (authService is null)
+        if (AuthService is null)
             return true;
-        var ok = await authService.CheckUserStatusAsync(Current);
+        var ok = await AuthService.CheckUserStatusAsync(Current);
         return ok;
     }
 

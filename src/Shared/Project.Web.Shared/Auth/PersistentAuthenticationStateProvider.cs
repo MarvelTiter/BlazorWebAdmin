@@ -18,7 +18,7 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
     private readonly IUserStore userStore;
     private readonly NavigationManager navigation;
     private readonly IProjectSettingService settingService;
-    private readonly IAuthService? authService;
+    public IAuthService? AuthService { get; }
 
     private CancellationTokenSource? roopTokenSource;
 
@@ -39,7 +39,7 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
         this.userStore = userStore;
         this.navigation = navigation;
         this.settingService = settingService;
-        this.authService = provider.GetService<IAuthService>();
+        AuthService = provider.GetService<IAuthService>();
         this.logger = logger;
 
         // 从持久化状态中获取用户信息，如果存在，则设置用户信息并更新认证状态
@@ -79,7 +79,7 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
     {
         try
         {
-            if (authService is null)
+            if (AuthService is null)
             {
                 return;
             }
@@ -91,7 +91,7 @@ public class PersistentAuthenticationStateProvider : AuthenticationStateProvider
                     try
                     {
                         await Task.Delay(settingService.RevalidationInterval, cancellationToken);
-                        var isValid = await authService.CheckUserStatusAsync(Current);
+                        var isValid = await AuthService.CheckUserStatusAsync(Current);
                         if (!isValid)
                         {
                             await ClearState();

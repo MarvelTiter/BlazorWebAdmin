@@ -1,13 +1,15 @@
+﻿using Project.Constraints.PageHelper;
 using Project.Constraints.UI.Extensions;
 using Project.Web.Shared.Utils;
 
 namespace Project.Web.Shared.Pages;
 
-public partial class Dashboard
+public partial class Dashboard //: IRoutePage
 {
     private Type? homeType;
+    private IRoutePage? homePage;
     [Inject][NotNull] private IPageLocatorService? Locator { get; set; }
-
+    [Inject, NotNull] IRouterStore? RouterStore { get; set; }
     private Task Update()
     {
         // if (User?.UserInfo != null)
@@ -37,7 +39,38 @@ public partial class Dashboard
 
         }).Build();
 #else
-        return b => b.Span().Build();
+        return b => { };
 #endif
     }
+
+    private RenderFragment RenderCustomHomePage()
+    {
+        if (homeType is null)
+        {
+            return b =>
+            {
+                b.AddContent(0, "未找到首页组件，请联系管理员配置");
+            };
+        }
+        return b =>
+        {
+            b.OpenComponent(0, homeType);
+            b.AddComponentReferenceCapture(1, obj =>
+            {
+                homePage = obj as IRoutePage;
+                //if (RouterStore.Current?.RouteId == "Home")
+                //{
+                //    RouterStore.Current.Title = (homePage?.GetTitle() ?? "主页").AsContent();
+                //}
+            });
+            b.CloseComponent();
+        };
+    }
+
+    //public string? GetTitle()
+    //{
+    //    if (homeType is null)
+    //        return null;
+    //    return homePage?.GetTitle() ?? null;
+    //}
 }

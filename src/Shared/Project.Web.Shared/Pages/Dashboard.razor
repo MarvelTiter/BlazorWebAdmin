@@ -1,10 +1,9 @@
 ﻿@page "/"
 @inherits AppComponentBase
 @attribute [PageInfo(Icon = "home", Id = "Home", Pin = true, Sort = 0, Title = "主页")]
-
-<JsTimer Interval="1000" Callback="Update"></JsTimer>
 @if (homeType == null)
 {
+    <JsTimer Interval="1000" Callback="Update"></JsTimer>
     <MCard>
         <h2>
             会话创建时间<FontIcon IconName="fa fa-comment"></FontIcon>: @(User?.UserInfo?.CreatedTime.ToString("yyyy-MM-dd HH:mm:ss"))
@@ -18,28 +17,8 @@
 }
 else
 {
-    <DynamicComponent Type="homeType"></DynamicComponent>
+    @* <DynamicComponent Type="homeType"></DynamicComponent> *@
+    @RenderCustomHomePage()
 }
 
-@* <MCard> *@
-@*     <div style="display:flex;gap:5px;flex-wrap:wrap;"> *@
-@*         @for (int i = 0; i < Project.Web.Shared.Utils.FontAwesomeHelper.AllIcons().Length; i++) *@
-@*         { *@
-@*             var index = i; *@
-@*             var icon = Project.Web.Shared.Utils.FontAwesomeHelper.AllIcons()[i]; *@
-@*             <span> *@
-@*                 <span>@(index + 1)</span> *@
-@*                 <FontIcon Icon="@($"fa fa-{icon}")"></FontIcon> *@
-@*             </span> *@
-@*         } *@
-@*     </div> *@
-@* </MCard> *@
-
 @CurrentRenderMode()
-@* @{ *@
-@*     var icons = Assets.Where(a => a.Url.EndsWith(".svg")).ToList(); *@
-@* } *@
-@* @foreach (var i in icons) *@
-@* { *@
-@*     <p>@i.Url, @i.Properties.FirstOrDefault()?.Value</p> *@
-@* } *@

@@ -13,7 +13,7 @@ public class TableButtonAttribute : Attribute
     /// <summary>
     /// 委托签名
     /// <code>
-    /// public string LabelExpressionImpl(TData data)
+    /// public string LabelExpressionImpl(TableButtonContext&lt;TData&gt; ctx)
     /// </code>
     /// </summary>
     public string? LabelExpression { get; set; }
