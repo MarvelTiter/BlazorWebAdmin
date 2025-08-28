@@ -9,11 +9,11 @@ using Project.AppCore.Auth;
 using Project.Constraints.Common.Attributes;
 using Project.Constraints.Models;
 using Project.Constraints.Options;
+using Project.Constraints.Page;
 using Project.Constraints.Services;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.Utils;
 using Project.Web.Shared.Layouts;
-using Project.Web.Shared.Pages;
 
 namespace BlazorAdmin;
 
@@ -29,7 +29,7 @@ public class Login : SystemPageIndex<Login>, ILoginPage
     [CascadingParameter, NotNull] private HttpContext? HttpContext { get; set; }
     public bool Loading { get; set; }
     public string? Redirect { get; set; }
-
+    protected override bool CascadingSelf => true;
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -82,7 +82,7 @@ public class Login : SystemPageIndex<Login>, ILoginPage
         }
     }
 
-    public override Type? GetPageType(IPageLocatorService customSetting)
+    protected override Type? GetPageType(IPageLocatorService customSetting)
     {
         return customSetting.GetLoginPageType();
     }

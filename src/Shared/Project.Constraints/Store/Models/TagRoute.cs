@@ -3,7 +3,7 @@ using Project.Constraints.PageHelper;
 
 namespace Project.Constraints.Store.Models;
 
-public class TagRoute : RouterMeta
+public record RouteTag : RouteMeta, IRouteInfo //: RouteMeta
 {
     public bool Closable { get; set; } = true;
     public DateTime StartTime { get; set; } = DateTime.Now;
@@ -13,18 +13,24 @@ public class TagRoute : RouterMeta
     public bool Panic { get; set; }
     public Exception? Exception { get; set; }
     public bool Rendered { get; set; }
+    public RouteMenu? Menu { get; }
+
+    public RouteTag(RouteMenu? menu)
+    {
+        Menu = menu;
+    }
 }
 
 public static class TagRouteHelper
 {
-    public static void SetActive(this TagRoute route, bool active)
+    public static void SetActive(this RouteTag route, bool active)
     {
         if (active) route.ActiveTime = DateTime.Now;
         route.IsActive = active;
         // route.Rendered = active;
     }
 
-    public static void TrySetDisactive(this TagRoute route, WeakReference<object?> pageInstance)
+    public static void TrySetDisactive(this RouteTag route, WeakReference<object?> pageInstance)
     {
         route.SetActive(false);
         if (pageInstance.TryGetTarget(out var page) && page is IRoutePage rp)
@@ -34,7 +40,7 @@ public static class TagRouteHelper
         }
     }
 
-    public static void Drop(this TagRoute route)
+    public static void Drop(this RouteTag route)
     {
         //route.Body = null;
         route.Title = null;

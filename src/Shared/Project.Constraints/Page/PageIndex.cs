@@ -9,6 +9,7 @@ namespace Project.Constraints.Page;
 /// <summary>
 /// 自定义页面
 /// </summary>
+[Obsolete("使用SystemPageIndex")]
 public abstract class PageIndex : ComponentBase, IRoutePage
 {
     [Inject, NotNull] IPageLocatorService? PageLocator { get; set; }

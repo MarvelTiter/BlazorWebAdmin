@@ -45,14 +45,14 @@ public interface IProjectSettingService
     /// </summary>
     /// <param name="route"></param>
     /// <returns></returns>
-    Task<bool> RouterChangingAsync(TagRoute route);
+    Task<bool> RouterChangingAsync(RouteTag route);
 
     /// <summary>
     /// 初始化菜单钩子
     /// </summary>
     /// <param name="meta"></param>
     /// <returns></returns>
-    Task<bool> RouteMetaFilterAsync(RouterMeta meta);
+    Task<bool> RouteMetaFilterAsync(RouteMeta meta);
 
     /// <summary>
     /// 初次显示主页

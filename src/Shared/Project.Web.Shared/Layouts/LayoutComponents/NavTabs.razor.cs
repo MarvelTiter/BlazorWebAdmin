@@ -12,7 +12,7 @@ public partial class NavTabs
     private bool showContextmenu = false;
     private string contextmenuLeft = "";
     private string contextmenuTop = "";
-    private TagRoute? current;
+    private RouteTag? current;
     private HorizontalScroll? horizontalScroll;
     private ElementReference? leftButton;
     private ElementReference? rightButton;
@@ -55,7 +55,7 @@ public partial class NavTabs
 
     private ClassHelper ContextmenuClass => ClassHelper.Default.AddClass("context").AddClass("open", () => showContextmenu);
 
-    private void CloseTag(TagRoute state)
+    private void CloseTag(RouteTag state)
     {
         var index = Router.TopLinks.IndexOf(state);
         Router.Remove(state.RouteUrl);
@@ -76,7 +76,7 @@ public partial class NavTabs
 
     private void NavNext() => Router.NavigateToNextPage();
 
-    private void OpenContextMenu(MouseEventArgs e, TagRoute route)
+    private void OpenContextMenu(MouseEventArgs e, RouteTag route)
     {
         current = route;
         contextmenuLeft = $"{e.ClientX + 10}px";
@@ -114,6 +114,7 @@ public partial class NavTabs
     private async Task CloseSelf()
     {
         if (current == null) return;
+        if (current.Pin) return;
         CloseTag(current);
         await CloseMenu();
     }
@@ -121,7 +122,10 @@ public partial class NavTabs
     private Task CloseMenu()
     {
         if (showContextmenu)
+        {
             showContextmenu = false;
+            StateHasChanged();
+        }
         RootLayout.BodyClickEvent -= RootLayout_BodyClickEvent;
         return Task.CompletedTask;
     }
