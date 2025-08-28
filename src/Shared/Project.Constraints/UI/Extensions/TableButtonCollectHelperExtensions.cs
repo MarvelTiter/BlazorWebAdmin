@@ -95,6 +95,6 @@ public static class TableButtonCollectHelperExtensions
         }
         if (method is null)
             return null;
-        return CreateMethodDelegate<TDelegate>(method, method.IsStatic ? null : instance);
+        return CreateMethodDelegate<TDelegate>(method, instance);
     }
 }

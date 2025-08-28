@@ -9,7 +9,7 @@ public static class RouterStoreExtensions
         return CompareUrl(store.CurrentUrl, url);
     }
 
-    public static bool Compare(this IRouterStore store, TagRoute other)
+    public static bool Compare(this IRouterStore store, RouteTag other)
     {
         return store.Current == other;
     }

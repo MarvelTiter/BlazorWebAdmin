@@ -1,6 +1,6 @@
 ﻿@page "/"
-@inherits AppComponentBase
 @attribute [PageInfo(Icon = "home", Id = "Home", Pin = true, Sort = 0, Title = "主页")]
+@inherits SystemPageIndex<Dashboard>
 @if (homeType == null)
 {
     <JsTimer Interval="1000" Callback="Update"></JsTimer>

@@ -10,7 +10,7 @@ namespace BlazorAdmin.Client.TestPages;
 [Route("/testlocator")]
 [PageInfo(Title = "Locator测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 #endif
-public class LocatorTest : PageIndex
+public class LocatorTest : SystemPageIndex<LocatorTest>
 {
     protected override Type? GetPageType(IPageLocatorService pageLocator)
     {

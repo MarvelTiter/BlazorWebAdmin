@@ -1,12 +1,12 @@
 ﻿namespace Project.Constraints.Store.Models;
 
-public class RouteMenu : RouterMeta
+public record RouteMenu : RouteMeta, IRouteInfo
 {
     public RouteMenu()
     {
 
     }
-    public RouteMenu(RouterMeta meta)
+    public RouteMenu(RouteMeta meta)
     {
         RouteId = meta.RouteId;
         RouteUrl = meta.RouteUrl;
@@ -15,7 +15,6 @@ public class RouteMenu : RouterMeta
         Redirect = meta.Redirect;
         Pin = meta.Pin;
         Group = meta.Group;
-        Cache = meta.Cache;
         Sort = meta.Sort;
         IsGroupHeader = meta.IsGroupHeader;
     }

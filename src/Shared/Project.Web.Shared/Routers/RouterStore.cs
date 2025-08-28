@@ -18,14 +18,14 @@ namespace Project.Web.Shared.Routers;
 
 public partial class RouterStore
 {
-    private readonly AsyncHandlerManager<TagRoute, bool> routerChangingHandlerManager = new();
+    private readonly AsyncHandlerManager<RouteTag, bool> routerChangingHandlerManager = new();
 
-    public IDisposable RegisterRouterChangingHandler(Func<TagRoute, Task<bool>> handler)
+    public IDisposable RegisterRouterChangingHandler(Func<RouteTag, Task<bool>> handler)
     {
         return routerChangingHandlerManager.RegisterHandler(handler);
     }
 
-    private async Task<bool> OnRouterChangingAsync(TagRoute tag)
+    private async Task<bool> OnRouterChangingAsync(RouteTag tag)
     {
         bool enable = true;
         if (IsUserDashboard(tag))
@@ -43,14 +43,14 @@ public partial class RouterStore
         return enable && pass;
     }
 
-    private readonly AsyncHandlerManager<RouterMeta, bool> routerMetaFilterHandlerManager = new();
+    private readonly AsyncHandlerManager<RouteMeta, bool> routerMetaFilterHandlerManager = new();
 
-    public IDisposable RegisterRouterMetaFilterHandler(Func<RouterMeta, Task<bool>> handler)
+    public IDisposable RegisterRouterMetaFilterHandler(Func<RouteMeta, Task<bool>> handler)
     {
         return routerMetaFilterHandlerManager.RegisterHandler(handler);
     }
 
-    private async Task<bool> OnRouteMetaFilterAsync(RouterMeta meta)
+    private async Task<bool> OnRouteMetaFilterAsync(RouteMeta meta)
     {
         if (IsUserDashboard(meta))
         {
@@ -76,22 +76,18 @@ public partial class RouterStore
 [AutoInject(ServiceType = typeof(IRouterStore))]
 public partial class RouterStore : StoreBase, IRouterStore
 {
-    private readonly Dictionary<string, TagRoute> pages = [];
+    private readonly Dictionary<string, RouteTag> pages = new(StringComparer.OrdinalIgnoreCase);
 
     //private FrozenDictionary<string, RouteMenu>? frozenMenus;
-    private List<RouteMenu> menus = [];
+    private readonly List<RouteMenu> menus = [];
 
+    private RouteTag? current;
 
-    public List<TagRoute> TopLinks => [.. pages.Values];
+    public List<RouteTag> TopLinks => [.. pages.Values];
 
     public IEnumerable<RouteMenu> Menus => menus; // frozenMenus?.Values ?? [];
 
-    public int Count { get; set; }
-
-    private TagRoute? current;
-    public TagRoute? Current => current ?? pages.GetValueOrDefault("/");
-
-    public RenderFragment? CurrentContent { get; private set; }
+    public RouteTag? Current => current ?? pages.GetValueOrDefault("/");
 
     public WeakReference<object?> CurrentPageInstance { get; set; } = new WeakReference<object?>(null);
     public bool LastRouterChangingCheck => lastRouterChangingCheck;
@@ -99,11 +95,13 @@ public partial class RouterStore : StoreBase, IRouterStore
     protected override void Release()
     {
         pages.Clear();
+        menus.Clear();
+        navigationManager.LocationChanged -= NavigationManager_LocationChanged;
     }
 
     public string CurrentUrl => '/' + navigationManager.ToBaseRelativePath(navigationManager.Uri);
 
-    private TagRoute? preview;
+    private RouteTag? preview;
     private readonly IProjectSettingService settingService;
     private readonly NavigationManager navigationManager;
     private readonly IUserStore userStore;
@@ -152,22 +150,28 @@ public partial class RouterStore : StoreBase, IRouterStore
         {
             // TODO 可能有BUG，先观察观察
             if (menus.Count == 0) return;
-            RouterMeta? meta = menus.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
-            if (meta == null)
+            var menu = menus.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
+            if (menu == default)
             {
-                meta = AllPages.Pages.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
-                if (meta != null)
-                    meta.Cache = false;
+                var meta = AllPages.Pages.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
+                if (meta == default)
+                {
+                    meta = new()
+                    {
+                        RouteId = url,
+                        RouteTitle = url,
+                        RouteUrl = url,
+                    };
+                }
+                menu = new RouteMenu(meta);
             }
-
-            tag = new TagRoute
+            tag = new RouteTag(menu)
             {
-                RouteId = meta?.RouteId ?? url,
-                RouteUrl = AttachFirstSlash(meta?.RouteUrl ?? url),
-                RouteTitle = meta?.RouteTitle,
-                Icon = meta?.Icon ?? "",
-                Pin = meta?.Pin ?? false,
-                Cache = meta?.Cache ?? false,
+                RouteId = menu.RouteId ?? url,
+                RouteUrl = AttachFirstSlash(menu.RouteUrl ?? url),
+                RouteTitle = menu.RouteTitle,
+                Icon = menu.Icon ?? "",
+                Pin = menu.Pin,
             };
             pages[url] = tag;
         }
@@ -176,7 +180,7 @@ public partial class RouterStore : StoreBase, IRouterStore
         lastRouterChangingCheck = await OnRouterChangingAsync(tag);
         if (lastRouterChangingCheck && preview is not null)
         {
-            preview.TrySetDisactive(CurrentPageInstance);
+            preview?.TrySetDisactive(CurrentPageInstance);
         }
 
         return;
@@ -230,7 +234,6 @@ public partial class RouterStore : StoreBase, IRouterStore
                 Current.Title = CurrentUrl.AsContent();
             }
         }
-
         // Current.Rendered = true;
         NotifyChanged();
     }
@@ -245,7 +248,8 @@ public partial class RouterStore : StoreBase, IRouterStore
         pages.Remove(link);
     }
 
-    public string GetLocalizerString(RouterMeta meta)
+    public string GetLocalizerString<T>(T meta)
+        where T : IRouteInfo
     {
         if (!options.CurrentValue.Enabled)
             return meta.RouteTitle;
@@ -280,7 +284,7 @@ public partial class RouterStore : StoreBase, IRouterStore
             return Task.CompletedTask;
         }
 
-        Current.Drop();
+        Current?.Drop();
         GoTo(CurrentUrl);
         return Task.CompletedTask;
     }
@@ -292,16 +296,9 @@ public partial class RouterStore : StoreBase, IRouterStore
 
     public Task Reset()
     {
+        pages.TryGetValue("/", out var homeTag);
+        ArgumentNullException.ThrowIfNull(homeTag);
         pages.Clear();
-        var homeTag = new TagRoute
-        {
-            RouteUrl = "/",
-            RouteId = "Home",
-            RouteTitle = "主页",
-            Icon = "svg-home",
-            Pin = true,
-            IsActive = true
-        };
         pages.Add("/", homeTag);
         preview = homeTag;
         return Task.CompletedTask;
@@ -311,19 +308,28 @@ public partial class RouterStore : StoreBase, IRouterStore
     {
         try
         {
-            await Reset();
-            this.menus = [];
-            //menus.Clear();
-            menus.Add(new()
+            menus.Clear();
+            pages.Clear();
+            var homeMenu = new RouteMenu()
             {
                 RouteId = "Home",
                 RouteUrl = "/",
                 Icon = "svg-home",
                 Group = "ROOT",
-                Cache = true,
                 RouteTitle = "主页",
-            });
-           
+            };
+            var homeTag = new RouteTag(homeMenu)
+            {
+                RouteUrl = "/",
+                RouteId = "Home",
+                RouteTitle = "主页",
+                Icon = "svg-home",
+                Pin = true,
+                IsActive = true
+            };
+            pages.Add("/", homeTag);
+            menus.Add(homeMenu);
+
             IPermission[] savedInfos = [];
             if (userInfo is not null)
             {
@@ -363,7 +369,8 @@ public partial class RouterStore : StoreBase, IRouterStore
         }
     }
 
-    private static bool IsUserDashboard(RouterMeta meta)
+    private static bool IsUserDashboard<T>(T meta)
+        where T : IRouteInfo
     {
         return meta.RouteUrl == "/userdashboard";
     }

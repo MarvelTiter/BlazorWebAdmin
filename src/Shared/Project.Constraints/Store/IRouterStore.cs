@@ -10,12 +10,12 @@ public interface IStore
 
 public interface IRouterStore : IStore, IDisposable
 {
-    IDisposable RegisterRouterChangingHandler(Func<TagRoute, Task<bool>> handler);
-    IDisposable RegisterRouterMetaFilterHandler(Func<RouterMeta, Task<bool>> handler);
+    IDisposable RegisterRouterChangingHandler(Func<RouteTag, Task<bool>> handler);
+    IDisposable RegisterRouterMetaFilterHandler(Func<RouteMeta, Task<bool>> handler);
 
-    List<TagRoute> TopLinks { get; }
+    List<RouteTag> TopLinks { get; }
     IEnumerable<RouteMenu> Menus { get; }
-    TagRoute? Current { get; }
+    RouteTag? Current { get; }
     WeakReference<object?> CurrentPageInstance { get; }
     bool LastRouterChangingCheck { get; }
     string CurrentUrl { get; }
@@ -34,5 +34,6 @@ public interface IRouterStore : IStore, IDisposable
     /// <returns></returns>
     Task InitMenusAsync(UserInfo? userInfo);
     Type? GetRouteType(string routeUrl);
-    string GetLocalizerString(RouterMeta meta);
+    string GetLocalizerString<T>(T meta)
+        where T : IRouteInfo;
 }

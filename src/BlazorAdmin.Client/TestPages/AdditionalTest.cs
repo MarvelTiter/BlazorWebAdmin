@@ -8,7 +8,7 @@ namespace BlazorAdmin.Client.TestPages;
 [AutoInject(ServiceType = typeof(IAddtionalInterceptor))]
 public class AdditionalTest(IPageLocatorService pageLocator) : IAddtionalInterceptor
 {
-    public Task<bool> RouterChangingAsync(TagRoute route)
+    public Task<bool> RouterChangingAsync(RouteTag route)
     {
         Console.WriteLine($"AdditionalTest: RouterChangingAsync: {route.RouteUrl}");
         return Task.FromResult(true);

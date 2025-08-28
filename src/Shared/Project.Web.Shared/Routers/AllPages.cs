@@ -7,11 +7,11 @@ namespace Project.Web.Shared.Routers;
 
 internal static partial class AllPages
 {
-    public static IList<RouterMeta> Pages { get; } = [];
-    public static List<RouterMeta> Groups { get; } = [];
+    public static List<RouteMeta> Pages { get; } = [];
+    public static List<RouteMeta> Groups { get; } = [];
     static AllPages()
     {
-        List<RouterMeta> routes = [];
+        List<RouteMeta> routes = [];
         foreach (var assembly in AppConst.AllAssemblies)
         {
             routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).SelectMany(GetRouterMeta));
@@ -19,7 +19,7 @@ internal static partial class AllPages
         Pages = [.. Groups.Concat(routes).OrderBy(m => m.Sort)];
     }
 
-    private static IEnumerable<RouterMeta> GetRouterMeta(Type t)
+    private static IEnumerable<RouteMeta> GetRouterMeta(Type t)
     {
         var routerAttr = t.GetCustomAttribute<RouteAttribute>()!;
         var info = t.GetCustomAttribute<PageInfoAttribute>();
@@ -60,9 +60,9 @@ internal static partial class AllPages
     private static void TryAddGroup(PageGroupAttribute groupInfo)
     {
         var g = Groups.Find(g => g.RouteId == groupInfo.Id);
-        if (g == null)
+        if (g == default)
         {
-            g = new RouterMeta
+            g = new RouteMeta
             {
                 RouteId = groupInfo.Id,
                 RouteTitle = groupInfo.Name

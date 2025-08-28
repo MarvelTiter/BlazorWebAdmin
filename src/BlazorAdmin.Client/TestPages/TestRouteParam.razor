@@ -2,21 +2,41 @@
 @using Project.Constraints.Common.Attributes
 @attribute [PageInfo(Title = "路由参数测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 @inject NavigationManager Navigation
-<span class="nav-p" @onclick="@(e => NavigateTo("中文123"))">中文参数123</span>
-<span class="nav-p" @onclick="@(e => NavigateTo("中文456"))">中文参数456</span>
-<span class="nav-p" @onclick="@(e => NavigateTo("中文789"))">中文参数789</span>
-<p>
-    <NavLink href="/param/中文123">路由参数123</NavLink>
-</p>
-<p>
-    <NavLink href="/param/中文456">路由参数456</NavLink>
-</p>
-<p>
-    <NavLink href="/param/中文789">路由参数789</NavLink>
-</p>
+<Project.Web.Shared.ComponentHelper.MCard Title="路由参数">
+    <span class="nav-p" @onclick="@(e => NavigateTo("中文123"))">中文参数123</span>
+    <span class="nav-p" @onclick="@(e => NavigateTo("中文456"))">中文参数456</span>
+    <span class="nav-p" @onclick="@(e => NavigateTo("中文789"))">中文参数789</span>
+    <p>
+        <NavLink href="/param/中文123">路由参数123</NavLink>
+    </p>
+    <p>
+        <NavLink href="/param/中文456">路由参数456</NavLink>
+    </p>
+    <p>
+        <NavLink href="/param/中文789">路由参数789</NavLink>
+    </p>
+</Project.Web.Shared.ComponentHelper.MCard>
+<Project.Web.Shared.ComponentHelper.MCard Title="查询参数">
+    <span class="nav-p" @onclick="@(e => NavigateToByQuery("中文123"))">中文参数123</span>
+    <span class="nav-p" @onclick="@(e => NavigateToByQuery("中文456"))">中文参数456</span>
+    <span class="nav-p" @onclick="@(e => NavigateToByQuery("中文789"))">中文参数789</span>
+    <p>
+        <NavLink href="/param/query?id=中文123">路由参数123</NavLink>
+    </p>
+    <p>
+        <NavLink href="/param/query?id=中文456">路由参数456</NavLink>
+    </p>
+    <p>
+        <NavLink href="/param/query?id=中文789">路由参数789</NavLink>
+    </p>
+</Project.Web.Shared.ComponentHelper.MCard>
 @code {
     public void NavigateTo(string id)
     {
         Navigation.NavigateTo($"/param/{id}", replace: true);
+    }
+    public void NavigateToByQuery(string id)
+    {
+        Navigation.NavigateTo($"/param/query?id={id}", replace: true);
     }
 }

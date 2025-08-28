@@ -35,7 +35,7 @@ public class CustomSetting : BasicSetting, IProjectSettingService
         await service.UpdateWaterMarkAsync(CurrentUser?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
     }
 
-    public override Task<bool> RouterChangingAsync(TagRoute route)
+    public override Task<bool> RouterChangingAsync(RouteTag route)
     {
         var service = watermarkServiceFactory.GetWatermarkService();
         service.UpdateWaterMarkAsync(CurrentUser?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), route.RouteTitle);
