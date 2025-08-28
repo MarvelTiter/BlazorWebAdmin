@@ -117,6 +117,7 @@ app.MapControllers();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
 #if DEBUG
+    .AddInteractiveWebAssemblyRenderMode()
 #else
 #if (UseClientProject)
     .AddInteractiveWebAssemblyRenderMode()
