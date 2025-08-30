@@ -527,6 +527,14 @@ public class UIService(
         });
     }
 
+    public RenderFragment RenderIcon(IconInfo icon)
+    {
+        return b => b.Component<Icon>()
+            .SetComponent(i => i.Type, icon.Name)
+            .SetComponent(i => i.Class, icon.Class)
+            .Build();
+    }
+
     public int GetMenuWidth(bool collapsed)
     {
         return collapsed ? 80 : 260;

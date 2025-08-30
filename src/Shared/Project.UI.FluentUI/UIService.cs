@@ -18,6 +18,8 @@ using ButtonType = Project.Constraints.UI.ButtonType;
 using Project.Constraints.UI.Extensions;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.DependencyInjection;
+using IconInfo = Project.Constraints.UI.IconInfo;
+
 namespace Project.UI.FluentUI;
 
 public class UIService(
@@ -399,6 +401,12 @@ public class UIService(
             b.Component<FluentTooltipProvider>().Build();
             b.Component<FluentMessageBarProvider>().Build();
         };
+    }
+
+    public RenderFragment RenderIcon(IconInfo icon)
+    {
+        // return b => b.Component<FluentIcon<Icon>>()
+        throw new NotImplementedException();
     }
 
     public int GetMenuWidth(bool collapsed)

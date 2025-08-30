@@ -4,18 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Project.Constraints.UI;
+
 #pragma warning disable IDE0130
 namespace Project.Web.Shared.Components;
 
-public class MIcon : ComponentBase
+public class MIcon : AppComponentBase
 {
-    [Parameter]
-    public string HtmlTag { get; set; } = "i";
-    [Parameter]
-    public string? IconName { get; set; }
-    [Parameter]
-    public string? ClassName { get; set; }
-    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalParameters { get; set; } = [];
+    [Parameter] public string HtmlTag { get; set; } = "i";
+    [Parameter] public string? IconName { get; set; }
+    [Parameter] public string? ClassName { get; set; }
+    // [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalParameters { get; set; } = [];
 
     [Parameter] public EventCallback OnClick { get; set; }
 
@@ -40,6 +39,9 @@ public class MIcon : ComponentBase
             builder.AddAttribute(5, nameof(FontIcon.OnClick), OnClick);
             builder.CloseComponent();
         }
+        else
+        {
+            builder.AddContent(0, UI.RenderIcon(new(IconName, ClassName)));
+        }
     }
 }
-

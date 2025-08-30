@@ -28,7 +28,7 @@ public interface IUIComponent<TPropModel> : IUIComponent
     IUIComponent<TPropModel> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value);
 }
 
-public interface IClickable<TReturn>
+public interface IClickable<out TReturn>
 {
     TReturn OnClick(Action callback);
     TReturn OnClick(EventCallback callback);
@@ -165,4 +165,6 @@ public interface IUIService
     RenderFragment RenderContainer();
 
     int GetMenuWidth(bool collapsed);
+
+    RenderFragment RenderIcon(IconInfo icon);
 }

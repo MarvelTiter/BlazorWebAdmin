@@ -39,7 +39,7 @@ public static class AppConst
     //}
 
     public static RenderFragment? Footer { get; set; }
-    private static readonly Lazy<List<Assembly>> allAssemblise = new(() => GetAllAssemblies());
+    private static readonly Lazy<List<Assembly>> allAssemblise = new(GetAllAssemblies);
     private static List<Assembly> GetAllAssemblies()
     {
         return [AppAssembly, .. AdditionalAssemblies];
