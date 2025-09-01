@@ -109,6 +109,7 @@ public partial class RouterStore : StoreBase, IRouterStore
     private readonly IOptionsMonitor<CultureOptions> options;
     private readonly ILogger<RouterStore> logger;
     private readonly IOptionsMonitor<AppSetting> setting;
+    private readonly PagesService pagesService;
 
     public RouterStore(IProjectSettingService settingService
         , NavigationManager navigationManager
@@ -116,7 +117,8 @@ public partial class RouterStore : StoreBase, IRouterStore
         , IStringLocalizer<RouterStore> localizer
         , IOptionsMonitor<CultureOptions> options
         , ILogger<RouterStore> logger
-        , IOptionsMonitor<AppSetting> setting)
+        , IOptionsMonitor<AppSetting> setting
+        , PagesService pagesService)
     {
         this.settingService = settingService;
         this.navigationManager = navigationManager;
@@ -125,6 +127,7 @@ public partial class RouterStore : StoreBase, IRouterStore
         this.options = options;
         this.logger = logger;
         this.setting = setting;
+        this.pagesService = pagesService;
         this.navigationManager.LocationChanged += NavigationManager_LocationChanged;
     }
 
@@ -153,7 +156,7 @@ public partial class RouterStore : StoreBase, IRouterStore
             var menu = menus.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
             if (menu == default)
             {
-                var meta = AllPages.Pages.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
+                var meta = pagesService.Pages.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
                 if (meta == default)
                 {
                     meta = new()
@@ -336,7 +339,7 @@ public partial class RouterStore : StoreBase, IRouterStore
                 savedInfos = [.. await settingService.GetUserPowersAsync(userInfo)];
             }
 
-            foreach (var meta in AllPages.Pages.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
+            foreach (var meta in pagesService.Pages.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
             {
                 if (menus.Any(m => m.RouteId == meta.RouteId)) continue;
                 var enable = await OnRouteMetaFilterAsync(meta);
@@ -377,8 +380,9 @@ public partial class RouterStore : StoreBase, IRouterStore
 
     private static bool EnableShowUserDashboard(IUserStore _, AppSetting setting) => setting.ClientHubOptions.Enable;
 
+    [Obsolete("没什么用")]
     public Type? GetRouteType(string routeUrl)
     {
-        return AllPages.Pages.FirstOrDefault(meta => meta.RouteUrl == routeUrl)?.RouteType;
+        return pagesService.Pages.FirstOrDefault(meta => meta.RouteUrl == routeUrl)?.RouteType;
     }
 }

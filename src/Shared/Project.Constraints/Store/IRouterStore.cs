@@ -33,6 +33,7 @@ public interface IRouterStore : IStore, IDisposable
     /// <param name="userInfo"></param>
     /// <returns></returns>
     Task InitMenusAsync(UserInfo? userInfo);
+    [Obsolete("没什么用")]
     Type? GetRouteType(string routeUrl);
     string GetLocalizerString<T>(T meta)
         where T : IRouteInfo;

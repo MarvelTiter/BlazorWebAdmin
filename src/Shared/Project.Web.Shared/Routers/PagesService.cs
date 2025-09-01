@@ -5,26 +5,27 @@ using System.Text.RegularExpressions;
 
 namespace Project.Web.Shared.Routers;
 
-internal static partial class AllPages
+[AutoInject(LifeTime = InjectLifeTime.Singleton)]
+public partial class PagesService
 {
-    public static List<RouteMeta> Pages { get; } = [];
-    public static List<RouteMeta> Groups { get; } = [];
-    static AllPages()
+    public List<RouteMeta> Pages { get; } = [];
+    public List<RouteMeta> Groups { get; } = [];
+    public PagesService()
     {
         List<RouteMeta> routes = [];
         foreach (var assembly in AppConst.AllAssemblies)
         {
-            routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).SelectMany(GetRouterMeta));
+            routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).SelectMany(CollectRouteMeta));
         }
         Pages = [.. Groups.Concat(routes).OrderBy(m => m.Sort)];
     }
 
-    private static IEnumerable<RouteMeta> GetRouterMeta(Type t)
+    private IEnumerable<RouteMeta> CollectRouteMeta(Type t)
     {
         var routerAttr = t.GetCustomAttribute<RouteAttribute>()!;
         var info = t.GetCustomAttribute<PageInfoAttribute>();
         var groupInfo = t.GetCustomAttribute<PageGroupAttribute>();
-        var authorizeAttr = t.GetCustomAttribute<Microsoft.AspNetCore.Authorization.AuthorizeAttribute>();
+        var authorizeAttr = t.GetCustomAttribute<Microsoft.AspNetCore.Authorization.AuthorizeAttribute>(false);
         var allowAnonymousAttr = t.GetCustomAttribute<Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute>();
         if (groupInfo != null)
         {
@@ -57,7 +58,7 @@ internal static partial class AllPages
         return !MatchPathParameter().Match(template).Success;
     }
 
-    private static void TryAddGroup(PageGroupAttribute groupInfo)
+    private void TryAddGroup(PageGroupAttribute groupInfo)
     {
         var g = Groups.Find(g => g.RouteId == groupInfo.Id);
         if (g == default)
