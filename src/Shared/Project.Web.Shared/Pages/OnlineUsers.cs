@@ -13,7 +13,7 @@ namespace Project.Web.Shared.Pages;
 public class OnlineUsers : ModelPage<ClientInfo, GenericRequest<ClientInfo>>
 {
     [Inject, NotNull] IClientService? ClientService { get; set; }
-    bool? hasPermission;
+    //bool? hasPermission;
 
     protected override void OnInitialized()
     {
@@ -21,21 +21,15 @@ public class OnlineUsers : ModelPage<ClientInfo, GenericRequest<ClientInfo>>
         Options.LoadDataOnLoaded = true;
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        var result = await ClientService.CheckPermissionAsync(User.UserInfo);
-        hasPermission = result.IsSuccess;
-        await base.OnInitializedAsync();
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        await base.OnAfterRenderAsync(firstRender);
-        if (firstRender)
-        {
-            await Options.NotifyChanged();
-        }
-    }
+    
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    await base.OnAfterRenderAsync(firstRender);
+    //    if (firstRender)
+    //    {
+    //        await Options.NotifyChanged();
+    //    }
+    //}
 
     protected override Task<QueryCollectionResult<ClientInfo>> OnQueryAsync(GenericRequest<ClientInfo> query)
     {
@@ -49,19 +43,19 @@ public class OnlineUsers : ModelPage<ClientInfo, GenericRequest<ClientInfo>>
         return QueryResult.Null().AsTask();
     }
 
-    protected override void BuildRenderTree(RenderTreeBuilder builder)
-    {
-        if (!hasPermission.HasValue)
-        {
-            return;
-        }
-        if (hasPermission.Value)
-        {
-            base.BuildRenderTree(builder);
-        }
-        else
-        {
-            builder.Component<ForbiddenPage>().Build();
-        }
-    }
+    //protected override void BuildRenderTree(RenderTreeBuilder builder)
+    //{
+    //    if (!hasPermission.HasValue)
+    //    {
+    //        return;
+    //    }
+    //    if (hasPermission.Value)
+    //    {
+    //        base.BuildRenderTree(builder);
+    //    }
+    //    else
+    //    {
+    //        builder.Component<ForbiddenPage>().Build();
+    //    }
+    //}
 }

@@ -18,6 +18,6 @@ public class ClientHubOptions
     /// 心跳超时时间限制
     /// </summary>
     public TimeSpan ClearTimeoutLimit { get; set; } = TimeSpan.FromSeconds(15);
-    public string[] AllowUsers { get; set; } = [];
-    public string[] AllowRoles { get; set; } = [];
+    //public string[] AllowUsers { get; set; } = [];
+    //public string[] AllowRoles { get; set; } = [];
 }

@@ -11,7 +11,7 @@ public sealed class AppSetting
     public string? AppLanguage { get; set; }
     public string? LauchUrl { get; set; }
     // public bool LoadUnregisteredPage { get; set; }
-    public bool LoadPageFromDatabase { get; set; } = true;
+    //public bool LoadPageFromDatabase { get; set; } = true;
     public bool UseAspectProxy { get; set; }
     public bool ShowExceptionDetial { get; set; }
     public int SupportedMajorVersion { get; set; } = 75;
