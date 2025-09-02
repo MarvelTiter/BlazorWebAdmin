@@ -1,16 +1,22 @@
-﻿using Project.Constraints.UI;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project.Constraints.UI;
 using Project.Constraints.Utils;
 
 namespace Project.Web.Shared.Store;
 
 [AutoInject]
-public class AppSession(NavigationManager navigationManager, IAppStore appStore, IRouterStore routerStore, IUserStore userStore, IUIService ui) : IAppSession
+public class AppSession(IServiceProvider serviceProvider) : IAppSession
 {
-    public NavigationManager Navigator { get; } = navigationManager;
-    public IAppStore AppStore { get; } = appStore;
-    public IRouterStore RouterStore { get; } = routerStore;
-    public IUserStore UserStore { get; } = userStore;
-    public IUIService UI { get; } = ui;
+    private readonly Lazy<NavigationManager> lazyNavigationManager = new(serviceProvider.GetRequiredService<NavigationManager>);
+    private readonly Lazy<IAppStore> lazyAppStore = new(serviceProvider.GetRequiredService<IAppStore>);
+    private readonly Lazy<IRouterStore> lazyRouterStore = new(serviceProvider.GetRequiredService<IRouterStore>);
+    private readonly Lazy<IUserStore> lazyUserStore = new(serviceProvider.GetRequiredService<IUserStore>);
+    private readonly Lazy<IUIService> lazyUI = new(serviceProvider.GetRequiredService<IUIService>);
+    public NavigationManager Navigator => lazyNavigationManager.Value;
+    public IAppStore AppStore => lazyAppStore.Value;
+    public IRouterStore RouterStore => lazyRouterStore.Value;
+    public IUserStore UserStore => lazyUserStore.Value;
+    public IUIService UI => lazyUI.Value;
     public Action? Update { get; set; }
     public bool Loaded { get; set; }
 

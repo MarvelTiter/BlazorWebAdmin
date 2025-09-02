@@ -20,12 +20,12 @@ public interface IRouterStore : IStore, IDisposable
     bool LastRouterChangingCheck { get; }
     string CurrentUrl { get; }
     void GoTo(string uri);
-    ValueTask LocationChangingHandlerAsync(string url);
+    //ValueTask LocationChangingHandlerAsync(string url);
     void CollectPageAdditionalInfo(object pageInstance);
     void Remove(string link);
     Task RemoveOther(string link);
     Task Reset();
-
+    void AttchNavigateEvent();
     //Task Reload();
     /// <summary>
     /// 初始化菜单

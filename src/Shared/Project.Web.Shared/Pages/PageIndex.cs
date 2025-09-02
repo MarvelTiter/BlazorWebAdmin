@@ -7,7 +7,7 @@ namespace Project.Web.Shared.Pages;
 [Route("/user/index")]
 [PageGroup("BasicSetting", "基础配置", 1, Icon = "fa fa-cog")]
 [PageInfo(Title = "用户管理", Icon = "svg-user", Sort = 1, GroupId = "BasicSetting")]
-[Authorize]
+[Authorize(Policy = AppConst.DEFAULT_DYNAMIC_POLICY)]
 public class UserIndex : SystemPageIndex<UserIndex>
 {
     protected override Type? GetPageType(IPageLocatorService customSetting)
@@ -18,7 +18,7 @@ public class UserIndex : SystemPageIndex<UserIndex>
 
 [Route("/operationlog")]
 [PageInfo(Title = "操作日志", Icon = "svg-log", Sort = 2, GroupId = "BasicSetting")]
-[Authorize]
+[Authorize(Policy = AppConst.DEFAULT_DYNAMIC_POLICY)]
 public class RunLogIndex : SystemPageIndex<RunLogIndex>
 {
     protected override Type? GetPageType(IPageLocatorService customSetting)
@@ -30,7 +30,7 @@ public class RunLogIndex : SystemPageIndex<RunLogIndex>
 [Route("/rolepermission")]
 [PageGroup("SysSetting", "系统设置", 2, Icon = "fa fa-cog")]
 [PageInfo(Id = "RolePermission", Title = "权限分配", Icon = "svg-assign_permissions", Sort = 1, GroupId = "SysSetting")]
-[Authorize]
+[Authorize(Policy = AppConst.DEFAULT_DYNAMIC_POLICY)]
 public class RolePermissionIndex : SystemPageIndex<RolePermissionIndex>
 {
     protected override Type? GetPageType(IPageLocatorService customSetting)
@@ -41,7 +41,7 @@ public class RolePermissionIndex : SystemPageIndex<RolePermissionIndex>
 
 [Route("/permission")]
 [PageInfo(Id = "Permission", Title = "权限设置", Icon = "svg-rights", Sort = 2, GroupId = "SysSetting")]
-[Authorize]
+[Authorize(Policy = AppConst.DEFAULT_DYNAMIC_POLICY)]
 public class PermissionIndex : SystemPageIndex<PermissionIndex>
 {
     protected override Type? GetPageType(IPageLocatorService customSetting)

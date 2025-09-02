@@ -9,7 +9,7 @@ namespace Project.Web.Shared.Pages;
 
 [Route("/userdashboard")]
 [PageInfo(Icon = "svg-setting", Title = "在线用户", Sort = 999)]
-[Authorize(Policy = "AdminPolicy")]
+[Authorize(Policy = AppConst.ONLINE_USER_POLICY)]
 public class OnlineUsers : ModelPage<ClientInfo, GenericRequest<ClientInfo>>
 {
     [Inject, NotNull] IClientService? ClientService { get; set; }
@@ -21,7 +21,7 @@ public class OnlineUsers : ModelPage<ClientInfo, GenericRequest<ClientInfo>>
         Options.LoadDataOnLoaded = true;
     }
 
-    
+
     //protected override async Task OnAfterRenderAsync(bool firstRender)
     //{
     //    await base.OnAfterRenderAsync(firstRender);

@@ -54,7 +54,7 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
 
     private readonly List<IDisposable> registerHandlers = [];
     private IDisposable? loadedHandler;
-    private IDisposable? locationChangingHandler;
+    //private IDisposable? locationChangingHandler;
 
     protected override void OnInitialized()
     {
@@ -64,8 +64,8 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
         registerHandlers.Add(Context.RouterStore.RegisterRouterMetaFilterHandler(SettingService.RouteMetaFilterAsync));
         registerHandlers.Add(Context.RegisterLoginSuccessHandler(SettingService.LoginSuccessAsync));
         registerHandlers.Add(Context.RegisterWebApplicationAccessedHandler(SettingService.AfterWebApplicationAccessed));
-        locationChangingHandler = Context.Navigator.RegisterLocationChangingHandler(LocationChangingAsync);
-        // Context.Navigator.LocationChanged += NavigatorOnLocationChanged;
+        //locationChangingHandler = Context.Navigator.RegisterLocationChangingHandler(LocationChangingAsync);
+        Context.RouterStore.AttchNavigateEvent();
         var interceptors = Services.GetServices<IAddtionalInterceptor>();
 
         foreach (var additional in interceptors)
@@ -105,10 +105,10 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
         await InvokeAsync(StateHasChanged);
     }
 
-    private ValueTask LocationChangingAsync(LocationChangingContext context)
-    {
-        return Context.RouterStore.LocationChangingHandlerAsync(context.TargetLocation);
-    }
+    //private ValueTask LocationChangingAsync(LocationChangingContext context)
+    //{
+    //    return Context.RouterStore.LocationChangingHandlerAsync(context.TargetLocation);
+    //}
 
     private Task OnLoadedAsync()
     {
@@ -139,7 +139,7 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
 
     public ValueTask DisposeAsync()
     {
-        locationChangingHandler?.Dispose();
+        //locationChangingHandler?.Dispose();
         initActions.Clear();
         foreach (var handler in registerHandlers)
         {

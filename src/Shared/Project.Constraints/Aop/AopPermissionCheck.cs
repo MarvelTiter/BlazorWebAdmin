@@ -2,28 +2,50 @@
 using AutoAopProxyGenerator;
 using AutoInjectGenerator;
 using System.Reflection;
+using Project.Constraints.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Project.Constraints.Aop;
 
 // [AutoInject(ServiceType = typeof(AopPermissionCheck))]
 [AutoInjectSelf]
-public class AopPermissionCheck(IUserStore userStore) : IAspectHandler
+public class AopPermissionCheck(
+    IUserStore userStore
+    , IServiceProvider services) : IAspectHandler
 {
-    public Task Invoke(ProxyContext context, Func<Task> process)
+    private readonly SemaphoreSlim _lock = new(1, 1);
+    public async Task Invoke(ProxyContext context, Func<Task> process)
     {
-        var action = FormattedAction(context);
-        if (userStore.UserInfo?.UserPowers == null)
+        if (userStore.UserInfo is null)
         {
-            return process.Invoke();
+            throw new InvalidOperationException("AopPermissionCheck Exception: userinfo is null");
         }
-        if (userStore.UserInfo.UserPowers.Contains(action) == false)
+        var action = FormattedAction(context);
+        if (userStore.UserInfo.Permissions is null)
+        {
+            await _lock.WaitAsync();
+            try
+            {
+                if (userStore.UserInfo.Permissions is null)
+                {
+                    var permissionService = services.GetRequiredService<IPermissionService>();
+                    var permissions = await permissionService.GetUserPermissionsAsync(userStore.UserInfo.UserId);
+                    userStore.UserInfo.Permissions = [.. permissions.Payload.Select(p => p.PermissionId)];
+                }
+            }
+            finally
+            {
+                _lock.Release();
+            }
+        }
+        if (userStore.UserInfo.Permissions.Contains(action) == false)
         {
             context.SetReturnValue(new QueryResult() { IsSuccess = false, Message = "没有权限" });
-            return Task.CompletedTask;
+            return;
         }
         else
         {
-            return process.Invoke();
+            await process.Invoke();
         }
     }
 

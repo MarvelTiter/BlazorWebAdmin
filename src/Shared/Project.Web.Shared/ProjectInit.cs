@@ -1,14 +1,15 @@
 ﻿using LightExcel;
-using Project.Constraints;
-using Project.Constraints.Options;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MT.Toolkit.LogTool;
 using MT.Toolkit.ReflectionExtension;
-using Project.Web.Shared.Pages;
+using Project.Constraints;
+using Project.Constraints.Options;
 using Project.Web.Shared;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
+using Project.Web.Shared.Auth;
 using Project.Web.Shared.Locales.Extensions;
+using Project.Web.Shared.Pages;
 
 namespace Project.Web.Shared;
 public static class ProjectInit
@@ -33,7 +34,17 @@ public static class ProjectInit
         });
 #endif
         action.Invoke(setting);
-
+        services.AddAuthorizationCore(o =>
+        {
+            o.AddPolicy(AppConst.ONLINE_USER_POLICY, policy =>
+            {
+                policy.RequireUserName("admin");
+            });
+            o.AddPolicy(AppConst.DEFAULT_DYNAMIC_POLICY, policy =>
+            {
+                policy.AddRequirements(new DynamicPermissionRequirement());
+            });
+        });
         services.AddSingleton(setting.locator);
         services.AddScoped(typeof(IProjectSettingService), setting.SettingProviderType);
         services.AddCascadingAuthenticationState();

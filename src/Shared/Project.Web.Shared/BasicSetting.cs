@@ -30,7 +30,7 @@ public class BasicSetting : IProjectSettingService //, IDisposable
         AppSetting = services.GetRequiredService<IOptionsMonitor<AppSetting>>();
     }
 
-    public virtual TimeSpan RevalidationInterval => TimeSpan.FromMinutes(2);
+    public virtual TimeSpan RevalidationInterval => TimeSpan.FromSeconds(5);
 
     /// <summary>
     /// 在登录成功后调用此方法以设置当前用户信息
@@ -67,9 +67,9 @@ public class BasicSetting : IProjectSettingService //, IDisposable
         }
 
         var result = await permissionService.GetUserPermissionsAsync(info.UserId);
-        MinimalPermission[] powers = [.. result.Payload];
-        info.UserPowers = [.. powers.Where(p => p.PermissionType != PermissionType.Page).Select(p => p.PermissionId)];
-        info.UserPages = [.. powers.Where(p => p.PermissionType == PermissionType.Page).Select(p => p.PermissionId)];
+        //MinimalPermission[] powers = [.. result.Payload];
+        //info.UserPowers = [.. powers.Where(p => p.PermissionType != PermissionType.Page).Select(p => p.PermissionId)];
+        //info.UserPages = [.. powers.Where(p => p.PermissionType == PermissionType.Page).Select(p => p.PermissionId)];
         return result.Payload;
     }
 

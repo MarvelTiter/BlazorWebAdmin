@@ -99,6 +99,24 @@ setting.ConfigurePage(locator =>
 });
 ```
 
+### 权限控制
+
+初始添加两个策略，第一个用于控制在线用户页面，第二个用于根据当前路由的页面检查是否拥有访问权限
+
+```csharp
+services.AddAuthorizationCore(o =>
+{
+    o.AddPolicy(AppConst.ONLINE_USER_POLICY, policy =>
+    {
+        policy.RequireUserName("admin");
+    });
+    o.AddPolicy(AppConst.DEFAULT_DYNAMIC_POLICY, policy =>
+    {
+        policy.AddRequirements(new DynamicPermissionRequirement());
+    });
+});
+```
+
 ## master分支 web host
 
 ## master.wpf分支 wpf host

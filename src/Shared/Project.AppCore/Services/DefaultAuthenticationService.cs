@@ -51,8 +51,6 @@ public abstract class DefaultAuthenticationService(IServiceProvider services) : 
 
     public abstract Task<bool> CheckUserStatusAsync(UserInfo? userInfo);
 
-    public virtual TimeSpan RevalidationInterval { get; } = TimeSpan.FromMinutes(5);
-
     public virtual async Task SignOutAsync()
     {
         var httpContextAccessor = Services.GetService<IHttpContextAccessor>();
@@ -119,10 +117,22 @@ public class BlazorAdminAuthenticationService(IServiceProvider services) : Defau
         var passwordEqual = u?.Password.ToHash() == userInfo.PasswordHash;
 
         var roles = await context.Select<UserRole>().Where(ur => ur.UserId == userInfo.UserId).ToListAsync(r => r.RoleId);
-        
+
         var rolesChanged = roles.Count != userInfo.Roles.Length || roles.Except(userInfo.Roles).Any();
 
-        return passwordEqual && !rolesChanged;
+        var permissions = await context.Select<Permission>()
+            .Distinct()
+            .InnerJoin<RolePermission>((p, r) => p.PermissionId == r.PermissionId)
+            .InnerJoin<UserRole>((_, r, u) => r.RoleId == u.RoleId)
+            .Where((_, _, u) => u.UserId == userInfo.UserId)
+            .ToListAsync(u => u.Tb1.PermissionId);
+        bool permissionsChanged = false;
+        if (userInfo.Permissions is not null)
+        {
+            permissionsChanged = permissions.Count != userInfo.Permissions.Length || permissions.Except(userInfo.Permissions).Any();
+        }
+
+        return passwordEqual && !rolesChanged && !permissionsChanged;
     }
 
     public override async Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd)

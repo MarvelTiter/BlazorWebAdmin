@@ -12,7 +12,7 @@ public interface IRolePermission
 #else
 [LightTable(Name = "ROLE_POWER")]
 [GenMapper]
-public partial class RolePower : IRolePermission, IAutoMap
+public partial class RolePermission : IRolePermission, IAutoMap
 {
     [LightColumn(Name = "ROLE_ID", PrimaryKey = true)]
     [NotNull] public string? RoleId { get; set; }

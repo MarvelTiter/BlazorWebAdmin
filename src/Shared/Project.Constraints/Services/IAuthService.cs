@@ -44,7 +44,7 @@ public interface IAuthService
     Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd);
 
     /// <summary>
-    /// 检查用户状态，是否修改过密码，是否修改过角色等
+    /// 检查用户状态，是否修改过密码，是否修改过角色，是否修改过权限等
     /// </summary>
     /// <param name="userInfo"></param>
     /// <returns></returns>

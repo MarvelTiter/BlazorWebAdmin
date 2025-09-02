@@ -12,8 +12,8 @@ public class UserInfo
     public string? Token { get; set; }
 
     public string[] Roles { get; set; } = [];
-    public string[] UserPowers { get; set; } = [];
-    public string[] UserPages { get; set; } = [];
+    public string[]? Permissions { get; set; }
+    //public string[]? UserPages { get; set; }
     /// <summary>
     /// 存储用户额外信息
     /// </summary>

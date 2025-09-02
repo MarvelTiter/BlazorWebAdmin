@@ -96,7 +96,14 @@ public partial class RouterStore : StoreBase, IRouterStore
     {
         pages.Clear();
         menus.Clear();
-        navigationManager.LocationChanged -= NavigationManager_LocationChanged;
+        try
+        {
+            navigationManager.LocationChanged -= NavigationManager_LocationChanged;
+            locationChangingHandler?.Dispose();
+        }
+        finally
+        {
+        }
     }
 
     public string CurrentUrl => '/' + navigationManager.ToBaseRelativePath(navigationManager.Uri);
@@ -110,7 +117,7 @@ public partial class RouterStore : StoreBase, IRouterStore
     private readonly ILogger<RouterStore> logger;
     private readonly IOptionsMonitor<AppSetting> setting;
     private readonly PagesService pagesService;
-
+    private IDisposable? locationChangingHandler;
     public RouterStore(IProjectSettingService settingService
         , NavigationManager navigationManager
         , IUserStore userStore
@@ -128,7 +135,6 @@ public partial class RouterStore : StoreBase, IRouterStore
         this.logger = logger;
         this.setting = setting;
         this.pagesService = pagesService;
-        this.navigationManager.LocationChanged += NavigationManager_LocationChanged;
     }
 
     private bool lastRouterChangingCheck = true;
@@ -144,9 +150,14 @@ public partial class RouterStore : StoreBase, IRouterStore
             NotifyChanged();
         }
     }
-
-    public async ValueTask LocationChangingHandlerAsync(string url)
+    public void AttchNavigateEvent()
     {
+        locationChangingHandler = navigationManager.RegisterLocationChangingHandler(LocationChangingHandlerAsync);
+        navigationManager.LocationChanged += NavigationManager_LocationChanged;
+    }
+    public async ValueTask LocationChangingHandlerAsync(LocationChangingContext ctx)
+    {
+        var url = ctx.TargetLocation;
         url = string.IsNullOrEmpty(url) ? "/" : ParsedUriPathAndQuery(url);
 
         if (!pages.TryGetValue(url, out var tag))

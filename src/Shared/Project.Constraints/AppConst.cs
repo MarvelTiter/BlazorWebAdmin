@@ -19,7 +19,8 @@ public static class AppConst
 
     public const string TEMP_FOLDER = "tempfile";
     public const string CUSTOM_SVG_PREFIX = "svg-";
-
+    public const string DEFAULT_DYNAMIC_POLICY = "DefaultDynamicPolicy";
+    public const string ONLINE_USER_POLICY = "OnlineUserPagePolicy";
     private readonly static List<Assembly> additionalPageAssemblies = [];
     //public static Assembly ServerAssembly { get; set; }
     //public static Assembly ClientAssembly { get; set; }
