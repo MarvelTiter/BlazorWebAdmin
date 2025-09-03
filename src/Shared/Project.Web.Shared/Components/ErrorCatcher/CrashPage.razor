@@ -3,27 +3,23 @@
 @inject IUIService UI
 <ErrorPage OnDetialClick="@(() => showDetial = true)">
     <p>未处理的异常：请联系管理员</p>
-    @if (showDetial)
-    {
-        <div class="exception-wrapper">
-            <p class="exception-message">错误信息: <span style="color:orangered">@Exception?.Message</span></p>
-            @if (Options.Value.ShowExceptionDetial)
-            {
-                <div class="exception-stacktrace">
-                    @foreach (var line in Exception?.StackTrace?.Split(Environment.NewLine) ?? [])
-                    {
-                        <div class="exception-stacktrace-item">@line</div>
-                    }
-                </div>
-            }
-            else
-            {
-                <pre style="font-size:24px;">已禁止显示详细错误信息</pre>
-            }
-            <div class="exception-footer"><a @onclick:preventDefault @onclick:stopPropagation @onclick="@(() => showDetial = false)">关闭</a></div>
-        </div>
-
-    }
+    <div style="display:@(showDetial ? "block" : "none");" class="exception-wrapper">
+        <p class="exception-message">错误信息: <span style="color:orangered">@Exception?.Message</span></p>
+        @if (Options.Value.ShowExceptionDetial)
+        {
+            <div class="exception-stacktrace">
+                @foreach (var line in Exception?.StackTrace?.Split(Environment.NewLine) ?? [])
+                {
+                    <div class="exception-stacktrace-item">@line</div>
+                }
+            </div>
+        }
+        else
+        {
+            <pre style="font-size:24px;">已禁止显示详细错误信息</pre>
+        }
+        <div class="exception-footer"><a @onclick:preventDefault @onclick:stopPropagation @onclick="@(() => showDetial = false)">关闭</a></div>
+    </div>
 </ErrorPage>
 
 @code {

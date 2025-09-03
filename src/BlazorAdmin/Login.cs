@@ -42,43 +42,48 @@ public class Login : SystemPageIndex<Login>, ILoginPage
 
     public async Task HandleLogin(LoginFormModel model)
     {
-        //Loading = true;
-        using var _ = BooleanStatusManager.New(b => Loading = b, callback: () => InvokeAsync(StateHasChanged));
-        //await InvokeAsync(StateHasChanged);
-        var authService = Provider.GetService<IAuthService>();
-        if (authService is null)
+        try
         {
-            UI.Error("未配置登录功能!");
-            return;
-        }
-        var result = await authService.SignInAsync(model);
-        if (result.IsSuccess)
-        {
-            User.SetUser(result.Payload);
-            UI.Success(Localizer["Login.SuccessTips"].Value);
-            var goon = await CustomSetting.LoginInterceptorAsync(result.Payload!);
-            if (goon.IsSuccess)
+            using var _ = BooleanStatusManager.New(b => Loading = b, callback: () => InvokeAsync(StateHasChanged));
+            var authService = Provider.GetService<IAuthService>();
+            if (authService is null)
             {
-                await Router.InitMenusAsync(result.Payload);
-                var principal = result.Payload!.BuildClaims(CookieAuthenticationDefaults.AuthenticationScheme);
-                var properties = new AuthenticationProperties
+                UI.Error("未配置登录功能!");
+                return;
+            }
+            var result = await authService.SignInAsync(model);
+            if (result.IsSuccess)
+            {
+                User.SetUser(result.Payload);
+                UI.Success(Localizer["Login.SuccessTips"].Value);
+                var goon = await CustomSetting.LoginInterceptorAsync(result.Payload!);
+                if (goon.IsSuccess)
                 {
-                    IsPersistent = true,
-                    //cookie过期是单独指cookie，这里的是指
-                    ExpiresUtc = TimeProvider.System.GetUtcNow().Add(TokenOption.CurrentValue.Expire)
-                };
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
-                if (string.IsNullOrEmpty(Redirect)) Redirect = "/";
-                HttpContext.Response.Redirect(Redirect);
+                    await Router.InitMenusAsync(result.Payload);
+                    var principal = result.Payload!.BuildClaims(CookieAuthenticationDefaults.AuthenticationScheme);
+                    var properties = new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        //cookie过期是单独指cookie，这里的是指
+                        ExpiresUtc = TimeProvider.System.GetUtcNow().Add(TokenOption.CurrentValue.Expire)
+                    };
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
+                    if (string.IsNullOrEmpty(Redirect)) Redirect = "/";
+                    HttpContext.Response.Redirect(Redirect);
+                }
+                else
+                {
+                    UI.Error(goon.Message!);
+                }
             }
             else
             {
-                UI.Error(goon.Message!);
+                UI.Error(result.Message!);
             }
         }
-        else
+        catch (Exception ex)
         {
-            UI.Error(result.Message!);
+            UI.Error(ex.Message);
         }
     }
 
