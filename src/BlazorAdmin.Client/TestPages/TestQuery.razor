@@ -53,9 +53,11 @@
         </Project.Web.Shared.Components.EmptyCondition>
     </ChildContent>
 </Project.Web.Shared.Components.QueryConditions>
+@(UI.BuildDictionarySelect(this, options).Multiple().Binds(() => selectedValues).Render())
 @code {
     ConditionUnit condition = new();
     DateTime? dateTime;
+    IEnumerable<string> selectedValues = [];
     Dictionary<string, string> options = new()
     {
             ["test1"] = "test1",

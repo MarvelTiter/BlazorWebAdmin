@@ -47,9 +47,16 @@ public class PropComponentBuilder<TComponent, TPropModel> : ComponentBuilderBasi
         return this;
     }
 
+    public IUIComponent<TPropModel> SetModel(Action<TPropModel> action)
+    {
+        action?.Invoke(Model);
+        return this;
+    }
+
     public override RenderFragment Render()
     {
         tpropHandle?.Invoke(this);
+        handleBind?.Invoke();
         return newRender?.Invoke(this) ?? base.Render();
     }
 }

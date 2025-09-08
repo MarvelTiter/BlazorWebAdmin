@@ -73,12 +73,26 @@ public class UIService(
     {
         if (typeof(TValue).IsEnum && options == null)
         {
-            return new BindableComponentBuilder<EnumSelect<TValue>, SelectProp, TValue>() { Receiver = reciver };
+            return new BindableComponentBuilder<EnumSelect<TValue>, SelectProp, TValue>(self =>
+            {
+                if (self.Model.Mulitple)
+                {
+                    self.SetComponent(s => s.Mode, SelectMode.Multiple);
+                    self.Model.BindValueName = "Values";
+                    self.Model.ValueExpressionName = "ValuesExpression";
+                }
+            }) { Receiver = reciver };
         }
         else
         {
             return new BindableComponentBuilder<Select<TValue, Options<TValue>>, SelectProp, TValue>(self =>
                 {
+                    if (self.Model.Mulitple)
+                    {
+                        self.SetComponent(s => s.Mode, SelectMode.Multiple);
+                        self.Model.BindValueName = "Values";
+                        self.Model.ValueExpressionName = "ValuesExpression";
+                    }
                     self.SetComponent(s => s.DataSource, options)
                         .SetComponent(s => s.ValueName, "Value")
                         .SetComponent(s => s.LabelName, "Label")
@@ -95,6 +109,12 @@ public class UIService(
     {
         return new SelectComponentBuilder<Select<TValue, TItem>, SelectProp, TItem, TValue>(self =>
             {
+                if (self.Model.Mulitple)
+                {
+                    self.SetComponent(s => s.Mode, SelectMode.Multiple);
+                    self.Model.BindValueName = "Values";
+                    self.Model.ValueExpressionName = "ValuesExpression";
+                }
                 self.SetComponent(s => s.DataSource, options);
                 if (self.Model.ValueExpression is LambdaExpression valueLambda)
                     self.SetComponent(s => s.ItemValue, valueLambda.Compile());

@@ -16,7 +16,11 @@ public static class SelectBuilderExtensions
     {
         return service.BuildSelect<KeyValuePair<TValue, string>, TValue>(receiver, options.ToList()).LabelExpression(kv => kv.Value).ValueExpression(kv => kv.Key);
     }
-
+    public static ISelectInput<SelectProp, TItem, TValue> Multiple<TItem, TValue>(this ISelectInput<SelectProp, TItem, TValue> sel)
+    {
+        sel.SetModel(p => p.Mulitple = true);
+        return sel;
+    }
     public static ISelectInput<SelectProp, TItem, TValue> LabelExpression<TItem, TValue>(this ISelectInput<SelectProp, TItem, TValue> sel, Expression<Func<TItem, string>> expression)
     {
         sel.Set(s => s.LabelExpression, expression);

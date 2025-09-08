@@ -26,6 +26,7 @@ public interface IUIComponent<TPropModel> : IUIComponent
 {
     TPropModel Model { get; set; }
     IUIComponent<TPropModel> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value);
+    IUIComponent<TPropModel> SetModel(Action<TPropModel> action);
 }
 
 public interface IClickable<out TReturn>
@@ -49,7 +50,11 @@ public interface IBindableInputComponent<TPropModel, TValue> : IUIComponent<TPro
 
 public interface IButtonInput : IUIComponent<ButtonProp>, IClickable<IButtonInput>;
 
-public interface ISelectInput<TPropModel, TItem, TValue> : IBindableInputComponent<TPropModel, TValue>;
+public interface ISelectInput<TPropModel, TItem, TValue> : IBindableInputComponent<TPropModel, TValue>
+{
+    IBindableInputComponent<TPropModel, TValue> Binds(Expression<Func<IEnumerable<TValue>>> expression);
+    IBindableInputComponent<TPropModel, TValue> Binds(Expression<Func<IEnumerable<TValue>>> expression, Func<Task>? onchange);
+}
 
 public enum MessageType
 {

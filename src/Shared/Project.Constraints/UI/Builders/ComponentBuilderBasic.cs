@@ -15,6 +15,7 @@ public class ComponentBuilderBasic<TComponent, TSelf> : IUIComponent
     protected readonly Dictionary<string, object?> parameters = new(StringComparer.Ordinal);
     protected Func<TSelf, RenderFragment>? newRender;
     protected Action<TSelf>? tpropHandle;
+    protected Action? handleBind;
     protected readonly static ConcurrentDictionary<(Type Entity, PropertyInfo Prop), Delegate> propAssignCaches = new();
 
     public IUIComponent AdditionalParameters(Dictionary<string, object> parameters)
@@ -37,6 +38,7 @@ public class ComponentBuilderBasic<TComponent, TSelf> : IUIComponent
         Set(prop.Name, value!);
         return (this as TSelf)!;
     }
+
     public IUIComponent Set(string key, object value)
     {
         parameters[key] = value;

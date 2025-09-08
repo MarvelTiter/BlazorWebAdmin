@@ -6,6 +6,7 @@ public class DefaultProp
 {
     public string? Label { get; set; }
     public bool EnableValueExpression { get; set; } = true;
+    public string ValueExpressionName { get; set; } = "ValueExpression";
     public string BindValueName { get; set; } = "Value";
     public bool StringValue { get; set; } = false;
 }
