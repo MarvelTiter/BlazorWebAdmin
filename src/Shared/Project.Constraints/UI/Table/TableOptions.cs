@@ -4,6 +4,7 @@ using Project.Constraints.Utils;
 using System.Data;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Components;
+using System.Collections.Immutable;
 
 namespace Project.Constraints.UI.Table;
 
@@ -93,7 +94,7 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     public List<TableButton<TData>>? Buttons { get; set; }
     public Func<TableButton<TData>, IQueryResult, Task>? OnTableButtonClickAsync { get; set; }
     public Func<IEnumerable<TData>, Task>? OnSaveExcelAsync { get; set; }
-    public Func<IEnumerable<TData>, Task>? OnSelectedChangedAsync { get; set; }
+    public Func<ImmutableArray<TData>, ImmutableArray<TData>, Task<IEnumerable<TData>>>? OnSelectedChangedAsync { get; set; }
 
     public RenderFragment<Grouping<object, TData>>? GroupTitleTemplate { get; set; }
     public RenderFragment<Grouping<object, TData>>? GroupFooterTemplate { get; set; }

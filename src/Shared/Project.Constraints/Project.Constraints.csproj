@@ -6,11 +6,11 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="AutoAopProxyGenerator" Version="0.1.3" />
+		<PackageReference Include="AutoAopProxyGenerator" Version="0.1.4" />
 		<PackageReference Include="AutoGenMapperGenerator" Version="0.0.9" />
-		<PackageReference Include="AutoInjectGenerator" Version="0.1.0" />
-		<PackageReference Include="AutoPageStateContainerGenerator" Version="0.0.6" />
-		<PackageReference Include="AutoWasmApiGenerator" Version="0.1.3" />
+		<PackageReference Include="AutoInjectGenerator" Version="0.1.2" />
+		<PackageReference Include="AutoPageStateContainerGenerator" Version="0.0.7" />
+		<PackageReference Include="AutoWasmApiGenerator" Version="0.1.4" />
 		<PackageReference Include="LoggerProviderExtensions" Version="0.0.1" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
 		<PackageReference Include="MT.LightORM" Version="3.1.7.3" />

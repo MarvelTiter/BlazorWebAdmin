@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Immutable;
+using System.Reflection;
 using AutoPageStateContainerGenerator;
 using LightExcel;
 using Microsoft.AspNetCore.Components.Rendering;
@@ -55,8 +56,11 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         Options.OnExportAsync = OnExportAsync;
         Options.OnImportAsync = OnImportAsync;
         Options.OnSaveExcelAsync = OnSaveExcelAsync;
-        Options.OnSelectedChangedAsync = OnSelectedChangedAsync;
-        // 被重写了
+        //
+        if (IsOverride(nameof(OnSelectedChangedAsync)))
+        {
+            Options.OnSelectedChangedAsync = OnSelectedChangedAsync;
+        }
         Options.ShowExportButton = IsOverride(nameof(OnExportAsync));
         Options.ShowAddButton = IsOverride(nameof(OnAddItemAsync));
         Options.ShowImportButton = IsOverride(nameof(HandleImportedDataAsync));
@@ -153,9 +157,11 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     /// </summary>
     /// <param name="enumerable"></param>
     /// <returns></returns>
-    protected virtual Task OnSelectedChangedAsync(IEnumerable<TModel> enumerable) =>
+    protected virtual Task<IEnumerable<TModel>> OnSelectedChangedAsync(ImmutableArray<TModel> sources, ImmutableArray<TModel> selected)
+    {
         // TODO table的行选择处理
-        Task.CompletedTask;
+        return Task.FromResult<IEnumerable<TModel>>(selected);
+    }
 
     protected virtual async Task OnImportAsync(Stream stream)
     {

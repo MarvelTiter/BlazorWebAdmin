@@ -35,9 +35,15 @@ public class CatchObjectRefRouteView : RouteView
 
     private void RenderPageWithParameters(RenderTreeBuilder builder)
     {
+        if (RouterStore.RouteChanging)
+        {
+            return;
+        }
+
         if (!RouterStore.LastRouterChangingCheck)
         {
             builder.Component<NotAuthorizedPage>().Build();
+            
             return;
         }
 

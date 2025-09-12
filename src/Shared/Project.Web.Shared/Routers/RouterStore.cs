@@ -91,7 +91,7 @@ public partial class RouterStore : StoreBase, IRouterStore
 
     public WeakReference<object?> CurrentPageInstance { get; set; } = new WeakReference<object?>(null);
     public bool LastRouterChangingCheck => lastRouterChangingCheck;
-
+    public bool RouteChanging => routeChanging;
     protected override void Release()
     {
         pages.Clear();
@@ -138,6 +138,7 @@ public partial class RouterStore : StoreBase, IRouterStore
     }
 
     private bool lastRouterChangingCheck = true;
+    private bool routeChanging = false;
 
     private void NavigationManager_LocationChanged(object? sender, LocationChangedEventArgs e)
     {
@@ -158,6 +159,7 @@ public partial class RouterStore : StoreBase, IRouterStore
     public async ValueTask LocationChangingHandlerAsync(LocationChangingContext ctx)
     {
         var url = ctx.TargetLocation;
+        using var _ = BooleanStatusManager.New(b => routeChanging = b, true);
         url = string.IsNullOrEmpty(url) ? "/" : ParsedUriPathAndQuery(url);
 
         if (!pages.TryGetValue(url, out var tag))
@@ -196,7 +198,6 @@ public partial class RouterStore : StoreBase, IRouterStore
         {
             preview?.TrySetDisactive(CurrentPageInstance);
         }
-
         return;
 
         static string ParsedUriPathAndQuery(string url)

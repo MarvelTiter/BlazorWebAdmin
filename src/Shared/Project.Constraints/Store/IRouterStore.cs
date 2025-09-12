@@ -18,6 +18,7 @@ public interface IRouterStore : IStore, IDisposable
     RouteTag? Current { get; }
     WeakReference<object?> CurrentPageInstance { get; }
     bool LastRouterChangingCheck { get; }
+    bool RouteChanging { get; }
     string CurrentUrl { get; }
     void GoTo(string uri);
     //ValueTask LocationChangingHandlerAsync(string url);

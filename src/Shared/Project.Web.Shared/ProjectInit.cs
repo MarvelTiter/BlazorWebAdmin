@@ -38,7 +38,7 @@ public static class ProjectInit
         {
             o.AddPolicy(AppConst.ONLINE_USER_POLICY, policy =>
             {
-                policy.RequireUserName("admin");
+                policy.RequireUserName("admin22");
             });
             o.AddPolicy(AppConst.DEFAULT_DYNAMIC_POLICY, policy =>
             {

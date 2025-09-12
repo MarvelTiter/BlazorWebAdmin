@@ -1,6 +1,6 @@
 ﻿@inherits AppComponentBase
 
-<div class="bg">
+<div class="bg @(loaded ? "loaded":"")">
     <div class="container">
         <div class="icon">🚫</div>
         <h1>权限不足</h1>
@@ -17,9 +17,22 @@
     </div>
 </div>
 
-@code{
+@code {
     private async Task ReLogin()
     {
         await AuthenticationStateProvider.ClearState();
+    }
+    [Inject, NotNull] ILogger<NotAuthorizedPage>? Logger { get; set; }
+    private bool loaded;
+    
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            Logger.LogDebug("未授权");
+            loaded = true;
+            StateHasChanged();
+        }
     }
 }

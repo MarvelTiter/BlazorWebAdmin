@@ -1,6 +1,7 @@
 ﻿@using AntDesign.TableModels
 @using Microsoft.Extensions.Logging
 @using Project.Constraints.Models.Request
+@using System.Collections.Immutable
 @typeparam TData
 @typeparam TQuery where TQuery : IRequest, new()
 <Card>
@@ -18,7 +19,8 @@
            Total="@Total"
            @bind-PageIndex="@Options.Query.PageIndex"
            @bind-PageSize="@Options.Query.PageSize"
-           @bind-SelectedRows="@Options.Selected"
+           SelectedRows="@Options.Selected"
+           SelectedRowsChanged="@OnSelectedRowsChanged"
            RowKey="@Options.RowKey"
            OnRowClick="OnRowClick"
            OnRow="RowOptions"
@@ -122,6 +124,19 @@
         Options.NotifyChanged = () => InvokeAsync(StateHasChanged);
     }
 
+    private async Task OnSelectedRowsChanged(IEnumerable<TData> datas)
+    {
+        if (Options.OnSelectedChangedAsync is not null)
+        {
+            var finalSelected = await Options.OnSelectedChangedAsync.Invoke(Datas.ToImmutableArray(), datas.ToImmutableArray());
+            Options.Selected = finalSelected;
+        }
+        else
+        {
+            Options.Selected = datas;
+        }
+    }
+
     // string GetLocalizerString()
     // {
 
@@ -145,13 +160,13 @@
     {
         return
     @<Button Type="@Utils.GetButtonType(definition.ButtonType)"
-                 Size="@ButtonSize.Small"
-                 Danger="@definition.Danger"
-                 Icon="@definition.Icon"
-                 OnClickStopPropagation
-                 OnClick="@(() => InvokeButtonAction(definition, context))">
+                     Size="@ButtonSize.Small"
+                     Danger="@definition.Danger"
+                     Icon="@definition.Icon"
+                     OnClickStopPropagation
+                     OnClick="@(() => InvokeButtonAction(definition, context))">
         @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
-    </Button>
+        </Button>
         ;
     }
 
@@ -235,18 +250,18 @@
     {
         return
     @<Column TData="TColumnData"
-                 Ellipsis="@col.Ellipsis"
-                 Width="@col.Width"
-                 Sortable="@col.Sortable"
-                 Title="@(Localizer[col.Label])"
-                 Fixed="@Utils.GetColumnFix(col.Fixed)"
-                 Align="@Utils.GetColumnAlign(col.Align)"
-                 DataIndex="@col.PropertyOrFieldName"
-                 Grouping="@col.Grouping"
-                 GroupBy="data => col.GroupByExpression(data)"
-                 OnCell="GetOnCell(col)"
-                 CellRender="ColumnRender<TColumnData>(row, col)">
-    </Column>
-    ;
+                     Ellipsis="@col.Ellipsis"
+                     Width="@col.Width"
+                     Sortable="@col.Sortable"
+                     Title="@(Localizer[col.Label])"
+                     Fixed="@Utils.GetColumnFix(col.Fixed)"
+                     Align="@Utils.GetColumnAlign(col.Align)"
+                     DataIndex="@col.PropertyOrFieldName"
+                     Grouping="@col.Grouping"
+                     GroupBy="data => col.GroupByExpression(data)"
+                     OnCell="GetOnCell(col)"
+                     CellRender="ColumnRender<TColumnData>(row, col)">
+        </Column>
+        ;
     }
 }
