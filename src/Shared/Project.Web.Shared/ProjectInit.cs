@@ -38,7 +38,7 @@ public static class ProjectInit
         {
             o.AddPolicy(AppConst.ONLINE_USER_POLICY, policy =>
             {
-                policy.RequireUserName("admin22");
+                policy.RequireUserName("admin");
             });
             o.AddPolicy(AppConst.DEFAULT_DYNAMIC_POLICY, policy =>
             {
@@ -68,14 +68,14 @@ public static class ProjectInit
 
     }
 
-    private static void InterceptorsInit(IServiceCollection services, ProjectSetting setting)
-    {
-        services.AddScoped(typeof(IProjectSettingService), setting.SettingProviderType);
-        foreach (var item in setting.interceptorTypes)
-        {
-            services.AddScoped(typeof(IAddtionalInterceptor), item);
-        }
-    }
+    //private static void InterceptorsInit(IServiceCollection services, ProjectSetting setting)
+    //{
+    //    services.AddScoped(typeof(IProjectSettingService), setting.SettingProviderType);
+    //    foreach (var item in setting.interceptorTypes)
+    //    {
+    //        services.AddScoped(typeof(IAddtionalInterceptor), item);
+    //    }
+    //}
 
     internal static void ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
     {

@@ -1,9 +1,19 @@
-﻿namespace Project.Constraints.Store.Models;
+﻿using Microsoft.AspNetCore.Components;
+namespace Project.Constraints.Store.Models;
 
 public interface IRouteInfo
 {
+    /// <summary>
+    /// 通过<see cref="PageInfoAttribute"/>自定义，默认是类型名称
+    /// </summary>
     string RouteId { get; }
+    /// <summary>
+    /// 关联<see cref="RouteAttribute"/>的值
+    /// </summary>
     string RouteUrl { get; }
+    /// <summary>
+    /// 通过<see cref="PageInfoAttribute"/>自定义，默认是类型名称
+    /// </summary>
     string RouteTitle { get; }
 }
 

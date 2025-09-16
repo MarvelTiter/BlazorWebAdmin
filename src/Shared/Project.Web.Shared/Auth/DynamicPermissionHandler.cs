@@ -7,8 +7,7 @@ public class DynamicPermissionRequirement : IAuthorizationRequirement
 
 }
 [AutoInject(ServiceType = typeof(IAuthorizationHandler))]
-public class DynamicPermissionHandler(IUserStore userStore
-    , IAppSession session
+public class DynamicPermissionHandler(IAppSession session
     , IServiceProvider serviceProvider) : AuthorizationHandler<DynamicPermissionRequirement>
 {
     private readonly SemaphoreSlim locker = new(1, 1);
@@ -18,6 +17,7 @@ public class DynamicPermissionHandler(IUserStore userStore
         {
             return;
         }
+        var userStore = session.UserStore;
         if (userStore.UserInfo is null)
         {
             return;
