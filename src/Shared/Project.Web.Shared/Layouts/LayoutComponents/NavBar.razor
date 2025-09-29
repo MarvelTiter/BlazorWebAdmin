@@ -1,7 +1,11 @@
 ﻿<div class="nav-bar @Class">
+    <span style="cursor:pointer;">
+        <MIcon ClassName="menu-collapse-icon" IconName="@IconName"></MIcon>
+    </span>
     <NavTabs Class="@Class"></NavTabs>
     <NavMenu Class="@Class"></NavMenu>
 </div>
 @code{
     [Parameter] public string? Class{ get; set; }
+    private string IconName => true ? "fa fa-indent" : "fa fa-outdent";
 }

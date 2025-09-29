@@ -75,7 +75,9 @@ public enum ButtonType
 
 public interface IUIService
 {
+    [Obsolete]
     string MainStyle();
+    RenderFragment AddStyles();
     string DarkStyle();
     string UIFrameworkJs();
     void Message(MessageType type, string message);

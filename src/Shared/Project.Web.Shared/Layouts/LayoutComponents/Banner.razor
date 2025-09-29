@@ -3,7 +3,7 @@
 @using Project.Web.Shared.Components
 @using System.Diagnostics.CodeAnalysis
 @inherits AppComponentBase
-<div class="layout-logo @Class">
+<div class="layout-logo @Class" data-theme="@theme">
     @if (!collapse)
     {
         <img class="logo-img" src="/_content/Project.Web.Shared/assets/logo.png" alt="logo">
@@ -24,7 +24,7 @@
     [Inject, NotNull] public IOptionsMonitor<AppSetting>? Config { get; set; }
     private bool collapse = false;
     private string IconName => collapse ? "fa fa-indent" : "fa fa-outdent";//"svg-expand_menu" : "svg-collapse_menu";
-
+    private string theme => App.Theme.ToString().ToLower();
     protected override void OnInitialized()
     {
         collapse = App.Collapsed;

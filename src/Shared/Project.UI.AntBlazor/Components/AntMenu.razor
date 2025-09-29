@@ -1,9 +1,13 @@
 ﻿@* 需要套一个元素才能让 ::deep 选择到 *@
-<div>
-    <Menu Theme="@MenuTheme.Light" 
+<div style="height:100%;">
+    <Menu Theme="@MenuTheme.Dark"
           Mode="@(Horizontal ? MenuMode.Horizontal : MenuMode.Inline)"
-          InlineCollapsed="@Collapsed" 
-          Style="flex: 1;height: 50px;background-color: var(--background-color);">
+          InlineCollapsed="@Collapsed"
+          Style="flex: 1;height: 100%;">
+        @* <MenuItem>
+            <Project.Web.Shared.Layouts.LayoutComponents.Banner>
+            </Project.Web.Shared.Layouts.LayoutComponents.Banner>
+        </MenuItem> *@
         @foreach (var item in Router.Menus.Where(m => m.Group == "ROOT"))
         {
             <AntMenuItem Route=item></AntMenuItem>
@@ -16,4 +20,10 @@
     [Parameter] public bool Horizontal { get; set; }
     [Parameter, NotNull] public IAppStore? App { get; set; }
     bool Collapsed => Horizontal ? false : App.Collapsed;
+    MenuTheme Theme => App.MenuTheme switch
+    {
+        ThemeMode.Light => MenuTheme.Light,
+        ThemeMode.Dark => MenuTheme.Dark,
+        _ => MenuTheme.Light
+    };
 }

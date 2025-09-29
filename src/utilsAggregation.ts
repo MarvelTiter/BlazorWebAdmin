@@ -1,4 +1,4 @@
-import  { setTheme }  from './themeManager.ts'
+﻿import  { setTheme }  from './themeManager.ts'
 function closeWin() {
     window.close()
 }
@@ -19,17 +19,6 @@ function openWindow(url: string, width: number, height: number, target?: string)
     console.log(features)
     window.open(url, target, features)
 }
-
-// async function getClient() {
-//     if (window.opener !== null) {
-//         return [null, null]
-//     }
-//     const response = await fetch('/ip.client')
-//     const ip = await response.text()
-//     return [ip, navigator.userAgent]
-// }
-
-
 
 export default {
     closeWin,

@@ -1,4 +1,5 @@
-@import "_content/Project.Web.Shared/css/font-awesome4.7.min.css";
+ï»¿@import "_content/Project.Web.Shared/css/font-awesome4.7.min.css";
+@import "themeVariables.css";
 
 h1:focus {
     outline: none;
@@ -78,7 +79,7 @@ html, body {
     margin-right: 5px;
 }
 
-/* QueryCondition×é¼şÏà¹Ø ¿ªÊ¼ */
+/* QueryConditionç»„ä»¶ç›¸å…³ å¼€å§‹ */
 .condition {
     display: flex;
     align-items: center;
@@ -101,9 +102,9 @@ html, body {
         width: 100%;
         overflow: hidden;
     }
-/* QueryCondition×é¼şÏà¹Ø ½áÊø */
+/* QueryConditionç»„ä»¶ç›¸å…³ ç»“æŸ */
 
-/* ÁÁ°µÖ÷Ìâ */
+/* äº®æš—ä¸»é¢˜ */
 :root {
     --background-color: #fcfcfc;
     --side-bar-bg: #fff;

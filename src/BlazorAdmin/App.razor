@@ -13,7 +13,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     @* <link href="@Assets[UIService.MainStyle()]" rel="stylesheet"> *@
-    <VLink Href="@UIService.MainStyle()"></VLink>
+    @* <VLink Href="@UIService.MainStyle()"></VLink> *@
+    @UIService.AddStyles()
     <link data-dark rel="stylesheet">
     @* <script src="@Assets[UIService.UIFrameworkJs()]"></script> *@
     <VScript Src="@UIService.UIFrameworkJs()"></VScript>

@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using OneOf;
 using Microsoft.Extensions.DependencyInjection;
 using AutoInjectGenerator;
+using Project.Web.Shared.Components;
 
 namespace Project.UI.AntBlazor;
 
@@ -31,6 +32,15 @@ public class UIService(
 {
     public IServiceProvider ServiceProvider { get; } = services;
     public string MainStyle() => "_content/AntDesign/css/ant-design-blazor.css";
+
+    public RenderFragment AddStyles()
+    {
+        return b =>
+        {
+            b.Component<VLink>().SetComponent(c => c.Href, "_content/AntDesign/css/ant-design-blazor.css").Build();
+            b.Component<VLink>().SetComponent(c => c.Href, "_content/AntDesign/css/ant-design-blazor.variable.css").Build();
+        };
+    }
 
     public string DarkStyle() => "_content/AntDesign/css/ant-design-blazor.dark.css";
 
