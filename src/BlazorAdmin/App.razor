@@ -35,15 +35,7 @@
     <VScript Src="_framework/blazor.web.js"></VScript>
     @* <script src="@Assets["js/blazor-admin-project.js"]"></script> *@
     <VScript Src="js/blazor-admin-project.js"></VScript>
-
-    <script type="text/javascript">
-        window.changeColor = function (color){
-            document.documentElement.style.setProperty("--ant-primary-color", color);
-            document.documentElement.style.setProperty("--ant-primary-color-hover", `color-mix(in srgb, ${color} 90%, white)`);
-            document.documentElement.style.setProperty("--ant-primary-color-active", `color-mix(in srgb, ${color} 80%, black)`);
-            document.documentElement.style.setProperty("--ant-primary-color-outline", `color-mix(in srgb, ${color} 20%, transparent)`);
-        }
-    </script>
+    
 </body>
 
 </html>
