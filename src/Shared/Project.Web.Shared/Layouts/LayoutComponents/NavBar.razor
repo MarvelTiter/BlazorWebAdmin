@@ -4,4 +4,5 @@
 </div>
 @code{
     [Parameter] public string? Class{ get; set; }
+    private string IconName => true ? "fa fa-indent" : "fa fa-outdent";
 }

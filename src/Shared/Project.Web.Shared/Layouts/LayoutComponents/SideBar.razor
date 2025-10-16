@@ -2,7 +2,7 @@
 @inherits Project.Constraints.Page.AppComponentBase
 <div class="side_bar @Class" style="display: flex;flex-direction: column;width:@Width">
     @TopBanner
-    <ScrollBar>
+    <ScrollBar ViewStyle="height:100%">
         @UI.BuildMenu(Router, Horizontal, App)
     </ScrollBar>
 </div>

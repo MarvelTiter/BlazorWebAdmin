@@ -1,4 +1,6 @@
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Project.Constraints.Models;
 using Project.Constraints.Models.Request;
@@ -6,19 +8,18 @@ using Project.Constraints.Store;
 using Project.Constraints.UI;
 using Project.Constraints.UI.Builders;
 using Project.Constraints.UI.Dropdown;
+using Project.Constraints.UI.Extensions;
 using Project.Constraints.UI.Flyout;
 using Project.Constraints.UI.Form;
 using Project.Constraints.UI.Props;
 using Project.Constraints.UI.Table;
 using Project.Constraints.UI.Tree;
 using Project.UI.FluentUI.Components;
+using Project.Web.Shared.Components;
 using System.Linq.Expressions;
-using MessageType = Project.Constraints.UI.MessageType;
 using ButtonType = Project.Constraints.UI.ButtonType;
-using Project.Constraints.UI.Extensions;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.DependencyInjection;
 using IconInfo = Project.Constraints.UI.IconInfo;
+using MessageType = Project.Constraints.UI.MessageType;
 
 namespace Project.UI.FluentUI;
 
@@ -30,9 +31,22 @@ public class UIService(
 {
     public string MainStyle() => string.Empty;//"_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css";
 
+    public RenderFragment AddStyles()
+    {
+        return b => { };
+    }
+
+
     public string DarkStyle() => string.Empty;
 
-    public string UIFrameworkJs() => "_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js";
+    public RenderFragment UIFrameworkJs()
+    {
+        return b =>
+        {
+            b.Component<VScript>()
+            .SetComponent(s =>s.Src, "_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js").Build();
+        };
+    }
     public RenderFragment BuildIcon(string name)
     {
         throw new NotImplementedException();

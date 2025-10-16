@@ -13,10 +13,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
     @* <link href="@Assets[UIService.MainStyle()]" rel="stylesheet"> *@
-    <VLink Href="@UIService.MainStyle()"></VLink>
+    @* <VLink Href="@UIService.MainStyle()"></VLink> *@
+    @UIService.AddStyles()
     <link data-dark rel="stylesheet">
     @* <script src="@Assets[UIService.UIFrameworkJs()]"></script> *@
-    <VScript Src="@UIService.UIFrameworkJs()"></VScript>
+    @* <VScript Src="@UIService.UIFrameworkJs()"></VScript> *@
+    @UIService.UIFrameworkJs()
     @* <link href="@Assets["app.css"]" rel="stylesheet" /> *@
     <VLink Href="app.css"></VLink>
     @* <link href="@Assets["BlazorAdmin.styles.css"]" rel="stylesheet" /> *@
@@ -33,6 +35,15 @@
     <VScript Src="_framework/blazor.web.js"></VScript>
     @* <script src="@Assets["js/blazor-admin-project.js"]"></script> *@
     <VScript Src="js/blazor-admin-project.js"></VScript>
+
+    <script type="text/javascript">
+        window.changeColor = function (color){
+            document.documentElement.style.setProperty("--ant-primary-color", color);
+            document.documentElement.style.setProperty("--ant-primary-color-hover", `color-mix(in srgb, ${color} 90%, white)`);
+            document.documentElement.style.setProperty("--ant-primary-color-active", `color-mix(in srgb, ${color} 80%, black)`);
+            document.documentElement.style.setProperty("--ant-primary-color-outline", `color-mix(in srgb, ${color} 20%, transparent)`);
+        }
+    </script>
 </body>
 
 </html>

@@ -55,6 +55,10 @@ public class StyleBuilder
             {
                 if (pair.Value.Condition())
                 {
+                    if (pair.Key == string.Empty)
+                    {
+                        return pair.Value.Value();
+                    }
                     return $"{pair.Key}: {pair.Value.Value()};";
                 }
                 return "";

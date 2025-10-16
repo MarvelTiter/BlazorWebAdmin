@@ -1,4 +1,4 @@
-const darkQuery = window.matchMedia("(prefers-color-scheme: dark)")
+﻿const darkQuery = window.matchMedia("(prefers-color-scheme: dark)")
 
 function setDarkStyleSheet(href: string) {
     const link: HTMLLinkElement = document.querySelector('link[data-dark]')!
@@ -50,5 +50,14 @@ export function setTheme(theme: string, url: string) {
             osThemeChangedHandler = undefined
         }
         changeTheme(theme, url)
+    }
+}
+
+export function updateTheme(map: any) {
+    const keys = Object.keys(map)
+    for (let i = 0; i < keys.length; i++) {
+        const myName = keys[i]
+        const otherName = map[myName]
+        document.documentElement.style.setProperty(myName, `var(${otherName})`)
     }
 }

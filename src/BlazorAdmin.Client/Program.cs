@@ -1,4 +1,5 @@
 ﻿using AutoPageStateContainerGenerator;
+using AutoWasmApiGenerator;
 using BlazorAdmin.Client;
 using BlazorAdmin.Client.HttpClientHandlers;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -40,7 +41,7 @@ builder.Services.AddStateContainers();
 builder.Services.AutoInjectWasm();
 builder.Services.AddAuthorizationCore(o =>
 {
-    o.AddPolicy("AdminPolicy", policy =>
+    o.AddPolicy(AppConst.ONLINE_USER_POLICY, policy =>
     {
         policy.RequireUserName("admin");
     });
@@ -51,10 +52,7 @@ builder.Services.AddScoped<ISvgIconService, SvgIconServiceApiInvoker>();
 builder.Services.AddScoped<IFileService, FileServiceApiInvoker>();
 #if (ExcludeDefaultService)
 #else
-builder.Services.AddScoped<IPermissionService, StandardPermissionServiceApiInvoker>();
-builder.Services.AddScoped<IStandardPermissionService, StandardPermissionServiceApiInvoker>();
-builder.Services.AddScoped<IStandardRunLogService, StandardRunLogServiceApiInvoker>();
-builder.Services.AddScoped<IStandardUserService, StandardUserServiceApiInvoker>();
+builder.Services.AddGeneratedApiInvokerServices();
 #endif
 
 var host = builder.Build();

@@ -1,0 +1,22 @@
+﻿::deep .condition {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+    ::deep .condition .label {
+        padding-right: 5px;
+        display: inline-block;
+        box-sizing: border-box;
+        text-align: right;
+    }
+
+    ::deep .condition .content > * {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    ::deep .condition .label + * {
+        width: 100%;
+        overflow: hidden;
+    }

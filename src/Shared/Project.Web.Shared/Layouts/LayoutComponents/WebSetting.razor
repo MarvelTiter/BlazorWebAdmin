@@ -4,17 +4,23 @@
 @using Project.Web.Shared.Utils
 @using Project.Web.Shared.Layouts.LayoutComponents.WebSettingItems
 @inherits AppComponentBase
+@implements IWebSettingHandler
 <MCard Title="页面布局">
     <LayoutManager OnLayoutChanged="OnLayoutChanged"></LayoutManager>
 </MCard>
 
-<MCard Title="主题设置">
+<MCard Title="系统主题">
     <ThemeManager Current="App.Theme" OnThemeChanged="OnThemeChanged"></ThemeManager>
 </MCard>
 
-@* <MCard Title="语言设置"> *@
-@*     <LanguageSelector></LanguageSelector> *@
-@* </MCard> *@
+<CascadingValue Value="this" IsFixed>
+    @foreach (var item in UI.WebSettings())
+    {
+        <MCard Title="@item.Title">
+            @item.Fragment
+        </MCard>
+    }
+</CascadingValue>
 
 @code {
     [Inject, NotNull] IProtectedLocalStorage? Storage { get; set; }
@@ -29,6 +35,13 @@
     private async Task OnLayoutChanged(LayoutMode mode)
     {
         App.Mode = mode;
+        Context.Update?.Invoke();
+        await SaveSetting();
+    }
+
+    public async Task SaveSetting(Action<IAppStore> action)
+    {
+        action(App);
         Context.Update?.Invoke();
         await SaveSetting();
     }

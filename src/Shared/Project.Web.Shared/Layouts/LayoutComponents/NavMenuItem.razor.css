@@ -1,16 +1,1 @@
-﻿.nav-menu-item {
-    height: 100%;
-    width: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-    .nav-menu-item.fit-width {
-        width: unset;
-    }
-
-    .nav-menu-item:hover {
-        background-color: var(--hover-bg-color);
-    }
+﻿

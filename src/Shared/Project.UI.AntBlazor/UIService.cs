@@ -18,6 +18,7 @@ using System.Linq.Expressions;
 using OneOf;
 using Microsoft.Extensions.DependencyInjection;
 using AutoInjectGenerator;
+using Project.Web.Shared.Components;
 
 namespace Project.UI.AntBlazor;
 
@@ -32,9 +33,26 @@ public class UIService(
     public IServiceProvider ServiceProvider { get; } = services;
     public string MainStyle() => "_content/AntDesign/css/ant-design-blazor.css";
 
+    public RenderFragment AddStyles()
+    {
+        return b =>
+        {
+            //b.Component<VLink>().SetComponent(c => c.Href, "_content/AntDesign/css/ant-design-blazor.css").Build();
+            b.Component<VLink>().SetComponent(c => c.Href, "_content/AntDesign/css/ant-design-blazor.variable.css").Build();
+            b.Component<VLink>().SetComponent(c => c.Href, "_content/Project.UI.AntBlazor/ant.css").Build();
+        };
+    }
+
     public string DarkStyle() => "_content/AntDesign/css/ant-design-blazor.dark.css";
 
-    public string UIFrameworkJs() => "_content/AntDesign/js/ant-design-blazor.js";
+    public RenderFragment UIFrameworkJs()
+    {
+        return b =>
+        {
+            b.Component<VScript>()
+            .SetComponent(c => c.Src, "_content/AntDesign/js/ant-design-blazor.js").Build();
+        };
+    }
 
     //public RenderFragment BuildIcon(string name)
     //{
@@ -60,7 +78,7 @@ public class UIService(
                     builder.SetComponent(c => c.ShowTime, "HH:mm");
                 }
             })
-            { Receiver = reciver };
+        { Receiver = reciver };
     }
 
     public IBindableInputComponent<DefaultProp, string> BuildPassword(object reciver)
@@ -81,7 +99,8 @@ public class UIService(
                     self.Model.BindValueName = "Values";
                     self.Model.ValueExpressionName = "ValuesExpression";
                 }
-            }) { Receiver = reciver };
+            })
+            { Receiver = reciver };
         }
         else
         {
@@ -100,7 +119,7 @@ public class UIService(
                         .SetComponent(s => s.AllowClear, self.Model.AllowClear)
                         .SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
                 })
-                { Receiver = reciver };
+            { Receiver = reciver };
         }
     }
 
@@ -125,7 +144,7 @@ public class UIService(
                 self.SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
                 self.SetComponent(s => s.DropdownMatchSelectWidth, false);
             })
-            { Receiver = reciver };
+        { Receiver = reciver };
     }
 
     public IBindableInputComponent<SwitchProp, bool> BuildSwitch(object reciver)
@@ -136,7 +155,7 @@ public class UIService(
                 self.SetComponent(sw => sw.CheckedChildren, self.Model.CheckedLabel)
                     .SetComponent(sw => sw.UnCheckedChildren, self.Model.UnCheckedLabel);
             })
-            { Receiver = reciver };
+        { Receiver = reciver };
         // @bind-Check
         binder.Model.BindValueName = "Checked";
         return binder;
@@ -164,7 +183,7 @@ public class UIService(
                 self.TrySet("ChildContent", (RenderFragment)(builder => builder.AddContent(1, self.Model.Text)));
 
             })
-            { Receiver = reciver };
+        { Receiver = reciver };
     }
 
     public RenderFragment BuildFakeButton(ButtonProp props)
@@ -433,7 +452,7 @@ public class UIService(
                 if (self.Model.Label != null)
                     self.SetComponent(cb => cb.ChildContent, self.Model.Label.AsContent());
             })
-            { Receiver = reciver };
+        { Receiver = reciver };
         binder.Model.BindValueName = "Checked";
         return binder;
     }
@@ -466,7 +485,7 @@ public class UIService(
                     self.SetComponent(cbg => cbg.Options, options.ConvertToCheckBoxOptions(label, value));
                 }
             })
-            { Receiver = reciver };
+        { Receiver = reciver };
     }
 
     public ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object reciver,
@@ -487,7 +506,7 @@ public class UIService(
                     self.SetComponent(rg => rg.ButtonStyle, RadioButtonStyle.Solid);
                 }
             })
-            { Receiver = reciver };
+        { Receiver = reciver };
     }
 
     public RenderFragment BuildPopover(PopoverOptions options)
@@ -558,5 +577,10 @@ public class UIService(
     public int GetMenuWidth(bool collapsed)
     {
         return collapsed ? 80 : 260;
+    }
+
+    public IEnumerable<WebSettingFragment> WebSettings()
+    {
+        yield return new WebSettingFragment("菜单主题", b => b.Component<AntMenuSetting>().Build());
     }
 }
