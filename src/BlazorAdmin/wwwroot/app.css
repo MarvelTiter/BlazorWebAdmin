@@ -79,31 +79,6 @@ html, body {
     margin-right: 5px;
 }
 
-/* QueryCondition组件相关 开始 */
-.condition {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-}
-
-    .condition .label {
-        padding-right: 5px;
-        display: inline-block;
-        box-sizing: border-box;
-        text-align: right;
-    }
-
-    .condition .content > * {
-        width: 100%;
-        overflow: hidden;
-    }
-
-    .condition .label + * {
-        width: 100%;
-        overflow: hidden;
-    }
-/* QueryCondition组件相关 结束 */
-
 /* 亮暗主题 */
 :root {
     --background-color: #fcfcfc;

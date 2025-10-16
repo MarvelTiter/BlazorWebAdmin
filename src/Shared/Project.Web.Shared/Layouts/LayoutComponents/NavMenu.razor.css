@@ -7,6 +7,7 @@
     background-color: var(--background-color);
 }
 
+    
 
     .nav-menu.card {
         border-radius: 4px;
@@ -16,3 +17,34 @@
     .nav-menu.line {
         padding-left: 16px;
     }
+
+    .nav-menu.line.dark {
+        background: #001529;
+        color: rgba(255, 255, 255, 0.65);
+    }
+
+        .nav-menu.line.dark ::deep svg * {
+            fill: rgba(255, 255, 255, 0.65) !important;
+        }
+
+
+::deep .nav-menu-item {
+    height: 100%;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+    ::deep .nav-menu-item.fit-width {
+        width: unset;
+    }
+
+    ::deep .nav-menu-item:hover {
+        background-color: var(--hover-bg-color);
+    }
+
+.dark ::deep .nav-menu-item:hover {
+    background-color: unset;
+}

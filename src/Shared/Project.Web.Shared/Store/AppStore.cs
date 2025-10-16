@@ -30,7 +30,7 @@ public class AppStore : StoreBase, IAppStore
     public LayoutMode? Mode { get; set; }
     public string? AppLanguage { get; set; }
     public ThemeMode Theme { get; set; }
-    public ThemeMode MenuTheme { get; set; }
+    public ThemeMode MenuTheme { get; set; } = ThemeMode.Dark;
     public bool Collapsed { get; set; }
     public int SideBarExpandWidth { get; set; } = 260;
     public string MainThemeColor { get; set; } = "#1464ff";//#141414
@@ -40,7 +40,7 @@ public class AppStore : StoreBase, IAppStore
         Mode = app?.Mode ?? options?.CurrentValue.LayoutMode ?? LayoutMode.Card;
         AppLanguage = app?.AppLanguage ?? options?.CurrentValue.AppLanguage ?? "zh-CN";
         Theme = app?.Theme ?? ThemeMode.Light;
-        MenuTheme = app?.MenuTheme ?? ThemeMode.Light;
+        MenuTheme = app?.MenuTheme ?? ThemeMode.Dark;
         Collapsed = app?.Collapsed ?? false;
         MainBackgroundColor = app?.MainBackgroundColor ?? MainBackgroundColor;
         CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(AppLanguage);

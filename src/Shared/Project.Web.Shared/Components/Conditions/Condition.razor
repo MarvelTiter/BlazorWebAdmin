@@ -3,7 +3,7 @@
 <MGridContent ColSpan="@ColSpan" RowSpan="@RowSpan">
     <span class="condition" style="@Style;min-width:@(ColumnWidthStyle);max-width:@(ColumnWidthStyle);">
         <span class="label" style="min-width:@(LabelWidthStyle);max-width:@(LabelWidthStyle);">
-            @Label
+            @(new MarkupString(Label ?? "&nbsp;"))
         </span>
         <span class="content" style="min-width:@(ContentWidthStyle);max-width:@(ContentWidthStyle);">
             @if (Field != null && ChildContent == null)

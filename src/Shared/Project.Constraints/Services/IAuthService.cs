@@ -25,7 +25,7 @@ public interface IAuthService
     /// </summary>
     /// <returns></returns>
     [WebMethod(Method = WebMethod.Get, Route = "logout")]
-    [LogInfo(Module = "登录模块", Action = "用户登出")]
+    //[LogInfo(Module = "登录模块", Action = "用户登出")]
     Task SignOutAsync();
 
     /// <summary>

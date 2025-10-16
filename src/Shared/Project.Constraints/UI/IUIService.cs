@@ -79,7 +79,7 @@ public interface IUIService
     string MainStyle();
     RenderFragment AddStyles();
     string DarkStyle();
-    string UIFrameworkJs();
+    RenderFragment UIFrameworkJs();
     void Message(MessageType type, string message);
     void Notify(MessageType type, string title, string message);
     void Alert(MessageType type, string title, string message);
@@ -174,4 +174,8 @@ public interface IUIService
     int GetMenuWidth(bool collapsed);
 
     RenderFragment RenderIcon(IconInfo icon);
+    IEnumerable<WebSettingFragment> WebSettings()
+    {
+        yield break;
+    }
 }

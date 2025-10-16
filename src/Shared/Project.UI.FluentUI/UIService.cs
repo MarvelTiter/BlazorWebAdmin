@@ -39,7 +39,14 @@ public class UIService(
 
     public string DarkStyle() => string.Empty;
 
-    public string UIFrameworkJs() => "_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js";
+    public RenderFragment UIFrameworkJs()
+    {
+        return b =>
+        {
+            b.Component<VScript>()
+            .SetComponent(s =>s.Src, "_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js").Build();
+        };
+    }
     public RenderFragment BuildIcon(string name)
     {
         throw new NotImplementedException();

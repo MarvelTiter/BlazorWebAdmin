@@ -4,7 +4,7 @@
 @using System.Globalization
 @inherits AppComponentBase
 @inject IProtectedLocalStorage LocalStorage
-<div class="nav-menu @Class">
+<div class="nav-menu @Class @Theme">
     @*全屏按钮*@
     <NavMenuItem OnClick="ToggleFullScreen" Title="@Localizer["NavMenu.TipTitle.FullScreen"]">
         <FullScreen @ref="fullscreen"></FullScreen>
@@ -40,7 +40,7 @@
     [Inject, NotNull] IOptionsMonitor<CultureOptions>? CultureOptions { get; set; }
     [Inject, NotNull] IOptionsMonitor<Token>? Token { get; set; }
     [Inject, NotNull] ILanguageService? LanguageService { get; set; }
-
+    private string Theme => App.MenuTheme == ThemeMode.Dark && App.Mode == Constraints.Store.Models.LayoutMode.Line ? "dark" : "light";
     private async Task ToggleFullScreen()
     {
         await fullscreen!.Toggle();

@@ -1,9 +1,9 @@
 ﻿@* 需要套一个元素才能让 ::deep 选择到 *@
-<div style="height:100%;">
-    <Menu Theme="@MenuTheme.Dark"
+<div style="height:100%;display:flex;flex-direction:column;" class="@Theme.ToString().ToLower()">
+    <Menu Theme="@Theme"
           Mode="@(Horizontal ? MenuMode.Horizontal : MenuMode.Inline)"
           InlineCollapsed="@Collapsed"
-          Style="flex: 1;height: 100%;">
+          Style="flex: 1;">
         @* <MenuItem>
             <Project.Web.Shared.Layouts.LayoutComponents.Banner>
             </Project.Web.Shared.Layouts.LayoutComponents.Banner>

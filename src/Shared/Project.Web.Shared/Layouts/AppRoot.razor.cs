@@ -76,7 +76,7 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
             registerHandlers.Add(Context.RegisterLoginSuccessHandler(additional.LoginSuccessAsync));
             registerHandlers.Add(Context.RegisterWebApplicationAccessedHandler(additional.AfterWebApplicationAccessedAsync));
         }
-
+        Context.Update = StateHasChanged;
         base.OnInitialized();
     }
     protected override async Task OnInitializedAsync()
@@ -122,13 +122,13 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
         await base.OnAfterRenderAsync(firstRender);
         if (firstRender)
         {
-            await Context.NotifyWebApplicationAccessedAsync();
             var app = await LocalStorage.GetAsync<AppStore>(ConstraintString.APP_STORE_KEY);
             if (app.Success)
             {
                 Context.AppStore.ApplySetting(app.Value);
                 await Js.InvokeUtilsAsync("setTheme", $"{app.Value!.Theme}".ToLower(), Context.UI.DarkStyle());
             }
+            await Context.NotifyWebApplicationAccessedAsync();
             var url = Context.Navigator.ToBaseRelativePath(Context.Navigator.Uri);
             if (!string.IsNullOrEmpty(url))
             {

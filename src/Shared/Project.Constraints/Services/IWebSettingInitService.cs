@@ -9,6 +9,11 @@ public interface IWebSettingInitService
     void ApplyAppSetting(IAppStore app);
 }
 
+public interface IWebSettingHandler
+{
+    Task SaveSetting(Action<IAppStore> action);
+}
+
 [AutoInject]
 public class WebSettingInitService : IWebSettingInitService
 {
