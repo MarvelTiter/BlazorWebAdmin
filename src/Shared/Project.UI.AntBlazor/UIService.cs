@@ -39,6 +39,7 @@ public class UIService(
         {
             //b.Component<VLink>().SetComponent(c => c.Href, "_content/AntDesign/css/ant-design-blazor.css").Build();
             b.Component<VLink>().SetComponent(c => c.Href, "_content/AntDesign/css/ant-design-blazor.variable.css").Build();
+            //b.Component<VLink>().SetComponent(c => c.Href, "_content/AntDesign/less/ant-design-blazor.variable.less").SetComponent(c => c.Rel, "stylesheet/less").Build();
             b.Component<VLink>().SetComponent(c => c.Href, "_content/Project.UI.AntBlazor/ant.css").Build();
         };
     }
@@ -49,8 +50,9 @@ public class UIService(
     {
         return b =>
         {
-            b.Component<VScript>()
-            .SetComponent(c => c.Src, "_content/AntDesign/js/ant-design-blazor.js").Build();
+            b.Component<VScript>().SetComponent(c => c.Src, "_content/AntDesign/js/ant-design-blazor.js").Build();
+            b.Component<VScript>().SetComponent(c => c.Src, "_content/Project.UI.AntBlazor/ant-color.js").Build();
+            //b.Component<VScript>().SetComponent(c => c.Src, "_content/Project.UI.AntBlazor/less.min.js").Build();
         };
     }
 
@@ -582,5 +584,6 @@ public class UIService(
     public IEnumerable<WebSettingFragment> WebSettings()
     {
         yield return new WebSettingFragment("菜单主题", b => b.Component<AntMenuSetting>().Build());
+        yield return new("主题设置", b => b.Component<AntColorSetting>().Build());
     }
 }

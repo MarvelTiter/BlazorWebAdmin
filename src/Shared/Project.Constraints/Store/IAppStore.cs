@@ -17,7 +17,7 @@ public interface IAppStore
     ThemeMode MenuTheme { get; set; }
     bool Collapsed { get; set; }
     int SideBarExpandWidth { get; set; }
-    string MainThemeColor { get; set; }
-    string MainBackgroundColor { get; set; }
+    string? MainThemeColor { get; set; }
+    string? MainBackgroundColor { get; set; }
     void ApplySetting(IAppStore? app);
 }

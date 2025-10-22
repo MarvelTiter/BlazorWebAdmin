@@ -1,11 +1,11 @@
 ﻿::deep a {
-    color: var(--font-color);
+/*    color: var(--font-color);*/
     text-decoration: none;
     white-space: nowrap;
 }
 
     ::deep a.active {
-        color: var(--major-color);
+/*        color: var(--major-color);*/
         font-weight: 600;
     }
 
@@ -13,7 +13,7 @@
 
 /* 标签样式 */
 .tags-box .nav-top {
-    color: var(--font-color);
+/*    color: var(--font-color);*/
     display: flex;
     align-items: center;
     justify-content: center;

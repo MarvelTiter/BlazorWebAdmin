@@ -1,0 +1,183 @@
+﻿
+// Hex 转 RGB
+function hexToRgb(hex) {
+    hex = hex.replace(/^#/, '');
+    if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    const num = parseInt(hex, 16);
+    return {
+        r: (num >> 16) & 255,
+        g: (num >> 8) & 255,
+        b: num & 255
+    };
+}
+
+// RGB 转 Hex
+function rgbToHex(r, g, b) {
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+// RGB 转 HSV
+function rgbToHsv(r, g, b) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const delta = max - min;
+
+    let h = 0;
+    if (delta !== 0) {
+        if (max === r) h = ((g - b) / delta) % 6;
+        else if (max === g) h = (b - r) / delta + 2;
+        else h = (r - g) / delta + 4;
+        h = Math.round(h * 60);
+        if (h < 0) h += 360;
+    }
+
+    const s = max === 0 ? 0 : delta / max;
+    const v = max;
+
+    return { h, s, v };
+}
+
+// HSV 转 RGB
+function hsvToRgb(h, s, v) {
+    h = h % 360;
+    if (h < 0) h += 360;
+
+    const i = Math.floor(h / 60);
+    const f = h / 60 - i;
+    const p = v * (1 - s);
+    const q = v * (1 - f * s);
+    const t = v * (1 - (1 - f) * s);
+
+    let r, g, b;
+    switch (i) {
+        case 0: [r, g, b] = [v, t, p]; break;
+        case 1: [r, g, b] = [q, v, p]; break;
+        case 2: [r, g, b] = [p, v, t]; break;
+        case 3: [r, g, b] = [p, q, v]; break;
+        case 4: [r, g, b] = [t, p, v]; break;
+        case 5: [r, g, b] = [v, p, q]; break;
+    }
+
+    return {
+        r: Math.round(r * 255),
+        g: Math.round(g * 255),
+        b: Math.round(b * 255)
+    };
+}
+// 计算亮度（YIQ 模型）
+function calculateBrightness(hex) {
+    const rgb = hexToRgb(hex);
+    // 使用 YIQ 模型计算相对亮度
+    return (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
+}
+// 根据背景色计算文本颜色
+function getTextColor(backgroundColor, alpha) {
+    const brightness = calculateBrightness(backgroundColor);
+    // 阈值 128，亮度大于 128 用黑色，小于等于 128 用白色
+    return brightness > 128 ? 'rgba(0, 0, 0, ' + alpha + ')' : 'rgba(255, 255, 255, ' + alpha + ')';
+}
+// 调整颜色亮度
+function adjustBrightness(hex, factor) {
+    const rgb = this.hexToRgb(hex);
+    const hsv = this.rgbToHsv(rgb.r, rgb.g, rgb.b);
+
+    // 调整亮度
+    hsv.v = Math.max(0, Math.min(1, hsv.v + factor));
+
+    const newRgb = this.hsvToRgb(hsv.h, hsv.s, hsv.v);
+    return this.rgbToHex(newRgb.r, newRgb.g, newRgb.b);
+}
+
+// 调整颜色饱和度
+function adjustSaturation(hex, factor) {
+    const rgb = this.hexToRgb(hex);
+    const hsv = this.rgbToHsv(rgb.r, rgb.g, rgb.b);
+
+    // 调整饱和度
+    hsv.s = Math.max(0, Math.min(1, hsv.s + factor));
+
+    const newRgb = this.hsvToRgb(hsv.h, hsv.s, hsv.v);
+    return this.rgbToHex(newRgb.r, newRgb.g, newRgb.b);
+}
+
+// 生成半透明颜色
+function withAlpha(hex, alpha) {
+    const rgb = this.hexToRgb(hex);
+    return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+}
+
+// Ant Design 颜色生成算法
+function colorPalette(color, index) {
+    const isLight = index <= 6;
+
+    if (isLight) {
+        // 浅色系列：index 越小颜色越浅
+        const lightnessMap = {
+            1: 0.95,  // 最浅
+            2: 0.85,
+            3: 0.75,
+            4: 0.65,
+            5: 0.55,  // hover
+            6: 0.45   // 主色
+        };
+        const factor = (lightnessMap[index] || 0.5) - 0.5;
+        return adjustBrightness(color, factor);
+    } else {
+        // 深色系列：index 越大颜色越深
+        const lightnessMap = {
+            7: -0.15,  // active
+            8: -0.30,
+            9: -0.45,
+            10: -0.60 // 最深
+        };
+        const factor = lightnessMap[index] || -0.15;
+        return adjustBrightness(color, factor);
+    }
+};
+
+// 主题色变更函数
+window.changeColor = function (primaryColor) {
+    const root = document.documentElement
+    // 设置主色
+    root.style.setProperty('--ant-primary-color', primaryColor)
+    root.style.setProperty('--major-color', primaryColor)
+    // 计算相关颜色
+    root.style.setProperty('--ant-primary-color-hover', colorPalette(primaryColor, 5))// 比主色浅
+    root.style.setProperty('--ant-primary-color-active', colorPalette(primaryColor, 7))// 比主色深
+    root.style.setProperty('--ant-primary-color-outline', withAlpha(primaryColor, 0.2))
+    // 主色色板
+    root.style.setProperty('--ant-primary-1', colorPalette(primaryColor, 1))
+    root.style.setProperty('--ant-primary-2', colorPalette(primaryColor, 2))
+    root.style.setProperty('--ant-primary-3', colorPalette(primaryColor, 3))
+    root.style.setProperty('--ant-primary-4', colorPalette(primaryColor, 4))
+    root.style.setProperty('--ant-primary-5', colorPalette(primaryColor, 5))
+    root.style.setProperty('--ant-primary-6', colorPalette(primaryColor, 6))
+    root.style.setProperty('--ant-primary-7', colorPalette(primaryColor, 7))
+    // 信息色
+    root.style.setProperty('--ant-info-color', primaryColor);
+    root.style.setProperty('--ant-info-color-deprecated-bg', colorPalette(primaryColor, 1))
+    root.style.setProperty('--ant-info-color-deprecated-border', colorPalette(primaryColor, 3))
+
+    // 计算文本颜色
+    const fontColor = getTextColor(primaryColor, 0.65)
+    root.style.setProperty('--ant-text-color', fontColor)
+    root.style.setProperty('--ant-text-color-secondary', getTextColor(primaryColor, 0.45))
+    root.style.setProperty('--font-color', fontColor)
+
+    localStorage.setItem("blazor-admin-project-primary-color", primaryColor)
+    
+};
+
+// 页面加载时初始化
+document.addEventListener('DOMContentLoaded', function () {
+    const color = localStorage.getItem("blazor-admin-project-primary-color")
+    if (color) {
+        changeColor(color);
+    }
+});

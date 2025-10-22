@@ -33,8 +33,8 @@ public class AppStore : StoreBase, IAppStore
     public ThemeMode MenuTheme { get; set; } = ThemeMode.Dark;
     public bool Collapsed { get; set; }
     public int SideBarExpandWidth { get; set; } = 260;
-    public string MainThemeColor { get; set; } = "#1464ff";//#141414
-    public string MainBackgroundColor { get; set; } = "#fcfcfc";
+    public string? MainThemeColor { get; set; } 
+    public string? MainBackgroundColor { get; set; } 
     public void ApplySetting(IAppStore? app)
     {
         Mode = app?.Mode ?? options?.CurrentValue.LayoutMode ?? LayoutMode.Card;
@@ -42,7 +42,8 @@ public class AppStore : StoreBase, IAppStore
         Theme = app?.Theme ?? ThemeMode.Light;
         MenuTheme = app?.MenuTheme ?? ThemeMode.Dark;
         Collapsed = app?.Collapsed ?? false;
-        MainBackgroundColor = app?.MainBackgroundColor ?? MainBackgroundColor;
+        MainThemeColor = app?.MainThemeColor;
+        MainBackgroundColor = app?.MainBackgroundColor;
         CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(AppLanguage);
     }
 }
