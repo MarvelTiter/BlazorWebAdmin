@@ -3,6 +3,7 @@
 <div>
     主题颜色
     <input type="color" value="@App.MainThemeColor" @onchange="@SetColor" />
+    <Button OnClick="Reset">重置</Button>
 </div>
 
 @code {
@@ -16,5 +17,11 @@
             await Js.InvokeVoidAsync("changeColor", color);
             await Ws.SaveSetting(a => a.MainThemeColor = color);
         }
+    }
+
+    private async Task Reset()
+    {
+        await Js.InvokeVoidAsync("resetThemeVariables");
+        await Ws.SaveSetting(a => a.MainThemeColor = "#1890ff");
     }
 }

@@ -146,7 +146,7 @@ window.changeColor = function (primaryColor) {
     const root = document.documentElement
     // 设置主色
     root.style.setProperty('--ant-primary-color', primaryColor)
-    root.style.setProperty('--major-color', primaryColor)
+    //root.style.setProperty('--major-color', primaryColor)
     // 计算相关颜色
     root.style.setProperty('--ant-primary-color-hover', colorPalette(primaryColor, 5))// 比主色浅
     root.style.setProperty('--ant-primary-color-active', colorPalette(primaryColor, 7))// 比主色深
@@ -168,15 +168,74 @@ window.changeColor = function (primaryColor) {
     const fontColor = getTextColor(primaryColor, 0.65)
     root.style.setProperty('--ant-text-color', fontColor)
     root.style.setProperty('--ant-text-color-secondary', getTextColor(primaryColor, 0.45))
-    root.style.setProperty('--font-color', fontColor)
+    //root.style.setProperty('--font-color', fontColor)
 
     localStorage.setItem("blazor-admin-project-primary-color", primaryColor)
-    
+
 };
 
+const defaultThemeValues = {
+    '--ant-primary-color': '#1890ff',
+    '--ant-primary-color-hover': '#40a9ff',
+    '--ant-primary-color-active': '#096dd9',
+    '--ant-primary-color-outline': 'rgba(24, 144, 255, 0.2)',
+    '--ant-primary-1': '#e6f7ff',
+    '--ant-primary-2': '#bae7ff',
+    '--ant-primary-3': '#91d5ff',
+    '--ant-primary-4': '#69c0ff',
+    '--ant-primary-5': '#40a9ff',
+    '--ant-primary-6': '#1890ff',
+    '--ant-primary-7': '#096dd9',
+    '--ant-primary-color-deprecated-pure': '',
+    '--ant-primary-color-deprecated-l-35': '#cbe6ff',
+    '--ant-primary-color-deprecated-l-20': '#7ec1ff',
+    '--ant-primary-color-deprecated-t-20': '#46a6ff',
+    '--ant-primary-color-deprecated-t-50': '#8cc8ff',
+    '--ant-primary-color-deprecated-f-12': 'rgba(24, 144, 255, 0.12)',
+    '--ant-primary-color-active-deprecated-f-30': 'rgba(230, 247, 255, 0.3)',
+    '--ant-primary-color-active-deprecated-d-02': '#dcf4ff',
+    '--ant-success-color': '#52c41a',
+    '--ant-success-color-hover': '#73d13d',
+    '--ant-success-color-active': '#389e0d',
+    '--ant-success-color-outline': 'rgba(82, 196, 26, 0.2)',
+    '--ant-success-color-deprecated-bg': '#f6ffed',
+    '--ant-success-color-deprecated-border': '#b7eb8f',
+    '--ant-error-color': '#ff4d4f',
+    '--ant-error-color-hover': '#ff7875',
+    '--ant-error-color-active': '#d9363e',
+    '--ant-error-color-outline': 'rgba(255, 77, 79, 0.2)',
+    '--ant-error-color-deprecated-bg': '#fff2f0',
+    '--ant-error-color-deprecated-border': '#ffccc7',
+    '--ant-warning-color': '#faad14',
+    '--ant-warning-color-hover': '#ffc53d',
+    '--ant-warning-color-active': '#d48806',
+    '--ant-warning-color-outline': 'rgba(250, 173, 20, 0.2)',
+    '--ant-warning-color-deprecated-bg': '#fffbe6',
+    '--ant-warning-color-deprecated-border': '#ffe58f',
+    '--ant-info-color': '#1890ff',
+    '--ant-info-color-deprecated-bg': '#e6f7ff',
+    '--ant-info-color-deprecated-border': '#91d5ff',
+    '--ant-text-color': rgba(0, 0, 0, 0.65),
+    '--ant-text-color-secondary': rgba(0, 0, 0, 0.45)
+};
+// 设置主题函数
+window.resetThemeVariables = function () {
+    const root = document.documentElement;
+
+    Object.entries(defaultThemeValues).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && value !== '') {
+            root.style.setProperty(key, value);
+        }
+    });
+
+    localStorage.removeItem("blazor-admin-project-primary-color")
+}
 // 页面加载时初始化
 document.addEventListener('DOMContentLoaded', function () {
     const color = localStorage.getItem("blazor-admin-project-primary-color")
+    const root = document.documentElement;
+    root.style.setProperty('--major-color', 'var(--ant-primary-color)')
+    root.style.setProperty('--font-color', 'var(--ant-text-color)')
     if (color) {
         changeColor(color);
     }
