@@ -9,11 +9,15 @@ function setDarkStyleSheet(href) {
 }
 
 function removeDarkStyleSheet(href) {
-    for (const link of document.querySelectorAll('link')) {
-        if (link.getAttribute('href')?.match(href)) {
-            link.removeAttribute('href')
-            break;
-        }
+    //for (const link of document.querySelectorAll('link')) {
+    //    if (link.getAttribute('href')?.match(href)) {
+    //        link.removeAttribute('href')
+    //        break;
+    //    }
+    //}
+    const link = document.querySelector('link[data-dark]')
+    if (link) {
+        link.removeAttribute('href')
     }
 }
 

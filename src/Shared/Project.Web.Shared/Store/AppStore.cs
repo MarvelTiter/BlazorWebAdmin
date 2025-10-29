@@ -32,7 +32,7 @@ public class AppStore : StoreBase, IAppStore
     public ThemeMode Theme { get; set; } = ThemeMode.Light;
     public ThemeMode MenuTheme { get; set; } = ThemeMode.Dark;
     public bool Collapsed { get; set; }
-    public int SideBarExpandWidth { get; set; }
+    public int SideBarExpandWidth { get; set; } = 260;
     public string? MainThemeColor { get; set; }
     public string? MainBackgroundColor { get; set; }
     public void ApplySetting(IAppStore? app)

@@ -14,7 +14,7 @@ namespace Project.Web.Shared.Store;
 /// <summary>
 /// https://source.dot.net/#Microsoft.AspNetCore.Components.Server/ProtectedBrowserStorage/ProtectedLocalStorage.cs,2ced327c1fc4a5f4
 /// </summary>
-public class MyProtectedLocalStorage(IJSRuntime jsRuntime) : IProtectedLocalStorage
+public class MyProtectedLocalStorage(IJSRuntime jsRuntime, ILogger<MyProtectedLocalStorage> logger) : IProtectedLocalStorage
 {
 
     public static readonly JsonSerializerOptions Options = new()
@@ -40,11 +40,18 @@ public class MyProtectedLocalStorage(IJSRuntime jsRuntime) : IProtectedLocalStor
 
     public async ValueTask<StorageResult<TValue>> GetAsync<TValue>(string key)
     {
-        var protectedJson = await GetProtectedJsonAsync(key);
-
-        return protectedJson == null ?
-            new StorageResult<TValue>(false, default) :
-            new StorageResult<TValue>(true, Unprotect<TValue>(protectedJson));
+        try
+        {
+            var protectedJson = await GetProtectedJsonAsync(key);
+            return protectedJson == null ?
+                new StorageResult<TValue>(false, default) :
+                new StorageResult<TValue>(true, Unprotect<TValue>(protectedJson));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "{Messgae}", ex.Message);
+            return new(false, default);
+        }
     }
 
     public ValueTask DeleteAsync(string key) => _jsRuntime.InvokeVoidAsync("localStorage.removeItem", key);
@@ -64,6 +71,8 @@ public class MyProtectedLocalStorage(IJSRuntime jsRuntime) : IProtectedLocalStor
         var bytes = Convert.FromBase64String(protectedJson);
         var json = Encoding.UTF8.GetString(bytes);
         return JsonSerializer.Deserialize<TValue>(json, options: Options)!;
+
+
     }
 
     private ValueTask SetProtectedJsonAsync(string key, string protectedJson)
