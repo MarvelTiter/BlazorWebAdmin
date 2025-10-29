@@ -2,12 +2,33 @@
 
 namespace Project.Constraints.Store;
 
-public enum ThemeMode
+//public enum ThemeMode
+//{
+//    Light,
+//    Dark,
+//    OS
+//}
+
+public record ThemeMode(string Name, int Value)
 {
-    Light,
-    Dark,
-    OS
+    public static readonly ThemeMode Light = new("Light", 0);
+    public static readonly ThemeMode Dark = new("Dark", 1);
+    public static readonly ThemeMode OS = new("OS", 2);
+    public override string ToString()
+    {
+        return Name;
+    }
+
+    public static bool operator ==(ThemeMode mode, int value)
+    {
+        return mode.Value == value;
+    }
+    public static bool operator !=(ThemeMode mode, int value)
+    {
+        return mode.Value != value;
+    }
 }
+
 public interface IAppStore
 {
     bool Working { get; set; }

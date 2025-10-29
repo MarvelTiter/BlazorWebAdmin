@@ -78,6 +78,7 @@ public interface IUIService
     [Obsolete]
     string MainStyle();
     RenderFragment AddStyles();
+    [Obsolete]
     string DarkStyle();
     RenderFragment UIFrameworkJs();
     void Message(MessageType type, string message);
@@ -88,7 +89,6 @@ public interface IUIService
     Task<TReturn> ShowDrawerAsync<TReturn>(FlyoutDrawerOptions<TReturn> options);
     IServiceProvider ServiceProvider { get; }
     //RenderFragment BuildIcon(string name);
-
     IUIComponent<TabsProp> BuildTabs();
 
     /// <summary>
@@ -177,5 +177,9 @@ public interface IUIService
     IEnumerable<WebSettingFragment> WebSettings()
     {
         yield break;
+    }
+    Task OnAppMounted(IAppStore app)
+    {
+        return Task.CompletedTask;
     }
 }

@@ -29,6 +29,7 @@ public class UIService(
     IServiceProvider services
 ) : IUIService
 {
+    public Action? Update { get; set; }
     public string MainStyle() => string.Empty;//"_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css";
 
     public RenderFragment AddStyles()

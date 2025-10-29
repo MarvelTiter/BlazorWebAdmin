@@ -1,8 +1,10 @@
-﻿@using Project.Web.Shared.Utils
+﻿@using Project.Constraints.Services
+@using Project.Constraints.UI.Extensions
+@using Project.Web.Shared.Utils
 @inherits JsComponentBase
-@attribute [Obsolete("在UI组件中自己实现", true)]
+@attribute [Obsolete]
 <div>
-    @(UI.BuildRadioGroup<ThemeMode, ThemeMode>(this, modes)
+    @(UI.BuildRadioGroup<ThemeMode, ThemeMode?>(this, modes)
         .LabelExpression(i => FormatLabel(i))
         .ValueExpression(i => i)
         .Bind(() => Current, NotifyChanged)
@@ -11,16 +13,30 @@
 
 @code {
     readonly ThemeMode[] modes = [ThemeMode.Light, ThemeMode.Dark, ThemeMode.OS];
-    [Parameter] public ThemeMode Current { get; set; }
-    [Parameter] public EventCallback<ThemeMode> OnThemeChanged { get; set; }
+    [CascadingParameter, NotNull] public IWebSettingHandler? Ws { get; set; }
+    ThemeMode? Current { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (App.MenuTheme == ThemeMode.Dark)
+        {
+            Current = ThemeMode.Dark;
+        }
+        else if (App.MenuTheme == ThemeMode.OS)
+        {
+            Current = ThemeMode.OS;
+        }
+        else
+        {
+            Current = ThemeMode.Light;
+        }
+    }
 
     private async Task NotifyChanged()
     {
-        if (OnThemeChanged.HasDelegate)
-        {
-            await OnThemeChanged.InvokeAsync(Current);
-        }
-        await Js.InvokeUtilsAsync("setTheme", $"{Current}".ToLower(), Context.UI.DarkStyle());
+        await Ws.SaveSetting(a => a.Theme = Current!);
+        await Js.InvokeVoidAsync("setTheme", $"{Current}".ToLower(), Context.UI.DarkStyle());
     }
 
     static string FormatLabel(ThemeMode theme)

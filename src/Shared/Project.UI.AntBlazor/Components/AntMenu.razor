@@ -20,10 +20,18 @@
     [Parameter] public bool Horizontal { get; set; }
     [Parameter, NotNull] public IAppStore? App { get; set; }
     bool Collapsed => Horizontal ? false : App.Collapsed;
-    MenuTheme Theme => App.MenuTheme switch
+    MenuTheme Theme
     {
-        ThemeMode.Light => MenuTheme.Light,
-        ThemeMode.Dark => MenuTheme.Dark,
-        _ => MenuTheme.Light
-    };
+        get
+        {
+            if (App.MenuTheme == ThemeMode.Dark)
+            {
+                return MenuTheme.Dark;
+            }
+            else
+            {
+                return MenuTheme.Light;
+            }
+        }
+    }
 }

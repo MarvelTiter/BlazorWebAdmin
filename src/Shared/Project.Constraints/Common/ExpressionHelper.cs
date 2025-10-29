@@ -31,4 +31,13 @@ public static class ExpressionHelper
         ArgumentNullException.ThrowIfNull(propertyInfo);
         return propertyInfo;
     }
+
+    public static string ExtractPropertyName<T, TValue>(this Expression<Func<T, TValue>> selector)
+    {
+        ArgumentNullException.ThrowIfNull(selector);
+
+        if (selector.Body is not MemberExpression body || body.Member is not PropertyInfo prop)
+            throw new ArgumentException($"The parameter selector '{selector}' does not resolve to a public property on the type '{typeof(T)}'.", nameof(selector));
+        return prop.Name;
+    }
 }

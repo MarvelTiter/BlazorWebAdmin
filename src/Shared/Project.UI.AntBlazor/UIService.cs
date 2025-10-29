@@ -19,6 +19,9 @@ using OneOf;
 using Microsoft.Extensions.DependencyInjection;
 using AutoInjectGenerator;
 using Project.Web.Shared.Components;
+using Microsoft.JSInterop;
+using Project.UI.AntBlazor.WebSettings;
+using Project.Web.Shared.Utils;
 
 namespace Project.UI.AntBlazor;
 
@@ -28,23 +31,54 @@ public class UIService(
     IMessageService messageService,
     DrawerService drawerService,
     INotificationService notificationService,
-    IServiceProvider services) : IUIService
+    IServiceProvider services,
+    IJSRuntime js,
+    IAppStore app) : IUIService
 {
     public IServiceProvider ServiceProvider { get; } = services;
+    private Action? update;
+    public void RegisterUpdateUIAction(Action updateUI)
+    {
+        update ??= updateUI;
+    }
     public string MainStyle() => "_content/AntDesign/css/ant-design-blazor.css";
-
+    internal static readonly ThemeMode CompactMode = new("Compact", 3);
     public RenderFragment AddStyles()
     {
         return b =>
         {
             //b.Component<VLink>().SetComponent(c => c.Href, "_content/AntDesign/css/ant-design-blazor.css").Build();
             b.Component<VLink>().SetComponent(c => c.Href, "_content/AntDesign/css/ant-design-blazor.variable.css").Build();
-            //b.Component<VLink>().SetComponent(c => c.Href, "_content/AntDesign/less/ant-design-blazor.variable.less").SetComponent(c => c.Rel, "stylesheet/less").Build();
+            b.OpenElement(0, "link");
+            b.AddAttribute(1, "rel", "stylesheet");
+            b.AddAttribute(2, "data-dark");
+            b.CloseElement();
+            b.OpenElement(0, "link");
+            b.AddAttribute(1, "rel", "stylesheet");
+            b.AddAttribute(2, "data-compact");
+            b.CloseElement();
             b.Component<VLink>().SetComponent(c => c.Href, "_content/Project.UI.AntBlazor/ant.css").Build();
         };
     }
-
+    //_content/AntDesign/css/ant-design-blazor.compact.css
+    //_content/AntDesign/css/ant-design-blazor.dark.css
+    //_content/AntDesign/css/ant-design-blazor.variable.css
+    public const string DARK_CSS = "_content/AntDesign/css/ant-design-blazor.dark.css";
+    public const string COMPACT_CSS = "_content/AntDesign/css/ant-design-blazor.compact.css";
     public string DarkStyle() => "_content/AntDesign/css/ant-design-blazor.dark.css";
+
+    public async Task OnAppMounted(IAppStore app)
+    {
+        if (app.Theme == CompactMode)
+        {
+            await js.InvokeVoidAsync("setCompactStyleSheet", COMPACT_CSS);
+        }
+        else
+        {
+            await js.InvokeVoidAsync("setTheme", $"{app.Theme}".ToLower(), DARK_CSS);
+            await js.InvokeVoidAsync("setDark");
+        }
+    }
 
     public RenderFragment UIFrameworkJs()
     {
@@ -52,6 +86,7 @@ public class UIService(
         {
             b.Component<VScript>().SetComponent(c => c.Src, "_content/AntDesign/js/ant-design-blazor.js").Build();
             b.Component<VScript>().SetComponent(c => c.Src, "_content/Project.UI.AntBlazor/ant-color.js").Build();
+            b.Component<VScript>().SetComponent(c => c.Src, "_content/Project.UI.AntBlazor/ant-style.js").Build();
             //b.Component<VScript>().SetComponent(c => c.Src, "_content/Project.UI.AntBlazor/less.min.js").Build();
         };
     }
@@ -578,12 +613,14 @@ public class UIService(
 
     public int GetMenuWidth(bool collapsed)
     {
-        return collapsed ? 80 : 260;
+        return collapsed ? 80 : app.SideBarExpandWidth;
     }
 
     public IEnumerable<WebSettingFragment> WebSettings()
     {
-        yield return new WebSettingFragment("菜单主题", b => b.Component<AntMenuSetting>().Build());
-        yield return new("主题设置", b => b.Component<AntColorSetting>().Build());
+        //yield return new WebSettingFragment("系统主题", b => b.Component<AntThemeManager>().Build());
+        //yield return new WebSettingFragment("菜单主题", b => b.Component<AntMenuSetting>().Build());
+        //yield return new("主题设置", b => b.Component<AntColorSetting>().Build());
+        yield return new("主题设置", b => b.Component<AntSetting>().Build());
     }
 }

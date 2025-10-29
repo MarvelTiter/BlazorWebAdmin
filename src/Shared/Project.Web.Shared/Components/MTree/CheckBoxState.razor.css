@@ -13,8 +13,8 @@
 }
 
 .check-state-checked {
-    background-color: #1890ff;
-    border-color: #1890ff;
+    background-color: var(--major-color);
+    border-color: var(--major-color);
 }
 
     .check-state-checked::after {

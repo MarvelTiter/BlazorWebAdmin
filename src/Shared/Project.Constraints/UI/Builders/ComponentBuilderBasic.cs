@@ -34,8 +34,8 @@ public class ComponentBuilderBasic<TComponent, TSelf> : IUIComponent
     }
     public TSelf SetComponent<TProp>(Expression<Func<TComponent, TProp>> selector, TProp value)
     {
-        var prop = selector.ExtractProperty();
-        Set(prop.Name, value!);
+        var key = selector.ExtractPropertyName();
+        Set(key, value!);
         return (this as TSelf)!;
     }
 

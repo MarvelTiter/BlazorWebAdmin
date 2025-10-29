@@ -1,0 +1,142 @@
+﻿@using Project.Constraints.Services
+@using Project.Constraints.UI.Extensions
+@using Project.Web.Shared.Utils
+@inherits JsComponentBase
+<Project.Web.Shared.ComponentHelper.StackPanel IsVertial HorizontalAlign="left">
+    <Project.Web.Shared.ComponentHelper.StackPanel>
+        <span class="title">系统模式</span>
+        @(UI.BuildRadioGroup<ThemeMode, ThemeMode?>(this, sysModes)
+                .LabelExpression(i => FormatLabel(i))
+                .ValueExpression(i => i)
+                .Bind(() => sysMode, UpdateSysMode)
+                .Render())
+    </Project.Web.Shared.ComponentHelper.StackPanel>
+    <Project.Web.Shared.ComponentHelper.StackPanel>
+        <span class="title">紧凑模式</span>
+        @(UI.BuildCheckBox(this).Bind(() => isCompact, UpdateCompactStyle).Render())
+    </Project.Web.Shared.ComponentHelper.StackPanel>
+    <Project.Web.Shared.ComponentHelper.StackPanel>
+        <span class="title">菜单主题</span>
+        @(UI.BuildRadioGroup<ThemeMode, ThemeMode?>(this, menuModes)
+                .LabelExpression(i => FormatLabel(i))
+                .ValueExpression(i => i)
+                .Bind(() => menuMode, UpdateMenuMode)
+                .Render())
+    </Project.Web.Shared.ComponentHelper.StackPanel>
+    <Project.Web.Shared.ComponentHelper.StackPanel>
+        <span class="title">主题颜色</span>
+        <input type="color" value="@App.MainThemeColor" @onchange="@SetColor" />
+        <Button Type="@AntDesign.ButtonType.Primary" OnClick="Reset">重置</Button>
+    </Project.Web.Shared.ComponentHelper.StackPanel>
+</Project.Web.Shared.ComponentHelper.StackPanel>
+
+
+@code {
+    readonly ThemeMode[] menuModes = [ThemeMode.Light, ThemeMode.Dark];
+    [CascadingParameter, NotNull] public IWebSettingHandler? Ws { get; set; }
+    readonly ThemeMode[] sysModes = [ThemeMode.Light, ThemeMode.Dark, ThemeMode.OS];
+    private ThemeMode? sysMode;
+    private ThemeMode? menuMode;
+    private bool isCompact;
+    const string COMPACT_KEY = "blazor-admin-ant-style-is-compact";
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        menuMode = App.MenuTheme;
+        sysMode = App.Theme;
+        isCompact = sysMode == 3;
+    }
+
+    private async Task UpdateCompactStyle()
+    {
+        await Ws.SaveSetting(a =>
+            {
+                a.SideBarExpandWidth = isCompact ? 220 : 260;
+                if (isCompact)
+                {
+                    a.Theme = UIService.CompactMode;
+                }
+            });
+        await Reset();
+        if (isCompact)
+        {
+            sysMode = null;
+            await Js.InvokeVoidAsync("setTheme", "light", UIService.DARK_CSS);
+            await Js.InvokeVoidAsync("setCompactStyleSheet", UIService.COMPACT_CSS);
+        }
+        else
+        {
+            sysMode = ThemeMode.Light;
+            await Js.InvokeVoidAsync("removeCompactStyleSheet");
+            await UpdateSysMode();
+        }
+    }
+
+    private Task UpdateMenuMode()
+    {
+        if (menuMode is null)
+        {
+            return Task.CompletedTask;
+        }
+        return Ws.SaveSetting(a => a.MenuTheme = menuMode);
+    }
+
+    private async Task UpdateSysMode()
+    {
+        if (sysMode is null)
+        {
+            return;
+        }
+        await Ws.SaveSetting(a =>
+        {
+            a.Theme = sysMode;
+            a.SideBarExpandWidth = 260;
+            isCompact = false;
+        });
+        await Js.InvokeVoidAsync("removeCompactStyleSheet");
+        await Js.InvokeVoidAsync("setTheme", $"{sysMode}".ToLower(), UIService.DARK_CSS);
+        if (sysMode == ThemeMode.Light)
+        {
+            await Js.InvokeVoidAsync("changeColor", App.MainThemeColor);
+        }
+        else
+        {
+            await Reset();
+        }
+    }
+
+
+    private async Task SetColor(ChangeEventArgs e)
+    {
+        var color = e.Value?.ToString();
+        if (color != null && Context.Loaded)
+        {
+            await Js.InvokeVoidAsync("changeColor", color);
+            await Ws.SaveSetting(a => a.MainThemeColor = color);
+        }
+    }
+
+    private async Task Reset()
+    {
+        await Js.InvokeVoidAsync("resetThemeVariables");
+        await Ws.SaveSetting(a => a.MainThemeColor = "#1890ff");
+    }
+
+    static string FormatLabel(ThemeMode theme)
+    {
+        if (theme == ThemeMode.Dark)
+        {
+            return "暗色";
+        }
+        else if (theme == ThemeMode.Light)
+        {
+            return "亮色";
+        }
+        else if (theme == ThemeMode.OS)
+        {
+            return "跟随系统";
+        }
+        return "";
+    }
+
+}

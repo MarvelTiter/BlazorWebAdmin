@@ -161,7 +161,10 @@ public partial class RouterStore : StoreBase, IRouterStore
         var url = ctx.TargetLocation;
         using var _ = BooleanStatusManager.New(b => routeChanging = b, true);
         url = string.IsNullOrEmpty(url) ? "/" : ParsedUriPathAndQuery(url);
-
+        if (url.StartsWith("/account", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
         if (!pages.TryGetValue(url, out var tag))
         {
             // TODO 可能有BUG，先观察观察

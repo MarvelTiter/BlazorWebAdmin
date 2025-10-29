@@ -29,12 +29,12 @@ public class AppStore : StoreBase, IAppStore
     public bool Working { get; set; }
     public LayoutMode? Mode { get; set; }
     public string? AppLanguage { get; set; }
-    public ThemeMode Theme { get; set; }
+    public ThemeMode Theme { get; set; } = ThemeMode.Light;
     public ThemeMode MenuTheme { get; set; } = ThemeMode.Dark;
     public bool Collapsed { get; set; }
-    public int SideBarExpandWidth { get; set; } = 260;
-    public string? MainThemeColor { get; set; } 
-    public string? MainBackgroundColor { get; set; } 
+    public int SideBarExpandWidth { get; set; }
+    public string? MainThemeColor { get; set; }
+    public string? MainBackgroundColor { get; set; }
     public void ApplySetting(IAppStore? app)
     {
         Mode = app?.Mode ?? options?.CurrentValue.LayoutMode ?? LayoutMode.Card;
@@ -44,6 +44,7 @@ public class AppStore : StoreBase, IAppStore
         Collapsed = app?.Collapsed ?? false;
         MainThemeColor = app?.MainThemeColor;
         MainBackgroundColor = app?.MainBackgroundColor;
+        SideBarExpandWidth = app?.SideBarExpandWidth ?? 260;
         CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(AppLanguage);
     }
 }

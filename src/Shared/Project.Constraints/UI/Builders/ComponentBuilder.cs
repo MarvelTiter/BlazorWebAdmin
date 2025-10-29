@@ -10,7 +10,7 @@ public class ComponentBuilder<TComponent> : ComponentBuilderBasic<TComponent, Co
 {
     public ComponentBuilder()
     {
-            
+
     }
 
     public ComponentBuilder(Action<ComponentBuilder<TComponent>> action)
@@ -30,8 +30,8 @@ public class CustomComponentBuilder<TComponent>(RenderTreeBuilder builder)
 
     public CustomComponentBuilder<TComponent> SetComponent<TProp>(Expression<Func<TComponent, TProp>> selector, TProp value)
     {
-        var prop = selector.ExtractProperty();
-        return Set(prop.Name, value!);
+        var key = selector.ExtractPropertyName();
+        return Set(key, value!);
     }
 
     public CustomComponentBuilder<TComponent> SetContent(RenderFragment content)
@@ -45,7 +45,7 @@ public class CustomComponentBuilder<TComponent>(RenderTreeBuilder builder)
         return this;
     }
 
-        
+
 
     public void Build(Action<object>? capture = null)
     {
@@ -54,7 +54,7 @@ public class CustomComponentBuilder<TComponent>(RenderTreeBuilder builder)
         {
             builder.AddMultipleAttributes(1, parameters!);
         }
-        if (capture != null)
+        if (capture is not null)
         {
             builder.AddComponentReferenceCapture(2, capture);
         }

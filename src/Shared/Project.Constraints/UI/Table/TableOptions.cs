@@ -107,8 +107,8 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
 
     public ColumnInfo GetColumn<TMember>(Expression<Func<TData, TMember>> expression)
     {
-        var prop = (expression).ExtractProperty();
-        return this[prop.Name];
+        var name = expression.ExtractPropertyName();
+        return this[name];
     }
 
     public async Task RefreshAsync()

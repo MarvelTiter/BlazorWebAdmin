@@ -1,10 +1,12 @@
 ﻿@using Project.Constraints.Services
 @inherits JsComponentBase
-<div>
-    主题颜色
+<Project.Web.Shared.ComponentHelper.StackPanel>
+    <span>
+        主题颜色
+    </span>
     <input type="color" value="@App.MainThemeColor" @onchange="@SetColor" />
-    <Button OnClick="Reset">重置</Button>
-</div>
+    <Button Type="@AntDesign.ButtonType.Primary" OnClick="Reset">重置</Button>
+</Project.Web.Shared.ComponentHelper.StackPanel>
 
 @code {
     // private string? color;

@@ -8,7 +8,6 @@
 
 /*经典布局*/
 .classic {
-    background: var(--side-bar-bg);
     height: 100vh;
     box-shadow: var(--border-shadow);
     overflow: hidden;
@@ -17,7 +16,6 @@
 
 /*卡片式布局*/
 .card {
-    background: var(--side-bar-bg);
     margin: 16px 1px 16px 16px;
     height: calc(100vh - 32px);
     box-shadow: var(--border-shadow);

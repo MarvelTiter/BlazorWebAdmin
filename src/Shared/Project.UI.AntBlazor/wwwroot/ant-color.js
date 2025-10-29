@@ -84,31 +84,31 @@ function getTextColor(backgroundColor, alpha) {
 }
 // 调整颜色亮度
 function adjustBrightness(hex, factor) {
-    const rgb = this.hexToRgb(hex);
-    const hsv = this.rgbToHsv(rgb.r, rgb.g, rgb.b);
+    const rgb = hexToRgb(hex);
+    const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
 
     // 调整亮度
     hsv.v = Math.max(0, Math.min(1, hsv.v + factor));
 
-    const newRgb = this.hsvToRgb(hsv.h, hsv.s, hsv.v);
-    return this.rgbToHex(newRgb.r, newRgb.g, newRgb.b);
+    const newRgb = hsvToRgb(hsv.h, hsv.s, hsv.v);
+    return rgbToHex(newRgb.r, newRgb.g, newRgb.b);
 }
 
 // 调整颜色饱和度
 function adjustSaturation(hex, factor) {
-    const rgb = this.hexToRgb(hex);
-    const hsv = this.rgbToHsv(rgb.r, rgb.g, rgb.b);
+    const rgb = hexToRgb(hex);
+    const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
 
     // 调整饱和度
     hsv.s = Math.max(0, Math.min(1, hsv.s + factor));
 
-    const newRgb = this.hsvToRgb(hsv.h, hsv.s, hsv.v);
-    return this.rgbToHex(newRgb.r, newRgb.g, newRgb.b);
+    const newRgb = hsvToRgb(hsv.h, hsv.s, hsv.v);
+    return rgbToHex(newRgb.r, newRgb.g, newRgb.b);
 }
 
 // 生成半透明颜色
 function withAlpha(hex, alpha) {
-    const rgb = this.hexToRgb(hex);
+    const rgb = hexToRgb(hex);
     return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
 }
 
@@ -215,8 +215,8 @@ const defaultThemeValues = {
     '--ant-info-color': '#1890ff',
     '--ant-info-color-deprecated-bg': '#e6f7ff',
     '--ant-info-color-deprecated-border': '#91d5ff',
-    '--ant-text-color': rgba(0, 0, 0, 0.65),
-    '--ant-text-color-secondary': rgba(0, 0, 0, 0.45)
+    '--ant-text-color': 'rgba(0, 0, 0, 0.65)',
+    '--ant-text-color-secondary': 'rgba(0, 0, 0, 0.45)'
 };
 // 设置主题函数
 window.resetThemeVariables = function () {
@@ -230,12 +230,20 @@ window.resetThemeVariables = function () {
 
     localStorage.removeItem("blazor-admin-project-primary-color")
 }
+
+window.setDark = function () {
+    resetThemeVariables();
+    const root = document.documentElement;
+    root.style.setProperty('--ant-text-color', 'rgba(255, 255, 255, 0.85)');
+}
+
 // 页面加载时初始化
 document.addEventListener('DOMContentLoaded', function () {
     const color = localStorage.getItem("blazor-admin-project-primary-color")
     const root = document.documentElement;
     root.style.setProperty('--major-color', 'var(--ant-primary-color)')
     root.style.setProperty('--font-color', 'var(--ant-text-color)')
+    root.style.setProperty('--hover-bg-color', 'var(--ant-primary-color-hover)')
     if (color) {
         changeColor(color);
     }

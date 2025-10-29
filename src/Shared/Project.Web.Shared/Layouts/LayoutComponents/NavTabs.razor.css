@@ -9,7 +9,9 @@
         font-weight: 600;
     }
 
-
+::deep .tags-box .nav-top svg * {
+    fill: var(--major-color) !important;
+}
 
 /* 标签样式 */
 .tags-box .nav-top {
@@ -118,7 +120,7 @@ html[data-theme='dark'] .tags-box.classic {
 .context {
     padding: 10px;
     /*    border: 1px solid #d8dce5;*/
-    background-color: var(--background-color);
+    background-color: var(--major-color);
     border-radius: 10px;
     position: absolute;
     display: none;

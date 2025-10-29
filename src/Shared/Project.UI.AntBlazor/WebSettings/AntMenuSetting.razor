@@ -1,0 +1,61 @@
+﻿@using Project.Constraints.Services
+@using Project.Constraints.UI.Extensions
+@using Project.Web.Shared.Utils
+@inherits JsComponentBase
+<div>
+    <span>菜单主题</span>
+    @(UI.BuildRadioGroup<ThemeMode, ThemeMode>(this, modes)
+        .LabelExpression(i => FormatLabel(i))
+        .ValueExpression(i => i)
+        .Bind(() => Current, NotifyChanged)
+        .Render())
+</div>
+
+@code {
+    readonly ThemeMode[] modes = [ThemeMode.Light, ThemeMode.Dark];
+    [NotNull] private ThemeMode? Current { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        // Current = App.MenuTheme switch
+        // {
+        //     ThemeMode.Light => ThemeMode.Light,
+        //     ThemeMode.Dark => ThemeMode.Dark,
+        //     _ => ThemeMode.Light
+        // };
+        if (App.MenuTheme == ThemeMode.Dark)
+        {
+            Current = ThemeMode.Dark;
+        }
+        else
+        {
+            Current = ThemeMode.Light;
+        }
+    }
+    [CascadingParameter, NotNull] public IWebSettingHandler? Ws { get; set; }
+    private Task NotifyChanged()
+    {
+        return Ws.SaveSetting(a => a.MenuTheme = Current);
+    }
+
+
+    static string FormatLabel(ThemeMode theme)
+    {
+        // return theme switch
+        // {
+        //     ThemeMode.Light => "亮色",
+        //     ThemeMode.Dark => "暗色",
+        //     _ => ""
+        // };
+        if (theme == ThemeMode.Dark)
+        {
+            return "暗色";
+        }
+        else if (theme == ThemeMode.Light)
+        {
+            return "亮色";
+        }
+        return "";
+    }
+
+}
