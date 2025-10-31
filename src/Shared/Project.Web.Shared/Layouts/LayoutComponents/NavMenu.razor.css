@@ -7,7 +7,7 @@
     background-color: var(--background-color);
 }
 
-    
+
 
     .nav-menu.card {
         border-radius: 4px;
@@ -18,14 +18,14 @@
         padding-left: 16px;
     }
 
-    .nav-menu.line.dark {
-        background: #001529;
-        color: rgba(255, 255, 255, 0.65);
-    }
-
-        .nav-menu.line.dark ::deep svg * {
-            fill: rgba(255, 255, 255, 0.65) !important;
+        .nav-menu.line.dark {
+            background: #001529;
+            color: rgba(255, 255, 255, 0.65);
         }
+
+            .nav-menu.line.dark ::deep svg * {
+                fill: rgba(255, 255, 255, 0.65) !important;
+            }
 
 
 ::deep .nav-menu-item {
@@ -42,8 +42,11 @@
     }
 
     ::deep .nav-menu-item:hover {
-        background-color: var(--hover-bg-color);
+        color: var(--hover-bg-color);
     }
+        ::deep .nav-menu-item:hover svg * {
+            fill: var(--hover-bg-color) !important;
+        }
 
 .dark ::deep .nav-menu-item:hover {
     background-color: unset;
