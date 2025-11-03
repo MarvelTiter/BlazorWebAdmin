@@ -1,4 +1,4 @@
-import { IJsActionResult, failed, success } from '../../JsCore/utils'
+﻿import { IJsActionResult, failed, success } from '../../JsCore/utils'
 import { BaseComponent } from '../../JsCore/baseComponent'
 import { startDrag } from '../../JsCore/dragHelper'
 import { EventHandler } from '../../JsCore/eventHandler'
@@ -33,7 +33,7 @@ export class Camera extends BaseComponent {
             if (navigator && navigator.mediaDevices) {
                 navigator.mediaDevices.getUserMedia({
                     video: {
-                        deviceId: { exact: deviceId },
+                        deviceId: { ideal: deviceId },
                         width: { ideal: width },
                         height: { ideal: height },
                     },
