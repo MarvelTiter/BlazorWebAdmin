@@ -20,7 +20,9 @@ public class MIcon : AppComponentBase
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (IconName?.StartsWith(AppConst.CUSTOM_SVG_PREFIX) == true)
+        if (IconName is null)
+            return;
+        if (IconName.StartsWith(AppConst.CUSTOM_SVG_PREFIX) == true)
         {
             builder.OpenComponent<SvgIcon>(0);
             builder.AddAttribute(2, nameof(SvgIcon.IconName), IconName);
@@ -29,7 +31,7 @@ public class MIcon : AppComponentBase
             builder.AddAttribute(5, nameof(SvgIcon.OnClick), OnClick);
             builder.CloseComponent();
         }
-        else if (IconName?.StartsWith("fa fa-") == true)
+        else if (IconName.StartsWith("fa fa-") == true)
         {
             builder.OpenComponent<FontIcon>(0);
             builder.AddAttribute(1, nameof(FontIcon.HtmlTag), HtmlTag);

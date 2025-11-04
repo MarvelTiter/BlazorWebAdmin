@@ -618,6 +618,7 @@ public class UIService(
 
     public IEnumerable<WebSettingFragment> WebSettings()
     {
+        IconService.GetAllIcons();
         //yield return new WebSettingFragment("系统主题", b => b.Component<AntThemeManager>().Build());
         //yield return new WebSettingFragment("菜单主题", b => b.Component<AntMenuSetting>().Build());
         //yield return new("主题设置", b => b.Component<AntColorSetting>().Build());
