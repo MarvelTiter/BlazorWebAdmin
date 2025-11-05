@@ -63,7 +63,6 @@ builder.AddServerProject(setting =>
     // setting.ConfigureSettingProviderType<BasicSetting>();
     // setting.ConfigureAuthService<YourAuthenticationService>();
 #endif
-
 });
 
 //#endif

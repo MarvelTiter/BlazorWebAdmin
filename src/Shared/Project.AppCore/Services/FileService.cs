@@ -1,5 +1,6 @@
 ﻿using AutoInjectGenerator;
 using Microsoft.Extensions.Hosting;
+using Project.Constraints.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 namespace Project.AppCore.Services;
 
 [AutoInject(Group = "SERVER", LifeTime = InjectLifeTime.Singleton)]
+[AutoInject(Group = AutoInjectGroups.Hybrid, LifeTime = InjectLifeTime.Singleton)]
 public class FileService : IFileService
 {
     public string GetStaticFileWithVersion(string path)

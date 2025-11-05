@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="8.0.20" />
+		<PackageReference Include="LightORM.Providers.Sqlite" Version="0.1.2" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
+		<ProjectReference Include="..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
+	</ItemGroup>
+	
+</Project>

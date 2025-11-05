@@ -1,0 +1,44 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Options
+@using Project.Constraints.Options
+@using Project.Constraints.Store.Models
+@using Project.Constraints.UI
+@using Project.Web.Shared.Components
+@using Project.AppCore
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" no-antblazor-js no-antblazor-css />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    @* <link href="@Assets[UIService.MainStyle()]" rel="stylesheet"> *@
+    @* <VLink Href="@UIService.MainStyle()"></VLink> *@
+    @UIService.AddStyles()
+    @* <link data-dark rel="stylesheet"> *@
+    @* <script src="@Assets[UIService.UIFrameworkJs()]"></script> *@
+    @* <VScript Src="@UIService.UIFrameworkJs()"></VScript> *@
+    @UIService.UIFrameworkJs()
+    @* <link href="@Assets["app.css"]" rel="stylesheet" /> *@
+    <VLink Href="app.css"></VLink>
+    @* <link href="@Assets["BlazorAdmin.styles.css"]" rel="stylesheet" /> *@
+    <VLink Href="BlazorAdmin.styles.css"></VLink>
+    <HeadOutlet />
+</head>
+
+<body>
+
+    <Routers></Routers>
+
+    @* <script src="@Assets["_framework/blazor.web.js"]"></script> *@
+    @* <script src="@Assets["js/blazor-admin-project.js"]"></script> *@
+    <VScript Src="js/blazor-admin-project.js"></VScript>
+
+</body>
+
+</html>
+
+@code {
+    [Inject, NotNull] public IUIService? UIService { get; set; }
+}

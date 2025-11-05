@@ -32,6 +32,22 @@
         }
     ],
     "symbols": {
+        "host": {
+            "type": "parameter",
+            "datatype": "choice",
+            "choices": [
+                {
+                    "choice": "web",
+                    "description": "Web application"
+                },
+                {
+                    "choice": "wpf",
+                    "description": "WPF application"
+                }
+            ],
+            "defaultValue": "web",
+            "description": "The type of host application to create"
+        },
         "ExcludeDefaultService": {
             "type": "parameter",
             "datatype": "bool",
