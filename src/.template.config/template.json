@@ -49,6 +49,12 @@
             "datatype": "bool",
             "defaultValue": "true",
             "description": "是否使用.Client项目"
+        },
+        "UseNotifyIcon":{
+            "type": "parameter",
+            "datatype": "bool",
+            "defaultValue": "true",
+            "description": "是否创建托盘图标(仅限Window系统)"
         }
     }
 }

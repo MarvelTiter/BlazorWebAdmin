@@ -9,6 +9,26 @@ using Project.Constraints;
 using Project.Web.Shared;
 using MT.LightTask;
 using Project.Constraints.Services;
+
+
+#if (UseNotifyIcon || DEBUG)
+if (OperatingSystem.IsWindows())
+{
+    // 注册进程退出事件
+    AppDomain.CurrentDomain.ProcessExit += (s, e) =>
+    {
+
+    };
+
+    // 注册 Ctrl+C 事件
+    Console.CancelKeyPress += (s, e) =>
+    {
+        Console.WriteLine("\nCtrl+C 被按下");
+        e.Cancel = true; // 阻止立即退出
+    };
+}
+#endif
+
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
