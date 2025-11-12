@@ -14,6 +14,6 @@ public class ConstraintString
 public class AutoInjectGroups
 {
     public const string WASM = "WASM";
-    public const string Hybrid = "Hybrid";
+    public const string Hybrid = "HYBRID";
     public const string SERVER = "SERVER";
 }

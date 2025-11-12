@@ -28,7 +28,43 @@
                 "**/TestPages/**",
                 "**/.vs/**",
                 "**/.idea/**"
-            ]
+            ],
+            "condition": "host == 'none'"
+        },
+        {
+            "source": "./",
+            "target": "./",
+            "exclude": [
+                "**/[Bb]in/**",
+                "**/[Oo]bj/**",
+                ".template.config/**/*",
+                "**/*.filelist",
+                "**/*.user",
+                "*-lock.json",
+                "**/TestPages/**",
+                "**/.vs/**",
+                "**/.idea/**",
+                "**/BlazorAdmin.Wpf/**"
+            ],
+            "condition": "host == 'web'"
+        },
+        {
+            "source": "./",
+            "target": "./",
+            "exclude": [
+                "**/[Bb]in/**",
+                "**/[Oo]bj/**",
+                ".template.config/**/*",
+                "**/*.filelist",
+                "**/*.user",
+                "*-lock.json",
+                "**/TestPages/**",
+                "**/.vs/**",
+                "**/.idea/**",
+                "**/BlazorAdmin/**",
+                "**/BlazorAdmin.Client/**"
+            ],
+            "condition": "host == 'wpf'"
         }
     ],
     "symbols": {
@@ -36,6 +72,10 @@
             "type": "parameter",
             "datatype": "choice",
             "choices": [
+                {
+                    "choice": "none",
+                    "description": "both web and wpf project in the solution"
+                },
                 {
                     "choice": "web",
                     "description": "Web application"
@@ -45,7 +85,7 @@
                     "description": "WPF application"
                 }
             ],
-            "defaultValue": "web",
+            "defaultValue": "none",
             "description": "The type of host application to create"
         },
         "ExcludeDefaultService": {

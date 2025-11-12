@@ -1,4 +1,6 @@
-﻿namespace BlazorAdmin;
+﻿using Project.Constraints.Common;
+
+namespace BlazorAdmin;
 
 [AutoInjectGenerator.AutoInjectContext]
 public static partial class AutoInjectContext

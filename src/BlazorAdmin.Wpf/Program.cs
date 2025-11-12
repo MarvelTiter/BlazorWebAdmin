@@ -1,4 +1,5 @@
 ﻿using AutoPageStateContainerGenerator;
+using BlazorAdmin.Wpf.Auth;
 using LightORM;
 using LightORM.Providers.Sqlite.Extensions;
 using Microsoft.Extensions.Configuration;
@@ -13,11 +14,24 @@ namespace BlazorAdmin.Wpf;
 
 public class Program
 {
+    public static class BlazorHybridWpfApplication
+    {
+        public static HostApplicationBuilder Create(string[] args)
+        {
+            var configuration = new ConfigurationManager();
+            configuration.AddEnvironmentVariables("ASPNETCORE_");
+            var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings()
+            {
+                Args = args,
+                Configuration = configuration
+            });
+            return builder;
+        }
+    }
     [STAThread]
     public static void Main(string[] args)
     {
-        var builder = Host.CreateApplicationBuilder(args);
-
+        var builder = BlazorHybridWpfApplication.Create(args);
         Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
         //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
         //builder.Services.AddAntDesignUI();
@@ -50,17 +64,22 @@ public class Program
             option.SetTableContext<LightOrmTableContext>();
             option.UseInterceptor<LightOrmSqlTrace>();
         });
-        builder.Services.AutoInject();
-        builder.Services.AutoInjectHybrid();
+        builder.Services.AutoInjectWpf();
+
         builder.Services.AddStateContainers();
         builder.Services.AddSingleton<App>();
-        builder.Services.AddTransient<MainWindow>();
+#if (!ExcludeDefaultService)
+        builder.Services.AddScoped<IAuthService, LocalAuthService>();
+#endif
+        builder.Services.AddSingleton<MainWindow>();
         builder.Services.AddHostedService<WpfHostedService<App, MainWindow>>();
         builder.Services.AddWpfBlazorWebView();
-        //builder.Services.AddAuthenticationCore();
-        //builder.Services.AddAuthorization();
-        Console.WriteLine(AppConst.TempFilePath);
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddBlazorWebViewDeveloperTools();
+        }
         var host = builder.Build();
+
         host.Run();
     }
 }

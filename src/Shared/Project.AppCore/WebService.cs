@@ -14,7 +14,7 @@ public static class WebService
 {
     public static void AddServerProject(this IHostApplicationBuilder builder, Action<ProjectSetting> action)
     {
-        ScanRazorLibraryAssembly();
+        //ScanRazorLibraryAssembly();
         builder.Services.AddClientProject(builder.Configuration, action, out var setting);
         //var setting = new ProjectSetting();
         //action.Invoke(setting);

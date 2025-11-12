@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:BlazorAdmin.Wpf"
         xmlns:blazor="clr-namespace:Microsoft.AspNetCore.Components.WebView.Wpf;assembly=Microsoft.AspNetCore.Components.WebView.Wpf"
         mc:Ignorable="d"
+        Padding="0"
         Title="MainWindow" Height="450" Width="800">
-    <blazor:BlazorWebView x:Name="webview">
+    <blazor:BlazorWebView x:Name="webview" Margin="0">
         <blazor:BlazorWebView.RootComponents />
     </blazor:BlazorWebView>
 </Window>

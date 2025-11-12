@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.WebView;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.ComponentModel;
 using System.Windows;
@@ -16,16 +17,25 @@ public partial class MainWindow : Window
         this.hostApplicationLifetime = hostApplicationLifetime;
         webview.Services = provider;
         webview.HostPage = "index.html";
-        var root = new Microsoft.AspNetCore.Components.WebView.Wpf.RootComponent();
-        root.Selector = "#app";
-        root.ComponentType = typeof(WpfApp);
+        var root = new Microsoft.AspNetCore.Components.WebView.Wpf.RootComponent
+        {
+            Selector = "#app",
+            ComponentType = typeof(Routers)
+        };
+        var head = new Microsoft.AspNetCore.Components.WebView.Wpf.RootComponent
+        {
+            Selector = "#head",
+            ComponentType = typeof(WpfHead)
+        };
+        webview.RootComponents.Add(head);
         webview.RootComponents.Add(root);
         webview.BlazorWebViewInitialized = BlazorWebViewInitialized;
+        //webview.WebView.CoreWebView2
     }
 
     private void BlazorWebViewInitialized(object? sender, BlazorWebViewInitializedEventArgs e)
     {
-
+        //e.WebView.CoreWebView2.
     }
 
     protected override void OnClosing(CancelEventArgs e)
