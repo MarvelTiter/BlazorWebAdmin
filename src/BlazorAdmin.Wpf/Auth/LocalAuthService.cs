@@ -3,16 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Project.AppCore.Services;
 using Project.Constraints.Models;
 using Project.Constraints.Models.Permissions;
-using Project.Constraints.Services;
 using Project.Constraints.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace BlazorAdmin.Wpf.Auth;
-#if(!ExcludeDefaultService)
+#if (ExcludeDefaultService)
+#else
 public class LocalAuthService(IServiceProvider services) : DefaultAuthenticationService(services)
 {
     public override async Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd)

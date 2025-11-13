@@ -13,6 +13,7 @@
 |ExcludeDefaultService|默认页面是否去除默认的服务实现(需要自己实现服务)|false|
 |ExcludeDefaultPages|是否去除默认的页面|false|
 |UseClientProject|是否使用.Client项目(依然保留.Client项目, 只是不再引用, 有需要可以引用)|true|
+|host|主机类型，可选web/wpf/none，选择none时，保留web和wpf的入口项目|none|
 
 ### 定制说明
 
