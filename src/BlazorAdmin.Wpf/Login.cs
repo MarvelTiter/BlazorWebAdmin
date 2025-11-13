@@ -1,32 +1,37 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Web;
+﻿using BlazorAdmin.Wpf.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using Project.AppCore.Auth;
-using Project.Constraints.Common.Attributes;
 using Project.Constraints.Models;
 using Project.Constraints.Options;
 using Project.Constraints.Page;
 using Project.Constraints.Services;
+using Project.Constraints.Store;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.Utils;
 using Project.Web.Shared.Layouts;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
 
-namespace BlazorAdmin;
+namespace BlazorAdmin.Wpf;
 
 [Route("/account/login")]
 [Layout(typeof(BlankLayout))]
-[ExcludeFromInteractiveRouting]
 public class Login : SystemPageIndex<Login>, ILoginPage
 {
     [Inject, NotNull] public IServiceProvider? Provider { get; set; }
-    [Inject, NotNull] private IStringLocalizer<Login>? Localizer { get; set; }
     [Inject, NotNull] private IProjectSettingService? CustomSetting { get; set; }
     [Inject, NotNull] private IOptionsMonitor<Token>? TokenOption { get; set; }
-    [CascadingParameter, NotNull] private HttpContext? HttpContext { get; set; }
+    [Inject, NotNull] IProtectedLocalStorage? LocalStorage { get; set; }
     public bool Loading { get; set; }
     public string? Redirect { get; set; }
     protected override bool CascadingSelf => true;
@@ -55,20 +60,12 @@ public class Login : SystemPageIndex<Login>, ILoginPage
             if (result.IsSuccess)
             {
                 User.SetUser(result.Payload);
-                UI.Success(Localizer["Login.SuccessTips"].Value);
                 var goon = await CustomSetting.LoginInterceptorAsync(result.Payload!);
                 if (goon.IsSuccess)
                 {
-                    var principal = result.Payload!.BuildClaims(CookieAuthenticationDefaults.AuthenticationScheme);
-                    var properties = new AuthenticationProperties
-                    {
-                        IsPersistent = true,
-                        //cookie过期是单独指cookie，这里的是指
-                        ExpiresUtc = TimeProvider.System.GetUtcNow().Add(TokenOption.CurrentValue.Expire)
-                    };
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, properties);
+                    await LocalStorage.SetAsync(LocalAuthenticationStateProvider.USER_KEY, result.Payload!);
                     if (string.IsNullOrEmpty(Redirect)) Redirect = "/";
-                    HttpContext.Response.Redirect(Redirect);
+                    Navigator.NavigateTo(Redirect, true);
                 }
                 else
                 {

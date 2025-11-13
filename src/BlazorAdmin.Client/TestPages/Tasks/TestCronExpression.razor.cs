@@ -9,7 +9,6 @@ namespace BlazorAdmin.Client.TestPages.Tasks;
 #if DEBUG
 [Route("/testcronexp")]
 [PageInfo(Title = "CronExp测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
-//[Layout(typeof(NotAuthorizedLayout))]
 #endif
 public partial class TestCronExpression
 {

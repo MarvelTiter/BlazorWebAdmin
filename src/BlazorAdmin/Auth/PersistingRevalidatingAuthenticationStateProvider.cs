@@ -1,21 +1,21 @@
-﻿using System.Web;
-using AutoInjectGenerator;
+﻿using AutoInjectGenerator;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Http;
+using Project.AppCore;
 using Project.Constraints;
+using Project.Constraints.Models;
+using Project.Constraints.Services;
 using Project.Constraints.Store;
 using Project.Constraints.Utils;
 
-namespace Project.AppCore.Auth;
+namespace BlazorAdmin.Auth;
 
 // 使用AutoInject特性自动注入服务
-//[AutoInject(Group = "SERVER", ServiceType = typeof(IAuthenticationStateProvider))]
-//[AutoInject(Group = "SERVER", ServiceType = typeof(AuthenticationStateProvider))]
+[AutoInject(Group = "SERVER", ServiceType = typeof(IAuthenticationStateProvider))]
+[AutoInject(Group = "SERVER", ServiceType = typeof(AuthenticationStateProvider))]
 // 类声明，继承自RevalidatingServerAuthenticationStateProvider并实现IAuthenticationStateProvider接口
-[Obsolete("移动到程序入口的项目中")]
 public sealed class PersistingRevalidatingAuthenticationStateProvider : RevalidatingServerAuthenticationStateProvider,
     IAuthenticationStateProvider
 {

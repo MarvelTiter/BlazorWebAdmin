@@ -21,11 +21,14 @@
                     </ActionWatcher>
                 </ErrorCatcher>
             </Found>
+            <NotFound>
+                <h1>Sorry, there's nothing at this address.</h1>
+            </NotFound>
         </Router>
         <WaterMark ProvideService></WaterMark>
         <WebAdminReconnector></WebAdminReconnector>
         <Downloader />
-        <ClientHub />
+        @ChildContent
         @Context.UI.RenderContainer()
     </div>
 </CascadingValue>

@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "BlazorAdmin.Wpf": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

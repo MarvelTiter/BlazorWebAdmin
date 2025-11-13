@@ -35,10 +35,16 @@ builder.Services.AddClientProject(builder.Configuration, setting =>
     setting.App.Company = "Marvel";
 #if DEBUG
     setting.ConfigureSettingProviderType<CustomSetting>();
+    setting.ConfigurePage(locator =>
+    {
+        locator.SetDashboardType<BlazorAdmin.Client.TestPages.TestDashboard>();
+    });
 #endif
 }, out _);
 builder.Services.AddStateContainers();
 builder.Services.AutoInjectWasm();
+#if DEBUG
+// 会覆盖AddClientProject方法中默认的AddAuthorizationCore的配置
 builder.Services.AddAuthorizationCore(o =>
 {
     o.AddPolicy(AppConst.ONLINE_USER_POLICY, policy =>
@@ -46,10 +52,11 @@ builder.Services.AddAuthorizationCore(o =>
         policy.RequireUserName("admin");
     });
 });
-builder.Services.AddScoped<IAuthService, AuthServiceApiInvoker>();
-builder.Services.AddScoped<IClientService, ClientServiceApiInvoker>();
-builder.Services.AddScoped<ISvgIconService, SvgIconServiceApiInvoker>();
-builder.Services.AddScoped<IFileService, FileServiceApiInvoker>();
+#endif
+//builder.Services.AddScoped<IAuthService, AuthServiceApiInvoker>();
+//builder.Services.AddScoped<IClientService, ClientServiceApiInvoker>();
+//builder.Services.AddScoped<ISvgIconService, SvgIconServiceApiInvoker>();
+//builder.Services.AddScoped<IFileService, FileServiceApiInvoker>();
 #if (ExcludeDefaultService)
 #else
 builder.Services.AddGeneratedApiInvokerServices();

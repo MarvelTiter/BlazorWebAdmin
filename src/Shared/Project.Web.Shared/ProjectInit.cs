@@ -10,13 +10,14 @@ using Project.Web.Shared;
 using Project.Web.Shared.Auth;
 using Project.Web.Shared.Locales.Extensions;
 using Project.Web.Shared.Pages;
+using System.Reflection;
 
 namespace Project.Web.Shared;
 public static class ProjectInit
 {
     public static void AddClientProject(this IServiceCollection services, IConfiguration configuration, Action<ProjectSetting> action, out ProjectSetting setting)
     {
-
+        ScanRazorLibraryAssembly();
         setting = new ProjectSetting();
         setting.ConfigurePage(locator =>
         {
@@ -95,5 +96,19 @@ public static class ProjectInit
         var section = configuration.GetSection(name);
         section.Bind(option);
         return option;
+    }
+
+    private static void ScanRazorLibraryAssembly()
+    {
+        var entry = Assembly.GetEntryAssembly();
+        var additionAssemblys = entry?.GetReferencedAssemblies().Select(Assembly.Load);
+        foreach (var item in additionAssemblys ?? [])
+        {
+            var hasPage = item.ExportedTypes.Any(t => t.GetCustomAttribute<Microsoft.AspNetCore.Components.RouteAttribute>() is not null);
+            if (hasPage)
+            {
+                AppConst.AddAssembly(item);
+            }
+        }
     }
 }

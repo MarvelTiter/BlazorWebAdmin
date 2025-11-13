@@ -1,8 +1,16 @@
-﻿using System.Text.Json;
+﻿using System.Security.Claims;
+using System.Text.Json;
+using AutoInjectGenerator;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Project.Constraints;
+using Project.Constraints.Models;
+using Project.Constraints.Services;
+using Project.Constraints.Store;
 using Project.Constraints.Utils;
 
-namespace Project.Web.Shared.Auth;
+namespace BlazorAdmin.Client.Auth;
 
 // 标记为自动注入的服务，用于Blazor WebAssembly身份验证
 [AutoInject(Group = "WASM", ServiceType = typeof(IAuthenticationStateProvider))]

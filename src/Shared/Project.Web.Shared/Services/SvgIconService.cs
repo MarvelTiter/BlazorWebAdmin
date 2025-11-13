@@ -10,6 +10,7 @@ using System.Xml.Linq;
 
 namespace Project.Web.Shared.Services;
 [AutoInject(Group = "SERVER", LifeTime = InjectLifeTime.Singleton)]
+[AutoInject(Group = AutoInjectGroups.Hybrid, LifeTime = InjectLifeTime.Singleton)]
 public class SvgIconService : ISvgIconService
 {
     private readonly IHostEnvironment environment;
@@ -119,7 +120,7 @@ public class SvgIconService : ISvgIconService
         int svgTagEnd = content[svgStart..].IndexOf('>');
         if (svgTagEnd == -1)
         {
-            return 
+            return
                 new SvgParsingResult(content.ToString()
                 , []
                 , content.ToString());

@@ -238,13 +238,34 @@ window.setDark = function () {
 }
 
 // 页面加载时初始化
-document.addEventListener('DOMContentLoaded', function () {
-    const color = localStorage.getItem("blazor-admin-project-primary-color")
+//document.addEventListener('DOMContentLoaded', function () {
+//    const color = localStorage.getItem("blazor-admin-project-primary-color")
+//    const root = document.documentElement;
+//    root.style.setProperty('--major-color', 'var(--ant-primary-color)')
+//    root.style.setProperty('--font-color', 'var(--ant-text-color)')
+//    root.style.setProperty('--hover-bg-color', 'var(--ant-primary-color-hover)')
+//    if (color) {
+//        changeColor(color);
+//    }
+//});
+function initializeColors() {
+    const color = localStorage.getItem("blazor-admin-project-primary-color");
     const root = document.documentElement;
-    root.style.setProperty('--major-color', 'var(--ant-primary-color)')
-    root.style.setProperty('--font-color', 'var(--ant-text-color)')
-    root.style.setProperty('--hover-bg-color', 'var(--ant-primary-color-hover)')
+
+    root.style.setProperty('--major-color', 'var(--ant-primary-color)');
+    root.style.setProperty('--font-color', 'var(--ant-text-color)');
+    root.style.setProperty('--hover-bg-color', 'var(--ant-primary-color-hover)');
+
     if (color) {
         changeColor(color);
     }
-});
+}
+
+// 如果文档已经加载完成，立即执行
+if (document.readyState === 'loading') {
+    // 文档还在加载，等加载完成再执行
+    document.addEventListener('DOMContentLoaded', initializeColors);
+} else {
+    // 文档已经加载完成，立即执行
+    initializeColors();
+}

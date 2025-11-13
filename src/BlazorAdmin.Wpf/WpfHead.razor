@@ -1,0 +1,18 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Options
+@using Project.Constraints.Options
+@using Project.Constraints.Store.Models
+@using Project.Constraints.UI
+@using Project.Web.Shared.Components
+@using Project.AppCore
+
+@UIService.AddStyles()
+@UIService.UIFrameworkJs()
+<VLink Href="app.css"></VLink>
+<VLink Href="BlazorAdmin.Wpf.styles.css"></VLink>
+<VScript Src="js/blazor-admin-project.js"></VScript>
+
+@code {
+    [Inject, NotNull] public IUIService? UIService { get; set; }
+}
