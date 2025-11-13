@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.Extensions.Configuration;
 using Microsoft.JSInterop;
 using Project.Constraints.UI;
 
@@ -10,16 +11,12 @@ public class ErrorCatcher : ErrorBoundaryBase //, IExceptionHandler
     /// <summary>
     /// 
     /// </summary>
-    [Inject]
-    [NotNull]
+    [Inject, NotNull]
     private ILogger<ErrorCatcher>? Logger { get; set; }
-
     [Parameter] public bool ShowMessage { get; set; }
     [Inject, NotNull] IRouterStore? Router { get; set; }
 
-
-    public event Func<Exception, Task>? OnHandleExcetionAsync;
-    public event Action<Exception>? OnHandleExcetion;
+    [Parameter] public Func<Exception, Task<bool>>? OnHandleExcetionAsync { get; set; }
 
     protected override void OnInitialized()
     {
@@ -55,7 +52,7 @@ public class ErrorCatcher : ErrorBoundaryBase //, IExceptionHandler
             Router.Current.Exception = CurrentException;
             if (IsLifecycleError(CurrentException))
             {
-                Logger.LogInformation("{RouteUrl} Panic!",Router.Current.RouteUrl);
+                Logger.LogInformation("{RouteUrl} Panic!", Router.Current.RouteUrl);
                 Router.Current.Panic = true;
             }
 
@@ -91,22 +88,12 @@ public class ErrorCatcher : ErrorBoundaryBase //, IExceptionHandler
     /// <summary>
     /// OnParametersSet 方法
     /// </summary>
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        Recover();
-    }
+    //protected override void OnParametersSet()
+    //{
+    //    base.OnParametersSet();
+    //    Recover();
+    //}
 
-    //bool rendered;
-    // protected override void OnAfterRender(bool firstRender)
-    // {
-    //     base.OnAfterRender(firstRender);
-    //     if (firstRender)
-    //     {
-    //         if (Router.Current == null) return;
-    //         Router.Current.Rendered = true;
-    //     }
-    // }
 
     [Inject, NotNull] public IUIService? UI { get; set; }
 
@@ -114,7 +101,7 @@ public class ErrorCatcher : ErrorBoundaryBase //, IExceptionHandler
     /// OnErrorAsync 方法
     /// </summary>
     /// <param name="exception"></param>
-    protected override Task OnErrorAsync(Exception exception)
+    protected override async Task OnErrorAsync(Exception exception)
     {
         if (exception is not JSException && ShowMessage)
         {
@@ -122,13 +109,15 @@ public class ErrorCatcher : ErrorBoundaryBase //, IExceptionHandler
             Logger.LogError(exception, "{Message}", exception.Message);
         }
 
-        OnHandleExcetion?.Invoke(exception);
         if (OnHandleExcetionAsync != null)
         {
-            return OnHandleExcetionAsync(exception);
+            var handled = await OnHandleExcetionAsync(exception);
+            if (handled)
+            {
+                Recover();
+            }
         }
-
-        return Task.CompletedTask;
+        //return Task.CompletedTask;
     }
 
     //public Task HandleExceptionAsync(Exception exception)

@@ -6,6 +6,7 @@
 @using Project.Constraints.UI
 @using Project.Web.Shared.Components
 @using Project.AppCore
+@implements IDisposable
 
 @UIService.AddStyles()
 @UIService.UIFrameworkJs()
@@ -15,4 +16,32 @@
 
 @code {
     [Inject, NotNull] public IUIService? UIService { get; set; }
+    [Inject, NotNull] LoadingControl? LoadingControl { get; set; }
+
+    // protected override void OnAfterRender(bool firstRender)
+    // {
+    //     base.OnAfterRender(firstRender);
+    //     if (firstRender)
+    //     {
+    //         LoadingControl.HeaderLoaded = true;
+    //         LoadingControl.Update?.Invoke();
+    //     }
+    // }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            // 可能js没加载完成，会报错，非常恶心
+            await Task.Delay(100);
+            LoadingControl.HeaderLoaded = true;
+            LoadingControl.Update?.Invoke();
+        }
+    }
+
+    public void Dispose()
+    {
+        LoadingControl.HeaderLoaded = false;
+    }
 }

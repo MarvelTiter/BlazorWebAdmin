@@ -126,6 +126,7 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
             if (app.Success)
             {
                 Context.AppStore.ApplySetting(app.Value);
+                //await Context.UI.OnAppMounted(app.Value!);
             }
             await Context.NotifyWebApplicationAccessedAsync();
             var url = Context.Navigator.ToBaseRelativePath(Context.Navigator.Uri);

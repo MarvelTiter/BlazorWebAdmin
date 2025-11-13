@@ -15,10 +15,6 @@ public class FileService : IFileService
 {
     public string GetStaticFileWithVersion(string path)
     {
-        //if (environment.IsDevelopment())
-        //{
-        //    return path;
-        //}
         var file = Path.Combine("wwwroot", path);
         var fi = new FileInfo(file);
         if (!fi.Exists)

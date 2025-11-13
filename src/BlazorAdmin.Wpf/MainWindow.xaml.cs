@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components.WebView;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.JSInterop;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace BlazorAdmin.Wpf;
 /// <summary>
@@ -16,7 +18,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         this.hostApplicationLifetime = hostApplicationLifetime;
         webview.Services = provider;
-        webview.HostPage = "index.html";
+        webview.HostPage = "wwwroot/index.html";
         var root = new Microsoft.AspNetCore.Components.WebView.Wpf.RootComponent
         {
             Selector = "#app",
@@ -31,6 +33,18 @@ public partial class MainWindow : Window
         webview.RootComponents.Add(root);
         webview.BlazorWebViewInitialized = BlazorWebViewInitialized;
         //webview.WebView.CoreWebView2
+        Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+    }
+
+    private void Current_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+    {
+        var isJsException = e.Exception is JSException || e.Exception.InnerException is JSException;
+        if (isJsException)
+        {
+            e.Handled = true;
+        }
+        var message = $"{e.Exception.Message}{Environment.NewLine}{e.Exception.InnerException?.Message}";
+        MessageBox.Show(message, "发送错误");
     }
 
     private void BlazorWebViewInitialized(object? sender, BlazorWebViewInitializedEventArgs e)
