@@ -1,5 +1,4 @@
-﻿import  { setTheme }  from './themeManager.ts'
-function closeWin() {
+﻿function closeWin() {
     window.close()
 }
 
@@ -22,6 +21,5 @@ function openWindow(url: string, width: number, height: number, target?: string)
 
 export default {
     closeWin,
-    openWindow,
-    setTheme
+    openWindow
 }

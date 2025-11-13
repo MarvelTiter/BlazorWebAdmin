@@ -21,18 +21,23 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunBuild", "RunBuild\RunBuild.csproj", "{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypeScriptPackup", "TypeScriptPackup", "{0F196314-3413-403C-B39E-DDD6CA938D34}"
+	ProjectSection(SolutionItems) = preProject
+		main.ts = main.ts
+		package.json = package.json
+		tsconfig.json = tsconfig.json
+		tsup.config.ts = tsup.config.ts
+		tsup.config.wpf.ts = tsup.config.wpf.ts
+		utilsAggregation.ts = utilsAggregation.ts
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.UI.FluentUI", "Shared\Project.UI.FluentUI\Project.UI.FluentUI.csproj", "{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}"
 EndProject
-#if (host == "web" || host == 'none')
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorAdmin", "BlazorAdmin\BlazorAdmin.csproj", "{59A2D1B3-4083-4E81-91CF-B9A0A60A88F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorAdmin.Client", "BlazorAdmin.Client\BlazorAdmin.Client.csproj", "{2BB31FF3-22C2-4643-A605-DB1EA43FB03A}"
 EndProject
-#elif (host == "wpf" || host == 'none')
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorAdmin.Wpf", "BlazorAdmin.Wpf\BlazorAdmin.Wpf.csproj", "{1FE4291D-BCB8-48E3-A260-5BDB4ED877AA}"
 EndProject
-#endif
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

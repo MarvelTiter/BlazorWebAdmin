@@ -1,4 +1,4 @@
-import * as u from './utilsAggregation.ts'
+﻿import * as u from './utilsAggregation.ts'
 import {ActionWatcher} from './Shared/Project.Web.Shared/Components/ActionWatcher/ActionWatcher.razor.ts'
 import {Camera} from './Shared/Project.Web.Shared/Components/Camera/Camera.razor.ts'
 import {EdgeWidget} from './Shared/Project.Web.Shared/Components/EdgeWidget/EdgeWidget.razor.ts'
@@ -39,3 +39,10 @@ window.BlazorProject = {
     //SvgIcon,
     ClientHub
 }
+
+/**
+解决方案sln文件的条件编译，每次保存都会丢失，所有先放在这里备份
+#if (host == "web" || host == 'none')
+#elif (host == "wpf" || host == 'none')
+#endif
+ */

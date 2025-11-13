@@ -1,10 +1,14 @@
-{
+﻿{
   "name": "blazor-admin",
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "tsup",
-    "build:pub": "tsup --minify terser"
+    "build-all": "tsup --config tsup.config.ts && tsup --config tsup.config.wpf.ts",
+    "build-all-mini": "tsup --config tsup.config.ts --minify terser && tsup --config tsup.config.wpf.ts --minify terser",
+    "build-web": "tsup --config tsup.config.ts",
+    "build-wpf": "tsup --config tsup.config.wpf.ts",
+    "build-web-mini": "tsup --config tsup.config.ts --minify terser",
+    "build-wpf-mini": "tsup --config tsup.config.wpf.ts --minify terser"
   },
   "repository": {
     "type": "git",
