@@ -27,7 +27,9 @@
                 "*-lock.json",
                 "**/TestPages/**",
                 "**/.vs/**",
-                "**/.idea/**"
+                "**/.idea/**",
+                "BlazorAdmin.web.sln",
+                "BlazorAdmin.wpf.sln"
             ],
             "condition": "host == 'none'"
         },
@@ -44,8 +46,13 @@
                 "**/TestPages/**",
                 "**/.vs/**",
                 "**/.idea/**",
-                "**/BlazorAdmin.Wpf/**"
+                "**/BlazorAdmin.Wpf/**",
+                "BlazorAdmin.sln",
+                "BlazorAdmin.wpf.sln"
             ],
+            "rename": {
+                "BlazorAdmin.web.sln": "BlazorAdmin.sln"
+            },
             "condition": "host == 'web'"
         },
         {
@@ -62,8 +69,13 @@
                 "**/.vs/**",
                 "**/.idea/**",
                 "**/BlazorAdmin/**",
-                "**/BlazorAdmin.Client/**"
+                "**/BlazorAdmin.Client/**",
+                "BlazorAdmin.sln",
+                "BlazorAdmin.web.sln"
             ],
+            "rename": {
+                "BlazorAdmin.wpf.sln": "BlazorAdmin.sln"
+            },
             "condition": "host == 'wpf'"
         }
     ],

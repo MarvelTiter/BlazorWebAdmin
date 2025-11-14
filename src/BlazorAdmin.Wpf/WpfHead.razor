@@ -1,5 +1,6 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 @using Microsoft.AspNetCore.Components.Web
+@using Microsoft.Extensions.Configuration
 @using Microsoft.Extensions.Options
 @using Project.Constraints.Options
 @using Project.Constraints.Store.Models
@@ -17,7 +18,7 @@
 @code {
     [Inject, NotNull] public IUIService? UIService { get; set; }
     [Inject, NotNull] LoadingControl? LoadingControl { get; set; }
-
+    [Inject, NotNull] IConfiguration? Configuration { get; set; }
     // protected override void OnAfterRender(bool firstRender)
     // {
     //     base.OnAfterRender(firstRender);
@@ -34,7 +35,8 @@
         if (firstRender)
         {
             // 可能js没加载完成，会报错，非常恶心
-            await Task.Delay(100);
+            var delay = Configuration.GetValue<int>("headDelay");
+            await Task.Delay(delay);
             LoadingControl.HeaderLoaded = true;
             LoadingControl.Update?.Invoke();
         }

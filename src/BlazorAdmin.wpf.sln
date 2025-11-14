@@ -1,0 +1,86 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32002.185
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EFE16EE0-ABD6-4659-85D2-5CD3B1D05F09}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.AppCore", "Shared\Project.AppCore\Project.AppCore.csproj", "{7A073CB9-EE1A-4507-949C-441CA504BD59}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Constraints", "Shared\Project.Constraints\Project.Constraints.csproj", "{7820239B-6C3C-4761-80EA-BD9E98795D75}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.UI.AntBlazor", "Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj", "{64740E13-062E-40C1-AFB3-6F79BE848D71}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Web.Shared", "Shared\Project.Web.Shared\Project.Web.Shared.csproj", "{8D691E07-F967-495C-B1FC-3087ADB3CA4E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RunBuild", "RunBuild\RunBuild.csproj", "{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TypeScriptPackup", "TypeScriptPackup", "{0F196314-3413-403C-B39E-DDD6CA938D34}"
+	ProjectSection(SolutionItems) = preProject
+		main.ts = main.ts
+		package.json = package.json
+		tsconfig.json = tsconfig.json
+		tsup.config.ts = tsup.config.ts
+		tsup.config.wpf.ts = tsup.config.wpf.ts
+		utilsAggregation.ts = utilsAggregation.ts
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.UI.FluentUI", "Shared\Project.UI.FluentUI\Project.UI.FluentUI.csproj", "{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorAdmin.Wpf", "BlazorAdmin.Wpf\BlazorAdmin.Wpf.csproj", "{1FE4291D-BCB8-48E3-A260-5BDB4ED877AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7A073CB9-EE1A-4507-949C-441CA504BD59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A073CB9-EE1A-4507-949C-441CA504BD59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A073CB9-EE1A-4507-949C-441CA504BD59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A073CB9-EE1A-4507-949C-441CA504BD59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7820239B-6C3C-4761-80EA-BD9E98795D75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7820239B-6C3C-4761-80EA-BD9E98795D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7820239B-6C3C-4761-80EA-BD9E98795D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7820239B-6C3C-4761-80EA-BD9E98795D75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64740E13-062E-40C1-AFB3-6F79BE848D71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64740E13-062E-40C1-AFB3-6F79BE848D71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64740E13-062E-40C1-AFB3-6F79BE848D71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64740E13-062E-40C1-AFB3-6F79BE848D71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D691E07-F967-495C-B1FC-3087ADB3CA4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D691E07-F967-495C-B1FC-3087ADB3CA4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D691E07-F967-495C-B1FC-3087ADB3CA4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D691E07-F967-495C-B1FC-3087ADB3CA4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D2D31C0-251B-4F1A-B196-ED22F05A0C63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FE4291D-BCB8-48E3-A260-5BDB4ED877AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FE4291D-BCB8-48E3-A260-5BDB4ED877AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FE4291D-BCB8-48E3-A260-5BDB4ED877AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FE4291D-BCB8-48E3-A260-5BDB4ED877AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7A073CB9-EE1A-4507-949C-441CA504BD59} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
+		{7820239B-6C3C-4761-80EA-BD9E98795D75} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
+		{64740E13-062E-40C1-AFB3-6F79BE848D71} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
+		{8D691E07-F967-495C-B1FC-3087ADB3CA4E} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
+		{1E41BCEE-2760-4A93-9C37-8C62F6C53A50} = {0F196314-3413-403C-B39E-DDD6CA938D34}
+		{8D2D31C0-251B-4F1A-B196-ED22F05A0C63} = {41F05D31-29D1-4D2D-AA45-E6BA10C6CD1E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0371ABB4-6400-487C-9031-25B119AB8B9E}
+	EndGlobalSection
+EndGlobal

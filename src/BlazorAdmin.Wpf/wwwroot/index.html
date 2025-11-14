@@ -9,5 +9,77 @@
     <div id="head"></div>
     <div id="app"></div>
     <script src="_framework/blazor.webview.js"></script>
+    <!--<script>
+
+        const wb = document.createElement('script');
+        const head = document.getElementById('head');
+        const app = document.getElementById('app');
+        wb.src = '_framework/blazor.webview.js';
+        const httpRecord = function () {
+            this.timer = null;
+            this.count = 0;
+            this.increment = function () {
+                this.count++;
+                console.log('HTTP requests count:', this.count);
+                if (this.timer) {
+                    clearTimeout(this.timer);
+                    this.timer = null;
+                }
+            };
+            this.decrement = function () {
+                this.count--;
+                if (this.count == 0) {
+                    this.timer = setTimeout(() => {
+                        // 所有请求完成后的操作
+                        console.log('All HTTP requests have completed.');
+                        clearTimeout(this.timer);
+                        this.timer = null;
+                    }, 100);
+                }
+            };
+        }
+        // 拦截Fetch请求
+        const record = new httpRecord();
+        const originalFetch = window.fetch;
+        window.fetch = function (...args) {
+            record.increment();
+            return originalFetch.apply(this, args)
+                .then(response => {
+                    record.decrement();
+                    return response;
+                })
+                .catch(error => {
+                    record.decrement();
+                    throw error;
+                });
+        };
+
+        // 拦截XMLHttpRequest
+        const originalOpen = XMLHttpRequest.prototype.open;
+        const originalSend = XMLHttpRequest.prototype.send;
+
+        XMLHttpRequest.prototype.open = function (method, url) {
+
+            return originalOpen.apply(this, arguments);
+        };
+
+        XMLHttpRequest.prototype.send = function () {
+            record.increment();
+            this.addEventListener('load', function () {
+                record.decrement();
+            });
+
+            this.addEventListener('error', function () {
+                record.decrement();
+            });
+
+            return originalSend.apply(this, arguments);
+        };
+
+        document.body.appendChild(wb);
+        document.head.appendChild(head.content);
+
+
+    </script>-->
 </body>
 </html>

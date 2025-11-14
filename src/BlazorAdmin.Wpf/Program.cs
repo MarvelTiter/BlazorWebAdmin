@@ -20,6 +20,7 @@ public class Program
         {
             var configuration = new ConfigurationManager();
             configuration.AddEnvironmentVariables("ASPNETCORE_");
+            configuration.AddJsonFile("wpfhost.json",true);
             var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings()
             {
                 Args = args,
