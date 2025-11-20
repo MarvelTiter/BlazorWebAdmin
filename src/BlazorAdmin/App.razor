@@ -19,10 +19,10 @@
     @* <script src="@Assets[UIService.UIFrameworkJs()]"></script> *@
     @* <VScript Src="@UIService.UIFrameworkJs()"></VScript> *@
     @UIService.UIFrameworkJs()
-    @* <link href="@Assets["app.css"]" rel="stylesheet" /> *@
-    <VLink Href="app.css"></VLink>
-    @* <link href="@Assets["BlazorAdmin.styles.css"]" rel="stylesheet" /> *@
-    <VLink Href="BlazorAdmin.styles.css"></VLink>
+    <link href="@Assets["app.css"]" rel="stylesheet" />
+    @* <VLink Href="app.css"></VLink> *@
+    <link href="@Assets["BlazorAdmin.styles.css"]" rel="stylesheet" />
+    @* <VLink Href="BlazorAdmin.styles.css"></VLink> *@
     <HeadOutlet @rendermode="@RenderMode" />
 </head>
 
@@ -31,10 +31,10 @@
     <Routers RenderMode="@RenderMode"></Routers>
     <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></Project.Web.Shared.Components.ReconnectorOutlet>
 
-    @* <script src="@Assets["_framework/blazor.web.js"]"></script> *@
-    <VScript Src="_framework/blazor.web.js"></VScript>
-    @* <script src="@Assets["js/blazor-admin-project.js"]"></script> *@
-    <VScript Src="js/blazor-admin-project.js"></VScript>
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
+    @* <VScript Src="_framework/blazor.web.js"></VScript> *@
+    <script src="@Assets["js/blazor-admin-project.js"]"></script>
+    @* <VScript Src="js/blazor-admin-project.js"></VScript> *@
     
 </body>
 

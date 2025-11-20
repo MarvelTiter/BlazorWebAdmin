@@ -11,6 +11,11 @@ public static class RenderFragmentBuilderExtensions
         return new CustomComponentBuilder<TComponent>(builder);
     }
 
+    public static ElementBuilder Html(this RenderTreeBuilder builder, string tagName)
+    {
+        return new ElementBuilder(builder, tagName);
+    }
+
     public static ElementBuilder Div(this RenderTreeBuilder builder)
     {
         return new ElementBuilder(builder, "div");
