@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "blazor-admin",
   "version": "1.0.0",
   "description": "",
@@ -8,7 +8,9 @@
     "build-web": "tsup --config tsup.config.ts",
     "build-wpf": "tsup --config tsup.config.wpf.ts",
     "build-web-mini": "tsup --config tsup.config.ts --minify terser",
-    "build-wpf-mini": "tsup --config tsup.config.wpf.ts --minify terser"
+    "build-wpf-mini": "tsup --config tsup.config.wpf.ts --minify terser",
+
+    "down:es6": "babel blazor.web.js -o .\\BlazorAdmin\\wwwroot\\blazor.web.es6.js"
   },
   "repository": {
     "type": "git",
@@ -24,10 +26,17 @@
   },
   "homepage": "https://github.com/MarvelTiter/BlazorAdmin#readme",
   "devDependencies": {
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
     "@swc/cli": "^0.3.14",
     "@swc/core": "^1.6.5",
     "terser": "^5.31.1",
     "tsup": "^8.1.0",
     "typescript": "^5.5.2"
+  },
+  "dependencies": {
+    "blazor-admin": "file:",
+    "core-js": "^3.47.0"
   }
 }

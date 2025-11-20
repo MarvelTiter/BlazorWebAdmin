@@ -9,22 +9,22 @@ using System.Security.Claims;
 namespace Project.AppCore;
 
 
-public static class HttpContextExtensions
-{
-    private static readonly ConcurrentDictionary<Type, bool> AcceptsInteractiveRoutingCache = new();
-    public static bool AcceptsInteractiveRouting(this HttpContext context)
-    {
-        //httpContext.GetEndpoint().
-        ArgumentNullException.ThrowIfNull(context);
+//public static class HttpContextExtensions
+//{
+//    private static readonly ConcurrentDictionary<Type, bool> AcceptsInteractiveRoutingCache = new();
+//    public static bool AcceptsInteractiveRouting(this HttpContext context)
+//    {
+//        //httpContext.GetEndpoint().
+//        ArgumentNullException.ThrowIfNull(context);
 
-        var pageType = context.GetEndpoint()?.Metadata.GetMetadata<ComponentTypeMetadata>()?.Type;
+//        var pageType = context.GetEndpoint()?.Metadata.GetMetadata<ComponentTypeMetadata>()?.Type;
 
-        return pageType is not null
-            && AcceptsInteractiveRoutingCache.GetOrAdd(
-                pageType,
-                static pageType => !pageType.IsDefined(typeof(ExcludeFromInteractiveRoutingAttribute), true));
-    }
-}
+//        return pageType is not null
+//            && AcceptsInteractiveRoutingCache.GetOrAdd(
+//                pageType,
+//                static pageType => !pageType.IsDefined(typeof(ExcludeFromInteractiveRoutingAttribute), true));
+//    }
+//}
 
 
 public static class ClaimsPrincipalExtensions

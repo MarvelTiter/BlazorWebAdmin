@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Project.Constraints.Models.Request;
 using Project.Constraints.Store;
 using Project.Constraints.UI.Dropdown;
@@ -9,52 +8,8 @@ using Project.Constraints.UI.Props;
 using Project.Constraints.UI.Table;
 using Project.Constraints.UI.Tree;
 using System.Data;
-using System.Linq.Expressions;
 
 namespace Project.Constraints.UI;
-
-public interface IUIComponent
-{
-    IUIComponent Set(string key, object value);
-    IUIComponent Style(string value);
-    IUIComponent SetIf(bool condition, string key, object value);
-    IUIComponent AdditionalParameters(Dictionary<string, object> parameters);
-    RenderFragment Render();
-}
-
-public interface IUIComponent<TPropModel> : IUIComponent
-{
-    TPropModel Model { get; set; }
-    IUIComponent<TPropModel> Set<TMember>(Expression<Func<TPropModel, TMember>> selector, TMember value);
-    IUIComponent<TPropModel> SetModel(Action<TPropModel> action);
-}
-
-public interface IClickable<out TReturn>
-{
-    TReturn OnClick(Action callback);
-    TReturn OnClick(EventCallback callback);
-    TReturn OnClick(Action<object> callback);
-    TReturn OnClick(Func<Task> callback);
-    TReturn OnClick(Func<object, Task> callback);
-    TReturn OnClick(EventCallback<MouseEventArgs> callback);
-    TReturn OnClick(Action<MouseEventArgs> callback);
-    TReturn OnClick(Func<MouseEventArgs, Task> callback);
-}
-
-public interface IBindableInputComponent<TPropModel, TValue> : IUIComponent<TPropModel>
-{
-    IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression);
-    IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, Func<Task>? onchange);
-    //IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null);
-}
-
-public interface IButtonInput : IUIComponent<ButtonProp>, IClickable<IButtonInput>;
-
-public interface ISelectInput<TPropModel, TItem, TValue> : IBindableInputComponent<TPropModel, TValue>
-{
-    IBindableInputComponent<TPropModel, TValue> Binds(Expression<Func<IEnumerable<TValue>>> expression);
-    IBindableInputComponent<TPropModel, TValue> Binds(Expression<Func<IEnumerable<TValue>>> expression, Func<Task>? onchange);
-}
 
 public enum MessageType
 {
