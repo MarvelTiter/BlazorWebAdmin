@@ -5,7 +5,7 @@ module.exports = {
             {
                 // 或者直接指定 ES 版本
                 targets: {
-                    chrome: 78
+                    chrome: 75
                 },
 
                 useBuiltIns: false,

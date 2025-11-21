@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/Shared/">
+    <Project Path="Shared/Project.AppCore/Project.AppCore.csproj" />
+    <Project Path="Shared/Project.Constraints/Project.Constraints.csproj" />
+    <Project Path="Shared/Project.UI.AntBlazor/Project.UI.AntBlazor.csproj" />
+    <Project Path="Shared/Project.UI.FluentUI/Project.UI.FluentUI.csproj" />
+    <Project Path="Shared/Project.Web.Shared/Project.Web.Shared.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Folder Name="/TypeScriptPackup/">
+    <File Path="babel.config.js" />
+    <File Path="main.ts" />
+    <File Path="package.json" />
+    <File Path="tsconfig.json" />
+    <File Path="tsup.config.ts" />
+    <File Path="tsup.config.wpf.ts" />
+    <File Path="utilsAggregation.ts" />
+    <Project Path="RunBuild/RunBuild.csproj" />
+  </Folder>
+  <!-- #if(host == 'web' || host == 'none') -->
+  <Project Path="BlazorAdmin.Client/BlazorAdmin.Client.csproj" />
+  <Project Path="BlazorAdmin/BlazorAdmin.csproj" />
+  <!-- #elif(host == 'wpf' || host == 'none') -->
+  <Project Path="BlazorAdmin.Wpf/BlazorAdmin.Wpf.csproj" />
+  <!--#endif-->
+</Solution>
