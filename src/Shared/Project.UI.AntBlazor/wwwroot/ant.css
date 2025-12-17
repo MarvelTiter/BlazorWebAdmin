@@ -10,3 +10,7 @@
 .layout-logo.line {
     height: 46px !important;
 }
+
+.ant-menu-horizontal > .ant-menu-item a::before {
+    bottom: 0px !important;
+}
