@@ -39,7 +39,7 @@ class InteractiveLocalizer<T> : IStringLocalizer<T>
     public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => [];
 }
 
-internal class EmbeddedJsonLocalizer : IStringLocalizer
+internal class EmbeddedJsonLocalizerOld : IStringLocalizer
 {
     private readonly ConcurrentDictionary<string, JsonDocument?> documentCache = new();
     private static readonly ConcurrentDictionary<string, JsonDocument> allJsonFiles = new();
@@ -72,7 +72,7 @@ internal class EmbeddedJsonLocalizer : IStringLocalizer
 
     public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => [];
 
-    public EmbeddedJsonLocalizer(string resourceName, ConcurrentDictionary<string, string> allJsonFile, CultureInfo cultureInfo)
+    public EmbeddedJsonLocalizerOld(string resourceName, ConcurrentDictionary<string, string> allJsonFile, CultureInfo cultureInfo)
     {
         this.typedName = resourceName;
         this.allJsonFile = allJsonFile;
@@ -229,5 +229,48 @@ internal class EmbeddedJsonLocalizer : IStringLocalizer
                 fallbackJsonFiles.TryAdd(culture, fallback);
         }
         return fallback;
+    }
+}
+
+internal class EmbeddedJsonLocalizer(string resourceName, LocalizerItems? specific, LocalizerItems fallback) : IStringLocalizer
+{
+    private readonly ConcurrentDictionary<string, string> caches = [];
+    private readonly ConcurrentDictionary<string, bool> missingItems = [];
+    public LocalizedString this[string name]
+    {
+        get
+        {
+            ArgumentNullException.ThrowIfNull(name);
+            var value = GetStringSafely(name);
+            return new LocalizedString(name, value ?? name, resourceNotFound: value == null, searchedLocation: resourceName);
+        }
+    }
+
+    public LocalizedString this[string name, params object[] arguments]
+    {
+        get
+        {
+            ArgumentNullException.ThrowIfNull(name);
+            var format = GetStringSafely(name);
+            var value = string.Format(format ?? name, arguments);
+            return new LocalizedString(name, value ?? name, resourceNotFound: format == null, searchedLocation: resourceName);
+        }
+    }
+
+    public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => [];
+
+    private string GetStringSafely(string name)
+    {
+        if (caches.TryGetValue(name, out var cachedValue))
+        {
+            return cachedValue;
+        }
+        if (missingItems.ContainsKey(name))
+        {
+            return name;
+        }
+        return specific?.TryGetValue(name, out var value) == true
+            ? value
+            : fallback.TryGetValue(name, out value) ? value : name;
     }
 }
