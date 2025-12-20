@@ -1,5 +1,4 @@
-﻿@page "/camera/test"
-@namespace Project.Web.Shared.Components
+﻿@namespace Project.Web.Shared.Components
 @using Project.Constraints.Page
 @inherits AppComponentBase
 @* @attribute [PageInfo(Title = "Camera测试")] *@
@@ -9,6 +8,9 @@
     @UI.BuildButton(this).OnClick(context.Start).Text("打开").Render()
     @UI.BuildButton(this).OnClick(context.Capture).Text("拍照").Render()
     </DeviceSelectorRender> *@
+    @* <OverRender>
+        @context.CameraView
+    </OverRender> *@
 </Camera>
 @UI.BuildButton(this).Text("Toggle").Primary().OnClick(() => camera?.ToggleClipBoxAsync() ?? Task.CompletedTask).Render()
 <img src="@src" />

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Collections.Concurrent;
+using System.Text.Json;
 
 namespace Project.Web.Shared.Locales.Services;
 
@@ -8,9 +9,24 @@ public class JsonInfo
     public JsonDocument? Main { get; set; }
     public bool UseTypedName { get; set; }
     public string? SearchedLocation { get; set; }
+    private readonly ConcurrentDictionary<string, string?> cache = new();
+    private readonly ConcurrentDictionary<string, bool> missingKeys = new();
     private bool TryGetValue(JsonElement? root, string key, string typedName, out string? value)
     {
         if (!root.HasValue)
+        {
+            value = null;
+            return false;
+        }
+        // 检查缓存
+        var cacheKey = $"{typedName}:{key}";
+        if (cache.TryGetValue(cacheKey, out value))
+        {
+            return value != null;
+        }
+
+        // 标记为缺失的键（避免重复查找）
+        if (missingKeys.ContainsKey(cacheKey))
         {
             value = null;
             return false;

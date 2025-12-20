@@ -13,11 +13,15 @@ public partial class Camera : JsComponentBase, ICameraObject
     [Inject, NotNull] public IProtectedLocalStorage? Storage { get; set; }
     [Inject, NotNull] public IOptionsMonitor<AppSetting>? AppOptions { get; set; }
     [Inject, NotNull] public ICameraOptions? CameraOptions { get; set; }
+    /// <summary>
+    /// 自定义布局
+    /// </summary>
+    [Parameter] public RenderFragment<ICameraObject>? OverRender { get; set; }
     [Parameter] public bool AutoPlay { get; set; }
     [Parameter] public bool EnableClip { get; set; }
     [Parameter] public int Width { get; set; }
     [Parameter] public int Height { get; set; }
-    [Parameter] public RenderFragment<ICameraObject>? DeviceSelectorRender { get; set; }
+    [Parameter] public RenderFragment<ICameraObject>? CameraAtions { get; set; }
     [Parameter] public EventCallback<CaptureInfo> OnCapture { get; set; }
     [Parameter] public Resolution? CameraResolution { get; set; }
     [Parameter] public int? CameraWidth { get; set; }
@@ -61,7 +65,7 @@ public partial class Camera : JsComponentBase, ICameraObject
     // [Resolution.QVGA, Resolution.VGA,Resolution.HD,Resolution.FullHD, Resolution.Television4K, Resolution.Cinema4K, Resolution.A4]
     public IEnumerable<DeviceInfo> Devices { get; set; } = [];
 
-       
+
 
     //protected override void OnInitialized()
     //{

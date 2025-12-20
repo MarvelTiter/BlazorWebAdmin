@@ -5,6 +5,8 @@ namespace Project.Web.Shared.Components;
 public interface ICameraObject
 {
     IEnumerable<DeviceInfo> Devices { get; }
+    RenderFragment CameraView { get; }
+    RenderFragment CameraActionsView { get; }
     //SelectItem<Resolution> Resolutions { get; }
     Task SwitchCamera(string deviceId, Resolution? resolution = null);
     Task Start(Resolution? resolution);
