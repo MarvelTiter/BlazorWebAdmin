@@ -50,14 +50,55 @@ internal class LocalizerItems(string name, ILogger logger)
     private readonly ConcurrentDictionary<string, string> items = [];
     public bool TryGetValue(string key, string typeName, [NotNullWhen(true)] out string? value)
     {
-        return items.TryGetValue(key, out value);
+        // 尝试1：直接查找传入的key
+        if (items.TryGetValue(key, out value))
+            return true;
+
+        // 如果typeName为空，直接返回失败
+        if (string.IsNullOrEmpty(typeName))
+        {
+            value = null;
+            return false;
+        }
+
+        // 检查key是否已经是完整路径
+        bool hasTypeNamePrefix = key.StartsWith(typeName + ".", StringComparison.OrdinalIgnoreCase);
+        bool hasDot = key.Contains('.');
+
+        // 尝试2：如果key有typeName前缀，去掉前缀查找
+        if (hasTypeNamePrefix)
+        {
+            var keyWithoutPrefix = key[(typeName.Length + 1)..];
+            if (items.TryGetValue(keyWithoutPrefix, out value))
+                return true;
+        }
+        if (!hasDot && !hasTypeNamePrefix)
+        {
+            var keyWithPrefix = typeName + "." + key;
+            if (items.TryGetValue(keyWithPrefix, out value))
+                return true;
+        }
+
+        // 尝试4：通配符查找（最后的手段）
+        // 查找所有以key结尾的键
+        foreach (var kvp in items)
+        {
+            if (kvp.Key.EndsWith("." + key, StringComparison.OrdinalIgnoreCase))
+            {
+                value = kvp.Value;
+                return true;
+            }
+        }
+
+        value = null;
+        return false;
     }
 }
 
 internal class EmbeddedJsonLocalizerFactory : IStringLocalizerFactory
 {
     private static readonly ConcurrentDictionary<string, IStringLocalizer> caches = [];
-    private readonly ConcurrentDictionary<string, string> AllJsons = [];
+    //private readonly ConcurrentDictionary<string, string> AllJsons = [];
     private readonly ConcurrentDictionary<string, LocalizerItems> items = [];
     private readonly ILogger<EmbeddedJsonLocalizerFactory> logger;
 
@@ -74,9 +115,25 @@ internal class EmbeddedJsonLocalizerFactory : IStringLocalizerFactory
         {
             FlattenJson(a);
         }
-
         this.logger = logger;
     }
+
+    //private static bool IsValidCultureInfo(string cultureName)
+    //{
+    //    if (string.IsNullOrWhiteSpace(cultureName))
+    //        return false;
+
+    //    try
+    //    {
+    //        var culture = CultureInfo.GetCultureInfo(cultureName);
+    //        return culture != null;
+    //    }
+    //    catch (CultureNotFoundException)
+    //    {
+    //        return false;
+    //    }
+    //}
+
     void FlattenJson(Assembly a)
     {
         var files = a.GetManifestResourceNames().Where(f => f.Contains("Langs") && f.EndsWith(".json")).ToArray();
@@ -84,7 +141,12 @@ internal class EmbeddedJsonLocalizerFactory : IStringLocalizerFactory
         foreach (var file in files)
         {
             using var stream = a.GetManifestResourceStream(file);
-            var name = file[file.IndexOf("Langs")..];
+            // 去头掐尾，文件名保留 CultureName + resourceName
+            var name = file[(file.IndexOf("Langs") + 6)..^5];
+            if (name.EndsWith(".index"))
+            {
+                name = name.Replace(".index", "");
+            }
             if (!items.TryGetValue(name, out var value))
             {
                 value = new(name, logger);
@@ -131,8 +193,20 @@ internal class EmbeddedJsonLocalizerFactory : IStringLocalizerFactory
     private IStringLocalizer CreateLocalizer(string resourceName, CultureInfo cultureInfo)
     {
         var cacheKey = GetCacheKey(resourceName, cultureInfo);
-        Console.WriteLine($"IStringLocalizer -> {resourceName}");
-        return caches.GetOrAdd(cacheKey, new EmbeddedJsonLocalizerOld(resourceName, AllJsons, cultureInfo));
+        //Console.WriteLine($"IStringLocalizer -> {resourceName}");
+        return caches.GetOrAdd(cacheKey, k =>
+        {
+            LocalizerItems? specific = null;
+            var cultureName = cultureInfo.Name.Replace('-', '_');
+            items.TryGetValue(cultureName, out var fallback);
+            if (resourceName != "Object")
+            {
+                items.TryGetValue($"{cultureName}.{resourceName}", out specific);
+            }
+
+            return new EmbeddedJsonLocalizer(resourceName, specific, fallback);
+        });
+
     }
 
     private static string GetCacheKey(string resourceName, CultureInfo cultureInfo) => resourceName + ';' + cultureInfo.Name;

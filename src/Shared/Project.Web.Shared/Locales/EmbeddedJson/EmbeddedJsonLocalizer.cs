@@ -232,7 +232,7 @@ internal class EmbeddedJsonLocalizerOld : IStringLocalizer
     }
 }
 
-internal class EmbeddedJsonLocalizer(string resourceName, LocalizerItems? specific, LocalizerItems fallback) : IStringLocalizer
+internal class EmbeddedJsonLocalizer(string resourceName, LocalizerItems? specific, LocalizerItems? fallback) : IStringLocalizer
 {
     private readonly ConcurrentDictionary<string, string> caches = [];
     private readonly ConcurrentDictionary<string, bool> missingItems = [];
@@ -269,8 +269,13 @@ internal class EmbeddedJsonLocalizer(string resourceName, LocalizerItems? specif
         {
             return name;
         }
-        return specific?.TryGetValue(name, out var value) == true
-            ? value
-            : fallback.TryGetValue(name, out value) ? value : name;
+        if (specific?.TryGetValue(name, resourceName, out var value) == true
+            || fallback?.TryGetValue(name, resourceName, out value) == true)
+        {
+            caches[name] = value;
+            return value;
+        }
+        missingItems[name] = true;
+        return name;
     }
 }
