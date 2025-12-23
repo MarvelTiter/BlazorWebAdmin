@@ -11,12 +11,14 @@ namespace Project.Web.Shared.Store;
 public class AppStore : StoreBase, IAppStore
 {
     private readonly IOptionsMonitor<AppSetting>? options;
+    private readonly ILanguageService? languageService;
 
-    public AppStore(IOptionsMonitor<AppSetting> options)
+    public AppStore(IOptionsMonitor<AppSetting> options, ILanguageService languageService)
     {
         Mode = options.CurrentValue.LayoutMode ?? LayoutMode.Card;
         AppLanguage = options.CurrentValue.AppLanguage ?? "zh-CN";
         this.options = options;
+        this.languageService = languageService;
     }
     public AppStore()
     {
@@ -46,5 +48,6 @@ public class AppStore : StoreBase, IAppStore
         MainBackgroundColor = app?.MainBackgroundColor;
         SideBarExpandWidth = app?.SideBarExpandWidth ?? 260;
         CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(AppLanguage);
+        languageService?.SetLanguage(AppLanguage);
     }
 }

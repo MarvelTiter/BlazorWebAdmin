@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Options;
+using Project.Constraints.Options;
 using Project.Constraints.Store.Models;
 using Project.Constraints.UI;
 using Project.Web.Shared.Components;
@@ -17,6 +19,7 @@ public partial class NavTabs
     private ElementReference? leftButton;
     private ElementReference? rightButton;
     [CascadingParameter, NotNull] public IAppDomEventHandler? RootLayout { get; set; }
+    [Inject, NotNull] IOptionsMonitor<CultureOptions>? CultureOption { get; set; }
     [Parameter] public string? Class { get; set; }
     private int navMenuWidth = 200;
 

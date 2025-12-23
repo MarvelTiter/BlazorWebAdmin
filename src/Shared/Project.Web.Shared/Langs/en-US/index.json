@@ -89,8 +89,8 @@
     "BasicSetting": "Setting",
     "SysSetting": "SysSetting",
     "UserIndex": "Users",
-    "RolePermissionIndex": "Role Permission",
-    "PermissionIndex": "Permissions",
+    "RolePermission": "Role Permission",
+    "Permission": "Permissions",
     "RunLogIndex": "Operation Log"
   },
   "TableOptions": {

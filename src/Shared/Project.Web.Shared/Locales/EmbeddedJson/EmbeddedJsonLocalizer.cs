@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Project.Web.Shared.Locales.EmbeddedJson;
 
-class InteractiveLocalizer<T> : IStringLocalizer<T>
+class InteractiveLocalizer<T> : IStringLocalizer<T>, IDisposable
 {
     private readonly IStringLocalizerFactory factory;
     private readonly ILanguageService languageService;
@@ -37,6 +37,11 @@ class InteractiveLocalizer<T> : IStringLocalizer<T>
     public LocalizedString this[string name, params object[] arguments] => localizer[name, arguments];
 
     public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => [];
+
+    public void Dispose()
+    {
+        languageService.LanguageChanged -= LanguageService_LanguageChanged;
+    }
 }
 
 internal class EmbeddedJsonLocalizerOld : IStringLocalizer
@@ -241,8 +246,8 @@ internal class EmbeddedJsonLocalizer(string resourceName, LocalizerItems? specif
         get
         {
             ArgumentNullException.ThrowIfNull(name);
-            var value = GetStringSafely(name);
-            return new LocalizedString(name, value ?? name, resourceNotFound: value == null, searchedLocation: resourceName);
+            var founded = GetStringSafely(name,out var value);
+            return new LocalizedString(name, value ?? name, resourceNotFound: !founded, searchedLocation: resourceName);
         }
     }
 
@@ -251,31 +256,31 @@ internal class EmbeddedJsonLocalizer(string resourceName, LocalizerItems? specif
         get
         {
             ArgumentNullException.ThrowIfNull(name);
-            var format = GetStringSafely(name);
+            var founded = GetStringSafely(name, out var format);
             var value = string.Format(format ?? name, arguments);
-            return new LocalizedString(name, value ?? name, resourceNotFound: format == null, searchedLocation: resourceName);
+            return new LocalizedString(name, value ?? name, resourceNotFound: !founded, searchedLocation: resourceName);
         }
     }
 
     public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures) => [];
 
-    private string GetStringSafely(string name)
+    private bool GetStringSafely(string name, out string? value)
     {
-        if (caches.TryGetValue(name, out var cachedValue))
+        if (caches.TryGetValue(name, out value))
         {
-            return cachedValue;
+            return true;
         }
         if (missingItems.ContainsKey(name))
         {
-            return name;
+            return false;
         }
-        if (specific?.TryGetValue(name, resourceName, out var value) == true
+        if (specific?.TryGetValue(name, resourceName, out  value) == true
             || fallback?.TryGetValue(name, resourceName, out value) == true)
         {
             caches[name] = value;
-            return value;
+            return true;
         }
         missingItems[name] = true;
-        return name;
+        return false;
     }
 }

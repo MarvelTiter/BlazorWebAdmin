@@ -15,10 +15,16 @@
                         <div style="display:flex;padding:0 5px 0 5px;align-items: center;">
                             <MIcon IconName="@item.Icon" ClassName="top-link-icon"></MIcon>
                             <span @oncontextmenu:preventDefault>
-                                @{
-                                    item.Title ??= @Router.GetLocalizerString(item).AsContent();
+
+                                @if (CultureOption.CurrentValue.Enabled)
+                                {
+                                    @Router.GetLocalizerString(item)
                                 }
-                                @item.Title
+                                else
+                                {
+                                    item.Title ??= @Router.GetLocalizerString(item).AsContent();
+                                    @item.Title
+                                }
                             </span>
                             @if (actived && !item.Pin)
                             {

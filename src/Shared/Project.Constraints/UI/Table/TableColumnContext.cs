@@ -20,7 +20,7 @@ public static class TableColumnContext
         var tc = StaticCache<TableColumns>.GetOrAdd($"{type.FullName}_{type.GUID}", () =>
             {
                 var props = type.GetProperties();
-                PropertyInfo[] interfaceDefProps = [.. type.GetInterfaces().Where(i => i.GetCustomAttribute<SupplyColumnDefinition>() is not null).SelectMany(i => i.GetProperties())];
+                PropertyInfo[] interfaceDefProps = [.. type.GetInterfaces().Where(i => i.GetCustomAttribute<SupplyColumnDefinitionAttribute>() is not null).SelectMany(i => i.GetProperties())];
                 //var heads = props.Select(p => (Prop: p, Column: p.GetColumnDefinition()));
                 List<ColumnInfo> columns = [];
                 foreach (var prop in props)

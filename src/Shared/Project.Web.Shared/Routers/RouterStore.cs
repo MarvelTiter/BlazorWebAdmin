@@ -272,9 +272,7 @@ public partial class RouterStore : StoreBase, IRouterStore
         if (!options.CurrentValue.Enabled)
             return meta.RouteTitle;
         var l = localizer[meta.RouteId];
-        return !string.Equals(l, meta.RouteId) ? l :
-            //return localizer[meta.RouteId];
-            meta.RouteTitle;
+        return l.ResourceNotFound ? meta.RouteTitle : l;
     }
 
     public Task RemoveOther(string link)

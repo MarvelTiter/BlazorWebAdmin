@@ -90,8 +90,8 @@
     "BasicSetting": "基础配置",
     "SysSetting": "系统设置",
     "UserIndex": "用户",
-    "RolePermissionIndex": "权限分配",
-    "PermissionIndex": "权限设置",
+    "RolePermission": "权限分配",
+    "Permission": "权限设置",
     "RunLogIndex": "操作日志"
   },
   "TableOptions": {
