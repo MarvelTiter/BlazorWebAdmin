@@ -1,9 +1,9 @@
-﻿using AutoGenMapperGenerator;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using MT.Toolkit.Mapper;
 using Project.Constraints.Page;
+using Project.Constraints.Services;
 using Project.Constraints.UI.Extensions;
 
 namespace Project.Constraints.UI.Flyout;
@@ -19,6 +19,7 @@ public class DialogTemplate<TInput, TReturn> : JsComponentBase, IFeedback<TRetur
     [Parameter, NotNull] public RenderFragment<TInput?>? ChildContent { get; set; }
     [Parameter, NotNull] public FlyoutOptions<TReturn>? Options { get; set; }
     [Inject, NotNull] protected IStringLocalizer<TInput>? Localizer { get; set; }
+    [Inject, NotNull] protected ICopyable? CopySrv { get; set; }
     protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TInput).Name}.{prop}"];
 
     protected TInput? Value
@@ -41,17 +42,22 @@ public class DialogTemplate<TInput, TReturn> : JsComponentBase, IFeedback<TRetur
         base.OnInitialized();
         LoadJs = false;
         var valueType = typeof(TInput);
-        if (DialogModel == null) return;
-        if (DialogModel.Value == null && valueType.IsClass && valueType != typeof(string))
+        valueType = Nullable.GetUnderlyingType(valueType) ?? valueType;
+        if (DialogModel is null) return;
+        if (DialogModel.Value is null && valueType.IsClass && valueType != typeof(string))
         {
             DialogModel.Value = (TInput)Activator.CreateInstance(valueType)!;
         }
-        else
+        else if (!valueType.IsEnum && !valueType.IsValueType)
         {
-            if (DialogModel.Value is IAutoMap map)
+            if (Options.CopyValue)
             {
-                DialogModel.Value = map.MapTo<TInput>();
+                DialogModel.Value = CopySrv.Copy(DialogModel.Value);
             }
+            //if (DialogModel.Value is IAutoMap map)
+            //{
+            //    DialogModel.Value = map.MapTo<TInput>();
+            //}
             //DialogModel.Value = Mapper.Map<TInput, TInput>(DialogModel.Value);
         }
     }
