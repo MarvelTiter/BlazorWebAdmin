@@ -18,6 +18,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     [Inject][NotNull] private ILogger<ModelPage<TModel, TQuery>>? Logger { get; set; }
     [CascadingParameter] private IAppDomEventHandler? DomEvent { get; set; }
     [CascadingParameter] private RouteTag? RouteInfo { get; set; }
+    [Parameter] public RenderFragment? AdditionalHeaderButtons { get; set; }
 
     [SaveState(Init = "new()")]
     public virtual TableOptions<TModel, TQuery> Options { get; set; } = new();
@@ -31,6 +32,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
                 b.Component<DefaultTableHeader<TModel, TQuery>>()
                     .SetComponent(c => c.Options, Options)
                     .SetComponent(c => c.DownloadImportTemplate, EventCallback.Factory.Create(this, DownloadImportTemplate))
+                    .SetComponent(c => c.ChildContent, AdditionalHeaderButtons)
                     .Build();
             });
         builder.AddContent(1, UI.BuildTable(Options));

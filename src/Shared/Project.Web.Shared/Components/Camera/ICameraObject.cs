@@ -8,8 +8,9 @@ public interface ICameraObject
     RenderFragment CameraView { get; }
     RenderFragment CameraActionsView { get; }
     //SelectItem<Resolution> Resolutions { get; }
-    Task SwitchCamera(string deviceId, Resolution? resolution = null);
-    Task Start(Resolution? resolution);
+    ICameraOptions CameraOptions { get; }
+    Task SwitchCamera(string deviceId, Resolution? resolution = null, bool? exact = null);
+    Task Start(Resolution? resolution, bool? exact = null);
     Task Start();
     Task Stop();
     Task ToggleClipBoxAsync();

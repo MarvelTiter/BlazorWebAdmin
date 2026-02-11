@@ -8,9 +8,12 @@
     @UI.BuildButton(this).OnClick(context.Start).Text("打开").Render()
     @UI.BuildButton(this).OnClick(context.Capture).Text("拍照").Render()
     </DeviceSelectorRender> *@
-    @* <OverRender>
-        @context.CameraView
-    </OverRender> *@
+
+    @* <CameraAtions>
+        @UI.BuildSelect(this, context.CameraOptions.ResolutionOptions).Bind(() => resolution, SaveToLocal).Render()
+        @UI.BuildButton(this).OnClick(() => context.Start(null, exact: true)).Text("打开").Render()
+        @UI.BuildButton(this).OnClick(context.Capture).Text("拍照").Render()
+    </CameraAtions> *@
 </Camera>
 @UI.BuildButton(this).Text("Toggle").Primary().OnClick(() => camera?.ToggleClipBoxAsync() ?? Task.CompletedTask).Render()
 <img src="@src" />
@@ -50,6 +53,6 @@
 
     Task SwitchVideo(ICameraObject camera, string deviceId)
     {
-        return camera.SwitchCamera(deviceId);
+        return camera.SwitchCamera(deviceId, exact: true);
     }
 }

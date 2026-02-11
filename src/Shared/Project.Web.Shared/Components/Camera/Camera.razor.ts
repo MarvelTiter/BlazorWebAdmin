@@ -27,17 +27,31 @@ export class Camera extends BaseComponent {
             this.clipBox.initEvents()
         }
     }
-
-    open(deviceId: string, width: number, height: number): Promise<IJsActionResult> {
+    createVideoConstraints(deviceId: string, width: number, height: number, strictMode: boolean): MediaStreamConstraints {
+        if (strictMode) {
+            return {
+                video: {
+                    deviceId: { exact: deviceId },
+                    width: { ideal: width },
+                    height: { ideal: height },
+                }
+            }
+        } else {
+            return {
+                video: {
+                    deviceId: { ideal: deviceId },
+                    width: { ideal: width },
+                    height: { ideal: height },
+                }
+            }
+        }
+    }
+    open(deviceId: string, width: number, height: number, strictMode: boolean): Promise<IJsActionResult> {
         return new Promise(resolve => {
             if (navigator && navigator.mediaDevices) {
-                navigator.mediaDevices.getUserMedia({
-                    video: {
-                        deviceId: { ideal: deviceId },
-                        width: { ideal: width },
-                        height: { ideal: height },
-                    },
-                })
+                const constraints = this.createVideoConstraints(deviceId, width, height, strictMode)
+                console.debug(constraints)
+                navigator.mediaDevices.getUserMedia(constraints)
                     .then((stream) => {
                         /* 使用这个 stream stream */
                         this.width = width;
@@ -170,10 +184,10 @@ export class Camera extends BaseComponent {
         return failed('获取设备失败！请检查设备连接或者浏览器配置！')
     }
 
-    static async loadUserMedia(id: string, deviceId: string, width: number, height: number) {
+    static async loadUserMedia(id: string, deviceId: string, width: number, height: number, strictMode: boolean) {
         try {
             const camera: Camera = getComponentById(id)
-            return await camera.open(deviceId, width, height)
+            return await camera.open(deviceId, width, height, strictMode)
         } catch (e: any) {
             return failed(e.message)
         }

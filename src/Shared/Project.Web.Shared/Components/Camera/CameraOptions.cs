@@ -4,7 +4,7 @@ using static Project.Web.Shared.Components.Camera;
 
 namespace Project.Web.Shared.Components;
 
-[AutoInject(LifeTime = InjectLifeTime.Scoped)]
+[AutoInject(LifeTime = InjectLifeTime.Singleton)]
 public class CameraOptions : ICameraOptions, IDisposable
 {
     //private Lazy<IEnumerable<Resolution>> lazyResolutions;

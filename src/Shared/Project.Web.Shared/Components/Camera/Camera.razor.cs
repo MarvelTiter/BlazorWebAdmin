@@ -30,6 +30,8 @@ public partial class Camera : JsComponentBase, ICameraObject
     [Parameter] public double Quality { get; set; } = 1;
     [Parameter] public int Rotate { get; set; }
     [Parameter] public bool PreviewRotate { get; set; }
+    [Parameter] public double RotateFix { get; set; } = 0;
+    [Parameter] public bool Exact { get; set; }
     /// <summary>
     /// 默认值 image/png , 可选值 image/jpeg
     /// <para>
@@ -41,7 +43,7 @@ public partial class Camera : JsComponentBase, ICameraObject
     int WrapHeight => PreviewRotate ? (Rotate % 2 == 0 ? Height : Width) : Height;
     int WrapWidth => PreviewRotate ? (Rotate % 2 == 0 && PreviewRotate ? Width : Height) : Width;
     int ComWidth => Math.Max(Width, Height);
-    int RotateDeg => PreviewRotate ? InternalRotate * 90 : 0;
+    double RotateDeg => PreviewRotate ? InternalRotate * 90 + RotateFix : 0;
     private ElementReference? videoDom;
     private ElementReference? clipDom;
     private string? selectedDeviceId = null;
@@ -97,7 +99,7 @@ public partial class Camera : JsComponentBase, ICameraObject
             clip = EnableClip ? clipDom : null,
             width = Width,
             height = Height,
-            format = PhotoFormat
+            format = PhotoFormat,
         });
 
         var result = await Storage.GetAsync<string>("previousSelectedDevice");
@@ -168,11 +170,11 @@ public partial class Camera : JsComponentBase, ICameraObject
         return Start(resolution);
     }
 
-    public async Task Start(Resolution? resolution = null)
+    public async Task Start(Resolution? resolution = null, bool? exact = null)
     {
         (int Width, int Height) res = GetSize(resolution);
 
-        var result = await TryOpenCamera(res.Width, res.Height);
+        var result = await TryOpenCamera(res.Width, res.Height, exact);
         if (result == null)
         {
             UI.Error("something wrong when try to open the camera");
@@ -190,13 +192,14 @@ public partial class Camera : JsComponentBase, ICameraObject
         }
     }
 
-    async Task<JsActionResult?> TryOpenCamera(int width, int height)
+    async Task<JsActionResult?> TryOpenCamera(int width, int height, bool? exact = null)
     {
         int hadTried = 0;
         JsActionResult? result = default;
         while (hadTried < RetryTimes)
         {
-            result = await InvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, width, height);
+            var useExact = exact ?? Exact;
+            result = await InvokeAsync<JsActionResult>("loadUserMedia", selectedDeviceId, width, height, useExact);
             if (result == null || !result.IsSuccess)
             {
                 await Task.Delay(100);
@@ -227,11 +230,11 @@ public partial class Camera : JsComponentBase, ICameraObject
         }
     }
 
-    public async Task SwitchCamera(string deviceId, Resolution? resolution = null)
+    public async Task SwitchCamera(string deviceId, Resolution? resolution = null, bool? exact = null)
     {
         await Stop();
         selectedDeviceId = deviceId;
-        await Start(resolution);
+        await Start(resolution, exact);
     }
     public async Task<CaptureInfo> Capture()
     {
