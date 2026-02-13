@@ -96,8 +96,8 @@ app.UseLightTask(c =>
     {
         Console.WriteLine($"Task测试1: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
         return Task.CompletedTask;
-    }, b => b.WithCron("*/12 * * * * ?").Build());
-    c.AddTask<BlazorAdmin.Client.TestPages.Tasks.TestTask>("Task测试2", b => b.WithCron("*/12 * * * * ?").Build());
+    }, b => b.WithCron("*/12 * * * * ?"));
+    c.AddTask<BlazorAdmin.Client.TestPages.Tasks.TestTask>("Task测试2", b => b.WithCron("*/12 * * * * ?"));
 });
 #endif
 

@@ -58,8 +58,13 @@ public class BindableComponentBuilder<TComponent, TPropModel, TValue> : PropComp
         this.onchange = onchange;
         handleBind = () =>
         {
+            var type = typeof(TValue);//Nullable.GetUnderlyingType(typeof(TValue)) ??
             var body = this.expression.Body;
-            var p = Expression.Parameter(typeof(TValue), "v");
+            //if (body is UnaryExpression u)
+            //{
+            //    body = u.Operand;
+            //}
+            var p = Expression.Parameter(type, "v");
             var actionExp = Expression.Lambda<Action<TValue>>(Expression.Assign(body, p), p);
             assignAction = actionExp.Compile();
             callback = v =>
@@ -77,7 +82,7 @@ public class BindableComponentBuilder<TComponent, TPropModel, TValue> : PropComp
             parameters.Add($"{Model.BindValueName}Changed", eventCallback);
             if (Model.EnableValueExpression)
             {
-                if (!Model.StringValue || typeof(TValue) == typeof(string))
+                if (!Model.StringValue || type == typeof(string))
                 {
                     parameters.Add(Model.ValueExpressionName, this.expression);
                 }

@@ -62,6 +62,7 @@ public class SelectComponentBuilder<TComponent, TPropModel, TItem, TValue> : Bin
 
             multiCallback = v =>
             {
+                v ??= [];
                 multiAssignAction.Invoke(v);
                 if (this.onchange != null)
                     return this.onchange.Invoke();

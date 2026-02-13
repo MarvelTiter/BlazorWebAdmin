@@ -35,6 +35,7 @@ public sealed class FormBuilder
     {
         var col = new ColumnInfo(property);
         col.Label = label;
+        col.ColumnIndex = columns.Count;
         columns.Add(col);
         return this;
     }

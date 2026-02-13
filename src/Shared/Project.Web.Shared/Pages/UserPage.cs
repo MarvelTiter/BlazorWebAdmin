@@ -27,6 +27,7 @@ public class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : 
         Options.Pager = false;
         Options.LoadDataOnLoaded = true;
         Options.Exportable = true;
+        Options.EnableRowEdit = true;
         Options.GetColumn(u => u.Password).ValueFormat = val => "******";
         Options.GetColumn(u => u.Roles).FormTemplate = ctx => b =>
             b.Component<AssignUserRoles<TRole>>()
@@ -112,5 +113,14 @@ public class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : 
 [StateContainer]
 public partial class DefaultUserPage : UserPage<User, Permission, Role, IStandardUserService, IStandardPermissionService>
 {
+    protected override async Task<IQueryResult?> OnCellUpdateAsync(User model, ColumnInfo col)
+    {
+        return await UserSrv.SavePropertyAsync(model, col.PropertyOrFieldName);
+    }
+
+    protected override async Task<IQueryResult?> OnRowUpdateAsync(User model, ColumnInfo[] col)
+    {
+        return await UserSrv.SavePropertiesAsync(model, [.. col.Select(c => c.PropertyOrFieldName)]);
+    }
 }
 #endif

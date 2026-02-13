@@ -12,10 +12,10 @@
         <span @key="@item.Item1">@($"{item.Item1:yyyy-MM-dd HH:mm:ss}") => @item.Item2</span>
     }
 </div>
-@UI.BuildDatePicker(this).Bind(() => date).Render()
+@(UI.BuildDatePicker<DateTime>(this).Bind(() => date).Render())
 @date
 @code {
     List<(DateTime, string)> contents = [];
-    DateTime? date;
+    DateTime date;
 
 }

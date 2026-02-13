@@ -3,6 +3,7 @@ using AutoInjectGenerator;
 using AutoWasmApiGenerator;
 using LightORM;
 using Project.Constraints.Models.Permissions;
+using System.Linq.Expressions;
 
 namespace Project.Web.Shared.Services;
 
@@ -10,7 +11,7 @@ public class DefaultUserService<TUser, TUserRole>
     where TUser : IUser
     where TUserRole : IUserRole, new()
 {
-    private readonly IExpressionContext context;
+    protected readonly IExpressionContext context;
 
     public DefaultUserService(IExpressionContext context)
     {
@@ -124,10 +125,18 @@ public class DefaultUserService<TUser, TUserRole>
 #else
 [AutoInject(Group = "SERVER", ServiceType = typeof(IStandardUserService))]
 [GenAspectProxy]
-public class StandardUserService : DefaultUserService<User, UserRole>, IStandardUserService
+public class StandardUserService(IExpressionContext context) : DefaultUserService<User, UserRole>(context), IStandardUserService
 {
-    public StandardUserService(IExpressionContext context) : base(context)
+
+    public async Task<QueryResult> SavePropertyAsync(User user, string property)
     {
+        var e = await context.Update(user).UpdateByName(property).ExecuteAsync();
+        return e > 0;
+    }
+    public async Task<QueryResult> SavePropertiesAsync(User user, string[] property)
+    {
+        var e = await context.Update(user).UpdateByNames(property).ExecuteAsync();
+        return e > 0;
     }
 }
 #endif

@@ -1,0 +1,4 @@
+::deep .editable-cell:hover {
+    cursor: pointer;
+    box-shadow: var(--border-shadow);
+}

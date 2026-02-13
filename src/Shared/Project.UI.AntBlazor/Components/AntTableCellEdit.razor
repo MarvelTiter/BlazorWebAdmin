@@ -1,0 +1,28 @@
+@typeparam TData
+
+<div class="ant-table-cell-edit">
+    <div class="edit-input">
+        <InputBuilder TData="TData" Column="@Column" UI="@UI" Reciver="@Reciver" Data="@Data"></InputBuilder>
+    </div>
+    @if (CellEdit)
+    {
+        <Button Type="AntDesign.ButtonType.Primary" Size="@ButtonSize.Small" Icon="check" Class="edit-btn" OnClick="@OnSave" AutoLoading></Button>
+        <Button Danger Size="@ButtonSize.Small" Icon="close" Class="edit-btn" OnClick="@OnCancel"></Button>
+    }
+</div>
+
+@code {
+    [Parameter, NotNull] public ColumnInfo? Column { get; set; }
+    [Parameter, NotNull] public IUIService? UI { get; set; }
+    [Parameter, NotNull] public object? Reciver { get; set; }
+    [Parameter, NotNull] public TData? Data { get; set; }
+    [Parameter] public bool CellEdit { get; set; }
+    [Parameter] public EventCallback OnSave { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+}
+

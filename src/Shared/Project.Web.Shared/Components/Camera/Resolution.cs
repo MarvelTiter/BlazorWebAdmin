@@ -5,7 +5,7 @@ namespace Project.Web.Shared.Components;
 
 public partial class Camera
 {
-    public struct Resolution : IEquatable<Resolution>
+    public readonly record struct Resolution
     {
         public static Resolution QVGA => new("QVGA(320×240)", 320, 240);
         public static Resolution VGA => new("VGA(640×380)", 640, 380);
@@ -15,9 +15,9 @@ public partial class Camera
         public static Resolution Cinema4K => new("Cinema4K(4096×2160)", 4096, 2160);
         public static Resolution A4 => new("A4(1123×794)", 1123, 794);
 
-        public int Width { get; set; }
-        public int Height { get; set; }
-        [NotNull] public string? Name { get; set; }
+        public int Width { get; }
+        public int Height { get; }
+        [NotNull] public string? Name { get; }
         public Resolution() { }
         public Resolution(string name, int width, int height)
         {
@@ -35,27 +35,27 @@ public partial class Camera
             return new(name, c.Width, c.Height);
         }
 
-        public readonly bool Equals(Resolution other)
-        {
-            return other.Name == Name && other.Width == Width && other.Height == Height;
-        }
+        //public readonly bool Equals(Resolution other)
+        //{
+        //    return other.Name == Name && other.Width == Width && other.Height == Height;
+        //}
 
-        public override bool Equals(object? obj)
-        {
-            return obj is Resolution other && Equals(other);
-        }
+        //public override bool Equals(object? obj)
+        //{
+        //    return obj is Resolution other && Equals(other);
+        //}
 
-        public override readonly int GetHashCode() => Name.GetHashCode() ^ Width.GetHashCode() ^ Height.GetHashCode();
+        //public override readonly int GetHashCode() => Name.GetHashCode() ^ Width.GetHashCode() ^ Height.GetHashCode();
 
-        public static bool operator ==(Resolution left, Resolution right)
-        {
-            return left.Equals(right);
-        }
+        //public static bool operator ==(Resolution left, Resolution right)
+        //{
+        //    return left.Equals(right);
+        //}
 
-        public static bool operator !=(Resolution left, Resolution right)
-        {
-            return !(left == right);
-        }
+        //public static bool operator !=(Resolution left, Resolution right)
+        //{
+        //    return !(left == right);
+        //}
     }
 
     //public static SelectItem<Resolution> Resolutions => resolutions.Value;

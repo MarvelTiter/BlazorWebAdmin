@@ -5,6 +5,7 @@ using MT.Generators.Abstraction;
 using Project.Constraints.Aop;
 using Project.Constraints.Models.Permissions;
 using Project.Constraints.Models.Request;
+using System.Linq.Expressions;
 
 namespace Project.Constraints.Services;
 
@@ -45,6 +46,11 @@ public partial interface IUserService<TUser> where TUser : IUser
 [AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
 public interface IStandardUserService : IUserService<User>
 {
+    [RelatedPermission(PermissionId = nameof(UpdateUserAsync))]
+    Task<QueryResult> SavePropertyAsync(User user, string property);
 
+
+    [RelatedPermission(PermissionId = nameof(UpdateUserAsync))]
+    Task<QueryResult> SavePropertiesAsync(User user, string[] property);
 }
 #endif
