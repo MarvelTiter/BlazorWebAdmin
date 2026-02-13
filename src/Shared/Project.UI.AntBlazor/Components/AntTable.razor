@@ -4,105 +4,123 @@
 @using System.Collections.Immutable
 @typeparam TData
 @typeparam TQuery where TQuery : IRequest, new()
-<Card>
-    <Table DataSource="Datas"
-           Loading="@Options.Loading"
-           Bordered="@true"
-           Resizable="@true"
-           DefaultExpandAllRows="@true"
-           GroupTitleTemplate="@GroupTitle()"
-           GroupFooterTemplate="@GroupFooter()"
-           Size="@TableSize.Small"
-           TreeChildren="@Options.TreeChildren"
-           TItem="TData"
-           ScrollX="@Options.ScrollX"
-           Total="@Total"
-           @bind-PageIndex="@Options.Query.PageIndex"
-           @bind-PageSize="@Options.Query.PageSize"
-           SelectedRows="@Options.Selected"
-           SelectedRowsChanged="@OnSelectedRowsChanged"
-           RowKey="@Options.RowKey"
-           OnRowClick="OnRowClick"
-           OnRow="RowOptions"
-           HidePagination="!Options.Pager">
-        <ChildContent>
+<div>
+    <Card>
+        <Table DataSource="Datas"
+               Loading="@Options.Loading"
+               Bordered="@true"
+               Resizable="@true"
+               DefaultExpandAllRows="@true"
+               GroupTitleTemplate="@GroupTitle()"
+               GroupFooterTemplate="@GroupFooter()"
+               Size="@TableSize.Small"
+               TreeChildren="@Options.TreeChildren"
+               TItem="TData"
+               ScrollX="@Options.ScrollX"
+               Total="@Total"
+               @bind-PageIndex="@Options.Query.PageIndex"
+               @bind-PageSize="@Options.Query.PageSize"
+               SelectedRows="@Options.Selected"
+               SelectedRowsChanged="@OnSelectedRowsChanged"
+               RowKey="@Options.RowKey"
+               OnRowClick="OnRowClick"
+               OnRow="RowOptions"
+               HidePagination="!Options.Pager">
+            <ChildContent>
 
-            @if (Options.EnableSelection)
-            {
-                <Selection Fixed="ColumnFixPlacement.Left" />
-            }
-
-            @* <AntTableColumns Options="Options" RowData="context" Localizer="Localizer"></AntTableColumns> *@
-
-            @foreach (var col in Options.Columns)
-            {
-                @if (!(col.VisibleExpression?.Invoke(context) ?? col.Visible)) continue;
-                @RenderColumn(context, col)
-            }
-
-            @if (Options.Buttons?.Count > 0)
-            {
-                @foreach (var btnGroup in Options.Buttons.GroupBy(btn => btn.Group))
+                @if (Options.EnableSelection)
                 {
-                    <ActionColumn Title=@(TableLocalizer[btnGroup.Key]) Align="@ColumnAlign.Center" Fixed="ColumnFixPlacement.Right" Width="@Options.ActionColumnWidth">
-                        @{
-                            var btns = btnGroup.Where(b => b.CheckVisible(context)).ToList();
-                            if (Options.ActionButtonColumn.HasValue)
-                            {
-                                <Project.Web.Shared.ComponentHelper.MGrid GridColumns="@Options.ActionButtonColumn.Value" Gap="5px">
-                                    @foreach (var btn in btns)
+                    <Selection Fixed="ColumnFixPlacement.Left" />
+                }
+
+                @* <AntTableColumns Options="Options" RowData="context" Localizer="Localizer"></AntTableColumns> *@
+
+                @foreach (var col in Options.Columns)
+                {
+                    @if (!(col.VisibleExpression?.Invoke(context) ?? col.Visible)) continue;
+                    @RenderColumn(context, col)
+                }
+
+                @if (Options.Buttons?.Count > 0)
+                {
+                    @foreach (var btnGroup in Options.Buttons.GroupBy(btn => btn.Group))
+                    {
+                        <ActionColumn Title=@(TableLocalizer[btnGroup.Key]) Align="@ColumnAlign.Center" Fixed="ColumnFixPlacement.Right" Width="@Options.ActionColumnWidth">
+                            @{
+                                var btns = btnGroup.Where(b => b.CheckVisible(context)).ToList();
+                                if (Options.ActionButtonColumn.HasValue)
+                                {
+                                    <Project.Web.Shared.ComponentHelper.MGrid GridColumns="@Options.ActionButtonColumn.Value" Gap="5px">
+                                        @foreach (var btn in btns)
+                                        {
+                                            @CreateButton(btn, context)
+                                        }
+                                    </Project.Web.Shared.ComponentHelper.MGrid>
+                                }
+                                else if (btns.Count <= 2)
+                                {
+                                    foreach (var btn in btns)
                                     {
                                         @CreateButton(btn, context)
                                     }
-                                </Project.Web.Shared.ComponentHelper.MGrid>
-                            }
-                            else if (btns.Count <= 2)
-                            {
-                                foreach (var btn in btns)
-                                {
-                                    @CreateButton(btn, context)
                                 }
+                                else
+                                {
+                                    var first = btns[0];
+                                    @CreateButton(first, context)
+                                    <Dropdown>
+                                        <Overlay>
+                                            <Menu>
+                                                @for (var i = 1; i < btns.Count; i++)
+                                                {
+                                                    var btn = btns[i];
+                                                    <MenuItem>
+                                                        @CreateButton(btn, context)
+                                                    </MenuItem>
+                                                }
+                                            </Menu>
+                                        </Overlay>
+                                        <ChildContent>
+                                            <a @onclick:preventDefault>
+                                                @TableLocalizer["TableTips.More"] <Icon Type="down" />
+                                            </a>
+                                        </ChildContent>
+                                    </Dropdown>
+                                }
+                            }
+                        </ActionColumn>
+                    }
+                }
+                @if (Options.EnableRowEdit && Options.OnRowUpdateAsync is not null)
+                {
+                    <ActionColumn Align="@ColumnAlign.Center" Fixed="ColumnFixPlacement.Right" Width="80">
+                        <CellRender Context="cell">
+                            @if (cell.RowData.RowIndex == editRow)
+                            {
+                                <Button Size="@ButtonSize.Small" Type="AntDesign.ButtonType.Primary" Icon="check" OnClick="@(() => SaveRowEdit(context))"></Button>
+                                <Button Size="@ButtonSize.Small" Danger Icon="close" OnClick="@(() => editRow = -1)"></Button>
                             }
                             else
                             {
-                                var first = btns[0];
-                                @CreateButton(first, context)
-                                <Dropdown>
-                                    <Overlay>
-                                        <Menu>
-                                            @for (var i = 1; i < btns.Count; i++)
-                                            {
-                                                var btn = btns[i];
-                                                <MenuItem>
-                                                    @CreateButton(btn, context)
-                                                </MenuItem>
-                                            }
-                                        </Menu>
-                                    </Overlay>
-                                    <ChildContent>
-                                        <a @onclick:preventDefault>
-                                            @TableLocalizer["TableTips.More"] <Icon Type="down" />
-                                        </a>
-                                    </ChildContent>
-                                </Dropdown>
+                                <Button Size="@ButtonSize.Small" Type="AntDesign.ButtonType.Primary" Icon="edit" OnClick="@(() => editRow = cell.RowData.RowIndex)"></Button>
                             }
-                        }
+                        </CellRender>
                     </ActionColumn>
                 }
-            }
-        </ChildContent>
-        <PaginationTemplate Context="pageContext">
-            <Pagination Class="@pageContext.PaginationClass"
-                        Total="@pageContext.Total"
-                        PageSize="@pageContext.PageSize"
-                        Current="@pageContext.PageIndex"
-                        ShowTotal="TotalFragment"
-                        ShowSizeChanger="@true"
-                        ShowQuickJumper="@true"
-                        OnChange="@PaginationChanged" />
-        </PaginationTemplate>
-    </Table>
-</Card>
+            </ChildContent>
+            <PaginationTemplate Context="pageContext">
+                <Pagination Class="@pageContext.PaginationClass"
+                            Total="@pageContext.Total"
+                            PageSize="@pageContext.PageSize"
+                            Current="@pageContext.PageIndex"
+                            ShowTotal="TotalFragment"
+                            ShowSizeChanger="@true"
+                            ShowQuickJumper="@true"
+                            OnChange="@PaginationChanged" />
+            </PaginationTemplate>
+        </Table>
+    </Card>
+</div>
 
 @code {
     [Parameter, NotNull] public TableOptions<TData, TQuery>? Options { get; set; }
@@ -110,6 +128,7 @@
     [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
     [Inject, NotNull] ConfirmService? ConfirmSrv { get; set; }
     [Inject, NotNull] MessageService? MessageSrv { get; set; }
+    [Inject, NotNull] IUIService? UI { get; set; }
     IEnumerable<TData> Datas => Options.Result?.Payload ?? Enumerable.Empty<TData>();
     int Total => Options.Result?.TotalRecord ?? 0;
 
@@ -137,17 +156,19 @@
         }
     }
 
-    // string GetLocalizerString()
-    // {
-
-    // }
-
-    async Task PaginationChanged(PaginationEventArgs e)
+    private async Task PaginationChanged(PaginationEventArgs e)
     {
         Options.Query.PageIndex = e.Page;
         Options.Query.PageSize = e.PageSize;
+        ResetEditStatus();
         if (Options.Result?.IsPagingResult == true)
             await Options.RefreshAsync();
+    }
+
+    private void ResetEditStatus()
+    {
+        editRow = -1;
+        editCell = (-1, -1);
     }
 
     /// <summary>
@@ -167,101 +188,102 @@
                      OnClick="@(() => InvokeButtonAction(definition, context))">
         @(definition.GetLabel(context) ?? TableLocalizer[definition.Label])
         </Button>
-        ;
+    ;
     }
 
-    private async Task InvokeButtonAction(TableButton<TData> definition, TData data)
-    {
-        if (definition.Danger)
-        {
-            var confirmResult = await ConfirmSrv.Show(
-        TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
-        , TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
-            if (confirmResult == ConfirmResult.OK)
-            {
-                await CallButtonAction();
-            }
-        }
-        else
-        {
-            await CallButtonAction();
-        }
+private async Task InvokeButtonAction(TableButton<TData> definition, TData data)
+{
+if (definition.Danger)
+{
+var confirmResult = await ConfirmSrv.Show(
+TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
+, TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
+if (confirmResult == ConfirmResult.OK)
+{
+await CallButtonAction();
+}
+}
+else
+{
+await CallButtonAction();
+}
 
-        return;
+return;
 
-        async Task CallButtonAction()
-        {
-            var result = await definition.Callback.Invoke(data);
-            if (result is null)
-            {
-                return;
-            }
-            Options.OnTableButtonClickAsync?.Invoke(definition, result);
-            if (result.IsSuccess)
-            {
-                var msg = result.Message ?? TableLocalizer["TableTips.ActionSuccess"].Value;
-                MessageSrv.Success(msg);
-                if (Options.AutoRefreshData)
-                    await Options.RefreshAsync();
-            }
-            else
-            {
-                MessageSrv.Error(result.Message ?? "Error");
-            }
-        }
-    }
+async Task CallButtonAction()
+{
+var result = await definition.Callback.Invoke(data);
+if (result is null)
+{
+return;
+}
+Options.OnTableButtonClickAsync?.Invoke(definition, result);
+if (result.IsSuccess)
+{
+var msg = result.Message ?? TableLocalizer["TableTips.ActionSuccess"].Value;
+MessageSrv.Success(msg);
+if (Options.AutoRefreshData)
+await Options.RefreshAsync();
+}
+else
+{
+MessageSrv.Error(result.Message ?? "Error");
+}
+}
+}
 
-    Task OnRowClick(RowData<TData> row)
-    {
-        return Options.OnRowClickAsync is not null ? Options.OnRowClickAsync(row.Data) : Task.CompletedTask;
-    }
+Task OnRowClick(RowData<TData> row)
+{
+return Options.OnRowClickAsync is not null ? Options.OnRowClickAsync(row.Data) : Task.CompletedTask;
+}
 
-    Dictionary<string, object>? RowOptions(RowData<TData> row)
-    {
-        return Options.AddRowOptions?.Invoke(row.Data);
-    }
+Dictionary<string, object>? RowOptions(RowData<TData> row)
+{
+return Options.AddRowOptions?.Invoke(row.Data);
+}
 
-    RenderFragment RenderColumn(TData row, ColumnInfo col)
-    {
-        if (col.IsEnum)
-        {
-            return RenderColumn<Enum>(row, col);
-        }
+RenderFragment RenderColumn(TData row, ColumnInfo col)
+{
+if (col.IsEnum)
+{
+return RenderColumn<Enum>(row, col);
+}
 
-        var type = (Nullable.GetUnderlyingType(col.DataType) ?? col.DataType).Name.ToLower();
-        return type switch
-        {
-            "string" => RenderColumn<string>(row, col),
-            "int64" => RenderColumn<Int64?>(row, col),
-            "int32" => RenderColumn<Int32?>(row, col),
-            "int16" => RenderColumn<Int16?>(row, col),
-            "single" => RenderColumn<Single?>(row, col),
-            "double" => RenderColumn<Double?>(row, col),
-            "bool" => RenderColumn<Boolean?>(row, col),
-            "datetime" => RenderColumn<DateTime?>(row, col),
-            "datetimeoffset" => RenderColumn<DateTimeOffset?>(row, col),
-            "timespan" => RenderColumn<TimeSpan?>(row, col),
-            "decimal" => RenderColumn<Decimal?>(row, col),
-            _ => RenderColumn<string>(row, col)
-        };
-    }
+var type = (Nullable.GetUnderlyingType(col.DataType) ?? col.DataType).Name.ToLower();
+return type switch
+{
+"string" => RenderColumn<string>(row, col),
+"int64" => RenderColumn<Int64?>(row, col),
+"int32" => RenderColumn<Int32?>(row, col),
+"int16" => RenderColumn<Int16?>(row, col),
+"single" => RenderColumn<Single?>(row, col),
+"double" => RenderColumn<Double?>(row, col),
+"bool" => RenderColumn<Boolean?>(row, col),
+"datetime" => RenderColumn<DateTime?>(row, col),
+"datetimeoffset" => RenderColumn<DateTimeOffset?>(row, col),
+"timespan" => RenderColumn<TimeSpan?>(row, col),
+"decimal" => RenderColumn<Decimal?>(row, col),
+"boolean" => RenderColumn<Boolean?>(row,col),
+_ => RenderColumn<string>(row, col)
+};
+}
 
-    RenderFragment RenderColumn<TColumnData>(TData row, ColumnInfo col)
-    {
-        return
-    @<Column TData="TColumnData"
-                     Ellipsis="@col.Ellipsis"
-                     Width="@col.Width"
-                     Sortable="@col.Sortable"
-                     Title="@(Localizer[col.Label])"
-                     Fixed="@Utils.GetColumnFix(col.Fixed)"
-                     Align="@Utils.GetColumnAlign(col.Align)"
-                     DataIndex="@col.PropertyOrFieldName"
-                     Grouping="@col.Grouping"
-                     GroupBy="data => col.GroupByExpression(data)"
-                     OnCell="GetOnCell(col)"
-                     CellRender="ColumnRender<TColumnData>(row, col)">
-        </Column>
-        ;
-    }
+RenderFragment RenderColumn<TColumnData>(TData row, ColumnInfo col)
+{
+return
+@<Column TData="TColumnData"
+             Ellipsis="@col.Ellipsis"
+             Width="@col.Width"
+             Sortable="@col.Sortable"
+             Title="@(Localizer[col.Label])"
+             Fixed="@Utils.GetColumnFix(col.Fixed)"
+             Align="@Utils.GetColumnAlign(col.Align)"
+             DataIndex="@col.PropertyOrFieldName"
+             Grouping="@col.Grouping"
+             GroupBy="data => col.GroupByExpression(data)"
+             OnCell="GetOnCell(col)"
+             CellRender="ColumnRender<TColumnData>(row, col)">
+    </Column>
+;
+}
 }

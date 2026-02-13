@@ -1,0 +1,26 @@
+.ant-table-cell-edit {
+    display: flex;
+    align-items: center;
+}
+
+    .ant-table-cell-edit .edit-input {
+        flex: 1;
+    }
+
+::deep.ant-table-cell-edit .edit-btn {
+    margin-left: 5px;
+}
+
+/*::deep.ant-table-cell-edit .edit-icon {
+    cursor: pointer;
+}
+
+::deep.ant-table-cell-edit .check {
+    color: var(--major-color);
+    font-size: 2rem;
+}
+
+::deep.ant-table-cell-edit .close {
+    color: red;
+    font-size: 2rem;
+}*/

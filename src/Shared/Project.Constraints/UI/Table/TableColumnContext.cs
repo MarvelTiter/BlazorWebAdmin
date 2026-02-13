@@ -10,6 +10,7 @@ namespace Project.Constraints.UI.Table;
 
 public static class TableColumnContext
 {
+    private static readonly ConcurrentDictionary<Type, TableColumns> tableColumnCaches = [];
     public record TableColumns(ColumnInfo[] Columns);
     public static ColumnInfo[] GetColumnInfos<T>()
     {
@@ -17,7 +18,7 @@ public static class TableColumnContext
     }
     public static ColumnInfo[] GenerateColumns(this Type type)
     {
-        var tc = StaticCache<TableColumns>.GetOrAdd($"{type.FullName}_{type.GUID}", () =>
+        var tc = tableColumnCaches.GetOrAdd(type, static type =>
             {
                 var props = type.GetProperties();
                 PropertyInfo[] interfaceDefProps = [.. type.GetInterfaces().Where(i => i.GetCustomAttribute<SupplyColumnDefinitionAttribute>() is not null).SelectMany(i => i.GetProperties())];
@@ -32,6 +33,7 @@ public static class TableColumnContext
                         continue;
                     }
                     var column = GenerateColumn(prop, definition, upper);
+                    column.ColumnIndex = columns.Count;
                     column.ValueGetter = prop.GetPropertyAccessor<object>();
                     column.ValueSetter = prop.GetPropertySetter();
                     columns.Add(column);
@@ -74,6 +76,7 @@ public static class TableColumnContext
             Sortable = head.Sortable,
             Format = head.Format,
             Searchable = head.Searchable,
+            Editable = head.Editable,
         };
 
         var formAttr = self.GetCustomAttribute<FormAttribute>() ?? upper?.GetCustomAttribute<FormAttribute>();

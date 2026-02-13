@@ -229,6 +229,10 @@ public class UIService(
     {
         return new BindableComponentBuilder<FluentDatePicker, DatePickerProp, DateTime?>() { Receiver = receiver };
     }
+    public IBindableInputComponent<DatePickerProp, TDate> BuildDatePicker<TDate>(object receiver)
+    {
+        return new BindableComponentBuilder<FluentDatePicker, DatePickerProp, TDate>() { Receiver = receiver };
+    }
 
     public IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object receiver)
     {

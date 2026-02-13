@@ -14,9 +14,10 @@ public static class TableOptionsExtensions
     {
         option.Columns =
         [
-            ..columns.Select(c =>
+            ..columns.Select((c,i) =>
             {
                 var col = new ColumnInfo(c.Title, c.Property);
+                col.ColumnIndex = i;
                 action?.Invoke(col);
                 return col;
             })
@@ -56,6 +57,7 @@ public class TableOptions
 
     public bool Exportable { get; set; }
     public bool AutoRefreshData { get; set; } = true;
+    public bool EnableRowEdit { get; set; }
     [NotNull] public ColumnInfo[]? Columns { get; set; }
 }
 
@@ -95,7 +97,8 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     public Func<TableButton<TData>, IQueryResult, Task>? OnTableButtonClickAsync { get; set; }
     public Func<IEnumerable<TData>, Task>? OnSaveExcelAsync { get; set; }
     public Func<ImmutableArray<TData>, ImmutableArray<TData>, Task<IEnumerable<TData>>>? OnSelectedChangedAsync { get; set; }
-
+    public Func<TData, ColumnInfo,Task<IQueryResult?>>? OnCellUpdateAsync { get; set; }
+    public Func<TData, ColumnInfo[], Task<IQueryResult?>>? OnRowUpdateAsync {  get; set; }
     public RenderFragment<Grouping<object, TData>>? GroupTitleTemplate { get; set; }
     public RenderFragment<Grouping<object, TData>>? GroupFooterTemplate { get; set; }
 

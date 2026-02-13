@@ -1,0 +1,29 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using Project.Constraints.UI
+@using Project.Constraints.UI.Extensions
+@using Project.Constraints.UI.Table
+
+@(UI.BuildSelect<string, string>(this, items).Multiple().LabelExpression(t => t).ValueExpression(t => t).Binds(() => selected, UpdateValue).Render())
+
+@code {
+    private readonly static string[] items = ["A", "B", "C", "D"];
+    [Parameter, NotNull] public ColumnItemContext? Context { get; set; }
+    [Inject, NotNull] IUIService? UI { get; set; }
+    private string[] selected = [];
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var current = Context.GetValue() as string;
+        selected = current?.Split(',') ?? [];
+    }
+
+    private Task UpdateValue()
+    {
+        if (selected?.Length > 0)
+        {
+            var newValue = string.Join(',', selected);
+            Context.SetValue(newValue);
+        }
+        return Task.CompletedTask;
+    }
+}

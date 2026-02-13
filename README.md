@@ -1,3 +1,8 @@
+
+- [开始](#使用方式)
+- [日志](#更新日志)
+
+
 # 使用方式
 
 ## 创建Template包
@@ -122,3 +127,15 @@ services.AddAuthorizationCore(o =>
 
 ## master.wpf分支 wpf host
 
+
+# 更新日志
+
+### 2026.02.13
+- `AntTable`增加行内编辑功能
+    1. `ColumnDefinitionAttribute`编辑列是否允许编辑(优先级最高)
+    2. `TableOptions.EnableRowEdit`设置是否允许行编辑
+    3. 重写`ModelPage`的`OnCellUpdateAsync`或者`OnRowUpdateAsync`, 如果直接使用`TableOptions`, 就是设置`TableOptions.OnCellUpdateAsync`或者`TableOptions.OnRowUpdateAsync`
+
+### 2026.02.11
+- `ModelPage`增加属性`AdditionalHeaderButtons`，用于默认UI下，添加额外的按钮
+- `Camera`组件新增属性`Exact`，`Start`和`SwitchCamera`方法新增参数`exact`，用于控制打开摄像头的约束级别，优先级低于`Start`和`SwitchCamera`

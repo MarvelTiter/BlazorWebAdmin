@@ -66,7 +66,14 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         Options.ShowExportButton = IsOverride(nameof(OnExportAsync));
         Options.ShowAddButton = IsOverride(nameof(OnAddItemAsync));
         Options.ShowImportButton = IsOverride(nameof(HandleImportedDataAsync));
-        //DomEvent.OnKeyDown += DomEvent_OnKeyDown;
+        if (IsOverride(nameof(OnCellUpdateAsync)))
+        {
+            Options.OnCellUpdateAsync = OnCellUpdateAsync;
+        }
+        if (IsOverride(nameof(OnRowUpdateAsync)))
+        {
+            Options.OnRowUpdateAsync = OnRowUpdateAsync;
+        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -106,7 +113,14 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     {
         return Task.CompletedTask;
     }
-
+    protected virtual Task<IQueryResult?> OnCellUpdateAsync(TModel model, ColumnInfo col)
+    {
+        return QueryResult.Null().AsTask();
+    }
+    protected virtual Task<IQueryResult?> OnRowUpdateAsync(TModel model, ColumnInfo[] col)
+    {
+        return QueryResult.Null().AsTask();
+    }
     /// <summary>
     /// 处理新增
     /// </summary>

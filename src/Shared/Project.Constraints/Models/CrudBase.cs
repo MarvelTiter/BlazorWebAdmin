@@ -5,6 +5,8 @@ namespace Project.Constraints.Models;
 public class CrudBase<T>(IExpressionContext context) : ICrud<T>
     where T : class, new()
 {
+    protected readonly IExpressionContext context = context;
+
     public virtual async Task<QueryCollectionResult<T>> QueryListAsync(GenericRequest<T>? request = null)
     {
         if (request is null)

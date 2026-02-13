@@ -10,17 +10,8 @@ namespace Project.Web.Shared.Services;
 [AutoInject]
 internal class DefaultCopyService : ICopyable
 {
-    public T Copy<T>(T obj)
+    public T Copy<T>(T obj, bool usefallback = false)
     {
-        if (obj is null)
-        {
-            return default!;
-        }
-        if (obj is IAutoMap map)
-        {
-            return map.MapTo<T>();
-        }
-        return obj;
-        //return GMapper.Map<T, T>(obj);
+        return GMapper.Map<T, T>(obj);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Constraints.Common.Attributes;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Project.Constraints.UI.Table;
+
 public record ColumnInfo
 {
     public ColumnInfo(string label, string propertyName)
@@ -19,9 +21,22 @@ public record ColumnInfo
 
     [NotNull] public string? Label { get; set; }
     public string PropertyOrFieldName { get; }
+    /// <summary>
+    /// 排序使用
+    /// </summary>
     public int Index { get; set; }
+    /// <summary>
+    /// 表单布局使用
+    /// </summary>
     public int? Row { get; set; }
+    /// <summary>
+    /// 表单布局使用
+    /// </summary>
     public int? Column { get; set; }
+    /// <summary>
+    /// 列索引
+    /// </summary>
+    public int ColumnIndex { get; set; }
     public bool ShowOnForm { get; set; } = true;
     public Type DataType { get; }
     public bool IsEnum => DataType.IsEnum || (UnderlyingType?.IsEnum ?? false);
@@ -32,6 +47,7 @@ public record ColumnInfo
     public string? Align { get; set; }
     public bool Readonly { get; set; }
     public bool Ellipsis { get; set; }
+    public bool? Editable { get; set; }
     public bool Visible { get; set; } = true;
     /// <summary>
     /// 是否可作为查询条件
@@ -67,7 +83,7 @@ public record ColumnInfo
             Grouping = value != null;
         }
     }
-
+    public Expression? MemberAccessExpression { get; set; }
 }
 
 public static class ColumnInfoExtensions
@@ -79,5 +95,18 @@ public static class ColumnInfoExtensions
             return color;
         }
         return "Blue";
+    }
+
+    public static Expression<Func<TData, TProp>> MakeExpression<TData, TProp>(this ColumnInfo col)
+    {
+        col.MemberAccessExpression ??= Build();
+        
+        return (Expression<Func<TData, TProp>>)col.MemberAccessExpression;
+        
+        Expression<Func<TData, TProp>> Build()
+        {
+            var p = Expression.Parameter(typeof(TData), "p");
+            return Expression.Lambda<Func<TData, TProp>>(Expression.Property(p, col.PropertyOrFieldName), p);
+        }
     }
 }

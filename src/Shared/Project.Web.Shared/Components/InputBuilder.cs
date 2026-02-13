@@ -64,7 +64,7 @@ public class InputBuilder<TData> : ComponentBase
     private readonly static MethodInfo? buildInput = typeof(IUIService).GetMethod(nameof(IUIService.BuildInput));
     private readonly static MethodInfo? buildNumberInput = typeof(IUIService).GetMethod(nameof(IUIService.BuildNumberInput));
     private readonly static MethodInfo? buildSwitch = typeof(IUIService).GetMethod(nameof(IUIService.BuildSwitch));
-    private readonly static MethodInfo? buildDatepicker = typeof(IUIService).GetMethod(nameof(IUIService.BuildDatePicker));
+    private readonly static MethodInfo? buildDatepicker = typeof(IUIService).GetMethod(nameof(IUIService.BuildDatePicker), 1, [typeof(object)]);
     private readonly static MethodInfo? buildPassword = typeof(IUIService).GetMethod(nameof(IUIService.BuildPassword));
     static readonly ConcurrentDictionary<ColumnInfo, Func<IUIService, object, Expression, IUIComponent>> builderCaches = new();
 
@@ -98,7 +98,7 @@ public class InputBuilder<TData> : ComponentBase
                     builderMethod = buildSwitch;
                     break;
                 case InputType.DatePicker:
-                    builderMethod = buildDatepicker;
+                    builderMethod = buildDatepicker?.MakeGenericMethod(propertyType);
                     break;
                 case InputType.Password:
                     builderMethod = buildPassword;

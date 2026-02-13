@@ -115,7 +115,7 @@ public interface IUIService
     IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver) where TValue: new();
 
     IBindableInputComponent<DatePickerProp, DateTime?> BuildDatePicker(object receiver);
-
+    IBindableInputComponent<DatePickerProp, TDate> BuildDatePicker<TDate>(object reciver);
     IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object receiver);
 
     /// <summary>

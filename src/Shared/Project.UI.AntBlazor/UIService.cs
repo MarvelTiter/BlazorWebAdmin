@@ -119,6 +119,18 @@ public class UIService(
         { Receiver = reciver };
     }
 
+    public IBindableInputComponent<DatePickerProp, TDate> BuildDatePicker<TDate>(object reciver)
+    {
+        return new BindableComponentBuilder<DatePicker<TDate>, DatePickerProp, TDate>(builder =>
+        {
+            if (builder.Model.WithTime)
+            {
+                builder.SetComponent(c => c.ShowTime, "HH:mm");
+            }
+        })
+        { Receiver = reciver };
+    }
+
     public IBindableInputComponent<DefaultProp, string> BuildPassword(object reciver)
     {
         return new BindableComponentBuilder<InputPassword, DefaultProp, string>() { Receiver = reciver };
