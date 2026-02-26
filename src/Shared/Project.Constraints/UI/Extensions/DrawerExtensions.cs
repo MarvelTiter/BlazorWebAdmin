@@ -32,6 +32,23 @@ public static class DrawerExtensions
         _ = await service.ShowDrawerAsync(options);
     }
 
+    public static async Task ShowDrawerAsync<Template>(this IUIService service, string title, string? width = null, Position position = Position.Right)
+    {
+        var options = new FlyoutDrawerOptions<int>
+        {
+            Title = title,
+            Width = width,
+            Position = position,
+            Content = builder =>
+            {
+                builder.OpenComponent(0, typeof(Template));
+                builder.CloseComponent();
+            }
+        };
+
+        _ = await service.ShowDrawerAsync(options);
+    }
+
     public static async Task ShowDrawerAsync<Template>(this IUIService service, string title, RenderFragment content, int width = 0, Position position = Position.Right)
     {
         var options = new FlyoutDrawerOptions<int>();

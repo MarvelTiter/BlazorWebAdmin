@@ -264,7 +264,7 @@ return type switch
 "timespan" => RenderColumn<TimeSpan?>(row, col),
 "decimal" => RenderColumn<Decimal?>(row, col),
 "boolean" => RenderColumn<Boolean?>(row,col),
-_ => RenderColumn<string>(row, col)
+_ => RenderColumn<object>(row, col)
 };
 }
 

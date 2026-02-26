@@ -118,7 +118,7 @@ public partial class DefaultUserPage : UserPage<User, Permission, Role, IStandar
         return await UserSrv.SavePropertyAsync(model, col.PropertyOrFieldName);
     }
 
-    protected override async Task<IQueryResult?> OnRowUpdateAsync(User model, ColumnInfo[] col)
+    protected override async Task<IQueryResult?> OnRowUpdateAsync(User model, IReadOnlyList<ColumnInfo> col)
     {
         return await UserSrv.SavePropertiesAsync(model, [.. col.Select(c => c.PropertyOrFieldName)]);
     }

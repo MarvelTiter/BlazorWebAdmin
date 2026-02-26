@@ -117,7 +117,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     {
         return QueryResult.Null().AsTask();
     }
-    protected virtual Task<IQueryResult?> OnRowUpdateAsync(TModel model, ColumnInfo[] col)
+    protected virtual Task<IQueryResult?> OnRowUpdateAsync(TModel model, IReadOnlyList<ColumnInfo> cols)
     {
         return QueryResult.Null().AsTask();
     }

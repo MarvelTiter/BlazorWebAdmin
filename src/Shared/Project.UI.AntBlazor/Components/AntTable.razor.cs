@@ -35,7 +35,7 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
     private int editRow = -1;
     private RenderFragment CellContentRender<TProp>(TData row, ColumnInfo col, CellData<TProp> context)
     {
-        var enableEdit = !col.Readonly && (col.Editable ?? Options.EnableRowEdit);
+        var enableEdit = !col.Readonly && (col.Editable || Options.EnableRowEdit);
 
         if (enableEdit && (Options.OnCellUpdateAsync is not null || Options.OnRowUpdateAsync is not null))
         {
@@ -142,12 +142,26 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
             }
         }
     }
+
+    private Lazy<IReadOnlyList<ColumnInfo>>? editableCols;
+
+    public Lazy<IReadOnlyList<ColumnInfo>> EditableCols
+    {
+        get
+        {
+            editableCols ??= new Lazy<IReadOnlyList<ColumnInfo>>(() =>
+            {
+                return [.. Options.Columns.Where(col => !col.Readonly && (col.Editable || Options.EnableRowEdit))];
+            });
+            return editableCols;
+        }
+    }
+
     private async Task SaveRowEdit(TData row)
     {
         if (Options.OnRowUpdateAsync is not null)
         {
-            ColumnInfo[] cols = [.. Options.Columns.Where(col => !col.Readonly && (col.Editable ?? Options.EnableRowEdit))];
-            var r = await Options.OnRowUpdateAsync(row, cols);
+            var r = await Options.OnRowUpdateAsync(row, EditableCols.Value);
             if (r is null) return;
             UI.ShowResult(r);
             ResetEditStatus();

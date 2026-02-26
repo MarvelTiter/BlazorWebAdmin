@@ -84,14 +84,15 @@ public class SelectComponentBuilder<TComponent, TPropModel, TItem, TValue> : Bin
         };
         return this;
     }
-
+    private static readonly MethodInfo ToListMethod = typeof(Enumerable).GetMethod("ToList")!;
+    private static readonly MethodInfo ToArrayMethod = typeof(Enumerable).GetMethod("ToArray")!;
     private static BinaryExpression CreateCollectionConversionExpression(Expression target, Expression source, Type targetType)
     {
         // 根据目标类型选择合适的转换方法
         if (targetType.IsArray)
         {
             // 转换为数组
-            var toArrayMethod = typeof(Enumerable).GetMethod("ToArray")!.MakeGenericMethod(typeof(TValue));
+            var toArrayMethod = ToArrayMethod.MakeGenericMethod(typeof(TValue));
             return Expression.Assign(
                 target,
                 Expression.Convert(
@@ -107,8 +108,7 @@ public class SelectComponentBuilder<TComponent, TPropModel, TItem, TValue> : Bin
             if (genericTypeDef == typeof(List<>))
             {
                 // 转换为 List<T>
-                var toListMethod = typeof(Enumerable).GetMethod("ToList", [])!
-                    .MakeGenericMethod(typeof(TValue));
+                var toListMethod = ToListMethod.MakeGenericMethod(typeof(TValue));
                 return Expression.Assign(
                     target,
                     Expression.Convert(

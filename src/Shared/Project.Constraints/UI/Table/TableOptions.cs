@@ -98,7 +98,7 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     public Func<IEnumerable<TData>, Task>? OnSaveExcelAsync { get; set; }
     public Func<ImmutableArray<TData>, ImmutableArray<TData>, Task<IEnumerable<TData>>>? OnSelectedChangedAsync { get; set; }
     public Func<TData, ColumnInfo,Task<IQueryResult?>>? OnCellUpdateAsync { get; set; }
-    public Func<TData, ColumnInfo[], Task<IQueryResult?>>? OnRowUpdateAsync {  get; set; }
+    public Func<TData, IReadOnlyList<ColumnInfo>, Task<IQueryResult?>>? OnRowUpdateAsync {  get; set; }
     public RenderFragment<Grouping<object, TData>>? GroupTitleTemplate { get; set; }
     public RenderFragment<Grouping<object, TData>>? GroupFooterTemplate { get; set; }
 

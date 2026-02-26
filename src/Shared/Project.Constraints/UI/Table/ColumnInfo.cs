@@ -47,7 +47,7 @@ public record ColumnInfo
     public string? Align { get; set; }
     public bool Readonly { get; set; }
     public bool Ellipsis { get; set; }
-    public bool? Editable { get; set; }
+    public bool Editable { get; set; }
     public bool Visible { get; set; } = true;
     /// <summary>
     /// 是否可作为查询条件
