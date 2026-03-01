@@ -27,7 +27,7 @@ public partial class Role : IRole, IAutoMap
     [NotNull]
     public string? RoleName { get; set; }
 
-    [Ignore]
+    [LightColumn(Ignore = true)]
     public IEnumerable<string>? Permissions { get; set; }
 }
 #endif

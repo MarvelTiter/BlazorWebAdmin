@@ -85,7 +85,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddStateContainers();
 #if DEBUG
-builder.Services.AddLightTask();
+builder.Services.AddLightTask(o =>
+{
+    o.EnableStorage = true;
+});
 #endif
 var app = builder.Build();
 // Configure the HTTP request pipeline.

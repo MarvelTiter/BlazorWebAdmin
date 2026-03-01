@@ -75,7 +75,7 @@ public partial class User : IUser, IAutoMap
     [LightColumn(Name = "EXPIRY_DATE")]
     public DateTime? ExpiryDate { get; set; }
 
-    [Ignore]
+    [LightColumn(Ignore = true)]
     public IEnumerable<string>? Roles { get; set; }
 }
 #endif

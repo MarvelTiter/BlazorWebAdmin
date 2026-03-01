@@ -29,7 +29,7 @@ public class DefaultUserService<TUser, TUserRole>
             await scoped.CommitTransactionAsync();
             return true.Result();
         }
-        catch (Exception e)
+        catch (Exception)
         {
             await scoped.RollbackTransactionAsync();
             throw;

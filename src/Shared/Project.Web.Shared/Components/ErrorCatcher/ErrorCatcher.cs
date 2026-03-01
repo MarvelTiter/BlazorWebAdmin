@@ -69,13 +69,13 @@ public class ErrorCatcher : ErrorBoundaryBase //, IExceptionHandler
     /// </summary>
     /// <param name="ex"></param>
     /// <returns></returns>
-    private static bool IsLifecycleError(Exception ex)
+    private static bool IsLifecycleError(Exception? ex)
     {
         if (ex is AggregateException aggregateException)
         {
             ex = aggregateException.InnerException;
         }
-        var stackTrace = ex.StackTrace ?? "";
+        var stackTrace = ex?.StackTrace ?? "";
 
         // 检查是否是生命周期方法中的错误
         return stackTrace.Contains("Microsoft.AspNetCore.Components.ComponentBase.CallOn") ||
