@@ -1,5 +1,6 @@
 ﻿using Project.Constraints.Options;
 using System.Drawing;
+using System.Text.Json.Serialization;
 
 namespace Project.Web.Shared.Components;
 
@@ -18,7 +19,8 @@ public partial class Camera
         public int Width { get; }
         public int Height { get; }
         [NotNull] public string? Name { get; }
-        public Resolution() { }
+        //public Resolution() { }
+        [JsonConstructor]
         public Resolution(string name, int width, int height)
         {
             Name = name;

@@ -47,6 +47,14 @@ public class MyProtectedLocalStorage(IJSRuntime jsRuntime, ILogger<MyProtectedLo
                 new StorageResult<TValue>(false, default) :
                 new StorageResult<TValue>(true, Unprotect<TValue>(protectedJson));
         }
+        catch (TaskCanceledException)
+        {
+            return new(false, default);
+        }
+        catch (JSDisconnectedException)
+        {
+            return new(false, default);
+        }
         catch (Exception ex)
         {
             logger.LogError(ex, "{Messgae}", ex.Message);
