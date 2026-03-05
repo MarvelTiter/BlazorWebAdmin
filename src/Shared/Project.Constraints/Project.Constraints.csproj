@@ -8,13 +8,13 @@
 	<ItemGroup>
 		<PackageReference Include="AutoAopProxyGenerator" Version="0.1.6" />
 		<PackageReference Include="AutoGenMapperGenerator" Version="2026.2.26.1" />
-		<PackageReference Include="AutoInjectGenerator" Version="0.1.4" />
+		<PackageReference Include="AutoInjectGenerator" Version="2026.3.2.1" />
 		<PackageReference Include="AutoPageStateContainerGenerator" Version="0.0.8" />
 		<PackageReference Include="AutoWasmApiGenerator" Version="2026.2.12.1" />
 		<PackageReference Include="LoggerProviderExtensions" Version="0.0.2" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
-		<PackageReference Include="MT.LightORM" Version="2026.2.19.1" />
-		<PackageReference Include="MT.LightTask" Version="2026.3.1.2" />
+		<PackageReference Include="MT.LightORM" Version="2026.3.4.4" />
+		<PackageReference Include="MT.LightTask" Version="2026.3.5.1" />
 		<PackageReference Include="MT.Toolkit" Version="2.1.9" />
 		<PackageReference Include="LightExcel" Version="2.1.7" />
 	</ItemGroup>
