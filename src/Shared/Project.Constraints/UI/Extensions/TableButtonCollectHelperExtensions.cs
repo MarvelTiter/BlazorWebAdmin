@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Project.Constraints.UI.Table;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Constraints.UI.Extensions;
 
@@ -14,16 +9,11 @@ public static class TableButtonCollectHelperExtensions
 {
     const BindingFlags BINDING_ATTRS = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
     private static readonly ConcurrentDictionary<Type, TableButtonContext> buttonMethodsCache = new();
-    private sealed class TableButtonContext
+    private sealed class TableButtonContext(Type type)
     {
-        public TableButtonContext(Type type)
-        {
-            Type = type;
-            Methods = [.. ScanMethods(type)];
-        }
-        public Type Type { get; set; }
-        public (MethodInfo Method, TableButtonAttribute Attr)[] Methods { get; set; }
-        public Dictionary<string, MethodInfo> ExpressionMethods { get; set; } = [];
+        public Type Type { get; set; } = type;
+        public (MethodInfo Method, TableButtonAttribute Attr)[] Methods { get; set; } = [.. ScanMethods(type)];
+        public ConcurrentDictionary<string, MethodInfo> ExpressionMethods { get; set; } = [];
     }
     private static IEnumerable<(MethodInfo Method, TableButtonAttribute Attr)> ScanMethods(Type t)
     {
@@ -85,16 +75,10 @@ public static class TableButtonCollectHelperExtensions
         string methodName, TableButtonContext context, object instance, BindingFlags flags)
         where TDelegate : Delegate
     {
-        if (!context.ExpressionMethods.TryGetValue(methodName, out var method))
+        var method = context.ExpressionMethods.GetOrAdd(methodName, name =>
         {
-            method = context.Type.GetMethod(methodName, flags);
-            if (method is not null)
-            {
-                context.ExpressionMethods[methodName] = method;
-            }
-        }
-        if (method is null)
-            return null;
+            return context.Type.GetMethod(name, flags) ?? throw new MissingMethodException($"未找到{methodName}方法");
+        });
         return CreateMethodDelegate<TDelegate>(method, instance);
     }
 }
