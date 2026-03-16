@@ -35,6 +35,10 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
                     .SetComponent(c => c.ChildContent, AdditionalHeaderButtons)
                     .Build();
             });
+        if (HideDefaultTableHeader && AdditionalHeaderButtons is not null)
+        {
+            builder.Div(AdditionalHeaderButtons).Set("style", "display: flex;justify-content: space-between;align-items: center;width: 100%;margin-bottom: 10px;").Build();
+        }
         builder.AddContent(1, UI.BuildTable(Options));
     };
 

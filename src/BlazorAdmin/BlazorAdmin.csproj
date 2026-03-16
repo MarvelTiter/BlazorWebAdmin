@@ -23,7 +23,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" />
-		<PackageReference Include="LightORM.Providers.Sqlite" Version="0.1.4" />
+		<PackageReference Include="LightORM.Providers.Sqlite" Version="2026.3.15.1" />
 	</ItemGroup>
 	
 	<!--#if(UseClientProject)-->
