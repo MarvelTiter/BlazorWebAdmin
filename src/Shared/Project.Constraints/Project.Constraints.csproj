@@ -13,7 +13,7 @@
 		<PackageReference Include="AutoWasmApiGenerator" Version="2026.2.12.1" />
 		<PackageReference Include="LoggerProviderExtensions" Version="0.0.2" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
-		<PackageReference Include="MT.LightORM" Version="2026.3.16.1" />
+		<PackageReference Include="MT.LightORM" Version="2026.3.22.1" />
 		<PackageReference Include="MT.LightTask" Version="2026.3.6.1" />
 		<PackageReference Include="MT.Toolkit" Version="2.1.9" />
 		<PackageReference Include="LightExcel" Version="2.1.7" />
