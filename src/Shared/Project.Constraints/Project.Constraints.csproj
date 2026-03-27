@@ -7,7 +7,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="AutoAopProxyGenerator" Version="0.1.6" />
-		<PackageReference Include="AutoGenMapperGenerator" Version="2026.2.26.1" />
+		<PackageReference Include="AutoGenMapperGenerator" Version="2026.3.26.1" />
 		<PackageReference Include="AutoInjectGenerator" Version="2026.3.2.1" />
 		<PackageReference Include="AutoPageStateContainerGenerator" Version="0.0.8" />
 		<PackageReference Include="AutoWasmApiGenerator" Version="2026.2.12.1" />

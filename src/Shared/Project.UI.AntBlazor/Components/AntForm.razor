@@ -1,16 +1,21 @@
 ﻿@using AntDesign.Internal
 @using Project.Constraints.UI.Form
 @typeparam TData where TData : class, new()
-<Form Model="@Options.Data" LabelAlign="@AntLabelAlignType.Right" LabelColSpan="@Options.LabelSpan" OnFinish=OnFinish @ref=form WrapperColSpan="@Options.WrapperSpan">
+<Form Model="@Options.Data"
+      LabelAlign="@AntLabelAlignType.Right"
+      Name="@Options.FormName"
+      OnFinish="@OnFinish" 
+      @ref="@form"
+      LabelColSpan="@Options.LabelSpan">
     @foreach (var row in Options.GetRows())
     {
-        var colSpan = 24 / row.Length;
-        var lblSpan = GetLabelSpan(colSpan);
+        @* var colSpan = 24 / row.Length; *@
+        var (colSpan, lblSpan) = GetSpan(row);
         <GridRow>
             @foreach (var col in row)
             {
                 <GridCol Span="colSpan">
-                    <FormItem LabelColSpan="lblSpan" Label="@(Localizer[col.Label])">
+                    <FormItem LabelColSpan="@lblSpan" Label="@(Localizer[col.Label])">
                         <InputBuilder Data="Options.Data" UI="Options.UI" Reciver="Options" Column="col"></InputBuilder>
                     </FormItem>
                 </GridCol>
@@ -18,11 +23,10 @@
         </GridRow>
     }
 </Form>
-@code {
+        @code {
     [Parameter, NotNull] public FormOptions<TData>? Options { get; set; }
     [Inject, NotNull] IStringLocalizer<TData>? Localizer { get; set; }
     IForm? form;
-
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
@@ -33,12 +37,16 @@
         }
     }
 
-    private int GetLabelSpan(int colSpan)
+    List<(int Items, int Span)> rowsSpan = [];
+    private (int, int) GetSpan(ColumnInfo[] row)
     {
-        if (colSpan == 24)
-            return 6;
+        var colSpan = 24 / row.Length;
 
-        return Options.LabelSpan;
+        if (rowsSpan.Count > 0)
+        {
+            
+        }
+
     }
 
     Task OnFinish(EditContext context)
