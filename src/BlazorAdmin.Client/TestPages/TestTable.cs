@@ -42,7 +42,7 @@ public class TestEntity
     [ColumnDefinition]
     public string? CustomDisplay { get; set; }
 }
-[AutoInject]
+[AutoInjectSelf]
 public class TestService(IExpressionContext context) : CrudBase<TestEntity>(context)
 {
     public async Task CreateTableAsync()

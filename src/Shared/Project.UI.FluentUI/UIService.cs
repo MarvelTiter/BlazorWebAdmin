@@ -337,6 +337,12 @@ public class UIService(
         return b => b.AddContent(1, "NotImplemented");
     }
 
+    public IFormBuilder<TData> BuildForm<TData>(TData data, string? formName = null)
+    where TData : class, new()
+    {
+        return new FluentFormBuilder<TData>(this, data, formName);
+    }
+
     public RenderFragment BuildDropdown(DropdownOptions options)
     {
         return b => b.AddContent(1, "NotImplemented");

@@ -1,0 +1,27 @@
+﻿@using Project.Constraints.Page
+@inherits AppComponentBase
+
+@(UI.BuildForm(model)
+    .AddField("日期", m => m.DateValue)
+    .AddField("数字", m => m.IntValue)
+    .AddField("字符", m => m.StringValue)
+    .Render())
+
+@(UI.BuildForm(model)
+    .AddField("日期", m => m.StringValue, 1)
+    .AddField("数字", m => m.StringValue, 1)
+    .AddField("数字", m => m.StringValue, 2)
+    .AddField("数字", m => m.StringValue, 2)
+    .AddField("数字", m => m.StringValue, 2)
+    .AddField("字符", m => m.StringValue)
+    .Render())
+
+@(UI.BuildForm(model)
+    .AddField("日期", m => m.DateValue, 1)
+    .AddField("数字", m => m.IntValue, 1)
+    .AddField("字符", m => m.StringValue, 1)
+    .Render())
+
+@code {
+
+}

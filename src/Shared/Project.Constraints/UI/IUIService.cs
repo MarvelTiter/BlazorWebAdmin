@@ -149,7 +149,7 @@ public interface IUIService
     //RenderFragment BuildTableHeader<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
 
     RenderFragment BuildForm<TData>(FormOptions<TData> options) where TData : class, new();
-
+    IFormBuilder<TData> BuildForm<TData>(TData data, string? formName = null) where TData : class, new();
     RenderFragment BuildDropdown(DropdownOptions options);
     RenderFragment BuildProfile();
     RenderFragment BuildPopover(PopoverOptions options);

@@ -3,20 +3,20 @@ using System.Reflection;
 
 namespace Project.Constraints.UI.Form;
 
-public sealed class FormBuilder
+public sealed class AutoFormBuilder
 {
-    internal FormBuilder()
+    internal AutoFormBuilder()
     {
     }
 
-    public static FormBuilder Create()
+    public static AutoFormBuilder Create()
     {
-        return new FormBuilder();
+        return new AutoFormBuilder();
     }
 
-    public static FormBuilder Create<TData>()
+    public static AutoFormBuilder Create<TData>()
     {
-        var builder = new FormBuilder();
+        var builder = new AutoFormBuilder();
         builder.columns.AddRange(typeof(TData).GenerateColumns());
 
         // foreach (var item in props)
@@ -31,11 +31,14 @@ public sealed class FormBuilder
 
     private readonly List<ColumnInfo> columns = [];
 
-    public FormBuilder AddField(string label, PropertyInfo property)
+    public AutoFormBuilder AddField(string label, PropertyInfo property, Action<ColumnInfo>? configure = null)
     {
-        var col = new ColumnInfo(property);
-        col.Label = label;
-        col.ColumnIndex = columns.Count;
+        var col = new ColumnInfo(property)
+        {
+            Label = label,
+            ColumnIndex = columns.Count,
+        };
+        configure?.Invoke(col);
         columns.Add(col);
         return this;
     }

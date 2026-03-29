@@ -341,6 +341,12 @@ public class UIService(
         };
     }
 
+    public IFormBuilder<TData> BuildForm<TData>(TData data, string? formName = null)
+        where TData : class, new()
+    {
+        return new FluentFormBuilder<TData>(this, data, formName);
+    }
+
 
     // TODO Notify
     public void Notify(Constraints.UI.MessageType type, string title, string message)
