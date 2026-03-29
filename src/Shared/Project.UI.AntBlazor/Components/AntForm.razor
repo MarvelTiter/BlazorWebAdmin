@@ -4,13 +4,16 @@
 <Form Model="@Options.Data"
       LabelAlign="@AntLabelAlignType.Right"
       Name="@Options.FormName"
-      OnFinish="@OnFinish" 
+      OnFinish="@OnFinish"
       @ref="@form"
       LabelColSpan="@Options.LabelSpan">
-    @foreach (var row in Options.GetRows())
+    @{
+        int rowIndex = 0;
+    }
+    @foreach (var row in rows)
     {
         @* var colSpan = 24 / row.Length; *@
-        var (colSpan, lblSpan) = GetSpan(row);
+        var (colSpan, lblSpan) = GetSpan(ref rowIndex);
         <GridRow>
             @foreach (var col in row)
             {
@@ -27,6 +30,7 @@
     [Parameter, NotNull] public FormOptions<TData>? Options { get; set; }
     [Inject, NotNull] IStringLocalizer<TData>? Localizer { get; set; }
     IForm? form;
+    IReadOnlyList<ColumnInfo[]> rows = [];
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
@@ -38,15 +42,44 @@
     }
 
     List<(int Items, int Span)> rowsSpan = [];
-    private (int, int) GetSpan(ColumnInfo[] row)
-    {
-        var colSpan = 24 / row.Length;
+    (int, int)? SpecificColSpan;
 
-        if (rowsSpan.Count > 0)
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        rows = Options.GetRows();
+        CalRowsSpan();
+        if (Options.RowCapacity.HasValue)
         {
-            
+            var colSpan = 24 / (int)Options.RowCapacity.Value;
+            SpecificColSpan = (colSpan, Options.LabelSpan);
         }
 
+        void CalRowsSpan()
+        {
+            // 用户设置的基准 label 宽度（单字段时的宽度）
+            int baseLabelSpan = Options.LabelSpan;
+            int maxFieldCount = rows.Max(r => r.Length);
+            int cell = baseLabelSpan / maxFieldCount;
+            for (int i = 0; i < rows.Count; i++)
+            {
+                var row = rows[i];
+                var colSpan = 24 / row.Length;
+                int labelSpan = cell * row.Length;
+                rowsSpan.Add((colSpan, labelSpan));
+            }
+        }
+    }
+
+
+
+    private (int, int) GetSpan(ref int rowIndex)
+    {
+        if (SpecificColSpan.HasValue)
+        {
+            return SpecificColSpan.Value;
+        }
+        return rowsSpan[rowIndex++];
     }
 
     Task OnFinish(EditContext context)
