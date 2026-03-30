@@ -1,0 +1,95 @@
+﻿/* SimpleTable 组件样式 */
+.simple-table {
+    /* 亮色主题变量（默认） */
+    --simple-table-header-bg: #f9fafb;
+    --simple-table-border-color: #e5e7eb;
+    --simple-table-row-hover-bg: #fafbfc;
+    --simple-table-empty-color: #9ca3af;
+    --simple-table-striped-bg: #fafbfc;
+    --simple-table-text-color: #1f2937;
+    --simple-table-container-bg: #ffffff;
+    width: 100%;
+    border-collapse: collapse;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--simple-table-text-color);
+}
+
+/* 暗色主题 - 通过父级属性覆盖 */
+html[data-theme='dark'] .simple-table {
+    --simple-table-header-bg: #1f1f1f;
+    --simple-table-border-color: #303030;
+    --simple-table-row-hover-bg: #2a2a2a;
+    --simple-table-empty-color: #6b6b6b;
+    --simple-table-striped-bg: #1a1a1a;
+    --simple-table-text-color: rgba(255, 255, 255, 0.85);
+    --simple-table-container-bg: #141414;
+}
+
+.simple-table-container {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: var(--border-shadow, 0px 0px 12px rgba(0, 0, 0, .12));
+    background: var(--simple-table-container-bg);
+}
+
+/* 带边框样式 */
+.simple-table-bordered {
+    border: 1px solid var(--simple-table-border-color);
+}
+
+::deep .simple-table-bordered th,
+::deep .simple-table-bordered td {
+    border: 1px solid var(--simple-table-border-color);
+}
+
+/* 斑马纹效果 */
+::deep .simple-table-striped tbody tr:nth-child(even) {
+    background-color: var(--simple-table-striped-bg);
+}
+
+/* 表头样式 */
+.simple-table thead tr {
+    background-color: var(--simple-table-header-bg);
+}
+
+.simple-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--simple-table-text-color);
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* 表格单元格样式 */
+::deep .simple-table td {
+    padding: 12px 16px;
+    color: var(--simple-table-text-color);
+    text-align:center;
+}
+
+/* 行悬停效果 */
+::deep .simple-table tbody tr:hover {
+    background-color: var(--simple-table-row-hover-bg);
+}
+
+/* 空数据样式 */
+.simple-table .empty-row td {
+    text-align: center;
+    padding: 48px 16px;
+    color: var(--simple-table-empty-color);
+    background-color: var(--simple-table-container-bg);
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+    ::deep .simple-table th,
+    ::deep .simple-table td {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+}

@@ -23,18 +23,12 @@ public class MGrid : ComponentBase
     [Parameter] public int GridColumns { get; set; } = 1;
     [Parameter] public int? MinWidth { get; set; }
     [Parameter] public string? Gap { get; set; }
+    [Parameter] public string? TemplateColumns { get; set; }
     [Parameter, NotNull] public RenderFragment? ChildContent { get; set; }
 
-    string ColumnTemplate()
+    string GetTemplateColumns()
     {
-        if (MinWidth.HasValue)
-        {
-            return $"repeat(auto-fill, {MinWidth.Value}px)";
-        }
-        else
-        {
-            return $"repeat({GridColumns}, 1fr)";
-        }
+        return TemplateColumns ?? (MinWidth.HasValue ? $"repeat(auto-fill, {MinWidth.Value}px)" : $"repeat({GridColumns}, 1fr)");
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -44,7 +38,7 @@ public class MGrid : ComponentBase
             .SetComponent(c => c.ChildContent, b =>
             {
                 b.Div()
-                    .Set("style", $"display:grid; grid-template-columns:{ColumnTemplate()}; gap:{Gap ?? "normal"}")
+                    .Set("style", $"display:grid; grid-template-columns:{GetTemplateColumns()}; gap:{Gap ?? "normal"}")
                     .AddContent(ChildContent)
                     .Build();
             })

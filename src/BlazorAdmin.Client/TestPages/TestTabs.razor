@@ -1,5 +1,6 @@
 ﻿@using Project.Constraints.Common.Attributes
 @using Project.Constraints.UI
+@using Project.Web.Shared.Components
 @page "/testtabs"
 @attribute [PageInfo(Title = "Tab测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 @inject IUIService UI
@@ -7,8 +8,44 @@
     .AddTab<TestGrid>("测试1")
     .AddTab<TestStackPanel>("测试2")
     .AddTab("测试3", "测试3".AsContent())
+    .AddTab("SimpleTable", TestGrid())
     .Render()
     )
-@code {
 
+
+@code {
+    Dictionary<string, object> data = new Dictionary<string, object>()
+    {
+        { "Name", "张三" },
+        { "Age", 18 }
+    };
+    RenderFragment TestGrid()
+    {
+        return @<div>
+            <SimpleTable TData="Dictionary<string, object>" Headers="@(["名称", "年龄"])" Items="@([data, data, data])">
+                <RowTemplate>
+                    <tr>
+                        <td>
+                            @context["Name"]
+                        </td>
+                        <td>
+                            @context["Age"]
+                        </td>
+                    </tr>
+                </RowTemplate>
+            </SimpleTable>
+            <SimpleTable TData="Dictionary<string, object>" Headers="@(["名称", "年龄"])" Items="@([])">
+                <RowTemplate>
+                    <tr>
+                        <td>
+                            @context["Name"]
+                        </td>
+                        <td>
+                            @context["Age"]
+                        </td>
+                    </tr>
+                </RowTemplate>
+            </SimpleTable>
+        </div>;
+    }
 }

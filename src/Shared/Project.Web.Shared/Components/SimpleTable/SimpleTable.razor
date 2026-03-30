@@ -1,0 +1,43 @@
+﻿@namespace Project.Web.Shared.Components
+@typeparam TData
+
+<div class="simple-table-container">
+    <table class="simple-table simple-table-bordered simple-table-striped @TableClass">
+        <thead>
+            <tr class="@HeaderClass">
+                @foreach (var column in Headers)
+                {
+                    <th>
+                        @column
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @if (Items is null || !Items.Any())
+            {
+                <tr class="empty-row @RowClass">
+                    <td colspan="@(Headers.Length > 0 ? Headers.Length : 1)">
+                        @if (Empty is not null)
+                        {
+                            @Empty
+                        }
+                        else
+                        {
+                            <span>暂无数据</span>
+                        }
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Items)
+                {
+                    @* <tr class="@RowClass">
+                    </tr> *@
+                    @RowTemplate?.Invoke(item)
+                }
+            }
+        </tbody>
+    </table>
+</div>
