@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace Project.Constraints.UI.Form;
 
 public interface IFormBuilder<TData>
+    where TData : class, new()
 {
     //IFormBuilder<TData> Text<TField>(string label, Expression<Func<TData, TField>> fieldSelector);
     //IFormBuilder<TData> Number<TField>(string label, Expression<Func<TData, TField>> fieldSelector);
@@ -21,6 +22,7 @@ public interface IFormBuilder<TData>
         , Expression<Func<TData, TField>> fieldSelector
         , int? row = null
         , Dictionary<string, string>? selectSource = null);
+    IFormBuilder<TData> Options(Action<FormOptions<TData>> action);
     RenderFragment Render();
 }
 
@@ -69,11 +71,18 @@ public sealed class FluentFormBuilder<TData>(IUIService ui, TData data, string? 
         });
         return this;
     }
+    private Action<FormOptions<TData>>? action;
+    public IFormBuilder<TData> Options(Action<FormOptions<TData>> action)
+    {
+        this.action = action;
+        return this;
+    }
 
     public RenderFragment Render()
     {
         options ??= builder.Build(ui, data);
         options.FormName ??= formName;
+        action?.Invoke(options);
         return ui.BuildForm(options);
     }
 }

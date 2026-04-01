@@ -9,6 +9,7 @@
     --simple-table-text-color: #1f2937;
     --simple-table-container-bg: #ffffff;
     width: 100%;
+    height: 100%;
     border-collapse: collapse;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     font-size: 14px;

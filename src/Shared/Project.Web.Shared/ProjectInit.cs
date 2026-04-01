@@ -1,40 +1,25 @@
 ﻿using LightExcel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using MT.Toolkit.LogTool;
-using MT.Toolkit.ReflectionExtension;
-using Project.Constraints;
 using Project.Constraints.Options;
-using Project.Web.Shared;
 using Project.Web.Shared.Auth;
 using Project.Web.Shared.Locales.Extensions;
 using Project.Web.Shared.Pages;
 using System.Reflection;
 
 namespace Project.Web.Shared;
+
 public static class ProjectInit
 {
     public static void AddClientProject(this IServiceCollection services, IConfiguration configuration, Action<ProjectSetting> action, out ProjectSetting setting)
     {
         ScanRazorLibraryAssembly();
         setting = new ProjectSetting();
+        action.Invoke(setting);
         setting.ConfigurePage(locator =>
         {
             locator.SetLoginPageType<DefaultLogin>();
         });
-#if (ExcludeDefaultService)
-#else
-        //set default
-        setting.ConfigurePage(locator =>
-        {
-            locator.SetUserPageType<DefaultUserPage>();
-            locator.SetRunLogPageType<DefaultOperationLog>();
-            locator.SetPermissionPageType<DefaultPermissionSetting>();
-            locator.SetRolePermissionPageType<DefaultRolePermission>();
-        });
-#endif
-        action.Invoke(setting);
         services.AddAuthorizationCore(o =>
         {
             o.AddPolicy(AppConst.ONLINE_USER_POLICY, policy =>
@@ -47,6 +32,7 @@ public static class ProjectInit
             });
         });
         services.AddSingleton(setting.locator);
+        services.InterceptorsInit(setting);
         services.AddScoped(typeof(IProjectSettingService), setting.SettingProviderType);
         services.AddCascadingAuthenticationState();
         ArgumentNullException.ThrowIfNull(AppConst.App.Name);
@@ -69,14 +55,13 @@ public static class ProjectInit
 
     }
 
-    //private static void InterceptorsInit(IServiceCollection services, ProjectSetting setting)
-    //{
-    //    services.AddScoped(typeof(IProjectSettingService), setting.SettingProviderType);
-    //    foreach (var item in setting.interceptorTypes)
-    //    {
-    //        services.AddScoped(typeof(IAddtionalInterceptor), item);
-    //    }
-    //}
+    private static void InterceptorsInit(this IServiceCollection services, ProjectSetting setting)
+    {
+        foreach (var item in setting.interceptorTypes)
+        {
+            services.AddScoped(typeof(IAddtionalInterceptor), item);
+        }
+    }
 
     internal static void ConfigureAppSettings(this IServiceCollection services, IConfiguration configuration)
     {
