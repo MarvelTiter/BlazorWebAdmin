@@ -7,16 +7,16 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="AutoAopProxyGenerator" Version="0.1.6" />
-		<PackageReference Include="AutoGenMapperGenerator" Version="2026.3.26.1" />
+		<PackageReference Include="AutoGenMapperGenerator" Version="2026.4.21.1" />
 		<PackageReference Include="AutoInjectGenerator" Version="2026.3.2.1" />
 		<PackageReference Include="AutoPageStateContainerGenerator" Version="0.0.8" />
 		<PackageReference Include="AutoWasmApiGenerator" Version="2026.2.12.1" />
-		<PackageReference Include="LoggerProviderExtensions" Version="0.0.2" />
+		<PackageReference Include="LoggerProviderExtensions" Version="2026.4.17.1" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
-		<PackageReference Include="MT.LightORM" Version="2026.3.22.1" />
+		<PackageReference Include="MT.LightORM" Version="2026.4.28.1" />
 		<PackageReference Include="MT.LightTask" Version="2026.3.6.1" />
 		<PackageReference Include="MT.Toolkit" Version="2.1.9" />
-		<PackageReference Include="LightExcel" Version="2.1.7" />
+		<PackageReference Include="LightExcel" Version="2026.4.27.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" />
