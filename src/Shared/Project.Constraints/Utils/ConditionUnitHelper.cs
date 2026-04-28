@@ -20,6 +20,17 @@ public static class ConditionUnitHelper
         return lambda;
     }
 
+    public static bool ValidateExpression<T>(this ConditionUnit unit)
+    {
+        bool result = true;
+        foreach (var item in unit.Children)
+        {
+            var enable = !string.IsNullOrEmpty(item.Name) && !InvalidValue(item.Value);
+            result = result && enable;
+        }
+        return result;
+    }
+
     public static Expression<Func<T, bool>> BuildTopExpression<T>(this ConditionUnit condition)
     {
         var parameterExpression = Expression.Parameter(typeof(T), "p");
@@ -35,6 +46,11 @@ public static class ConditionUnitHelper
         }
         var lambda = Expression.Lambda<Func<T, bool>>(body, parameterExpression);
         return lambda;
+    }
+
+    public static bool ValidateTopExpression<T>(this ConditionUnit unit)
+    {
+        return !string.IsNullOrEmpty(unit.Name) && !InvalidValue(unit.Value);
     }
 
     private static Expression? SolveConditionUnit<T>(ParameterExpression pExp, IEnumerable<ConditionUnit> conditions)

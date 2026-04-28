@@ -87,7 +87,7 @@ builder.Services.AddStateContainers();
 #if DEBUG
 builder.Services.AddLightTask(o =>
 {
-    o.EnableStorage = true;
+    //o.EnableStorage = true;
 });
 #endif
 var app = builder.Build();

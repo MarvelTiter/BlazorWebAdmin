@@ -32,6 +32,41 @@ public interface IRequest<T> : IRequest
 
 public static class RequestExtensions
 {
+    public static bool IsValidExpression<T>(this IRequest<T> request)
+    {
+        if (typeof(T) == typeof(object))
+        {
+            return false;
+        }
+        if (request.ExpressionSolveType == SolveType.All)
+        {
+            if (request.AdditionalCondition != null)
+            {
+                var u = new ConditionUnit()
+                {
+                    Children = [.. request.Condition.Children, request.AdditionalCondition]
+                };
+                return u.ValidateExpression<T>();
+            }
+            return request.Condition.ValidateExpression<T>();
+        }
+        else if (request.ExpressionSolveType == SolveType.TopOnly)
+        {
+            if (request.AdditionalCondition != null)
+            {
+                var u = new ConditionUnit()
+                {
+                    Children = [request.Condition, request.AdditionalCondition]
+                };
+                return u.ValidateExpression<T>();
+            }
+            else
+            {
+                return request.Condition.ValidateTopExpression<T>();
+            }
+        }
+        return false;
+    }
     public static Expression<Func<T, bool>> Expression<T>(this IRequest<T> request)
     {
         if (typeof(T) == typeof(object))
