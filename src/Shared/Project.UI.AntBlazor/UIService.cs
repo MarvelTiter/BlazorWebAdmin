@@ -110,12 +110,12 @@ public class UIService(
     public IBindableInputComponent<DatePickerProp, DateTime?> BuildDatePicker(object reciver)
     {
         return new BindableComponentBuilder<DatePicker<DateTime?>, DatePickerProp, DateTime?>(builder =>
+        {
+            if (builder.Model.WithTime)
             {
-                if (builder.Model.WithTime)
-                {
-                    builder.SetComponent(c => c.ShowTime, "HH:mm");
-                }
-            })
+                builder.SetComponent(c => c.ShowTime, "HH:mm");
+            }
+        })
         { Receiver = reciver };
     }
 
@@ -155,20 +155,20 @@ public class UIService(
         else
         {
             return new BindableComponentBuilder<Select<TValue, Options<TValue>>, SelectProp, TValue>(self =>
+            {
+                if (self.Model.Mulitple)
                 {
-                    if (self.Model.Mulitple)
-                    {
-                        self.SetComponent(s => s.Mode, SelectMode.Multiple);
-                        self.Model.BindValueName = "Values";
-                        self.Model.ValueExpressionName = "ValuesExpression";
-                    }
-                    self.SetComponent(s => s.DataSource, options)
-                        .SetComponent(s => s.ValueName, "Value")
-                        .SetComponent(s => s.LabelName, "Label")
-                        .SetComponent(s => s.DropdownMatchSelectWidth, false)
-                        .SetComponent(s => s.AllowClear, self.Model.AllowClear)
-                        .SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
-                })
+                    self.SetComponent(s => s.Mode, SelectMode.Multiple);
+                    self.Model.BindValueName = "Values";
+                    self.Model.ValueExpressionName = "ValuesExpression";
+                }
+                self.SetComponent(s => s.DataSource, options)
+                    .SetComponent(s => s.ValueName, "Value")
+                    .SetComponent(s => s.LabelName, "Label")
+                    .SetComponent(s => s.DropdownMatchSelectWidth, false)
+                    .SetComponent(s => s.AllowClear, self.Model.AllowClear)
+                    .SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
+            })
             { Receiver = reciver };
         }
     }
@@ -177,23 +177,23 @@ public class UIService(
         IEnumerable<TItem> options)
     {
         return new SelectComponentBuilder<Select<TValue, TItem>, SelectProp, TItem, TValue>(self =>
+        {
+            if (self.Model.Mulitple)
             {
-                if (self.Model.Mulitple)
-                {
-                    self.SetComponent(s => s.Mode, SelectMode.Multiple);
-                    self.Model.BindValueName = "Values";
-                    self.Model.ValueExpressionName = "ValuesExpression";
-                }
-                self.SetComponent(s => s.DataSource, options);
-                if (self.Model.ValueExpression is LambdaExpression valueLambda)
-                    self.SetComponent(s => s.ItemValue, valueLambda.Compile());
-                if (self.Model.LabelExpression is LambdaExpression labelLambda)
-                    self.SetComponent(s => s.ItemLabel, labelLambda.Compile());
+                self.SetComponent(s => s.Mode, SelectMode.Multiple);
+                self.Model.BindValueName = "Values";
+                self.Model.ValueExpressionName = "ValuesExpression";
+            }
+            self.SetComponent(s => s.DataSource, options);
+            if (self.Model.ValueExpression is LambdaExpression valueLambda)
+                self.SetComponent(s => s.ItemValue, valueLambda.Compile());
+            if (self.Model.LabelExpression is LambdaExpression labelLambda)
+                self.SetComponent(s => s.ItemLabel, labelLambda.Compile());
 
-                self.SetComponent(s => s.AllowClear, self.Model.AllowClear);
-                self.SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
-                self.SetComponent(s => s.DropdownMatchSelectWidth, false);
-            })
+            self.SetComponent(s => s.AllowClear, self.Model.AllowClear);
+            self.SetComponent(s => s.EnableSearch, self.Model.AllowSearch);
+            self.SetComponent(s => s.DropdownMatchSelectWidth, false);
+        })
         { Receiver = reciver };
     }
 
@@ -201,10 +201,10 @@ public class UIService(
     {
         // "CheckedChildren", "UnCheckedChildren"
         var binder = new BindableComponentBuilder<Switch, SwitchProp, bool>(self =>
-            {
-                self.SetComponent(sw => sw.CheckedChildren, self.Model.CheckedLabel)
-                    .SetComponent(sw => sw.UnCheckedChildren, self.Model.UnCheckedLabel);
-            })
+        {
+            self.SetComponent(sw => sw.CheckedChildren, self.Model.CheckedLabel)
+                .SetComponent(sw => sw.UnCheckedChildren, self.Model.UnCheckedLabel);
+        })
         { Receiver = reciver };
         // @bind-Check
         binder.Model.BindValueName = "Checked";
@@ -214,25 +214,27 @@ public class UIService(
     public IButtonInput BuildButton(object reciver)
     {
         return new ButtonComponentBuilder<Button>((self) =>
+        {
+            if (self.Model.ButtonType == Constraints.UI.ButtonType.Default)
             {
-                if (self.Model.ButtonType == Constraints.UI.ButtonType.Default)
-                {
-                    return;
-                }
+                return;
+            }
 
-                switch (self)
-                {
-                    case { Model.ButtonType: Constraints.UI.ButtonType.Primary }:
-                        self.SetComponent(b => b.Type, AntDesign.ButtonType.Primary);
-                        break;
-                    case { Model.ButtonType: Constraints.UI.ButtonType.Danger }:
-                        self.SetComponent(b => b.Danger, true);
-                        break;
-                }
+            switch (self)
+            {
+                case { Model.ButtonType: Constraints.UI.ButtonType.Primary }:
+                    self.SetComponent(b => b.Type, AntDesign.ButtonType.Primary);
+                    break;
+                case { Model.ButtonType: Constraints.UI.ButtonType.Danger }:
+                    self.SetComponent(b => b.Danger, true);
+                    break;
+            }
 
-                self.TrySet("ChildContent", (RenderFragment)(builder => builder.AddContent(1, self.Model.Text)));
+            self.SetComponent(b => b.AutoLoading, self.Model.AutoLoading);
 
-            })
+            self.TrySet("ChildContent", (RenderFragment)(builder => builder.AddContent(1, self.Model.Text)));
+
+        })
         { Receiver = reciver };
     }
 
@@ -504,10 +506,10 @@ public class UIService(
     public IBindableInputComponent<DefaultProp, bool> BuildCheckBox(object reciver)
     {
         var binder = new BindableComponentBuilder<Checkbox, DefaultProp, bool>(self =>
-            {
-                if (self.Model.Label != null)
-                    self.SetComponent(cb => cb.ChildContent, self.Model.Label.AsContent());
-            })
+        {
+            if (self.Model.Label != null)
+                self.SetComponent(cb => cb.ChildContent, self.Model.Label.AsContent());
+        })
         { Receiver = reciver };
         binder.Model.BindValueName = "Checked";
         return binder;
@@ -531,16 +533,16 @@ public class UIService(
         IEnumerable<TItem> options)
     {
         return new SelectComponentBuilder<CheckboxGroup<TValue>, SelectProp, TItem, TValue[]>(self =>
+        {
+            // (OneOf<CheckboxOption[], string[]>)
+            if (self.Model.LabelExpression is LambdaExpression labelLambda &&
+                self.Model.ValueExpression is LambdaExpression valueLambda)
             {
-                // (OneOf<CheckboxOption[], string[]>)
-                if (self.Model.LabelExpression is LambdaExpression labelLambda &&
-                    self.Model.ValueExpression is LambdaExpression valueLambda)
-                {
-                    var label = (Func<TItem, string>)labelLambda.Compile();
-                    var value = (Func<TItem, TValue>)valueLambda.Compile();
-                    self.SetComponent(cbg => cbg.Options, options.ConvertToCheckBoxOptions(label, value));
-                }
-            })
+                var label = (Func<TItem, string>)labelLambda.Compile();
+                var value = (Func<TItem, TValue>)valueLambda.Compile();
+                self.SetComponent(cbg => cbg.Options, options.ConvertToCheckBoxOptions(label, value));
+            }
+        })
         { Receiver = reciver };
     }
 
@@ -548,20 +550,20 @@ public class UIService(
         IEnumerable<TItem> options)
     {
         return new SelectComponentBuilder<RadioGroup<TValue>, SelectProp, TItem, TValue>(self =>
+        {
+            if (self.Model.LabelExpression is LambdaExpression labelLambda &&
+                self.Model.ValueExpression is LambdaExpression valueLambda)
             {
-                if (self.Model.LabelExpression is LambdaExpression labelLambda &&
-                    self.Model.ValueExpression is LambdaExpression valueLambda)
-                {
-                    var label = (Func<TItem, string>)labelLambda.Compile();
-                    var value = (Func<TItem, TValue>)valueLambda.Compile();
-                    self.SetComponent(rg => rg.Options, options.ConvertToRadioOptions(label, value));
-                }
+                var label = (Func<TItem, string>)labelLambda.Compile();
+                var value = (Func<TItem, TValue>)valueLambda.Compile();
+                self.SetComponent(rg => rg.Options, options.ConvertToRadioOptions(label, value));
+            }
 
-                if (self.Model.ButtonGroup)
-                {
-                    self.SetComponent(rg => rg.ButtonStyle, RadioButtonStyle.Solid);
-                }
-            })
+            if (self.Model.ButtonGroup)
+            {
+                self.SetComponent(rg => rg.ButtonStyle, RadioButtonStyle.Solid);
+            }
+        })
         { Receiver = reciver };
     }
 
