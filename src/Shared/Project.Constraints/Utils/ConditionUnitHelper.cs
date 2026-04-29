@@ -1,4 +1,5 @@
-﻿using Project.Constraints.Models.Request;
+﻿using MT.Toolkit.DateTimeExtension;
+using Project.Constraints.Models.Request;
 using Project.Constraints.UI;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -85,10 +86,10 @@ public static class ConditionUnitHelper
             _ => (ExpressionType)Enum.Parse(typeof(ExpressionType), Enum.GetName(info.CompareType)!)
         };
         Expression? exp;
+        var property = typeof(T).GetProperty(info.Name)!;
         if (expType.HasValue)
         {
             Expression right;
-            var property = typeof(T).GetProperty(info.Name)!;
             object? v;
             if (property.PropertyType.IsEnum)
             {
@@ -106,7 +107,19 @@ public static class ConditionUnitHelper
         }
         else
         {
-            exp = Expression.Call(propExp, ContainMethod, Expression.Constant(GetRealValue(info, typeof(string)), typeof(string)));
+            var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+            if (GetRealValue(info, type) is DateTime dt)
+            {
+                var start = dt.DayStart();
+                var end = dt.DayEnd();
+                var startExp = Expression.GreaterThanOrEqual(propExp, Expression.Constant(start, property.PropertyType));
+                var endExp = Expression.LessThanOrEqual(propExp, Expression.Constant(end, property.PropertyType));
+                exp = Expression.AndAlso(startExp, endExp);
+            }
+            else
+            {
+                exp = Expression.Call(propExp, ContainMethod, Expression.Constant(GetRealValue(info, typeof(string)), typeof(string)));
+            }
         }
         return exp;
 

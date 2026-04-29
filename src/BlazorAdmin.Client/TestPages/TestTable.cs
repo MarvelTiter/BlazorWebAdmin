@@ -75,6 +75,7 @@ public class TestTable : ModelPage<TestEntity, GenericRequest<TestEntity>>
     private Task BuildTable() => Test.CreateTableAsync();
     protected override Task<QueryCollectionResult<TestEntity>> OnQueryAsync(GenericRequest<TestEntity> query)
     {
+        var whereExp = query.Expression();
         return Test.QueryListAsync(query);
     }
 
