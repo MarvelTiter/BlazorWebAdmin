@@ -19,6 +19,10 @@ public static class ProjectInit
         setting.ConfigurePage(locator =>
         {
             locator.SetLoginPageType<DefaultLogin>();
+            locator.SetUserPageType<DefaultUserPage>();
+            locator.SetRunLogPageType<DefaultOperationLog>();
+            locator.SetPermissionPageType<DefaultPermissionSetting>();
+            locator.SetRolePermissionPageType<DefaultRolePermission>();
         });
         services.AddAuthorizationCore(o =>
         {

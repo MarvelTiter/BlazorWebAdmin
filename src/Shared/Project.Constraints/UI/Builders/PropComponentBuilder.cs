@@ -37,13 +37,16 @@ public class PropComponentBuilder<TComponent, TPropModel> : ComponentBuilderBasi
         //action.Compile().Invoke(value);
         //return this;
         var prop = selector.ExtractProperty();
-        var action = propAssignCaches.GetOrAdd((typeof(TPropModel), prop), static key =>
-        {
-            var modelExp = Expression.Parameter(key.Entity);
-            var p = Expression.Parameter(key.Prop.PropertyType);
-            return Expression.Lambda<Action<TPropModel, TMember>>(Expression.Assign(Expression.Property(modelExp, key.Prop), p), modelExp, p).Compile();
-        });
-        action.DynamicInvoke(Model, value);
+        //var action = propAssignCaches.GetOrAdd((typeof(TPropModel), prop), static key =>
+        //{
+        //    var modelExp = Expression.Parameter(key.Entity);
+        //    var p = Expression.Parameter(key.Prop.PropertyType);
+        //    return Expression.Lambda<Action<TPropModel, TMember>>(Expression.Assign(Expression.Property(modelExp, key.Prop), p), modelExp, p).Compile();
+        //});
+        //action.DynamicInvoke(Model, value);
+
+        PropertySetter<TPropModel,TMember>.GetOrCreate(prop).Invoke(Model, value);
+
         return this;
     }
 

@@ -6,6 +6,26 @@ using System.Reflection;
 
 namespace Project.Constraints.UI.Builders;
 
+internal static class PropertySetter<TEntity, TProp>
+{
+    private static Action<TEntity, TProp>? setter;
+    private static PropertyInfo? lastProp;
+    public static Action<TEntity, TProp> GetOrCreate(PropertyInfo prop)
+    {
+        if (setter != null && lastProp == prop)
+            return setter;
+
+        lastProp = prop;
+
+        var entityType = typeof(TEntity);
+        var propType = typeof(TProp);
+        var modelExp = Expression.Parameter(entityType, "p");
+        var p = Expression.Parameter(propType, "value");
+        setter = Expression.Lambda<Action<TEntity, TProp>>(Expression.Assign(Expression.Property(modelExp, prop), p), modelExp, p).Compile();
+        return setter;
+    }
+}
+
 public class ComponentBuilderBasic<TComponent, TSelf> : IUIComponent
     where TComponent : IComponent
     where TSelf : ComponentBuilderBasic<TComponent, TSelf>
@@ -44,7 +64,7 @@ public class ComponentBuilderBasic<TComponent, TSelf> : IUIComponent
         parameters[key] = value;
         return this;
     }
-        
+
     public IUIComponent Style(string value)
     {
         parameters.Add("style", value);

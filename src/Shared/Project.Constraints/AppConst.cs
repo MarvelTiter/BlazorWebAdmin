@@ -21,7 +21,7 @@ public static class AppConst
     public const string CUSTOM_SVG_PREFIX = "svg-";
     public const string DEFAULT_DYNAMIC_POLICY = "DefaultDynamicPolicy";
     public const string ONLINE_USER_POLICY = "OnlineUserPagePolicy";
-    private readonly static List<Assembly> additionalPageAssemblies = [];
+    private readonly static HashSet<Assembly> additionalPageAssemblies = [];
     //public static Assembly ServerAssembly { get; set; }
     //public static Assembly ClientAssembly { get; set; }
     //public static string GetStatisticsFileWithVersion(string path)
@@ -40,15 +40,15 @@ public static class AppConst
     //}
 
     public static RenderFragment? Footer { get; set; }
-    private static readonly Lazy<List<Assembly>> allAssemblise = new(GetAllAssemblies);
-    private static List<Assembly> GetAllAssemblies()
+    private static readonly Lazy<HashSet<Assembly>> allAssemblise = new(GetAllAssemblies);
+    private static HashSet<Assembly> GetAllAssemblies()
     {
         return [AppAssembly, .. AdditionalAssemblies];
     }
 
-    public static List<Assembly> AllAssemblies => allAssemblise.Value.Distinct().ToList();
+    public static HashSet<Assembly> AllAssemblies => allAssemblise.Value;
 
-    public static List<Assembly> AdditionalAssemblies => additionalPageAssemblies;
+    public static HashSet<Assembly> AdditionalAssemblies => additionalPageAssemblies;
     [NotNull] public static Assembly? AppAssembly { get; set; }
     //public static IEnumerable<Assembly> AllEnableAssembly()
     //{

@@ -58,7 +58,7 @@ public partial class RouterStore
         }
 
         var used = meta.RouteType == null
-                   || AppConst.AllAssemblies.IndexOf(meta.RouteType.Assembly) > -1
+                   || AppConst.AllAssemblies.Contains(meta.RouteType.Assembly)
                    || meta.RouteType.Assembly == Assembly.GetEntryAssembly()
                    || (meta.RouteType.Assembly.GetName().Name?.EndsWith(".Client") ?? false);
 
