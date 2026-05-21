@@ -1,17 +1,22 @@
-import { BaseComponent } from "../../JsCore/baseComponent";
+﻿import { BaseComponent } from "../../JsCore/baseComponent";
 import { getComponentById } from "../../JsCore/componentStore";
 export class WaterMark extends BaseComponent {
     wrapper: HTMLElement
     options?: any
     ob: MutationObserver
     mask?: HTMLElement
+    originalDisplay: string = ''
+
     constructor(wrapper: HTMLElement) {
         super()
-        this.wrapper = wrapper || window.document.documentElement
+        this.wrapper = wrapper || window.document.body
+
+        window.addEventListener('beforeprint', this.handleBeforePrint.bind(this))
+        window.addEventListener('afterprint', this.handleAfterPrint.bind(this))
 
         this.ob = new MutationObserver((entries) => {
             for (const entry of entries) {
-                if (entry.type === 'childList') {
+                if (entry.type === 'childList' || entry.type === "attributes") {
                     const removeNodes = entry.removedNodes;
                     removeNodes.forEach((node) => {
                         if (node === this.mask) {
@@ -43,7 +48,34 @@ export class WaterMark extends BaseComponent {
         let url = drawMask(options)
         this.mask.style.backgroundSize = `${options.gapX + options.width}px`;
         this.mask.style.backgroundImage = `url(${url})`;
+        //this.mask.src = url!
         this.wrapper.appendChild(this.mask);
+    }
+
+    // 打印前隐藏水印
+    handleBeforePrint() {
+        if (this.mask) {
+            // 暂时断开观察器，避免打印时触发
+            this.ob.disconnect();
+            this.originalDisplay = this.mask.style.display;
+            this.mask.style.display = 'none';
+
+        }
+    }
+
+    // 打印后恢复水印
+    handleAfterPrint() {
+        if (this.mask) {
+            this.mask.style.display = this.originalDisplay || '';
+
+            // 重新连接观察器
+            this.ob.observe(this.wrapper, {
+                attributes: true,
+                childList: true,
+                characterData: true,
+                subtree: true,
+            });
+        }
     }
 
     dispose() {
@@ -60,7 +92,7 @@ export class WaterMark extends BaseComponent {
     static refreshWatermark(id: string) {
         const com = getComponentById(id)
         if (com) {
-            // ��һ֡�����»���
+            // 下一帧再重新绘制
             window.requestAnimationFrame(() => {
                 com.setWatermark(com.options);
             })
@@ -70,13 +102,14 @@ export class WaterMark extends BaseComponent {
 
 function createDiv(): HTMLElement {
     var d = document.createElement("div");
-    d.style.position = "absolute";
+    d.style.position = "fixed";
     d.style.left = '0';
     d.style.top = '0';
     d.style.width = "100%";
     d.style.height = "100%";
     d.style.pointerEvents = "none";
     d.style.backgroundRepeat = "repeat";
+    d.style.zIndex = Number.MAX_SAFE_INTEGER.toString();
     return d;
 }
 
@@ -138,5 +171,5 @@ function drawMask({
         ctx.fillStyle = color;
         ctx.fillText(text, 0, top * ratio);
     }
-    return canvas.toDataURL();
+    return canvas.toDataURL("image/png");
 }

@@ -8,21 +8,19 @@ namespace Project.Constraints.UI.Builders;
 
 internal static class PropertySetter<TEntity, TProp>
 {
-    private static Action<TEntity, TProp>? setter;
-    private static PropertyInfo? lastProp;
+    private static readonly ConcurrentDictionary<PropertyInfo, Action<TEntity, TProp>> cache = new();
     public static Action<TEntity, TProp> GetOrCreate(PropertyInfo prop)
     {
-        if (setter != null && lastProp == prop)
+        return cache.GetOrAdd(prop, p =>
+        {
+            var entityType = typeof(TEntity);
+            var propType = typeof(TProp);
+            var modelExp = Expression.Parameter(entityType, "p");
+            var valueExp = Expression.Parameter(propType, "value");
+            var propExp = Expression.Property(modelExp, p);
+            var setter = Expression.Lambda<Action<TEntity, TProp>>(Expression.Assign(propExp, valueExp), modelExp, valueExp).Compile();
             return setter;
-
-        lastProp = prop;
-
-        var entityType = typeof(TEntity);
-        var propType = typeof(TProp);
-        var modelExp = Expression.Parameter(entityType, "p");
-        var p = Expression.Parameter(propType, "value");
-        setter = Expression.Lambda<Action<TEntity, TProp>>(Expression.Assign(Expression.Property(modelExp, prop), p), modelExp, p).Compile();
-        return setter;
+        });
     }
 }
 
