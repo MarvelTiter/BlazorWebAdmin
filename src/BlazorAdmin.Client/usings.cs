@@ -1,1 +1,1 @@
-﻿[assembly: AutoWasmApiGenerator.ApiInvokerAssembly]
+﻿[assembly: AutoWasmApiGenerator.ApiClientAssembly]

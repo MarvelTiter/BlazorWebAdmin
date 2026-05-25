@@ -6,17 +6,17 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="AutoAopProxyGenerator" Version="0.1.6" />
-		<PackageReference Include="AutoGenMapperGenerator" Version="2026.4.21.1" />
-		<PackageReference Include="AutoInjectGenerator" Version="2026.3.2.1" />
+		<PackageReference Include="AutoAopProxyGenerator" Version="2026.5.15.1" />
+		<PackageReference Include="AutoGenMapperGenerator" Version="2026.5.25.1" />
+		<PackageReference Include="AutoInjectGenerator" Version="2026.5.22.2" />
 		<PackageReference Include="AutoPageStateContainerGenerator" Version="0.0.8" />
-		<PackageReference Include="AutoWasmApiGenerator" Version="2026.2.12.1" />
-		<PackageReference Include="LoggerProviderExtensions" Version="2026.4.17.1" />
+		<PackageReference Include="AutoWasmApiGenerator" Version="2026.5.25.1" />
+		<PackageReference Include="LoggerProviderExtensions" Version="2026.5.19.1" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
-		<PackageReference Include="MT.LightORM" Version="2026.4.28.1" />
-		<PackageReference Include="MT.LightTask" Version="2026.3.6.1" />
+		<PackageReference Include="MT.LightORM" Version="2026.5.15.1" />
+		<PackageReference Include="MT.LightTask" Version="2026.5.11.1" />
 		<PackageReference Include="MT.Toolkit" Version="2.1.9" />
-		<PackageReference Include="LightExcel" Version="2026.4.27.2" />
+		<PackageReference Include="LightExcel" Version="2026.5.19.1" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" />

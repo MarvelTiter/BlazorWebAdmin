@@ -18,7 +18,7 @@ public interface ISvgIconService
 [WebController(Route = "file")]
 public interface IFileService
 {
-    [ApiInvokeNotSupported]
+    [ApiClientNotSupported]
     string GetStaticFileWithVersion(string path);
     Task<string> GetStaticFileWithVersionAsync(string path);
 }

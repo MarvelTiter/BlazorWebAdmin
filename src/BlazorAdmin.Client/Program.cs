@@ -59,7 +59,7 @@ builder.Services.AddAuthorizationCore(o =>
 //builder.Services.AddScoped<IFileService, FileServiceApiInvoker>();
 #if (ExcludeDefaultService)
 #else
-builder.Services.AddGeneratedApiInvokerServices();
+builder.Services.AddGeneratedApiClientServices();
 #endif
 
 var host = builder.Build();

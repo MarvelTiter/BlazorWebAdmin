@@ -90,7 +90,7 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
                 .ExecuteAsync();
 
             var roleId = role.RoleId;
-            string[] powers = [.. role.Permissions?.Distinct()];
+            string[] powers = [.. role.Permissions?.Distinct() ?? []];
             var d = await scoped.Delete<TRolePower>().Where(r => r.RoleId == roleId).ExecuteAsync();
             var i = 0;
             foreach (var p in powers)
@@ -147,7 +147,7 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
             await scoped.BeginTransactionAsync();
             var n = await context.Insert(role).ExecuteAsync();
             var roleId = role.RoleId;
-            string[] powers = [.. role.Permissions?.Distinct()];
+            string[] powers = [.. role.Permissions?.Distinct() ?? []];
             var i = 0;
             foreach (var p in powers)
             {

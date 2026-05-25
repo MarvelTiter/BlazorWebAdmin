@@ -32,8 +32,8 @@ namespace BlazorAdmin.Client.HttpClientHandlers;
 //    }
 
 //}
-[AutoInject(Group = "WASM", ServiceType = typeof(IGeneratedApiInvokeDelegatingHandler))]
-public class GeneratedApiHandler(ILogger<GeneratedApiHandler> logger, IUIService ui) : GeneratedApiInvokeDelegatingHandler
+[AutoInject(Group = "WASM", ServiceType = typeof(IGeneratedApiClientDelegatingHandler))]
+public class GeneratedApiHandler(ILogger<GeneratedApiHandler> logger, IUIService ui) : GeneratedApiClientDelegatingHandler
 {
     public override Task BeforeSendAsync(SendContext context)
     {

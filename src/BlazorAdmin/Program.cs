@@ -9,6 +9,7 @@ using Project.Constraints;
 using Project.Web.Shared;
 using MT.LightTask;
 using Project.Constraints.Services;
+using AutoWasmApiGenerator;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -130,5 +131,6 @@ app.MapRazorComponents<App>()
 #endif
     .AddAdditionalAssemblies([.. AppConst.AdditionalAssemblies]);
 
+app.MapAutoWasmApiEndPoints();
 
 app.Run();

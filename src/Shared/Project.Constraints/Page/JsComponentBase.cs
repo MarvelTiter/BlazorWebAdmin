@@ -85,7 +85,7 @@ public abstract class JsComponentBase : AppComponentBase, IJsComponent, IAsyncDi
         return ValueTask.CompletedTask;
     }
 
-    protected async ValueTask InvokeInit(params object?[]? args)
+    protected async ValueTask InvokeInit(params object?[] args)
     {
         try
         {
@@ -98,7 +98,7 @@ public abstract class JsComponentBase : AppComponentBase, IJsComponent, IAsyncDi
         }
     }
 
-    protected async ValueTask InvokeVoidAsync(string identifier, params object?[]? args)
+    protected async ValueTask InvokeVoidAsync(string identifier, params object?[] args)
     {
         try
         {
@@ -111,7 +111,7 @@ public abstract class JsComponentBase : AppComponentBase, IJsComponent, IAsyncDi
         }
     }
 
-    protected async ValueTask<T> InvokeAsync<T>(string identifier, params object?[]? args)
+    protected async ValueTask<T> InvokeAsync<T>(string identifier, params object?[] args)
     {
         var ret = default(T);
         try
