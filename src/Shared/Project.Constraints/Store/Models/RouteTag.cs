@@ -14,7 +14,10 @@ public record RouteTag : RouteMeta, IRouteInfo //: RouteMeta
     public Exception? Exception { get; set; }
     public bool Rendered { get; set; }
     public RouteMenu? Menu { get; }
-
+    /// <summary>
+    /// 不在菜单中的临时导航目标
+    /// </summary>
+    public bool Temp { get; set; }
     public RouteTag(RouteMenu? menu)
     {
         Menu = menu;

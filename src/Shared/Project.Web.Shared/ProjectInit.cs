@@ -15,15 +15,22 @@ public static class ProjectInit
     {
         ScanRazorLibraryAssembly();
         setting = new ProjectSetting();
-        action.Invoke(setting);
         setting.ConfigurePage(locator =>
         {
             locator.SetLoginPageType<DefaultLogin>();
+        });
+#if (ExcludeDefaultService)
+#else
+        //set default
+        setting.ConfigurePage(locator =>
+        {
             locator.SetUserPageType<DefaultUserPage>();
             locator.SetRunLogPageType<DefaultOperationLog>();
             locator.SetPermissionPageType<DefaultPermissionSetting>();
             locator.SetRolePermissionPageType<DefaultRolePermission>();
         });
+#endif
+        action.Invoke(setting);
         services.AddAuthorizationCore(o =>
         {
             o.AddPolicy(AppConst.ONLINE_USER_POLICY, policy =>

@@ -16,7 +16,7 @@
                             <MIcon IconName="@item.Icon" ClassName="top-link-icon"></MIcon>
                             <span @oncontextmenu:preventDefault>
 
-                                @if (CultureOption.CurrentValue.Enabled)
+                                @if (CultureOption.CurrentValue.Enabled && !item.Temp)
                                 {
                                     @Router.GetLocalizerString(item)
                                 }

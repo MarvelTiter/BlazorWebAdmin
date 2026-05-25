@@ -88,11 +88,11 @@ public class ErrorCatcher : ErrorBoundaryBase //, IExceptionHandler
     /// <summary>
     /// OnParametersSet 方法
     /// </summary>
-    //protected override void OnParametersSet()
-    //{
-    //    base.OnParametersSet();
-    //    Recover();
-    //}
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        Recover();
+    }
 
 
     [Inject, NotNull] public IUIService? UI { get; set; }

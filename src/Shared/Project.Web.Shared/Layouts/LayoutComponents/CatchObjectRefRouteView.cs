@@ -47,7 +47,7 @@ public class CatchObjectRefRouteView : RouteView
             return;
         }
 
-        if (RouterStore.Current?.Panic == true)
+        if (RouterStore.Current?.Exception is not null && RouterStore.Current?.Panic == true)
         {
             builder.Component<CrashPage>()
                 .SetComponent(c => c.Exception, RouterStore.Current.Exception)

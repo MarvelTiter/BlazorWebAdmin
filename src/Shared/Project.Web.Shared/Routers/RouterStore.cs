@@ -52,15 +52,6 @@ public partial class RouterStore
 
     private async Task<bool> OnRouteMetaFilterAsync(RouteMeta meta)
     {
-        if (IsUserDashboard(meta))
-        {
-            return EnableShowUserDashboard(userStore, setting.CurrentValue);
-        }
-
-        var used = meta.RouteType == null
-                   || AppConst.AllAssemblies.Contains(meta.RouteType.Assembly)
-                   || meta.RouteType.Assembly == Assembly.GetEntryAssembly()
-                   || (meta.RouteType.Assembly.GetName().Name?.EndsWith(".Client") ?? false);
 
         bool pass = true;
         await routerMetaFilterHandlerManager.NotifyInvokeHandlers(meta, (_, newValue) =>
@@ -68,6 +59,16 @@ public partial class RouterStore
             pass = pass && newValue;
             return pass;
         });
+
+        if (IsUserDashboard(meta))
+        {
+            return EnableShowUserDashboard(userStore, setting.CurrentValue) && pass;
+        }
+
+        var used = meta.RouteType == null
+                   || AppConst.AllAssemblies.Contains(meta.RouteType.Assembly)
+                   || meta.RouteType.Assembly == Assembly.GetEntryAssembly()
+                   || (meta.RouteType.Assembly.GetName().Name?.EndsWith(".Client") ?? false);
 
         return used && pass;
     }
@@ -169,12 +170,14 @@ public partial class RouterStore : StoreBase, IRouterStore
         {
             // TODO 可能有BUG，先观察观察
             if (menus.Count == 0) return;
+            bool temp = false;
             var menu = menus.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
             if (menu == default)
             {
                 var meta = pagesService.Pages.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
                 if (meta == default)
                 {
+                    temp = true;
                     meta = new()
                     {
                         RouteId = url,
@@ -191,10 +194,11 @@ public partial class RouterStore : StoreBase, IRouterStore
                 RouteTitle = menu.RouteTitle,
                 Icon = menu.Icon ?? "",
                 Pin = menu.Pin,
+                Temp = temp
             };
             pages[url] = tag;
         }
-
+        tag.Exception = null;
         current = tag;
         lastRouterChangingCheck = await OnRouterChangingAsync(tag);
         if (lastRouterChangingCheck && preview is not null)
