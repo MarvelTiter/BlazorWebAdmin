@@ -36,6 +36,8 @@ public record RouteMeta : IRouteInfo//: IEqualityComparer<RouteMeta>
     //public bool Cache { get; set; } = true;
     public bool IsGroupHeader { get; set; }
     public bool IsAllowAnonymous { get; set; }
+    public Type? Layout { get; set; }
+    public bool IsStaticPath { get; set; }
 
     //public bool Equals(RouteMeta? x, RouteMeta? y)
     //{

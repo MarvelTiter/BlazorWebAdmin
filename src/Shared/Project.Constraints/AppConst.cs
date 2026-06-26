@@ -22,23 +22,8 @@ public static class AppConst
     public const string DEFAULT_DYNAMIC_POLICY = "DefaultDynamicPolicy";
     public const string ONLINE_USER_POLICY = "OnlineUserPagePolicy";
     private readonly static HashSet<Assembly> additionalPageAssemblies = [];
-    //public static Assembly ServerAssembly { get; set; }
-    //public static Assembly ClientAssembly { get; set; }
-    //public static string GetStatisticsFileWithVersion(string path)
-    //{
-    //    if (Environment?.IsDevelopment() == true)
-    //    {
-    //        return path;
-    //    }
-    //    var file = Path.Combine("wwwroot", path);
-    //    var fi = new FileInfo(file);
-    //    if (!fi.Exists)
-    //    {
-    //        return path;
-    //    }
-    //    return $"{path}?v={fi.LastWriteTime:yyMMddHHmmss}";
-    //}
 
+    public static Type DefaultLayout { get; set; }
     public static RenderFragment? Footer { get; set; }
     private static readonly Lazy<HashSet<Assembly>> allAssemblise = new(GetAllAssemblies);
     private static HashSet<Assembly> GetAllAssemblies()

@@ -16,6 +16,7 @@ public interface IRouterStore : IStore, IDisposable
     List<RouteTag> TopLinks { get; }
     IEnumerable<RouteMenu> Menus { get; }
     RouteTag? Current { get; }
+    //RenderFragment? Content { get; }
     WeakReference<object?> CurrentPageInstance { get; }
     bool LastRouterChangingCheck { get; }
     bool RouteChanging { get; }

@@ -13,11 +13,13 @@
                 <ErrorCatcher>
                     <ActionWatcher WatchRoot Timeout="@(Token.Value.LimitedFreeTime * 1000)"
                                    Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
-                        <CatchObjectRefAuthorizedRouteView RouteData="@routeData" DefaultLayout="@DefaultLayout">
+                        <CascadingValue Value="@routeData">
+                            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@DefaultLayout">
                             <NotAuthorized>
                                 <Project.Web.Shared.Pages.NotAuthorizedPage />
                             </NotAuthorized>
-                        </CatchObjectRefAuthorizedRouteView>
+                        </AuthorizeRouteView>
+                        </CascadingValue>
                     </ActionWatcher>
                 </ErrorCatcher>
             </Found>

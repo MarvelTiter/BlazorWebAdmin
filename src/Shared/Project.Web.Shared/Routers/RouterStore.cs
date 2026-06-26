@@ -1,81 +1,26 @@
-﻿using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Project.Constraints.Common.Attributes;
 using Project.Constraints.Options;
 using Project.Constraints.PageHelper;
 using Project.Constraints.Store.Models;
 using Project.Constraints.UI.Extensions;
 using Project.Constraints.Utils;
-using Project.Web.Shared.Components;
 using Project.Web.Shared.Store;
 using System.Reflection;
 using Microsoft.AspNetCore.Components.Routing;
 using static Project.Web.Shared.Routers.RouterStoreExtensions;
-using System;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Project.Web.Shared.Routers;
 
-public partial class RouterStore
-{
-    private readonly AsyncHandlerManager<RouteTag, bool> routerChangingHandlerManager = new();
-
-    public IDisposable RegisterRouterChangingHandler(Func<RouteTag, Task<bool>> handler)
-    {
-        return routerChangingHandlerManager.RegisterHandler(handler);
-    }
-
-    private async Task<bool> OnRouterChangingAsync(RouteTag tag)
-    {
-        bool enable = true;
-        if (IsUserDashboard(tag))
-        {
-            enable = EnableShowUserDashboard(userStore, setting.CurrentValue);
-        }
-
-        bool pass = true;
-        await routerChangingHandlerManager.NotifyInvokeHandlers(tag, (_, newValue) =>
-        {
-            pass = pass && newValue;
-            return pass;
-        });
-
-        return enable && pass;
-    }
-
-    private readonly AsyncHandlerManager<RouteMeta, bool> routerMetaFilterHandlerManager = new();
-
-    public IDisposable RegisterRouterMetaFilterHandler(Func<RouteMeta, Task<bool>> handler)
-    {
-        return routerMetaFilterHandlerManager.RegisterHandler(handler);
-    }
-
-    private async Task<bool> OnRouteMetaFilterAsync(RouteMeta meta)
-    {
-
-        bool pass = true;
-        await routerMetaFilterHandlerManager.NotifyInvokeHandlers(meta, (_, newValue) =>
-        {
-            pass = pass && newValue;
-            return pass;
-        });
-
-        if (IsUserDashboard(meta))
-        {
-            return EnableShowUserDashboard(userStore, setting.CurrentValue) && pass;
-        }
-
-        var used = meta.RouteType == null
-                   || AppConst.AllAssemblies.Contains(meta.RouteType.Assembly)
-                   || meta.RouteType.Assembly == Assembly.GetEntryAssembly()
-                   || (meta.RouteType.Assembly.GetName().Name?.EndsWith(".Client") ?? false);
-
-        return used && pass;
-    }
-}
-
 [AutoInject(ServiceType = typeof(IRouterStore))]
-public partial class RouterStore : StoreBase, IRouterStore
+public partial class RouterStore(IProjectSettingService settingService
+        , NavigationManager navigationManager
+        , IUserStore userStore
+        , IStringLocalizer<RouterStore> localizer
+        , IOptionsMonitor<CultureOptions> options
+        , ILogger<RouterStore> logger
+        , IOptionsMonitor<AppSetting> setting
+        , PagesService pagesService) : StoreBase, IRouterStore
 {
     private readonly Dictionary<string, RouteTag> pages = new(StringComparer.OrdinalIgnoreCase);
 
@@ -110,34 +55,7 @@ public partial class RouterStore : StoreBase, IRouterStore
     public string CurrentUrl => '/' + navigationManager.ToBaseRelativePath(navigationManager.Uri);
 
     private RouteTag? preview;
-    private readonly IProjectSettingService settingService;
-    private readonly NavigationManager navigationManager;
-    private readonly IUserStore userStore;
-    private readonly IStringLocalizer<RouterStore> localizer;
-    private readonly IOptionsMonitor<CultureOptions> options;
-    private readonly ILogger<RouterStore> logger;
-    private readonly IOptionsMonitor<AppSetting> setting;
-    private readonly PagesService pagesService;
     private IDisposable? locationChangingHandler;
-    public RouterStore(IProjectSettingService settingService
-        , NavigationManager navigationManager
-        , IUserStore userStore
-        , IStringLocalizer<RouterStore> localizer
-        , IOptionsMonitor<CultureOptions> options
-        , ILogger<RouterStore> logger
-        , IOptionsMonitor<AppSetting> setting
-        , PagesService pagesService)
-    {
-        this.settingService = settingService;
-        this.navigationManager = navigationManager;
-        this.userStore = userStore;
-        this.localizer = localizer;
-        this.options = options;
-        this.logger = logger;
-        this.setting = setting;
-        this.pagesService = pagesService;
-    }
-
     private bool lastRouterChangingCheck = true;
     private bool routeChanging = false;
 
@@ -151,6 +69,8 @@ public partial class RouterStore : StoreBase, IRouterStore
         {
             NotifyChanged();
         }
+        logger.LogInformation("{url} changed", CurrentUrl);
+
     }
     public void AttchNavigateEvent()
     {
@@ -205,6 +125,7 @@ public partial class RouterStore : StoreBase, IRouterStore
         {
             preview?.TrySetDisactive(CurrentPageInstance);
         }
+        logger.LogInformation("{url}, changing", url);
         return;
 
         static string ParsedUriPathAndQuery(string url)

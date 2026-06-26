@@ -17,9 +17,9 @@ public class AopLogger(IUserStore userStore, ILogger<AopLogger> logger, IService
 
     public async Task Invoke(ProxyContext context, Func<Task> process)
     {
-        logger.LogInformation("AopLogger called before {Name}", context.ServiceMethod?.Name);
+        logger.LogDebug("AopLogger called before {Name}", context.ServiceMethod?.Name);
         await process();
-        logger.LogInformation("AopLogger called after {Name}", context.ServiceMethod?.Name);
+        logger.LogDebug("AopLogger called after {Name}", context.ServiceMethod?.Name);
         if (runLogService is null)
             return;
         var infoAttr = context.ServiceMethod?.GetCustomAttribute<LogInfoAttribute>();

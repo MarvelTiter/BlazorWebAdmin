@@ -27,35 +27,33 @@ public partial class PagesService
         var groupInfo = t.GetCustomAttribute<PageGroupAttribute>();
         var authorizeAttr = t.GetCustomAttribute<Microsoft.AspNetCore.Authorization.AuthorizeAttribute>(false);
         var allowAnonymousAttr = t.GetCustomAttribute<Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute>();
+        var layout = t.GetCustomAttribute<LayoutAttribute>();
         if (groupInfo != null)
         {
             ArgumentNullException.ThrowIfNull(info, $"{nameof(PageGroupAttribute)} should used with {nameof(PageInfoAttribute)}");
             TryAddGroup(groupInfo);
         }
-        //ArgumentOutOfRangeException.ThrowIfEqual(false, HasGroup(info), $"invalid groupId ({info!.GroupId})");
-        //TryForceShowGroup(info);
-        if (CheckPathTemplate(routerAttr.Template))
+
+        yield return new()
         {
-            yield return new()
-            {
-                RouteId = info?.Id ?? t.Name,
-                RouteTitle = info?.Title ?? t.Name,
-                RouteUrl = routerAttr.Template,
-                Icon = info?.Icon,
-                Pin = info?.Pin ?? false,
-                Group = info?.GroupId ?? groupInfo?.Id ?? "ROOT",
-                Sort = info?.Sort ?? 0,
-                HasPageInfo = info != null,
-                RouteType = t,
-                //ForceShowOnNavMenu = info?.ForceShowOnNavMenu ?? false,
-                IsAllowAnonymous = allowAnonymousAttr != null || authorizeAttr is null,
-            };
-        }
+            RouteId = info?.Id ?? t.Name,
+            RouteTitle = info?.Title ?? t.Name,
+            RouteUrl = routerAttr.Template,
+            Icon = info?.Icon,
+            Pin = info?.Pin ?? false,
+            Group = info?.GroupId ?? groupInfo?.Id ?? "ROOT",
+            Sort = info?.Sort ?? 0,
+            HasPageInfo = info != null,
+            RouteType = t,
+            Layout = layout?.LayoutType,
+            IsStaticPath = !CheckPathTemplate(routerAttr.Template),
+            IsAllowAnonymous = allowAnonymousAttr != null || authorizeAttr is null,
+        };
     }
 
     private static bool CheckPathTemplate(string template)
     {
-        return !MatchPathParameter().Match(template).Success;
+        return MatchPathParameter().Match(template).Success;
     }
 
     private void TryAddGroup(PageGroupAttribute groupInfo)
