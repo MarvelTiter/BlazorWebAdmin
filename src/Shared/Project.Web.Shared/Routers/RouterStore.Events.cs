@@ -6,15 +6,16 @@ namespace Project.Web.Shared.Routers;
 
 public partial class RouterStore
 {
-    private readonly AsyncHandlerManager<RouteTag, bool> routerChangingHandlerManager = new();
+    private readonly AsyncHandlerManager<RouteMeta, bool> routerChangingHandlerManager = new();
 
-    public IDisposable RegisterRouterChangingHandler(Func<RouteTag, Task<bool>> handler)
+    public IDisposable RegisterRouterChangingHandler(Func<RouteMeta, Task<bool>> handler)
     {
         return routerChangingHandlerManager.RegisterHandler(handler);
     }
 
-    private async Task<bool> OnRouterChangingAsync(RouteTag tag)
+    private async Task<bool> OnRouterChangingAsync(RouteMeta? tag)
     {
+        if (tag is null) return true;
         bool enable = true;
         if (IsUserDashboard(tag))
         {

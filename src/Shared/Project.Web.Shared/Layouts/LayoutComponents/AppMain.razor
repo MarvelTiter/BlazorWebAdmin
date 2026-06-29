@@ -10,7 +10,14 @@
 <ScrollBar>
     <ErrorCatcher ShowMessage>
         <!-- 在路由页面中获取当前页的信息 -->
-        @(ChildContent)
+        @RouterStore.Content
+        @* @if(RouterStore.Content is not null)
+        {
+        }
+        else
+        {
+
+} *@
         @* <AuthorizeView>
             <Authorized>
             </Authorized>
@@ -29,12 +36,12 @@
 
     public override Task SetParametersAsync(ParameterView parameters)
     {
-        if (parameters.ValueHadChanged(nameof(RouteData), RouteData, out var nrd)
-         && IsRouteDataChanged(RouteData, nrd))
+        if (parameters.ValueHadChanged(nameof(RouteData), RouteData, out var nrd))
         {
-            ChildContent = RenderWithRouteData(nrd);
-            Logger.LogInformation("route data changed");
-            // RouterStore.
+            if (IsRouteDataChanged(RouteData, nrd))
+            {
+                RouterStore.TryRenderRouteData(nrd);
+            }
         }
         return base.SetParametersAsync(parameters);
     }
@@ -69,23 +76,5 @@
         }
 
         return false;
-    }
-
-    RenderFragment? RenderWithRouteData(RouteData? routeData)
-    {
-        if (routeData is null)
-            return ChildContent;
-        return builder =>
-            {
-                builder.OpenComponent(0, routeData.PageType);
-                foreach (var routeValue in routeData.RouteValues)
-                {
-                    builder.AddAttribute(1, routeValue.Key, routeValue.Value);
-                }
-
-                builder.AddComponentReferenceCapture(2, RouterStore.CollectPageAdditionalInfo);
-
-                builder.CloseComponent();
-            };
     }
 }

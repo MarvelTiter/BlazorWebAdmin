@@ -78,7 +78,7 @@ public class BasicSetting : IProjectSettingService //, IDisposable
     /// </summary>
     /// <param name="route">即将访问的路由</param>
     /// <returns>是否允许更改路由</returns>
-    public virtual Task<bool> RouterChangingAsync(RouteTag route) => Task.FromResult(true);
+    public virtual Task<bool> RouterChangingAsync(RouteMeta route) => Task.FromResult(true);
 
     /// <summary>
     /// 过滤路由元数据，决定是否显示路由

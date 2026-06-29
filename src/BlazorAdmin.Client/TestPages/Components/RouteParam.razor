@@ -7,9 +7,10 @@
 接收的路由参数: @Id
 @code {
     [Parameter] public string? Id { get; set; }
+    Guid GId => Guid.NewGuid();
     public RenderFragment GetTitle()
     {
-        return $"详情-{Id}".AsContent();
+        return $"详情-{Id}-{GId}".AsContent();
     }
 
 

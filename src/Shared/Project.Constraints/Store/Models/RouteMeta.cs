@@ -38,14 +38,4 @@ public record RouteMeta : IRouteInfo//: IEqualityComparer<RouteMeta>
     public bool IsAllowAnonymous { get; set; }
     public Type? Layout { get; set; }
     public bool IsStaticPath { get; set; }
-
-    //public bool Equals(RouteMeta? x, RouteMeta? y)
-    //{
-    //    return x?.RouteId == y?.RouteId;
-    //}
-
-    //public int GetHashCode([DisallowNull] RouteMeta obj)
-    //{
-    //    return obj.RouteId.GetHashCode();
-    //}
 }
