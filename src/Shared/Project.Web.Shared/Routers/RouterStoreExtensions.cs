@@ -28,21 +28,21 @@ public static class RouterStoreExtensions
         }
     }
 
-    public static void NavigateToPreiousPage(this IRouterStore store)
-    {
-        if (store.Current is null) return;
-        var currentIndex = store.TopLinks.IndexOf(store.Current);
-        if (currentIndex == 0) return;
-        var previousUri = store.TopLinks[currentIndex - 1].RouteUrl;
-        store.GoTo(previousUri);
-    }
+    //public static void NavigateToPreiousPage(this IRouterStore store)
+    //{
+    //    //if (store.Current is null) return;
+    //    //var currentIndex = store.TopLinks.IndexOf(store.Current);
+    //    //if (currentIndex == 0) return;
+    //    //var previousUri = store.TopLinks[currentIndex - 1].RouteUrl;
+    //    //store.GoTo(previousUri);
+    //}
 
-    public static void NavigateToNextPage(this IRouterStore store)
-    {
-        if (store.Current is null) return;
-        var currentIndex = store.TopLinks.IndexOf(store.Current);
-        if (currentIndex == store.TopLinks.Count - 1) return;
-        var nextUri = store.TopLinks[currentIndex + 1].RouteUrl;
-        store.GoTo(nextUri);
-    }
+    //public static void NavigateToNextPage(this IRouterStore store)
+    //{
+    //    if (store.Current is null) return;
+    //    var currentIndex = store.TopLinks.IndexOf(store.Current);
+    //    if (currentIndex == store.TopLinks.Count - 1) return;
+    //    var nextUri = store.TopLinks[currentIndex + 1].RouteUrl;
+    //    store.GoTo(nextUri);
+    //}
 }

@@ -45,7 +45,7 @@ public sealed class ClientService : IClientService, IDisposable
 
     public Task<QueryResult> AddOrUpdateAsync(ClientInfo client)
     {
-        logger.LogInformation("收到客户端心跳: {CircuitId}", client.CircuitId);
+        logger.LogDebug("收到客户端心跳: {CircuitId}", client.CircuitId);
         clients.AddOrUpdate(client.CircuitId, AddClient, UpdateClient,client);
         return Task.FromResult(QueryResult.Success());
     }

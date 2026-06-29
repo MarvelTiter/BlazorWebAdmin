@@ -1,6 +1,7 @@
 ﻿@using System.Buffers
-@using Project.Web.Shared.Components
 @using System.Diagnostics.CodeAnalysis
+@using Project.Constraints.Utils
+@using Project.Web.Shared.Components
 @using Project.Web.Shared.Routers
 @* @inherits AppComponentBase *@
 @* @if (Context != null) *@
@@ -9,7 +10,14 @@
 <ScrollBar>
     <ErrorCatcher ShowMessage>
         <!-- 在路由页面中获取当前页的信息 -->
-        @ChildContent
+        @RouterStore.Content
+        @* @if(RouterStore.Content is not null)
+        {
+        }
+        else
+        {
+
+} *@
         @* <AuthorizeView>
             <Authorized>
             </Authorized>
@@ -21,5 +29,52 @@
 </ScrollBar>
 
 @code {
+    [Inject, NotNull] IRouterStore? RouterStore { get; set; }
+    [Inject, NotNull] ILogger<AppMain>? Logger { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    [CascadingParameter] private RouteData? RouteData { get; set; }
+
+    public override Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.ValueHadChanged(nameof(RouteData), RouteData, out var nrd))
+        {
+            if (IsRouteDataChanged(RouteData, nrd))
+            {
+                RouterStore.TryRenderRouteData(nrd);
+            }
+        }
+        return base.SetParametersAsync(parameters);
+    }
+
+    private static bool IsRouteDataChanged(RouteData? left, RouteData? right)
+    {
+        if (left is null && right is null)
+        {
+            return false;
+        }
+        else if (left is null || right is null)
+        {
+            return true;
+        }
+        else if (left.PageType != right.PageType)
+        {
+            return true;
+        }
+        else if (left.RouteValues.Count != right.RouteValues.Count)
+        {
+            return true;
+        }
+        else
+        {
+            foreach (var kv in left.RouteValues)
+            {
+                if (!right.RouteValues.ContainsKey(kv.Key) || !object.Equals(kv.Value, right.RouteValues[kv.Key]))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

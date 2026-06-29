@@ -77,7 +77,7 @@ builder.Services.AddLightOrm(option =>
 {
     option.UseSqlite(connStr);
     option.SetTableContext<LightOrmTableContext>();
-    option.UseInterceptor<LightOrmSqlTrace>();
+    //option.UseInterceptor<LightOrmSqlTrace>();
 });
 
 builder.Services.AutoInject();
@@ -100,8 +100,8 @@ app.UseLightTask(c =>
     {
         Console.WriteLine($"Task测试1: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
         return Task.CompletedTask;
-    }, b => b.WithCron("*/12 * * * * ?"));
-    c.AddTask<BlazorAdmin.Client.TestPages.Tasks.TestTask>("Task测试2", b => b.WithCron("*/12 * * * * ?"));
+    }, b => b.WithCron("0 */12 * * * ?"));
+    c.AddTask<BlazorAdmin.Client.TestPages.Tasks.TestTask>("Task测试2", b => b.WithCron("0 */12 * * * ?"));
 });
 #endif
 

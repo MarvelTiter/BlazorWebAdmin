@@ -1,21 +1,18 @@
 ﻿@page "/param/{Id}"
 @using Project.Constraints.Common.Attributes
 @using Project.Constraints.PageHelper
-@implements IRoutePage
+@implements IRouteTagPage
 @implements IDisposable
 @* @attribute [TagTitle("路由参数")] *@
 接收的路由参数: @Id
 @code {
     [Parameter] public string? Id { get; set; }
-    public string GetTitle()
+    Guid GId => Guid.NewGuid();
+    public RenderFragment GetTitle()
     {
-        return $"详情-{Id}";
+        return $"详情-{Id}-{GId}".AsContent();
     }
 
-    public void OnClose()
-    {
-        Console.WriteLine($"Id: {Id} -> OnClose");
-    }
 
     public void Dispose()
     {

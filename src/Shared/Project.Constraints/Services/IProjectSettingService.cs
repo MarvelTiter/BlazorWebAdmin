@@ -45,7 +45,7 @@ public interface IProjectSettingService
     /// </summary>
     /// <param name="route"></param>
     /// <returns></returns>
-    Task<bool> RouterChangingAsync(RouteTag route);
+    Task<bool> RouterChangingAsync(RouteMeta route);
 
     /// <summary>
     /// 初始化菜单钩子

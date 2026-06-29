@@ -21,7 +21,7 @@ namespace Project.Constraints.Page;
 /// </para>
 /// </summary>
 /// <typeparam name="TPage"></typeparam>
-public abstract class SystemPageIndex<TPage> : AppComponentBase, IRoutePage
+public abstract class SystemPageIndex<TPage> : AppComponentBase, IRouteTagPage
     where TPage : SystemPageIndex<TPage>
 {
     [Inject, NotNull] protected IPageLocatorService? Locator { get; set; }
@@ -35,7 +35,7 @@ public abstract class SystemPageIndex<TPage> : AppComponentBase, IRoutePage
         PageType = GetPageType(Locator);
     }
     protected abstract Type? GetPageType(IPageLocatorService customSetting);
-    IRoutePage? page;
+
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         if (PageType != null)
@@ -63,18 +63,16 @@ public abstract class SystemPageIndex<TPage> : AppComponentBase, IRoutePage
         }
     }
 
-    public void OnClose() => page?.OnClose();
-
     private void HandleReferenceCapture(object ins)
     {
-        if (RouterStore.Current is not null && ins is IRoutePage page)
+        if (RouterStore.Current is not null && ins is IRouteTagPage page)
         {
-            this.page = page;
-            var title = page.GetTitle();
-            if (string.IsNullOrEmpty(title)) return;
-            RouterStore.Current.Title = title.AsContent();
-            if (RouterStore.Current.Menu is not null)
-                RouterStore.Current.Menu.RouteTitle = title;
+            RouterStore.Current.Title = page.GetTitle();
+            //var title = page.GetTitle();
+            //if (string.IsNullOrEmpty(title)) return;
+            //RouterStore.Current.Title = title.AsContent();
+            //if (RouterStore.Current.Menu is not null)
+            //    RouterStore.Current.Menu.RouteTitle = title;
         }
     }
 

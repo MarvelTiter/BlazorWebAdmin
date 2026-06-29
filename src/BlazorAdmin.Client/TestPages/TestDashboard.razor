@@ -3,7 +3,7 @@
 @using Project.Web.Shared.ComponentHelper
 @using Project.Web.Shared.Components
 @inherits AppComponentBase
-@implements IRoutePage
+@implements IRouteTagPage
 <JsTimer Interval="1000" Callback="Update"></JsTimer>
 <MCard>
     <h1>测试主页</h1>
@@ -29,8 +29,8 @@
 
         return InvokeAsync(StateHasChanged);
     }
-    public string? GetTitle()
+    public RenderFragment GetTitle()
     {
-        return "重写主页标题";
+        return "重写主页标题".AsContent();
     }
 }

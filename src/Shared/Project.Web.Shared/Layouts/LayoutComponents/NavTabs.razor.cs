@@ -60,19 +60,19 @@ public partial class NavTabs
 
     private void CloseTag(RouteTag state)
     {
-        var index = Router.TopLinks.IndexOf(state);
+        //var index = Router.TopLinks.IndexOf(state);
         Router.Remove(state.RouteUrl);
-        if (index < Router.TopLinks.Count)
-        {
-            Navigator.NavigateTo(Router.TopLinks[index].RouteUrl);
-        }
-        else
-        {
-            if (Router.TopLinks.Count > 1)
-                Navigator.NavigateTo(Router.TopLinks[index - 1].RouteUrl);
-            else if (Router.TopLinks.Count == 1)
-                Navigator.NavigateTo(Router.TopLinks[0].RouteUrl);
-        }
+        //if (index < Router.TopLinks.Count)
+        //{
+        //    Navigator.NavigateTo(Router.TopLinks[index].RouteUrl);
+        //}
+        //else
+        //{
+        //    if (Router.TopLinks.Count > 1)
+        //        Navigator.NavigateTo(Router.TopLinks[index - 1].RouteUrl);
+        //    else if (Router.TopLinks.Count == 1)
+        //        Navigator.NavigateTo(Router.TopLinks[0].RouteUrl);
+        //}
     }
 
     private void NavPrev() => Router.NavigateToPreiousPage();
