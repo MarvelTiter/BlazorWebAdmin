@@ -90,6 +90,9 @@ public static class WebService
                            && !ctx.Request.Path.StartsWithSegments("/api/account/login")
             , a => a.UseMiddleware<SetUserInfoMiddleware>());
         app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/client.heart.beat"), a => a.UseMiddleware<ClientHeartBeatMiddleware>());
+
+        app.UseMiddleware<NotFoundRedirect>();
+
     }
 
     //private static async Task ValidateCookiePrincipal(CookieValidatePrincipalContext context)
