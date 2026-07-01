@@ -16,6 +16,7 @@ public class FlyoutOptions
     public bool ShowFooter { get; set; } = true;
     public bool FullScreen { get; set; }
     public bool CopyValue { get; set; } = true;
+    public bool CloseOnMaskClick { get; set; } = true;
 }
 
 public class PopoverOptions

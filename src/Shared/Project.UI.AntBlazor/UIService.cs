@@ -406,6 +406,7 @@ public class UIService(
             Maximizable = true,
             Draggable = true,
             DragInViewport = true,
+            MaskClosable = options.CloseOnMaskClick,
             OnOk = e => options.OnOk?.Invoke(),
             OnCancel = e => options.OnClose?.Invoke(),
             DefaultMaximized = options.FullScreen
