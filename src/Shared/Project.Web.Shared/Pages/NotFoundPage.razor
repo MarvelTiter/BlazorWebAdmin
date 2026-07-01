@@ -1,0 +1,39 @@
+﻿@page "/notfound"
+@attribute [AllowAnonymous]
+@layout Project.Web.Shared.Layouts.BlankLayout
+@inherits AppComponentBase
+<div class="bg @(loaded ? "loaded" : "")">
+    <div class="container">
+        <div class="icon">⛔</div>
+        <h1>HTTP 404 - Not Found</h1>
+        <p>抱歉，您请求的页面不存在。这可能是因为：</p>
+        <ul style="text-align: left; color: #747d8c; margin-bottom: 25px; padding-left: 80px;">
+            <li>页面已删除或移动</li>
+            <li>您输入的URL有误 @(UI.BuildButton(this).Primary().Text("回到首页").OnClick(ReLogin).Render())</li>
+            <li>此资源需要特殊授权</li>
+        </ul>
+
+        <div class="contact">
+            <p>如果您认为这是一个错误，请联系<a href="#">系统管理员</a></p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private void ReLogin()
+    {
+        Navigator.NavigateTo("/");
+    }
+    [Inject, NotNull] ILogger<NotAuthorizedPage>? Logger { get; set; }
+    private bool loaded;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        if (firstRender)
+        {
+            loaded = true;
+            StateHasChanged();
+        }
+    }
+}
