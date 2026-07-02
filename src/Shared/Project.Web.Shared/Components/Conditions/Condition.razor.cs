@@ -25,7 +25,7 @@ public enum DateType
 public partial class Condition : ConditionBase
 {
     [Parameter] public CompareType Compare { get; set; } = CompareType.Equal;
-    [Parameter] public ColumnInfo? Field { get; set; }
+    [Parameter] public IColumnInfo? Field { get; set; }
     [Parameter] public object? DefaultValue { get; set; }
     public int Index { get; set; }
     DateTime? dateValue = DateTime.Now;

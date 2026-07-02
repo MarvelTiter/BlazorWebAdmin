@@ -113,12 +113,12 @@ public class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : 
 [StateContainer]
 public partial class DefaultUserPage : UserPage<User, Permission, Role, IStandardUserService, IStandardPermissionService>
 {
-    protected override async Task<IQueryResult?> OnCellUpdateAsync(User model, ColumnInfo col)
+    protected override async Task<IQueryResult?> OnCellUpdateAsync(User model, IColumnInfo col)
     {
         return await UserSrv.SavePropertyAsync(model, col.PropertyOrFieldName);
     }
 
-    protected override async Task<IQueryResult?> OnRowUpdateAsync(User model, IReadOnlyList<ColumnInfo> col)
+    protected override async Task<IQueryResult?> OnRowUpdateAsync(User model, IReadOnlyList<IColumnInfo> col)
     {
         return await UserSrv.SavePropertiesAsync(model, [.. col.Select(c => c.PropertyOrFieldName)]);
     }

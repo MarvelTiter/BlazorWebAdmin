@@ -6,7 +6,7 @@ namespace Project.Constraints.UI.Extensions;
 
 public static class BuildFormExtension
 {
-    public static async Task<TData> ShowFormDialogAsync<TData>(this IUIService service, string title, TData? data, IEnumerable<ColumnInfo> columns, bool? edit = null, string? width = null) where TData : class, new()
+    public static async Task<TData> ShowFormDialogAsync<TData>(this IUIService service, string title, TData? data, IEnumerable<IColumnInfo> columns, bool? edit = null, string? width = null) where TData : class, new()
     {
         var result = await ShowFormDialogAsync(service, data, columns, edit, config =>
         {
@@ -16,7 +16,7 @@ public static class BuildFormExtension
         return result;
     }
 
-    public static async Task<TData> ShowFormDialogAsync<TData>(this IUIService service, TData? data, IEnumerable<ColumnInfo> columns, bool? edit = null, Action<FlyoutOptions<TData>>? config = null)
+    public static async Task<TData> ShowFormDialogAsync<TData>(this IUIService service, TData? data, IEnumerable<IColumnInfo> columns, bool? edit = null, Action<FlyoutOptions<TData>>? config = null)
         where TData : class, new()
     {
         var options = new FlyoutOptions<TData>();

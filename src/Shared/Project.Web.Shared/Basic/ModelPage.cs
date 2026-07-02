@@ -117,11 +117,11 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     {
         return Task.CompletedTask;
     }
-    protected virtual Task<IQueryResult?> OnCellUpdateAsync(TModel model, ColumnInfo col)
+    protected virtual Task<IQueryResult?> OnCellUpdateAsync(TModel model, IColumnInfo col)
     {
         return QueryResult.Null().AsTask();
     }
-    protected virtual Task<IQueryResult?> OnRowUpdateAsync(TModel model, IReadOnlyList<ColumnInfo> cols)
+    protected virtual Task<IQueryResult?> OnRowUpdateAsync(TModel model, IReadOnlyList<IColumnInfo> cols)
     {
         return QueryResult.Null().AsTask();
     }

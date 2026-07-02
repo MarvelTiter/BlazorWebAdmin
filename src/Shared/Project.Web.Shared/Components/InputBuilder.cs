@@ -16,7 +16,7 @@ public class InputBuilderHelper
         return Expression.Lambda<Func<TReturn>>(body);
     }
 
-    public static InputType GetInputType(Type type, ColumnInfo col)
+    public static InputType GetInputType(Type type, IColumnInfo col)
     {
         if (col.InputType.HasValue)
             return col.InputType.Value;
@@ -36,7 +36,7 @@ public class InputBuilderHelper
 }
 public class InputBuilder<TData> : ComponentBase
 {
-    [Parameter, NotNull] public ColumnInfo? Column { get; set; }
+    [Parameter, NotNull] public IColumnInfo? Column { get; set; }
     [Parameter, NotNull] public IUIService? UI { get; set; }
     [Parameter, NotNull] public object? Reciver { get; set; }
     [Parameter, NotNull] public TData? Data { get; set; }
@@ -66,9 +66,9 @@ public class InputBuilder<TData> : ComponentBase
     private readonly static MethodInfo? buildSwitch = typeof(IUIService).GetMethod(nameof(IUIService.BuildSwitch));
     private readonly static MethodInfo? buildDatepicker = typeof(IUIService).GetMethod(nameof(IUIService.BuildDatePicker), 1, [typeof(object)]);
     private readonly static MethodInfo? buildPassword = typeof(IUIService).GetMethod(nameof(IUIService.BuildPassword));
-    static readonly ConcurrentDictionary<ColumnInfo, Func<IUIService, object, Expression, IUIComponent>> builderCaches = new();
+    static readonly ConcurrentDictionary<IColumnInfo, Func<IUIService, object, Expression, IUIComponent>> builderCaches = new();
 
-    public IUIComponent GetInputType(ColumnInfo column, Expression propertyExpression)
+    public IUIComponent GetInputType(IColumnInfo column, Expression propertyExpression)
     {
         if (column.IsEnum || column.EnumValues != null)
         {
@@ -119,7 +119,7 @@ public class InputBuilder<TData> : ComponentBase
         return func.Invoke(UI, Reciver, propertyExpression);
     }
 
-    private Task UpdateValue(ColumnInfo col)
+    private Task UpdateValue(IColumnInfo col)
     {
         //property.SetValue(Data, ObjectExtensions.ConvertTo(property.PropertyType, TempValue));
         col.SetValue(Data, ObjectExtensions.ConvertTo(col.DataType, TempValue) ?? default!);

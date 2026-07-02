@@ -30,7 +30,7 @@
     [Parameter, NotNull] public FormOptions<TData>? Options { get; set; }
     [Inject, NotNull] IStringLocalizer<TData>? Localizer { get; set; }
     IForm? form;
-    IReadOnlyList<ColumnInfo[]> rows = [];
+    IReadOnlyList<IColumnInfo[]> rows = [];
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);

@@ -5,7 +5,7 @@
 @inherits AppComponentBase
 
 <StackPanel>
-    @(UI.BuildSelect<ColumnInfo, string>(this, SearchableColumns)
+    @(UI.BuildSelect<IColumnInfo, string>(this, SearchableColumns)
         .ValueExpression(c => c.PropertyOrFieldName)
         .LabelExpression(c => Localizer[c.Label].Value)
         .Bind(() => Item.Name!, NotifyNameChanged)
@@ -20,12 +20,12 @@
 </StackPanel>
 
 @code {
-    [Parameter, NotNull] public ColumnInfo[]? Columns { get; set; }
+    [Parameter, NotNull] public IColumnInfo[]? Columns { get; set; }
     [Parameter, NotNull] public ConditionUnit? Item { get; set; }
     [Parameter, NotNull] public IStringLocalizer? Localizer { get; set; }
     [Parameter, NotNull] public IStringLocalizer? TableLocalizer { get; set; }
     [Parameter] public EventCallback OnNameChanged { get; set; }
-    private ColumnInfo[] SearchableColumns = [];
+    private IColumnInfo[] SearchableColumns = [];
     Func<object?>? GetCurrentValue;
 
     protected override void OnInitialized()

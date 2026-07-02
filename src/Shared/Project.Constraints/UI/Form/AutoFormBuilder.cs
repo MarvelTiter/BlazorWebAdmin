@@ -29,9 +29,9 @@ public sealed class AutoFormBuilder
         return builder;
     }
 
-    private readonly List<ColumnInfo> columns = [];
+    private readonly List<IColumnInfo> columns = [];
 
-    public AutoFormBuilder AddField(string label, PropertyInfo property, Action<ColumnInfo>? configure = null)
+    public AutoFormBuilder AddField(string label, PropertyInfo property, Action<IColumnInfo>? configure = null)
     {
         var col = new ColumnInfo(property)
         {

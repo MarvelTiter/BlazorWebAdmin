@@ -85,7 +85,7 @@ public class TestTable : ModelPage<TestEntity, GenericRequest<TestEntity>>
         return await Test.InsertAsync(e);
     }
 
-    protected override async Task<IQueryResult?> OnCellUpdateAsync(TestEntity model, ColumnInfo col)
+    protected override async Task<IQueryResult?> OnCellUpdateAsync(TestEntity model, IColumnInfo col)
     {
         var r = await Test.UpdatePropertyAsync(model, col.PropertyOrFieldName);
         return r;

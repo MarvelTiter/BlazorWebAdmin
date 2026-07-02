@@ -8,7 +8,7 @@ namespace Project.Constraints.UI.Flyout;
 
 public sealed class FormDialogTemplate<TValue> : DialogTemplate<TValue> where TValue : class, new()
 {
-    [Parameter, NotNull] public IEnumerable<ColumnInfo>? Columns { get; set; }
+    [Parameter, NotNull] public IEnumerable<IColumnInfo>? Columns { get; set; }
     FormOptions<TValue>? options;
     public override async Task<bool> OnPostAsync()
     {

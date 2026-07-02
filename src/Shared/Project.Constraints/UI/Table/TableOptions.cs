@@ -10,7 +10,7 @@ namespace Project.Constraints.UI.Table;
 
 public static class TableOptionsExtensions
 {
-    public static void AddColumns(this TableOptions option, (string Title, string Property)[] columns, Action<ColumnInfo>? action = null)
+    public static void AddColumns(this TableOptions option, (string Title, string Property)[] columns, Action<IColumnInfo>? action = null)
     {
         option.Columns =
         [
@@ -58,7 +58,7 @@ public class TableOptions
     public bool Exportable { get; set; }
     public bool AutoRefreshData { get; set; } = true;
     public bool EnableRowEdit { get; set; }
-    [NotNull] public ColumnInfo[]? Columns { get; set; }
+    [NotNull] public IColumnInfo[]? Columns { get; set; }
 }
 
 public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest, new()
@@ -97,18 +97,18 @@ public class TableOptions<TData, TQuery> : TableOptions where TQuery : IRequest,
     public Func<TableButton<TData>, IQueryResult, Task>? OnTableButtonClickAsync { get; set; }
     public Func<IEnumerable<TData>, Task>? OnSaveExcelAsync { get; set; }
     public Func<ImmutableArray<TData>, ImmutableArray<TData>, Task<IEnumerable<TData>>>? OnSelectedChangedAsync { get; set; }
-    public Func<TData, ColumnInfo,Task<IQueryResult?>>? OnCellUpdateAsync { get; set; }
-    public Func<TData, IReadOnlyList<ColumnInfo>, Task<IQueryResult?>>? OnRowUpdateAsync {  get; set; }
+    public Func<TData, IColumnInfo,Task<IQueryResult?>>? OnCellUpdateAsync { get; set; }
+    public Func<TData, IReadOnlyList<IColumnInfo>, Task<IQueryResult?>>? OnRowUpdateAsync {  get; set; }
     public RenderFragment<Grouping<object, TData>>? GroupTitleTemplate { get; set; }
     public RenderFragment<Grouping<object, TData>>? GroupFooterTemplate { get; set; }
 
     //public Func<Task> RefreshAsync { get; set; }
-    public ColumnInfo this[string name]
+    public IColumnInfo this[string name]
     {
         get { return Columns.FirstOrDefault(c => c.PropertyOrFieldName == name) ?? throw new ArgumentException($"属性[{name}]未配置[ColumnDefinitionAttribute]或[DisplayAttribute]或[FormAttribute], 因此未被收集到TableOptions.Columns中"); }
     }
 
-    public ColumnInfo GetColumn<TMember>(Expression<Func<TData, TMember>> expression)
+    public IColumnInfo GetColumn<TMember>(Expression<Func<TData, TMember>> expression)
     {
         var name = expression.ExtractPropertyName();
         return this[name];

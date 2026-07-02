@@ -11,12 +11,12 @@ public enum RowCapacity
     Six = 6,
     Eight = 8,
 }
-public class FormOptions<TData>(IUIService ui, TData? data, List<ColumnInfo> columns) where TData : class, new()
+public class FormOptions<TData>(IUIService ui, TData? data, List<IColumnInfo> columns) where TData : class, new()
 {
     public string? FormName { get; set; }
     public IUIService UI { get; } = ui;
     public TData Data { get; } = data ?? new TData();
-    public ColumnInfo[] Columns { get; } = [.. columns];
+    public IColumnInfo[] Columns { get; } = [.. columns];
     public int LabelSpan { get; set; } = 6;
     public int WrapperSpan { get; set; }
     public Func<TData, Task<bool>>? OnPostAsync { get; set; }
@@ -25,13 +25,13 @@ public class FormOptions<TData>(IUIService ui, TData? data, List<ColumnInfo> col
     public RowCapacity? RowCapacity { get; set; }
 
     //private List<ColumnInfo[]>? rows;
-    public IReadOnlyList<ColumnInfo[]> GetRows()
+    public IReadOnlyList<IColumnInfo[]> GetRows()
     {
         //if (rows is not null)
         //{
         //    return rows;
         //}
-        List<ColumnInfo[]> rows = [];
+        List<IColumnInfo[]> rows = [];
         var settedRow = Columns.Where(c => c.Row.HasValue && c.Row > 0).GroupBy(c => c.Row!.Value).OrderBy(c => c.Key);
         foreach (var row in settedRow)
         {

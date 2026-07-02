@@ -5,7 +5,50 @@ using System.Reflection;
 
 namespace Project.Constraints.UI.Table;
 
-public record ColumnInfo
+public interface IColumnInfo
+{
+    [NotNull] string? Label { get; set; }
+    string PropertyOrFieldName { get; }
+    int Index { get; set; }
+    int? Row { get; set; }
+    int? Column { get; set; }
+    int ColumnIndex { get; set; }
+    bool ShowOnForm { get; set; }
+    Type DataType { get; }
+    bool IsEnum { get; }
+    bool Nullable { get; }
+    Type? UnderlyingType { get; }
+    string? Fixed { get; set; }
+    string? Width { get; set; }
+    string? Align { get; set; }
+    bool Readonly { get; set; }
+    bool Ellipsis { get; set; }
+    bool Editable { get; set; }
+    bool Visible { get; set; }
+    bool Searchable { get; set; }
+    Func<object?, bool>? VisibleExpression { get; set; }
+    bool UseTag { get; set; }
+    bool Sortable { get; set; }
+    Dictionary<string, string>? EnumValues { get; set; }
+    Dictionary<string, string>? TagColors { get; set; }
+    InputType? InputType { get; set; }
+    Func<object, string>? ValueFormat { get; set; }
+    string? Format { get; set; }
+    Func<string, Dictionary<string, object>>? AddCellOptions { get; set; }
+    RenderFragment<ColumnItemContext>? CellTemplate { get; set; }
+    RenderFragment<ColumnItemContext>? FormTemplate { get; set; }
+    bool Grouping { get; set; }
+    Func<object, object> GroupByExpression { get; set; }
+    Expression? MemberAccessExpression { get; set; }
+    Action<object, object>? ValueSetter { get; set; }
+    Func<object, object>? ValueGetter { get; set; }
+
+    object? GetValue(object target);
+    void SetValue(object target, object val);
+    object MemberwiseClone();
+}
+
+public record ColumnInfo : IColumnInfo
 {
     public ColumnInfo(string label, string propertyName)
     {
@@ -18,7 +61,7 @@ public record ColumnInfo
         PropertyOrFieldName = Property.Name;
         DataType = Property.PropertyType;
     }
-
+    public new object MemberwiseClone() => base.MemberwiseClone();
     [NotNull] public string? Label { get; set; }
     public string PropertyOrFieldName { get; }
     /// <summary>
@@ -70,8 +113,8 @@ public record ColumnInfo
     public bool Grouping { get; set; }
 
     private Func<object, object> groupByExpression = static obj => 0;
-    internal Action<object, object>? ValueSetter { get; set; }
-    internal Func<object, object>? ValueGetter { get; set; }
+    public Action<object, object>? ValueSetter { get; set; }
+    public Func<object, object>? ValueGetter { get; set; }
     public object? GetValue(object target) => ValueGetter?.Invoke(target);
     public void SetValue(object target, object val) => ValueSetter?.Invoke(target, val);
     public Func<object, object> GroupByExpression
@@ -88,7 +131,7 @@ public record ColumnInfo
 
 public static class ColumnInfoExtensions
 {
-    public static string GetTagColor(this ColumnInfo column, object? val)
+    public static string GetTagColor(this IColumnInfo column, object? val)
     {
         if (column.TagColors?.TryGetValue(val?.ToString() ?? "", out var color) ?? false)
         {
@@ -97,12 +140,12 @@ public static class ColumnInfoExtensions
         return "Blue";
     }
 
-    public static Expression<Func<TData, TProp>> MakeExpression<TData, TProp>(this ColumnInfo col)
+    public static Expression<Func<TData, TProp>> MakeExpression<TData, TProp>(this IColumnInfo col)
     {
         col.MemberAccessExpression ??= Build();
-        
+
         return (Expression<Func<TData, TProp>>)col.MemberAccessExpression;
-        
+
         Expression<Func<TData, TProp>> Build()
         {
             var p = Expression.Parameter(typeof(TData), "p");

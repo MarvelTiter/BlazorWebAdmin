@@ -168,7 +168,7 @@
         await Options.RefreshAsync();
     }
 
-    RenderFragment BuildColumn(ColumnInfo col)
+    RenderFragment BuildColumn(IColumnInfo col)
     {
         return builder => builder.Component<PropertyColumn<DataRow, object>>()
               .SetComponent(c => c.Title, col.Label)

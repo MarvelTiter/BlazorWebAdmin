@@ -242,7 +242,7 @@ Dictionary<string, object>? RowOptions(RowData<TData> row)
 return Options.AddRowOptions?.Invoke(row.Data);
 }
 
-RenderFragment RenderColumn(TData row, ColumnInfo col)
+RenderFragment RenderColumn(TData row, IColumnInfo col)
 {
 if (col.IsEnum)
 {
@@ -268,7 +268,7 @@ _ => RenderColumn<object>(row, col)
 };
 }
 
-RenderFragment RenderColumn<TColumnData>(TData row, ColumnInfo col)
+    RenderFragment RenderColumn<TColumnData>(TData row, IColumnInfo col)
 {
 return
 @<Column TData="TColumnData"

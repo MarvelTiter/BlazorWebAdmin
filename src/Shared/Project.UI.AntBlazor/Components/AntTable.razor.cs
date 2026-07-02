@@ -33,7 +33,7 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
 
     private (int, int) editCell = (-1, -1);
     private int editRow = -1;
-    private RenderFragment CellContentRender<TProp>(TData row, ColumnInfo col, CellData<TProp> context)
+    private RenderFragment CellContentRender<TProp>(TData row, IColumnInfo col, CellData<TProp> context)
     {
         var enableEdit = !col.Readonly && (col.Editable || Options.EnableRowEdit);
 
@@ -143,13 +143,13 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
         }
     }
 
-    private Lazy<IReadOnlyList<ColumnInfo>>? editableCols;
+    private Lazy<IReadOnlyList<IColumnInfo>>? editableCols;
 
-    public Lazy<IReadOnlyList<ColumnInfo>> EditableCols
+    public Lazy<IReadOnlyList<IColumnInfo>> EditableCols
     {
         get
         {
-            editableCols ??= new Lazy<IReadOnlyList<ColumnInfo>>(() =>
+            editableCols ??= new Lazy<IReadOnlyList<IColumnInfo>>(() =>
             {
                 return [.. Options.Columns.Where(col => !col.Readonly && (col.Editable || Options.EnableRowEdit))];
             });
@@ -173,9 +173,9 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
         return false;
     }
 
-    private RenderFragment<CellData<T>> ColumnRender<T>(TData row, ColumnInfo col) => context => CellContentRender(row, col, context);
+    private RenderFragment<CellData<T>> ColumnRender<T>(TData row, IColumnInfo col) => context => CellContentRender(row, col, context);
 
-    private static Func<CellData, Dictionary<string, object>> GetOnCell(ColumnInfo col)
+    private static Func<CellData, Dictionary<string, object>> GetOnCell(IColumnInfo col)
     {
         if (col.AddCellOptions != null)
         {

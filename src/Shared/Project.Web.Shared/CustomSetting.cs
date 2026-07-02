@@ -26,11 +26,11 @@ public class CustomSetting : BasicSetting, IProjectSettingService
     private UserInfo? CurrentUser => userStore.UserInfo;
     public override async Task AfterWebApplicationAccessed()
     {
-        if (userStore.UserInfo is null)
-        {
-            var authService = ServiceProvider.GetRequiredService<IAuthenticationStateProvider>();
-            await authService.ClearState();
-        }
+        //if (userStore.UserInfo is null)
+        //{
+        //    var authService = ServiceProvider.GetRequiredService<IAuthenticationStateProvider>();
+        //    await authService.ClearState();
+        //}
         var service = watermarkServiceFactory.GetWatermarkService();
         await service.UpdateWaterMarkAsync(CurrentUser?.UserName!, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
     }
