@@ -4,7 +4,7 @@
 }
 
 .view-content {
-/*    padding: 10px;*/
+    overflow: auto;
 }
 
 .split-view.row .view-content-first {

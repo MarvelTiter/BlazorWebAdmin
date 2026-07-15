@@ -10,6 +10,14 @@
 <pre>
     @jsonResult
 </pre>
+<p>Flex布局</p>
+<Project.Web.Shared.Components.QueryConditions LabelWidth="80" StackLayout>
+    <Project.Web.Shared.Components.SimpleCondition Label="字段名称123" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+    <Project.Web.Shared.Components.SimpleCondition Label="日期" @bind-Value="@dateTime"></Project.Web.Shared.Components.SimpleCondition>
+    <Project.Web.Shared.Components.SimpleCondition Label="字段名称22" @bind-Value="@condition.Name" EnumValues="@options"></Project.Web.Shared.Components.SimpleCondition>
+    @UI.BuildButton(this).Text("查询").Render()
+    @UI.BuildButton(this).Text("查询").Render()
+</Project.Web.Shared.Components.QueryConditions>
 <p>可收起，Flex布局</p>
 <Project.Web.Shared.Components.QueryConditions LabelWidth="80" ContentWidth="200">
     <Header>
@@ -61,11 +69,11 @@
     string[] selectedValues = [];
     Dictionary<string, string> options = new()
     {
-            ["test1"] = "test1",
-            ["test2"] = "test2",
-            ["test3"] = "test3",
-            ["test4"] = "test4",
-            ["test5"] = "test5",
+        ["test1"] = "test1",
+        ["test2"] = "test2",
+        ["test3"] = "test3",
+        ["test4"] = "test4",
+        ["test5"] = "test5",
     };
     public void BuildExpression()
     {
@@ -77,9 +85,9 @@
     public void ToJson()
     {
         jsonResult = System.Text.Json.JsonSerializer.Serialize(condition, options: new System.Text.Json.JsonSerializerOptions()
-            {
-                WriteIndented = true
-            });
+        {
+            WriteIndented = true
+        });
     }
 
     public async Task Open()

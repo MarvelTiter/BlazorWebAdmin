@@ -20,3 +20,7 @@
         width: 100%;
         overflow: hidden;
     }
+
+    ::deep .condition .content {
+        display: flex;
+    }
