@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 using Project.Constraints.Store.Models;
 using Project.Constraints.UI;
 using Project.Constraints.UI.Extensions;
+using Project.Web.Shared.ComponentHelper;
 using Project.Web.Shared.Utils;
 
 namespace Project.Web.Shared.Basic;
@@ -39,7 +40,12 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         {
             builder.Div(AdditionalHeaderButtons).Set("style", "display: flex;justify-content: space-between;align-items: center;width: 100%;margin-bottom: 10px;").Build();
         }
-        builder.AddContent(1, UI.BuildTable(Options));
+        builder.Component<MCard>().SetContent(UI.BuildTable(Options)).Build();
+    };
+
+    protected RenderFragment TableOnly => builder =>
+    {
+        builder.AddContent(0, UI.BuildTable(Options));
     };
 
     private bool IsOverride(string methodName)
