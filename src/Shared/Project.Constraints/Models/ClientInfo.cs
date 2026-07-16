@@ -1,9 +1,11 @@
-﻿using Project.Constraints.Store;
+﻿using AutoGenMapperGenerator;
+using Project.Constraints.Store;
 
 namespace Project.Constraints.Models;
-public class ClientInfo
+
+[GenMapper]
+public partial class ClientInfo
 {
-    //[ColumnDefinition("Id", width: "50", Ellipsis = true)]
     [NotNull] public string? CircuitId { get; set; }
 
     [ColumnDefinition("用户ID", width: "100")]

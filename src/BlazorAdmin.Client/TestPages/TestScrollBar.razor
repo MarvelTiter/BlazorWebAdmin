@@ -1,25 +1,22 @@
 ﻿@page "/testscrollbar"
 @using Project.Constraints.Common.Attributes
 @attribute [PageInfo(Title = "滚动条测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
-<Project.Web.Shared.Components.ScrollBar>
-    <div style="height:500px;">
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-        <p>ScrollBar</p>
-    </div>
-</Project.Web.Shared.Components.ScrollBar>
-@code {
+<button @onclick="@(() => count++)">增加</button>
+<div style="border:1px solid black; width:500px;">
+    <Project.Web.Shared.Components.ScrollBar MaxHeight="500px">
+        <div>
+            @for(int i = 0; i < count; i++)
+            {
+                <p>ScrollBar</p>
+                <p>ScrollBar</p>
+                <p>ScrollBar</p>
+                <p>ScrollBar</p>
+                <p>ScrollBar</p>
+            }
+        </div>
+    </Project.Web.Shared.Components.ScrollBar>
+</div>
 
+@code {
+    private int count = 1;
 }
