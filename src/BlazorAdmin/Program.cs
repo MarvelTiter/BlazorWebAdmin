@@ -77,7 +77,7 @@ builder.Services.AddLightOrm(option =>
 {
     option.UseSqlite(connStr);
     option.SetTableContext<LightOrmTableContext>();
-    //option.UseInterceptor<LightOrmSqlTrace>();
+    option.UseInterceptor<LightOrmSqlTrace>();
 });
 
 builder.Services.AutoInject();

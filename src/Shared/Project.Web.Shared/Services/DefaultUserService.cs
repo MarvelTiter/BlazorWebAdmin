@@ -39,6 +39,7 @@ public class DefaultUserService<TUser, TUserRole>
     public virtual async Task<QueryCollectionResult<TUser>> GetUserListAsync(GenericRequest<TUser> req)
     {
         var list = await context.Select<TUser>()
+            .TagWith("获取用户列表")
             .Where(req.Expression())
             .Count(out var count)
             .Paging(req.PageIndex, req.PageSize)
