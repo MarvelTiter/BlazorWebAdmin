@@ -13,10 +13,10 @@
 		<PackageReference Include="AutoWasmApiGenerator" Version="2026.5.25.1" />
 		<PackageReference Include="LoggerProviderExtensions" Version="2026.7.15.1" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
-		<PackageReference Include="MT.LightORM" Version="2026.7.17.1" />
+		<PackageReference Include="MT.LightORM" Version="2026.7.24.1" />
 		<PackageReference Include="MT.LightTask" Version="2026.5.11.1" />
 		<PackageReference Include="MT.Toolkit" Version="2026.6.2.1" />
-		<PackageReference Include="LightExcel" Version="2026.7.10.1" />
+		<PackageReference Include="LightExcel" Version="2026.7.20.1" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" />
