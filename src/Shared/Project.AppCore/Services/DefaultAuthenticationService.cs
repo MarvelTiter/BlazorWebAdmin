@@ -42,7 +42,8 @@ public abstract class DefaultAuthenticationService(IServiceProvider services) : 
     protected abstract Task<QueryResult<UserInfo>> CreateUserInfoAsync(LoginFormModel loginForm);
 
     /// <summary>
-    /// 根据<paramref name="userInfo"/>查询用户的角色信息
+    /// <para>用于强调设置用户角色，如果已经在<see cref="CreateUserInfoAsync"/>中设置，此方法返回空列表即可</para>
+    /// <para>根据<paramref name="userInfo"/>查询用户的角色信息</para>
     /// </summary>
     /// <param name="userInfo"></param>
     /// <returns></returns>
