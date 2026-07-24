@@ -16,19 +16,22 @@ public abstract class DefaultAuthenticationService(IServiceProvider services) : 
 
     public virtual async Task<QueryResult<UserInfo>> SignInAsync(LoginFormModel loginForm)
     {
-        var (success, message, userInfo) = await CreateUserInfoAsync(loginForm);
-        if (!success)
+        var result = await CreateUserInfoAsync(loginForm);
+        if (!result.IsSuccess)
         {
-            return QueryResult.Fail<UserInfo>(message);
+            return result;
         }
-        var roles = await GetUserRolesAsync(userInfo);
-        userInfo.Roles = [.. roles];
-        userInfo.PasswordHash = loginForm.Password.ToHash();
+        var roles = await GetUserRolesAsync(result.Payload!);
+        if (roles.Count > 0)
+        {
+            result.Payload!.Roles = [.. roles];
+        }
+        result.Payload!.PasswordHash = loginForm.Password.ToHash();
         // var projSetting = Services.GetService<IProjectSettingService>();
         // var powers = await projSetting!.GetUserPowersAsync(userInfo);
         // userInfo.UserPowers = [.. powers.Where(p => p.PowerType != PowerType.Page).Select(p => p.PowerId)];
         // userInfo.UserPages = [.. powers.Where(p => p.PowerType == PowerType.Page).Select(p => p.PowerId)];
-        return QueryResult.Success<UserInfo>(message).SetPayload(userInfo);
+        return result;
     }
 
     /// <summary>
@@ -36,7 +39,7 @@ public abstract class DefaultAuthenticationService(IServiceProvider services) : 
     /// </summary>
     /// <param name="loginForm"></param>
     /// <returns></returns>
-    protected abstract Task<(bool Success, string Message, UserInfo Payload)> CreateUserInfoAsync(LoginFormModel loginForm);
+    protected abstract Task<QueryResult<UserInfo>> CreateUserInfoAsync(LoginFormModel loginForm);
 
     /// <summary>
     /// 根据<paramref name="userInfo"/>查询用户的角色信息
@@ -74,7 +77,7 @@ public abstract class DefaultAuthenticationService(IServiceProvider services) : 
 [GenAspectProxy]
 public class BlazorAdminAuthenticationService(IServiceProvider services) : DefaultAuthenticationService(services)
 {
-    protected override async Task<(bool Success, string Message, UserInfo Payload)> CreateUserInfoAsync(LoginFormModel loginForm)
+    protected override async Task<QueryResult<UserInfo>> CreateUserInfoAsync(LoginFormModel loginForm)
     {
         var context = Services.GetService<IExpressionContext>();
         ArgumentNullException.ThrowIfNull(context);
@@ -89,15 +92,15 @@ public class BlazorAdminAuthenticationService(IServiceProvider services) : Defau
 
         if (u is null)
         {
-            return (false, $"用户：{username} 不存在", userInfo);
+            return userInfo.Result(false).SetMessage($"用户：{username} 不存在");
         }
 
         if (u!.Password != password)
         {
-            return (false, "密码错误", userInfo);
+            return userInfo.Result(false).SetMessage("密码错误");
         }
 
-        return (true, "", userInfo);
+        return userInfo.Result();
     }
 
     protected override async Task<IList<string>> GetUserRolesAsync(UserInfo userInfo)
@@ -172,9 +175,9 @@ public class FreeAuthenticationService(IServiceProvider services) : DefaultAuthe
         return Task.FromResult<QueryResult>(true);
     }
 
-    protected override Task<(bool Success, string Message, UserInfo Payload)> CreateUserInfoAsync(LoginFormModel loginForm)
+    protected override Task<QueryResult<UserInfo>> CreateUserInfoAsync(LoginFormModel loginForm)
     {
-        return Task.FromResult((true, "", UserInfo.Visitor));
+        return Task.FromResult(UserInfo.Visitor.Result());
     }
 
     protected override Task<IList<string>> GetUserRolesAsync(UserInfo userInfo)
