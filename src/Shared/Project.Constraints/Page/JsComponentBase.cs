@@ -35,24 +35,6 @@ public abstract class JsComponentBase : AppComponentBase, IJsComponent, IAsyncDi
         GetType().Assembly.GetName().FullName != Assembly.GetEntryAssembly()?.GetName().FullName;
 
     protected string? ProjectName => GetType().Assembly.GetName().Name;
-    protected string? RelativePath { get; set; }
-
-
-
-    //private Lazy<string> GetModuleName()
-    //{
-    //    return new Lazy<string>(() =>
-    //    {
-    //        var type = GetType();
-    //        if (type.IsGenericType)
-    //        {
-    //            var i = type.Name.IndexOf('`');
-    //            return type.Name[..i];
-    //        }
-
-    //        return type.Name;
-    //    });
-    //}
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -61,8 +43,7 @@ public abstract class JsComponentBase : AppComponentBase, IJsComponent, IAsyncDi
         {
             if (LoadJs)
             {
-                var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
-                RelativePath = attr?.Path ?? $"Components/{ModuleName.Value}";
+
                 //var path = 
                 await LoadJsAsync();
             }
@@ -71,11 +52,24 @@ public abstract class JsComponentBase : AppComponentBase, IJsComponent, IAsyncDi
         }
     }
 
+    protected virtual string RewriteJsPath()
+    {
+        var attr = GetType().GetCustomAttribute<AutoLoadJsModuleAttribute>();
+        var relativePath = attr?.Path ?? $"Components/{ModuleName.Value}";
+        var fullJsPath = attr?.FullPath;
+        if (fullJsPath is not { })
+        {
+            fullJsPath = IsLibrary
+            ? $"{ProjectName}/{relativePath}/{ModuleName.Value}.razor.js"
+            : $"{relativePath}/{ModuleName.Value}.razor.js";
+        }
+        var path = IsLibrary ? $"./_content/{fullJsPath}" : $"./{fullJsPath}";
+        return path;
+    }
+
     protected virtual async Task LoadJsAsync()
     {
-        var path = IsLibrary
-            ? $"./_content/{ProjectName}/{RelativePath}/{ModuleName.Value}.razor.js"
-            : $"./{RelativePath}/{ModuleName.Value}.razor.js";
+        var path = RewriteJsPath();
         var versionPath = await FileService.GetStaticFileWithVersionAsync(path);
         Module = await Js.InvokeAsync<IJSObjectReference>("import", versionPath);
     }
