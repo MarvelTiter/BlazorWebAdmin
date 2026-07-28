@@ -22,6 +22,12 @@ public static class ButtonBuilderExtensions
         return btn.SetButtonType(ButtonType.Danger);
     }
 
+    public static IButtonInput AutoLoading(this IButtonInput btn)
+    {
+        btn.Set(b => b.AutoLoading, true);
+        return btn;
+    }
+
     public static IButtonInput SetButtonType(this IButtonInput btn, ButtonType type)
     {
         btn.Set(p => p.ButtonType, type);
