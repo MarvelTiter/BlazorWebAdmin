@@ -1,0 +1,12 @@
+﻿@namespace BlazorTemplate.UI.Shared.Components
+@inherits ConditionBase
+<MGridContent ColSpan="@ColSpan" RowSpan="@RowSpan">
+    <span class="condition" style="@Style;min-width:@(Parent.ColumnWidth.HasValue ? $"{Parent.ColumnWidth}px" : "unset")">
+        <span class="label" style="min-width:@($"{LabelWidth ?? Parent.LabelWidth}px");">
+            @(new MarkupString(Label ?? "&nbsp;"))
+        </span>
+        <span>
+            @ChildContent
+        </span>
+    </span>
+</MGridContent>

@@ -1,8 +1,8 @@
 ﻿
 using AutoInjectGenerator;
 using AutoWasmApiGenerator;
-using Project.Constraints.UI;
-using Project.Constraints.UI.Extensions;
+using BlazorTemplate.Constraints.UI;
+using BlazorTemplate.Constraints.UI.Extensions;
 
 namespace BlazorAdmin.Client.HttpClientHandlers;
 

@@ -1,14 +1,12 @@
 ﻿using System.Security.Claims;
-using System.Text.Json;
 using AutoInjectGenerator;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.DependencyInjection;
-using Project.Constraints;
-using Project.Constraints.Models;
-using Project.Constraints.Services;
-using Project.Constraints.Store;
-using Project.Constraints.Utils;
+using BlazorTemplate.Constraints;
+using BlazorTemplate.Constraints.Models;
+using BlazorTemplate.Constraints.Services;
+using BlazorTemplate.Constraints.Store;
+using BlazorTemplate.Constraints.Utils;
 
 namespace BlazorAdmin.Client.Auth;
 

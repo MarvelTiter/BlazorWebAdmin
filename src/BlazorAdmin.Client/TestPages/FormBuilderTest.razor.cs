@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Project.Constraints.Common.Attributes;
-using Project.Constraints.Page;
+using BlazorTemplate.Constraints.Common.Attributes;
+using BlazorTemplate.Constraints.Page;
 
 namespace BlazorAdmin.Client.TestPages;
 #if DEBUG

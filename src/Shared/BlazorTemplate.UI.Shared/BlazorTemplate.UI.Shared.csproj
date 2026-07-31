@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Components\IconSelector\**" />
+	  <Content Remove="Components\IconSelector\**" />
+	  <EmbeddedResource Remove="Components\IconSelector\**" />
+	  <None Remove="Components\IconSelector\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<EmbeddedResource Include="Langs\en-US\index.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Langs\zh-CN\index.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<EmbeddedResource Include="wwwroot\css\font-awesome4.7.min.css" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\BlazorTemplate.Constraints\BlazorTemplate.Constraints.csproj" />
+	</ItemGroup>
+
+</Project>

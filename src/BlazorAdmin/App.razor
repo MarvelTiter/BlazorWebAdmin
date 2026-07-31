@@ -1,10 +1,10 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 @using Microsoft.Extensions.Options
-@using Project.Constraints.Options
-@using Project.Constraints.Store.Models
-@using Project.Constraints.UI
-@using Project.Web.Shared.Components
-@using Project.AppCore
+@using BlazorTemplate.Constraints.Options
+@using BlazorTemplate.Constraints.Store.Models
+@using BlazorTemplate.Constraints.UI
+@using BlazorTemplate.UI.Shared.Components
+@using BlazorTemplate.AppCore
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,12 +29,13 @@
 <body>
 
     <Routers RenderMode="@RenderMode"></Routers>
-    <Project.Web.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></Project.Web.Shared.Components.ReconnectorOutlet>
+    <BlazorTemplate.UI.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></BlazorTemplate.UI.Shared.Components.ReconnectorOutlet>
 
     @* <script src="@Assets["_framework/blazor.web.js"]"></script> *@
     <VScript Src="_framework/blazor.web.js"></VScript>
     @* <script src="@Assets["js/blazor-admin-project.js"]"></script> *@
-    <VScript Src="js/blazor-admin-project.js"></VScript>
+    <VScript Src="_content/BlazorTemplate.UI.Shared/js/shared-project.js"></VScript>
+    <VScript Src="js/BlazorAdmin-project.js"></VScript>
     
 </body>
 

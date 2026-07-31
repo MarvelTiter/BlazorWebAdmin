@@ -14,8 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
-	  <ProjectReference Include="..\Shared\Project.Web.Shared\Project.Web.Shared.csproj" />
+	  <ProjectReference Include="..\Shared\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
+	  <ProjectReference Include="..\Shared\BlazorTemplate.UI.Shared\BlazorTemplate.UI.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

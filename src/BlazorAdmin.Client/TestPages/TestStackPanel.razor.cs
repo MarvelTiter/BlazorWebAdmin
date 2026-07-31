@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Project.Constraints.Common.Attributes;
-using Project.Constraints.UI;
-using Project.Constraints.UI.Extensions;
-using Project.Web.Shared.Layouts;
+using BlazorTemplate.Constraints.Common.Attributes;
+using BlazorTemplate.Constraints.UI;
+using BlazorTemplate.Constraints.UI.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorAdmin.Client.TestPages;

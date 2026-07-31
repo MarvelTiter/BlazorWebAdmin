@@ -29,13 +29,13 @@
 	<!--#if(UseClientProject)-->
 	<ItemGroup>
 		<ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
-		<ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
+		<ProjectReference Include="..\Shared\BlazorTemplate.AppCore\BlazorTemplate.AppCore.csproj" />
 	</ItemGroup>
 	<!--#endif-->
 	<!--#if(!UseClientProject)-->
 	<ItemGroup>
-		<ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
-		<ProjectReference Include="..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
+		<ProjectReference Include="..\Shared\BlazorTemplate.AppCore\BlazorTemplate.AppCore.csproj" />
+		<ProjectReference Include="..\Shared\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
 	</ItemGroup>
 	<!--#endif-->
 	<ItemGroup>

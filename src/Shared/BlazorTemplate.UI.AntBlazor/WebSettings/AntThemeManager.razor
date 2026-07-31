@@ -1,0 +1,65 @@
+﻿@using BlazorTemplate.Constraints.Services
+@using BlazorTemplate.Constraints.UI.Extensions
+@using BlazorTemplate.UI.Shared.Utils
+@inherits JsComponentBase
+@attribute [Obsolete]
+<div>
+    @(UI.BuildRadioGroup<ThemeMode, ThemeMode?>(this, modes)
+        .LabelExpression(i => FormatLabel(i))
+        .ValueExpression(i => i)
+        .Bind(() => Current, NotifyChanged)
+        .Render())
+</div>
+
+@code {
+    readonly ThemeMode[] modes = [ThemeMode.Light, ThemeMode.Dark, ThemeMode.OS];
+    [CascadingParameter, NotNull] public IWebSettingHandler? Ws { get; set; }
+    ThemeMode? Current { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        if (App.MenuTheme == ThemeMode.Dark)
+        {
+            Current = ThemeMode.Dark;
+        }
+        else if (App.MenuTheme == ThemeMode.OS)
+        {
+            Current = ThemeMode.OS;
+        }
+        else
+        {
+            Current = ThemeMode.Light;
+        }
+    }
+
+    private async Task NotifyChanged()
+    {
+        await Ws.SaveSetting(a => a.Theme = Current!);
+        await Js.InvokeVoidAsync("setTheme", $"{Current}".ToLower(), Context.UI.DarkStyle());
+    }
+
+    static string FormatLabel(ThemeMode theme)
+    {
+        // return theme switch
+        // {
+        //     ThemeMode.Light => "亮色",
+        //     ThemeMode.Dark => "暗色",
+        //     ThemeMode.OS => "跟随系统",
+        //     _ => ""
+        // };
+        if (theme == ThemeMode.Dark)
+        {
+            return "暗色";
+        }
+        else if (theme == ThemeMode.Light)
+        {
+            return "亮色";
+        }
+        else if (theme == ThemeMode.OS)
+        {
+            return "跟随系统";
+        }
+        return "";
+    }
+}

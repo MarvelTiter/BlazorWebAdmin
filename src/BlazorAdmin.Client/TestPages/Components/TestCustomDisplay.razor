@@ -1,7 +1,7 @@
 ﻿@using System.Diagnostics.CodeAnalysis
-@using Project.Constraints.UI
-@using Project.Constraints.UI.Extensions
-@using Project.Constraints.UI.Table
+@using BlazorTemplate.Constraints.UI
+@using BlazorTemplate.Constraints.UI.Extensions
+@using BlazorTemplate.Constraints.UI.Table
 
 @(UI.BuildSelect<string, string>(this, items).Multiple().LabelExpression(t => t).ValueExpression(t => t).Binds(() => selected, UpdateValue).Render())
 

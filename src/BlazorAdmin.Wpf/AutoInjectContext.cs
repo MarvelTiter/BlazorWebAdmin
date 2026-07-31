@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Project.Constraints.Common;
+using BlazorTemplate.Constraints.Common;
 
 namespace BlazorAdmin.Wpf;
 

@@ -6,8 +6,10 @@
     "build-all": "tsup --config tsup.config.ts && tsup --config tsup.config.wpf.ts",
     "build-all-mini": "tsup --config tsup.config.ts --minify terser && tsup --config tsup.config.wpf.ts --minify terser",
     "build-web": "tsup --config tsup.config.ts",
-    "build-wpf": "tsup --config tsup.config.wpf.ts",
     "build-web-mini": "tsup --config tsup.config.ts --minify terser",
+    "build-shared": "tsup --config Shared/BlazorTemplate.UI.Shared/TsHelper/tsup.config.ts",
+    "build-shared-mini": "tsup --config Shared/BlazorTemplate.UI.Shared/TsHelper/tsup.config.ts --minify terser",
+    "build-wpf": "tsup --config tsup.config.wpf.ts",
     "build-wpf-mini": "tsup --config tsup.config.wpf.ts --minify terser"
   },
   "repository": {

@@ -1,0 +1,58 @@
+﻿@namespace BlazorTemplate.UI.Shared.Components
+@using BlazorTemplate.Constraints.Page
+@inherits AppComponentBase
+@* @attribute [PageInfo(Title = "Camera测试")] *@
+<Camera Width="400" Height="300" OnCapture="handleCapture" @ref=camera PreviewRotate PhotoFormat="image/jpeg" Quality="0.7">
+    @* <DeviceSelectorRender>
+    @UI.BuildSelect(this, context.Resolutions).Bind(() => resolution, SaveToLocal).Render()
+    @UI.BuildButton(this).OnClick(context.Start).Text("打开").Render()
+    @UI.BuildButton(this).OnClick(context.Capture).Text("拍照").Render()
+    </DeviceSelectorRender> *@
+
+    @* <CameraAtions>
+        @UI.BuildSelect(this, context.CameraOptions.ResolutionOptions).Bind(() => resolution, SaveToLocal).Render()
+        @UI.BuildButton(this).OnClick(() => context.Start(null, exact: true)).Text("打开").Render()
+        @UI.BuildButton(this).OnClick(context.Capture).Text("拍照").Render()
+    </CameraAtions> *@
+</Camera>
+@UI.BuildButton(this).Text("Toggle").Primary().OnClick(() => camera?.ToggleClipBoxAsync() ?? Task.CompletedTask).Render()
+<img src="@src" />
+@code {
+    Camera? camera;
+    [Inject, NotNull] IProtectedLocalStorage? LocalStorage { get; set; }
+    public async Task SwitchCamera(IEnumerable<Camera.DeviceInfo> devices, int type)
+    {
+        await camera!.SwitchCamera(devices.First(d => d.Kind == "videoinput").DeviceId);
+    }
+    Camera.Resolution resolution;
+    string? src;
+
+    public void handleCapture(Camera.CaptureInfo info)
+    {
+        src = $"data:image/jpeg;base64,{info.Content}";
+        StateHasChanged();
+    }
+
+    async Task SaveToLocal()
+    {
+        await LocalStorage.SetAsync("Test", resolution);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        if (firstRender)
+        {
+            var result = await LocalStorage.GetAsync<Camera.Resolution>("Test");
+            if (result.Success)
+            {
+                resolution = result.Value;
+            }
+        }
+    }
+
+    Task SwitchVideo(ICameraObject camera, string deviceId)
+    {
+        return camera.SwitchCamera(deviceId, exact: true);
+    }
+}
