@@ -15,7 +15,16 @@
     <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="src\**\*" Exclude="src\**\bin\**;src\**\obj\**;src\node_modules\**;*.lock.json;.vs\**\*;.idea\**" />
+    <Content Include="src\**\*"
+      Exclude="
+    src\**\bin\**;
+    src\**\obj\**;
+    src\node_modules\**;
+    *.lock.json;
+    **\.vs\**\*;
+    **\.idea\**;
+    src\**\BlazorTemplates\**
+    " />
     <Compile Remove="**\*" />
   </ItemGroup>
 

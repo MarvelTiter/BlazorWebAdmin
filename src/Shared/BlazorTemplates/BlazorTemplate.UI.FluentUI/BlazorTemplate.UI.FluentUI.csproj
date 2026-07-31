@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<Import Project="../../Props/projects.versions.props"/>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Authors>MarvelTiter</Authors>
+		<Copyright>MIT</Copyright>
+		<Description>BlazorWebAdmin模板项目的组件</Description>
+		<Version>$(FluentUIVersion)</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.10.4" />
+		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.10.4" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<_ContentIncludedByDefault Remove="wwwroot\background.png" />
+		<_ContentIncludedByDefault Remove="wwwroot\exampleJsInterop.js" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)'=='DEBUG'">
+		<ProjectReference Include="..\BlazorTemplate.UI.Shared\BlazorTemplate.UI.Shared.csproj" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(Configuration)'=='RELEASE'">
+		<PackageReference Include="BlazorTemplate.Constraints" Version="$(SharedProjectVersion)" />
+	</ItemGroup>
+
+</Project>

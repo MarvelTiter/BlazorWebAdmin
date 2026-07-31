@@ -1,0 +1,49 @@
+<Solution>
+  <Folder Name="/Shared/" />
+  <Folder Name="/Shared/BlazorTemplates/">
+    <Project Path="Shared/BlazorTemplates/BlazorTemplate.AppCore/BlazorTemplate.AppCore.csproj" />
+    <Project
+      Path="Shared/BlazorTemplates/BlazorTemplate.Constraints/BlazorTemplate.Constraints.csproj" />
+    <Project
+      Path="Shared/BlazorTemplates/BlazorTemplate.UI.AntBlazor/BlazorTemplate.UI.AntBlazor.csproj" />
+    <Project
+      Path="Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj" />
+    <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj" />
+  </Folder>
+  <Folder Name="/Shared/Props/">
+    <File Path="Shared/Props/pack.settings.forpack.props" />
+    <File Path="Shared/Props/pack.settings.props" />
+    <File Path="Shared/Props/projects.versions.props" />
+  </Folder>
+  <Folder Name="/Shared/TsCore/">
+    <File Path="Shared/TsCore/baseComponent.ts" />
+    <File Path="Shared/TsCore/componentStore.ts" />
+    <File Path="Shared/TsCore/customEventHandler.ts" />
+    <File Path="Shared/TsCore/dragHelper.ts" />
+    <File Path="Shared/TsCore/eventHandler.ts" />
+    <File Path="Shared/TsCore/eventHandlerSet.ts" />
+    <File Path="Shared/TsCore/handlerBase.ts" />
+    <File Path="Shared/TsCore/resizeHandler.ts" />
+    <File Path="Shared/TsCore/utils.ts" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Folder Name="/TypeScriptPackup/">
+    <File Path="main.ts" />
+    <File Path="package.json" />
+    <File Path="tsconfig.json" />
+    <File Path="tsup.config.ts" />
+    <File Path="tsup.config.wpf.ts" />
+    <File Path="utilsAggregation.ts" />
+    <Project Path="RunBuild/RunBuild.csproj" />
+  </Folder>
+  <!--#if(host == 'none' || host == 'web')-->
+  <Project Path="BlazorAdmin/BlazorAdmin.csproj" />
+  <Project Path="BlazorAdmin.Client/BlazorAdmin.Client.csproj" />
+  <!--#endif-->
+  <!--#if(host == 'none' || host == 'wpf')-->
+  <Project Path="BlazorAdmin.Wpf/BlazorAdmin.Wpf.csproj" />
+  <!--#endif-->
+
+</Solution>

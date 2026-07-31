@@ -18,11 +18,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Shared\BlazorTemplate.AppCore\BlazorTemplate.AppCore.csproj" />
-		<ProjectReference Include="..\Shared\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Content Update="wpfhost.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </Content>

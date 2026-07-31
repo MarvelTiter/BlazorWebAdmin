@@ -38,7 +38,11 @@ public class Login : SystemPageIndex<Login>, ILoginPage
         //var refer = HttpContext.Request.Headers.Referer.ToString();
         //if (!string.IsNullOrEmpty(refer)) UI.Error("登录凭证超时，请重新登录");
     }
-
+#if DEBUG
+    public int Release { get; set; }
+#else
+    public int Debug { get; set; }
+#endif
     public async Task HandleLogin(LoginFormModel model)
     {
         try

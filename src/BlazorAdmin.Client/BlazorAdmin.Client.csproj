@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
+	<Import Project="../Shared/Props/projects.versions.props" />
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
@@ -12,10 +13,15 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" />
 	</ItemGroup>
-
+	<!--#if(AlwaysFalse)-->
 	<ItemGroup>
-	  <ProjectReference Include="..\Shared\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
-	  <ProjectReference Include="..\Shared\BlazorTemplate.UI.Shared\BlazorTemplate.UI.Shared.csproj" />
+	  <ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
+	  <ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.UI.Shared\BlazorTemplate.UI.Shared.csproj" />
+	</ItemGroup>
+	<!--#endif-->
+	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
+		<PackageReference Include="BlazorTemplate.UI.AntBlazor" />
+		<PackageReference Include="BlazorTemplate.UI.Shared" />
 	</ItemGroup>
 
 </Project>
