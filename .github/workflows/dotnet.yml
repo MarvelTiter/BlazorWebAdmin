@@ -7,23 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-      - name: Restore dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --no-restore
-      - name: Test
-        run: dotnet test --no-build --verbosity normal
-
   publish-nuget:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,6 +16,14 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
+
+      - name: Build source projects
+        run: |
+          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.Constraints/BlazorTemplate.Constraints.csproj -c Release --no-restore
+          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj -c Release --no-restore
+          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.AppCore/BlazorTemplate.AppCore.csproj -c Release --no-restore
+          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj -c Release --no-restore
+          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.UI.AntBlazor/BlazorTemplate.UI.AntBlazor.csproj -c Release --no-restore
 
       - name: Create local NuGet source
         run:

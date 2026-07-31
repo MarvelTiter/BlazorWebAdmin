@@ -18,7 +18,7 @@
 		<Exec WorkingDirectory="$(SolutionDir)" Command="npm run build" />
 	</Target>
 
-	<Target Name="PublishRunTsup" AfterTargets="ComputeFilesToPublish">
+	<Target Name="PublishRunTsup" AfterTargets="ComputeFilesToPublish" Condition=" '$(Configuration)' == 'Debug' And Exists('$(SolutionDir)node_modules') ">
 		<Exec WorkingDirectory="$(SolutionDir)" Command="npm install" />
 		<Exec WorkingDirectory="$(SolutionDir)" Command="npm run build:pub" />
 	</Target>
