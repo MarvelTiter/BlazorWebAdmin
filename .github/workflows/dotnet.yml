@@ -19,11 +19,11 @@ jobs:
 
       - name: Build source projects
         run: |
-          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.Constraints/BlazorTemplate.Constraints.csproj -c Release --no-restore
-          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj -c Release --no-restore
-          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.AppCore/BlazorTemplate.AppCore.csproj -c Release --no-restore
-          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj -c Release --no-restore
-          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.UI.AntBlazor/BlazorTemplate.UI.AntBlazor.csproj -c Release --no-restore
+          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.Constraints/BlazorTemplate.Constraints.csproj -c Release
+          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj -c Release
+          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.AppCore/BlazorTemplate.AppCore.csproj -c Release
+          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj -c Release
+          dotnet build src/Shared/BlazorTemplates/BlazorTemplate.UI.AntBlazor/BlazorTemplate.UI.AntBlazor.csproj -c Release
 
       - name: Create local NuGet source
         run:
