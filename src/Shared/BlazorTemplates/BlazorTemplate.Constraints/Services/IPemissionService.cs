@@ -69,12 +69,10 @@ public interface IPermissionService<TPermission, TRole> : IPermissionService
     Task<QueryResult> DeleteRoleAsync(TRole role);
 }
 
-#if (ExcludeDefaultService)
-#else
-[WebController(Route = "default/permission", Authorize = true)]
+
+[WebController(Route = "template/default/permission", Authorize = true)]
 [AddAspectHandler(AspectType = typeof(AopLogger))]
 [AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
-public interface IStandardPermissionService : IPermissionService<Permission, Role>
+public interface ITemplatePermissionService : IPermissionService<TemplatePermission, TemplateRole>
 {
 }
-#endif

@@ -126,10 +126,8 @@ public partial class PermissionSetting<TPermission, TRole, TPermissionService> :
         return await PermissionSrv.DeletePermissionAsync(node);
     }
 }
-#if (ExcludeDefaultService)
-#else
+
 [StateContainer]
-public partial class DefaultPermissionSetting : PermissionSetting<Permission, Role, IStandardPermissionService>
+public partial class TemplatePermissionSetting : PermissionSetting<TemplatePermission, TemplateRole, ITemplatePermissionService>
 {
 }
-#endif

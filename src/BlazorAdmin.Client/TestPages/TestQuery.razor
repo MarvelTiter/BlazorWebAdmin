@@ -78,7 +78,7 @@
     public void BuildExpression()
     {
         // ToJson();
-        var exp = condition.BuildExpression<BlazorTemplate.Constraints.Models.Permissions.User>();
+        var exp = condition.BuildExpression<BlazorTemplate.Constraints.Models.Permissions.TemplateUser>();
         jsonResult = exp.ToString();
     }
     string? jsonResult;

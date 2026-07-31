@@ -61,19 +61,19 @@ public static class WebService
             builder.ConfigureContainer(new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
         }
     }
-    private static void ScanRazorLibraryAssembly()
-    {
-        var entry = Assembly.GetEntryAssembly();
-        var additionAssemblys = entry?.GetReferencedAssemblies().Select(Assembly.Load);
-        foreach (var item in additionAssemblys ?? [])
-        {
-            var hasPage = item.ExportedTypes.Any(t => t.GetCustomAttribute<Microsoft.AspNetCore.Components.RouteAttribute>() is not null);
-            if (hasPage)
-            {
-                AppConst.AddAssembly(item);
-            }
-        }
-    }
+    //private static void ScanRazorLibraryAssembly()
+    //{
+    //    var entry = Assembly.GetEntryAssembly();
+    //    var additionAssemblys = entry?.GetReferencedAssemblies().Select(Assembly.Load);
+    //    foreach (var item in additionAssemblys ?? [])
+    //    {
+    //        var hasPage = item.ExportedTypes.Any(t => t.GetCustomAttribute<Microsoft.AspNetCore.Components.RouteAttribute>() is not null);
+    //        if (hasPage)
+    //        {
+    //            AppConst.AddAssembly(item);
+    //        }
+    //    }
+    //}
     public static void UseProject(this WebApplication app)
     {
         app.UseMiddleware<CheckBrowserEnabledMiddleware>();

@@ -213,7 +213,7 @@ internal class EmbeddedJsonLocalizerFactory : IStringLocalizerFactory
 
     private static string? FindLangName(Type resource)
     {
-        var a = resource.GetCustomAttribute<LangNameAttribute>() ?? resource.GetInterfaces().Select(t => t.GetCustomAttribute<LangNameAttribute>()).Where(t => t is not null).FirstOrDefault();
+        var a = resource.GetCustomAttribute<LangNameAttribute>() ?? resource.GetInterfaces().Select(t => t.GetCustomAttribute<LangNameAttribute>()).FirstOrDefault(t => t is not null);
         return a?.Name;
     }
 }

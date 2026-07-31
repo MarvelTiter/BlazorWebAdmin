@@ -43,11 +43,10 @@ public class UserPwd
     [Form(InputType.Password)]
     public string? ConfirmPassword { get; set; }
 }
-#if (ExcludeDefaultService)
-#else
+
 [LightTable(Name = "USER")]
 [GenMapper]
-public partial class User : IUser, IAutoMap
+public partial class TemplateUser : IUser
 {
     [LightColumn(Name = "USER_ID", PrimaryKey = true)]
     [NotNull]
@@ -78,4 +77,3 @@ public partial class User : IUser, IAutoMap
     [LightColumn(Ignore = true)]
     public IEnumerable<string>? Roles { get; set; }
 }
-#endif

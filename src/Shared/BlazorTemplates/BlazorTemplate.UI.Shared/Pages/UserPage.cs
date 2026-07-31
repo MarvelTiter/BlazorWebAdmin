@@ -104,19 +104,16 @@ public class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : 
     }
 }
 
-#if (ExcludeDefaultService)
-#else
 [StateContainer]
-public partial class DefaultUserPage : UserPage<User, Permission, Role, IStandardUserService, IStandardPermissionService>
+public partial class TemplateUserPage : UserPage<TemplateUser, TemplatePermission, TemplateRole, ITemplateUserService, ITemplatePermissionService>
 {
-    protected override async Task<IQueryResult?> OnCellUpdateAsync(User model, ColumnInfo col)
+    protected override async Task<IQueryResult?> OnCellUpdateAsync(TemplateUser model, ColumnInfo col)
     {
         return await UserSrv.SavePropertyAsync(model, col.PropertyOrFieldName);
     }
 
-    protected override async Task<IQueryResult?> OnRowUpdateAsync(User model, IReadOnlyList<ColumnInfo> col)
+    protected override async Task<IQueryResult?> OnRowUpdateAsync(TemplateUser model, IReadOnlyList<ColumnInfo> col)
     {
         return await UserSrv.SavePropertiesAsync(model, [.. col.Select(c => c.PropertyOrFieldName)]);
     }
 }
-#endif

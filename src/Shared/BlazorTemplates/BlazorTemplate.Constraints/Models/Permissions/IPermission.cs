@@ -52,11 +52,9 @@ public class MinimalPermission : IPermission
     //public bool GenerateCRUDButton { get; set; }
 }
 
-#if (ExcludeDefaultService)
-#else
 [LightTable(Name = "POWERS")]
 [GenMapper]
-public partial class Permission : IPermission, IAutoMap
+public partial class TemplatePermission : IPermission
 {
     [Required]
     [LightColumn(Name = "POWER_ID", PrimaryKey = true)]
@@ -88,11 +86,10 @@ public partial class Permission : IPermission, IAutoMap
     public int Sort { get; set; }
 
     [NotMapped]
-    public IEnumerable<Permission>? Children { get; set; } = [];
-    IEnumerable<IPermission>? IPermission.Children { get => Children; set => Children = value?.Cast<Permission>(); }
+    public IEnumerable<TemplatePermission>? Children { get; set; } = [];
+    IEnumerable<IPermission>? IPermission.Children { get => Children; set => Children = value?.Cast<TemplatePermission>(); }
 
     //[NotMapped]
     //[Form]
     //public bool GenerateCRUDButton { get; set; }
 }
-#endif

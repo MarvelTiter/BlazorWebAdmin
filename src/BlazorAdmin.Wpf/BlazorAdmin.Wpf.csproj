@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<Import Project="../Shared/Props/pack.settings.props" />
+	<Import Project="../Shared/Props/projects.versions.props" />
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
@@ -23,8 +24,8 @@
 	</ItemGroup>
 	<!--#endif-->
 	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
-		<PackageReference Include="BlazorTemplate.AppCore" />
-		<PackageReference Include="BlazorTemplate.UI.AntBlazor" />
+		<PackageReference Include="BlazorTemplate.AppCore" Version="$(AppCoreVersion)"/>
+		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)"/>
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Update="wpfhost.json">

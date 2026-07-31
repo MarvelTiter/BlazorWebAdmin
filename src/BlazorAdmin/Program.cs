@@ -1,15 +1,16 @@
 ﻿using AutoPageStateContainerGenerator;
+using AutoWasmApiGenerator;
 using BlazorAdmin;
-using LightORM;
-using LightORM.Providers.Sqlite.Extensions;
-using LoggerProviderExtensions;
 using BlazorTemplate.AppCore;
 using BlazorTemplate.AppCore.Services;
 using BlazorTemplate.Constraints;
-using BlazorTemplate.UI.Shared;
-using MT.LightTask;
 using BlazorTemplate.Constraints.Services;
-using AutoWasmApiGenerator;
+using BlazorTemplate.UI.Shared;
+using BlazorTemplate.UI.Shared.Pages;
+using LightORM;
+using LightORM.Providers.Sqlite.Extensions;
+using LoggerProviderExtensions;
+using MT.LightTask;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -34,14 +35,18 @@ BlazorTemplate.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
 //builder.Services.AddFluentUI();
 builder.AddServerProject(setting =>
 {
-    setting.App.Id = "Test";
-    setting.App.Name = "Demo";
+    setting.App.Id = "BlazorAdmin";
+    setting.App.Name = "BlazorAdmin";
     setting.App.Company = "Marvel";
 #if DEBUG
     var appAssembly = typeof(BlazorAdmin.Client._Imports).Assembly;
     setting.ConfigurePage(locator =>
     {
         locator.SetDashboardType<BlazorAdmin.Client.TestPages.TestDashboard>();
+        locator.SetUserPageType<TemplateUserPage>();
+        locator.SetRunLogPageType<TemplateOperationLog>();
+        locator.SetPermissionPageType<TemplatePermissionSetting>();
+        locator.SetRolePermissionPageType<TemplateRolePermission>();
     });
 #else
 #if (UseClientProject)
@@ -55,14 +60,28 @@ builder.AddServerProject(setting =>
     /*
      * 配置IProjectSettingService和IAuthService(如果需要)
      */
+
 #if DEBUG
-    setting.ConfigureSettingProviderType<CustomSetting>();
-    setting.ConfigureAuthService<BlazorAdminAuthenticationService>();
-#endif
-#if (ExcludeDefaultService)
+    setting.ConfigureSettingProviderType<DevelopSetting>();
+    setting.ConfigureAuthService<DevelopAuthenticationService>();
+#else
     // setting.ConfigureSettingProviderType<YourSetting>();
-    // setting.ConfigureSettingProviderType<BasicSetting>();
     // setting.ConfigureAuthService<YourAuthenticationService>();
+#if (ExcludeDefaultPages)
+    setting.ConfigureSettingProviderType<BasicSetting>();
+    setting.ConfigureAuthService<FreeAuthenticationService>();
+#else
+    setting.ConfigureSettingProviderType<DevelopSetting>();
+    setting.ConfigureAuthService<DevelopAuthenticationService>();
+    //set default
+    setting.ConfigurePage(locator =>
+    {
+        locator.SetUserPageType<TemplateUserPage>();
+        locator.SetRunLogPageType<TemplateOperationLog>();
+        locator.SetPermissionPageType<TemplatePermissionSetting>();
+        locator.SetRolePermissionPageType<TemplateRolePermission>();
+    });
+#endif
 #endif
 });
 

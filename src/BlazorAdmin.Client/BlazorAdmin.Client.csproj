@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
 	<Import Project="../Shared/Props/pack.settings.props" />
+	<Import Project="../Shared/Props/projects.versions.props" />
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
 		<StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+		<Version>$(MainProjectVersion)</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

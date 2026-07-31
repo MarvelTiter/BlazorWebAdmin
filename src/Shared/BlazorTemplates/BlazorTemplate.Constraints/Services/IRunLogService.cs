@@ -18,8 +18,6 @@ public interface IRunLogService
     Task<QueryResult> WriteLog(MinimalLog log);
 }
 
-#if (ExcludeDefaultService)
-#else
-[WebController(Route = "runlog", Authorize = true)]
-public interface IStandardRunLogService : IRunLogService<RunLog> { }
-#endif
+
+[WebController(Route = "template/runlog", Authorize = true)]
+public interface ITemplateRunLogService : IRunLogService<TemplateRunLog> { }

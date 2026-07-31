@@ -27,27 +27,16 @@ public partial interface IUserService<TUser> where TUser : IUser
     Task<TUser?> GetUserAsync(string id);
 }
 
-#if (ExcludeDefaultService)
-#else
-// [WebController(Route = "user", Authorize = true)]
-// [ApiInvokerGenerate(typeof(AutoInjectAttribute))]
-// [AttachAttributeArgument(typeof(ApiInvokerGenerateAttribute), typeof(AutoInjectAttribute), "Group", "WASM")]
-// public interface IUserService
-// {
-//     Task<QueryResult> CheckUserPasswordAsync(string oldPassword);
-//     Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd);
-// }
 
-[WebController(Route = "user", Authorize = true)]
+[WebController(Route = "template/user", Authorize = true)]
 [AddAspectHandler(AspectType = typeof(AopLogger))]
 [AddAspectHandler(AspectType = typeof(AopPermissionCheck))]
-public interface IStandardUserService : IUserService<User>
+public interface ITemplateUserService : IUserService<TemplateUser>
 {
     [RelatedPermission(PermissionId = nameof(UpdateUserAsync))]
-    Task<QueryResult> SavePropertyAsync(User user, string property);
+    Task<QueryResult> SavePropertyAsync(TemplateUser user, string property);
 
 
     [RelatedPermission(PermissionId = nameof(UpdateUserAsync))]
-    Task<QueryResult> SavePropertiesAsync(User user, string[] property);
+    Task<QueryResult> SavePropertiesAsync(TemplateUser user, string[] property);
 }
-#endif

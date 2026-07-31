@@ -20,10 +20,7 @@ public class OperationLog<TRunLog, TRunLogService> : ModelPage<TRunLog, GenericR
     protected override Task<QueryCollectionResult<TRunLog>> OnExportAsync(GenericRequest<TRunLog> query) => base.OnExportAsync(query);
 }
 
-#if (ExcludeDefaultService)
-#else
 [StateContainer]
-public partial class DefaultOperationLog : OperationLog<RunLog, IStandardRunLogService>
+public partial class TemplateOperationLog : OperationLog<TemplateRunLog, ITemplateRunLogService>
 {
 }
-#endif

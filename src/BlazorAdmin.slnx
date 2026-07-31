@@ -8,8 +8,15 @@
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj" />
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj" />
   </Folder>
+  <Folder Name="/Shared/doc/">
+    <File Path="../doc/模板参数.md" />
+  </Folder>
   <Folder Name="/Shared/github/">
     <File Path="../.github/workflows/dotnet.yml" />
+  </Folder>
+  <Folder Name="/Shared/template/">
+    <File Path="../template.csproj" />
+    <File Path=".template.config/template.json" />
   </Folder>
    <!--#endif-->
   <Folder Name="/Shared/Props/">
@@ -38,12 +45,11 @@
     <File Path="utilsAggregation.ts" />
     <Project Path="RunBuild/RunBuild.csproj" />
   </Folder>
-  <!--#if(host == 'none' || host == 'web')-->
+   <!--#if(host == 'none' || host == 'web')-->
   <Project Path="BlazorAdmin/BlazorAdmin.csproj" />
   <Project Path="BlazorAdmin.Client/BlazorAdmin.Client.csproj" />
-  <!--#endif-->
-  <!--#if(host == 'none' || host == 'wpf')-->
+   <!--#endif-->
+   <!--#if(host == 'none' || host == 'wpf')-->
   <Project Path="BlazorAdmin.Wpf/BlazorAdmin.Wpf.csproj" />
-  <!--#endif-->
-
+   <!--#endif-->
 </Solution>

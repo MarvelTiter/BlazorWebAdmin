@@ -10,11 +10,10 @@ public interface IUserRole
     [NotNull] string? RoleId { get; set; }
 }
 
-#if (ExcludeDefaultService)
-#else
+
 [LightTable(Name = "USER_ROLE")]
 [GenMapper]
-public partial class UserRole : IUserRole, IAutoMap
+public partial class TemplateUserRole : IUserRole
 {
     [LightColumn(Name = "USER_ID", PrimaryKey = true)]
     [NotNull] 
@@ -23,4 +22,3 @@ public partial class UserRole : IUserRole, IAutoMap
     [NotNull]
     public string? RoleId { get; set; }
 }
-#endif

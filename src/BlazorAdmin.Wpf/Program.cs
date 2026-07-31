@@ -48,7 +48,7 @@ public class Program
              * 配置IProjectSettingService和IAuthService(如果需要)
              */
 #if DEBUG
-            setting.ConfigureSettingProviderType<CustomSetting>();
+            setting.ConfigureSettingProviderType<DevelopSetting>();
 #endif
 #if (ExcludeDefaultService)
     // setting.ConfigureSettingProviderType<YourSetting>();

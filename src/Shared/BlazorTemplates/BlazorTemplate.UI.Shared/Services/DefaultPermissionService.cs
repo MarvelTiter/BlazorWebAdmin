@@ -230,16 +230,13 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
     }
 }
 
-#if (ExcludeDefaultService)
-#else
-[AutoInject(ServiceType = typeof(IStandardPermissionService), Group = "SERVER")]
+[AutoInject(ServiceType = typeof(ITemplatePermissionService), Group = "SERVER")]
 [AutoInject(ServiceType = typeof(IPermissionService), Group = "SERVER")]
 [GenAspectProxy]
-public class StandardPermissionService : DefaultPermissionService<Permission, Role, RolePermission, UserRole>, IStandardPermissionService
+public class StandardPermissionService : DefaultPermissionService<TemplatePermission, TemplateRole, TemplateRolePermission, TemplateUserRole>, ITemplatePermissionService
 {
     public StandardPermissionService(IExpressionContext context) : base(context)
     {
 
     }
 }
-#endif

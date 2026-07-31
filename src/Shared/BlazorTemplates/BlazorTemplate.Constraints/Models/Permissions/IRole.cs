@@ -14,11 +14,10 @@ public interface IRole
     [ColumnDefinition(Visible = false)]
     IEnumerable<string>? Permissions { get; set; }
 }
-#if (ExcludeDefaultService)
-#else
+
 [LightTable(Name = "ROLE")]
 [GenMapper]
-public partial class Role : IRole, IAutoMap
+public partial class TemplateRole : IRole
 {
     [LightColumn(Name = "ROLE_ID", PrimaryKey = true)]
     [NotNull]
@@ -30,4 +29,3 @@ public partial class Role : IRole, IAutoMap
     [LightColumn(Ignore = true)]
     public IEnumerable<string>? Permissions { get; set; }
 }
-#endif

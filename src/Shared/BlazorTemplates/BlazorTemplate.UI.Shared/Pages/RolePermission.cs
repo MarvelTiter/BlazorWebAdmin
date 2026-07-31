@@ -122,10 +122,8 @@ public class RolePermission<TPermission, TRole, TPermissionService> : ModelPage<
         return await PermissionSrv.DeleteRoleAsync(role);
     }
 }
-#if (ExcludeDefaultService)
-#else
+
 [StateContainer]
-public partial class DefaultRolePermission : RolePermission<Permission, Role, IStandardPermissionService>
+public partial class TemplateRolePermission : RolePermission<TemplatePermission, TemplateRole, ITemplatePermissionService>
 {
 }
-#endif

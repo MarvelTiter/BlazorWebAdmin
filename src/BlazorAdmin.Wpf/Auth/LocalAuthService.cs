@@ -12,7 +12,7 @@ public class LocalAuthService(IServiceProvider services) : DefaultAuthentication
     public override async Task<QueryResult> CheckUserPasswordAsync(UserPwd pwd)
     {
         var context = Services.GetRequiredService<IExpressionContext>();
-        var old = await context.Select<User>()
+        var old = await context.Select<TemplateUser>()
             .Where(u => u.UserId == pwd.UserId)
             .FirstAsync();
         return old?.Password == pwd.OldPassword;
@@ -23,18 +23,18 @@ public class LocalAuthService(IServiceProvider services) : DefaultAuthentication
         if (userInfo is null) return false;
         var context = Services.GetRequiredService<IExpressionContext>();
         //var config = Services.GetService<IOptionsMonitor<Token>>()!;
-        var u = await context.Select<User>().Where(u => u.UserId == userInfo.UserId).FirstAsync();
+        var u = await context.Select<TemplateUser>().Where(u => u.UserId == userInfo.UserId).FirstAsync();
 
         var passwordEqual = u?.Password.ToHash() == userInfo.PasswordHash;
 
-        var roles = await context.Select<UserRole>().Where(ur => ur.UserId == userInfo.UserId).ToListAsync(r => r.RoleId);
+        var roles = await context.Select<TemplateUserRole>().Where(ur => ur.UserId == userInfo.UserId).ToListAsync(r => r.RoleId);
 
         var rolesChanged = roles.Count != userInfo.Roles.Length || roles.Except(userInfo.Roles).Any();
 
-        var permissions = await context.Select<Permission>()
+        var permissions = await context.Select<TemplatePermission>()
             .Distinct()
-            .InnerJoin<RolePermission>((p, r) => p.PermissionId == r.PermissionId)
-            .InnerJoin<UserRole>((_, r, u) => r.RoleId == u.RoleId)
+            .InnerJoin<TemplateRolePermission>((p, r) => p.PermissionId == r.PermissionId)
+            .InnerJoin<TemplateUserRole>((_, r, u) => r.RoleId == u.RoleId)
             .Where((_, _, u) => u.UserId == userInfo.UserId)
             .ToListAsync(u => u.Tb1.PermissionId);
         bool permissionsChanged = false;
@@ -49,7 +49,7 @@ public class LocalAuthService(IServiceProvider services) : DefaultAuthentication
     public override async Task<QueryResult> ModifyUserPasswordAsync(UserPwd pwd)
     {
         var context = Services.GetRequiredService<IExpressionContext>();
-        var r = await context.Update<User>().Set(u => u.Password, pwd.Password)
+        var r = await context.Update<TemplateUser>().Set(u => u.Password, pwd.Password)
             .Where(u => u.UserId == pwd.UserId)
             .ExecuteAsync();
         return r > 0;
@@ -61,7 +61,7 @@ public class LocalAuthService(IServiceProvider services) : DefaultAuthentication
         ArgumentNullException.ThrowIfNull(context);
         var username = loginForm.UserName;
         var password = loginForm.Password;
-        var u = await context.Select<User>().Where(u => u.UserId == username).FirstAsync();
+        var u = await context.Select<TemplateUser>().Where(u => u.UserId == username).FirstAsync();
         var userInfo = new UserInfo
         {
             UserId = username,
@@ -84,7 +84,7 @@ public class LocalAuthService(IServiceProvider services) : DefaultAuthentication
     protected override async Task<IList<string>> GetUserRolesAsync(UserInfo userInfo)
     {
         var context = Services.GetRequiredService<IExpressionContext>();
-        var roles = await context.Select<UserRole>().Where(ur => ur.UserId == userInfo.UserId).ToListAsync(r => r.RoleId);
+        var roles = await context.Select<TemplateUserRole>().Where(ur => ur.UserId == userInfo.UserId).ToListAsync(r => r.RoleId);
         return roles;
     }
 }

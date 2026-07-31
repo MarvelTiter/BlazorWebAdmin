@@ -20,6 +20,7 @@ public static class TableColumnContext
                 var props = type.GetProperties();
                 PropertyInfo[] interfaceDefProps = [.. type.GetInterfaces().Where(i => i.GetCustomAttribute<SupplyColumnDefinitionAttribute>() is not null).SelectMany(i => i.GetProperties())];
                 //var heads = props.Select(p => (Prop: p, Column: p.GetColumnDefinition()));
+                var lang = type.GetInterfaces().Select(i => i.GetCustomAttribute<LangNameAttribute>()).FirstOrDefault(s => s is not null);
                 List<ColumnInfo> columns = [];
                 foreach (var prop in props)
                 {
@@ -29,7 +30,7 @@ public static class TableColumnContext
                     {
                         continue;
                     }
-                    var column = GenerateColumn(prop, definition, upper);
+                    var column = GenerateColumn(prop, definition, upper, lang);
                     column.ColumnIndex = columns.Count;
                     column.ValueGetter = prop.GetPropertyAccessor<object>();
                     column.ValueSetter = prop.GetPropertySetter();
@@ -45,11 +46,14 @@ public static class TableColumnContext
         return tc.Columns;
     }
 
-    private static ColumnInfo GenerateColumn(PropertyInfo self, ColumnDefinitionAttribute head, PropertyInfo? upper)
+    private static ColumnInfo GenerateColumn(PropertyInfo self
+        , ColumnDefinitionAttribute head
+        , PropertyInfo? upper
+        , LangNameAttribute? upperLang)
     {
         if (head.Label == null)
         {
-            var lang = self.DeclaringType?.GetCustomAttribute<LangNameAttribute>() ?? upper?.DeclaringType?.GetCustomAttribute<LangNameAttribute>();
+            var lang = self.DeclaringType?.GetCustomAttribute<LangNameAttribute>() ?? upper?.DeclaringType?.GetCustomAttribute<LangNameAttribute>() ?? upperLang;
             if (lang is not null)
             {
                 head.Label = $"{lang.Name}.{self.Name}";

@@ -2,8 +2,7 @@
 using BlazorTemplate.Constraints.Common.Attributes;
 
 namespace BlazorTemplate.UI.Shared.Pages;
-#if (ExcludeDefaultPages)
-#else
+
 [Route("/user/index")]
 [PageGroup("BasicSetting", "基础配置", 1, Icon = "fa fa-cog")]
 [PageInfo(Title = "用户管理", Icon = "svg-user", Sort = 1, GroupId = "BasicSetting")]
@@ -49,4 +48,3 @@ public class PermissionIndex : SystemPageIndex<PermissionIndex>
         return customSetting.GetPermissionPageType();
     }
 }
-#endif

@@ -41,41 +41,12 @@ public class DefaultRunLogService<TRunLog> : IRunLogService where TRunLog : clas
     }
 }
 
-#if (ExcludeDefaultService)
-#else
-//[AutoInject(Group = "SERVER")]
-//public class DefaultRunLogService : IRunLogService
-//{
-//    private readonly IExpressionContext context;
-
-//    public DefaultRunLogService(IExpressionContext context)
-//    {
-//        this.context = context;
-//    }
-
-//    public async Task<QueryResult> WriteLog(MinimalLog log)
-//    {
-//        var l = new RunLog
-//        {
-//            UserId = log.UserId,
-//            ActionModule = log.Module,
-//            ActionName = log.Action,
-//            ActionResult = log.Result,
-//            ActionMessage = log.Message,
-//        };
-//        var i = await context.Insert(l).ExecuteAsync();
-//        return (i > 0).Result();
-//    }
-//}
-
-
-[AutoInject(Group = "SERVER", ServiceType = typeof(IStandardRunLogService))]
+[AutoInject(Group = "SERVER", ServiceType = typeof(ITemplateRunLogService))]
 [AutoInject(Group = "SERVER", ServiceType = typeof(IRunLogService))]
-public class StandardRunLogService : DefaultRunLogService<RunLog>, IStandardRunLogService
+public class StandardRunLogService : DefaultRunLogService<TemplateRunLog>, ITemplateRunLogService
 {
     public StandardRunLogService(IExpressionContext context) : base(context)
     {
     }
 
 }
-#endif

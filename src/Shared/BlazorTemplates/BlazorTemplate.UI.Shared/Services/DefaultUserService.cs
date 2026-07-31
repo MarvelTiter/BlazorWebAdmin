@@ -117,23 +117,19 @@ public class DefaultUserService<TUser, TUserRole>
     }
 }
 
-
-#if (ExcludeDefaultService)
-#else
-[AutoInject(Group = "SERVER", ServiceType = typeof(IStandardUserService))]
+[AutoInject(Group = "SERVER", ServiceType = typeof(ITemplateUserService))]
 [GenAspectProxy]
-public class StandardUserService(IExpressionContext context) : DefaultUserService<User, UserRole>(context), IStandardUserService
+public class StandardUserService(IExpressionContext context) : DefaultUserService<TemplateUser, TemplateUserRole>(context), ITemplateUserService
 {
 
-    public async Task<QueryResult> SavePropertyAsync(User user, string property)
+    public async Task<QueryResult> SavePropertyAsync(TemplateUser user, string property)
     {
         var e = await context.Update(user).UpdateByName(property).ExecuteAsync();
         return e > 0;
     }
-    public async Task<QueryResult> SavePropertiesAsync(User user, string[] property)
+    public async Task<QueryResult> SavePropertiesAsync(TemplateUser user, string[] property)
     {
         var e = await context.Update(user).UpdateByNames(property).ExecuteAsync();
         return e > 0;
     }
 }
-#endif

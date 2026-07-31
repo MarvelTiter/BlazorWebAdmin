@@ -1,5 +1,7 @@
 ﻿
 namespace BlazorTemplate.Constraints.Models.Permissions;
+
+[LangName("RunLog")]
 [SupplyColumnDefinition]
 public interface IRunLog
 {
@@ -28,10 +30,9 @@ public class MinimalLog
     public string? Result { get; set; }
     public string? Message { get; set; }
 }
-#if (ExcludeDefaultService)
-#else
+
 [LightTable(Name = "RUN_LOG")]
-public class RunLog : IRunLog
+public class TemplateRunLog : IRunLog
 {
     [LightColumn(Name = "LOG_ID", PrimaryKey = true)]
     [NotNull]
@@ -55,4 +56,4 @@ public class RunLog : IRunLog
     [LightColumn(Name = "ACTION_MESSAGE")]
     public string? ActionMessage { get; set; }
 }
-#endif
+

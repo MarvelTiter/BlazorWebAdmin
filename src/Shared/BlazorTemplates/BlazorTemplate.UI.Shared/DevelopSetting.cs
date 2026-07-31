@@ -4,19 +4,10 @@ using BlazorTemplate.UI.Shared.Components;
 
 namespace BlazorTemplate.UI.Shared;
 
-public class CustomSetting : BasicSetting, IProjectSettingService
-{
-    private readonly IWatermarkServiceFactory watermarkServiceFactory;
-    private readonly IUserStore userStore;
-
-    public CustomSetting(IWatermarkServiceFactory watermarkServiceFactory
+public class DevelopSetting(IWatermarkServiceFactory watermarkServiceFactory
         , IUserStore userStore
-        , IServiceProvider services) : base(services)
-    {
-        this.watermarkServiceFactory = watermarkServiceFactory;
-        this.userStore = userStore;
-    }
-
+        , IServiceProvider services) : BasicSetting(services), IProjectSettingService
+{
     public override Task LoginSuccessAsync(UserInfo result)
     {
         Console.WriteLine($"LoginSuccessAsync: {result.UserName}");

@@ -31,7 +31,7 @@ builder.Services.AddClientProject(builder.Configuration, setting =>
     setting.App.Name = "Demo";
     setting.App.Company = "Marvel";
 #if DEBUG
-    setting.ConfigureSettingProviderType<CustomSetting>();
+    setting.ConfigureSettingProviderType<DevelopSetting>();
     setting.ConfigurePage(locator =>
     {
         locator.SetDashboardType<BlazorAdmin.Client.TestPages.TestDashboard>();
@@ -50,14 +50,8 @@ builder.Services.AddAuthorizationCore(o =>
     });
 });
 #endif
-//builder.Services.AddScoped<IAuthService, AuthServiceApiInvoker>();
-//builder.Services.AddScoped<IClientService, ClientServiceApiInvoker>();
-//builder.Services.AddScoped<ISvgIconService, SvgIconServiceApiInvoker>();
-//builder.Services.AddScoped<IFileService, FileServiceApiInvoker>();
-#if (ExcludeDefaultService)
-#else
+
 builder.Services.AddGeneratedApiClientServices();
-#endif
 
 var host = builder.Build();
 
