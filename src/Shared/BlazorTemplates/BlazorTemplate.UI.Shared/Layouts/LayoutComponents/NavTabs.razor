@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using BlazorTemplate.UI.Shared.Routers
+@inherits JsComponentBase
+<div style="flex:1;width:calc(100% - @(navMenuWidth + 16)px)">
+    <div class="tags-box @Class" style="display:flex;height:50px;">
+        <div class="nav-top arrow hidden left forbidden" @ref="@leftButton" @onclick="@NavPrev">
+            <MIcon IconName="svg-left"></MIcon>
+        </div>
+        <HorizontalScroll style="display: flex; flex:1;" data-max-index="@Router.TopLinks.Count" @ref="@horizontalScroll">
+            @foreach (var item in Router.TopLinks)
+            {
+                var actived = Router.CompareUrl(item.RouteUrl);
+                <div class="nav-top @(actived ? "active" : "")" data-id="@item.RouteId" @oncontextmenu="e => OpenContextMenu(e, item)">
+                    <NavLink href="@item.RouteUrl" Match="NavLinkMatch.All">
+                        <div style="display:flex;padding:0 5px 0 5px;align-items: center;">
+                            <MIcon IconName="@item.Icon" ClassName="top-link-icon"></MIcon>
+                            <span @oncontextmenu:preventDefault>
+
+                                @if (CultureOption.CurrentValue.Enabled && !item.Temp)
+                                {
+                                    @Router.GetLocalizerString(item)
+                                }
+                                else
+                                {
+                                    item.Title ??= @Router.GetLocalizerString(item).AsContent();
+                                    @item.Title
+                                }
+                            </span>
+                            @if (actived && !item.Pin)
+                            {
+                                <span style="padding-left:5px;" @onclick="e => CloseTag(item)" @onclick:stopPropagation
+                                      @onclick:preventDefault>
+                                    X
+                                </span>
+                            }
+                        </div>
+                    </NavLink>
+                </div>
+            }
+        </HorizontalScroll>
+        <div class="nav-top arrow hidden right" @ref="@rightButton" @onclick="@NavNext">
+            <MIcon IconName="svg-right"></MIcon>
+        </div>
+    </div>
+</div>
+<ul class="@ContextmenuClass.Class" style="left:@contextmenuLeft;top:@contextmenuTop">
+    @* <li @onclick="@ReLoad">刷新</li> *@
+    <li @onclick="@CloseOther">除此之外全部关闭</li>
+    <li @onclick="@CloseAll">关闭全部选项卡</li>
+    <li @onclick="@CloseSelf">关闭</li>
+</ul>

@@ -1,0 +1,16 @@
+﻿global using BlazorTemplate.Constraints.Common;
+global using BlazorTemplate.Constraints.Page;
+global using BlazorTemplate.Constraints.Models.Permissions;
+global using BlazorTemplate.Constraints.Services;
+global using BlazorTemplate.UI.Shared.Basic;
+global using BlazorTemplate.Constraints.Models.Request;
+global using BlazorTemplate.Constraints.Models;
+global using BlazorTemplate.Constraints.UI.Table;
+global using Microsoft.Extensions.Localization;
+global using System.Diagnostics.CodeAnalysis;
+global using AutoInjectGenerator;
+global using Microsoft.AspNetCore.Components;
+global using Microsoft.AspNetCore.Components.Authorization;
+global using Microsoft.Extensions.Logging;
+global using BlazorTemplate.Constraints;
+global using BlazorTemplate.Constraints.Store;

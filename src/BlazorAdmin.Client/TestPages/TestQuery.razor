@@ -1,8 +1,8 @@
 ﻿@using BlazorAdmin.Client.TestPages.Components
-@using Project.Constraints.Models.Request
-@using Project.Constraints.UI
-@using Project.Constraints.Utils
-@using Project.Web.Shared.Layouts
+@using BlazorTemplate.Constraints.Models.Request
+@using BlazorTemplate.Constraints.UI
+@using BlazorTemplate.Constraints.Utils
+@using BlazorTemplate.UI.Shared.Layouts
 @inject IUIService UI
 <h3>TestPage4</h3>
 @* @UI.BuildButton(this).Text("生成").OnClick(BuildExpression).Render() *@
@@ -11,56 +11,56 @@
     @jsonResult
 </pre>
 <p>Flex布局</p>
-<Project.Web.Shared.Components.QueryConditions LabelWidth="80" StackLayout>
-    <Project.Web.Shared.Components.SimpleCondition Label="字段名称123" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-    <Project.Web.Shared.Components.SimpleCondition Label="日期" @bind-Value="@dateTime"></Project.Web.Shared.Components.SimpleCondition>
-    <Project.Web.Shared.Components.SimpleCondition Label="字段名称22" @bind-Value="@condition.Name" EnumValues="@options"></Project.Web.Shared.Components.SimpleCondition>
+<BlazorTemplate.UI.Shared.Components.QueryConditions LabelWidth="80" StackLayout>
+    <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称123" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+    <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="日期" @bind-Value="@dateTime"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+    <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称22" @bind-Value="@condition.Name" EnumValues="@options"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
     @UI.BuildButton(this).Text("查询").Render()
     @UI.BuildButton(this).Text("查询").Render()
-</Project.Web.Shared.Components.QueryConditions>
+</BlazorTemplate.UI.Shared.Components.QueryConditions>
 <p>可收起，Flex布局</p>
-<Project.Web.Shared.Components.QueryConditions LabelWidth="80" ContentWidth="200">
+<BlazorTemplate.UI.Shared.Components.QueryConditions LabelWidth="80" ContentWidth="200">
     <Header>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
         @UI.BuildButton(this).Text("查询").Render()
         @UI.BuildButton(this).Text("查询").Render()
     </Header>
 
     <ChildContent>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称123" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称22" @bind-Value="@condition.Name" EnumValues="@options"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="日期" @bind-Value="@dateTime"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称123" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称22" @bind-Value="@condition.Name" EnumValues="@options"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="日期" @bind-Value="@dateTime"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
     </ChildContent>
-</Project.Web.Shared.Components.QueryConditions>
+</BlazorTemplate.UI.Shared.Components.QueryConditions>
 <p>不可收起，Grid布局</p>
-<Project.Web.Shared.Components.QueryConditions LabelWidth="65" ColumnWidth="200">
+<BlazorTemplate.UI.Shared.Components.QueryConditions LabelWidth="65" ColumnWidth="200">
     <ChildContent>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name" EnumValues="@options"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="日期" @bind-Value="@dateTime"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></Project.Web.Shared.Components.SimpleCondition>
-        <Project.Web.Shared.Components.EmptyCondition LabelWidth="0">
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name" EnumValues="@options"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="日期" @bind-Value="@dateTime"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.SimpleCondition Label="字段名称" @bind-Value="@condition.Name"></BlazorTemplate.UI.Shared.Components.SimpleCondition>
+        <BlazorTemplate.UI.Shared.Components.EmptyCondition LabelWidth="0">
             @UI.BuildButton(this).Text("查询").Render()
             @UI.BuildButton(this).Text("查询").Render()
-        </Project.Web.Shared.Components.EmptyCondition>
+        </BlazorTemplate.UI.Shared.Components.EmptyCondition>
     </ChildContent>
-</Project.Web.Shared.Components.QueryConditions>
+</BlazorTemplate.UI.Shared.Components.QueryConditions>
 @(UI.BuildDictionarySelect(this, options).Multiple().Binds(() => selectedValues).Render())
 @(string.Join(", ", selectedValues))
 @code {
@@ -78,7 +78,7 @@
     public void BuildExpression()
     {
         // ToJson();
-        var exp = condition.BuildExpression<Project.Constraints.Models.Permissions.User>();
+        var exp = condition.BuildExpression<BlazorTemplate.Constraints.Models.Permissions.User>();
         jsonResult = exp.ToString();
     }
     string? jsonResult;

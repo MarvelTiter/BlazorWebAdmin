@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<Import Project="../../Props/projects.versions.props" />
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Authors>MarvelTiter</Authors>
+		<Copyright>MIT</Copyright>
+		<Description>BlazorWebAdmin模板项目的组件</Description>
+		<Version>$(AntUIVersion)</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AntDesign" Version="1.6.2" />
+	</ItemGroup>
+
+
+	<ItemGroup Condition="'$(Configuration)'=='DEBUG'">
+		<ProjectReference Include="..\BlazorTemplate.UI.Shared\BlazorTemplate.UI.Shared.csproj" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(Configuration)'=='RELEASE'">
+		<PackageReference Include="BlazorTemplate.UI.Shared" Version="$(SharedProjectVersion)" />
+	</ItemGroup>
+
+</Project>

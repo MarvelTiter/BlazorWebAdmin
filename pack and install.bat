@@ -10,7 +10,7 @@ set "SCRIPT_DIR=%~dp0"
 set "CURRENT_DIR=%CD%"
 set "IS_TEMP_DIR=0"
 set "TEMP_DIR_NAME=TempNuGetPackages"
-set "CONFIGURATION=Release"
+set "CONFIGURATION=RELEASE"
 set "NO_BUILD=--no-build"
 
 REM ============================================

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MT.LightTask;
-using Project.Constraints.Common.Attributes;
-using Project.Constraints.Models;
-using Project.Constraints.Models.Request;
-using Project.Constraints.UI.Table;
-using Project.Web.Shared.Basic;
+using BlazorTemplate.Constraints.Common.Attributes;
+using BlazorTemplate.Constraints.Models;
+using BlazorTemplate.Constraints.Models.Request;
+using BlazorTemplate.Constraints.UI.Table;
+using BlazorTemplate.UI.Shared.Basic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorAdmin.Client.TestPages.Tasks;

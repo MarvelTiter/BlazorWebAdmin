@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.JSInterop;
-using Project.Web.Shared.Components;
-using Project.Web.Shared.Layouts;
+using BlazorTemplate.UI.Shared.Components;
+using BlazorTemplate.UI.Shared.Layouts;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 namespace BlazorAdmin.Wpf;

@@ -1,13 +1,10 @@
 ﻿using AutoPageStateContainerGenerator;
 using AutoWasmApiGenerator;
 using BlazorAdmin.Client;
-using BlazorAdmin.Client.HttpClientHandlers;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
-using MT.Toolkit.ReflectionExtension;
-using Project.Constraints;
-using Project.Constraints.Services;
-using Project.Web.Shared;
+using BlazorTemplate.Constraints;
+using BlazorTemplate.Constraints.Services;
+using BlazorTemplate.UI.Shared;
 
 //[assembly: GenerateApiInvoker]
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -25,8 +22,8 @@ if (useProxy)
     builder.ConfigureContainer(new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
 }
 //builder.Configuration
-Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
-//Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
+BlazorTemplate.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
+//BlazorTemplate.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 AppConst.AppAssembly = typeof(BlazorAdmin.Client._Imports).Assembly;
 builder.Services.AddClientProject(builder.Configuration, setting =>
 {

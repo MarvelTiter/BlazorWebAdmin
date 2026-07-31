@@ -1,9 +1,9 @@
 ﻿using LightORM;
 using Microsoft.Extensions.DependencyInjection;
-using Project.AppCore.Services;
-using Project.Constraints.Models;
-using Project.Constraints.Models.Permissions;
-using Project.Constraints.Utils;
+using BlazorTemplate.AppCore.Services;
+using BlazorTemplate.Constraints.Models;
+using BlazorTemplate.Constraints.Models.Permissions;
+using BlazorTemplate.Constraints.Utils;
 namespace BlazorAdmin.Wpf.Auth;
 #if (ExcludeDefaultService)
 #else
@@ -55,7 +55,7 @@ public class LocalAuthService(IServiceProvider services) : DefaultAuthentication
         return r > 0;
     }
 
-    protected override async Task<(bool Success, string Message, UserInfo Payload)> CreateUserInfoAsync(LoginFormModel loginForm)
+    protected override async Task<QueryResult<UserInfo>> CreateUserInfoAsync(LoginFormModel loginForm)
     {
         var context = Services.GetService<IExpressionContext>();
         ArgumentNullException.ThrowIfNull(context);
@@ -70,15 +70,15 @@ public class LocalAuthService(IServiceProvider services) : DefaultAuthentication
 
         if (u is null)
         {
-            return (false, $"用户：{username} 不存在", userInfo);
+            return userInfo.Result(false).SetMessage($"用户：{username} 不存在");
         }
 
         if (u!.Password != password)
         {
-            return (false, "密码错误", userInfo);
+            return userInfo.Result(false).SetMessage("密码错误");
         }
 
-        return (true, "", userInfo);
+        return userInfo.Result();
     }
 
     protected override async Task<IList<string>> GetUserRolesAsync(UserInfo userInfo)

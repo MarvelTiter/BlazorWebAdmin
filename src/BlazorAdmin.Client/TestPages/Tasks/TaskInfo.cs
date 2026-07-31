@@ -1,5 +1,5 @@
 ﻿using MT.LightTask;
-using Project.Constraints.Common.Attributes;
+using BlazorTemplate.Constraints.Common.Attributes;
 
 namespace BlazorAdmin.Client.TestPages.Tasks;
 

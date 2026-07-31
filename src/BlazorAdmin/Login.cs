@@ -5,15 +5,14 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using Project.AppCore.Auth;
-using Project.Constraints.Common.Attributes;
-using Project.Constraints.Models;
-using Project.Constraints.Options;
-using Project.Constraints.Page;
-using Project.Constraints.Services;
-using Project.Constraints.UI.Extensions;
-using Project.Constraints.Utils;
-using Project.Web.Shared.Layouts;
+using BlazorTemplate.Constraints.Common.Attributes;
+using BlazorTemplate.Constraints.Models;
+using BlazorTemplate.Constraints.Options;
+using BlazorTemplate.Constraints.Page;
+using BlazorTemplate.Constraints.Services;
+using BlazorTemplate.Constraints.UI.Extensions;
+using BlazorTemplate.Constraints.Utils;
+using BlazorTemplate.UI.Shared.Layouts;
 
 namespace BlazorAdmin;
 
@@ -39,7 +38,11 @@ public class Login : SystemPageIndex<Login>, ILoginPage
         //var refer = HttpContext.Request.Headers.Referer.ToString();
         //if (!string.IsNullOrEmpty(refer)) UI.Error("登录凭证超时，请重新登录");
     }
-
+#if DEBUG
+    public int Release { get; set; }
+#else
+    public int Debug { get; set; }
+#endif
     public async Task HandleLogin(LoginFormModel model)
     {
         try

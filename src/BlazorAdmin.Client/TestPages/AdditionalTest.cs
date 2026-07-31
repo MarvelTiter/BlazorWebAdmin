@@ -1,7 +1,6 @@
-﻿using System.Diagnostics;
-using AutoInjectGenerator;
-using Project.Constraints.Services;
-using Project.Constraints.Store.Models;
+﻿using AutoInjectGenerator;
+using BlazorTemplate.Constraints.Services;
+using BlazorTemplate.Constraints.Store.Models;
 
 namespace BlazorAdmin.Client.TestPages;
 

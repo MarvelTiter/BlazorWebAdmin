@@ -1,5 +1,5 @@
 {
-    "$schema": "http://json.schemastore.org/template",
+    "$schema": "https://json.schemastore.org/template",
     "author": "MarvelTiter",
     "classifications": [
         "BlazorAdmin",
@@ -14,11 +14,38 @@
     },
     "sourceName": "BlazorAdmin",
     "preferNameDirectory": true,
+    "specialCustomOperations": {
+        "**/*.slnx": {
+            "operations": [
+                {
+                    "type": "conditional",
+                    "configuration": {
+                        "actionableIf": [
+                            "<!--#if"
+                        ],
+                        "actionableElse": [
+                            "<!--#else"
+                        ],
+                        "actionableElseif": [
+                            "<!--#elseif",
+                            "<!--#elif"
+                        ],
+                        "endif": [
+                            "<!--#endif"
+                        ],
+                        "trim": "true",
+                        "wholeLine": "true"
+                    }
+                }
+            ]
+        }
+    },
     "sources": [
         {
             "source": "./",
             "target": "./",
             "exclude": [
+                "**/pack.settings.props",
                 "**/[Bb]in/**",
                 "**/[Oo]bj/**",
                 ".template.config/**/*",
@@ -27,16 +54,18 @@
                 "*-lock.json",
                 "**/TestPages/**",
                 "**/.vs/**",
-                "**/.idea/**",
-                "BlazorAdmin.web.sln",
-                "BlazorAdmin.wpf.sln"
+                "**/.idea/**"
             ],
+            "rename": {
+                "Shared/Props/pack.settings.forpack.props": "Shared/Props/pack.settings.props"
+            },
             "condition": "host == 'none'"
         },
         {
             "source": "./",
             "target": "./",
             "exclude": [
+                "**/pack.settings.props",
                 "**/[Bb]in/**",
                 "**/[Oo]bj/**",
                 ".template.config/**/*",
@@ -46,12 +75,10 @@
                 "**/TestPages/**",
                 "**/.vs/**",
                 "**/.idea/**",
-                "**/BlazorAdmin.Wpf/**",
-                "BlazorAdmin.sln",
-                "BlazorAdmin.wpf.sln"
+                "**/BlazorAdmin.Wpf/**"
             ],
             "rename": {
-                "BlazorAdmin.web.sln": "BlazorAdmin.sln"
+                "Shared/Props/pack.settings.forpack.props": "Shared/Props/pack.settings.props"
             },
             "condition": "host == 'web'"
         },
@@ -59,6 +86,7 @@
             "source": "./",
             "target": "./",
             "exclude": [
+                "**/pack.settings.props",
                 "**/[Bb]in/**",
                 "**/[Oo]bj/**",
                 ".template.config/**/*",
@@ -69,12 +97,10 @@
                 "**/.vs/**",
                 "**/.idea/**",
                 "**/BlazorAdmin/**",
-                "**/BlazorAdmin.Client/**",
-                "BlazorAdmin.sln",
-                "BlazorAdmin.web.sln"
+                "**/BlazorAdmin.Client/**"
             ],
             "rename": {
-                "BlazorAdmin.wpf.sln": "BlazorAdmin.sln"
+                "Shared/Props/pack.settings.forpack.props": "Shared/Props/pack.settings.props"
             },
             "condition": "host == 'wpf'"
         }

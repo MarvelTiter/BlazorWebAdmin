@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using Project.Constraints.Common.Attributes;
-using Project.Web.Shared.Layouts;
+using BlazorTemplate.Constraints.Common.Attributes;
 
 namespace BlazorAdmin.Client.TestPages;
 #if DEBUG

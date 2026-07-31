@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-
+	<Import Project="../Shared/Props/pack.settings.props" />
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<TargetFramework>net8.0-windows</TargetFramework>
@@ -16,12 +16,16 @@
 		<PackageReference Include="LightORM.Providers.Sqlite" Version="2026.6.19.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
 	</ItemGroup>
-
+	<!--#if(AlwaysFalse)-->
 	<ItemGroup>
-		<ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
-		<ProjectReference Include="..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
+		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.AppCore\BlazorTemplate.AppCore.csproj" />
+		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
 	</ItemGroup>
-
+	<!--#endif-->
+	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
+		<PackageReference Include="BlazorTemplate.AppCore" />
+		<PackageReference Include="BlazorTemplate.UI.AntBlazor" />
+	</ItemGroup>
 	<ItemGroup>
 	  <Content Update="wpfhost.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

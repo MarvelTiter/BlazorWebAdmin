@@ -1,0 +1,76 @@
+﻿@namespace BlazorTemplate.UI.Shared.Components
+@* @inherits JsComponentBase *@
+@attribute [Obsolete("建议使用 MIcon 组件替代", true)]
+<i style="display: flex;align-items: center;" @onclick="handleClick">
+    @IconMarkuString
+</i>
+@code {
+    [Parameter]
+    public string? IconName { get; set; }
+    [Inject, NotNull] ISvgIconService? SvgService { get; set; }
+    MarkupString IconMarkuString;
+
+    [Parameter]
+    public string? ClassName { get; set; }
+
+    [Parameter] public string? Style { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter] public string? FontSize { get; set; }
+
+    private async Task handleClick()
+    {
+        await OnClick.InvokeAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var result = await SvgService.GetIconAsync(IconName);
+        loadSvgData(result.Payload?.OriginalContent);
+    }
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue(nameof(IconName), out string? result))
+        {
+            if (!string.Equals(IconName, result)
+                && !string.IsNullOrEmpty(IconName)
+                && !string.IsNullOrEmpty(result))
+            {
+                shouldUpdate = true;
+            }
+        }
+        await base.SetParametersAsync(parameters);
+    }
+    bool shouldUpdate;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // await loadSvgData();
+        await base.OnParametersSetAsync();
+        if (shouldUpdate)
+        {
+            var result = await SvgService.GetIconAsync(IconName);
+            loadSvgData(result.Payload?.OriginalContent);
+            shouldUpdate = false;
+        }
+    }
+
+    void loadSvgData(string? svgContent)
+    {
+        if (string.IsNullOrEmpty(svgContent))
+        {
+            IconMarkuString = new MarkupString($"<span class='iconfont {ClassName} icon-{IconName}'></span>");
+        }
+        else
+        {
+            var style = Style ?? $"font-size: {FontSize ?? "18px"}";
+            var insertIndex = svgContent.IndexOf("<svg") + 4;
+            svgContent = svgContent.Insert(insertIndex, $" class='svg-icon {ClassName}' style='{style}'");
+            IconMarkuString = new MarkupString(svgContent);
+        }
+    }
+}

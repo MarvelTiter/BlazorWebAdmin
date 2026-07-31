@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Project.Constraints;
-using Project.Constraints.Models;
-using Project.Constraints.Services;
-using Project.Constraints.Store;
-using Project.Constraints.Utils;
+using BlazorTemplate.Constraints;
+using BlazorTemplate.Constraints.Models;
+using BlazorTemplate.Constraints.Services;
+using BlazorTemplate.Constraints.Store;
+using BlazorTemplate.Constraints.Utils;
 using System.Security.Claims;
 
 namespace BlazorAdmin.Wpf.Auth;

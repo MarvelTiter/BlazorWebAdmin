@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components.WebView;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.JSInterop;
 using System.ComponentModel;

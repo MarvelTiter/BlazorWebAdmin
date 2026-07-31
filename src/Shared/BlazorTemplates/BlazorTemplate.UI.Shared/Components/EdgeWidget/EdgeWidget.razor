@@ -1,0 +1,17 @@
+﻿@namespace BlazorTemplate.UI.Shared.Components
+@inherits JsComponentBase
+<div class="mark" @ref="maskDiv">
+</div>
+<div class="container" @ref="containerDiv" style="left:-1000px;">
+    <div class="content">
+        @if (ChildContent != null)
+        {
+            @ChildContent
+        }
+        <div class="trigger" @ref="triggerDiv">
+            <MIcon IconName="fa fa-exchange"></MIcon>
+            @* <span style="font-size:48px;"> *@
+            @* </span> *@
+        </div>
+    </div>
+</div>

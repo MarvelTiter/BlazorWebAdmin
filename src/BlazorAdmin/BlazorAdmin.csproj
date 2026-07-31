@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+	<Import Project="../Shared/Props/pack.settings.props" />
+	<Import Project="../Shared/Props/projects.versions.props" />
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>
@@ -8,9 +9,9 @@
 		<OutputType Condition="'$(Configuration)'!='Debug'">WinExe</OutputType>
 		<DisableWinExeOutputInference>true</DisableWinExeOutputInference>
 		<IsPackable>true</IsPackable>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<Version>$(MainProjectVersion)</Version>
 	</PropertyGroup>
-
+	
 	<ItemGroup>
 	  <Content Remove="Langs\zh-CN\index.json" />
 	  <Content Remove="Langs\zh-CN\RouterStore.json" />
@@ -25,17 +26,24 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" />
 		<PackageReference Include="LightORM.Providers.Sqlite" Version="2026.6.19.1" />
 	</ItemGroup>
-	
-	<!--#if(UseClientProject)-->
+
+	<!--#if(AlwaysFalse)-->
 	<ItemGroup>
 		<ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
-		<ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
+		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.AppCore\BlazorTemplate.AppCore.csproj" />
+		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
+	</ItemGroup>
+	<!--#endif-->
+	<!--#if(UseClientProject)-->
+	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
+		<ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
+		<PackageReference Include="BlazorTemplate.AppCore" Version="$(AppCoreVersion)"/>
 	</ItemGroup>
 	<!--#endif-->
 	<!--#if(!UseClientProject)-->
-	<ItemGroup>
-		<ProjectReference Include="..\Shared\Project.AppCore\Project.AppCore.csproj" />
-		<ProjectReference Include="..\Shared\Project.UI.AntBlazor\Project.UI.AntBlazor.csproj" />
+	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
+		<PackageReference Include="BlazorTemplate.AppCore" Version="$(AppCoreVersion)"/>
+		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)"/>
 	</ItemGroup>
 	<!--#endif-->
 	<ItemGroup>

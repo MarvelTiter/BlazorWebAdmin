@@ -3,12 +3,12 @@ using BlazorAdmin;
 using LightORM;
 using LightORM.Providers.Sqlite.Extensions;
 using LoggerProviderExtensions;
-using Project.AppCore;
-using Project.AppCore.Services;
-using Project.Constraints;
-using Project.Web.Shared;
+using BlazorTemplate.AppCore;
+using BlazorTemplate.AppCore.Services;
+using BlazorTemplate.Constraints;
+using BlazorTemplate.UI.Shared;
 using MT.LightTask;
-using Project.Constraints.Services;
+using BlazorTemplate.Constraints.Services;
 using AutoWasmApiGenerator;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -28,8 +28,8 @@ builder.Services.AddRazorComponents()
     });
 #endif
 #endif
-Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
-//Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
+BlazorTemplate.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
+//BlazorTemplate.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 //builder.Services.AddAntDesignUI();
 //builder.Services.AddFluentUI();
 builder.AddServerProject(setting =>

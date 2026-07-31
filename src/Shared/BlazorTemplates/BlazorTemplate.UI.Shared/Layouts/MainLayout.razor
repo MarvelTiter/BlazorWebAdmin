@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Components.Web
+@using BlazorTemplate.Constraints
+@using BlazorTemplate.Constraints.Store.Models
+@using System.Globalization;
+@using System.Diagnostics.CodeAnalysis
+@using BlazorTemplate.UI.Shared.Layouts.Layouts
+@inherits LayoutComponentBase
+@implements IDisposable
+@layout RootLayout
+
+<PageTitle>
+    @($"{AppSetting.Value.AppShortName} - {Context.RouterStore.Current?.RouteTitle ?? "主页"}")
+</PageTitle>
+
+<div class="page">
+    <CascadingValue Value="this" IsFixed>
+        @if (Context.AppStore.Mode == LayoutMode.Classic)
+        {
+            <ClassicLayout @ref=LayoutBase>
+                @Body
+            </ClassicLayout>
+        }
+        else if (Context.AppStore.Mode == LayoutMode.Card)
+        {
+            <CardLayout @ref=LayoutBase>
+                @Body
+            </CardLayout>
+        }
+        else if (Context.AppStore.Mode == LayoutMode.Line)
+        {
+            <LineLayout @ref=LayoutBase>
+                @Body
+            </LineLayout>
+        }
+        else
+        {
+            <div style="height:100vh; width:100vw;display: flex; align-items: center;justify-content: center;">
+                <h1>Loading</h1>
+            </div>
+        }
+        @* <WebSetting @ref=WebSetting></WebSetting> *@
+
+    </CascadingValue>
+</div>
+@code {
+    
+    [Inject, NotNull] IOptions<AppSetting>? AppSetting { get; set; }
+    [Inject, NotNull] IAppSession? Context { get; set; }
+    public LayoutBase? LayoutBase { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        // WebSetting更新页面
+        // Context.Update = StateHasChanged;
+    }
+    
+    private bool disposedValue;
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+}

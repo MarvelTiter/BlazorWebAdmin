@@ -5,11 +5,9 @@ using LightORM.Providers.Sqlite.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Project.AppCore;
-using Project.AppCore.Services;
-using Project.Constraints;
-using Project.Constraints.Services;
-using Project.Web.Shared;
+using BlazorTemplate.Constraints;
+using BlazorTemplate.Constraints.Services;
+using BlazorTemplate.UI.Shared;
 namespace BlazorAdmin.Wpf;
 
 public class Program
@@ -33,8 +31,8 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = BlazorHybridWpfApplication.Create(args);
-        Project.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
-        //Project.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
+        BlazorTemplate.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
+        //BlazorTemplate.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
         //builder.Services.AddAntDesignUI();
         //builder.Services.AddFluentUI();
         builder.Services.AddClientProject(builder.Configuration, setting =>
