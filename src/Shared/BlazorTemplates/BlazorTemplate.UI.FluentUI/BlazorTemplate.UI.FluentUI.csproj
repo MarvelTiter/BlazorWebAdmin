@@ -29,7 +29,7 @@
 		<ProjectReference Include="..\BlazorTemplate.UI.Shared\BlazorTemplate.UI.Shared.csproj" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='RELEASE'">
-		<PackageReference Include="BlazorTemplate.Constraints" Version="$(SharedProjectVersion)" />
+		<PackageReference Include="BlazorTemplate.UI.Shared" Version="$(SharedProjectVersion)" />
 	</ItemGroup>
 
 </Project>
