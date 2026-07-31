@@ -1,18 +1,15 @@
 <Solution>
   <Folder Name="/Shared/" />
+  <!--#if(AlwaysFalse)-->
   <Folder Name="/Shared/BlazorTemplates/">
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.AppCore/BlazorTemplate.AppCore.csproj" />
-    <Project
-      Path="Shared/BlazorTemplates/BlazorTemplate.Constraints/BlazorTemplate.Constraints.csproj" />
-    <Project
-      Path="Shared/BlazorTemplates/BlazorTemplate.UI.AntBlazor/BlazorTemplate.UI.AntBlazor.csproj" />
-    <Project
-      Path="Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj" />
+    <Project Path="Shared/BlazorTemplates/BlazorTemplate.Constraints/BlazorTemplate.Constraints.csproj" />
+    <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.AntBlazor/BlazorTemplate.UI.AntBlazor.csproj" />
+    <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj" />
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj" />
   </Folder>
+   <!--#endif-->
   <Folder Name="/Shared/Props/">
-    <File Path="Shared/Props/pack.settings.forpack.props" />
-    <File Path="Shared/Props/pack.settings.props" />
     <File Path="Shared/Props/projects.versions.props" />
   </Folder>
   <Folder Name="/Shared/TsCore/">

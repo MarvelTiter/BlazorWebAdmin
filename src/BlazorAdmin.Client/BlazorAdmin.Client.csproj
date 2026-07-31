@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-	<Import Project="../Shared/Props/projects.versions.props" />
+	<Import Project="../Shared/Props/pack.settings.props" />
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<Nullable>enable</Nullable>

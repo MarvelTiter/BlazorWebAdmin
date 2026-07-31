@@ -45,6 +45,7 @@
             "source": "./",
             "target": "./",
             "exclude": [
+                "**/pack.settings.props",
                 "**/[Bb]in/**",
                 "**/[Oo]bj/**",
                 ".template.config/**/*",
@@ -64,6 +65,7 @@
             "source": "./",
             "target": "./",
             "exclude": [
+                "**/pack.settings.props",
                 "**/[Bb]in/**",
                 "**/[Oo]bj/**",
                 ".template.config/**/*",
@@ -84,6 +86,7 @@
             "source": "./",
             "target": "./",
             "exclude": [
+                "**/pack.settings.props",
                 "**/[Bb]in/**",
                 "**/[Oo]bj/**",
                 ".template.config/**/*",
