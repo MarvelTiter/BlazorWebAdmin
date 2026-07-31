@@ -8,6 +8,9 @@
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj" />
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj" />
   </Folder>
+  <Folder Name="/Shared/github/">
+    <File Path="../.github/workflows/dotnet.yml" />
+  </Folder>
    <!--#endif-->
   <Folder Name="/Shared/Props/">
     <File Path="Shared/Props/projects.versions.props" />

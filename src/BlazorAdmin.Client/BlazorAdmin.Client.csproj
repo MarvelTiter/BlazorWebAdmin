@@ -20,8 +20,8 @@
 	</ItemGroup>
 	<!--#endif-->
 	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
-		<PackageReference Include="BlazorTemplate.UI.AntBlazor" />
-		<PackageReference Include="BlazorTemplate.UI.Shared" />
+		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)"/>
+		<PackageReference Include="BlazorTemplate.UI.Shared" Version="$(SharedProjectVersion)"/>
 	</ItemGroup>
 
 </Project>

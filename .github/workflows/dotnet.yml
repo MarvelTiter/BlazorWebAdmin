@@ -1,7 +1,4 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
+﻿name: .NET
 
 on:
   push:
@@ -11,18 +8,51 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 8.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+  publish-nuget:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Create local NuGet source
+        run:
+          |
+          mkdir -p $HOME/.local-nuget
+          dotnet nuget add source $HOME/.local-nuget --name local
+
+      - name: Pack BlazorTemplate.Constraints
+        run: dotnet pack -c Release src/Shared/BlazorTemplates/BlazorTemplate.Constraints/BlazorTemplate.Constraints.csproj -o $HOME/.local-nuget
+
+      - name: Pack BlazorTemplate.UI.Shared
+        run: dotnet pack -c Release src/Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj -o $HOME/.local-nuget
+
+      - name: Pack BlazorTemplate.AppCore
+        run: dotnet pack -c Release src/Shared/BlazorTemplates/BlazorTemplate.AppCore/BlazorTemplate.AppCore.csproj -o $HOME/.local-nuget
+
+      - name: Pack BlazorTemplate.UI.FluentUI
+        run: dotnet pack -c Release src/Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj -o $HOME/.local-nuget
+
+      - name: Pack BlazorTemplate.UI.AntBlazor
+        run: dotnet pack -c Release src/Shared/BlazorTemplates/BlazorTemplate.UI.AntBlazor/BlazorTemplate.UI.AntBlazor.csproj -o $HOME/.local-nuget
+
+      - name: Publish NuGet packages
+        run: dotnet nuget push $HOME/.local-nuget/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
