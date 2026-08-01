@@ -48,5 +48,10 @@ jobs:
           dotnet build src/Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj -c Release
           dotnet pack --no-build -c Release src/Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj -o $HOME/.local-nuget
 
+      - name: Pack Template
+        run: |
+          dotnet build template.csproj -c Release
+          dotnet pack --no-build -c Release template.csproj -o $HOME/.local-nuget
+
       - name: Publish NuGet packages
         run: dotnet nuget push $HOME/.local-nuget/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
