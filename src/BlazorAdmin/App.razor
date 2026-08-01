@@ -32,11 +32,18 @@
     <BlazorTemplate.UI.Shared.Components.ReconnectorOutlet @rendermode="@RenderMode"></BlazorTemplate.UI.Shared.Components.ReconnectorOutlet>
 
     @* <script src="@Assets["_framework/blazor.web.js"]"></script> *@
-    <VScript Src="_framework/blazor.web.js"></VScript>
     @* <script src="@Assets["js/blazor-admin-project.js"]"></script> *@
+    @if (AppOption.Value.RunMode == AppRunMode.Server)
+    {
+        <LegacyBlazorJs.Loader Target="es2015"></LegacyBlazorJs.Loader>
+    }
+    else
+    {
+        <VScript Src="_framework/blazor.web.js"></VScript>
+    }
     <VScript Src="_content/BlazorTemplate.UI.Shared/js/shared-project.js"></VScript>
     <VScript Src="js/BlazorAdmin-project.js"></VScript>
-    
+
 </body>
 
 </html>

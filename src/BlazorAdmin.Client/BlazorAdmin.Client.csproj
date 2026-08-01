@@ -3,7 +3,7 @@
 	<Import Project="../Shared/Props/pack.settings.props" />
 	<Import Project="../Shared/Props/projects.versions.props" />
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
@@ -12,8 +12,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.10" />
 	</ItemGroup>
 	<!--#if(AlwaysFalse)-->
 	<ItemGroup>
@@ -22,8 +22,8 @@
 	</ItemGroup>
 	<!--#endif-->
 	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
-		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)"/>
-		<PackageReference Include="BlazorTemplate.UI.Shared" Version="$(SharedProjectVersion)"/>
+		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)" />
+		<PackageReference Include="BlazorTemplate.UI.Shared" Version="$(SharedProjectVersion)" />
 	</ItemGroup>
 
 </Project>

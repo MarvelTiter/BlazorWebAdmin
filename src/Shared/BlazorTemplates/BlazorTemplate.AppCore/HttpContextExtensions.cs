@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace BlazorTemplate.AppCore;
 
-
+#if NET8_0
 public static class HttpContextExtensions
 {
     private static readonly ConcurrentDictionary<Type, bool> AcceptsInteractiveRoutingCache = new();
@@ -25,7 +25,7 @@ public static class HttpContextExtensions
                 static pageType => !pageType.IsDefined(typeof(ExcludeFromInteractiveRoutingAttribute), true));
     }
 }
-
+#endif
 
 public static class ClaimsPrincipalExtensions
 {

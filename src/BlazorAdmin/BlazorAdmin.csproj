@@ -2,7 +2,7 @@
 	<Import Project="../Shared/Props/pack.settings.props" />
 	<Import Project="../Shared/Props/projects.versions.props" />
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
@@ -23,8 +23,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.10" />
 		<PackageReference Include="LightORM.Providers.Sqlite" Version="2026.6.19.1" />
+		<PackageReference Include="LegacyBlazorJs" Version="10.0.10.64" />
 	</ItemGroup>
 
 	<!--#if(AlwaysFalse)-->
@@ -37,13 +38,13 @@
 	<!--#if(UseClientProject)-->
 	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
 		<ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
-		<PackageReference Include="BlazorTemplate.AppCore" Version="$(AppCoreVersion)"/>
+		<PackageReference Include="BlazorTemplate.AppCore" Version="$(AppCoreVersion)" />
 	</ItemGroup>
 	<!--#endif-->
 	<!--#if(!UseClientProject)-->
 	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
-		<PackageReference Include="BlazorTemplate.AppCore" Version="$(AppCoreVersion)"/>
-		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)"/>
+		<PackageReference Include="BlazorTemplate.AppCore" Version="$(AppCoreVersion)" />
+		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)" />
 	</ItemGroup>
 	<!--#endif-->
 	<ItemGroup>

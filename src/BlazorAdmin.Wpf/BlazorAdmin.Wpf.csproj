@@ -3,7 +3,7 @@
 	<Import Project="../Shared/Props/projects.versions.props" />
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net10.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
@@ -13,9 +13,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="8.0.20" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebView.Wpf" Version="10.0.90" />
 		<PackageReference Include="LightORM.Providers.Sqlite" Version="2026.6.19.1" />
-		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
 	</ItemGroup>
 	<!--#if(AlwaysFalse)-->
 	<ItemGroup>
@@ -24,8 +24,8 @@
 	</ItemGroup>
 	<!--#endif-->
 	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
-		<PackageReference Include="BlazorTemplate.AppCore" Version="$(AppCoreVersion)"/>
-		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)"/>
+		<PackageReference Include="BlazorTemplate.AppCore" Version="$(AppCoreVersion)" />
+		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Content Update="wpfhost.json">

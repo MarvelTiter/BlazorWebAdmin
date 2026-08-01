@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
-	<Import Project="../../Props/projects.versions.props"/>
+	<Import Project="../../Props/projects.versions.props" />
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -19,13 +19,13 @@
 		<PackageReference Include="AutoWasmApiGenerator" Version="2026.5.25.1" />
 		<PackageReference Include="LoggerProviderExtensions" Version="2026.7.15.1" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
-		<PackageReference Include="MT.LightORM" Version="2026.7.28.1" />
+		<PackageReference Include="MT.LightORM" Version="2026.8.1.1" />
 		<PackageReference Include="MT.LightTask" Version="2026.5.11.1" />
 		<PackageReference Include="MT.Toolkit" Version="2026.6.2.1" />
-		<PackageReference Include="LightExcel" Version="2026.7.20.1" />
+		<PackageReference Include="LightExcel" Version="2026.7.30.1" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" />
-		<PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.10" />
 	</ItemGroup>
 </Project>

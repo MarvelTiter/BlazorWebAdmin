@@ -130,6 +130,10 @@ services.AddAuthorizationCore(o =>
 
 # 更新日志
 
+### 2026.08.01
+1. 重构模板项目，其他共享项目不再包含在模板内
+2. 升级到.NET 10.0框架(依赖LegacyBlazorJs兼容低版本浏览器)
+
 ### 2026.02.13
 - `AntTable`增加行内编辑功能
     1. `ColumnDefinitionAttribute`编辑列是否允许编辑(优先级最高)
