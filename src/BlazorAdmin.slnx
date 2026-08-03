@@ -9,7 +9,7 @@
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj" />
   </Folder>
   <Folder Name="/Shared/doc/">
-    <File Path="../doc/模板参数.md" />
+    <File Path="../doc/模板参数和日志.md" />
   </Folder>
   <Folder Name="/Shared/github/">
     <File Path="../.github/workflows/dotnet.yml" />

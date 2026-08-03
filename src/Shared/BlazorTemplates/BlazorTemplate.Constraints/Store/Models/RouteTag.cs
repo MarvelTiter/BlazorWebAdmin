@@ -36,10 +36,10 @@ public static class TagRouteHelper
     public static void TrySetDisactive(this RouteTag route, WeakReference<object?> pageInstance)
     {
         route.SetActive(false);
-        if (pageInstance.TryGetTarget(out var page) && page is IRoutePage rp)
+        if (pageInstance.TryGetTarget(out var page) && page is IRouteTagPage rp)
         {
             Console.WriteLine($"{route.RouteTitle} -> close");
-            rp.OnClose();
+            //rp.OnClose();
         }
     }
 

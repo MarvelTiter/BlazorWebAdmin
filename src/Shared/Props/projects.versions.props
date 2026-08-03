@@ -1,10 +1,10 @@
-<Project>
+﻿<Project>
 	<PropertyGroup>
-		<MainProjectVersion>2026.08.01.1</MainProjectVersion>
-        <AppCoreVersion>2026.08.01.1</AppCoreVersion>
-        <ConstraintsVersion>2026.08.01.1</ConstraintsVersion>
-        <AntUIVersion>2026.08.01.1</AntUIVersion>
-        <SharedProjectVersion>2026.08.01.1</SharedProjectVersion>
-        <FluentUIVersion>2026.08.01.1</FluentUIVersion>
+		<MainProjectVersion>2026.08.03.1</MainProjectVersion>
+        <AppCoreVersion>2026.08.03.1</AppCoreVersion>
+        <ConstraintsVersion>2026.08.03.1</ConstraintsVersion>
+        <AntUIVersion>2026.08.03.1</AntUIVersion>
+        <SharedProjectVersion>2026.08.03.1</SharedProjectVersion>
+        <FluentUIVersion>2026.08.03.1</FluentUIVersion>
 	</PropertyGroup>
 </Project>
