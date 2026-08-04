@@ -11,8 +11,8 @@ public static class IconHelper
     {
         if (!fluentIcons.TryGetValue(name, out var icon))
         {
-            var svgPath = await service.GetIconAsync(name);
-            icon = new Icon(name, variant, size, svgPath.Payload?.OriginalContent ?? string.Empty);
+            var svgPath = service.GetIcon(name);
+            icon = new Icon(name, variant, size, svgPath?.OriginalContent ?? string.Empty);
             fluentIcons[name] = icon;
         }
         return icon;

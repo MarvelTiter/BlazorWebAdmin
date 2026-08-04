@@ -24,12 +24,19 @@ public class SvgIcon : ComponentBase
 
     [Parameter] public string? FontSize { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    await base.OnInitializedAsync();
+    //    var result = await SvgService.GetIconAsync(IconName);
+    //    //LoadSvgData(result.Payload?.OriginalContent);
+    //    svgData = result.Payload;
+    //}
+
+    protected override void OnInitialized()
     {
-        await base.OnInitializedAsync();
-        var result = await SvgService.GetIconAsync(IconName);
+        base.OnInitialized();
         //LoadSvgData(result.Payload?.OriginalContent);
-        svgData = result.Payload;
+        svgData = SvgService.GetIcon(IconName);
     }
 
     public override async Task SetParametersAsync(ParameterView parameters)
@@ -49,15 +56,27 @@ public class SvgIcon : ComponentBase
 
     bool shouldUpdate;
 
-    protected override async Task OnParametersSetAsync()
+    //protected override async Task OnParametersSetAsync()
+    //{
+    //    // await loadSvgData();
+    //    await base.OnParametersSetAsync();
+    //    if (shouldUpdate)
+    //    {
+    //        var result = await SvgService.GetIconAsync(IconName);
+    //        //LoadSvgData(result.Payload?.OriginalContent);
+    //        svgData = result.Payload;
+    //        shouldUpdate = false;
+    //    }
+    //}
+
+    protected override void OnParametersSet()
     {
         // await loadSvgData();
-        await base.OnParametersSetAsync();
+        base.OnParametersSet();
         if (shouldUpdate)
         {
-            var result = await SvgService.GetIconAsync(IconName);
+            svgData = SvgService.GetIcon(IconName);
             //LoadSvgData(result.Payload?.OriginalContent);
-            svgData = result.Payload;
             shouldUpdate = false;
         }
     }

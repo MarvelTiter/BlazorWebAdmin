@@ -30,6 +30,7 @@ jobs:
 
       - name: Pack BlazorTemplate.UI.Shared
         run: |
+          dotnet build src/Shared/BlazorTemplates/SvgContentClassGenerator/SvgContentClassGenerator.csproj -c Release    
           dotnet build src/Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj -c Release         
           dotnet pack --no-build -c Release src/Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj -o $HOME/.local-nuget
 

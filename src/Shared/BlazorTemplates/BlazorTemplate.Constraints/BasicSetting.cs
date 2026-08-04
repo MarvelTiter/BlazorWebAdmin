@@ -63,7 +63,7 @@ public class BasicSetting : IProjectSettingService //, IDisposable
     public virtual async Task<IEnumerable<MinimalPermission>> GetUserPowersAsync(UserInfo info)
     {
         var permissionService = ServiceProvider.GetService<IPermissionService>();
-        if (permissionService == null)
+        if (permissionService is null || permissionService is ITemplatePermissionService)
         {
             return [];
         }

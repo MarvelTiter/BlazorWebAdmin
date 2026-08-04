@@ -29,8 +29,17 @@ public class AopPermissionCheck(
                 if (userStore.UserInfo.Permissions is null)
                 {
                     var permissionService = services.GetRequiredService<IPermissionService>();
-                    var permissions = await permissionService.GetUserPermissionsAsync(userStore.UserInfo.UserId);
-                    userStore.UserInfo.Permissions = [.. permissions.Payload.Select(p => p.PermissionId)];
+#if RELEASE
+                    if (permissionService is ITemplatePermissionService)
+                    {
+                        userStore.UserInfo.Permissions = [];
+                    }
+                    else
+#endif
+                    {
+                        var permissions = await permissionService.GetUserPermissionsAsync(userStore.UserInfo.UserId);
+                        userStore.UserInfo.Permissions = [.. permissions.Payload.Select(p => p.PermissionId)];
+                    }
                 }
             }
             finally

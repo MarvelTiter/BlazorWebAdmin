@@ -25,11 +25,18 @@
         await OnClick.InvokeAsync();
     }
 
-    protected override async Task OnInitializedAsync()
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     await base.OnInitializedAsync();
+    //     var result = await SvgService.GetIconAsync(IconName);
+    //     loadSvgData(result.Payload?.OriginalContent);
+    // }
+
+    protected override void OnInitialized()
     {
-        await base.OnInitializedAsync();
-        var result = await SvgService.GetIconAsync(IconName);
-        loadSvgData(result.Payload?.OriginalContent);
+        base.OnInitialized();
+        var result = SvgService.GetIcon(IconName);
+        loadSvgData(result?.OriginalContent);
     }
 
     public override async Task SetParametersAsync(ParameterView parameters)
@@ -47,14 +54,26 @@
     }
     bool shouldUpdate;
 
-    protected override async Task OnParametersSetAsync()
+    // protected override async Task OnParametersSetAsync()
+    // {
+    //     await loadSvgData();
+    //     await base.OnParametersSetAsync();
+    //     if (shouldUpdate)
+    //     {
+    //         var result = await SvgService.GetIconAsync(IconName);
+    //         loadSvgData(result.Payload?.OriginalContent);
+    //         shouldUpdate = false;
+    //     }
+    // }
+
+    protected override void OnParametersSet()
     {
         // await loadSvgData();
-        await base.OnParametersSetAsync();
+        base.OnParametersSet();
         if (shouldUpdate)
         {
-            var result = await SvgService.GetIconAsync(IconName);
-            loadSvgData(result.Payload?.OriginalContent);
+            var result = SvgService.GetIcon(IconName);
+            loadSvgData(result?.OriginalContent);
             shouldUpdate = false;
         }
     }

@@ -1,5 +1,4 @@
 ﻿using LightORM;
-using AutoAopProxyGenerator;
 namespace BlazorTemplate.UI.Shared.Services;
 
 public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
@@ -227,16 +226,5 @@ public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
                 Sort = w.Tb1.Sort
             });
         return powers.CollectionResult();
-    }
-}
-
-[AutoInject(ServiceType = typeof(ITemplatePermissionService), Group = "SERVER")]
-[AutoInject(ServiceType = typeof(IPermissionService), Group = "SERVER")]
-[GenAspectProxy]
-public class StandardPermissionService : DefaultPermissionService<TemplatePermission, TemplateRole, TemplateRolePermission, TemplateUserRole>, ITemplatePermissionService
-{
-    public StandardPermissionService(IExpressionContext context) : base(context)
-    {
-
     }
 }

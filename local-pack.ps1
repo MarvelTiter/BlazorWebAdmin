@@ -138,7 +138,7 @@ if ($UseLocalSource) {
 # ============================================
 Write-Host ""
 Write-Host "============================================================" -ForegroundColor Cyan
-Write-Host "           .NET 模板打包与安装工具 v3.3 (PowerShell)" -ForegroundColor Cyan
+Write-Host "           .NET 模板打包与安装工具 v3.5 (PowerShell)" -ForegroundColor Cyan
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "当前目录: $CurrentDir" -ForegroundColor Gray
@@ -158,6 +158,7 @@ $Projects = @(
         DependsOn = @()
         OutputPrefix = "BlazorTemplate.Constraints"
         IsTemplate = $false
+        Generators = @()  # 此项目依赖的生成器列表（csproj 路径）
     },
     @{ 
         Name = "BlazorTemplate.UI.Shared"
@@ -165,6 +166,9 @@ $Projects = @(
         DependsOn = @("BlazorTemplate.Constraints")
         OutputPrefix = "BlazorTemplate.UI.Shared"
         IsTemplate = $false
+        Generators = @(
+            "src/Shared/BlazorTemplates/SvgContentClassGenerator/SvgContentClassGenerator.csproj"
+        )  # 依赖的生成器
     },
     @{ 
         Name = "BlazorTemplate.AppCore"
@@ -172,6 +176,7 @@ $Projects = @(
         DependsOn = @("BlazorTemplate.Constraints", "BlazorTemplate.UI.Shared")
         OutputPrefix = "BlazorTemplate.AppCore"
         IsTemplate = $false
+        Generators = @()
     },
     @{ 
         Name = "BlazorTemplate.UI.AntBlazor"
@@ -179,6 +184,7 @@ $Projects = @(
         DependsOn = @("BlazorTemplate.Constraints", "BlazorTemplate.UI.Shared", "BlazorTemplate.AppCore")
         OutputPrefix = "BlazorTemplate.UI.AntBlazor"
         IsTemplate = $false
+        Generators = @()
     },
     @{ 
         Name = "BlazorTemplate.UI.FluentUI"
@@ -186,6 +192,7 @@ $Projects = @(
         DependsOn = @("BlazorTemplate.Constraints", "BlazorTemplate.UI.Shared", "BlazorTemplate.AppCore")
         OutputPrefix = "BlazorTemplate.UI.FluentUI"
         IsTemplate = $false
+        Generators = @()
     }
 )
 
@@ -215,6 +222,58 @@ if (-not $SkipClean -and -not $NoPrompt) {
 Write-Host ""
 
 # ============================================
+# 函数: 编译生成器列表
+# ============================================
+function Build-Generators {
+    param(
+        [string[]]$GeneratorPaths,
+        [string]$Configuration
+    )
+    
+    if ($GeneratorPaths.Count -eq 0) {
+        return $true
+    }
+    
+    Write-Host "编译生成器: 共 $($GeneratorPaths.Count) 个生成器" -ForegroundColor Yellow
+    
+    $AllSuccess = $true
+    foreach ($generatorPath in $GeneratorPaths) {
+        $FullGeneratorPath = Join-Path $CurrentDir $generatorPath
+        
+        if (-not (Test-Path $FullGeneratorPath)) {
+            Write-Host "  警告: 生成器项目文件不存在: $generatorPath" -ForegroundColor Yellow
+            $AllSuccess = $false
+            continue
+        }
+        
+        $GeneratorName = Split-Path -Path $generatorPath -Leaf
+        Write-Host "  编译: $GeneratorName" -ForegroundColor Gray
+        Write-Host "    项目文件: $generatorPath" -ForegroundColor Gray
+        
+        # 构建生成器（不打包）
+        $BuildCommand = "dotnet build `"$FullGeneratorPath`" -c $Configuration"
+        Write-Host "    命令: $BuildCommand" -ForegroundColor Gray
+        Invoke-Expression -Command $BuildCommand
+        
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "    错误: 生成器编译失败: $GeneratorName" -ForegroundColor Red
+            $AllSuccess = $false
+        } else {
+            Write-Host "    成功: 生成器编译完成: $GeneratorName" -ForegroundColor Green
+        }
+    }
+    
+    if ($AllSuccess) {
+        Write-Host "  所有生成器编译完成" -ForegroundColor Green
+    } else {
+        Write-Host "  部分生成器编译失败" -ForegroundColor Red
+    }
+    Write-Host ""
+    
+    return $AllSuccess
+}
+
+# ============================================
 # 函数: 打包单个项目
 # ============================================
 function Pack-Project {
@@ -223,7 +282,8 @@ function Pack-Project {
         [string]$ProjectPath,
         [string[]]$DependsOn,
         [string]$OutputPrefix,
-        [bool]$IsTemplate = $false
+        [bool]$IsTemplate = $false,
+        [string[]]$Generators = @()
     )
     
     $FullProjectPath = Join-Path $CurrentDir $ProjectPath
@@ -238,7 +298,15 @@ function Pack-Project {
     Write-Host "  项目文件: $ProjectPath" -ForegroundColor Gray
     
     if ($DependsOn.Count -gt 0) {
-        Write-Host "  依赖: $($DependsOn -join ', ')" -ForegroundColor Gray
+        Write-Host "  依赖项目: $($DependsOn -join ', ')" -ForegroundColor Gray
+    }
+    
+    if ($Generators.Count -gt 0) {
+        Write-Host "  依赖生成器: $($Generators.Count) 个" -ForegroundColor Gray
+        foreach ($gen in $Generators) {
+            $GenName = Split-Path -Path $gen -Leaf
+            Write-Host "    - $GenName" -ForegroundColor Gray
+        }
     }
     
     # 构建项目
@@ -287,10 +355,46 @@ function Pack-Project {
 }
 
 # ============================================
-# 步骤 2: 打包所有项目（按依赖顺序）
+# 步骤 2: 编译所有生成器
 # ============================================
 Write-Host "------------------------------------------------------------" -ForegroundColor Cyan
-Write-Host "步骤 1/3: 正在打包所有项目..." -ForegroundColor Cyan
+Write-Host "步骤 1/4: 编译所有生成器..." -ForegroundColor Cyan
+Write-Host "------------------------------------------------------------" -ForegroundColor Cyan
+Write-Host ""
+
+# 收集所有需要编译的生成器（去重）
+$AllGenerators = @()
+foreach ($project in $Projects) {
+    if ($project.Generators.Count -gt 0) {
+        $AllGenerators += $project.Generators
+    }
+}
+# 去重
+$AllGenerators = $AllGenerators | Select-Object -Unique
+
+if ($AllGenerators.Count -gt 0 -and -not $NoBuild) {
+    $GeneratorResult = Build-Generators -GeneratorPaths $AllGenerators -Configuration $Configuration
+    if (-not $GeneratorResult) {
+        Write-Host "错误: 生成器编译失败，请检查错误信息" -ForegroundColor Red
+        if (-not $NoPrompt) {
+            Read-Host "按 Enter 退出"
+        }
+        exit 1
+    }
+} elseif ($AllGenerators.Count -gt 0 -and $NoBuild) {
+    Write-Host "信息: 已指定 --no-build，跳过生成器编译" -ForegroundColor Yellow
+    Write-Host "  注意: 请确保生成器已经编译过，否则构建可能失败" -ForegroundColor Yellow
+    Write-Host ""
+} else {
+    Write-Host "信息: 没有需要编译的生成器" -ForegroundColor Cyan
+    Write-Host ""
+}
+
+# ============================================
+# 步骤 3: 打包所有项目（按依赖顺序）
+# ============================================
+Write-Host "------------------------------------------------------------" -ForegroundColor Cyan
+Write-Host "步骤 2/4: 正在打包所有项目..." -ForegroundColor Cyan
 Write-Host "------------------------------------------------------------" -ForegroundColor Cyan
 Write-Host ""
 
@@ -303,7 +407,8 @@ foreach ($project in $Projects) {
                           -ProjectPath $project.Path `
                           -DependsOn $project.DependsOn `
                           -OutputPrefix $project.OutputPrefix `
-                          -IsTemplate $false
+                          -IsTemplate $false `
+                          -Generators $project.Generators
     
     if ($result) {
         $PackedProjects += $project.Name
@@ -317,17 +422,53 @@ foreach ($project in $Projects) {
     Write-Host ""
 }
 
-# 打包主模板
-$MainTemplateResult = Pack-Project -ProjectName "主模板" `
-                                  -ProjectPath $MainTemplate `
-                                  -DependsOn $PackedProjects `
-                                  -OutputPrefix "Template" `
-                                  -IsTemplate $true
+# 打包主模板（主模板可能也依赖生成器，但通常在项目文件中已经配置）
+Write-Host "打包: 主模板" -ForegroundColor Yellow
+Write-Host "  项目文件: $MainTemplate" -ForegroundColor Gray
+Write-Host "  依赖项目: $($PackedProjects -join ', ')" -ForegroundColor Gray
 
-if ($MainTemplateResult) {
-    $PackedProjects += "主模板"
+$FullMainTemplatePath = Join-Path $CurrentDir $MainTemplate
+if (-not (Test-Path $FullMainTemplatePath)) {
+    Write-Host "警告: 主模板文件不存在: $FullMainTemplatePath" -ForegroundColor Yellow
 } else {
-    $FailedProjects += "主模板"
+    if (-not $NoBuild) {
+        $BuildCommand = "dotnet build `"$FullMainTemplatePath`" -c $Configuration"
+        if ($UseLocalSource) {
+            $BuildCommand += " --source `"$LocalNuGetPath`""
+        }
+        Write-Host "  构建命令: $BuildCommand" -ForegroundColor Gray
+        Invoke-Expression -Command $BuildCommand
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "  错误: 构建失败: 主模板" -ForegroundColor Red
+            $FailedProjects += "主模板"
+        }
+    }
+    
+    if ($LASTEXITCODE -eq 0 -or $NoBuild) {
+        $PackCommand = "dotnet pack `"$FullMainTemplatePath`" --no-build -c $Configuration -o `"$OutputDir`""
+        if ($UseLocalSource) {
+            $PackCommand += " --source `"$LocalNuGetPath`""
+        }
+        Write-Host "  打包命令: $PackCommand" -ForegroundColor Gray
+        Invoke-Expression -Command $PackCommand
+        
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "  错误: 打包失败: 主模板" -ForegroundColor Red
+            $FailedProjects += "主模板"
+        } else {
+            Write-Host "  成功: 打包完成: 主模板" -ForegroundColor Green
+            $PackedProjects += "主模板"
+            
+            # 如果启用本地源，将生成的 nupkg 复制到本地源目录
+            if ($UseLocalSource) {
+                $NupkgFiles = Get-ChildItem -Path "$OutputDir*.nupkg" -File | Where-Object { $_.Name -like "*Template*" }
+                foreach ($file in $NupkgFiles) {
+                    Write-Host "  复制到本地源: $($file.Name)" -ForegroundColor Gray
+                    Copy-Item -Path $file.FullName -Destination $LocalNuGetPath -Force
+                }
+            }
+        }
+    }
 }
 
 Write-Host ""
@@ -360,10 +501,10 @@ if ($FailedProjects.Count -gt 0 -and -not $NoPrompt) {
 }
 
 # ============================================
-# 步骤 3: 查找生成的 nupkg
+# 步骤 4: 查找生成的 nupkg
 # ============================================
 Write-Host "------------------------------------------------------------" -ForegroundColor Cyan
-Write-Host "步骤 2/3: 查找生成的 NuGet 包..." -ForegroundColor Cyan
+Write-Host "步骤 3/4: 查找生成的 NuGet 包..." -ForegroundColor Cyan
 Write-Host "------------------------------------------------------------" -ForegroundColor Cyan
 Write-Host ""
 
@@ -385,11 +526,11 @@ foreach ($file in $NupkgFiles) {
 Write-Host ""
 
 # ============================================
-# 步骤 4: 安装主模板（仅安装主模板）
+# 步骤 5: 安装主模板（仅安装主模板）
 # ============================================
 if (-not $SkipInstall) {
     Write-Host "------------------------------------------------------------" -ForegroundColor Cyan
-    Write-Host "步骤 3/3: 安装主模板到本地" -ForegroundColor Cyan
+    Write-Host "步骤 4/4: 安装主模板到本地" -ForegroundColor Cyan
     Write-Host "------------------------------------------------------------" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "注意: 只有主模板会被安装，其他项目作为依赖包" -ForegroundColor Yellow
@@ -518,7 +659,7 @@ if (-not $SkipInstall) {
 }
 
 # ============================================
-# 步骤 5: 清理临时文件夹
+# 步骤 6: 清理临时文件夹
 # ============================================
 if ($IsTempDir -and -not $NoPrompt) {
     Write-Host "------------------------------------------------------------" -ForegroundColor Cyan

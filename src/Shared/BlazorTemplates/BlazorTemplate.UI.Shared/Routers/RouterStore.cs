@@ -16,25 +16,26 @@ using static BlazorTemplate.UI.Shared.Routers.RouterStoreExtensions;
 namespace BlazorTemplate.UI.Shared.Routers;
 
 [AutoInject(ServiceType = typeof(IRouterStore))]
-public partial class RouterStore(IProjectSettingService settingService
-        , NavigationManager navigationManager
+public partial class RouterStore(NavigationManager navigationManager
         , IUserStore userStore
         , IStringLocalizer<RouterStore> localizer
         , IOptionsMonitor<CultureOptions> options
         , ILogger<RouterStore> logger
         , IOptionsMonitor<AppSetting> setting
+        , IMenuService menuService
         , PagesService pagesService) : StoreBase, IRouterStore
 {
 
-    private readonly List<RouteMenu> menus = [];
 
     private RouteTag? current;
 
     private readonly Dictionary<string, RouteTag> pages = new(StringComparer.OrdinalIgnoreCase);
     public ICollection<RouteTag> TopLinks => pages.Values;
 
-    public ICollection<RouteMenu> Menus => menus; // frozenMenus?.Values ?? [];
+    public ICollection<RouteMenu> Menus => menuService.AllMenus; // frozenMenus?.Values ?? [];
 
+    public IMenuService MenuService => menuService;
+    
     public RouteTag? Current => current ?? pages.GetValueOrDefault("/");
 
     public WeakReference<object?> CurrentPageInstance { get; set; } = new WeakReference<object?>(null);
@@ -44,7 +45,8 @@ public partial class RouterStore(IProjectSettingService settingService
     protected override void Release()
     {
         pages.Clear();
-        menus.Clear();
+        //menus.Clear();
+        menuService.Clear();
         try
         {
             locationChangingHandler?.Dispose();
@@ -100,9 +102,9 @@ public partial class RouterStore(IProjectSettingService settingService
         if (!pages.TryGetValue(url, out var tag))
         {
             // TODO 可能有BUG，先观察观察
-            if (menus.Count == 0) return;
+            if (menuService.AllMenus.Count == 0) return;
             bool temp = false;
-            var menu = menus.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
+            var menu = menuService.AllMenus.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
             if (menu == default)
             {
                 var meta = pagesService.Pages.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
@@ -316,17 +318,17 @@ public partial class RouterStore(IProjectSettingService settingService
     {
         try
         {
-            menus.Clear();
+            menuService.Clear();
             pages.Clear();
-            var homeMenu = new RouteMenu()
-            {
-                RouteId = "Home",
-                RouteUrl = "/",
-                Icon = "svg-home",
-                Group = "ROOT",
-                RouteTitle = "主页",
-            };
-            var homeTag = new RouteTag(homeMenu)
+            //var homeMenu = new RouteMenu()
+            //{
+            //    RouteId = "Home",
+            //    RouteUrl = "/",
+            //    Icon = "svg-home",
+            //    Group = "ROOT",
+            //    RouteTitle = "主页",
+            //};
+            var homeTag = new RouteTag(menuService.Home)
             {
                 RouteUrl = "/",
                 RouteId = "Home",
@@ -336,39 +338,40 @@ public partial class RouterStore(IProjectSettingService settingService
                 IsActive = true
             };
             pages.Add("/", homeTag);
-            menus.Add(homeMenu);
+            await menuService.InitMenusAsync(userInfo, OnRouteMetaFilterAsync);
+            //menus.Add(homeMenu);
 
-            IPermission[] savedInfos = [];
-            if (userInfo is not null)
-            {
-                savedInfos = [.. await settingService.GetUserPowersAsync(userInfo)];
-            }
+            //IPermission[] savedInfos = [];
+            //if (userInfo is not null)
+            //{
+            //    savedInfos = [.. await settingService.GetUserPowersAsync(userInfo)];
+            //}
 
-            foreach (var meta in pagesService.Pages.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
-            {
-                if (menus.Any(m => m.RouteId == meta.RouteId)) continue;
-                var enable = await OnRouteMetaFilterAsync(meta);
-                if (!enable)
-                    continue;
-                // 没登录
-                if (userInfo is null)
-                {
-                    if (!meta.IsAllowAnonymous)
-                    {
-                        continue;
-                    }
-                }
-                var savedMeta = savedInfos.FirstOrDefault(p => p.PermissionId == meta.RouteId);
-                if (savedMeta != null)
-                {
-                    meta.Icon = savedMeta.Icon;
-                    meta.RouteTitle = savedMeta.PermissionName;
-                    meta.Sort = savedMeta.Sort;
-                }
-                menus.Add(new RouteMenu(meta));
-            }
+            //foreach (var meta in pagesService.Pages.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
+            //{
+            //    if (menus.Any(m => m.RouteId == meta.RouteId)) continue;
+            //    var enable = await OnRouteMetaFilterAsync(meta);
+            //    if (!enable)
+            //        continue;
+            //    // 没登录
+            //    if (userInfo is null)
+            //    {
+            //        if (!meta.IsAllowAnonymous)
+            //        {
+            //            continue;
+            //        }
+            //    }
+            //    var savedMeta = savedInfos.FirstOrDefault(p => p.PermissionId == meta.RouteId);
+            //    if (savedMeta != null)
+            //    {
+            //        meta.Icon = savedMeta.Icon;
+            //        meta.RouteTitle = savedMeta.PermissionName;
+            //        meta.Sort = savedMeta.Sort;
+            //    }
+            //    menus.Add(new RouteMenu(meta));
+            //}
 
-            this.menus.Sort((a, b) => a.Sort - b.Sort);
+            //this.menus.Sort((a, b) => a.Sort - b.Sort);
             NotifyChanged();
         }
         catch (Exception ex)

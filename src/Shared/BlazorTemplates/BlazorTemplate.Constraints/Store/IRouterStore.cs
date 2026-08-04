@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using BlazorTemplate.Constraints.Store.Models;
+using BlazorTemplate.Constraints.Services;
 
 namespace BlazorTemplate.Constraints.Store;
 
@@ -15,6 +16,7 @@ public interface IRouterStore : IStore, IDisposable
 
     ICollection<RouteTag> TopLinks { get; }
     ICollection<RouteMenu> Menus { get; }
+    IMenuService MenuService { get; }
     RouteTag? Current { get; }
     RenderFragment? Content { get; }
     WeakReference<object?> CurrentPageInstance { get; }

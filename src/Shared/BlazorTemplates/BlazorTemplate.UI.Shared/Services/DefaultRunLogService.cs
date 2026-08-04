@@ -1,6 +1,6 @@
 ﻿using LightORM;
 
-namespace BlazorTemplate.AppCore.Services;
+namespace BlazorTemplate.UI.Shared.Services;
 
 public class DefaultRunLogService<TRunLog> : IRunLogService where TRunLog : class, IRunLog, new()
 {
@@ -39,14 +39,4 @@ public class DefaultRunLogService<TRunLog> : IRunLogService where TRunLog : clas
         var i = await context.Insert(l).ExecuteAsync();
         return i > 0;
     }
-}
-
-[AutoInject(Group = "SERVER", ServiceType = typeof(ITemplateRunLogService))]
-[AutoInject(Group = "SERVER", ServiceType = typeof(IRunLogService))]
-public class StandardRunLogService : DefaultRunLogService<TemplateRunLog>, ITemplateRunLogService
-{
-    public StandardRunLogService(IExpressionContext context) : base(context)
-    {
-    }
-
 }

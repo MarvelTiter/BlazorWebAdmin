@@ -1,7 +1,8 @@
-﻿@using Microsoft.AspNetCore.Components.Routing
-@using System.Linq
+﻿@using System.Linq
+@using BlazorTemplate.Constraints.Services
 @using BlazorTemplate.Constraints.Store.Models
 @using BlazorTemplate.UI.Shared.Components
+@using Microsoft.AspNetCore.Components.Routing
 @if (!HasChildren)
 {
     @if (!Route.IsGroupHeader)
@@ -41,12 +42,20 @@ else
 
     [Inject, NotNull] IRouterStore? RouterStore { get; set; }
 
+    IMenuService MenuService => RouterStore.MenuService;
+
     public RouteMenu Current => Route;
-    // public RouteMenu Current => onlyOneChildren ? Children.First() : Route;
 
-    // private bool onlyOneChildren => Children.Count() == 1;
+    private bool HasChildren => Children.Length > 0;
 
-    private bool HasChildren => Children.Any();
+    private RouteMenu[]? children;
 
-    private IEnumerable<RouteMenu> Children => RouterStore.Menus.Where(m => m.Group == Route.RouteId);
+    private RouteMenu[] Children
+    {
+        get
+        {
+            return children ??= [.. MenuService.GetChildMenus(Route.RouteId)];
+        }    
+
+    }
 }

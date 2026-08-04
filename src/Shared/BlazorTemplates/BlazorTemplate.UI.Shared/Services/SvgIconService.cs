@@ -4,9 +4,38 @@ using System.Collections.Concurrent;
 using System.Text;
 
 namespace BlazorTemplate.UI.Shared.Services;
-[AutoInject(Group = "SERVER", LifeTime = InjectLifeTime.Singleton)]
-[AutoInject(Group = AutoInjectGroups.Hybrid, LifeTime = InjectLifeTime.Singleton)]
-public class SvgIconService : ISvgIconService
+
+[AutoInject(LifeTime = InjectLifeTime.Singleton)]
+public class DefaultSvgIconService : ISvgIconService
+{
+    private readonly static ConcurrentDictionary<string, SvgParsingResult> iconCache = [];
+    public ICollection<SvgParsingResult> GetAllIcon()
+    {
+        return iconCache.Values;
+    }
+
+    public SvgParsingResult? GetIcon(string? name)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            return null;
+        }
+        return iconCache.GetValueOrDefault(name);
+    }
+
+    public static void RegisterIcons<T>() where T : ISvgIconProvider
+    {
+        foreach (var icon in T.GetIcons())
+        {
+            iconCache[icon.Name] = icon;
+        }
+    }
+}
+
+//[AutoInject(Group = "SERVER", LifeTime = InjectLifeTime.Singleton)]
+//[AutoInject(Group = AutoInjectGroups.Hybrid, LifeTime = InjectLifeTime.Singleton)]
+[Obsolete]
+public class SvgIconService //: ISvgIconService
 {
     private readonly IHostEnvironment environment;
     private static readonly ConcurrentDictionary<string, SvgParsingResult> _contentCache = new();
@@ -106,7 +135,7 @@ public class SvgIconService : ISvgIconService
         int svgStart = content.IndexOf("<svg".AsSpan());
         if (svgStart == -1)
         {
-            return new SvgParsingResult(content.ToString()
+            return new SvgParsingResult("", content.ToString()
                 , []
                 , content.ToString());
         }
@@ -116,7 +145,7 @@ public class SvgIconService : ISvgIconService
         if (svgTagEnd == -1)
         {
             return
-                new SvgParsingResult(content.ToString()
+                new SvgParsingResult("", content.ToString()
                 , []
                 , content.ToString());
         }
@@ -140,7 +169,7 @@ public class SvgIconService : ISvgIconService
             innerContent = content[svgContentStart..(svgContentStart + svgEnd)].ToString();
         }
 
-        return new SvgParsingResult(innerContent, attributes, content.ToString());
+        return new SvgParsingResult("", innerContent, attributes, content.ToString());
     }
 
     private static ReadOnlySpan<char> CleanSvgContent(ReadOnlySpan<char> content)

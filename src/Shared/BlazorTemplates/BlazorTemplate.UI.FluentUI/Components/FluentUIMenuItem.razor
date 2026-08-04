@@ -53,14 +53,17 @@ else
     [Inject, NotNull] IRouterStore? RouterStore { get; set; }
     [Inject, NotNull] IJSRuntime? Js { get; set; }
     [Inject, NotNull] ISvgIconService? SvgIconService { get; set; }
+
+    BlazorTemplate.Constraints.Services.IMenuService MenuService => RouterStore.MenuService;
+
     // public RouteMenu Current => Route;
     // public RouteMenu Current => onlyOneChildren ? Children.First() : Route;
 
     // private bool onlyOneChildren => Children.Count() == 1;
 
-    private bool HasChildren => Children.Any();
-
-    private IEnumerable<RouteMenu> Children => RouterStore.Menus.Where(m => m.Group == Route.RouteId);
+    private bool HasChildren => Children.Length > 0;
+    private RouteMenu[]? children;
+    private RouteMenu[] Children => children ??= [.. MenuService.GetChildMenus(Route.RouteId)];
     Icon? Svg { get; set; }
     protected override async Task OnInitializedAsync()
     {

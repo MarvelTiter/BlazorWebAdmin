@@ -1,5 +1,4 @@
-﻿using AutoAopProxyGenerator;
-using LightORM;
+﻿using LightORM;
 
 namespace BlazorTemplate.UI.Shared.Services;
 
@@ -114,22 +113,5 @@ public class DefaultUserService<TUser, TUserRole>
     {
         var u = await context.Select<TUser>().Where(u => u.UserId == id).FirstAsync();
         return u;
-    }
-}
-
-[AutoInject(Group = "SERVER", ServiceType = typeof(ITemplateUserService))]
-[GenAspectProxy]
-public class StandardUserService(IExpressionContext context) : DefaultUserService<TemplateUser, TemplateUserRole>(context), ITemplateUserService
-{
-
-    public async Task<QueryResult> SavePropertyAsync(TemplateUser user, string property)
-    {
-        var e = await context.Update(user).UpdateByName(property).ExecuteAsync();
-        return e > 0;
-    }
-    public async Task<QueryResult> SavePropertiesAsync(TemplateUser user, string[] property)
-    {
-        var e = await context.Update(user).UpdateByNames(property).ExecuteAsync();
-        return e > 0;
     }
 }

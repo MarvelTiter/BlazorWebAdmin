@@ -34,6 +34,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<AdditionalFiles Include="**/*.svg" />
+	</ItemGroup>
+	
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.10" />
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='DEBUG'">
@@ -41,5 +46,13 @@
 	</ItemGroup>
 	<ItemGroup Condition="'$(Configuration)'=='RELEASE'">
 		<PackageReference Include="BlazorTemplate.Constraints" Version="$(ConstraintsVersion)" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\SvgContentClassGenerator\bin\$(Configuration)\netstandard2.0\SvgContentClassGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<ProjectReference Include="..\SvgContentClassGenerator\SvgContentClassGenerator.csproj" Pack="false">
+			<OutputItemType>Analyzer</OutputItemType>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<PrivateAssets>all</PrivateAssets>
+		</ProjectReference>
 	</ItemGroup>
 </Project>

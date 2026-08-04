@@ -30,13 +30,13 @@
             <div class="icons-wrapper">
                 @foreach (var item in icons)
                 {
-                    <span @onclick="e => HandleClickEvent(item)" class="@(innerValue==item? "selected":"")">
+                    <span @onclick="e => HandleClickEvent(item)" class="@(innerValue == item ? "selected" : "")">
                         <SvgIcon IconName="@item"></SvgIcon>
                     </span>
                 }
             </div>
         </div>
-    ;
+;
 
     IEnumerable<string> Fa47Icons => string.IsNullOrEmpty(filter) ? Utils.FontAwesomeHelper.AllIcons() : Utils.FontAwesomeHelper.AllIcons().Where(i => i.Contains(filter, StringComparison.InvariantCultureIgnoreCase));
 
@@ -45,20 +45,28 @@
             <div class="icons-wrapper">
                 @foreach (var item in Fa47Icons)
                 {
-                    <span @onclick="e => HandleClickEvent(item)" class="@(innerValue==item? "selected":"")">
+                    <span @onclick="e => HandleClickEvent(item)" class="@(innerValue == item ? "selected" : "")">
                         <FontIcon IconName="@item"></FontIcon>
                     </span>
                 }
             </div>
         </div>
-    ;
+;
 
-    protected override async Task OnInitializedAsync()
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     await base.OnInitializedAsync();
+    //     innerValue = Value ?? string.Empty;
+    //     var result = await SvgService.GetAllIcon();
+    //     icons = result.Payload.ToArray();
+    // }
+
+    protected override void OnInitialized()
     {
-        await base.OnInitializedAsync();
+        base.OnInitialized();
         innerValue = Value ?? string.Empty;
-        var result = await SvgService.GetAllIcon();
-        icons = result.Payload.ToArray();
+        var result = SvgService.GetAllIcon();
+        icons = [..result.Select(r => r.Name)];
     }
 
     private void OpenModal()

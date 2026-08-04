@@ -7,6 +7,7 @@
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.AntBlazor/BlazorTemplate.UI.AntBlazor.csproj" />
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj" />
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj" />
+    <Project Path="Shared/BlazorTemplates/SvgContentClassGenerator/SvgContentClassGenerator.csproj" Id="9ec09481-8a04-4496-9596-987012a0e103" />
   </Folder>
   <Folder Name="/Shared/doc/">
     <File Path="../doc/模板参数和日志.md" />
@@ -45,11 +46,7 @@
     <File Path="utilsAggregation.ts" />
     <Project Path="RunBuild/RunBuild.csproj" />
   </Folder>
-   <!--#if(host == 'none' || host == 'web')-->
-  <Project Path="BlazorAdmin/BlazorAdmin.csproj" />
   <Project Path="BlazorAdmin.Client/BlazorAdmin.Client.csproj" />
-   <!--#endif-->
-   <!--#if(host == 'none' || host == 'wpf')-->
   <Project Path="BlazorAdmin.Wpf/BlazorAdmin.Wpf.csproj" />
-   <!--#endif-->
+  <Project Path="BlazorAdmin/BlazorAdmin.csproj" />
 </Solution>
