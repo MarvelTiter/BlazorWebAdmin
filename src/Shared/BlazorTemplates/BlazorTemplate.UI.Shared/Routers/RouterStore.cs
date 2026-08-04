@@ -26,7 +26,6 @@ public partial class RouterStore(NavigationManager navigationManager
         , PagesService pagesService) : StoreBase, IRouterStore
 {
 
-
     private RouteTag? current;
 
     private readonly Dictionary<string, RouteTag> pages = new(StringComparer.OrdinalIgnoreCase);

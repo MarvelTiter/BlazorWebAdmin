@@ -3,7 +3,7 @@ using BlazorTemplate.Constraints.Common.Attributes;
 
 namespace BlazorTemplate.UI.Shared.Pages;
 
-[Route("/user/index")]
+[Route(ConstraintString.USER_URL)]
 [PageGroup("BasicSetting", "基础配置", 1, Icon = "fa fa-cog")]
 [PageInfo(Title = "用户管理", Icon = "svg-user", Sort = 1, GroupId = "BasicSetting")]
 [Authorize(Policy = AppConst.DEFAULT_DYNAMIC_POLICY)]
@@ -15,7 +15,7 @@ public class UserIndex : SystemPageIndex<UserIndex>
     }
 }
 
-[Route("/operationlog")]
+[Route(ConstraintString.RUNLOG_URL)]
 [PageInfo(Title = "操作日志", Icon = "svg-log", Sort = 2, GroupId = "BasicSetting")]
 [Authorize(Policy = AppConst.DEFAULT_DYNAMIC_POLICY)]
 public class RunLogIndex : SystemPageIndex<RunLogIndex>
@@ -26,9 +26,9 @@ public class RunLogIndex : SystemPageIndex<RunLogIndex>
     }
 }
 
-[Route("/rolepermission")]
+[Route(ConstraintString.ROLE_PERMISSION_URL)]
 [PageGroup("SysSetting", "系统设置", 2, Icon = "fa fa-cog")]
-[PageInfo(Id = "RolePermission", Title = "权限分配", Icon = "svg-assign_permissions", Sort = 1, GroupId = "SysSetting")]
+[PageInfo(Title = "权限分配", Icon = "svg-assign_permissions", Sort = 1, GroupId = "SysSetting")]
 [Authorize(Policy = AppConst.DEFAULT_DYNAMIC_POLICY)]
 public class RolePermissionIndex : SystemPageIndex<RolePermissionIndex>
 {
@@ -38,8 +38,8 @@ public class RolePermissionIndex : SystemPageIndex<RolePermissionIndex>
     }
 }
 
-[Route("/permission")]
-[PageInfo(Id = "Permission", Title = "权限设置", Icon = "svg-rights", Sort = 2, GroupId = "SysSetting")]
+[Route(ConstraintString.PERMISSION_URL)]
+[PageInfo(Title = "权限设置", Icon = "svg-rights", Sort = 2, GroupId = "SysSetting")]
 [Authorize(Policy = AppConst.DEFAULT_DYNAMIC_POLICY)]
 public class PermissionIndex : SystemPageIndex<PermissionIndex>
 {

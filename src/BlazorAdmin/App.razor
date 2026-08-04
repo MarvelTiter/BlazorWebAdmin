@@ -35,7 +35,7 @@
     @* <script src="@Assets["js/blazor-admin-project.js"]"></script> *@
     @if (AppOption.Value.RunMode == AppRunMode.Server)
     {
-        <LegacyBlazorJs.Loader Target="es2015"></LegacyBlazorJs.Loader>
+        <LegacyBlazorJs.Loader></LegacyBlazorJs.Loader>
     }
     else
     {

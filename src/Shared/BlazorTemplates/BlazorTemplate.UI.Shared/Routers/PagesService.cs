@@ -53,7 +53,7 @@ public partial class PagesService
 
     private static bool CheckPathTemplate(string template)
     {
-        return MatchPathParameter().Match(template).Success;
+        return MatchPathParameter().IsMatch(template);
     }
 
     private void TryAddGroup(PageGroupAttribute groupInfo)
@@ -83,15 +83,6 @@ public partial class PagesService
             }
         }
     }
-
-    //private static void TryForceShowGroup(PageInfoAttribute? pageInfo)
-    //{
-    //    var g = Groups.Find(g => g.RouteId == pageInfo?.GroupId);
-    //    if (g is not null && !g.ForceShowOnNavMenu)
-    //    {
-    //        g.ForceShowOnNavMenu = pageInfo?.ForceShowOnNavMenu ?? false;
-    //    }
-    //}
 
     [GeneratedRegex(@"\{[^{}]+\}")]
     private static partial Regex MatchPathParameter();

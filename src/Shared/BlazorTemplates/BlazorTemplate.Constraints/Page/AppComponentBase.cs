@@ -2,6 +2,7 @@
 using BlazorTemplate.Constraints.Store;
 using BlazorTemplate.Constraints.UI;
 using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.JSInterop;
 
 namespace BlazorTemplate.Constraints.Page;
 
@@ -74,7 +75,7 @@ public class AppComponentBase : ComponentBase, IAsyncDisposable
                 {
                     await OnDisposeAsync();
                 }
-                catch
+                catch(JSDisconnectedException)
                 {
                 }
             }

@@ -59,6 +59,8 @@ public interface IProjectSettingService
     /// </summary>
     /// <returns></returns>
     Task AfterWebApplicationAccessed();
-        
+
     TimeSpan RevalidationInterval { get; }
+    bool ShowBuildInPageOnMenu { get; }
+    HashSet<string> EnableBuildInPages { get; }
 }

@@ -1,8 +1,5 @@
 ﻿using BlazorTemplate.Constraints.Store.Models;
 using BlazorTemplate.UI.Shared.Routers;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BlazorTemplate.UI.Shared.Services;
 
@@ -18,6 +15,7 @@ internal class DefaultMenuService(IProjectSettingService settingService
         Group = "ROOT",
         RouteTitle = "主页",
     };
+    private static readonly HashSet<string> defaultPages = [ConstraintString.USER_URL, ConstraintString.RUNLOG_URL, ConstraintString.PERMISSION_URL, ConstraintString.ROLE_PERMISSION_URL];
     public RouteMenu Home => defaultHome;
 
     public List<RouteMenu> AllMenus => this;
@@ -58,6 +56,17 @@ internal class DefaultMenuService(IProjectSettingService settingService
         foreach (var meta in pagesService.Pages.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
         {
             if (this.Any(m => m.RouteId == meta.RouteId)) continue;
+            if (!settingService.ShowBuildInPageOnMenu && defaultPages.Contains(meta.RouteUrl))
+            {
+                continue;
+            }
+            else
+            {
+                if (settingService.EnableBuildInPages.Count > 0 && !settingService.EnableBuildInPages.Contains(meta.RouteUrl))
+                {
+                    continue;
+                }
+            }
             var enable = await predicate(meta);
             if (!enable)
                 continue;

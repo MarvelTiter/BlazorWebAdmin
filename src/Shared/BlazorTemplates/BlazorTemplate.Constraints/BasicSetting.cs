@@ -34,6 +34,10 @@ public class BasicSetting : IProjectSettingService //, IDisposable
 
     public virtual TimeSpan RevalidationInterval => TimeSpan.FromSeconds(5);
 
+    public virtual bool ShowBuildInPageOnMenu => true;
+
+    public virtual HashSet<string> EnableBuildInPages => [];
+
     /// <summary>
     /// 在登录成功后调用此方法以设置当前用户信息
     /// </summary>
