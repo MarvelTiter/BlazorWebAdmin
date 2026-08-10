@@ -15,18 +15,19 @@ public static class DialogExtensions
         });
     }
 
-    public static async Task<TData> ShowDialogAsync<Template, TData>(this IUIService service, TData? param = default, bool? edit = null, Action<FlyoutOptions<TData>>? config = null)
+    public static async Task<TData> ShowDialogAsync<Template, TData>(this IUIService service, TData? param = default, bool? edit = null, Action<FlyoutOptions<Template, TData>>? config = null)
         where Template : DialogTemplate<TData>
     {
-        var options = new FlyoutOptions<TData>();
+        var options = new FlyoutOptions<Template, TData>();
         var p = new FormParam<TData>(param, edit);
         config?.Invoke(options);
         options.Content = builder =>
         {
-            builder.Component<Template>()
-                .SetComponent(c => c.DialogModel, p)
-                .SetComponent(c => c.Options, options)
-                .Build(obj => options.Feedback = (IFeedback<TData>)obj);
+            var cb = builder.Component<Template>()
+                 .SetComponent(c => c.DialogModel, p)
+                 .SetComponent(c => c.Options, options);
+            options.ComponentSet?.Invoke(cb);
+            cb.Build(obj => options.Feedback = (IFeedback<TData>)obj);
         };
 
         var result = await service.ShowDialogAsync(options);
@@ -34,18 +35,19 @@ public static class DialogExtensions
         return result;
     }
 
-    public static async Task<TReturn> ShowDialogAsync<Template, TInput, TReturn>(this IUIService service, TInput data, Action<FlyoutOptions<TReturn>>? config = null)
+    public static async Task<TReturn> ShowDialogAsync<Template, TInput, TReturn>(this IUIService service, TInput data, Action<FlyoutOptions<Template, TReturn>>? config = null)
         where Template : DialogTemplate<TInput, TReturn>
     {
-        var options = new FlyoutOptions<TReturn>();
+        var options = new FlyoutOptions<Template, TReturn>();
         var p = new FormParam<TInput>(data, true);
         config?.Invoke(options);
         options.Content = builder =>
         {
-            builder.Component<Template>()
+            var cb = builder.Component<Template>()
                 .SetComponent(c => c.DialogModel, p)
-                .SetComponent(c => c.Options, options)
-                .Build(obj => options.Feedback = (IFeedback<TReturn>)obj);
+                .SetComponent(c => c.Options, options);
+            options.ComponentSet?.Invoke(cb);
+            cb.Build(obj => options.Feedback = (IFeedback<TReturn>)obj);
         };
         var result = await service.ShowDialogAsync(options);
         return result;

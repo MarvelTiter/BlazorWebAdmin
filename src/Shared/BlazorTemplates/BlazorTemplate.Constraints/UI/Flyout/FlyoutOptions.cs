@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using BlazorTemplate.Constraints.Services;
+using BlazorTemplate.Constraints.UI.Builders;
+using Microsoft.AspNetCore.Components;
 
 namespace BlazorTemplate.Constraints.UI.Flyout;
 
@@ -31,6 +33,12 @@ public class FlyoutOptions<TReturn> : FlyoutOptions
 {
     public IFeedback<TReturn>? Feedback { get; set; }
     public Func<TReturn?, Func<bool>, Task<bool>>? PostCheckAsync { get; set; }
+}
+
+public class FlyoutOptions<Template, TReturn> : FlyoutOptions<TReturn>
+    where Template : IComponent
+{
+    public Action<CustomComponentBuilder<Template>>? ComponentSet { get; set; }
 }
 
 public enum Position
