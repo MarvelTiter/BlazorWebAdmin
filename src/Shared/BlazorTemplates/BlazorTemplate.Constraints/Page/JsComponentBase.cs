@@ -14,21 +14,8 @@ public abstract class JsComponentBase : AppComponentBase, IJsComponent, IAsyncDi
     protected IJSObjectReference? Module { get; set; }
     protected bool LoadJs { get; set; } = false;
 
-    private Lazy<string>? idLazy;
-    public Lazy<string> Id => idLazy ??= new(() => $"{GetType().Name}_{Guid.NewGuid():N}");
-
-    private Lazy<string>? moduleName;
-    protected Lazy<string> ModuleName => moduleName ??= new Lazy<string>(() =>
-    {
-        var type = GetType();
-        if (type.IsGenericType)
-        {
-            var i = type.Name.IndexOf('`');
-            return type.Name[..i];
-        }
-
-        return type.Name;
-    });
+    public Lazy<string> Id => field ??= new(() => $"{GetType().Name}_{Guid.NewGuid():N}");
+    protected Lazy<string> ModuleName => field ??= new Lazy<string>(RewriteModuleName);
     protected string GlobalModuleName => $"{JS_FUNC_PREFIX}{ModuleName.Value}";
 
     protected bool IsLibrary =>
@@ -43,8 +30,6 @@ public abstract class JsComponentBase : AppComponentBase, IJsComponent, IAsyncDi
         {
             if (LoadJs)
             {
-
-                //var path = 
                 await LoadJsAsync();
             }
 
@@ -65,6 +50,17 @@ public abstract class JsComponentBase : AppComponentBase, IJsComponent, IAsyncDi
         }
         var path = IsLibrary ? $"./_content/{fullJsPath}" : $"./{fullJsPath}";
         return path;
+    }
+
+    protected virtual string RewriteModuleName()
+    {
+        var type = GetType();
+        if (type.IsGenericType)
+        {
+            var i = type.Name.IndexOf('`');
+            return type.Name[..i];
+        }
+        return type.Name;
     }
 
     protected virtual async Task LoadJsAsync()
