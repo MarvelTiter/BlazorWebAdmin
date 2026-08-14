@@ -2,9 +2,9 @@
 @using System.Linq
 @using Microsoft.FluentUI.AspNetCore.Components
 @using Microsoft.JSInterop
-@using BlazorTemplate.Constraints.Services
-@using BlazorTemplate.Constraints.Store
-@using BlazorTemplate.Constraints.Store.Models
+@using BlazorTemplate.ClientCore.Services
+@using BlazorTemplate.ClientCore.Store
+@using BlazorTemplate.ClientCore.Store.Models
 @using BlazorTemplate.ClientCore.Components
 @using System.Diagnostics.CodeAnalysis
 @if (!HasChildren)
@@ -54,7 +54,7 @@ else
     [Inject, NotNull] IJSRuntime? Js { get; set; }
     [Inject, NotNull] ISvgIconService? SvgIconService { get; set; }
 
-    BlazorTemplate.Constraints.Services.IMenuService MenuService => RouterStore.MenuService;
+    BlazorTemplate.ClientCore.Services.IMenuService MenuService => RouterStore.MenuService;
 
     // public RouteMenu Current => Route;
     // public RouteMenu Current => onlyOneChildren ? Children.First() : Route;

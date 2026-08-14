@@ -1,6 +1,6 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 @using Microsoft.FluentUI.AspNetCore.Components
-@using BlazorTemplate.Constraints.Store
+@using BlazorTemplate.ClientCore.Store
 <FluentNavMenu Collapsible="@true" Expanded="@(!Collapsed)" CollapsedChildNavigation="@true" Style="flex: 1;">
     @foreach (var item in MenuService.RootMenus)
     {
@@ -10,7 +10,7 @@
 
 @code {
     [Parameter, NotNull] public IRouterStore? Router { get; set; }
-    BlazorTemplate.Constraints.Services.IMenuService MenuService => Router.MenuService;
+    BlazorTemplate.ClientCore.Services.IMenuService MenuService => Router.MenuService;
     [Parameter] public bool Horizontal { get; set; }
     [Parameter, NotNull] public IAppStore? App { get; set; }
 

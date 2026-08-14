@@ -5,9 +5,21 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using BlazorTemplate.UI.FluentUI.Components;
 using BlazorTemplate.ClientCore.Components;
 using System.Linq.Expressions;
-using ButtonType = BlazorTemplate.Constraints.UI.ButtonType;
-using IconInfo = BlazorTemplate.Constraints.UI.IconInfo;
-using MessageType = BlazorTemplate.Constraints.UI.MessageType;
+using ButtonType = BlazorTemplate.ClientCore.UI.ButtonType;
+using IconInfo = BlazorTemplate.ClientCore.UI.IconInfo;
+using MessageType = BlazorTemplate.ClientCore.UI.MessageType;
+using BlazorTemplate.ClientCore.UI;
+using BlazorTemplate.ClientCore.UI.Extensions;
+using BlazorTemplate.ClientCore.UI.Flyout;
+using BlazorTemplate.ClientCore.UI.Props;
+using BlazorTemplate.ClientCore.UI.Builders;
+using BlazorTemplate.ClientCore.Models;
+using BlazorTemplate.ClientCore.Models.Request;
+using BlazorTemplate.ClientCore.UI.Table;
+using BlazorTemplate.ClientCore.UI.Dropdown;
+using BlazorTemplate.ClientCore.UI.Form;
+using BlazorTemplate.ClientCore.Store;
+using BlazorTemplate.ClientCore.UI.Tree;
 
 namespace BlazorTemplate.UI.FluentUI;
 
@@ -44,16 +56,16 @@ public class UIService(
     {
         switch (type)
         {
-            case Constraints.UI.MessageType.Success:
+            case MessageType.Success:
                 toastService.ShowSuccess(message);
                 break;
-            case Constraints.UI.MessageType.Error:
+            case MessageType.Error:
                 toastService.ShowError(message);
                 break;
-            case Constraints.UI.MessageType.Warning:
+            case MessageType.Warning:
                 toastService.ShowWarning(message);
                 break;
-            case Constraints.UI.MessageType.Information:
+            case MessageType.Information:
                 toastService.ShowInfo(message);
                 break;
             default:
@@ -278,7 +290,7 @@ public class UIService(
     {
         return new ButtonComponentBuilder<FluentButton>(builder =>
         {
-            if (builder.Model.ButtonType == Constraints.UI.ButtonType.Default)
+            if (builder.Model.ButtonType == ButtonType.Default)
             {
                 return;
             }

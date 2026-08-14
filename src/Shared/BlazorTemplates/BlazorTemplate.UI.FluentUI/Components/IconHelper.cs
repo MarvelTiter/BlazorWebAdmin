@@ -1,4 +1,5 @@
-﻿using Microsoft.FluentUI.AspNetCore.Components;
+﻿using BlazorTemplate.ClientCore.Services;
+using Microsoft.FluentUI.AspNetCore.Components;
 using System.Collections.Concurrent;
 
 namespace BlazorTemplate.UI.FluentUI.Components;

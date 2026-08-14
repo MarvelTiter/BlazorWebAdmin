@@ -57,7 +57,8 @@ public record ColumnInfo
     public Func<object?, bool>? VisibleExpression { get; set; }
     public bool UseTag { get; set; }
     public bool Sortable { get; set; }
-    //public Dictionary<string, string>? EnumValues { get; set; }
+    [Obsolete]
+    public Dictionary<string, string>? EnumValues { get; set; }
     public Dictionary<string, string>? TagColors { get; set; }
     public string? LookupType
     {
