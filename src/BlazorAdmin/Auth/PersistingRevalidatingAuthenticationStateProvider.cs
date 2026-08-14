@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Components.Web;
-using BlazorTemplate.AppCore;
-using BlazorTemplate.Constraints;
-using BlazorTemplate.Constraints.Models;
-using BlazorTemplate.Constraints.Services;
-using BlazorTemplate.Constraints.Store;
-using BlazorTemplate.Constraints.Utils;
+using BlazorTemplate.AppServer;
+using BlazorTemplate.ClientCore;
+using BlazorTemplate.ClientCore.Models;
+using BlazorTemplate.ClientCore.Services;
+using BlazorTemplate.ClientCore.Store;
+using BlazorTemplate.ClientCore.Utils;
 
 namespace BlazorAdmin.Auth;
 

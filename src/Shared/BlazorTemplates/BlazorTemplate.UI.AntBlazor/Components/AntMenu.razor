@@ -1,4 +1,4 @@
-﻿@using BlazorTemplate.Constraints.Services
+﻿@using BlazorTemplate.ClientCore.Services
 @* 需要套一个元素才能让 ::deep 选择到 *@
 <div style="height:100%;display:flex;flex-direction:column;" class="@Theme.ToString().ToLower()">
     <Menu Theme="@Theme"
@@ -6,8 +6,8 @@
           InlineCollapsed="@Collapsed"
           Style="flex: 1;">
         @* <MenuItem>
-            <BlazorTemplate.UI.Shared.Layouts.LayoutComponents.Banner>
-            </BlazorTemplate.UI.Shared.Layouts.LayoutComponents.Banner>
+            <BlazorTemplate.ClientCore.Layouts.LayoutComponents.Banner>
+            </BlazorTemplate.ClientCore.Layouts.LayoutComponents.Banner>
         </MenuItem> *@
         @foreach (var item in MenuService.RootMenus)
         {

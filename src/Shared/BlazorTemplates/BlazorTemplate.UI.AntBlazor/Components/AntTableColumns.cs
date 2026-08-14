@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using System.Data;
-using BlazorTemplate.Constraints.UI.Extensions;
+using BlazorTemplate.ClientCore.UI.Extensions;
 
 namespace BlazorTemplate.UI.AntBlazor.Components;
 

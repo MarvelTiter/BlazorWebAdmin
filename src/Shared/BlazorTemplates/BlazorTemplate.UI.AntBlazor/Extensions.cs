@@ -1,6 +1,6 @@
 ﻿using AntDesign;
 using Microsoft.Extensions.DependencyInjection;
-using BlazorTemplate.Constraints.UI;
+using BlazorTemplate.ClientCore.UI;
 
 namespace BlazorTemplate.UI.AntBlazor;
 

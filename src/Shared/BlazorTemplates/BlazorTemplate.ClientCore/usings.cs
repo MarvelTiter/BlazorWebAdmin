@@ -1,0 +1,17 @@
+﻿global using BlazorTemplate.ClientCore.Common;
+global using BlazorTemplate.ClientCore.Page;
+global using BlazorTemplate.ClientCore.Models.Permissions;
+global using BlazorTemplate.ClientCore.Services;
+global using BlazorTemplate.ClientCore.Basic;
+global using BlazorTemplate.ClientCore.Models.Request;
+global using BlazorTemplate.ClientCore.Models;
+global using BlazorTemplate.ClientCore.UI.Table;
+global using Microsoft.Extensions.Localization;
+global using System.Diagnostics.CodeAnalysis;
+global using AutoInjectGenerator;
+global using Microsoft.AspNetCore.Components;
+global using Microsoft.AspNetCore.Components.Authorization;
+global using Microsoft.Extensions.Logging;
+global using BlazorTemplate.ClientCore.Store;
+global using BlazorTemplate.ClientCore.Common.Attributes;
+global using LightORM;

@@ -1,6 +1,6 @@
 ﻿using AutoInjectGenerator;
-using BlazorTemplate.Constraints.Services;
-using BlazorTemplate.Constraints.Store.Models;
+using BlazorTemplate.ClientCore.Services;
+using BlazorTemplate.ClientCore.Store.Models;
 
 namespace BlazorAdmin.Client.TestPages;
 

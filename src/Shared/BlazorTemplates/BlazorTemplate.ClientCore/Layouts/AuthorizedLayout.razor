@@ -1,0 +1,74 @@
+﻿@using BlazorTemplate.ClientCore.Layouts.LayoutComponents
+@inherits RootLayout
+@inject IProtectedLocalStorage LocalStorage
+@inject IOptions<Token> Token
+@inject IOptions<AppSetting> Setting
+@attribute [Obsolete]
+<div id="app"
+     @ref="RootWrapper">
+    @* <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime * 1000)" Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
+    <ActionWatcher WatchRoot Timeout="@(Token.CurrentValue.LimitedFreeTime / 2 * 1000)" Type="ActionWatcher.WatchType.Throttle" Callback="UpdateUserToken">
+    @Body
+    </ActionWatcher>
+    </ActionWatcher> *@
+    <CascadingValue Value="this">
+        <AuthorizeView>
+            <Authorized>
+                <ActionWatcher WatchRoot Timeout="@(Token.Value.LimitedFreeTime * 1000)"
+                               Type="ActionWatcher.WatchType.Debounce" Callback="NoneOperation">
+                    @Body
+                    <IndexLoading Loading="@(!AppSession.Loaded)" Title="正在初始化..."></IndexLoading>
+                </ActionWatcher>
+            </Authorized>
+            <NotAuthorized>
+                <RedirectToLogin></RedirectToLogin>
+            </NotAuthorized>
+        </AuthorizeView>
+    </CascadingValue>
+</div>
+
+@code {
+    [CascadingParameter] private Task<AuthenticationState>? authenticationStateTask { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    // [Inject, NotNull] public ILogger<AuthorizedLayout>? Logger { get; set; }
+    [Inject, NotNull] IAppSession? AppSession { get; set; }
+    [Inject, NotNull] IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+    string? LauchUrl => Setting.Value.LauchUrl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (authenticationStateTask != null)
+        {
+            var state = await authenticationStateTask;
+            if (state.User.Identity!.IsAuthenticated)
+            {
+                await AppSession.NotifyLoginSuccessAsync();
+                await AppSession.RouterStore.InitMenusAsync(AuthenticationStateProvider?.Current);
+            }
+            else
+            {
+                await AppSession.RouterStore.InitMenusAsync(null);
+            }
+
+            var url = AppSession.Navigator.ToBaseRelativePath(AppSession.Navigator.Uri);
+            AppSession.Navigator.NavigateTo(url);
+        }
+    }
+
+    async Task NoneOperation()
+    {
+        if (AppSession.AppStore.Working)
+        {
+            return;
+        }
+
+        // 退出
+        await AuthenticationStateProvider.ClearState();
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+}

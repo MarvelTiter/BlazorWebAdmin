@@ -1,6 +1,6 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
-using BlazorTemplate.Constraints.UI.Tree;
+using BlazorTemplate.ClientCore.UI.Tree;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorTemplate.UI.AntBlazor.Components;

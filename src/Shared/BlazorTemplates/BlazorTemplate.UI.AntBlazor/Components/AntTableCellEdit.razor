@@ -1,8 +1,9 @@
+﻿@using BlazorTemplate.ClientCore.Lockup
 @typeparam TData
 
 <div class="ant-table-cell-edit">
     <div class="edit-input">
-        <InputBuilder TData="TData" Column="@Column" UI="@UI" Reciver="@Reciver" Data="@Data"></InputBuilder>
+        <InputBuilder TData="TData" Column="@Column" UI="@UI" Reciver="@Reciver" Data="@Data" Lookup="@Lookup"></InputBuilder>
     </div>
     @if (CellEdit)
     {
@@ -19,6 +20,7 @@
     [Parameter] public bool CellEdit { get; set; }
     [Parameter] public EventCallback OnSave { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public ILookupService? Lookup { get; set; }
 
     protected override void OnInitialized()
     {

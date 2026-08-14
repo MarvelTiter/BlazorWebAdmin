@@ -1,9 +1,9 @@
-﻿@using BlazorTemplate.Constraints.Common.Attributes
-@using BlazorTemplate.UI.Shared.Components
+﻿@using BlazorTemplate.ClientCore.Common.Attributes
+@using BlazorTemplate.ClientCore.Components
 @page "/testicon"
 @attribute [PageInfo(Title = "Icon测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 
-<BlazorTemplate.UI.Shared.Components.IconSelector @bind-Value="@selectedIcon"></BlazorTemplate.UI.Shared.Components.IconSelector>
+<BlazorTemplate.ClientCore.Components.IconSelector @bind-Value="@selectedIcon"></BlazorTemplate.ClientCore.Components.IconSelector>
 <MIcon IconName="@selectedIcon"></MIcon>
 <UploadButton Text="上传"></UploadButton>
 @code {

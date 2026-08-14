@@ -1,6 +1,6 @@
 ﻿using LightORM.Implements;
 using LightORM.Models;
-using BlazorTemplate.Constraints.Store;
+using BlazorTemplate.ClientCore.Store;
 
 namespace BlazorAdmin;
 

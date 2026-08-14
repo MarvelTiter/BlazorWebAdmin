@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using BlazorTemplate.Constraints.Common.Attributes;
+using BlazorTemplate.ClientCore.Common.Attributes;
 
 namespace BlazorAdmin.Client.TestPages;
 #if DEBUG

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
-using BlazorTemplate.Constraints.Common.Attributes;
-using BlazorTemplate.Constraints.UI;
-using BlazorTemplate.Constraints.UI.Extensions;
+using BlazorTemplate.ClientCore.Common.Attributes;
+using BlazorTemplate.ClientCore.UI;
+using BlazorTemplate.ClientCore.UI.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorAdmin.Client.TestPages;

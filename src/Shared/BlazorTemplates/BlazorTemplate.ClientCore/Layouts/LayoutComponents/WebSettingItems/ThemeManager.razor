@@ -1,0 +1,49 @@
+﻿@using BlazorTemplate.ClientCore.Utils
+@inherits JsComponentBase
+@attribute [Obsolete("在UI组件中自己实现", true)]
+<div>
+    @(UI.BuildRadioGroup<ThemeMode, ThemeMode?>(this, modes)
+        .LabelExpression(i => FormatLabel(i))
+        .ValueExpression(i => i)
+        .Bind(() => Current, NotifyChanged)
+        .Render())
+</div>
+
+@code {
+    readonly ThemeMode[] modes = [ThemeMode.Light, ThemeMode.Dark, ThemeMode.OS];
+    [Parameter] public ThemeMode? Current { get; set; }
+    [Parameter] public EventCallback<ThemeMode> OnThemeChanged { get; set; }
+
+    private async Task NotifyChanged()
+    {
+        if (OnThemeChanged.HasDelegate)
+        {
+            await OnThemeChanged.InvokeAsync(Current);
+        }
+        await Js.InvokeUtilsAsync("setTheme", $"{Current}".ToLower(), Context.UI.DarkStyle());
+    }
+
+    static string FormatLabel(ThemeMode theme)
+    {
+        // return theme switch
+        // {
+        //     ThemeMode.Light => "亮色",
+        //     ThemeMode.Dark => "暗色",
+        //     ThemeMode.OS => "跟随系统",
+        //     _ => ""
+        // };
+        if (theme == ThemeMode.Dark)
+        {
+            return "暗色";
+        }
+        else if (theme == ThemeMode.Light)
+        {
+            return "亮色";
+        }
+        else if (theme == ThemeMode.OS)
+        {
+            return "跟随系统";
+        }
+        return "";
+    }
+}

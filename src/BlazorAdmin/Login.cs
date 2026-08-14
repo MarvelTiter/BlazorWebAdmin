@@ -5,14 +5,13 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
-using BlazorTemplate.Constraints.Common.Attributes;
-using BlazorTemplate.Constraints.Models;
-using BlazorTemplate.Constraints.Options;
-using BlazorTemplate.Constraints.Page;
-using BlazorTemplate.Constraints.Services;
-using BlazorTemplate.Constraints.UI.Extensions;
-using BlazorTemplate.Constraints.Utils;
-using BlazorTemplate.UI.Shared.Layouts;
+using BlazorTemplate.ClientCore.Models;
+using BlazorTemplate.ClientCore.Options;
+using BlazorTemplate.ClientCore.Page;
+using BlazorTemplate.ClientCore.Services;
+using BlazorTemplate.ClientCore.UI.Extensions;
+using BlazorTemplate.ClientCore.Utils;
+using BlazorTemplate.ClientCore.Layouts;
 
 namespace BlazorAdmin;
 

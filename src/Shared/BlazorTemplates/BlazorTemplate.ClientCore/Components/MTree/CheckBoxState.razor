@@ -1,0 +1,10 @@
+﻿@namespace BlazorTemplate.ClientCore.Components
+<span class=@($"check-state check-state-{State}")></span>
+
+@code {
+    [Parameter, NotNull] public string? State { get; set; }
+
+    public const string Checked = "checked";
+    public const string Normal = "normal";
+    public const string Indeterminate = "indeterminate";
+}

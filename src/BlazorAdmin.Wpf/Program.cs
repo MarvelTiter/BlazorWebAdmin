@@ -5,9 +5,7 @@ using LightORM.Providers.Sqlite.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using BlazorTemplate.Constraints;
-using BlazorTemplate.Constraints.Services;
-using BlazorTemplate.UI.Shared;
+using BlazorTemplate.ClientCore;
 namespace BlazorAdmin.Wpf;
 
 public class Program

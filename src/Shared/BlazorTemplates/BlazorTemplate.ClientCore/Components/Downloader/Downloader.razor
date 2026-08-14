@@ -1,0 +1,49 @@
+﻿@namespace BlazorTemplate.ClientCore.Components
+@inherits JsComponentBase
+@implements IDownloadService
+@inject IDownloadServiceProvider DownProvider
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        DownProvider.Register(this);
+    }
+
+    public async Task DownloadAsync(object payload)
+    {
+        await InvokeVoidAsync("download", payload);
+    }
+
+    public async Task DownloadFileAsync(string filename, params string[] paths)
+    {
+        await InvokeVoidAsync("download", new
+        {
+            token = User.UserInfo?.Token,
+            filename,
+            path = AppConst.GetPath(paths)
+        });
+    }
+
+    public async Task DownloadStreamAsync(string filename, Stream stream)
+    {
+        // byte[] buffer = [];
+        // if (stream is MemoryStream ms)
+        // {
+        //     buffer = ms.ToArray();
+        // }
+        if (!stream.CanRead || !stream.CanSeek)
+        {
+            throw new Exception("Stream can't read");
+        }
+
+        using var streamRef = new DotNetStreamReference(stream);
+        await InvokeVoidAsync("downloadStream", new
+        {
+            filename,
+            streamRef
+        });
+    }
+
+}

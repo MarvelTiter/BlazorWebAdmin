@@ -1,0 +1,49 @@
+﻿@page "/blazor/web/error"
+@namespace BlazorTemplate.ClientCore.Components
+@inherits AppComponentBase
+<div class="error-page-wrapper">
+    <div class="content-container">
+        <div class="head-line">
+            <MIcon IconName="@svgName" Style="height:100%;width:100%;"></MIcon>
+        </div>
+        <div class="subheader">
+            HTTP 500- 服务器异常
+            @if (ChildContent != null)
+            {
+                <div class="exception-content">
+                    @ChildContent
+                </div>
+            }
+        </div>
+        <div class="hr"></div>
+        <div class="context">
+            <p>
+                您可以返回首页，或联系管理员
+            </p>
+        </div>
+        <div class="buttons-container">
+            <a href="#" @onclick="e => NavigatorToIndex()">去首页</a>
+        </div>
+        <div>
+            <a href="#" @onclick:preventDefault @onclick:stopPropagation @onclick="OnDetialClick">查看详情?</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    string svgName = "p500_01";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback OnDetialClick { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var i = Random.Shared.Next(0, 100);
+        var index = i % 2 == 0 ? "01" : "02";
+        svgName = $"p500_{index}";
+    }
+
+    void NavigatorToIndex()
+    {
+        Navigator.NavigateTo("/");
+    }
+}

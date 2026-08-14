@@ -1,9 +1,6 @@
 ﻿using LightORM;
 using Microsoft.Extensions.DependencyInjection;
-using BlazorTemplate.AppCore.Services;
-using BlazorTemplate.Constraints.Models;
-using BlazorTemplate.Constraints.Models.Permissions;
-using BlazorTemplate.Constraints.Utils;
+using BlazorTemplate.AppServer.Services;
 namespace BlazorAdmin.Wpf.Auth;
 #if (ExcludeDefaultService)
 #else

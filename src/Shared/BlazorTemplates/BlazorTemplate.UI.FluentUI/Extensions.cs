@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FluentUI.AspNetCore.Components;
-using BlazorTemplate.Constraints.UI;
 
 namespace BlazorTemplate.UI.FluentUI;
 

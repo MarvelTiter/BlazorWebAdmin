@@ -1,34 +1,34 @@
-﻿@using BlazorTemplate.Constraints.Services
-@using BlazorTemplate.Constraints.UI.Extensions
-@using BlazorTemplate.UI.Shared.Utils
+﻿@using BlazorTemplate.ClientCore.Services
+@using BlazorTemplate.ClientCore.UI.Extensions
+@using BlazorTemplate.ClientCore.Utils
 @inherits JsComponentBase
-<BlazorTemplate.UI.Shared.ComponentHelper.StackPanel IsVertial HorizontalAlign="left">
-    <BlazorTemplate.UI.Shared.ComponentHelper.StackPanel>
+<BlazorTemplate.ClientCore.ComponentHelper.StackPanel IsVertial HorizontalAlign="left">
+    <BlazorTemplate.ClientCore.ComponentHelper.StackPanel>
         <span class="title">系统模式</span>
         @(UI.BuildRadioGroup<ThemeMode, ThemeMode?>(this, sysModes)
                 .LabelExpression(i => FormatLabel(i))
                 .ValueExpression(i => i)
                 .Bind(() => sysMode, UpdateSysMode)
                 .Render())
-    </BlazorTemplate.UI.Shared.ComponentHelper.StackPanel>
-    <BlazorTemplate.UI.Shared.ComponentHelper.StackPanel>
+    </BlazorTemplate.ClientCore.ComponentHelper.StackPanel>
+    <BlazorTemplate.ClientCore.ComponentHelper.StackPanel>
         <span class="title">紧凑模式</span>
         @(UI.BuildCheckBox(this).Bind(() => isCompact, UpdateCompactStyle).Render())
-    </BlazorTemplate.UI.Shared.ComponentHelper.StackPanel>
-    <BlazorTemplate.UI.Shared.ComponentHelper.StackPanel>
+    </BlazorTemplate.ClientCore.ComponentHelper.StackPanel>
+    <BlazorTemplate.ClientCore.ComponentHelper.StackPanel>
         <span class="title">菜单主题</span>
         @(UI.BuildRadioGroup<ThemeMode, ThemeMode?>(this, menuModes)
                 .LabelExpression(i => FormatLabel(i))
                 .ValueExpression(i => i)
                 .Bind(() => menuMode, UpdateMenuMode)
                 .Render())
-    </BlazorTemplate.UI.Shared.ComponentHelper.StackPanel>
-    <BlazorTemplate.UI.Shared.ComponentHelper.StackPanel>
+    </BlazorTemplate.ClientCore.ComponentHelper.StackPanel>
+    <BlazorTemplate.ClientCore.ComponentHelper.StackPanel>
         <span class="title">主题颜色</span>
         <input type="color" value="@App.MainThemeColor" @onchange="@SetColor" />
         <Button Type="@AntDesign.ButtonType.Primary" OnClick="Reset">重置</Button>
-    </BlazorTemplate.UI.Shared.ComponentHelper.StackPanel>
-</BlazorTemplate.UI.Shared.ComponentHelper.StackPanel>
+    </BlazorTemplate.ClientCore.ComponentHelper.StackPanel>
+</BlazorTemplate.ClientCore.ComponentHelper.StackPanel>
 
 
 @code {

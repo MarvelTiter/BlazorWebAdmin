@@ -1,0 +1,16 @@
+﻿@namespace BlazorTemplate.ClientCore.Components
+@inherits JsComponentBase
+@attribute [AutoLoadJsModule(Path = "Components/ScrollBar")]
+<div class="wrap" @ref="@WrapElementRef" @attributes="AdditionalParameters">
+    @ChildContent
+</div>
+
+@code {
+    private ElementReference? WrapElementRef;
+    [Parameter, NotNull] public RenderFragment? ChildContent { get; set; }
+    public ElementReference? GetWrapElementRef() => WrapElementRef;
+    protected override ValueTask Init()
+    {
+        return InvokeVoidAsync("init", WrapElementRef);
+    }
+}

@@ -1,5 +1,6 @@
 ﻿@using AntDesign.Internal
-@using BlazorTemplate.Constraints.UI.Form
+@using BlazorTemplate.ClientCore.Lockup
+@using BlazorTemplate.ClientCore.UI.Form
 @typeparam TData where TData : class, new()
 <Form Model="@Options.Data"
       LabelAlign="@AntLabelAlignType.Right"
@@ -19,16 +20,19 @@
             {
                 <GridCol Span="colSpan">
                     <FormItem LabelColSpan="@lblSpan" Label="@(Localizer[col.Label])">
-                        <InputBuilder Data="Options.Data" UI="Options.UI" Reciver="Options" Column="col"></InputBuilder>
+                        <InputBuilder Data="Options.Data"
+                                      UI="Options.UI"
+                                      Reciver="Options" Column="col" Lookup="@Lookup"></InputBuilder>
                     </FormItem>
                 </GridCol>
             }
         </GridRow>
     }
 </Form>
-        @code {
+@code {
     [Parameter, NotNull] public FormOptions<TData>? Options { get; set; }
     [Inject, NotNull] IStringLocalizer<TData>? Localizer { get; set; }
+    [Inject, NotNull] ILookupService? Lookup { get; set; }
     IForm? form;
     IReadOnlyList<ColumnInfo[]> rows = [];
     protected override void OnAfterRender(bool firstRender)

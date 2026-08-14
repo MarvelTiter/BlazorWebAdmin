@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using MT.LightTask;
-using BlazorTemplate.Constraints.Common.Attributes;
-using BlazorTemplate.Constraints.UI;
+using BlazorTemplate.ClientCore.Common.Attributes;
+using BlazorTemplate.ClientCore.UI;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorAdmin.Client.TestPages.Tasks;
