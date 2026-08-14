@@ -46,7 +46,11 @@
     <File Path="utilsAggregation.ts" />
     <Project Path="RunBuild/RunBuild.csproj" />
   </Folder>
-  <Project Path="BlazorAdmin.Client/BlazorAdmin.Client.csproj" />
-  <Project Path="BlazorAdmin.Wpf/BlazorAdmin.Wpf.csproj" />
+   <!--#if(host == 'none' || host == 'web')-->
   <Project Path="BlazorAdmin/BlazorAdmin.csproj" />
+  <Project Path="BlazorAdmin.Client/BlazorAdmin.Client.csproj" />
+   <!--#endif-->
+   <!--#if(host == 'none' || host == 'wpf')-->
+  <Project Path="BlazorAdmin.Wpf/BlazorAdmin.Wpf.csproj" />
+   <!--#endif-->
 </Solution>
