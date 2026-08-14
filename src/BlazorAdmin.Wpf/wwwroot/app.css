@@ -1,4 +1,4 @@
-﻿@import "_content/BlazorTemplate.UI.Shared/css/font-awesome4.7.min.css";
+﻿@import "_content/BlazorTemplate.ClientCore/css/font-awesome4.7.min.css";
 @import "themeVariables.css";
 
 h1:focus {

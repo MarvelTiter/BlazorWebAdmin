@@ -2,11 +2,11 @@
   <Folder Name="/Shared/" />
   <!--#if(AlwaysFalse)-->
   <Folder Name="/Shared/BlazorTemplates/">
-    <Project Path="Shared/BlazorTemplates/BlazorTemplate.AppCore/BlazorTemplate.AppCore.csproj" />
-    <Project Path="Shared/BlazorTemplates/BlazorTemplate.Constraints/BlazorTemplate.Constraints.csproj" />
+    <Project Path="Shared/BlazorTemplates/BlazorTemplate.AppServer/BlazorTemplate.AppServer.csproj" />
+    <Project Path="Shared/BlazorTemplates/BlazorTemplate.ClientCore/BlazorTemplate.ClientCore.csproj" />
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.AntBlazor/BlazorTemplate.UI.AntBlazor.csproj" />
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj" />
-    <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.Shared/BlazorTemplate.UI.Shared.csproj" />
+    <Project Path="Shared/BlazorTemplates/EnumDisplayProviderGenerator/EnumDisplayProviderGenerator.csproj" Id="2ab9b174-b743-4bf1-bbf6-bee271a0890a" />
     <Project Path="Shared/BlazorTemplates/SvgContentClassGenerator/SvgContentClassGenerator.csproj" Id="9ec09481-8a04-4496-9596-987012a0e103" />
   </Folder>
   <Folder Name="/Shared/doc/">

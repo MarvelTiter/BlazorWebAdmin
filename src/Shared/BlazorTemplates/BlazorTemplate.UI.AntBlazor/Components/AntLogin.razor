@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Components.Web
 @using Microsoft.Extensions.Localization
-@using BlazorTemplate.Constraints.Models
-@using BlazorTemplate.Constraints.Utils
+@using BlazorTemplate.ClientCore.Models
+@using BlazorTemplate.ClientCore.Utils
 <Form Model="LoginModel" Method="@HttpMethod.Post" OnFinish="DoLogin" Name="login">
     <FormItem>
         <Input @bind-Value="@LoginModel.UserName" Placeholder="@Localizer["Login.Placeholder.UserName"].Value" Type="@InputType.Text" tabindex="1">

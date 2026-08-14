@@ -2,14 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using BlazorTemplate.Constraints.Models;
-using BlazorTemplate.Constraints.Options;
-using BlazorTemplate.Constraints.Page;
-using BlazorTemplate.Constraints.Services;
-using BlazorTemplate.Constraints.Store;
-using BlazorTemplate.Constraints.UI.Extensions;
-using BlazorTemplate.Constraints.Utils;
-using BlazorTemplate.UI.Shared.Layouts;
+using BlazorTemplate.ClientCore.Layouts;
 using System.Diagnostics.CodeAnalysis;
 using System.Web;
 

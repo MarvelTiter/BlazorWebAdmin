@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+	<Import Project="../../Props/projects.versions.props" />
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Authors>MarvelTiter</Authors>
+		<Copyright>MIT</Copyright>
+		<Description>BlazorWebAdmin模板项目的组件</Description>
+		<Version>$(ClientCoreVersion)</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Components\IconSelector\**" />
+	  <Content Remove="Components\IconSelector\**" />
+	  <EmbeddedResource Remove="Components\IconSelector\**" />
+	  <None Remove="Components\IconSelector\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
+	</ItemGroup>
+
+
+	<ItemGroup>
+		<EmbeddedResource Include="Langs\en-US\index.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Langs\zh-CN\index.json">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<EmbeddedResource Include="wwwroot\css\font-awesome4.7.min.css" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<AdditionalFiles Include="**/*.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoAopProxyGenerator" Version="2026.5.15.1" />
+		<PackageReference Include="AutoGenMapperGenerator" Version="2026.7.16.1" />
+		<PackageReference Include="AutoInjectGenerator" Version="2026.7.8.1" />
+		<PackageReference Include="AutoPageStateContainerGenerator" Version="0.0.8" />
+		<PackageReference Include="AutoWasmApiGenerator" Version="2026.5.25.1" />
+		<PackageReference Include="LightORM.Extensions.DependencyInjection" Version="2026.8.5.1" />
+		<PackageReference Include="LoggerProviderExtensions" Version="2026.7.15.1" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.11" />
+		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
+		<PackageReference Include="MT.LightTask" Version="2026.5.11.1" />
+		<PackageReference Include="MT.Toolkit" Version="2026.6.2.1" />
+		<PackageReference Include="LightExcel" Version="2026.8.6.2" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.10" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="..\SvgContentClassGenerator\bin\$(Configuration)\netstandard2.0\SvgContentClassGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<ProjectReference Include="..\SvgContentClassGenerator\SvgContentClassGenerator.csproj" Pack="false">
+			<OutputItemType>Analyzer</OutputItemType>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<PrivateAssets>all</PrivateAssets>
+		</ProjectReference>
+
+		<None Include="..\EnumDisplayProviderGenerator\bin\$(Configuration)\netstandard2.0\EnumDisplayProviderGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<ProjectReference Include="..\EnumDisplayProviderGenerator\EnumDisplayProviderGenerator.csproj" Pack="false">
+			<OutputItemType>Analyzer</OutputItemType>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<PrivateAssets>all</PrivateAssets>
+		</ProjectReference>
+	</ItemGroup>
+</Project>

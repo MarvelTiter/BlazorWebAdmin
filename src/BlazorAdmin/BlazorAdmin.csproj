@@ -31,19 +31,19 @@
 	<!--#if(AlwaysFalse)-->
 	<ItemGroup>
 		<ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
-		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.AppCore\BlazorTemplate.AppCore.csproj" />
+		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.AppServer\BlazorTemplate.AppServer.csproj" />
 		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
 	</ItemGroup>
 	<!--#endif-->
 	<!--#if(UseClientProject)-->
 	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
 		<ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
-		<PackageReference Include="BlazorTemplate.AppCore" Version="$(AppCoreVersion)" />
+		<PackageReference Include="BlazorTemplate.AppServer" Version="$(AppServerVersion)" />
 	</ItemGroup>
 	<!--#endif-->
 	<!--#if(!UseClientProject)-->
 	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
-		<PackageReference Include="BlazorTemplate.AppCore" Version="$(AppCoreVersion)" />
+		<PackageReference Include="BlazorTemplate.AppServer" Version="$(AppServerVersion)" />
 		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)" />
 	</ItemGroup>
 	<!--#endif-->

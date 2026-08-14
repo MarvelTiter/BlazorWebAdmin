@@ -1,24 +1,24 @@
 ﻿using AntDesign;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
-using BlazorTemplate.Constraints.Models;
-using BlazorTemplate.Constraints.Models.Request;
-using BlazorTemplate.Constraints.Store;
-using BlazorTemplate.Constraints.UI;
-using BlazorTemplate.Constraints.UI.Builders;
-using BlazorTemplate.Constraints.UI.Dropdown;
-using BlazorTemplate.Constraints.UI.Extensions;
-using BlazorTemplate.Constraints.UI.Flyout;
-using BlazorTemplate.Constraints.UI.Form;
-using BlazorTemplate.Constraints.UI.Props;
-using BlazorTemplate.Constraints.UI.Table;
-using BlazorTemplate.Constraints.UI.Tree;
+using BlazorTemplate.ClientCore.Models;
+using BlazorTemplate.ClientCore.Models.Request;
+using BlazorTemplate.ClientCore.Store;
+using BlazorTemplate.ClientCore.UI;
+using BlazorTemplate.ClientCore.UI.Builders;
+using BlazorTemplate.ClientCore.UI.Dropdown;
+using BlazorTemplate.ClientCore.UI.Extensions;
+using BlazorTemplate.ClientCore.UI.Flyout;
+using BlazorTemplate.ClientCore.UI.Form;
+using BlazorTemplate.ClientCore.UI.Props;
+using BlazorTemplate.ClientCore.UI.Table;
+using BlazorTemplate.ClientCore.UI.Tree;
 using BlazorTemplate.UI.AntBlazor.Components;
 using System.Linq.Expressions;
 using OneOf;
 using Microsoft.Extensions.DependencyInjection;
 using AutoInjectGenerator;
-using BlazorTemplate.UI.Shared.Components;
+using BlazorTemplate.ClientCore.Components;
 using Microsoft.JSInterop;
 using BlazorTemplate.UI.AntBlazor.WebSettings;
 
@@ -213,17 +213,17 @@ public class UIService(
     {
         return new ButtonComponentBuilder<Button>((self) =>
         {
-            if (self.Model.ButtonType == BlazorTemplate.Constraints.UI.ButtonType.Default)
+            if (self.Model.ButtonType == BlazorTemplate.ClientCore.UI.ButtonType.Default)
             {
                 return;
             }
 
             switch (self)
             {
-                case { Model.ButtonType: BlazorTemplate.Constraints.UI.ButtonType.Primary }:
+                case { Model.ButtonType: BlazorTemplate.ClientCore.UI.ButtonType.Primary }:
                     self.SetComponent(b => b.Type, AntDesign.ButtonType.Primary);
                     break;
-                case { Model.ButtonType: BlazorTemplate.Constraints.UI.ButtonType.Danger }:
+                case { Model.ButtonType: BlazorTemplate.ClientCore.UI.ButtonType.Danger }:
                     self.SetComponent(b => b.Danger, true);
                     break;
             }
@@ -240,30 +240,30 @@ public class UIService(
     {
         var tyleClass = props.ButtonType switch
         {
-            BlazorTemplate.Constraints.UI.ButtonType.Primary => "ant-btn-primary",
-            BlazorTemplate.Constraints.UI.ButtonType.Danger => "ant-btn-dangerous",
+            BlazorTemplate.ClientCore.UI.ButtonType.Primary => "ant-btn-primary",
+            BlazorTemplate.ClientCore.UI.ButtonType.Danger => "ant-btn-dangerous",
             _ => "ant-btn-default"
         };
         var spanClass = $"ant-btn {tyleClass}";
         return b => b.Span().Set("class", spanClass).AddText(props.Text).Build();
     }
 
-    public void Message(BlazorTemplate.Constraints.UI.MessageType type, string message)
+    public void Message(BlazorTemplate.ClientCore.UI.MessageType type, string message)
     {
         // var messageConfig = new MessageConfig();
         // messageConfig.
         switch (type)
         {
-            case BlazorTemplate.Constraints.UI.MessageType.Success:
+            case BlazorTemplate.ClientCore.UI.MessageType.Success:
                 messageService.Success(message);
                 break;
-            case BlazorTemplate.Constraints.UI.MessageType.Error:
+            case BlazorTemplate.ClientCore.UI.MessageType.Error:
                 messageService.Error(message);
                 break;
-            case BlazorTemplate.Constraints.UI.MessageType.Warning:
+            case BlazorTemplate.ClientCore.UI.MessageType.Warning:
                 messageService.Warning(message);
                 break;
-            case BlazorTemplate.Constraints.UI.MessageType.Information:
+            case BlazorTemplate.ClientCore.UI.MessageType.Information:
                 messageService.Info(message);
                 break;
             default:
@@ -271,7 +271,7 @@ public class UIService(
         }
     }
 
-    public void Alert(BlazorTemplate.Constraints.UI.MessageType type, string title, string message)
+    public void Alert(BlazorTemplate.ClientCore.UI.MessageType type, string title, string message)
     {
         var option = new ConfirmOptions
         {
@@ -281,16 +281,16 @@ public class UIService(
         };
         switch (type)
         {
-            case BlazorTemplate.Constraints.UI.MessageType.Success:
+            case BlazorTemplate.ClientCore.UI.MessageType.Success:
                 modalService.Success(option);
                 break;
-            case BlazorTemplate.Constraints.UI.MessageType.Error:
+            case BlazorTemplate.ClientCore.UI.MessageType.Error:
                 modalService.Error(option);
                 break;
-            case BlazorTemplate.Constraints.UI.MessageType.Warning:
+            case BlazorTemplate.ClientCore.UI.MessageType.Warning:
                 modalService.Warning(option);
                 break;
-            case BlazorTemplate.Constraints.UI.MessageType.Information:
+            case BlazorTemplate.ClientCore.UI.MessageType.Information:
                 modalService.Info(option);
                 break;
             default:
@@ -349,7 +349,7 @@ public class UIService(
 
 
     // TODO Notify
-    public void Notify(BlazorTemplate.Constraints.UI.MessageType type, string title, string message)
+    public void Notify(BlazorTemplate.ClientCore.UI.MessageType type, string title, string message)
     {
         _ = notificationService.Error(new NotificationConfig()
         {

@@ -1,12 +1,12 @@
-﻿@using BlazorTemplate.Constraints.Services
+﻿@using BlazorTemplate.ClientCore.Services
 @inherits JsComponentBase
-<BlazorTemplate.UI.Shared.ComponentHelper.StackPanel>
+<BlazorTemplate.ClientCore.ComponentHelper.StackPanel>
     <span>
         主题颜色
     </span>
     <input type="color" value="@App.MainThemeColor" @onchange="@SetColor" />
     <Button Type="@AntDesign.ButtonType.Primary" OnClick="Reset">重置</Button>
-</BlazorTemplate.UI.Shared.ComponentHelper.StackPanel>
+</BlazorTemplate.ClientCore.ComponentHelper.StackPanel>
 
 @code {
     // private string? color;

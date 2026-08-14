@@ -1,7 +1,7 @@
-﻿@using BlazorTemplate.Constraints.Models.Request
+﻿@using BlazorTemplate.ClientCore.Models.Request
 @using System.Collections
 @using System.Data
-@using BlazorTemplate.Constraints.UI.Extensions
+@using BlazorTemplate.ClientCore.UI.Extensions
 @typeparam TRowData
 @typeparam TQuery where TQuery : IRequest, new()
 <Card>
@@ -30,12 +30,12 @@
                             var btns = btnGroup.Where(b => b.CheckVisible(context)).ToList();
                             if (Options.ActionButtonColumn.HasValue)
                             {
-                                <BlazorTemplate.UI.Shared.ComponentHelper.MGrid GridColumns="@Options.ActionButtonColumn.Value" Gap="5px">
+                                <BlazorTemplate.ClientCore.ComponentHelper.MGrid GridColumns="@Options.ActionButtonColumn.Value" Gap="5px">
                                     @foreach (var btn in btns)
                                     {
                                         @CreateButton(btn, context)
                                     }
-                                </BlazorTemplate.UI.Shared.ComponentHelper.MGrid>
+                                </BlazorTemplate.ClientCore.ComponentHelper.MGrid>
                             }
                             else if (btns.Count <= 2)
                             {

@@ -2,9 +2,8 @@
 using AutoWasmApiGenerator;
 using BlazorAdmin.Client;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using BlazorTemplate.Constraints;
-using BlazorTemplate.Constraints.Services;
-using BlazorTemplate.UI.Shared;
+using BlazorTemplate.ClientCore;
+using BlazorTemplate.ClientCore.Services;
 
 //[assembly: GenerateApiInvoker]
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

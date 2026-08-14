@@ -2,11 +2,11 @@
 using AutoInjectGenerator;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using BlazorTemplate.Constraints;
-using BlazorTemplate.Constraints.Models;
-using BlazorTemplate.Constraints.Services;
-using BlazorTemplate.Constraints.Store;
-using BlazorTemplate.Constraints.Utils;
+using BlazorTemplate.ClientCore;
+using BlazorTemplate.ClientCore.Models;
+using BlazorTemplate.ClientCore.Services;
+using BlazorTemplate.ClientCore.Store;
+using BlazorTemplate.ClientCore.Utils;
 
 namespace BlazorAdmin.Client.Auth;
 

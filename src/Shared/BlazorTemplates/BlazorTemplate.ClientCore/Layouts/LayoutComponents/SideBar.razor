@@ -1,0 +1,34 @@
+﻿@using BlazorTemplate.ClientCore.Common
+@inherits BlazorTemplate.ClientCore.Page.AppComponentBase
+<div class="side_bar @Class" style="display: flex;flex-direction: column;width:@Width">
+    @TopBanner
+    <ScrollBar ViewStyle="height:100%">
+        @UI.BuildMenu(Router, Horizontal, App)
+    </ScrollBar>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? TopBanner { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public bool Horizontal { get; set; }
+    protected override Task OnInitializedAsync()
+    {
+        Router.DataChangedEvent += StateHasChanged;
+        return base.OnInitializedAsync();
+    }
+
+    private string Width => UI.GetMenuWidth(App.Collapsed).ToPixel();//  App.Collapsed ? 80.ToPixel() : App.SideBarExpandWidth.ToPixel();
+
+    public void ToggleCollapse()
+    {
+        // collapse = newState;
+        StateHasChanged();
+    }
+
+    protected override ValueTask OnDisposeAsync()
+    {
+        Router.DataChangedEvent -= StateHasChanged;
+        return base.OnDisposeAsync();
+    }
+}
+

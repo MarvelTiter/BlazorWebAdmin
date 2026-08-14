@@ -1,0 +1,421 @@
+﻿using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.Extensions.Options;
+using BlazorTemplate.ClientCore.Options;
+using BlazorTemplate.ClientCore.PageHelper;
+using BlazorTemplate.ClientCore.Store.Models;
+using BlazorTemplate.ClientCore.UI.Extensions;
+using BlazorTemplate.ClientCore.Utils;
+using BlazorTemplate.ClientCore.Components;
+using BlazorTemplate.ClientCore.BuildInPages;
+using BlazorTemplate.ClientCore.StoreImpl;
+using System.Reflection;
+using static BlazorTemplate.ClientCore.Routers.RouterStoreExtensions;
+
+namespace BlazorTemplate.ClientCore.Routers;
+
+[AutoInject(ServiceType = typeof(IRouterStore))]
+public partial class RouterStore(NavigationManager navigationManager
+        , IUserStore userStore
+        , IStringLocalizer<RouterStore> localizer
+        , IOptionsMonitor<CultureOptions> options
+        , ILogger<RouterStore> logger
+        , IOptionsMonitor<AppSetting> setting
+        , IMenuService menuService
+        , PagesService pagesService) : StoreBase, IRouterStore
+{
+
+    private RouteTag? current;
+
+    private readonly Dictionary<string, RouteTag> pages = new(StringComparer.OrdinalIgnoreCase);
+    public ICollection<RouteTag> TopLinks => pages.Values;
+
+    public ICollection<RouteMenu> Menus => menuService.AllMenus; // frozenMenus?.Values ?? [];
+
+    public IMenuService MenuService => menuService;
+
+    public RouteMeta? RoutingMeta { get; set; }
+    public RouteTag? Current => current ?? pages.GetValueOrDefault("/");
+
+    public WeakReference<object?> CurrentPageInstance { get; set; } = new WeakReference<object?>(null);
+    public RenderFragment? Content { get; set; }
+    public bool LastRouterChangingCheck => lastRouterChangingCheck;
+    public bool RouteChanging => routeChanging;
+    protected override void Release()
+    {
+        pages.Clear();
+        //menus.Clear();
+        menuService.Clear();
+        try
+        {
+            locationChangingHandler?.Dispose();
+        }
+        finally
+        {
+        }
+    }
+
+    public string CurrentUrl => '/' + navigationManager.ToBaseRelativePath(navigationManager.Uri);
+
+    private RouteTag? preview;
+    private IDisposable? locationChangingHandler;
+    private bool lastRouterChangingCheck = true;
+    private bool routeChanging = false;
+
+    private void NavigationManager_LocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        NotifyChanged();
+    }
+
+    public void AttchNavigateEvent()
+    {
+        navigationManager.LocationChanged += NavigationManager_LocationChanged;
+        locationChangingHandler = navigationManager.RegisterLocationChangingHandler(LocationChangingHandlerAsync);
+    }
+
+    public async ValueTask LocationChangingHandlerAsync(LocationChangingContext ctx)
+    {
+        using var _ = BooleanStatusManager.New(b =>
+        {
+            routeChanging = b;
+        }, true);
+        var url = ctx.TargetLocation;
+        url = string.IsNullOrEmpty(url) ? "/" : ParsedUriPathAndQuery(url);
+        
+        var meta = pagesService.Pages.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
+        lastRouterChangingCheck = await OnRouterChangingAsync(meta);
+        RoutingMeta = meta;
+
+        if (lastRouterChangingCheck && preview is not null)
+        {
+            preview?.TrySetDisactive(CurrentPageInstance);
+        }
+    }
+
+    public void TryRenderRouteData(RouteData? routeData)
+    {
+        if (routeData is null)
+        {
+            return;
+        }
+        var url = string.IsNullOrEmpty(CurrentUrl) ? "/" : ParsedUriPathAndQuery(CurrentUrl);
+        if (!pages.TryGetValue(url, out var tag))
+        {
+            // TODO 可能有BUG，先观察观察
+            if (menuService.AllMenus.Count == 0) return;
+            bool temp = false;
+            var menu = menuService.AllMenus.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
+            if (menu == default)
+            {
+                var meta = pagesService.Pages.FirstOrDefault(r => CompareUrl(r.RouteUrl, url));
+                if (meta == default)
+                {
+                    temp = true;
+                    meta = new()
+                    {
+                        RouteId = url,
+                        RouteTitle = url,
+                        RouteUrl = url,
+                    };
+                }
+                menu = new RouteMenu(meta);
+            }
+            tag = new RouteTag(menu)
+            {
+                RouteId = menu.RouteId ?? url,
+                RouteUrl = AttachFirstSlash(menu.RouteUrl ?? url),
+                RouteTitle = menu.RouteTitle,
+                Icon = menu.Icon ?? "",
+                Pin = menu.Pin,
+                Temp = temp
+            };
+            pages[url] = tag;
+        }
+        tag.Exception = null;
+        preview = current;
+        current = tag;
+        Content = CreateBody(routeData);
+
+        return;
+
+        RenderFragment CreateBody(RouteData routeData)
+        {
+            var pagetype = routeData.PageType;
+            var routeValues = routeData.RouteValues;
+            void RenderForLastValue(RenderTreeBuilder builder)
+            {
+                if (!LastRouterChangingCheck)
+                {
+                    builder.Component<NotAuthorizedPage>().Build();
+
+                    return;
+                }
+
+                if (Current?.Exception is not null && Current?.Panic == true)
+                {
+                    builder.Component<CrashPage>()
+                        .SetComponent(c => c.Exception, Current.Exception)
+                        .Build();
+                    return;
+                }
+
+                //dont reference RouteData again
+                builder.OpenComponent(0, pagetype);
+                foreach (KeyValuePair<string, object?> routeValue in routeValues)
+                {
+                    builder.AddAttribute(1, routeValue.Key, routeValue.Value);
+                }
+                builder.AddComponentReferenceCapture(2, CollectPageAdditionalInfo);
+                builder.CloseComponent();
+            }
+            return RenderForLastValue;
+        }
+    }
+
+    public void CollectPageAdditionalInfo(object obj)
+    {
+        CurrentPageInstance.SetTarget(obj);
+        if (Current is null) return;
+        if (obj is IRouteTagPage page)
+        {
+            var title = page.GetTitle();
+            if (title is not null)
+            {
+                Current.Title = title;
+            }
+        }
+        else if (Current.RouteTitle is null)
+        {
+            var tta = obj.GetType().GetCustomAttribute<TagTitleAttribute>();
+            if (tta != null)
+            {
+                Current.Title = tta.Title.AsContent();
+            }
+            else
+            {
+                Current.Title = CurrentUrl.AsContent();
+            }
+        }
+        // Current.Rendered = true;
+        NotifyChanged();
+    }
+
+    public void Remove(string link)
+    {
+        if (!pages.ContainsKey(link)) return;
+
+        var (previousTag, nextTag) = GetRelativelyRouteTag(link);
+
+        pages.Remove(link);
+
+        if (nextTag != null)
+        {
+            GoTo(nextTag.RouteUrl);
+        }
+        else if (previousTag != null)
+        {
+            GoTo(previousTag.RouteUrl);
+        }
+    }
+
+    public void NavigateToPreiousPage()
+    {
+        if (Current is null) return;
+        var (p, _) = GetRelativelyRouteTag(Current.RouteUrl);
+        if (p is null) return;
+        GoTo(p.RouteUrl);
+    }
+
+    public void NavigateToNextPage()
+    {
+        if (Current is null) return;
+        var (_, n) = GetRelativelyRouteTag(Current.RouteUrl);
+        if (n is null) return;
+        GoTo(n.RouteUrl);
+    }
+
+    private (RouteTag?, RouteTag?) GetRelativelyRouteTag(string link)
+    {
+        RouteTag? previousTag = null;
+        RouteTag? nextTag = null;
+        bool found = false;
+
+        foreach (var tag in pages.Values)
+        {
+            if (tag.RouteUrl == link)
+            {
+                found = true;
+            }
+            else if (!found)
+            {
+                previousTag = tag;
+            }
+            else if (found && nextTag is null)
+            {
+                nextTag = tag;
+                break;
+            }
+        }
+
+        return (previousTag, nextTag);
+    }
+
+    public string GetLocalizerString<T>(T meta)
+        where T : IRouteInfo
+    {
+        if (!options.CurrentValue.Enabled)
+            return meta.RouteTitle;
+        var l = localizer[meta.RouteId];
+        return l.ResourceNotFound ? meta.RouteTitle : l;
+    }
+
+    public Task RemoveOther(string link)
+    {
+        var removeKeys = pages.Keys.Where(k => k != link);
+        foreach (var key in removeKeys)
+        {
+            if (pages[key].Pin) continue;
+            // if (pages.TryGetValue(key, out var p))
+            // {
+            //     p.Drop();
+            // }
+
+            pages.Remove(key);
+        }
+
+        NotifyChanged();
+        return Task.CompletedTask;
+    }
+
+    public Task Reload()
+    {
+        if (Current is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        Current?.Drop();
+        GoTo(CurrentUrl);
+        return Task.CompletedTask;
+    }
+
+    public void GoTo(string uri)
+    {
+        navigationManager.NavigateTo(uri);
+    }
+
+    public Task Reset()
+    {
+        pages.TryGetValue("/", out var homeTag);
+        ArgumentNullException.ThrowIfNull(homeTag);
+        pages.Clear();
+        pages.Add("/", homeTag);
+        preview = homeTag;
+        return Task.CompletedTask;
+    }
+
+    public async Task InitMenusAsync(UserInfo? userInfo)
+    {
+        try
+        {
+            menuService.Clear();
+            pages.Clear();
+            //var homeMenu = new RouteMenu()
+            //{
+            //    RouteId = "Home",
+            //    RouteUrl = "/",
+            //    Icon = "svg-home",
+            //    Group = "ROOT",
+            //    RouteTitle = "主页",
+            //};
+            var homeTag = new RouteTag(menuService.Home)
+            {
+                RouteUrl = "/",
+                RouteId = "Home",
+                RouteTitle = "主页",
+                Icon = "svg-home",
+                Pin = true,
+                IsActive = true
+            };
+            pages.Add("/", homeTag);
+            await menuService.InitMenusAsync(userInfo, OnRouteMetaFilterAsync);
+            //menus.Add(homeMenu);
+
+            //IPermission[] savedInfos = [];
+            //if (userInfo is not null)
+            //{
+            //    savedInfos = [.. await settingService.GetUserPowersAsync(userInfo)];
+            //}
+
+            //foreach (var meta in pagesService.Pages.Where(m => m.HasPageInfo).OrderBy(m => m.Sort))
+            //{
+            //    if (menus.Any(m => m.RouteId == meta.RouteId)) continue;
+            //    var enable = await OnRouteMetaFilterAsync(meta);
+            //    if (!enable)
+            //        continue;
+            //    // 没登录
+            //    if (userInfo is null)
+            //    {
+            //        if (!meta.IsAllowAnonymous)
+            //        {
+            //            continue;
+            //        }
+            //    }
+            //    var savedMeta = savedInfos.FirstOrDefault(p => p.PermissionId == meta.RouteId);
+            //    if (savedMeta != null)
+            //    {
+            //        meta.Icon = savedMeta.Icon;
+            //        meta.RouteTitle = savedMeta.PermissionName;
+            //        meta.Sort = savedMeta.Sort;
+            //    }
+            //    menus.Add(new RouteMenu(meta));
+            //}
+
+            //this.menus.Sort((a, b) => a.Sort - b.Sort);
+            NotifyChanged();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "InitMenusAsync异常: {Message}", ex.Message);
+        }
+    }
+
+    public void Update() => NotifyChanged();
+
+    private static bool IsUserDashboard<T>(T meta)
+        where T : IRouteInfo
+    {
+        return meta.RouteUrl == "/userdashboard";
+    }
+
+    private static bool EnableShowUserDashboard(IUserStore _, AppSetting setting) => setting.ClientHubOptions.Enable;
+
+    [Obsolete("没什么用")]
+    public Type? GetRouteType(string routeUrl)
+    {
+        return pagesService.Pages.FirstOrDefault(meta => meta.RouteUrl == routeUrl)?.RouteType;
+    }
+
+    private static string ParsedUriPathAndQuery(string url)
+    {
+        if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var parsedUri)) throw new Exception();
+        // 如果是绝对路径，返回 PathAndQuery（如 "/permission?x=1"）
+        var parsed = parsedUri.IsAbsoluteUri
+            ? parsedUri.PathAndQuery
+            :
+            // 已经是相对路径，直接返回
+            parsedUri.OriginalString;
+        if (!parsed.StartsWith('/'))
+        {
+            parsed = '/' + parsed;
+        }
+        return Uri.UnescapeDataString(parsed);
+    }
+
+    private static string? AttachFirstSlash(string? url)
+    {
+        if (string.IsNullOrEmpty(url)) return null;
+        if (url.StartsWith('/')) return url;
+        return "/" + url;
+    }
+}

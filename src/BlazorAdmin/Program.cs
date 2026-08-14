@@ -1,12 +1,11 @@
 ﻿using AutoPageStateContainerGenerator;
 using AutoWasmApiGenerator;
 using BlazorAdmin;
-using BlazorTemplate.AppCore;
-using BlazorTemplate.AppCore.Services;
-using BlazorTemplate.Constraints;
-using BlazorTemplate.Constraints.Services;
-using BlazorTemplate.UI.Shared;
-using BlazorTemplate.UI.Shared.Pages;
+using BlazorTemplate.AppServer;
+using BlazorTemplate.AppServer.Services;
+using BlazorTemplate.ClientCore;
+using BlazorTemplate.ClientCore.Services;
+using BlazorTemplate.ClientCore.BuildInPages;
 using LightORM;
 using LightORM.Providers.Sqlite.Extensions;
 using LoggerProviderExtensions;

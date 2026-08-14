@@ -2,12 +2,12 @@
 using BlazorAdmin.Client.TestPages.Components;
 using LightORM;
 using Microsoft.AspNetCore.Components;
-using BlazorTemplate.Constraints.Common.Attributes;
-using BlazorTemplate.Constraints.Models;
-using BlazorTemplate.Constraints.Models.Request;
-using BlazorTemplate.Constraints.UI.Extensions;
-using BlazorTemplate.Constraints.UI.Table;
-using BlazorTemplate.UI.Shared.Basic;
+using BlazorTemplate.ClientCore.Common.Attributes;
+using BlazorTemplate.ClientCore.Models;
+using BlazorTemplate.ClientCore.Models.Request;
+using BlazorTemplate.ClientCore.UI.Extensions;
+using BlazorTemplate.ClientCore.UI.Table;
+using BlazorTemplate.ClientCore.Basic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorAdmin.Client.TestPages;

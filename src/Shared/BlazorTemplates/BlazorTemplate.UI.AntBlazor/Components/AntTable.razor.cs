@@ -1,15 +1,18 @@
 ﻿using AntDesign;
 using AntDesign.TableModels;
 using Microsoft.AspNetCore.Components;
-using BlazorTemplate.Constraints.Models.Request;
-using BlazorTemplate.Constraints.UI.Extensions;
-using BlazorTemplate.Constraints.UI.Table;
+using BlazorTemplate.ClientCore.Models.Request;
+using BlazorTemplate.ClientCore.UI.Extensions;
+using BlazorTemplate.ClientCore.UI.Table;
 using System.Globalization;
+using BlazorTemplate.ClientCore.Lockup;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorTemplate.UI.AntBlazor.Components;
 
 public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
 {
+    [Inject, NotNull] ILookupService? LookupService { get; set; }
     private RenderFragment<GroupResult<TData>>? GroupTitle()
     {
         if (Options.GroupTitleTemplate is null)
@@ -63,6 +66,7 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
             .SetComponent(c => c.Reciver, this)
             .SetComponent(c => c.UI, UI)
             .SetComponent(c => c.CellEdit, cellEdit)
+            .SetComponent(c => c.Lookup, LookupService)
             .SetComponent(c => c.OnSave, EventCallback.Factory.Create(this, SaveCellEdit))
             .SetComponent(c => c.OnCancel, EventCallback.Factory.Create(this, ResetEditCell))
             .Build();
@@ -76,15 +80,28 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
             }
 
             string? formattedValue = null;
-            if (col.IsEnum || col.EnumValues != null)
+            //if (col.IsEnum || col.EnumValues != null)
+            //{
+            //    var v = context.FieldValue;
+            //    if (v is not null)
+            //    {
+            //        if (col.EnumValues?.ContainsKey($"{v}") ?? false)
+            //        {
+            //            formattedValue = col.EnumValues?[$"{v}"];
+            //        }
+            //    }
+            //}
+
+            if (col.LookupType is { })
             {
                 var v = context.FieldValue;
                 if (v is not null)
                 {
-                    if (col.EnumValues?.ContainsKey($"{v}") ?? false)
-                    {
-                        formattedValue = col.EnumValues?[$"{v}"];
-                    }
+                    //if (col.EnumValues?.ContainsKey($"{v}") ?? false)
+                    //{
+                    //    formattedValue = col.EnumValues?[$"{v}"];
+                    //}
+                    formattedValue = LookupService.GetDisplayString(col.LookupType, v.ToString());
                 }
             }
 
