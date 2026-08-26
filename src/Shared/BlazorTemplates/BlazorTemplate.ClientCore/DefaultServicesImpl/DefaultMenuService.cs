@@ -17,6 +17,7 @@ internal class DefaultMenuService(IProjectSettingService settingService
     };
     private static readonly HashSet<string> defaultPages = [ConstraintString.USER_URL, ConstraintString.RUNLOG_URL, ConstraintString.PERMISSION_URL, ConstraintString.ROLE_PERMISSION_URL];
     public RouteMenu Home => defaultHome;
+    //public RouteMenu? Current => throw new NotImplementedException();
 
     public List<RouteMenu> AllMenus => this;
 
@@ -33,6 +34,7 @@ internal class DefaultMenuService(IProjectSettingService settingService
             }
         }
     }
+
 
     public IEnumerable<RouteMenu> GetChildMenus(string parentKey)
     {

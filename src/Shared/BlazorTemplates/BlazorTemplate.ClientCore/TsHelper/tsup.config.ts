@@ -1,6 +1,7 @@
 ﻿import { defineConfig } from 'tsup'
 export default defineConfig({
-    entry: ['./Shared/BlazorTemplate.ClientCore/TsHelper/shared.ts'],
+    entry: ['./Shared/BlazorTemplates/BlazorTemplate.ClientCore/TsHelper/shared.ts'],
+    format: ['iife'],
     splitting: false,
     sourcemap: true,
     clean: true,
@@ -9,6 +10,6 @@ export default defineConfig({
     // minify: "terser",
     esbuildOptions(options, context) {
         options.outdir = undefined
-        options.outfile = './Shared/BlazorTemplate.ClientCore/wwwroot/js/shared-project.js'
+        options.outfile = './Shared/BlazorTemplates/BlazorTemplate.ClientCore/wwwroot/js/shared-project.js'
     },
 })

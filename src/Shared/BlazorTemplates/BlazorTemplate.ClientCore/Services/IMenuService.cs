@@ -5,6 +5,7 @@ namespace BlazorTemplate.ClientCore.Services;
 public interface IMenuService
 {
     RouteMenu Home { get; }
+    //RouteMenu? Current { get; }
     int Count { get; }
     List<RouteMenu> AllMenus { get; }
     IEnumerable<RouteMenu> RootMenus { get; }
