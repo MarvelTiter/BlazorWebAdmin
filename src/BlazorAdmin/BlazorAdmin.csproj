@@ -24,8 +24,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.10" />
-		<PackageReference Include="LightORM.Providers.Sqlite" Version="2026.6.19.1" />
-		<PackageReference Include="LegacyBlazorJs" Version="10.0.10.64" />
+		<PackageReference Include="LightORM.Providers.Sqlite" Version="2026.8.21.1" />
+		<PackageReference Include="LegacyBlazorJs" Version="10.0.11.74" />
 	</ItemGroup>
 
 	<!--#if(AlwaysFalse)-->

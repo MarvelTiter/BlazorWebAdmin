@@ -97,11 +97,11 @@
                         @if (cell.RowData.RowIndex == editRow)
                         {
                             <Button Size="@ButtonSize.Small" Type="AntDesign.ButtonType.Primary" Icon="check" OnClick="@(() => SaveRowEdit(context))"></Button>
-                            <Button Size="@ButtonSize.Small" Danger Icon="close" OnClick="@(() => editRow = -1)"></Button>
+                            <Button Size="@ButtonSize.Small" Danger Icon="close" OnClick="@CancelRowEdit"></Button>
                         }
                         else
                         {
-                            <Button Size="@ButtonSize.Small" Type="AntDesign.ButtonType.Primary" Icon="edit" OnClick="@(() => editRow = cell.RowData.RowIndex)"></Button>
+                            <Button Size="@ButtonSize.Small" Type="AntDesign.ButtonType.Primary" Icon="edit" OnClick="@(() => StartRowEdit(cell))"></Button>
                         }
                     </CellRender>
                 </ActionColumn>

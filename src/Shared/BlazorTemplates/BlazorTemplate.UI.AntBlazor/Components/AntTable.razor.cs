@@ -10,9 +10,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorTemplate.UI.AntBlazor.Components;
 
-public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
+public partial class AntTable<TData, TQuery> : IAsyncDisposable
+    where TQuery : IRequest, new()
 {
     [Inject, NotNull] ILookupService? LookupService { get; set; }
+    private CancellationTokenSource rowEditCancelTokenSource = new();
     private RenderFragment<GroupResult<TData>>? GroupTitle()
     {
         if (Options.GroupTitleTemplate is null)
@@ -60,16 +62,34 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
 
         RenderFragment EditModeFragment(bool cellEdit)
         {
-            return builder => builder.Component<AntTableCellEdit<TData>>()
-            .SetComponent(c => c.Column, col)
-            .SetComponent(c => c.Data, row)
-            .SetComponent(c => c.Reciver, this)
-            .SetComponent(c => c.UI, UI)
-            .SetComponent(c => c.CellEdit, cellEdit)
-            .SetComponent(c => c.Lookup, LookupService)
-            .SetComponent(c => c.OnSave, EventCallback.Factory.Create(this, SaveCellEdit))
-            .SetComponent(c => c.OnCancel, EventCallback.Factory.Create(this, ResetEditCell))
-            .Build();
+            //return builder => builder.Component<CascadingValue<IAntTable>>()
+            //.SetComponent(c => c.Value, this)
+            //.SetComponent(c => c.ChildContent, b =>
+            //    {
+            //        b.Component<AntTableCellEdit<TData>>()
+            //        .SetComponent(c => c.Column, col)
+            //        .SetComponent(c => c.Data, row)
+            //        .SetComponent(c => c.Reciver, this)
+            //        .SetComponent(c => c.UI, UI)
+            //        .SetComponent(c => c.CellEdit, cellEdit)
+            //        .SetComponent(c => c.Lookup, LookupService)
+            //        .SetComponent(c => c.OnSave, EventCallback.Factory.Create(this, SaveCellEdit))
+            //        .SetComponent(c => c.OnCancel, EventCallback.Factory.Create(this, ResetEditCell))
+            //        .Build();
+            //    }
+            //).Build();
+
+            return b => b.Component<AntTableCellEdit<TData>>()
+                    .SetComponent(c => c.Column, col)
+                    .SetComponent(c => c.Data, row)
+                    .SetComponent(c => c.Reciver, this)
+                    .SetComponent(c => c.UI, UI)
+                    .SetComponent(c => c.CellEdit, cellEdit)
+                    .SetComponent(c => c.Lookup, LookupService)
+                    .SetComponent(c => c.RowEditCancelToken, rowEditCancelTokenSource.Token)
+                    .SetComponent(c => c.OnSave, EventCallback.Factory.Create(this, SaveCellEdit))
+                    .SetComponent(c => c.OnCancel, EventCallback.Factory.Create(this, ResetEditCell))
+                    .Build();
         }
 
         RenderFragment DisplayFragment()
@@ -160,6 +180,7 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
 
     private Lazy<IReadOnlyList<ColumnInfo>>? editableCols;
 
+
     public Lazy<IReadOnlyList<ColumnInfo>> EditableCols
     {
         get
@@ -182,6 +203,21 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
             ResetEditStatus();
         }
     }
+    private void StartRowEdit(CellData data)
+    {
+        if (editRow > -1)
+        {
+            CancelRowEdit();
+        }
+        editRow = data.RowData.RowIndex;
+    }
+    private void CancelRowEdit()
+    {
+        rowEditCancelTokenSource.Cancel();
+        rowEditCancelTokenSource = new();
+        editRow = -1;
+    }
+
     private static bool CastToBool(object? v)
     {
         if (v is bool b) return b;
@@ -200,5 +236,12 @@ public partial class AntTable<TData, TQuery> where TQuery : IRequest, new()
         {
             return c => null!;
         }
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        rowEditCancelTokenSource.Dispose();
+        GC.SuppressFinalize(this);
+        return ValueTask.CompletedTask;
     }
 }

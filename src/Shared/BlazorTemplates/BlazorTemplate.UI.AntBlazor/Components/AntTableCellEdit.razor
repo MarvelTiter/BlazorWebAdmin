@@ -1,6 +1,6 @@
 ﻿@using BlazorTemplate.ClientCore.Lockup
 @typeparam TData
-
+@implements IAsyncDisposable
 <div class="ant-table-cell-edit">
     <div class="edit-input">
         <InputBuilder TData="TData" Column="@Column" UI="@UI" Reciver="@Reciver" Data="@Data" Lookup="@Lookup"></InputBuilder>
@@ -8,7 +8,7 @@
     @if (CellEdit)
     {
         <Button Type="AntDesign.ButtonType.Primary" Size="@ButtonSize.Small" Icon="check" Class="edit-btn" OnClick="@OnSave" AutoLoading></Button>
-        <Button Danger Size="@ButtonSize.Small" Icon="close" Class="edit-btn" OnClick="@OnCancel"></Button>
+        <Button Danger Size="@ButtonSize.Small" Icon="close" Class="edit-btn" OnClick="@Cancel"></Button>
     }
 </div>
 
@@ -21,10 +21,34 @@
     [Parameter] public EventCallback OnSave { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
     [Parameter] public ILookupService? Lookup { get; set; }
-
+    [Parameter] public CancellationToken RowEditCancelToken { get; set; }
+    private object? originalValue;
+    private CancellationTokenRegistration registration = default;
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        originalValue = Column.GetValue(Data);
+        registration = RowEditCancelToken.Register(ResetValue);
+    }
+
+    public void ResetValue()
+    {
+        if (originalValue is not null)
+            Column.SetValue(Data, originalValue);
+    }
+
+    private async Task Cancel()
+    {
+        ResetValue();
+        if (OnCancel.HasDelegate)
+        {
+            await OnCancel.InvokeAsync();
+        }
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        return registration.DisposeAsync();
     }
 }
 
