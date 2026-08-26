@@ -1,6 +1,7 @@
 ﻿import { defineConfig } from 'tsup'
 export default defineConfig({
     entry: ['./main.ts'],
+    format: ['iife'],
     splitting: false,
     sourcemap: true,
     clean: true,
