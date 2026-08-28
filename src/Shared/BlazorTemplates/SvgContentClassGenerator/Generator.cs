@@ -39,19 +39,22 @@ public class Generator : IIncrementalGenerator
                     public static IEnumerable<global::BlazorTemplate.ClientCore.Services.SvgParsingResult> GetIcons()
                     {
                 """);
-            foreach (var svg in svgs)
+            foreach (var svg in svgs
+            .Select(s => new {Name = Path.GetFileNameWithoutExtension(s.Path), Content = s.GetText()?.ToString() }).Distinct()
+            .Where(s => s.Name.StartsWith("svg-") && s.Content is not null))
             {
-                var iconName = Path.GetFileNameWithoutExtension(svg.Path);
-                if (iconName.StartsWith("svg-") == false)
-                {
-                    continue;
-                }
-                var svgContent = svg.GetText()?.ToString();
-                if (svgContent is null)
-                {
-                    continue;
-                }
-
+                //var iconName = Path.GetFileNameWithoutExtension(svg.Path);
+                //if (iconName.StartsWith("svg-") == false)
+                //{
+                //    continue;
+                //}
+                //var svgContent = svg.GetText()?.ToString();
+                //if (svgContent is null)
+                //{
+                //    continue;
+                //}
+                var iconName = svg.Name;
+                var svgContent = svg.Content!;
                 var r = ProcessSvgContent(svgContent);
                 var propName = iconName.Replace("-", "_");
                 var attributesString = r.Attributes.Count > 0 ? $$"""

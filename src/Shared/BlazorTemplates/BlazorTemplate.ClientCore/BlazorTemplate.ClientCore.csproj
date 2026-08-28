@@ -34,7 +34,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<AdditionalFiles Include="**/*.svg" />
+		<AdditionalFiles Include="wwwroot/**/*.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
