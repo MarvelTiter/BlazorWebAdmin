@@ -1,9 +1,9 @@
 ﻿<Project>
 	<PropertyGroup>
-		<MainProjectVersion>2026.08.28.1</MainProjectVersion>
-        <AppServerVersion>2026.08.26.1</AppServerVersion>
-        <ClientCoreVersion>2026.08.28.1</ClientCoreVersion>
-        <AntUIVersion>2026.08.26.1</AntUIVersion>
-        <FluentUIVersion>2026.08.26.1</FluentUIVersion>
+		<MainProjectVersion>2026.08.31.1</MainProjectVersion>
+        <AppServerVersion>2026.08.31.1</AppServerVersion>
+        <ClientCoreVersion>2026.08.31.1</ClientCoreVersion>
+        <AntUIVersion>2026.08.31.1</AntUIVersion>
+        <FluentUIVersion>2026.08.31.1</FluentUIVersion>
 	</PropertyGroup>
 </Project>

@@ -1,142 +1,116 @@
 ﻿{
-    "$schema": "https://json.schemastore.org/template",
-    "author": "MarvelTiter",
-    "classifications": [
-        "BlazorAdmin",
-        "Web"
-    ],
-    "name": "MtBlazorAdminTemplate",
-    "identity": "MtBlazorAdminTemplate",
-    "shortName": "mtblazor",
-    "tags": {
-        "language": "C#",
-        "type": "project"
-    },
-    "sourceName": "BlazorAdmin",
-    "preferNameDirectory": true,
-    "specialCustomOperations": {
-        "**/*.slnx": {
-            "operations": [
-                {
-                    "type": "conditional",
-                    "configuration": {
-                        "actionableIf": [
-                            "<!--#if"
-                        ],
-                        "actionableElse": [
-                            "<!--#else"
-                        ],
-                        "actionableElseif": [
-                            "<!--#elseif",
-                            "<!--#elif"
-                        ],
-                        "endif": [
-                            "<!--#endif"
-                        ],
-                        "trim": "true",
-                        "wholeLine": "true"
-                    }
-                }
-            ]
-        }
-    },
-    "sources": [
+  "$schema": "https://json.schemastore.org/template",
+  "author": "MarvelTiter",
+  "classifications": [
+    "BlazorAdmin",
+    "Web"
+  ],
+  "name": "MtBlazorAdminTemplate",
+  "identity": "MtBlazorAdminTemplate",
+  "shortName": "mtblazor",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "BlazorAdmin",
+  "preferNameDirectory": true,
+  "specialCustomOperations": {
+    "**/*.slnx": {
+      "operations": [
         {
-            "source": "./",
-            "target": "./",
-            "exclude": [
-                "**/pack.settings.props",
-                "**/[Bb]in/**",
-                "**/[Oo]bj/**",
-                ".template.config/**/*",
-                "**/*.filelist",
-                "**/*.user",
-                "*-lock.json",
-                "**/TestPages/**",
-                "**/.vs/**",
-                "**/.idea/**"
+          "type": "conditional",
+          "configuration": {
+            "actionableIf": [
+              "<!--#if"
             ],
-            "rename": {
-                "Shared/Props/pack.settings.forpack.props": "Shared/Props/pack.settings.props"
-            },
-            "condition": "host == 'none'"
-        },
-        {
-            "source": "./",
-            "target": "./",
-            "exclude": [
-                "**/pack.settings.props",
-                "**/[Bb]in/**",
-                "**/[Oo]bj/**",
-                ".template.config/**/*",
-                "**/*.filelist",
-                "**/*.user",
-                "*-lock.json",
-                "**/TestPages/**",
-                "**/.vs/**",
-                "**/.idea/**",
-                "**/BlazorAdmin.Wpf/**"
+            "actionableElse": [
+              "<!--#else"
             ],
-            "rename": {
-                "Shared/Props/pack.settings.forpack.props": "Shared/Props/pack.settings.props"
-            },
-            "condition": "host == 'web'"
-        },
-        {
-            "source": "./",
-            "target": "./",
-            "exclude": [
-                "**/pack.settings.props",
-                "**/[Bb]in/**",
-                "**/[Oo]bj/**",
-                ".template.config/**/*",
-                "**/*.filelist",
-                "**/*.user",
-                "*-lock.json",
-                "**/TestPages/**",
-                "**/.vs/**",
-                "**/.idea/**",
-                "**/BlazorAdmin/**",
-                "**/BlazorAdmin.Client/**"
+            "actionableElseif": [
+              "<!--#elseif",
+              "<!--#elif"
             ],
-            "rename": {
-                "Shared/Props/pack.settings.forpack.props": "Shared/Props/pack.settings.props"
-            },
-            "condition": "host == 'wpf'"
+            "endif": [
+              "<!--#endif"
+            ],
+            "trim": "true",
+            "wholeLine": "true"
+          }
         }
-    ],
-    "symbols": {
-        "host": {
-            "type": "parameter",
-            "datatype": "choice",
-            "choices": [
-                {
-                    "choice": "none",
-                    "description": "both web and wpf project in the solution"
-                },
-                {
-                    "choice": "web",
-                    "description": "Web application"
-                },
-                {
-                    "choice": "wpf",
-                    "description": "WPF application"
-                }
-            ],
-            "defaultValue": "none",
-            "description": "The type of host application to create"
-        },
-        "ExcludeDefaultPages": {
-            "type": "parameter",
-            "datatype": "bool",
-            "defaultValue": "false",
-            "description": "是否配置默认的页面"
-        },
-        "UseClientProject": {
-            "type": "parameter",
-            "datatype": "bool",
-            "defaultValue": "true",
-            "description": "是否使用.Client项目"
-        }
+      ]
     }
+  },
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "exclude": [
+        "**/pack.settings.props",
+        "**/[Bb]in/**",
+        "**/[Oo]bj/**",
+        ".template.config/**/*",
+        "**/*.filelist",
+        "**/*.user",
+        "*-lock.json",
+        "**/TestPages/**",
+        "**/.vs/**",
+        "**/.idea/**"
+      ],
+      "rename": {
+        "Shared/Props/pack.settings.forpack.props": "Shared/Props/pack.settings.props"
+      },
+      "modifiers": [
+        {
+          "condition": "host == 'none'"
+        },
+        {
+          "condition": "host == 'web'",
+          "exclude": [
+            "**/BlazorAdmin.Wpf/**"
+          ]
+        },
+        {
+          "condition": "host == 'wpf'",
+          "exclude": [
+            "**/BlazorAdmin/**",
+            "**/BlazorAdmin.Client/**"
+          ]
+        }
+      ]
+    }
+  ],
+  "symbols": {
+    "host": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "none",
+          "description": "both web and wpf project in the solution"
+        },
+        {
+          "choice": "web",
+          "description": "Web application"
+        },
+        {
+          "choice": "wpf",
+          "description": "WPF application"
+        }
+      ],
+      "defaultValue": "none",
+      "description": "The type of host application to create"
+    },
+    "ExcludeDefaultPages": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "false",
+      "description": "是否配置默认的页面"
+    },
+    "UseClientProject": {
+      "type": "parameter",
+      "datatype": "bool",
+      "defaultValue": "true",
+      "description": "是否使用.Client项目"
+    }
+  }
 }

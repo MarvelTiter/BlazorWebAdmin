@@ -33,41 +33,11 @@
 
     @* <script src="@Assets["_framework/blazor.web.js"]"></script> *@
     @* <script src="@Assets["js/blazor-admin-project.js"]"></script> *@
-    @if (AppOption.Value.RunMode == AppRunMode.Server)
-    {
-        <LegacyBlazorJs.Loader Target="es2015"></LegacyBlazorJs.Loader>
-    }
-    else
-    {
-        <VScript Src="_framework/blazor.web.js"></VScript>
-    }
+    @loadBlazorFrameworkScript
+
     <VScript Src="_content/BlazorTemplate.ClientCore/js/shared-project.js"></VScript>
     <VScript Src="js/BlazorAdmin-project.js"></VScript>
 
 </body>
 
 </html>
-
-@code {
-    [CascadingParameter, NotNull] public HttpContext? HttpContext { get; set; }
-    [Inject, NotNull] public IOptions<AppSetting>? AppOption { get; set; }
-    [Inject, NotNull] public IOptions<Token>? TokenOption { get; set; }
-    [Inject, NotNull] public IUIService? UIService { get; set; }
-    IComponentRenderMode? RenderMode
-    {
-        get
-        {
-            if (!HttpContext.AcceptsInteractiveRouting())
-            {
-                return null;
-            }
-            return AppOption.Value.RunMode switch
-            {
-                AppRunMode.Auto => new InteractiveAutoRenderMode(false),
-                AppRunMode.Server => new InteractiveServerRenderMode(false),
-                AppRunMode.WebAssembly => new InteractiveWebAssemblyRenderMode(false),
-                _ => throw new ArgumentException()
-            };
-        }
-    }
-}

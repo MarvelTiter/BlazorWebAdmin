@@ -75,7 +75,11 @@ public static class WebService
     public static void UseProject(this WebApplication app)
     {
         app.UseMiddleware<CheckBrowserEnabledMiddleware>();
+#if NET8_0
+        app.UseStaticFiles();
+#else
         app.MapStaticAssets();
+#endif
         app.UseMiddleware<RedirectToLauchUrlMiddleware>();
         app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/api/download"), a => a.UseMiddleware<FileDownloaderMiddleware>());
         // app.UseWhen(ctx => ctx.Request.Path.StartsWithSegments("/ip.client"), a => a.UseMiddleware<GetClientIpMiddleware>());

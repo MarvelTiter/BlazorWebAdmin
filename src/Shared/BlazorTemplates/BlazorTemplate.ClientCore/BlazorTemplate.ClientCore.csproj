@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 	<Import Project="../../Props/projects.versions.props" />
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFrameworks>net8.0;net10.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>MarvelTiter</Authors>
@@ -43,7 +44,7 @@
 		<PackageReference Include="AutoInjectGenerator" Version="2026.7.8.1" />
 		<PackageReference Include="AutoPageStateContainerGenerator" Version="0.0.8" />
 		<PackageReference Include="AutoWasmApiGenerator" Version="2026.5.25.1" />
-		<PackageReference Include="LightORM.Extensions.DependencyInjection" Version="2026.8.26.1" />
+		<PackageReference Include="LightORM.Extensions.DependencyInjection" Version="2026.8.31.1" />
 		<PackageReference Include="LoggerProviderExtensions" Version="2026.7.15.1" />
 		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="10.0.11" />
 		<PackageReference Include="MT.Generators.Abstraction" Version="1.0.0" />
@@ -51,14 +52,18 @@
 		<PackageReference Include="MT.Toolkit" Version="2026.6.2.1" />
 		<PackageReference Include="LightExcel" Version="2026.8.6.2" />
 	</ItemGroup>
-	<ItemGroup>
+	<ItemGroup Condition="$(TargetFramework) == 'net10.0'">
 		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.10" />
 		<PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="10.0.10" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.10" />
 	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework) == 'net8.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" />
+	</ItemGroup>
+	
 	<ItemGroup>
 		<None Include="..\SvgContentClassGenerator\bin\$(Configuration)\netstandard2.0\SvgContentClassGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 		<ProjectReference Include="..\SvgContentClassGenerator\SvgContentClassGenerator.csproj" Pack="false">

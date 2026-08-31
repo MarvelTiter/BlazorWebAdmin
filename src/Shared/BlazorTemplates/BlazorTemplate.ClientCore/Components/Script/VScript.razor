@@ -1,8 +1,2 @@
 ﻿@namespace BlazorTemplate.ClientCore.Components
-@using System.Diagnostics.CodeAnalysis
-<script src="@Assets[Src]"></script>
-@code {
-    [Parameter, NotNull] public string? Src { get; set; }
-    // [Inject, NotNull] IFileService? FileService { get; set; }
-    // string VersionSrc => FileService.GetStaticFileWithVersion(Src);
-}
+<script src="@GetSrc()"></script>

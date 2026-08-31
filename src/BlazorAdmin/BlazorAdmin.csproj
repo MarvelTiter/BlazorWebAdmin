@@ -2,7 +2,7 @@
 	<Import Project="../Shared/Props/pack.settings.props" />
 	<Import Project="../Shared/Props/projects.versions.props" />
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFrameworks>net8.0;net10.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
@@ -26,10 +26,17 @@
 	  <EmbeddedResource Include="Langs\zh-CN\RouterStore.json" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="$(TargetFramework) == 'net10.0'">
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.10" />
-		<PackageReference Include="LightORM.Providers.Sqlite" Version="2026.8.21.1" />
 		<PackageReference Include="LegacyBlazorJs" Version="10.0.11.74" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(TargetFramework) == 'net8.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.10" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="LightORM.Providers.Sqlite" Version="2026.8.31.1" />
 	</ItemGroup>
 
 	<!--#if(AlwaysFalse)-->

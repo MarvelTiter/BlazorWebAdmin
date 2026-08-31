@@ -1,19 +1,23 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿#if NET8_0
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Endpoints;
+using Microsoft.AspNetCore.Http;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 
-namespace BlazorTemplate.AppServer;
+#pragma warning disable IDE0130 // 命名空间与文件夹结构不匹配
+namespace Microsoft.AspNetCore.Components.Routing;
+#pragma warning restore IDE0130 // 命名空间与文件夹结构不匹配
 
-#if NET8_0
 public static class HttpContextExtensions
 {
-    private static readonly ConcurrentDictionary<Type, bool> AcceptsInteractiveRoutingCache = new();
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<Type, bool> AcceptsInteractiveRoutingCache = new();
     public static bool AcceptsInteractiveRouting(this HttpContext context)
     {
         //httpContext.GetEndpoint().
         ArgumentNullException.ThrowIfNull(context);
 
-        var pageType = context.GetEndpoint()?.Metadata.GetMetadata<ComponentTypeMetadata>()?.Type;
+        var pageType = EndpointHttpContextExtensions.GetEndpoint(context)?.Metadata.GetMetadata<ComponentTypeMetadata>()?.Type;
 
         return pageType is not null
             && AcceptsInteractiveRoutingCache.GetOrAdd(
@@ -22,20 +26,3 @@ public static class HttpContextExtensions
     }
 }
 #endif
-
-public static class ClaimsPrincipalExtensions
-{
-    //public static bool GetCookieClaimsIdentity(this ClaimsPrincipal user, [NotNullWhen(true)] out ClaimsIdentity? identity)
-    //{
-    //    foreach (var item in user.Identities)
-    //    {
-    //        if (item.AuthenticationType == CookieAuthenticationDefaults.AuthenticationScheme)
-    //        {
-    //            identity = item;
-    //            return true;
-    //        }
-    //    }
-    //    identity = null;
-    //    return false;
-    //}
-}
