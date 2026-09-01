@@ -19,11 +19,29 @@ public class Generator : IIncrementalGenerator
                 return si!;
             }
         ).Collect();
-        var cc = context.CompilationProvider.Combine(enums);
+
+        var manual = context.SyntaxProvider.CreateSyntaxProvider(
+            static (node, _) => node is InvocationExpressionSyntax
+            {
+                Expression: MemberAccessExpressionSyntax { Name.Identifier.Text: "AddEnumLookupProvider" }
+            },
+            static (c, _) =>
+            {
+                var invocation = (InvocationExpressionSyntax)c.Node;
+                if (c.SemanticModel.GetSymbolInfo(invocation).Symbol is not IMethodSymbol symbol)
+                {
+                    return null!;
+                }
+                return (symbol.TypeArguments.FirstOrDefault() as INamedTypeSymbol)!;
+            }
+            ).Where(t => t is not null).Collect();
+
+        var cc = context.CompilationProvider.Combine(enums.Combine(manual));
         context.RegisterSourceOutput(cc, static (context, c) =>
         {
             var (compilation, enums) = c;
-            foreach (var item in enums)
+            INamedTypeSymbol[] total = [.. enums.Left, .. enums.Right];
+            foreach (var item in total)
             {
                 if (!CreateEntries(item, out var contents))
                 {

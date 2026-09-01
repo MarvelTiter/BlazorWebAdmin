@@ -1,12 +1,13 @@
-﻿using LightExcel;
+﻿using BlazorTemplate.ClientCore.Auth;
+using BlazorTemplate.ClientCore.BuildInPages;
+using BlazorTemplate.ClientCore.Locales.Extensions;
+using BlazorTemplate.ClientCore.Lockup;
+using BlazorTemplate.ClientCore.Options;
+using LightExcel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using BlazorTemplate.ClientCore.Options;
-using BlazorTemplate.ClientCore.Auth;
-using BlazorTemplate.ClientCore.Locales.Extensions;
-using BlazorTemplate.ClientCore.BuildInPages;
+using MT.LightTask;
 using System.Reflection;
-using BlazorTemplate.ClientCore.Lockup;
 
 namespace BlazorTemplate.ClientCore;
 
@@ -45,10 +46,9 @@ public static class ProjectInit
              <span>{AppConst.App.Version}</span>
          </footer>
 ");
-
+        services.AddLookupService();
         services.AddJsonLocales();
         services.AddLightExcel();
-        services.AddLookupService();
         services.AddScoped(provider =>
         {
             var p = provider.GetService<IDownloadServiceProvider>()!;
