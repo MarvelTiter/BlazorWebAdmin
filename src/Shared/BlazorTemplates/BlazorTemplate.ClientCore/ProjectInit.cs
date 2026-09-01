@@ -18,7 +18,7 @@ public static class ProjectInit
         setting = new ProjectSetting();
         setting.ConfigurePage(locator =>
         {
-            locator.SetLoginPageType<DefaultLogin>();
+            locator.SetLoginPageType<DefaultLoginOrigin>();
         });
 
         action.Invoke(setting);

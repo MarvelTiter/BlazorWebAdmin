@@ -8,6 +8,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
 		<StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+		<BlazorDisableThrowNavigationException Condition="$(TargetFramework) == 'net10.0'">true</BlazorDisableThrowNavigationException>
 		<Version>$(MainProjectVersion)</Version>
 	</PropertyGroup>
 

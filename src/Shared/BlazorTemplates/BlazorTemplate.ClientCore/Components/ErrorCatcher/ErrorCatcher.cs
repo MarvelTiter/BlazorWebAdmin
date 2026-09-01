@@ -102,10 +102,14 @@ public class ErrorCatcher : ErrorBoundaryBase //, IExceptionHandler
     /// <param name="exception"></param>
     protected override async Task OnErrorAsync(Exception exception)
     {
-        if (exception is not JSException && ShowMessage)
+        if (ExceptionShouldShow(exception) && ShowMessage)
         {
             UI.Notify(MessageType.Error, "程序异常", exception.Message);
             Logger.LogError(exception, "{Message}", exception.Message);
+        }
+        else
+        {
+            Logger.LogWarning("Exception occurred but not shown: {Message}", exception.Message);
         }
 
         if (OnHandleExcetionAsync != null)
@@ -116,11 +120,23 @@ public class ErrorCatcher : ErrorBoundaryBase //, IExceptionHandler
                 Recover();
             }
         }
-        //return Task.CompletedTask;
-    }
 
-    //public Task HandleExceptionAsync(Exception exception)
-    //{
-    //    return OnErrorAsync(exception);
-    //}
+        static bool ExceptionShouldShow(Exception? ex)
+        {
+            if (ex is null)
+                return false;
+            if (ex is AggregateException aggregateException)
+            {
+                return ExceptionShouldShow(aggregateException.InnerException);
+            }
+            if (ex is JSException)
+                return false;
+            if (ex is JSDisconnectedException)
+                return false;
+            if (ex is InvalidOperationException i && i.Message.Contains("JavaScript", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            return true;
+        }
+    }
 }

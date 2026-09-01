@@ -12,16 +12,10 @@
     <meta charset="utf-8" no-antblazor-js no-antblazor-css />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
-    @* <link href="@Assets[UIService.MainStyle()]" rel="stylesheet"> *@
-    @* <VLink Href="@UIService.MainStyle()"></VLink> *@
     @UIService.AddStyles()
-    @* <link data-dark rel="stylesheet"> *@
-    @* <script src="@Assets[UIService.UIFrameworkJs()]"></script> *@
-    @* <VScript Src="@UIService.UIFrameworkJs()"></VScript> *@
     @UIService.UIFrameworkJs()
-    @* <link href="@Assets["app.css"]" rel="stylesheet" /> *@
+    @loadResources.Value
     <VLink Href="app.css"></VLink>
-    @* <link href="@Assets["BlazorAdmin.styles.css"]" rel="stylesheet" /> *@
     <VLink Href="BlazorAdmin.styles.css"></VLink>
     <HeadOutlet @rendermode="@RenderMode" />
 </head>
@@ -31,9 +25,7 @@
     <Routers RenderMode="@RenderMode"></Routers>
     <BlazorTemplate.ClientCore.Components.ReconnectorOutlet @rendermode="@RenderMode"></BlazorTemplate.ClientCore.Components.ReconnectorOutlet>
 
-    @* <script src="@Assets["_framework/blazor.web.js"]"></script> *@
-    @* <script src="@Assets["js/blazor-admin-project.js"]"></script> *@
-    @loadBlazorFrameworkScript
+    @loadBlazorFrameworkScript.Value
 
     <VScript Src="_content/BlazorTemplate.ClientCore/js/shared-project.js"></VScript>
     <VScript Src="js/BlazorAdmin-project.js"></VScript>

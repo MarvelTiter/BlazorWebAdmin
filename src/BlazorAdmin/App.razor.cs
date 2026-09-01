@@ -13,11 +13,12 @@ namespace BlazorAdmin;
 
 partial class App
 {
-    private readonly RenderFragment loadBlazorFrameworkScript;
+    private readonly Lazy<RenderFragment> loadBlazorFrameworkScript;
+    private readonly Lazy<RenderFragment> loadResources;
     [CascadingParameter, NotNull] public HttpContext? HttpContext { get; set; }
-    public IOptions<AppSetting> AppOption { get; set; }
-    public IOptions<Token> TokenOption { get; set; }
-    public IUIService UIService { get; set; }
+    [Inject, NotNull] public IOptions<AppSetting>? AppOption { get; set; }
+    [Inject, NotNull] public IOptions<Token>? TokenOption { get; set; }
+    [Inject, NotNull] public IUIService? UIService { get; set; }
     IComponentRenderMode? RenderMode
     {
         get
@@ -35,38 +36,40 @@ partial class App
             };
         }
     }
-    public App(IOptions<AppSetting> appOption, IOptions<Token> tokenOption, IUIService uIService)
+    public App()
     {
-        AppOption = appOption;
-        TokenOption = tokenOption;
-        UIService = uIService;
         //-:cnd:noEmit
 #if NET8_0
-        loadBlazorFrameworkScript = b =>
+        loadResources = new(b => { });
+        loadBlazorFrameworkScript = new(b =>
         {
             b.OpenComponent<VScript>(0);
             b.AddAttribute(1, nameof(VScript.Src), "_framework/blazor.web.js");
             b.CloseComponent();
-        };
+        });
 #else
-        if (AppOption.Value.RunMode == AppRunMode.Server)
+        loadResources = new(b =>
         {
-            loadBlazorFrameworkScript = b =>
+            b.OpenComponent<ResourcePreloader>(0);
+            b.CloseComponent();
+            b.OpenComponent<ImportMap>(0);
+            b.CloseComponent();
+        });
+        loadBlazorFrameworkScript = new(b =>
+        {
+            if (AppOption.Value.RunMode == AppRunMode.Server)
             {
                 b.OpenComponent<LegacyBlazorJs.Loader>(0);
                 b.AddAttribute(1, nameof(LegacyBlazorJs.Loader.Target), "es2015");
                 b.CloseComponent();
-            };
-        }
-        else
-        {
-            loadBlazorFrameworkScript = b =>
+            }
+            else
             {
                 b.OpenComponent<VScript>(0);
                 b.AddAttribute(1, nameof(VScript.Src), "_framework/blazor.web.js");
                 b.CloseComponent();
-            };
-        }
+            }
+        });
 #endif
         //+:cnd:noEmit
     }

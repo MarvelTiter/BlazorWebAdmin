@@ -8,6 +8,7 @@
 		<OutputType Condition="'$(Configuration)'=='Debug'">Exe</OutputType>
 		<OutputType Condition="'$(Configuration)'!='Debug'">WinExe</OutputType>
 		<DisableWinExeOutputInference>true</DisableWinExeOutputInference>
+		<BlazorDisableThrowNavigationException Condition="$(TargetFramework) == 'net10.0'">true</BlazorDisableThrowNavigationException>
 		<IsPackable>true</IsPackable>
 		<Version>$(MainProjectVersion)</Version>
 	</PropertyGroup>
@@ -73,9 +74,6 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</Content>
-		<Content Update="Login.razor">
-		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		</Content>
 	</ItemGroup>
 
