@@ -8,12 +8,26 @@ namespace BlazorTemplate.ClientCore.UI.Table;
 public static class TableColumnContext
 {
     private static readonly ConcurrentDictionary<Type, TableColumns> tableColumnCaches = [];
+    private static readonly ConcurrentDictionary<Type, Func<ColumnInfo[]>> generatedColumnFactories = [];
     public record TableColumns(ColumnInfo[] Columns);
     public static ColumnInfo[] GetColumnInfos<T>()
     {
         return typeof(T).GenerateColumns();
     }
+    public static void RegisterGeneratedColumns(Type type, Func<ColumnInfo[]> factory)
+    {
+        generatedColumnFactories[type] = factory;
+    }
     public static ColumnInfo[] GenerateColumns(this Type type)
+    {
+        if (generatedColumnFactories.TryGetValue(type, out var factory))
+        {
+            return factory();
+        }
+        return GenerateColumnsReflection(type);
+    }
+
+    private static ColumnInfo[] GenerateColumnsReflection(Type type)
     {
         var tc = tableColumnCaches.GetOrAdd(type, static type =>
             {
@@ -44,96 +58,97 @@ public static class TableColumnContext
             }) with
         { };
         return tc.Columns;
-    }
 
-    private static ColumnInfo GenerateColumn(PropertyInfo self
+        static ColumnDefinitionAttribute? GetColumnDefinition(PropertyInfo p, PropertyInfo? upper)
+        {
+            var col = p.GetCustomAttribute<ColumnDefinitionAttribute>() ?? upper?.GetCustomAttribute<ColumnDefinitionAttribute>();
+            if (col is null)
+            {
+                var dis = p.GetCustomAttribute<DisplayAttribute>() ?? upper?.GetCustomAttribute<DisplayAttribute>();
+                if (dis is not null)
+                {
+                    col = new ColumnDefinitionAttribute(dis.Name);
+                }
+            }
+            FormAttribute? form = p.GetCustomAttribute<FormAttribute>() ?? upper?.GetCustomAttribute<FormAttribute>();
+            if (form != null)
+            {
+                // 没有 ColumnDefinitionAttribute 和 DisplayAttribute
+                // 不在Table上显示，但是需要在表单上显示
+                col ??= new ColumnDefinitionAttribute() { Visible = false };
+            }
+
+            return col;
+        }
+
+        static ColumnInfo GenerateColumn(PropertyInfo self
         , ColumnDefinitionAttribute head
         , PropertyInfo? upper
         , LangNameAttribute? upperLang)
-    {
-        if (head.Label == null)
         {
-            var lang = self.DeclaringType?.GetCustomAttribute<LangNameAttribute>() ?? upper?.DeclaringType?.GetCustomAttribute<LangNameAttribute>() ?? upperLang;
-            if (lang is not null)
+            if (head.Label == null)
             {
-                head.Label = $"{lang.Name}.{self.Name}";
+                var lang = self.DeclaringType?.GetCustomAttribute<LangNameAttribute>() ?? upper?.DeclaringType?.GetCustomAttribute<LangNameAttribute>() ?? upperLang;
+                if (lang is not null)
+                {
+                    head.Label = $"{lang.Name}.{self.Name}";
+                }
+                else
+                {
+                    head.Label = $"{self.DeclaringType!.Name}.{self.Name}";
+                }
             }
-            else
+            ColumnInfo column = new(self)
             {
-                head.Label = $"{self.DeclaringType!.Name}.{self.Name}";
-            }
-        }
-        ColumnInfo column = new(self)
-        {
-            Label = head.Label,
-            Index = head.Sort,
-            Fixed = head.Fixed,
-            Width = head.Width,
-            Align = head.Align,
-            Visible = head.Visible,
-            Ellipsis = head.Ellipsis,
-            Readonly = head.Readonly,
-            UseTag = head.UseTag,
-            Sortable = head.Sortable,
-            Format = head.Format,
-            Searchable = head.Searchable,
-            Editable = head.Editable,
-        };
+                Label = head.Label,
+                Index = head.Sort,
+                Fixed = head.Fixed,
+                Width = head.Width,
+                Align = head.Align,
+                Visible = head.Visible,
+                Ellipsis = head.Ellipsis,
+                Readonly = head.Readonly,
+                UseTag = head.UseTag,
+                Sortable = head.Sortable,
+                Format = head.Format,
+                Searchable = head.Searchable,
+                Editable = head.Editable,
+            };
 
-        var formAttr = self.GetCustomAttribute<FormAttribute>() ?? upper?.GetCustomAttribute<FormAttribute>();
-        if (formAttr != null)
-        {
-            column.Row = formAttr.Row;
-            column.Column = formAttr.Column;
-            column.ShowOnForm = !formAttr.Hide;
-            column.InputType = formAttr.InputType;
-            if (!string.IsNullOrEmpty(formAttr.Label))
+            var formAttr = self.GetCustomAttribute<FormAttribute>() ?? upper?.GetCustomAttribute<FormAttribute>();
+            if (formAttr != null)
             {
-                column.Label = formAttr.Label;
+                column.Row = formAttr.Row;
+                column.Column = formAttr.Column;
+                column.ShowOnForm = !formAttr.Hide;
+                column.InputType = formAttr.InputType;
+                if (!string.IsNullOrEmpty(formAttr.Label))
+                {
+                    column.Label = formAttr.Label;
+                }
             }
-        }
 
-        //if (column.IsEnum)
-        //{
-        //    //column.EnumValues = ParseDictionary(column.UnderlyingType ?? column.DataType);
-        //    column.LookupType = (column.UnderlyingType ?? column.DataType).Name;
-        //}
+            //if (column.IsEnum)
+            //{
+            //    //column.EnumValues = ParseDictionary(column.UnderlyingType ?? column.DataType);
+            //    column.LookupType = (column.UnderlyingType ?? column.DataType).Name;
+            //}
 
-        var colors = self.GetCustomAttributes<ColumnTagAttribute>().Concat(upper?.GetCustomAttributes<ColumnTagAttribute>() ?? []);
-        if (colors?.Any() ?? false)
-        {
-            column.UseTag = true;
-            column.TagColors = [];
-            foreach (var c in colors)
+            var colors = self.GetCustomAttributes<ColumnTagAttribute>().Concat(upper?.GetCustomAttributes<ColumnTagAttribute>() ?? []);
+            if (colors?.Any() ?? false)
             {
-                if (c == null) continue;
-                column.TagColors.TryAdd(c.Value, c.Color);
+                column.UseTag = true;
+                column.TagColors = [];
+                foreach (var c in colors)
+                {
+                    if (c == null) continue;
+                    column.TagColors.TryAdd(c.Value, c.Color);
+                }
             }
+            return column;
         }
-        return column;
     }
 
-    public static ColumnDefinitionAttribute? GetColumnDefinition(PropertyInfo p, PropertyInfo? upper)
-    {
-        var col = p.GetCustomAttribute<ColumnDefinitionAttribute>() ?? upper?.GetCustomAttribute<ColumnDefinitionAttribute>();
-        if (col is null)
-        {
-            var dis = p.GetCustomAttribute<DisplayAttribute>() ?? upper?.GetCustomAttribute<DisplayAttribute>();
-            if (dis is not null)
-            {
-                col = new ColumnDefinitionAttribute(dis.Name);
-            }
-        }
-        FormAttribute? form = p.GetCustomAttribute<FormAttribute>() ?? upper?.GetCustomAttribute<FormAttribute>();
-        if (form != null)
-        {
-            // 没有 ColumnDefinitionAttribute 和 DisplayAttribute
-            // 不在Table上显示，但是需要在表单上显示
-            col ??= new ColumnDefinitionAttribute() { Visible = false };
-        }
-
-        return col;
-    }
 
     //public static Dictionary<string, string> ParseDictionary(Type enumType)
     //{

@@ -65,15 +65,8 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<None Include="..\SvgContentClassGenerator\bin\$(Configuration)\netstandard2.0\SvgContentClassGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-		<ProjectReference Include="..\SvgContentClassGenerator\SvgContentClassGenerator.csproj" Pack="false">
-			<OutputItemType>Analyzer</OutputItemType>
-			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-			<PrivateAssets>all</PrivateAssets>
-		</ProjectReference>
-
-		<None Include="..\EnumDisplayProviderGenerator\bin\$(Configuration)\netstandard2.0\EnumDisplayProviderGenerator.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-		<ProjectReference Include="..\EnumDisplayProviderGenerator\EnumDisplayProviderGenerator.csproj" Pack="false">
+		<None Include="..\BlazorTemplate.ClientCore.Generators\bin\$(Configuration)\netstandard2.0\BlazorTemplate.ClientCore.Generators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<ProjectReference Include="..\BlazorTemplate.ClientCore.Generators\BlazorTemplate.ClientCore.Generators.csproj" Pack="false">
 			<OutputItemType>Analyzer</OutputItemType>
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 			<PrivateAssets>all</PrivateAssets>

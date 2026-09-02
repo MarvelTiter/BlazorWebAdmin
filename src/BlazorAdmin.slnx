@@ -6,8 +6,7 @@
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.ClientCore/BlazorTemplate.ClientCore.csproj" />
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.AntBlazor/BlazorTemplate.UI.AntBlazor.csproj" />
     <Project Path="Shared/BlazorTemplates/BlazorTemplate.UI.FluentUI/BlazorTemplate.UI.FluentUI.csproj" />
-    <Project Path="Shared/BlazorTemplates/EnumDisplayProviderGenerator/EnumDisplayProviderGenerator.csproj" Id="2ab9b174-b743-4bf1-bbf6-bee271a0890a" />
-    <Project Path="Shared/BlazorTemplates/SvgContentClassGenerator/SvgContentClassGenerator.csproj" Id="9ec09481-8a04-4496-9596-987012a0e103" />
+    <Project Path="Shared/BlazorTemplates/BlazorTemplate.ClientCore.Generators/BlazorTemplate.ClientCore.Generators.csproj" Id="3c7a1f2e-6b8d-4c9a-a1b2-c3d4e5f6a7b8" />
   </Folder>
   <Folder Name="/Shared/doc/">
     <File Path="../doc/模板参数和日志.md" />

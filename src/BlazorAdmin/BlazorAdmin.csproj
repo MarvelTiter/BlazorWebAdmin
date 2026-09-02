@@ -45,7 +45,7 @@
 		<ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
 		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.AppServer\BlazorTemplate.AppServer.csproj" />
 		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
-		<ProjectReference Include="..\Shared\BlazorTemplates\SvgContentClassGenerator\SvgContentClassGenerator.csproj">
+		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.ClientCore.Generators\BlazorTemplate.ClientCore.Generators.csproj">
 			<OutputItemType>Analyzer</OutputItemType>
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 			<PrivateAssets>all</PrivateAssets>

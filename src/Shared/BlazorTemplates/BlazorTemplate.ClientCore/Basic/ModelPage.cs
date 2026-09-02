@@ -3,8 +3,6 @@ using System.Reflection;
 using AutoPageStateContainerGenerator;
 using LightExcel;
 using Microsoft.AspNetCore.Components.Rendering;
-using BlazorTemplate.ClientCore.Store.Models;
-using BlazorTemplate.ClientCore.UI;
 using BlazorTemplate.ClientCore.UI.Extensions;
 using BlazorTemplate.ClientCore.ComponentHelper;
 using BlazorTemplate.ClientCore.Utils;
@@ -16,9 +14,6 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
 {
     [Inject][NotNull] protected IExcelHelper? Excel { get; set; }
     [Inject][NotNull] private IDownloadServiceProvider? DownloadServiceProvider { get; set; }
-    [Inject][NotNull] private ILogger<ModelPage<TModel, TQuery>>? Logger { get; set; }
-    [CascadingParameter] private IAppDomEventHandler? DomEvent { get; set; }
-    [CascadingParameter] private RouteTag? RouteInfo { get; set; }
     [Parameter] public RenderFragment? AdditionalHeaderButtons { get; set; }
 
     [SaveState(Init = "new()")]

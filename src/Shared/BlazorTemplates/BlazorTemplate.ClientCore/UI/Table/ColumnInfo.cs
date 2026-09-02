@@ -16,6 +16,12 @@ public record ColumnInfo
         PropertyOrFieldName = Property.Name;
         DataType = Property.PropertyType;
     }
+    public ColumnInfo(string label, string propertyName, Type dataType)
+    {
+        DataType = dataType;
+        Label = label;
+        PropertyOrFieldName = propertyName;
+    }
 
     [NotNull] public string? Label { get; set; }
     public string PropertyOrFieldName { get; }
@@ -76,6 +82,11 @@ public record ColumnInfo
     private Func<object, object> groupByExpression = static obj => 0;
     internal Action<object, object>? ValueSetter { get; set; }
     internal Func<object, object>? ValueGetter { get; set; }
+    public void SetAccessors(Func<object, object> getter, Action<object, object>? setter)
+    {
+        ValueGetter = getter;
+        ValueSetter = setter;
+    }
     public object? GetValue(object target) => ValueGetter?.Invoke(target);
     public void SetValue(object target, object val) => ValueSetter?.Invoke(target, val);
     public Func<object, object> GroupByExpression

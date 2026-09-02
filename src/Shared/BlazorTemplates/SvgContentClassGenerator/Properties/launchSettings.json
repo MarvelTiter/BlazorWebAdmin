@@ -1,8 +1,0 @@
-﻿{
-  "profiles": {
-    "svg": {
-      "commandName": "DebugRoslynComponent",
-      "targetProject": "..\\BlazorTemplate.ClientCore\\BlazorTemplate.ClientCore.csproj"
-    }
-  }
-}

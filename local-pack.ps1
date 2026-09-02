@@ -167,7 +167,7 @@ $Projects = @(
         OutputPrefix = "BlazorTemplate.UI.Shared"
         IsTemplate = $false
         Generators = @(
-            "src/Shared/BlazorTemplates/SvgContentClassGenerator/SvgContentClassGenerator.csproj"
+            "src/Shared/BlazorTemplates/BlazorTemplate.ClientCore.Generators/BlazorTemplate.ClientCore.Generators.csproj"
         )  # ÒÀÀµµÄÉú³ÉÆ÷
     },
     @{ 
