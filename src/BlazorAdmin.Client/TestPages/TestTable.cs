@@ -61,7 +61,7 @@ public class TestService(IExpressionContext context) : CrudBase<TestEntity>(cont
 [PageInfo(Title = "表格测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 //[Layout(typeof(NotAuthorizedLayout))]
 #endif
-public class TestTable : ModelPage<TestEntity, GenericRequest<TestEntity>>
+public partial class TestTable : ModelPage<TestEntity, GenericRequest<TestEntity>>
 {
     [Inject, NotNull] TestService? Test { get; set; }
     protected override void OnInitialized()

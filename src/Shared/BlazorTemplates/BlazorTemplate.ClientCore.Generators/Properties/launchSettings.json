@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "generators": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\BlazorTemplate.ClientCore\\BlazorTemplate.ClientCore.csproj"
+    }
+  }
+}

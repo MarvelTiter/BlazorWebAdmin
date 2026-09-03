@@ -1,11 +1,11 @@
-﻿using System.Collections.Immutable;
-using System.Reflection;
-using AutoPageStateContainerGenerator;
+﻿using AutoPageStateContainerGenerator;
+using BlazorTemplate.ClientCore.ComponentHelper;
+using BlazorTemplate.ClientCore.UI.Extensions;
+using BlazorTemplate.ClientCore.Utils;
 using LightExcel;
 using Microsoft.AspNetCore.Components.Rendering;
-using BlazorTemplate.ClientCore.UI.Extensions;
-using BlazorTemplate.ClientCore.ComponentHelper;
-using BlazorTemplate.ClientCore.Utils;
+using System.Collections.Immutable;
+using System.Reflection;
 
 namespace BlazorTemplate.ClientCore.Basic;
 
@@ -16,7 +16,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     [Inject][NotNull] private IDownloadServiceProvider? DownloadServiceProvider { get; set; }
     [Parameter] public RenderFragment? AdditionalHeaderButtons { get; set; }
 
-    [SaveState(Init = "new()")]
+    [SaveState(InitExpression = "new()")]
     public virtual TableOptions<TModel, TQuery> Options { get; set; } = new();
     protected bool HideDefaultTableHeader { get; set; }
 
@@ -43,27 +43,18 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         builder.AddContent(0, UI.BuildTable(Options));
     };
 
-    private bool IsOverride(string methodName)
+    /// <summary>
+    /// 收集本页按钮重新特性
+    ///     <para>
+    ///         默认实现走反射，作为兜底路径，面向无法被源生成器分析的页面。
+    ///     </para>
+    ///     <para>
+    ///         源生成器会为可分析的派生类生成该方法的重写，在编译期静态构建按钮列表，
+    ///         彻底消除运行时反射并让 AOT 裁剪对其无影响。
+    ///     </para>
+    /// </summary>
+    protected virtual void ApplyCapabilities()
     {
-        var method = GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
-        return method?.DeclaringType != typeof(ModelPage<TModel, TQuery>);
-    }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        LoadJs = false;
-        Options.AutoRefreshData = true;
-        Options.RowKey = SetRowKey;
-        Options.Buttons = this.CollectButtons<TModel>();
-        Options.OnQueryAsync = OnQueryAsync;
-        Options.OnAddItemAsync = OnAddItemAsync;
-        Options.OnRowClickAsync = OnRowClickAsync;
-        Options.AddRowOptions = OnAddRowOptions;
-        Options.OnExportAsync = OnExportAsync;
-        Options.OnImportAsync = OnImportAsync;
-        Options.OnSaveExcelAsync = OnSaveExcelAsync;
-        //
         if (IsOverride(nameof(OnSelectedChangedAsync)))
         {
             Options.OnSelectedChangedAsync = OnSelectedChangedAsync;
@@ -79,6 +70,42 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         {
             Options.OnRowUpdateAsync = OnRowUpdateAsync;
         }
+    }
+
+    private bool IsOverride(string methodName)
+    {
+        var method = GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
+        return method?.DeclaringType != typeof(ModelPage<TModel, TQuery>);
+    }
+
+    /// <summary>
+    ///     收集本页通过 <c>[TableButton]</c> 及其派生特性声明的表格按钮。
+    ///     <para>
+    ///         默认实现走反射（按特性扫描方法、按名字解析 Label/Visible 表达式方法），
+    ///         作为兜底路径，面向无法被源生成器分析的页面。
+    ///     </para>
+    ///     <para>
+    ///         源生成器会为可分析的派生类生成该方法的重写，在编译期静态构建按钮列表，
+    ///         彻底消除运行时反射并让 AOT 裁剪对其无影响。
+    ///     </para>
+    /// </summary>
+    protected virtual List<TableButton<TModel>> CollectPageButtons() => this.CollectButtons<TModel>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        LoadJs = false;
+        Options.AutoRefreshData = true;
+        Options.RowKey = SetRowKey;
+        Options.Buttons = CollectPageButtons();
+        Options.OnQueryAsync = OnQueryAsync;
+        Options.OnAddItemAsync = OnAddItemAsync;
+        Options.OnRowClickAsync = OnRowClickAsync;
+        Options.AddRowOptions = OnAddRowOptions;
+        Options.OnExportAsync = OnExportAsync;
+        Options.OnImportAsync = OnImportAsync;
+        Options.OnSaveExcelAsync = OnSaveExcelAsync;
+        ApplyCapabilities();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

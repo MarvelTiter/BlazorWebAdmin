@@ -2,7 +2,7 @@
 
 namespace BlazorTemplate.ClientCore.BuildInPages;
 
-public class OperationLog<TRunLog, TRunLogService> : ModelPage<TRunLog, GenericRequest<TRunLog>>
+public partial class OperationLog<TRunLog, TRunLogService> : ModelPage<TRunLog, GenericRequest<TRunLog>>
     where TRunLog : class, IRunLog, new()
     where TRunLogService : IRunLogService<TRunLog>
 {

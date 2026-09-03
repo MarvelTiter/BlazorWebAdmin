@@ -14,7 +14,7 @@ namespace BlazorAdmin.Client.TestPages.Tasks;
 [PageInfo(Title = "任务列表测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
 //[Layout(typeof(NotAuthorizedLayout))]
 #endif
-public class TestTaskList : ModelPage<TaskInfo, GenericRequest<TaskInfo>>
+public partial class TestTaskList : ModelPage<TaskInfo, GenericRequest<TaskInfo>>
 {
 
     [Inject, NotNull] ITaskCenter? Tc { get; set; }

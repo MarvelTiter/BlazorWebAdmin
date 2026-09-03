@@ -26,6 +26,11 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
 	  <ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.ClientCore\BlazorTemplate.ClientCore.csproj" />
+	  <ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.ClientCore.Generators\BlazorTemplate.ClientCore.Generators.csproj">
+	    <OutputItemType>Analyzer</OutputItemType>
+	    <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+	    <PrivateAssets>all</PrivateAssets>
+	  </ProjectReference>
 	</ItemGroup>
 	<!--#endif-->
 	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">

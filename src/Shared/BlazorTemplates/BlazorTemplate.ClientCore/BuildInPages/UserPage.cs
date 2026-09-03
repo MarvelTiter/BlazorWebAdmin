@@ -4,7 +4,7 @@ using AutoPageStateContainerGenerator;
 
 namespace BlazorTemplate.ClientCore.BuildInPages;
 
-public class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : ModelPage<TUser, GenericRequest<TUser>>
+public partial class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : ModelPage<TUser, GenericRequest<TUser>>
     where TUser : class, IUser, new()
     where TPower : class, IPermission, new()
     where TRole : class, IRole, new()
@@ -29,6 +29,8 @@ public class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : 
             b.Component<AssignUserRoles<TRole>>()
                 .SetComponent(c => c.Roles, allRoles)
                 .SetComponent(c => c.Ctx, ctx).Build();
+        var btn = new TableButton<TUser>();
+        btn.Callback = EditUser;
     }
 
     protected override async Task OnInitializedAsync()
@@ -69,7 +71,7 @@ public class UserPage<TUser, TPower, TRole, TUserService, TPermissionService> : 
     }
 
     [EditButton]
-    public async Task<IQueryResult> EditUser(TUser user)
+    public async Task<IQueryResult?> EditUser(TUser user)
     {
         var userRoles = await PermissionSrv.GetUserRolesAsync(user.UserId);
         user.Roles = userRoles.Payload?.Select(r => r.RoleId).ToList() ?? [];

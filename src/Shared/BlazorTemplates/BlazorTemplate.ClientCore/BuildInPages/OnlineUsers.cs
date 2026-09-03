@@ -7,7 +7,7 @@ namespace BlazorTemplate.ClientCore.BuildInPages;
 [Route("/userdashboard")]
 [PageInfo(Icon = "svg-setting", Title = "在线用户", Sort = 999)]
 [Authorize(Policy = AppConst.ONLINE_USER_POLICY)]
-public class OnlineUsers : ModelPage<ClientInfo, GenericRequest<ClientInfo>>
+public partial class OnlineUsers : ModelPage<ClientInfo, GenericRequest<ClientInfo>>
 {
     [Inject, NotNull] IClientService? ClientService { get; set; }
     //bool? hasPermission;

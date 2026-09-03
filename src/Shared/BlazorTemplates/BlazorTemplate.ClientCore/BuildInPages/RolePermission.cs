@@ -7,7 +7,7 @@ using BlazorTemplate.ClientCore.BuildInPages.Component;
 
 namespace BlazorTemplate.ClientCore.BuildInPages;
 
-public class RolePermission<TPermission, TRole, TPermissionService> : ModelPage<TRole, GenericRequest<TRole>>
+public partial class RolePermission<TPermission, TRole, TPermissionService> : ModelPage<TRole, GenericRequest<TRole>>
     where TPermission : class, IPermission, new()
     where TRole : class, IRole, new()
     where TPermissionService : IPermissionService<TPermission, TRole>
