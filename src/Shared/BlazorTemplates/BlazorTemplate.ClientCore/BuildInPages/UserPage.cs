@@ -29,8 +29,6 @@ public partial class UserPage<TUser, TPower, TRole, TUserService, TPermissionSer
             b.Component<AssignUserRoles<TRole>>()
                 .SetComponent(c => c.Roles, allRoles)
                 .SetComponent(c => c.Ctx, ctx).Build();
-        var btn = new TableButton<TUser>();
-        btn.Callback = EditUser;
     }
 
     protected override async Task OnInitializedAsync()
