@@ -90,9 +90,28 @@ public class ModelPageCapabilityGenerator : IIncrementalGenerator
             .CreateSyntaxProvider(
                 predicate: static (node, _) => IsCandidate(node),
                 transform: static (ctx, ct) => Transform(ctx, ct))
-            .Where(static page => page is not null);
+            .Where(static page => page is not null).Collect();
 
-        context.RegisterSourceOutput(pages, static (spc, page) => Emit(spc, page!));
+        context.RegisterSourceOutput(pages, static (spc, pages) =>
+        {
+            HashSet<string> handled = [];
+            foreach (var page in pages)
+            {
+                if (page is null)
+                {
+                    continue;
+                }
+                if (handled.Contains(page.HintName))
+                {
+                    continue;
+                }
+                if (!handled.Add(page.HintName))
+                {
+                    continue;
+                }
+                Emit(spc, page);
+            }
+        });
     }
 
     private static bool IsCandidate(SyntaxNode node)
@@ -447,8 +466,16 @@ public class ModelPageCapabilityGenerator : IIncrementalGenerator
 
     private static bool IsModelPage(INamedTypeSymbol type)
     {
-        var tn = type.ConstructedFrom?.ToDisplayString();
-        return tn?.StartsWith(BaseTypeFullName) == true;
+        //var tn = type.ConstructedFrom?.ToDisplayString();
+        //return tn?.Contains(BaseTypeFullName) == true;
+
+        var originalDef = type.OriginalDefinition;
+        if (originalDef.Name == "ModelPage" &&
+            originalDef.ContainingNamespace?.ToDisplayString() == "BlazorTemplate.ClientCore.Basic")
+        {
+            return true;
+        }
+        return false;
     }
 
     private static INamedTypeSymbol? FindModelPageBase(INamedTypeSymbol type)

@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<MainProjectVersion>2026.09.04.1</MainProjectVersion>
         <AppServerVersion>2026.08.31.1</AppServerVersion>
-        <ClientCoreVersion>2026.09.04.1</ClientCoreVersion>
+        <ClientCoreVersion>2026.09.04.2</ClientCoreVersion>
         <AntUIVersion>2026.08.31.1</AntUIVersion>
         <FluentUIVersion>2026.08.31.1</FluentUIVersion>
 	</PropertyGroup>
