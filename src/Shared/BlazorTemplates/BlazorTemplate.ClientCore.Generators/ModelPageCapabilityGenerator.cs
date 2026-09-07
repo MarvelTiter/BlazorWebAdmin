@@ -246,7 +246,7 @@ public class ModelPageCapabilityGenerator : IIncrementalGenerator
 
                 if (line is not null)
                 {
-                    hookBody.AppendLine($"        {line};");
+                    hookBody.AppendLine($"        {line}");
                 }
             }
 
