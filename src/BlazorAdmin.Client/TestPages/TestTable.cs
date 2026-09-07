@@ -90,3 +90,44 @@ public partial class TestTable : ModelPage<TestEntity, GenericRequest<TestEntity
         return r;
     }
 }
+
+public abstract partial class TestOverriddenButton : ModelPage<TestEntity, GenericRequest<TestEntity>>
+{
+    [Inject, NotNull] TestService? Test { get; set; }
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Options.EnableRowEdit = true;
+        AdditionalHeaderButtons = UI.BuildButton(this).Text("创建Table").OnClick(BuildTable).Render();
+        Options[nameof(TestEntity.CustomDisplay)].FormTemplate = ctx => b => b.Component<TestCustomDisplay>().SetComponent(c => c.Context, ctx).Build();
+    }
+    private Task BuildTable() => Test.CreateTableAsync();
+    
+    protected override async Task<IQueryResult?> OnAddItemAsync()
+    {
+        var e = await this.ShowAddFormAsync("添加测试实体", "50%");
+        return await Test.InsertAsync(e);
+    }
+
+    protected override async Task<IQueryResult?> OnCellUpdateAsync(TestEntity model, ColumnInfo col)
+    {
+        var r = await Test.UpdatePropertyAsync(model, col.PropertyOrFieldName);
+        return r;
+    }
+
+    [TableButton(Label = "测试")]
+    protected abstract Task<IQueryResult?> Do(TestEntity entity);
+}
+
+public partial class TestTable2 : TestOverriddenButton
+{
+    protected override Task<IQueryResult?> Do(TestEntity entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override Task<QueryCollectionResult<TestEntity>> OnQueryAsync(GenericRequest<TestEntity> query)
+    {
+        throw new NotImplementedException();
+    }
+}
