@@ -38,7 +38,6 @@ builder.AddServerProject(setting =>
     setting.App.Name = "BlazorAdmin";
     setting.App.Company = "Marvel";
 #if DEBUG
-    var appAssembly = typeof(BlazorAdmin.Client._Imports).Assembly;
     setting.ConfigurePage(locator =>
     {
         locator.SetDashboardType<BlazorAdmin.Client.TestPages.TestDashboard>();
@@ -55,7 +54,6 @@ builder.AddServerProject(setting =>
     var appAssembly = typeof(BlazorAdmin._Imports).Assembly;
 #endif
 #endif
-    AppConst.AppAssembly = appAssembly;
     /*
      * 配置IProjectSettingService和IAuthService(如果需要)
      */

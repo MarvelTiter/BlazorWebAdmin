@@ -49,6 +49,8 @@ public static class AppConst
     {
         foreach (var item in types)
         {
+            if (item.Assembly == AppAssembly)
+                continue;
             additionalPageAssemblies.Add(item.Assembly);
         }
     }

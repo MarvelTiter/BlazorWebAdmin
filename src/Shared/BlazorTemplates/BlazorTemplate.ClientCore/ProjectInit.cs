@@ -3,6 +3,7 @@ using BlazorTemplate.ClientCore.BuildInPages;
 using BlazorTemplate.ClientCore.Locales.Extensions;
 using BlazorTemplate.ClientCore.Lockup;
 using BlazorTemplate.ClientCore.Options;
+using BlazorTemplate.ClientCore.Routers;
 using LightExcel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -86,12 +87,26 @@ public static class ProjectInit
         return option;
     }
 
+    /// <summary>
+    ///     扫描入口程序集引用的、包含页面的 Razor 类库程序集，登记到 <see cref="AppConst.AdditionalAssemblies" />。
+    ///     <para>
+    ///         这是反射兜底路径。源生成器已静态登记过某个程序集时（
+    ///         <see cref="PageRouteContext.IsAssemblyRegistered" />）跳过它的扫描；
+    ///         其余程序集——例如页面全部写在 razor 里、生成器一个都扫不到的类库——
+    ///         继续走原来的反射发现，避免漏登记。
+    ///     </para>
+    /// </summary>
     private static void ScanRazorLibraryAssembly()
     {
         var entry = Assembly.GetEntryAssembly();
         var additionAssemblys = entry?.GetReferencedAssemblies().Select(Assembly.Load);
         foreach (var item in additionAssemblys ?? [])
         {
+            if (PageRouteContext.IsAssemblyRegistered(item))
+            {
+                continue;
+            }
+
             var hasPage = item.ExportedTypes.Any(t => t.GetCustomAttribute<Microsoft.AspNetCore.Components.RouteAttribute>() is not null);
             if (hasPage)
             {

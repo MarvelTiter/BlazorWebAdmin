@@ -245,7 +245,7 @@ public class ModelPageCapabilityGenerator : IIncrementalGenerator
 
                 if (line is not null)
                 {
-                    hookBody.Append("        ").Append(line).Append('\n');
+                    hookBody.AppendLine($"        {line};");
                 }
             }
 
@@ -256,17 +256,17 @@ public class ModelPageCapabilityGenerator : IIncrementalGenerator
             }
 
             sections.Append($$"""
-                /// <summary>由 ModelPageCapabilityGenerator 生成：编译期判定的钩子能力申报。</summary>
-                protected override void ApplyCapabilities()
-                {
+                    /// <summary>由 ModelPageCapabilityGenerator 生成：编译期判定的钩子能力申报。</summary>
+                    protected override void ApplyCapabilities()
+                    {
                 {{body}}
-                }
+                    }
 
                 """);
         }
 
         // —— CollectPageButtons：只在确实找到按钮方法时生成（见类型 remarks 中的安全边界）。
-        if (!page.HasUserButtonsOverride && !page.Buttons.IsEmpty)
+        if (!page.HasUserButtonsOverride)
         {
             var unsupported = page.Buttons.FirstOrDefault(static b => b.UnsupportedAttribute is not null);
             var invalid = page.Buttons.FirstOrDefault(static b => !b.IsValid);
@@ -289,25 +289,28 @@ public class ModelPageCapabilityGenerator : IIncrementalGenerator
                 var buttonBody = new StringBuilder();
                 foreach (var button in page.Buttons)
                 {
-                    buttonBody.Append("        new global::").Append(TableButtonTypeFullName)
+                    buttonBody.AppendLine();
+                    buttonBody.Append("            new global::").Append(TableButtonTypeFullName)
                         .Append('<').Append(page.ModelTypeFullName).Append(">\n")
-                        .Append("        {\n");
+                        .Append("            {\n");
                     foreach (var line in button.PropertyLines)
                     {
-                        buttonBody.Append("            ").Append(line).Append('\n');
+                        buttonBody.AppendLine($"                {line}");
                     }
-                    buttonBody.Append("        },\n");
+                    buttonBody.Append("            },\n");
+                }
+
+                if (page.Buttons.Length > 0)
+                {
+                    buttonBody.Append("        ");
                 }
 
                 sections.Append($$"""
-                    /// <summary>由 ModelPageCapabilityGenerator 生成：编译期构建 [TableButton] 按钮（对象初始化器），替代运行时反射扫描。</summary>
-                    protected override global::System.Collections.Generic.List<global::{{TableButtonTypeFullName}}<{{page.ModelTypeFullName}}>> CollectPageButtons()
-                    {
-                        return
-                        [
-                    {{buttonBody}}
-                        ];
-                    }
+                        /// <summary>由 ModelPageCapabilityGenerator 生成：编译期构建 [TableButton] 按钮（对象初始化器），替代运行时反    射扫描。</summary>
+                        protected override global::System.Collections.Generic.List<global::{{TableButtonTypeFullName}}< {{page.ModelTypeFullName}}>> CollectPageButtons()
+                        {
+                            return [{{buttonBody}}];
+                        }
 
                     """);
             }

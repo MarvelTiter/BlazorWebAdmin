@@ -11,11 +11,19 @@ public partial class PagesService
     public List<RouteMeta> Groups { get; } = [];
     public PagesService()
     {
-        List<RouteMeta> routes = [];
+        // 编译期登记优先：源生成器已为显式标注 [Route] 的类型生成好 RouteMeta，直接取用。
+        // Groups 先灌入编译期分组，反射补充时 TryAddGroup 会命中它们并只补 Icon，语义不变。
+        List<RouteMeta> routes = [.. PageRouteContext.GeneratedPages];
+        Groups.AddRange(PageRouteContext.GeneratedGroups);
+
+        // 反射兜底：只补充生成器没覆盖到的类型（razor 的 @page、外部程序集、开放泛型等）。
         foreach (var assembly in AppConst.AllAssemblies)
         {
-            routes.AddRange(assembly.ExportedTypes.Where(t => t.GetCustomAttribute<RouteAttribute>() != null).SelectMany(CollectRouteMeta));
+            var missed = assembly.ExportedTypes
+                .Where(t => !PageRouteContext.IsGenerated(t) && t.GetCustomAttribute<RouteAttribute>() != null);
+            routes.AddRange(missed.SelectMany(CollectRouteMeta));
         }
+
         Pages = [.. Groups.Concat(routes).OrderBy(m => m.Sort)];
     }
 
