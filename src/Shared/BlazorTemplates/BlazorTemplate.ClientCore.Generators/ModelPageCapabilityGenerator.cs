@@ -57,7 +57,8 @@ public class ModelPageCapabilityGenerator : IIncrementalGenerator
         new("HandleImportedDataAsync", "Options.ShowImportButton = {0};", null),
         new("OnSelectedChangedAsync", null, "Options.OnSelectedChangedAsync = OnSelectedChangedAsync;"),
         new("OnCellUpdateAsync", null, "Options.OnCellUpdateAsync = OnCellUpdateAsync;"),
-        new("OnRowUpdateAsync", null, "Options.OnRowUpdateAsync = OnRowUpdateAsync;")
+        new("OnRowUpdateAsync", null, "Options.OnRowUpdateAsync = OnRowUpdateAsync;"),
+        new("OnRowClickAsync", null, "Options.OnRowClickAsync = OnRowClickAsync;")
     ];
 
     private static readonly DiagnosticDescriptor NotPartialDescriptor = new(

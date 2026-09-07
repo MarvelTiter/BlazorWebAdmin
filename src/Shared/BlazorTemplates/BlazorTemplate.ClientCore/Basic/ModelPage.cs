@@ -59,6 +59,10 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         {
             Options.OnSelectedChangedAsync = OnSelectedChangedAsync;
         }
+        if (IsOverride(nameof(OnRowClickAsync)))
+        {
+            Options.OnRowClickAsync = OnRowClickAsync;
+        }
         Options.ShowExportButton = IsOverride(nameof(OnExportAsync));
         Options.ShowAddButton = IsOverride(nameof(OnAddItemAsync));
         Options.ShowImportButton = IsOverride(nameof(HandleImportedDataAsync));
@@ -100,7 +104,6 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         Options.Buttons = CollectPageButtons();
         Options.OnQueryAsync = OnQueryAsync;
         Options.OnAddItemAsync = OnAddItemAsync;
-        Options.OnRowClickAsync = OnRowClickAsync;
         Options.AddRowOptions = OnAddRowOptions;
         Options.OnExportAsync = OnExportAsync;
         Options.OnImportAsync = OnImportAsync;
