@@ -29,7 +29,7 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = BlazorHybridWpfApplication.Create(args);
-        BlazorTemplate.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
+        // BlazorTemplate.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
         //BlazorTemplate.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
         //builder.Services.AddAntDesignUI();
         //builder.Services.AddFluentUI();

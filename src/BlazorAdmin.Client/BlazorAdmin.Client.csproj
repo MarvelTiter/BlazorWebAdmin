@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-	<Import Project="../Shared/Props/pack.settings.props" />
-	<Import Project="../Shared/Props/projects.versions.props" />
+	<Import Project="../Shared/Props/pack.settings.props"/>
+	<Import Project="../Shared/Props/projects.versions.props"/>
 	<PropertyGroup>
 		<TargetFrameworks>net8.0;net10.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
@@ -13,29 +13,35 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="$(TargetFramework) == 'net10.0'">
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.10" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.10"/>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="10.0.10"/>
 	</ItemGroup>
 
 	<ItemGroup Condition="$(TargetFramework) == 'net8.0'">
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10"/>
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10"/>
 	</ItemGroup>
-	
+
 	<!--#if(AlwaysFalse)-->
 	<ItemGroup>
-	  <ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
-	  <ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.ClientCore\BlazorTemplate.ClientCore.csproj" />
-	  <ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.ClientCore.Generators\BlazorTemplate.ClientCore.Generators.csproj">
-	    <OutputItemType>Analyzer</OutputItemType>
-	    <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-	    <PrivateAssets>all</PrivateAssets>
-	  </ProjectReference>
+		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
+		<!--<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.UI.FluentUI\BlazorTemplate.UI.FluentUI.csproj"/>-->
+		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.ClientCore\BlazorTemplate.ClientCore.csproj"/>
+		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.ClientCore.Generators\BlazorTemplate.ClientCore.Generators.csproj">
+			<OutputItemType>Analyzer</OutputItemType>
+			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+			<PrivateAssets>all</PrivateAssets>
+		</ProjectReference>
 	</ItemGroup>
 	<!--#endif-->
 	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
-		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)" />
-		<PackageReference Include="BlazorTemplate.ClientCore" Version="$(ClientCoreVersion)" />
+		<PackageReference Include="BlazorTemplate.ClientCore" Version="$(ClientCoreVersion)"/>
+		<!--#if(ui == 'antdesign')-->
+		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)"/>
+		<!--#endif-->
+		<!--#if(ui == 'fluentui')-->
+		<PackageReference Include="BlazorTemplate.UI.FluentUI" Version="$(FluentUIVersion)"/>
+		<!--#endif-->
 	</ItemGroup>
 
 </Project>

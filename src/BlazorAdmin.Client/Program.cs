@@ -21,8 +21,8 @@ if (useProxy)
     builder.ConfigureContainer(new AutoAopProxyGenerator.AutoAopProxyServiceProviderFactory());
 }
 //builder.Configuration
-BlazorTemplate.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
-//BlazorTemplate.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
+//BlazorTemplate.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
+// BlazorTemplate.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 AppConst.AppAssembly = typeof(BlazorAdmin.Client._Imports).Assembly;
 builder.Services.AddClientProject(builder.Configuration, setting =>
 {

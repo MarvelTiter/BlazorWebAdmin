@@ -44,7 +44,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\BlazorAdmin.Client\BlazorAdmin.Client.csproj" />
 		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.AppServer\BlazorTemplate.AppServer.csproj" />
-		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.UI.AntBlazor\BlazorTemplate.UI.AntBlazor.csproj" />
 		<ProjectReference Include="..\Shared\BlazorTemplates\BlazorTemplate.ClientCore.Generators\BlazorTemplate.ClientCore.Generators.csproj">
 			<OutputItemType>Analyzer</OutputItemType>
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
@@ -61,7 +60,12 @@
 	<!--#if(!UseClientProject)-->
 	<ItemGroup Condition="'$(CurrentMode)'== 'Package'">
 		<PackageReference Include="BlazorTemplate.AppServer" Version="$(AppServerVersion)" />
+		<!--#if(UseAntDesign)-->
 		<PackageReference Include="BlazorTemplate.UI.AntBlazor" Version="$(AntUIVersion)" />
+		<!--#endif-->
+		<!--#if(UseFluentUI)-->
+		<PackageReference Include="BlazorTemplate.UI.FluentUI" Version="$(FluentUIVersion)" />
+		<!--#endif-->
 	</ItemGroup>
 	<!--#endif-->
 	<ItemGroup>

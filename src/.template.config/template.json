@@ -100,6 +100,22 @@
       "defaultValue": "none",
       "description": "The type of host application to create"
     },
+    "ui": {
+      "type": "parameter",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "antdesign",
+          "description": "ant-design-blazor"
+        },
+        {
+          "choice": "fluentui",
+          "description": "fluent-ui-blazor"
+        }
+      ],
+      "defaultValue": "antdesign",
+      "description": "组件库"
+    },
     "ExcludeDefaultPages": {
       "type": "parameter",
       "datatype": "bool",

@@ -28,8 +28,8 @@ builder.Services.AddRazorComponents()
     });
 #endif
 #endif
-BlazorTemplate.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
-//BlazorTemplate.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
+//BlazorTemplate.UI.AntBlazor.Extensions.AddAntDesignUI(builder.Services);
+// BlazorTemplate.UI.FluentUI.Extensions.AddFluentUI(builder.Services);
 //builder.Services.AddAntDesignUI();
 //builder.Services.AddFluentUI();
 builder.AddServerProject(setting =>
