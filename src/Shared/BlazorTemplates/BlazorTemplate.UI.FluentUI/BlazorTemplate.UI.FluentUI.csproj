@@ -4,6 +4,7 @@
 		<TargetFrameworks>net8.0;net10.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>latest</LangVersion>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>MarvelTiter</Authors>
 		<Copyright>MIT</Copyright>
@@ -16,13 +17,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.14.4" />
-		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.14.4" />
+		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="5.0.0" />
+		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="5.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<_ContentIncludedByDefault Remove="wwwroot\background.png" />
-		<_ContentIncludedByDefault Remove="wwwroot\exampleJsInterop.js" />
+		<AdditionalFiles Include="..\BlazorTemplate.ClientCore\wwwroot\icons\*.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\BlazorTemplate.UI.FluentUI.Generators\BlazorTemplate.UI.FluentUI.Generators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)'=='DEBUG'">

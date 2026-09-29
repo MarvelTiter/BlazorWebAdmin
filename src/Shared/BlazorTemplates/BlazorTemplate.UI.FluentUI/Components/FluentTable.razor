@@ -29,7 +29,7 @@
         {
             @foreach (var btnGroup in Options.Buttons.GroupBy(btn => btn.Group))
             {
-                <TemplateColumn Title="@(TableLocalizer[btnGroup.Key])" Align="@Align.Center">
+                <TemplateColumn Title="@(TableLocalizer[btnGroup.Key])" Align="@DataGridCellAlignment.Center">
                     @{
                         var btns = btnGroup.Where(b => b.CheckVisible(context)).ToList();
                         if (Options.ActionButtonColumn.HasValue)
@@ -62,7 +62,7 @@
     [Parameter, NotNull] public TableOptions<TData, TQuery>? Options { get; set; }
     [Inject, NotNull] IStringLocalizer<TData>? Localizer { get; set; }
     [Inject, NotNull] IStringLocalizer<TableOptions>? TableLocalizer { get; set; }
-    [Inject, NotNull] IToastService? Toast { get; set; }
+    [Inject, NotNull] INotificationService? Toast { get; set; }
     [Inject, NotNull] IDialogService? Dialog { get; set; }
     PaginationState? pagination;
     IQueryable<TData> Datas => (Options.Result?.Payload ?? []).AsQueryable();
@@ -113,12 +113,11 @@
     {
         if (definition.Danger)
         {
-            var confirmResult = await Dialog.ShowConfirmationAsync(
-        TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value
-        , Localizer["CustomButtons.Ok"]
-        , Localizer["CustomButtons.Cancel"]
-        , title: TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value);
-            var r = await confirmResult.Result;
+            var r = await Dialog.ShowConfirmationAsync(
+                TableLocalizer[definition.ConfirmContent ?? "TableTips.DangerActionConfirmContent"].Value,
+                TableLocalizer[definition.ConfirmTitle ?? "TableTips.DangerActionConfirmTitle"].Value,
+                Localizer["CustomButtons.Ok"],
+                Localizer["CustomButtons.Cancel"]);
             if (!r.Cancelled)
             {
                 await CallButtonAction();
@@ -138,13 +137,13 @@
             if (result.IsSuccess)
             {
                 var msg = result.Message ?? TableLocalizer["TableTips.ActionSuccess"].Value;
-                Toast.ShowSuccess(msg);
+                await Toast.ShowSuccessToastAsync(msg);
                 if (Options.AutoRefreshData)
                     await Options.RefreshAsync();
             }
             else
             {
-                Toast.ShowError(result.Message ?? "");
+                await Toast.ShowErrorToastAsync(result.Message ?? "");
             }
         }
     }

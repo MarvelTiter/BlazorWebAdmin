@@ -1,0 +1,9 @@
+.icon {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.fluent-card {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,15 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using BlazorTemplate.ClientCore.UI.Dropdown
+<FluentMenu>
+    <FluentMenuButton>
+        @Options.Content
+    </FluentMenuButton>
+    @foreach (var item in Options.Actions ?? [])
+    {
+        <FluentMenuItem OnClick="@item.OnClick">@item.Label</FluentMenuItem>
+    }
+</FluentMenu>
+
+@code {
+    [Parameter, NotNull] public DropdownOptions? Options { get; set; }
+}

@@ -1,0 +1,33 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using BlazorTemplate.ClientCore.UI.Flyout
+
+<div @ref="anchor" id="@anchorId" style="display:inline-block;" @onclick="Toggle">
+    @Options.Trigger
+</div>
+<FluentPopover AnchorId="@anchorId" Open="@open" OpenChanged="OnOpenChanged">
+    <Header>
+        @if (!string.IsNullOrEmpty(Options.Title))
+        {
+            <span>@Options.Title</span>
+        }
+    </Header>
+    <Body>
+        @Options.Content
+    </Body>
+</FluentPopover>
+
+@code {
+    [Parameter, NotNull] public PopoverOptions? Options { get; set; }
+
+    private ElementReference anchor;
+    private string anchorId = $"popover-{Guid.NewGuid():N}";
+    private bool open;
+
+    private void Toggle() => open = !open;
+
+    private Task OnOpenChanged(bool value)
+    {
+        open = value;
+        return Task.CompletedTask;
+    }
+}

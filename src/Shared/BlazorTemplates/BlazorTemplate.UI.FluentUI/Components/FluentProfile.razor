@@ -1,0 +1,39 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using BlazorTemplate.ClientCore
+@using BlazorTemplate.ClientCore.Store
+@using BlazorTemplate.ClientCore.Components
+
+<div @ref="anchor" id="@anchorId" style="display: flex;height: 100%;padding: 0 10px;align-items: center; cursor: pointer;user-select: none;" @onclick="Toggle">
+    <MIcon IconName="svg-user" ClassName="nav-menu-icon"></MIcon>
+    <span style="padding-left: 6px;white-space: nowrap;">@User.UserInfo?.UserName</span>
+</div>
+
+<FluentPopover AnchorId="@anchorId" Open="@open" OpenChanged="OnOpenChanged">
+    <Body>
+        <div>
+            <p>登录时间: @User.UserInfo?.CreatedTime</p>
+        </div>
+        <FluentStack Orientation="Orientation.Horizontal" Style="gap: 8px;">
+            <FluentButton Appearance="ButtonAppearance.Default" OnClick="PasswordModifyEventCallback">修改密码</FluentButton>
+            <FluentButton Appearance="ButtonAppearance.Primary" OnClick="@(() => AuthenticationStateProvider.ClearState())">退出</FluentButton>
+        </FluentStack>
+    </Body>
+</FluentPopover>
+
+@code {
+    [Inject, NotNull] public IUserStore? User { get; set; }
+    [Inject, NotNull] public IAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+    [CascadingParameter(Name = "PasswordModify")] public EventCallback PasswordModifyEventCallback { get; set; }
+
+    private ElementReference anchor;
+    private string anchorId = $"profile-{Guid.NewGuid():N}";
+    private bool open;
+
+    private void Toggle() => open = !open;
+
+    private Task OnOpenChanged(bool value)
+    {
+        open = value;
+        return Task.CompletedTask;
+    }
+}

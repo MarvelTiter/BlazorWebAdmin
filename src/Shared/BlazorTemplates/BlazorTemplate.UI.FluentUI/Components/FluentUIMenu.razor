@@ -1,12 +1,13 @@
 ﻿@using System.Diagnostics.CodeAnalysis
 @using Microsoft.FluentUI.AspNetCore.Components
 @using BlazorTemplate.ClientCore.Store
-<FluentNavMenu Collapsible="@true" Expanded="@(!Collapsed)" CollapsedChildNavigation="@true" Style="flex: 1;">
+@* Collapsible="@true" Expanded="@(!Collapsed)" CollapsedChildNavigation="@true" *@
+<FluentNav  Style="flex: 1;">
     @foreach (var item in MenuService.RootMenus)
     {
         <FluentUIMenuItem Route="@item"></FluentUIMenuItem>
     }
-</FluentNavMenu>
+</FluentNav>
 
 @code {
     [Parameter, NotNull] public IRouterStore? Router { get; set; }
