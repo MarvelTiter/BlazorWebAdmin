@@ -1,10 +1,10 @@
 ﻿using BlazorTemplate.ClientCore.UI.Props;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace BlazorTemplate.ClientCore.UI.Builders;
 
-public class SelectComponentBuilder<TComponent, TPropModel, TItem, TValue> : BindableComponentBuilder<TComponent, TPropModel, TValue>, IBindableInputComponent<TPropModel, TValue>, ISelectInput<TPropModel, TItem, TValue>
+public class SelectComponentBuilder<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent, TPropModel, TItem, TValue> : BindableComponentBuilder<TComponent, TPropModel, TValue>, IBindableInputComponent<TPropModel, TValue>, ISelectInput<TPropModel, TItem, TValue>
     where TComponent : IComponent
     where TPropModel : DefaultProp, new()
 {
@@ -83,19 +83,28 @@ public class SelectComponentBuilder<TComponent, TPropModel, TItem, TValue> : Bin
         };
         return this;
     }
-    private static readonly MethodInfo ToListMethod = typeof(Enumerable).GetMethod("ToList")!;
-    private static readonly MethodInfo ToArrayMethod = typeof(Enumerable).GetMethod("ToArray")!;
+
+    private static readonly Func<IEnumerable<TValue>, TValue[]> toArray = Enumerable.ToArray;
+    private static readonly Func<IEnumerable<TValue>, List<TValue>> toList = Enumerable.ToList;
+
+    /// <summary>
+    ///     为"集合改写回属性"构造赋值表达式。
+    ///     <para>
+    ///         表达式树侧用 <see cref="Expression.Invoke" /> 调用上面那两个委托实例，
+    ///         替代原来的 <c>Expression.Call(MethodInfo, ...)</c>，
+    ///         因此整条路径不再触碰 <c>MethodInfo</c>。
+    ///     </para>
+    /// </summary>
     private static BinaryExpression CreateCollectionConversionExpression(Expression target, Expression source, Type targetType)
     {
         // 根据目标类型选择合适的转换方法
         if (targetType.IsArray)
         {
             // 转换为数组
-            var toArrayMethod = ToArrayMethod.MakeGenericMethod(typeof(TValue));
             return Expression.Assign(
                 target,
                 Expression.Convert(
-                    Expression.Call(toArrayMethod, source),
+                    Expression.Invoke(Expression.Constant(toArray), source),
                     targetType
                 )
             );
@@ -107,11 +116,10 @@ public class SelectComponentBuilder<TComponent, TPropModel, TItem, TValue> : Bin
             if (genericTypeDef == typeof(List<>))
             {
                 // 转换为 List<T>
-                var toListMethod = ToListMethod.MakeGenericMethod(typeof(TValue));
                 return Expression.Assign(
                     target,
                     Expression.Convert(
-                        Expression.Call(toListMethod, source),
+                        Expression.Invoke(Expression.Constant(toList), source),
                         targetType
                     )
                 );

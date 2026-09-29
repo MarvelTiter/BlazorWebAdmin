@@ -1,7 +1,7 @@
 ﻿using MT.Toolkit.DateTimeExtension;
 using MT.Toolkit.StringExtension;
 using BlazorTemplate.ClientCore.UI;
-using BlazorTemplate.ClientCore.Lockup;
+using BlazorTemplate.ClientCore.Lookup;
 
 namespace BlazorTemplate.ClientCore.Components;
 

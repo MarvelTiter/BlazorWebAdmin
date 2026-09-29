@@ -1,4 +1,5 @@
 ﻿using Microsoft.JSInterop;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorTemplate.ClientCore.Utils;
 
@@ -25,7 +26,7 @@ public static class JsRuntimeExtension
     {
         return runtime.InvokeVoidAsync($"{UTILS_FUNC_PREFIX}{method}", args);
     }
-    public static ValueTask<T> InvokeUtilsAsync<T>(this IJSRuntime runtime, string method, params object[] args)
+    public static ValueTask<T> InvokeUtilsAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] T>(this IJSRuntime runtime, string method, params object[] args)
     {
         return runtime.InvokeAsync<T>($"{UTILS_FUNC_PREFIX}{method}", args);
     }

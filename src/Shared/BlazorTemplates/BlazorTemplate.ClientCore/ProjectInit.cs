@@ -1,13 +1,14 @@
 ﻿using BlazorTemplate.ClientCore.Auth;
 using BlazorTemplate.ClientCore.BuildInPages;
 using BlazorTemplate.ClientCore.Locales.Extensions;
-using BlazorTemplate.ClientCore.Lockup;
+using BlazorTemplate.ClientCore.Lookup;
 using BlazorTemplate.ClientCore.Options;
 using BlazorTemplate.ClientCore.Routers;
 using LightExcel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MT.LightTask;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace BlazorTemplate.ClientCore;
@@ -76,7 +77,7 @@ public static class ProjectInit
         services.Configure<Token>(configuration.GetSection(nameof(Token)));
     }
 
-    public static T ConfigureOptions<T>(this IServiceCollection services, IConfiguration configuration, string? propertyName = null)
+    public static T ConfigureOptions<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] T>(this IServiceCollection services, IConfiguration configuration, string? propertyName = null)
       where T : class, new()
     {
         var name = propertyName ?? typeof(T).Name;

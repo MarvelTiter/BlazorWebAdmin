@@ -1,6 +1,10 @@
-﻿namespace BlazorTemplate.ClientCore.DefaultServicesImpl;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public class DefaultUserService<TUser, TUserRole>
+namespace BlazorTemplate.ClientCore.DefaultServicesImpl;
+
+public class DefaultUserService<
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] TUser,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] TUserRole>
     where TUser : IUser
     where TUserRole : IUserRole, new()
 {

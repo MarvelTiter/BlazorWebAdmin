@@ -1,6 +1,8 @@
-﻿namespace BlazorTemplate.ClientCore.DefaultServicesImpl;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public class DefaultRunLogService<TRunLog> : IRunLogService where TRunLog : class, IRunLog, new()
+namespace BlazorTemplate.ClientCore.DefaultServicesImpl;
+
+public class DefaultRunLogService<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] TRunLog> : IRunLogService where TRunLog : class, IRunLog, new()
 {
     protected readonly IExpressionContext context;
 

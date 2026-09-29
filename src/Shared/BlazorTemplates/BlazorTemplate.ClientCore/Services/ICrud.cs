@@ -1,6 +1,6 @@
 ﻿namespace BlazorTemplate.ClientCore.Services;
 
-public interface ICrud<T>
+public interface ICrud<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors| DynamicallyAccessedMemberTypes.PublicProperties)]T>
 {
     Task<QueryCollectionResult<T>> QueryListAsync(GenericRequest<T>? request = null);
     Task<QueryResult> InsertAsync(T entity);

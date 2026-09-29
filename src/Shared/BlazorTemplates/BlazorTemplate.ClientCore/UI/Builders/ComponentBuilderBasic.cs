@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -22,7 +23,7 @@ internal static class PropertySetter<TEntity, TProp>
     }
 }
 
-public class ComponentBuilderBasic<TComponent, TSelf> : IUIComponent
+public class ComponentBuilderBasic<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent, TSelf> : IUIComponent
     where TComponent : IComponent
     where TSelf : ComponentBuilderBasic<TComponent, TSelf>
 {

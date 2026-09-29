@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Microsoft.JSInterop;
 using BlazorTemplate.ClientCore.UI;
 
@@ -99,7 +100,7 @@ public abstract class JsComponentBase : AppComponentBase, IJsComponent, IAsyncDi
         }
     }
 
-    protected async ValueTask<T> InvokeAsync<T>(string identifier, params object?[] args)
+    protected async ValueTask<T> InvokeAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string identifier, params object?[] args)
     {
         var ret = default(T);
         try

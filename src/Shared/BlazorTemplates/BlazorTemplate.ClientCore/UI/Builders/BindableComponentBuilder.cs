@@ -1,9 +1,10 @@
 ﻿using BlazorTemplate.ClientCore.UI.Props;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 
 namespace BlazorTemplate.ClientCore.UI.Builders;
 
-public class BindableComponentBuilder<TComponent, TPropModel, TValue> : PropComponentBuilder<TComponent, TPropModel>, IBindableInputComponent<TPropModel, TValue>
+public class BindableComponentBuilder<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent, TPropModel, TValue> : PropComponentBuilder<TComponent, TPropModel>, IBindableInputComponent<TPropModel, TValue>
     where TComponent : IComponent
     where TPropModel : DefaultProp, new()
 {

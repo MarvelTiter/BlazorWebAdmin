@@ -1,6 +1,12 @@
-﻿namespace BlazorTemplate.ClientCore.DefaultServicesImpl;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public class DefaultPermissionService<TPower, TRole, TRolePower, TUserRole>
+namespace BlazorTemplate.ClientCore.DefaultServicesImpl;
+
+public class DefaultPermissionService<
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] TPower,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] TRole,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] TRolePower,
+    [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] TUserRole>
     where TPower : class, IPermission, new()
     where TRole : class, IRole, new()
     where TRolePower : class, IRolePermission, new()

@@ -1,5 +1,6 @@
 ﻿using BlazorTemplate.ClientCore.UI.Flyout;
 using BlazorTemplate.ClientCore.UI.Props;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorTemplate.ClientCore.UI.Extensions;
 
@@ -15,6 +16,7 @@ public static class UIComponentExtensions
         });
         return tab;
     }
+    [UnconditionalSuppressMessage("Trimming", "IL2091", Justification = "T 为开放组件泛型参数(where T : IComponent)，不宜标 DAM All；Mono AOT 解释器兜底，非硬阻塞。")]
     public static IUIComponent<TabsProp> AddTab<T>(this IUIComponent<TabsProp> tab, string title)
         where T : IComponent
     {

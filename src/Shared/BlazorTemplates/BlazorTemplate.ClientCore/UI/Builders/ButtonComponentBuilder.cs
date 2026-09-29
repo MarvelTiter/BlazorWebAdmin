@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using BlazorTemplate.ClientCore.UI.Props;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorTemplate.ClientCore.UI.Builders;
 
-public class ButtonComponentBuilder<TComponent> : PropComponentBuilder<TComponent, ButtonProp>, IButtonInput
+public class ButtonComponentBuilder<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent> : PropComponentBuilder<TComponent, ButtonProp>, IButtonInput
     where TComponent : IComponent
 {
 

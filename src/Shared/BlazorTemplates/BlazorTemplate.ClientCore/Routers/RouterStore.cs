@@ -320,14 +320,6 @@ public partial class RouterStore(NavigationManager navigationManager
         {
             menuService.Clear();
             pages.Clear();
-            //var homeMenu = new RouteMenu()
-            //{
-            //    RouteId = "Home",
-            //    RouteUrl = "/",
-            //    Icon = "svg-home",
-            //    Group = "ROOT",
-            //    RouteTitle = "主页",
-            //};
             var homeTag = new RouteTag(menuService.Home)
             {
                 RouteUrl = "/",

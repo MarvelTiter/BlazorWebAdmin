@@ -18,13 +18,7 @@ public static class ExpressionHelper
         if (selector.Body is not MemberExpression body || body.Member is not PropertyInfo prop)
             throw new ArgumentException($"The parameter selector '{selector}' does not resolve to a public property on the type '{typeof(T)}'.", nameof(selector));
 
-        var type = typeof(T);
-        var propertyInfo = prop.DeclaringType != type
-            ? type.GetProperty(prop.Name, prop.PropertyType)
-            : prop;
-
-        ArgumentNullException.ThrowIfNull(propertyInfo);
-        return propertyInfo;
+        return prop;
     }
 
     public static string ExtractPropertyName<T, TValue>(this Expression<Func<T, TValue>> selector)

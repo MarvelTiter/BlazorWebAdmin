@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components.Rendering;
 using BlazorTemplate.ClientCore.UI.Builders;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorTemplate.ClientCore.UI.Extensions;
 
 public static class RenderFragmentBuilderExtensions
 {
-    public static CustomComponentBuilder<TComponent> Component<TComponent>(this RenderTreeBuilder builder) where TComponent : IComponent
+    public static CustomComponentBuilder<TComponent> Component<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent>(this RenderTreeBuilder builder) where TComponent : IComponent
     {
         return new CustomComponentBuilder<TComponent>(builder);
     }

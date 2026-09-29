@@ -5,7 +5,7 @@ using BlazorTemplate.ClientCore.Models.Request;
 using BlazorTemplate.ClientCore.UI.Extensions;
 using BlazorTemplate.ClientCore.UI.Table;
 using System.Globalization;
-using BlazorTemplate.ClientCore.Lockup;
+using BlazorTemplate.ClientCore.Lookup;
 using System.Diagnostics.CodeAnalysis;
 
 namespace BlazorTemplate.UI.AntBlazor.Components;

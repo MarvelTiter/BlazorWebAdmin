@@ -5,6 +5,7 @@ using BlazorTemplate.ClientCore.Utils;
 using LightExcel;
 using Microsoft.AspNetCore.Components.Rendering;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace BlazorTemplate.ClientCore.Basic;
@@ -183,6 +184,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
     /// </summary>
     /// <param name="datas"></param>
     /// <returns></returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2091", Justification = "LightExcel 内部按运行时反射反序列化实体，Blazor WASM 走 Mono AOT + 解释器兜底，非硬阻塞。TModel 作为开放基类泛型参数不宜标 DAM(会无边界级联到所有继承页面)。")]
     protected virtual async Task OnSaveExcelAsync(IEnumerable<TModel> datas)
     {
         var service = DownloadServiceProvider.GetService();
@@ -214,6 +216,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         return Task.FromResult<IEnumerable<TModel>>(selected);
     }
 
+    [UnconditionalSuppressMessage("Trimming", "IL2091", Justification = "LightExcel.QueryExcel 按运行时反射，Mono AOT 解释器兜底，非硬阻塞。")]
     protected virtual async Task OnImportAsync(Stream stream)
     {
         var datas = Excel.QueryExcel<TModel>(stream, "Sheet1");
@@ -235,6 +238,7 @@ public abstract class ModelPage<TModel, TQuery> : JsComponentBase
         throw new NotImplementedException();
     }
 
+    [UnconditionalSuppressMessage("Trimming", "IL2091", Justification = "LightExcel.WriteExcel 按运行时反射，Mono AOT 解释器兜底，非硬阻塞。")]
     protected async Task DownloadImportTemplate()
     {
         var service = DownloadServiceProvider.GetService();

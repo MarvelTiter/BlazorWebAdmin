@@ -1,8 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 
 namespace BlazorTemplate.ClientCore.UI.Builders;
 
-public class PropComponentBuilder<TComponent, TPropModel> : ComponentBuilderBasic<TComponent, PropComponentBuilder<TComponent, TPropModel>>, IUIComponent<TPropModel>
+public class PropComponentBuilder<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TComponent, TPropModel> : ComponentBuilderBasic<TComponent, PropComponentBuilder<TComponent, TPropModel>>, IUIComponent<TPropModel>
     where TPropModel : new()
     where TComponent : IComponent
 {

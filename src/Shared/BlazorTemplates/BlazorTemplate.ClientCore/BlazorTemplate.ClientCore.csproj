@@ -9,6 +9,7 @@
 		<Authors>MarvelTiter</Authors>
 		<Copyright>MIT</Copyright>
 		<Description>BlazorWebAdmin模板项目的组件</Description>
+        <IsAotCompatible>true</IsAotCompatible>
 		<Version>$(ClientCoreVersion)</Version>
 	</PropertyGroup>
 
