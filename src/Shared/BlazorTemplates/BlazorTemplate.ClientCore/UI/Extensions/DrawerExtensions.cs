@@ -4,9 +4,10 @@ namespace BlazorTemplate.ClientCore.UI.Extensions;
 
 public static class DrawerExtensions
 {
-    public static async Task ShowDrawerAsync<Template>(this IUIService service, string title, int width = 0, Position position = Position.Right)
+    public static async Task ShowDrawerAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Template>(this IUIService service, string title, int width = 0, Position position = Position.Right)
+        where Template : IComponent
     {
-        var options = new FlyoutDrawerOptions<int>();
+        var options = new FlyoutDrawerOptions<Template>();
         options.Title = title;
         if (width > 0)
             options.Width = width.ToString();
@@ -31,9 +32,10 @@ public static class DrawerExtensions
         _ = await service.ShowDrawerAsync(options);
     }
 
-    public static async Task ShowDrawerAsync<Template>(this IUIService service, string title, string? width = null, Position position = Position.Right)
+    public static async Task ShowDrawerAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Template>(this IUIService service, string title, string? width = null, Position position = Position.Right)
+        where Template : IComponent
     {
-        var options = new FlyoutDrawerOptions<int>
+        var options = new FlyoutDrawerOptions<Template>
         {
             Title = title,
             Width = width,
@@ -49,8 +51,9 @@ public static class DrawerExtensions
     }
 
     public static async Task ShowDrawerAsync<Template>(this IUIService service, string title, RenderFragment content, int width = 0, Position position = Position.Right)
+        where Template : IComponent
     {
-        var options = new FlyoutDrawerOptions<int>();
+        var options = new FlyoutDrawerOptions<Template>();
         options.Title = title;
         if (width > 0)
             options.Width = width.ToString();

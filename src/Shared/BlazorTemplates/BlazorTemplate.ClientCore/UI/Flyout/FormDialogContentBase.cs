@@ -4,7 +4,7 @@ using BlazorTemplate.ClientCore.UI.Form;
 
 namespace BlazorTemplate.ClientCore.UI.Flyout;
 
-public sealed class FormDialogTemplate<TValue> : DialogTemplate<TValue> where TValue : class, new()
+public sealed class FormDialogContentBase<TValue> : DialogContentBase<TValue> where TValue : class, new()
 {
     [Parameter, NotNull] public IEnumerable<ColumnInfo>? Columns { get; set; }
     FormOptions<TValue>? options;

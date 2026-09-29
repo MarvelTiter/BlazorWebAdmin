@@ -13,7 +13,7 @@ public static class ModelPageExtension
         return n;
     }
 
-    public static async Task<TModel> ShowEditFormAsync<TModel, TQuery>(this ModelPage<TModel, TQuery> page, TModel? data, bool? edit = null, Action<FlyoutOptions<TModel>>? config = null)
+    public static async Task<TModel> ShowEditFormAsync<TModel, TQuery>(this ModelPage<TModel, TQuery> page, TModel? data, bool? edit = null, Action<FlyoutOptions<FormDialogContentBase<TModel>, TModel, TModel>>? config = null)
         where TQuery : IRequest, new()
         where TModel : class, new()
     {
@@ -29,7 +29,7 @@ public static class ModelPageExtension
         return n;
     }
 
-    public static async Task<TModel> ShowAddFormAsync<TModel, TQuery>(this ModelPage<TModel, TQuery> page, Action<FlyoutOptions<TModel>> config)
+    public static async Task<TModel> ShowAddFormAsync<TModel, TQuery>(this ModelPage<TModel, TQuery> page, Action<FlyoutOptions<FormDialogContentBase<TModel>, TModel, TModel>> config)
         where TQuery : IRequest, new()
         where TModel : class, new()
     {
@@ -47,6 +47,7 @@ public static class ModelPageExtension
             {
                 return;
             }
+
             var result = await page.Options.OnAddItemAsync();
             if (result is null) return;
             if (page.UI.ShowError(result))

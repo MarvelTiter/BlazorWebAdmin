@@ -390,7 +390,7 @@ public class UIService(
         };
     }
 
-    public async Task<TReturn> ShowDialogAsync<TReturn>(FlyoutOptions<TReturn> options)
+    public async Task<TReturn> ShowDialogAsync<TContent, TInput, TReturn>(FlyoutOptions<TContent, TInput, TReturn> options) where TContent : IComponent
     {
         var localizer = ServiceProvider.GetRequiredService<IStringLocalizer<object>>();
         TaskCompletionSource<TReturn> tcs = new();
@@ -446,7 +446,7 @@ public class UIService(
         return await tcs.Task;
     }
 
-    public async Task<TReturn> ShowDrawerAsync<TReturn>(FlyoutDrawerOptions<TReturn> options)
+    public async Task<TReturn> ShowDrawerAsync<TContent, TInput, TReturn>(FlyoutDrawerOptions<TContent, TInput, TReturn> options) where TContent : IComponent
     {
         var modal = new DrawerOptions
         {

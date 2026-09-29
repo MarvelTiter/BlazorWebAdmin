@@ -27,26 +27,36 @@ public class PopoverOptions
     public Func<Task>? CloseAsync { get; set; }
 }
 
-public class FlyoutOptions<TReturn> : FlyoutOptions
+public class FlyoutOptions<TInput, TReturn> : FlyoutOptions
 {
     public IFeedback<TReturn>? Feedback { get; set; }
     public Func<TReturn?, Func<bool>, Task<bool>>? PostCheckAsync { get; set; }
 }
 
-public class FlyoutOptions<Template, TReturn> : FlyoutOptions<TReturn>
-    where Template : IComponent
+public class FlyoutOptions<TContent, TInput, TReturn> : FlyoutOptions<TInput, TReturn>
+    where TContent : IComponent
 {
-    public Action<CustomComponentBuilder<Template>>? ComponentSet { get; set; }
+    public Action<CustomComponentBuilder<TContent>>? ComponentSet { get; set; }
 }
 
 public enum Position
 {
-    Left, Top, Right, Bottom
+    Left,
+    Top,
+    Right,
+    Bottom
 }
 
-public class FlyoutDrawerOptions<TReturn> : FlyoutOptions<TReturn>
+public class FlyoutDrawerOptions<TContent, TInput, TReturn> : FlyoutOptions<TContent, TInput, TReturn>
+    where TContent : IComponent
 {
     public Position Position { get; set; }
+}
+
+public class FlyoutDrawerOptions<TContent> : FlyoutDrawerOptions<TContent, object?, object?>
+    where TContent : IComponent
+{
+    
 }
 
 public struct FeedBackValue<TValue>

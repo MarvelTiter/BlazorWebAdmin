@@ -14,15 +14,15 @@ public static class BuildFormExtension
         return result;
     }
 
-    public static async Task<TData> ShowFormDialogAsync<TData>(this IUIService service, TData? data, IEnumerable<ColumnInfo> columns, bool? edit = null, Action<FlyoutOptions<TData>>? config = null)
+    public static async Task<TData> ShowFormDialogAsync<TData>(this IUIService service, TData? data, IEnumerable<ColumnInfo> columns, bool? edit = null, Action<FlyoutOptions<FormDialogContentBase<TData>, TData, TData>>? config = null)
         where TData : class, new()
     {
-        var options = new FlyoutOptions<TData>();
+        var options = new FlyoutOptions<FormDialogContentBase<TData>, TData, TData>();
         config?.Invoke(options);
         var p = new FormParam<TData>(data, edit);
         options.Content = builder =>
         {
-            builder.Component<FormDialogTemplate<TData>>()
+            builder.Component<FormDialogContentBase<TData>>()
             .SetComponent(c => c.DialogModel, p)
             .SetComponent(c => c.Options, options)
             .SetComponent(c => c.Columns, columns)

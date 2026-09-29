@@ -39,6 +39,7 @@ public interface IClickable<out TReturn>
 public interface IBindableInputComponent<TPropModel, TValue> : IUIComponent<TPropModel>
 {
     IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression);
+
     IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, Func<Task>? onchange);
     //IBindableInputComponent<TPropModel, TValue> Bind(Expression<Func<TValue>> expression, string valueName, Func<Task>? onchange = null);
 }
@@ -72,17 +73,24 @@ public interface IUIService
 {
     [Obsolete]
     string MainStyle();
+
     RenderFragment AddStyles();
+
     [Obsolete]
     string DarkStyle();
+
     RenderFragment UIFrameworkJs();
     void Message(MessageType type, string message);
     void Notify(MessageType type, string title, string message);
     void Alert(MessageType type, string title, string message);
     Task<bool> ConfirmAsync(string title, string message);
-    Task<TReturn> ShowDialogAsync<TReturn>(FlyoutOptions<TReturn> options);
-    Task<TReturn> ShowDrawerAsync<TReturn>(FlyoutDrawerOptions<TReturn> options);
+
+    Task<TReturn> ShowDialogAsync<TContent, TInput, TReturn>(FlyoutOptions<TContent, TInput, TReturn> options) where TContent : IComponent;
+
+    Task<TReturn> ShowDrawerAsync<TContent, TInput, TReturn>(FlyoutDrawerOptions<TContent, TInput, TReturn> options) where TContent : IComponent;
+
     IServiceProvider ServiceProvider { get; }
+
     //RenderFragment BuildIcon(string name);
     IUIComponent<TabsProp> BuildTabs();
 
@@ -101,13 +109,14 @@ public interface IUIService
     /// </code>
     /// </summary>
     IBindableInputComponent<DefaultProp, string> BuildPassword(object receiver);
+
     /// <summary>
     /// 生成数字输入框
     /// <code>
     /// <![CDATA[UI.BuildInput<TValue>(this).Bind(() => ValueExpression).Render()]]>
     /// </code>
     /// </summary>
-    IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver) where TValue: new();
+    IBindableInputComponent<DefaultProp, TValue> BuildNumberInput<TValue>(object receiver) where TValue : new();
 
     IBindableInputComponent<DatePickerProp, DateTime?> BuildDatePicker(object receiver);
     IBindableInputComponent<DatePickerProp, TDate> BuildDatePicker<TDate>(object reciver);
@@ -128,11 +137,13 @@ public interface IUIService
     /// 生成按钮
     /// </summary>
     IButtonInput BuildButton(object receiver);
+
     RenderFragment BuildFakeButton(ButtonProp props);
 
     IBindableInputComponent<SwitchProp, bool> BuildSwitch(object receiver);
 
     RenderFragment BuildTable<TModel, TQuery>(TableOptions<TModel, TQuery> options) where TQuery : IRequest, new();
+
     /// <summary>
     /// DataTable 或者 <![CDATA[Dictionary<string, object>]]> 
     /// </summary>
@@ -157,7 +168,9 @@ public interface IUIService
     IBindableInputComponent<DefaultProp, string[]> BuildTree<TData>(object revicer, TreeOptions<TData> options);
 
     ISelectInput<SelectProp, TItem, TValue[]> BuildCheckBoxGroup<TItem, TValue>(object receiver, IEnumerable<TItem> options);
+
     ISelectInput<SelectProp, TItem, TValue> BuildRadioGroup<TItem, TValue>(object receiver, IEnumerable<TItem> options);
+
     //ISelectInput<SelectProp, SelectItem<TValue>, TValue> BuildRadioGroup<TValue>(object receiver, SelectItem<TValue> options);
     IUIComponent<ModalProp> BuildModal();
     IUIComponent<GridProp> BuildRow();
@@ -169,10 +182,12 @@ public interface IUIService
     int GetMenuWidth(bool collapsed);
 
     RenderFragment RenderIcon(IconInfo icon);
+
     IEnumerable<WebSettingFragment> WebSettings()
     {
         yield break;
     }
+
     Task OnAppMounted(IAppStore app)
     {
         return Task.CompletedTask;

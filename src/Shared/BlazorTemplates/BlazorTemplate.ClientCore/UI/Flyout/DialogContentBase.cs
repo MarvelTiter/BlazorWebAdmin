@@ -8,30 +8,26 @@ public class FormParam<TEntity>(TEntity? entity, bool? edit)
     public TEntity? Value { get; set; } = entity;
     public bool Edit { get; set; } = edit ?? entity != null;
 }
-public class DialogTemplate<TInput, TReturn> : JsComponentBase, IFeedback<TReturn>
+
+public class DialogContentBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] TInput, TReturn> : JsComponentBase, IFeedback<TReturn>
 {
     [Parameter, NotNull] public FormParam<TInput>? DialogModel { get; set; }
     [Parameter, NotNull] public RenderFragment<TInput?>? ChildContent { get; set; }
-    [Parameter, NotNull] public FlyoutOptions<TReturn>? Options { get; set; }
+    [Parameter, NotNull] public FlyoutOptions<TInput, TReturn>? Options { get; set; }
     [Inject, NotNull] protected IStringLocalizer<TInput>? Localizer { get; set; }
     [Inject, NotNull] protected ICopyable? CopySrv { get; set; }
     protected string GetLocalizeString(string prop) => Localizer[$"{typeof(TInput).Name}.{prop}"];
 
     protected TInput? Value
     {
-        get
-        {
-            return DialogModel.Value;
-        }
-        set
-        {
-            DialogModel.Value = value;
-        }
+        get { return DialogModel.Value; }
+        set { DialogModel.Value = value; }
     }
 
     protected virtual TReturn? ReturnValue { get; set; }
 
     protected bool Edit => DialogModel.Edit;
+
     protected override void OnInitialized()
     {
         base.OnInitialized();
@@ -43,17 +39,12 @@ public class DialogTemplate<TInput, TReturn> : JsComponentBase, IFeedback<TRetur
         {
             DialogModel.Value = (TInput)Activator.CreateInstance(valueType)!;
         }
-        else if (!valueType.IsEnum && !valueType.IsValueType)
+        else if (valueType is { IsEnum: false, IsValueType: false })
         {
             if (Options.CopyValue)
             {
                 DialogModel.Value = CopySrv.Copy(DialogModel.Value);
             }
-            //if (DialogModel.Value is IAutoMap map)
-            //{
-            //    DialogModel.Value = map.MapTo<TInput>();
-            //}
-            //DialogModel.Value = Mapper.Map<TInput, TInput>(DialogModel.Value);
         }
     }
 
@@ -91,15 +82,16 @@ public class DialogTemplate<TInput, TReturn> : JsComponentBase, IFeedback<TRetur
         {
             builder.Component<CascadingValue<bool>>()
                 .SetComponent(c => c.Value, Edit)
-                .SetComponent(c => c.ChildContent, b =>
-                {
-                    ChildContent.Invoke(Value).Invoke(b);
-                }).Build();
+                .SetComponent(c => c.ChildContent, b => { ChildContent.Invoke(Value).Invoke(b); }).Build();
         }
     }
 }
 
-public class DialogTemplate<TValue> : DialogTemplate<TValue, TValue>
+public class DialogContentBase<TValue> : DialogContentBase<TValue, TValue>
 {
-    protected override TValue? ReturnValue { get => Value; set => Value = value; }
+    protected override TValue? ReturnValue
+    {
+        get => Value;
+        set => Value = value;
+    }
 }

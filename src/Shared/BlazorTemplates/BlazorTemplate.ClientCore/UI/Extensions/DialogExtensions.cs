@@ -4,27 +4,27 @@ namespace BlazorTemplate.ClientCore.UI.Extensions;
 
 public static class DialogExtensions
 {
-    public static async Task<TData> ShowDialogAsync<Template, TData>(this IUIService service, string title, TData? param = default, bool? edit = null, string? width = null)
-        where Template : DialogTemplate<TData>
+    public static Task<TData> ShowDialogAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Template, TData>(this IUIService service, string title, TData? param = default, bool? edit = null, string? width = null)
+        where Template : DialogContentBase<TData>
     {
-        return await ShowDialogAsync<Template, TData>(service, param, edit, config =>
+        return service.ShowDialogAsync<Template, TData>(param, edit, config =>
         {
             config.Title = title;
             config.Width = width;
         });
     }
 
-    public static async Task<TData> ShowDialogAsync<Template, TData>(this IUIService service, TData? param = default, bool? edit = null, Action<FlyoutOptions<Template, TData>>? config = null)
-        where Template : DialogTemplate<TData>
+    public static async Task<TData> ShowDialogAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Template, TData>(this IUIService service, TData? param = default, bool? edit = null, Action<FlyoutOptions<Template, TData, TData>>? config = null)
+        where Template : DialogContentBase<TData>
     {
-        var options = new FlyoutOptions<Template, TData>();
+        var options = new FlyoutOptions<Template, TData, TData>();
         var p = new FormParam<TData>(param, edit);
         config?.Invoke(options);
         options.Content = builder =>
         {
             var cb = builder.Component<Template>()
-                 .SetComponent(c => c.DialogModel, p)
-                 .SetComponent(c => c.Options, options);
+                .SetComponent(c => c.DialogModel, p)
+                .SetComponent(c => c.Options, options);
             options.ComponentSet?.Invoke(cb);
             cb.Build(obj => options.Feedback = (IFeedback<TData>)obj);
         };
@@ -34,10 +34,10 @@ public static class DialogExtensions
         return result;
     }
 
-    public static async Task<TReturn> ShowDialogAsync<Template, TInput, TReturn>(this IUIService service, TInput data, Action<FlyoutOptions<Template, TReturn>>? config = null)
-        where Template : DialogTemplate<TInput, TReturn>
+    public static async Task<TReturn> ShowDialogAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)] Template, TInput, TReturn>(this IUIService service, TInput data, Action<FlyoutOptions<Template, TInput, TReturn>>? config = null)
+        where Template : DialogContentBase<TInput, TReturn>
     {
-        var options = new FlyoutOptions<Template, TReturn>();
+        var options = new FlyoutOptions<Template, TInput, TReturn>();
         var p = new FormParam<TInput>(data, true);
         config?.Invoke(options);
         options.Content = builder =>
@@ -61,15 +61,15 @@ public static class DialogExtensions
         });
     }
 
-    public static async Task<TData> ShowDialogAsync<TData>(this IUIService service, RenderFragment<TData?> content, TData? param = default, bool? edit = null, Action<FlyoutOptions<TData>>? config = null)
+    public static async Task<TData> ShowDialogAsync<TData>(this IUIService service, RenderFragment<TData?> content, TData? param = default, bool? edit = null, Action<FlyoutOptions<DialogContentBase<TData>, TData, TData>>? config = null)
     {
-        var options = new FlyoutOptions<TData>();
+        var options = new FlyoutOptions<DialogContentBase<TData>, TData, TData>();
         config?.Invoke(options);
 
         var p = new FormParam<TData>(param, edit);
         options.Content = builder =>
         {
-            builder.Component<DialogTemplate<TData>>()
+            builder.Component<DialogContentBase<TData>>()
                 .SetComponent(c => c.DialogModel, p)
                 .SetComponent(c => c.Options, options)
                 .SetComponent(c => c.ChildContent, content)
@@ -81,14 +81,14 @@ public static class DialogExtensions
         return result;
     }
 
-    public static async Task<TReturn> ShowDialogAsync<TInput, TReturn>(this IUIService service, RenderFragment<TInput?> content, TInput data, Action<FlyoutOptions<TReturn>>? config = null)
+    public static async Task<TReturn> ShowDialogAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]TInput, TReturn>(this IUIService service, RenderFragment<TInput?> content, TInput data, Action<FlyoutOptions<DialogContentBase<TInput>, TInput, TReturn>>? config = null)
     {
-        var options = new FlyoutOptions<TReturn>();
+        var options = new FlyoutOptions<DialogContentBase<TInput>, TInput, TReturn>();
         config?.Invoke(options);
         var p = new FormParam<TInput>(data, true);
         options.Content = builder =>
         {
-            builder.Component<DialogTemplate<TInput, TReturn>>()
+            builder.Component<DialogContentBase<TInput, TReturn>>()
                 .SetComponent(c => c.DialogModel, p)
                 .SetComponent(c => c.Options, options)
                 .SetComponent(c => c.ChildContent, content)
