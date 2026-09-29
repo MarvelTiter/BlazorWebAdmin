@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Frozen;
 
-namespace BlazorTemplate.ClientCore.Lockup;
+namespace BlazorTemplate.ClientCore.Lookup;
 
 public class LookupService : ILookupService
 {

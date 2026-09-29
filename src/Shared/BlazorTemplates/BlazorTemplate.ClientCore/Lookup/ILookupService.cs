@@ -1,6 +1,6 @@
 ﻿using System.Collections.Frozen;
 
-namespace BlazorTemplate.ClientCore.Lockup;
+namespace BlazorTemplate.ClientCore.Lookup;
 
 public readonly record struct LookupEntry(string Code, string DisplayName);
 

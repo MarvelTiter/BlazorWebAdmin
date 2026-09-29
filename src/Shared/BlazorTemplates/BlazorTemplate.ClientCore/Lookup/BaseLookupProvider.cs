@@ -1,6 +1,6 @@
 ﻿using System.Collections.Frozen;
 
-namespace BlazorTemplate.ClientCore.Lockup;
+namespace BlazorTemplate.ClientCore.Lookup;
 
 public abstract class BaseLookupProvider : ILookupProvider
 {

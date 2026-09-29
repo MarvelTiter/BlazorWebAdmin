@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace BlazorTemplate.ClientCore.Lockup;
+namespace BlazorTemplate.ClientCore.Lookup;
 
 public static class ServiceCollectionExtensions
 {
