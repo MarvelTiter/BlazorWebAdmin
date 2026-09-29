@@ -14,3 +14,7 @@
 .ant-menu-horizontal > .ant-menu-item a::before {
     bottom: 0px !important;
 }
+
+.ant-card {
+    margin-bottom: 10px;
+}

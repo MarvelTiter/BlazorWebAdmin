@@ -1,4 +1,5 @@
 ﻿using AntDesign;
+using AutoInjectGenerator;
 using Microsoft.Extensions.DependencyInjection;
 using BlazorTemplate.ClientCore.UI;
 
@@ -6,6 +7,7 @@ namespace BlazorTemplate.UI.AntBlazor;
 
 public static class Extensions
 {
+    [CustomModuleServiceConfiguration]
     public static void AddAntDesignUI(this IServiceCollection services)
     {
         services.AddAntDesign();
