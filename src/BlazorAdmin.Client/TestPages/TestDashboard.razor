@@ -1,9 +1,11 @@
-﻿@using BlazorTemplate.ClientCore.Page
-@using BlazorTemplate.ClientCore.PageHelper
-@using BlazorTemplate.ClientCore.ComponentHelper
+﻿@using BlazorTemplate.ClientCore.ComponentHelper
 @using BlazorTemplate.ClientCore.Components
+@using BlazorTemplate.ClientCore.Lookup
+@using BlazorTemplate.ClientCore.Page
+@using BlazorTemplate.ClientCore.PageHelper
 @inherits AppComponentBase
 @implements IRouteTagPage
+@inject ILookupService Lookup
 <JsTimer Interval="1000" Callback="Update"></JsTimer>
 <MCard>
     <h1>测试主页</h1>
@@ -18,8 +20,12 @@
         会话持续时间<FontIcon IconName="fa fa-comment"></FontIcon>: @((DateTime.Now - User?.UserInfo?.CreatedTime)?.ToString("dd\\-hh\\:mm\\:ss"))
     </h2>
 </MCard>
-
+@foreach (var item in dictionaryEntries ??[])
+{
+    <p>@item.DisplayName - @item.Code</p>
+}
 @code {
+    ICollection<LookupEntry>? dictionaryEntries;
     private Task Update()
     {
         // if (User?.UserInfo != null)
@@ -32,5 +38,12 @@
     public RenderFragment GetTitle()
     {
         return "重写主页标题".AsContent();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+        dictionaryEntries = Lookup.GetEntries(LookupTypes.Dictionary);
+        StateHasChanged();
     }
 }

@@ -10,6 +10,8 @@ using LightORM;
 using LightORM.Providers.Sqlite.Extensions;
 using LoggerProviderExtensions;
 using MT.LightTask;
+using BlazorTemplate.ClientCore.Lookup;
+using BlazorTemplate.ClientCore.Models.Dictionary;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -38,6 +40,10 @@ builder.AddServerProject(setting =>
     setting.App.Name = "BlazorAdmin";
     setting.App.Company = "Marvel";
 #if DEBUG
+    builder.Services.AddLookupService(c =>
+    {
+        c.AddLookupProvider<DictionaryLookupProvider<TemplateDictItem>>();
+    });
     setting.ConfigurePage(locator =>
     {
         locator.SetDashboardType<BlazorAdmin.Client.TestPages.TestDashboard>();
@@ -45,6 +51,7 @@ builder.AddServerProject(setting =>
         locator.SetRunLogPageType<TemplateOperationLog>();
         locator.SetPermissionPageType<TemplatePermissionSetting>();
         locator.SetRolePermissionPageType<TemplateRolePermission>();
+        locator.SetDictPageType<TemplateDictPage>();
     });
 #else
 #if (UseClientProject)
@@ -77,6 +84,7 @@ builder.AddServerProject(setting =>
         locator.SetRunLogPageType<TemplateOperationLog>();
         locator.SetPermissionPageType<TemplatePermissionSetting>();
         locator.SetRolePermissionPageType<TemplateRolePermission>();
+        locator.SetDictPageType<TemplateDictPage>();
     });
 #endif
 #endif
