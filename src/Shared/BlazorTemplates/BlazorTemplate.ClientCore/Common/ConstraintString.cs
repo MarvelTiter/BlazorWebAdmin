@@ -8,6 +8,7 @@ public class ConstraintString
     public const string RUNLOG_URL = "/runlog/index";
     public const string ROLE_PERMISSION_URL = "/rolepermission/index";
     public const string PERMISSION_URL = "/permission/index";
+    public const string DICT_URL = "/dict/index";
 }
 
 public class AutoInjectGroups

@@ -47,3 +47,15 @@ public class PermissionIndex : SystemPageIndex<PermissionIndex>
         return customSetting.GetPermissionPageType();
     }
 }
+
+[Route(ConstraintString.DICT_URL)]
+[PageGroup("BasicSetting", "基础配置", 1, Icon = "fa fa-cog")]
+[PageInfo(Title = "字典配置", Icon = "svg-dict", Sort = 3, GroupId = "BasicSetting")]
+[Authorize(Policy = AppConst.DEFAULT_DYNAMIC_POLICY)]
+public class DictIndex : SystemPageIndex<DictIndex>
+{
+    protected override Type? GetPageType(IPageLocatorService customSetting)
+    {
+        return customSetting.GetDictPageType();
+    }
+}

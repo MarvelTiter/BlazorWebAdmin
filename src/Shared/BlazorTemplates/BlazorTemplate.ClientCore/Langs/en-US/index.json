@@ -93,6 +93,13 @@
     "Permission": "Permissions",
     "RunLogIndex": "Operation Log"
   },
+  "DictItem": {
+    "ItemId": "ItemId",
+    "TypeCode": "TypeCode",
+    "ItemName": "ItemName",
+    "ItemValue": "ItemValue",
+    "ParentId": "ParentId"
+  },
   "TableOptions": {
     "TableButtons": {
       "Query": "Search",

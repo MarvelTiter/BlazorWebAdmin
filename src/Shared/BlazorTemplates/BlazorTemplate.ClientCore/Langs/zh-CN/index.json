@@ -94,6 +94,13 @@
     "Permission": "权限设置",
     "RunLogIndex": "操作日志"
   },
+  "DictItem": {
+    "ItemId": "ID",
+    "TypeCode": "字典类型",
+    "ItemName": "字典名称",
+    "ItemValue": "字典值",
+    "ParentId": "上级"
+  },
   "TableOptions": {
     "TableButtons": {
       "Query": "查询",

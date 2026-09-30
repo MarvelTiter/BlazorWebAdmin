@@ -22,6 +22,8 @@
 
 	<ItemGroup>
 		<Content Remove="Components\ConditionBuilder\ConditionGroup.razor" />
+		<Content Remove="wwwroot\icons\svg-delete.svg" />
+		<Content Remove="wwwroot\icons\svg-edit.svg" />
 	</ItemGroup>
 
 

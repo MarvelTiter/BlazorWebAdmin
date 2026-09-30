@@ -1,0 +1,43 @@
+@typeparam TDictItem
+@typeparam TDictionaryService
+@inherits ModelPage<TDictItem, GenericRequest<TDictItem>>
+<div style="max-width:1280px;">
+    <SplitView InitWidth="400" Border>
+        <FirstContent>
+            <div class="dict-type-panel">
+                <div class="dict-type-toolbar">
+                    @UI.BuildInput(this).Bind(() => typeFilter, RefreshTypeListAsync).Style("flex:1;min-width:0;").Render()
+                    @UI.BuildButton(this).Text("添加").Primary().OnClick(AddDictTypeAsync).Render()
+                </div>
+                <div class="dict-type-list">
+                    @if (dictTypes.Count == 0)
+                    {
+                        <div class="dict-type-empty">暂无字典类型</div>
+                    }
+                    else
+                    {
+                        @foreach (var item in dictTypes)
+                        {
+                            <div class="dict-type-item @(ReferenceEquals(current, item) ? "active" : "")"
+                                 @onclick="@(async () => { current = item; StateHasChanged(); await Options.RefreshAsync(); })">
+                                <span class="dict-type-name" title="@item.ItemName">@item.ItemName</span>
+                                <span class="dict-type-code">@item.TypeCode</span>
+                                <div class="dict-type-actions" @onclick:stopPropagation>
+                                    <button type="button" class="dict-type-action dict-type-action-edit" title="编辑" @onclick="(() => EditTypeAsync(item))">
+                                        <MIcon IconName="svg-edit"></MIcon>
+                                    </button>
+                                    <button type="button" class="dict-type-action dict-type-action-delete" title="删除" @onclick="(() => DeleteTypeAsync(item))">
+                                        <MIcon IconName="svg-delete"></MIcon>
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </FirstContent>
+        <SecondContent>
+            @TableFragment
+        </SecondContent>
+    </SplitView>
+</div>

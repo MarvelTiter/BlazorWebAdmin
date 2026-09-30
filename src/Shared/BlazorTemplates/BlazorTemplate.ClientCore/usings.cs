@@ -1,6 +1,7 @@
 ﻿global using BlazorTemplate.ClientCore.Common;
 global using BlazorTemplate.ClientCore.Page;
 global using BlazorTemplate.ClientCore.Models.Permissions;
+global using BlazorTemplate.ClientCore.Models.Dictionary;
 global using BlazorTemplate.ClientCore.Services;
 global using BlazorTemplate.ClientCore.Basic;
 global using BlazorTemplate.ClientCore.Models.Request;

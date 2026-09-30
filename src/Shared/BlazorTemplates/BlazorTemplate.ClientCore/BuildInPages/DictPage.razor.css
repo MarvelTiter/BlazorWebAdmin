@@ -1,0 +1,144 @@
+/* 字典类型列表（定制列表，替代 SimpleTable） */
+.dict-type-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    --dict-fg: #1f2329;
+    --dict-sub: #8a9099;
+    --dict-hover-bg: #f2f3f5;
+    --dict-active-bg: #e8f3ff;
+    --dict-active-fg: #409eff;
+    --dict-action-fg: #8a9099;
+    --dict-action-edit-hover: #409eff;
+    --dict-action-delete-hover: #f56c6c;
+    --dict-action-hover-bg: #e6e8eb;
+    --dict-action-delete-hover-bg: #fde2e2;
+}
+
+html[data-theme='dark'] .dict-type-panel {
+    --dict-fg: #e5e7eb;
+    --dict-sub: #8a9099;
+    --dict-hover-bg: #2a2c30;
+    --dict-active-bg: #1e3a54;
+    --dict-active-fg: #409eff;
+    --dict-action-fg: #8a9099;
+    --dict-action-edit-hover: #409eff;
+    --dict-action-delete-hover: #f56c6c;
+    --dict-action-hover-bg: #3a3d42;
+    --dict-action-delete-hover-bg: #3a2b2b;
+}
+
+.dict-type-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+}
+
+.dict-type-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.dict-type-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    height: 34px;
+    padding: 0 6px 0 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--dict-fg);
+    user-select: none;
+    transition: background-color .15s ease;
+}
+
+.dict-type-item:hover {
+    background: var(--dict-hover-bg);
+}
+
+.dict-type-item.active {
+    background: var(--dict-active-bg);
+    color: var(--dict-active-fg);
+    font-weight: 500;
+}
+
+.dict-type-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dict-type-code {
+    flex: none;
+    font-size: 12px;
+    color: var(--dict-sub);
+}
+
+.dict-type-item.active .dict-type-code {
+    color: var(--dict-active-fg);
+    opacity: .75;
+}
+
+/* 操作按钮组：默认隐藏，悬停/选中该行时浮现 */
+.dict-type-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: none;
+    opacity: 0;
+    transition: opacity .15s ease;
+}
+
+.dict-type-item:hover .dict-type-actions,
+.dict-type-item.active .dict-type-actions {
+    opacity: 1;
+}
+
+.dict-type-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    color: var(--dict-action-fg);
+    transition: background-color .15s ease, color .15s ease;
+}
+
+.dict-type-action ::deep .svg-icon {
+    width: 15px;
+    height: 15px;
+    max-width: 15px;
+    max-height: 15px;
+}
+
+.dict-type-action-edit:hover {
+    color: var(--dict-action-edit-hover);
+    background: var(--dict-action-hover-bg);
+}
+
+.dict-type-action-delete:hover {
+    color: var(--dict-action-delete-hover);
+    background: var(--dict-action-delete-hover-bg);
+}
+
+.dict-type-empty {
+    padding: 20px 0;
+    text-align: center;
+    font-size: 13px;
+    color: var(--dict-sub);
+}
