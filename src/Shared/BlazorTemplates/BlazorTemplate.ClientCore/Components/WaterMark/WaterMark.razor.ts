@@ -116,7 +116,7 @@ function createDiv(): HTMLElement {
 function getFontColor(color: string) {
     if (color) return color;
     const cssParameters = getComputedStyle(document.documentElement)
-    const value = cssParameters.getPropertyValue('--watermark-color')
+    const value = cssParameters.getPropertyValue('--wb-watermark')
     return value
 }
 

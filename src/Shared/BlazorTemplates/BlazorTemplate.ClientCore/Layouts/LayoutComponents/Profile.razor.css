@@ -9,7 +9,7 @@
     align-items: center;
     cursor: pointer;
     user-select: none;
-    color: #000;
+    color: var(--wb-text);
 }
 
     .wrapper .avatar {
@@ -25,20 +25,20 @@
     }
 
 .menu-item {
-    border: 1px solid #ccc;
+    border: 1px solid var(--wb-border);
     padding: 2px 10px;
     text-align: center;
     border-radius: 5px;
 }
 
     .menu-item.green-tag {
-        color: #389e0d;
-        background: #f6ffed;
-        border-color: #b7eb8f;
+        color: var(--wb-success);
+        background: var(--wb-success-bg);
+        border-color: var(--wb-success-border);
     }
 
     .menu-item.red-tag {
-        color: #cf1322;
-        background: #fff1f0;
-        border-color: #ffa39e;
+        color: var(--wb-error);
+        background: var(--wb-error-bg);
+        border-color: var(--wb-error-border);
     }

@@ -1,6 +1,6 @@
 ﻿.exception-wrapper {
     width: fit-content;
-    background-color: white;
+    background-color: var(--wb-bg-container);
     padding: 10px;
     text-align: left;
     font-size: 14px;
@@ -9,8 +9,8 @@
     right: 50%;
     width: 70vw;
     z-index: 999;
-    border: 1px solid #ccc;
-    box-shadow: 0 0 12px 0 rgb(0 0 0 / 20%);
+    border: 1px solid var(--wb-border);
+    box-shadow: var(--wb-shadow);
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;

@@ -1,5 +1,5 @@
 ﻿@import "_content/BlazorTemplate.ClientCore/css/font-awesome4.7.min.css";
-@import "themeVariables.css";
+@import "theme/tokens.css";
 
 h1:focus {
     outline: none;
@@ -76,40 +76,20 @@ html, body {
     margin-right: 5px;
 }
 
-/* 亮暗主题 */
-:root {
-    --background-color: #fcfcfc;
-    --bg: #f5f5f5;
-    --font-color: rgba(0, 0, 0, 0.85);
-    --hover-bg-color: #f5f5f5;
-    --major-color: rgb(64, 158, 255);
-    --border-shadow: 0px 0px 12px rgba(0, 0, 0, .12);
-    --watermark-color: rgba(0,0,0,.15);
-}
-
+/* 亮暗主题（框架语义变量统一在 theme/tokens.css 中定义，页面一律使用 --wb-* 系列） */
 
 html[data-theme='dark'] {
-    --background-color: #141414;
-    --bg: #181818;
-    --font-color: rgba(255, 255, 255, 0.85);
-    --hover-bg-color: #2c2c2c;
-    --major-color: rgb(64, 158, 255);
-    --border-shadow: 0px 0px 0px 1px rgb(255 255 255 / 12%);
-    --watermark-color: rgba(200,200,200,.15);
-}
-
-html[data-theme='dark'] {
-    background-color: var(--background-color) !important;
+    background-color: var(--wb-bg-container) !important;
 }
 
     html[data-theme='dark'] svg * {
-        fill: var(--font-color) !important;
+        fill: var(--wb-text) !important;
     }
 
 html[data-set='dark'] * {
-    color: var(--font-color);
+    color: var(--wb-text);
 }
 
 #app {
-    background-color: var(--bg);
+    background-color: var(--wb-bg);
 }

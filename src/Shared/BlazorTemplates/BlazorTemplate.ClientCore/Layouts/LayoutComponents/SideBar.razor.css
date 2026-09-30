@@ -9,7 +9,7 @@
 /*经典布局*/
 .classic {
     height: 100vh;
-    box-shadow: var(--border-shadow);
+    box-shadow: var(--wb-shadow);
     overflow: hidden;
     transition: width .3s ease;
 }
@@ -18,7 +18,7 @@
 .card {
     margin: 16px 1px 16px 16px;
     height: calc(100vh - 32px);
-    box-shadow: var(--border-shadow);
+    box-shadow: var(--wb-shadow);
     border-radius: 4px;
     overflow: hidden;
     transition: width .3s ease;

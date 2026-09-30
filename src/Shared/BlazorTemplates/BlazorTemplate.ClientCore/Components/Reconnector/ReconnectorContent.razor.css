@@ -23,7 +23,7 @@
         }
 
 .reconnect-state .message {
-    background-color: rgb(64, 158, 255);
+    background-color: var(--wb-primary);
     display: block;
     padding: 1rem;
     color: #fff;

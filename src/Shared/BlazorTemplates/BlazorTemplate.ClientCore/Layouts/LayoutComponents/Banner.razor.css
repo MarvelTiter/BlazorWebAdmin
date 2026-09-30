@@ -6,7 +6,7 @@
     justify-content: center;
     box-sizing: border-box;
     padding: 10px;
-    background: var(--background-color);
+    background: var(--wb-bg-container);
 }
 
     .layout-logo.line {

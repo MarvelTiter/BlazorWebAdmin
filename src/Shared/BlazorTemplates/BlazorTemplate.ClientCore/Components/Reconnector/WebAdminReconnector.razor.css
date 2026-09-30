@@ -18,11 +18,11 @@
 }
 
 .content {
-    background-color: white;
+    background-color: var(--wb-bg-container);
     opacity: 1;
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+    box-shadow: var(--wb-shadow-sm);
 }
 
 .connecting .content h1 {

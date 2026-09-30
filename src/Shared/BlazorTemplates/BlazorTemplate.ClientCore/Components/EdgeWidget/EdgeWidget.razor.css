@@ -24,7 +24,7 @@
 
 .content {
     position: relative;
-    box-shadow: var(--border-shadow);
+    box-shadow: var(--wb-shadow);
     padding: 10px;
 }
 
@@ -33,9 +33,9 @@
     right: -52px;
     top: 50%;
     transform: translateY(-50%);
-    background: rgb(255 255 255 / 0.6);
+    background: var(--wb-bg-container);
     border-radius: 26px;
-    box-shadow: var(--border-shadow);
+    box-shadow: var(--wb-shadow);
     cursor: pointer;
     font-size: 2rem;
     width: 52px;
@@ -46,5 +46,5 @@
 }
 
 ::deep .trigger i {
-    color: var(--major-color);
+    color: var(--wb-primary);
 }

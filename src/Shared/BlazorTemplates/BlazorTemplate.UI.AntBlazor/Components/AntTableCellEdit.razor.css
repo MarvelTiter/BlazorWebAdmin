@@ -16,7 +16,7 @@
 }
 
 ::deep.ant-table-cell-edit .check {
-    color: var(--major-color);
+    color: var(--wb-primary);
     font-size: 2rem;
 }
 

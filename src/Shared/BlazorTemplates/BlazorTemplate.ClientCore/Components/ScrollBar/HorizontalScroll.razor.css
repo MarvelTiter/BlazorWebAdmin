@@ -9,8 +9,8 @@
 }
 
 .wrap::-webkit-scrollbar-thumb {
-    background: #eaeaea;
-    border-radius: var(--el-border-radius-base);
+    background: var(--wb-border-split);
+    border-radius: var(--wb-radius);
     box-shadow: none;
     -webkit-box-shadow: none;
 }
@@ -20,5 +20,5 @@
 }
 
 .wrap:hover::-webkit-scrollbar-thumb:hover {
-    background: #c8c9cc;
+    background: var(--wb-border);
 }

@@ -2,23 +2,13 @@
 .split-view {
     display: flex;
     height: 100%;
-    /* 亮色主题变量（默认） */
-    --split-border-color: #e5e7eb;
-    --split-separator-bg: #e8eaed;
-    --split-separator-hover-bg: #cfe6ff;
-    --split-grip-color: #b0b4bb;
-    --split-grip-hover-color: #409eff;
-    --split-panel-bg: #ffffff;
-}
-
-/* 暗色主题 */
-html[data-theme='dark'] .split-view {
-    --split-border-color: #303030;
-    --split-separator-bg: #2b2d31;
-    --split-separator-hover-bg: #1e3a54;
-    --split-grip-color: #5a5e65;
-    --split-grip-hover-color: #409eff;
-    --split-panel-bg: #1a1a1a;
+    /* 组件语义变量（值统一引用全局 --wb-*） */
+    --split-border-color: var(--wb-border-secondary);
+    --split-separator-bg: var(--wb-border-split);
+    --split-separator-hover-bg: var(--wb-primary-bg);
+    --split-grip-color: var(--wb-text-quaternary);
+    --split-grip-hover-color: var(--wb-primary);
+    --split-panel-bg: var(--wb-bg-container);
 }
 
 .view-content {
@@ -35,7 +25,7 @@ html[data-theme='dark'] .split-view {
 .view-content.border {
     border: 1px solid var(--split-border-color);
     border-radius: 8px;
-    box-shadow: var(--border-shadow, 0 0 12px rgba(0, 0, 0, 0.06));
+    box-shadow: var(--wb-shadow, 0 0 12px rgba(0, 0, 0, 0.06));
 }
 
 .split-view.row .view-content-first {

@@ -2,24 +2,24 @@
     width: 16px;
     height: 16px;
     transition: all 0.3s ease;
-    border: 1px solid #d9d9d9;
+    border: 1px solid var(--wb-border);
     border-radius: 2px;
     cursor: pointer;
     position:relative;
 }
 
 .check-state-normal {
-    background-color: #fff;
+    background-color: var(--wb-bg-container);
 }
 
 .check-state-checked {
-    background-color: var(--major-color);
-    border-color: var(--major-color);
+    background-color: var(--wb-primary);
+    border-color: var(--wb-primary);
 }
 
     .check-state-checked::after {
         position: absolute;
-        border: 2px solid #fff;
+        border: 2px solid var(--wb-bg-container);
         border-top: 0;
         border-left: 0;
         transform: rotate(45deg) scale(1) translate(-50%,-50%);
@@ -33,11 +33,11 @@
     }
 
 .check-state-indeterminate {
-    background-color: #fff;
+    background-color: var(--wb-bg-container);
 }
     .check-state-indeterminate::after {
         position: absolute;
-        border: 2px solid #1890ff;
+        border: 2px solid var(--wb-primary);
         transform: scale(1) translate(-50%,-50%);
         opacity: 1;
         transition: all .2s cubic-bezier(.12,.4,.29,1.46) .1s;

@@ -1,21 +1,21 @@
 ﻿::deep a {
-/*    color: var(--font-color);*/
+/*    color: var(--wb-text);*/
     text-decoration: none;
     white-space: nowrap;
 }
 
     ::deep a.active {
-/*        color: var(--major-color);*/
+/*        color: var(--wb-primary);*/
         font-weight: 600;
     }
 
 ::deep .tags-box .nav-top svg * {
-    fill: var(--major-color) !important;
+    fill: var(--wb-primary) !important;
 }
 
 /* 标签样式 */
 .tags-box .nav-top {
-/*    color: var(--font-color);*/
+/*    color: var(--wb-text);*/
     display: flex;
     align-items: center;
     justify-content: center;
@@ -32,7 +32,7 @@
     /* 激活的标签的前面的点 */
     .tags-box .nav-top.active::before {
         content: '';
-        background: var(--major-color);
+        background: var(--wb-primary);
         display: inline-block;
         width: 8px;
         height: 8px;
@@ -48,7 +48,7 @@
         /*减去padding的宽度*/
         width: calc(100% - 40px);
         height: 80%;
-        border-bottom: var(--major-color) 2px solid;
+        border-bottom: var(--wb-primary) 2px solid;
         pointer-events: none;
     }
 
@@ -78,13 +78,13 @@
 }
 
     .tags-box.card .nav-top {
-        /*background-color: var(--background-color);*/
+        /*background-color: var(--wb-bg-container);*/
     }
 
         .tags-box.card .nav-top.active {
-            background-color: var(--background-color);
-            color: var(--major-color);
-            box-shadow: var(--border-shadow);
+            background-color: var(--wb-bg-container);
+            color: var(--wb-primary);
+            box-shadow: var(--wb-shadow);
             border-radius: 4px;
         }
 
@@ -95,8 +95,8 @@
 }
 
     .tags-box.classic .nav-top.active {
-        background-color: #f5f5f5;
-        color: rgb(64, 158, 255);
+        background-color: var(--wb-bg-hover);
+        color: var(--wb-primary);
     }
         /*classic布局不显示下横线*/
         .tags-box.classic .nav-top.active::after {
@@ -104,41 +104,41 @@
         }
 
 html[data-theme='dark'] .tags-box.classic {
-    background-color: var(--background-color);
+    background-color: var(--wb-bg-container);
 }
 
     html[data-theme='dark'] .tags-box.classic .nav-top.active {
-        background-color: var(--background-color);
-        color: rgb(64, 158, 255);
+        background-color: var(--wb-bg-container);
+        color: var(--wb-primary);
     }
 
         html[data-theme='dark'] .tags-box.classic .nav-top.active * {
-            color: rgb(64, 158, 255);
+            color: var(--wb-primary);
         }
 
 /* 右键菜单样式 */
 .context {
     padding: 10px;
     /*    border: 1px solid #d8dce5;*/
-    background-color: var(--major-color);
+    background-color: var(--wb-primary);
     border-radius: 10px;
     position: absolute;
     display: none;
-    box-shadow: var(--border-shadow);
+    box-shadow: var(--wb-shadow);
 }
 
     .context li {
         height: 26px;
         line-height: 26px;
         font-size: 14px;
-        color: var(--font-color);
+        color: var(--wb-text);
         padding: 0 8px;
         cursor: pointer;
         list-style: none;
     }
 
         .context li:hover {
-            background-color: var(--hover-bg-color);
+            background-color: var(--wb-bg-hover);
         }
 
     .context.open {

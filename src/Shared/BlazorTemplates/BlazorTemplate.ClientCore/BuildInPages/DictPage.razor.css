@@ -4,29 +4,16 @@
     flex-direction: column;
     gap: 10px;
     height: 100%;
-    --dict-fg: #1f2329;
-    --dict-sub: #8a9099;
-    --dict-hover-bg: #f2f3f5;
-    --dict-active-bg: #e8f3ff;
-    --dict-active-fg: #409eff;
-    --dict-action-fg: #8a9099;
-    --dict-action-edit-hover: #409eff;
-    --dict-action-delete-hover: #f56c6c;
-    --dict-action-hover-bg: #e6e8eb;
-    --dict-action-delete-hover-bg: #fde2e2;
-}
-
-html[data-theme='dark'] .dict-type-panel {
-    --dict-fg: #e5e7eb;
-    --dict-sub: #8a9099;
-    --dict-hover-bg: #2a2c30;
-    --dict-active-bg: #1e3a54;
-    --dict-active-fg: #409eff;
-    --dict-action-fg: #8a9099;
-    --dict-action-edit-hover: #409eff;
-    --dict-action-delete-hover: #f56c6c;
-    --dict-action-hover-bg: #3a3d42;
-    --dict-action-delete-hover-bg: #3a2b2b;
+    --dict-fg: var(--wb-text);
+    --dict-sub: var(--wb-text-quaternary);
+    --dict-hover-bg: var(--wb-bg-hover);
+    --dict-active-bg: var(--wb-primary-bg);
+    --dict-active-fg: var(--wb-primary);
+    --dict-action-fg: var(--wb-text-quaternary);
+    --dict-action-edit-hover: var(--wb-primary);
+    --dict-action-delete-hover: var(--wb-error);
+    --dict-action-hover-bg: var(--wb-bg-hover);
+    --dict-action-delete-hover-bg: var(--wb-error-bg);
 }
 
 .dict-type-toolbar {

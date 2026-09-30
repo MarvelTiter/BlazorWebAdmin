@@ -4,14 +4,14 @@
     height: 100%;
     margin-left: auto;
     overflow: hidden;
-    background-color: var(--background-color);
+    background-color: var(--wb-bg-container);
 }
 
 
 
     .nav-menu.card {
         border-radius: 4px;
-        box-shadow: var(--border-shadow);
+        box-shadow: var(--wb-shadow);
     }
 
     .nav-menu.line {
@@ -42,10 +42,10 @@
     }
 
     ::deep .nav-menu-item:hover {
-        color: var(--hover-bg-color);
+        color: var(--wb-primary);
     }
         ::deep .nav-menu-item:hover svg * {
-            fill: var(--hover-bg-color) !important;
+            fill: var(--wb-primary) !important;
         }
 
 .dark ::deep .nav-menu-item:hover {

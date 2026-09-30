@@ -12,5 +12,5 @@
 
 .enable-edit:hover {
     cursor: pointer;
-    color: #1890ff;
+    color: var(--wb-primary);
 }

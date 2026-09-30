@@ -17,6 +17,6 @@
     }
 
         .icons-wrapper span.selected {
-            color: var(--major-color);
-            box-shadow: var(--border-shadow);
+            color: var(--wb-primary);
+            box-shadow: var(--wb-shadow);
         }
