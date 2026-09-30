@@ -51,3 +51,12 @@ Bash 工具 PATH 失效（`ls`/`grep` 全 not found），管道会静默吞掉 d
 `--no-incremental`（否则 obj 旧产物给「假绿」）；导出生成产物还须加 `-p:EmitCompilerGeneratedFiles=true`。
 `obj\GFEnum\**\*_razor.g.cs` 已停更，**不能**用来判断改没改。`ClientCore.csproj` 已写
 `<IsAotCompatible>true</IsAotCompatible>`，**不要**再当命令行全局属性传（会触发 NETSDK1210）。
+
+## 主题 / CSS 变量口径
+框架样式**只用** `--wb-*` 语义变量：宿主 `BlazorAdmin/wwwroot/theme/tokens.css` 定义 `:root` 默认值 +
+`html[data-theme='dark']` 暗色值；组件库侧 `bridge.ant.css` 用 `html:not([data-theme='dark'])`
+把 `--wb-*` 桥接到 `var(--ant-*)`（靠特异性分层，暗色不被冲掉）。旧兼容别名
+（`--major-color` / `--background-color` / `--bg` / `--font-color` / `--hover-bg-color` /
+`--border-shadow` / `--watermark-color`）**已全量清除**，新代码一律 `--wb-*`。
+`BlazorAdmin.Wpf` 是**未迁移的独立旧变体**（自建裸值主题，还 import 了不存在的
+`themeVariables.css`），别在那里找 `--wb-*`。
