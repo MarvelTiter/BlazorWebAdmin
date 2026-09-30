@@ -57,7 +57,7 @@ public static class ProjectInit
             return p.GetService()!;
         });
         services.ConfigureAppSettings(configuration);
-
+        
     }
 
     private static void InterceptorsInit(this IServiceCollection services, ProjectSetting setting)

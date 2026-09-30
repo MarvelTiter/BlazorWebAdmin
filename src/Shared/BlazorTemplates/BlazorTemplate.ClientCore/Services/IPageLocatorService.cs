@@ -8,6 +8,7 @@ public interface IPageLocatorService
     void SetPage(string key, Type type);
     Type? GetPage(string key);
 }
+
 public class PageLocatorService : IPageLocatorService
 {
     private readonly ConcurrentDictionary<string, Type> pages = new();
@@ -38,26 +39,28 @@ public static class PageLocatorServiceExtensions
     private const string SYSTEM_DASHBOARD_PAGE_KEY = "SYSTEM_DASHBOARD";
     private const string PERMISSION_INDEX_PAGE_KEY = "PERMISSION_INDEX";
     private const string ROLE_PERMISSION_INDEX_PAGE_KEY = "ROLE_PERMISSION_INDEX";
+    private const string DICT_INDEX_PAGE_KEY = "DICT_INDEX";
 
-    public static Type? GetLoginPageType(this IPageLocatorService locator) => locator.GetPage(SYSTEM_LOGIN_PAGE_KEY);
-    public static void SetLoginPageType<T>(this IPageLocatorService locator) => locator.SetPage<T>(SYSTEM_LOGIN_PAGE_KEY);
+    extension(IPageLocatorService locator)
+    {
+        public Type? GetLoginPageType() => locator.GetPage(SYSTEM_LOGIN_PAGE_KEY);
+        public void SetLoginPageType<T>() => locator.SetPage<T>(SYSTEM_LOGIN_PAGE_KEY);
+        public Type? GetUserPageType() => locator.GetPage(USER_INDEX_PAGE_KEY);
+        public void SetUserPageType<T>() => locator.SetPage<T>(USER_INDEX_PAGE_KEY);
+        public Type? GetDashboardType() => locator.GetPage(SYSTEM_DASHBOARD_PAGE_KEY);
+        public void SetDashboardType<T>() => locator.SetPage<T>(SYSTEM_DASHBOARD_PAGE_KEY);
 
-    public static Type? GetUserPageType(this IPageLocatorService locator) => locator.GetPage(USER_INDEX_PAGE_KEY);
-    public static void SetUserPageType<T>(this IPageLocatorService locator) => locator.SetPage<T>(USER_INDEX_PAGE_KEY);
+        public Type? GetPermissionPageType() => locator.GetPage(PERMISSION_INDEX_PAGE_KEY);
 
-    public static Type? GetDashboardType(this IPageLocatorService locator) => locator.GetPage(SYSTEM_DASHBOARD_PAGE_KEY);
-    public static void SetDashboardType<T>(this IPageLocatorService locator) => locator.SetPage<T>(SYSTEM_DASHBOARD_PAGE_KEY);
+        public void SetPermissionPageType<T>() => locator.SetPage<T>(PERMISSION_INDEX_PAGE_KEY);
 
-    public static Type? GetPermissionPageType(this IPageLocatorService locator) 
-        => locator.GetPage(PERMISSION_INDEX_PAGE_KEY);
-    public static void SetPermissionPageType<T>(this IPageLocatorService locator) 
-        => locator.SetPage<T>(PERMISSION_INDEX_PAGE_KEY);
+        public Type? GetRolePermissionPageType() => locator.GetPage(ROLE_PERMISSION_INDEX_PAGE_KEY);
 
-    public static Type? GetRolePermissionPageType(this IPageLocatorService locator) 
-        => locator.GetPage(ROLE_PERMISSION_INDEX_PAGE_KEY);
-    public static void SetRolePermissionPageType<T>(this IPageLocatorService locator) 
-        => locator.SetPage<T>(ROLE_PERMISSION_INDEX_PAGE_KEY);
+        public void SetRolePermissionPageType<T>() => locator.SetPage<T>(ROLE_PERMISSION_INDEX_PAGE_KEY);
 
-    public static Type? GetRunLogPageType(this IPageLocatorService locator) => locator.GetPage(RUNLOG_INDEX_PAGE_KEY);
-    public static void SetRunLogPageType<T>(this IPageLocatorService locator) => locator.SetPage<T>(RUNLOG_INDEX_PAGE_KEY);
+        public Type? GetRunLogPageType() => locator.GetPage(RUNLOG_INDEX_PAGE_KEY);
+        public void SetRunLogPageType<T>() => locator.SetPage<T>(RUNLOG_INDEX_PAGE_KEY);
+        public Type? GetDictPageType() => locator.GetPage(DICT_INDEX_PAGE_KEY);
+        public void SetDictPageType<T>() => locator.SetPage<T>(DICT_INDEX_PAGE_KEY);
+    }
 }
