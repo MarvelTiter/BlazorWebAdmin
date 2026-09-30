@@ -17,8 +17,11 @@ public class AppSession(IServiceProvider serviceProvider) : IAppSession
     public IRouterStore RouterStore => lazyRouterStore.Value;
     public IUserStore UserStore => lazyUserStore.Value;
     public IUIService UI => lazyUI.Value;
-    public Action? Update { get; set; }
+    public event Action? OnUpdate;
+
     public bool Loaded { get; set; }
+
+    public void NotifyUpdate() => OnUpdate?.Invoke();
 
     private readonly AsyncHandlerManager webappAccessed = new();
 

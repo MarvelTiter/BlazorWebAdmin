@@ -8,8 +8,10 @@ public interface IAppSession
     // event Func<Task>? WebApplicationAccessedEvent;
     // event Func<UserInfo, Task>? LoginSuccessEvent;
     // event Func<Task>? OnLoadedAsync;
+    event Action? OnUpdate;
+
     IDisposable RegisterWebApplicationAccessedHandler(Func<Task> handler);
-    IDisposable RegisterLoginSuccessHandler(Func<UserInfo,Task> handler);
+    IDisposable RegisterLoginSuccessHandler(Func<UserInfo, Task> handler);
     IDisposable RegisterLoadedHandler(Func<Task> handler);
     NavigationManager Navigator { get; }
     public bool Loaded { get; set; }
@@ -18,7 +20,7 @@ public interface IAppSession
     IRouterStore RouterStore { get; }
     IUserStore UserStore { get; }
     IUIService UI { get; }
-    Action? Update { get; set; }
+    void NotifyUpdate();
     Task NotifyWebApplicationAccessedAsync();
     Task NotifyLoginSuccessAsync();
 }

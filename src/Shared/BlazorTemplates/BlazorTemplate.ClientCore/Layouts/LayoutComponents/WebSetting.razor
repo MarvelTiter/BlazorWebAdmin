@@ -28,21 +28,21 @@
     private async Task OnThemeChanged(ThemeMode mode)
     {
         App.Theme = mode;
-        Context.Update?.Invoke();
+        Context.NotifyUpdate();
         await SaveSetting();
     }
 
     private async Task OnLayoutChanged(LayoutMode mode)
     {
         App.Mode = mode;
-        Context.Update?.Invoke();
+        Context.NotifyUpdate();
         await SaveSetting();
     }
 
     public async Task SaveSetting(Action<IAppStore> action)
     {
         action(App);
-        Context.Update?.Invoke();
+        Context.NotifyUpdate();
         await SaveSetting();
     }
 

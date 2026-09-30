@@ -71,7 +71,7 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
             registerHandlers.Add(Context.RegisterLoginSuccessHandler(additional.LoginSuccessAsync));
             registerHandlers.Add(Context.RegisterWebApplicationAccessedHandler(additional.AfterWebApplicationAccessedAsync));
         }
-        Context.Update = StateHasChanged;
+        Context.OnUpdate += StateHasChanged;
         base.OnInitialized();
     }
     protected override async Task OnInitializedAsync()
@@ -141,6 +141,7 @@ public partial class AppRoot : IAppDomEventHandler, IThemeChangedBroadcast, IAsy
             handler.Dispose();
         }
         Context.RouterStore.DataChangedEvent -= StateHasChanged;
+        Context.OnUpdate -= StateHasChanged;
         GC.SuppressFinalize(this);
         return ValueTask.CompletedTask;
     }
