@@ -1,11 +1,12 @@
 ﻿@namespace BlazorTemplate.ClientCore.Components
 @inherits JsComponentBase
 <div class="split-view @(Direction)" style="display:flex; flex-direction: @Direction ;gap:@Gap">
-    <div class="view-content view-content-first" style="width: @(InitWidth ?? "50%");" @ref="panel1">
+    <div class="view-content @(Border ? "border" : "") view-content-first" style="@FirstPanelStyle"
+         @ref="panel1">
         @FirstContent
     </div>
     <div class="split-view-separator" style="@SeparatorStyle.Style" @ref="separator"></div>
-    <div class="view-content view-content-second" style="flex:1;" @ref="panel2">
+    <div class="view-content @(Border ? "border" : "") view-content-second" style="flex:1;" @ref="panel2">
         @SecondContent
     </div>
 </div>
@@ -14,22 +15,53 @@
     [Parameter] public RenderFragment? FirstContent { get; set; }
     [Parameter] public RenderFragment? SecondContent { get; set; }
     [Parameter] public string Gap { get; set; } = "5px";
+
     /// <summary>
     /// column / row
     /// </summary>
-    [Parameter] public string Direction { get; set; } = "row";
-    [Parameter] public int SeparatorWidth { get; set; } = 10;
-    [Parameter] public string? InitWidth { get; set; }
+    [Parameter]
+    public string Direction { get; set; } = "row";
+
+    [Parameter] public int SeparatorWidth { get; set; } = 6;
+
     /// <summary>
-    /// % or px
+    /// 首个面板的初始尺寸。<c>&lt;1</c> 视为比例（0.5 = 50%），<c>&gt;=1</c> 视为像素（400 = 400px）。
     /// </summary>
-    [Parameter] public string Min { get; set; } = "30%";
+    [Parameter] public double InitWidth { get; set; } = 0.5;
+
+    [Parameter] public bool Border { get; set; }
+
     /// <summary>
-    /// % or px
+    /// 面板最小尺寸。<c>&lt;1</c> 视为比例（0.3 = 容器 30%），<c>&gt;=1</c> 视为像素。
     /// </summary>
-    [Parameter] public string Max { get; set; } = "70%";
+    [Parameter]
+    public double Min { get; set; } = 0.3;
+
+    /// <summary>
+    /// 面板最大尺寸。<c>&lt;1</c> 视为比例（0.7 = 容器 70%），<c>&gt;=1</c> 视为像素。
+    /// </summary>
+    [Parameter]
+    public double Max { get; set; } = 0.7;
+
     StyleBuilder SeparatorStyle => StyleBuilder.Default.AddStyle("width", () => $"{SeparatorWidth}px", () => Direction == "row")
         .AddStyle("height", () => $"{SeparatorWidth}px", () => Direction == "column");
+
+    /// <summary>
+    /// 首个面板的初始尺寸样式：按方向作用于 width 或 height。
+    /// </summary>
+    string FirstPanelStyle
+    {
+        get
+        {
+            var size = ToCssSize(InitWidth);
+            return Direction == "row" ? $"width:{size}" : $"height:{size}";
+        }
+    }
+
+    /// <summary>
+    /// 把数值尺寸转成 CSS：<c>&lt;1</c> 当比例（0.5 → 50%），<c>&gt;=1</c> 当像素（400 → 400px）。
+    /// </summary>
+    static string ToCssSize(double value) => value < 1 ? $"{value * 100:0.####}%" : $"{value:0.####}px";
 
     ElementReference? separator;
     ElementReference? panel1;
@@ -50,4 +82,5 @@
             InitWidth
         });
     }
+
 }

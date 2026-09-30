@@ -1,38 +1,139 @@
-﻿.split-view {
+﻿/* SplitView 分栏组件样式 */
+.split-view {
     display: flex;
     height: 100%;
+    /* 亮色主题变量（默认） */
+    --split-border-color: #e5e7eb;
+    --split-separator-bg: #e8eaed;
+    --split-separator-hover-bg: #cfe6ff;
+    --split-grip-color: #b0b4bb;
+    --split-grip-hover-color: #409eff;
+    --split-panel-bg: #ffffff;
+}
+
+/* 暗色主题 */
+html[data-theme='dark'] .split-view {
+    --split-border-color: #303030;
+    --split-separator-bg: #2b2d31;
+    --split-separator-hover-bg: #1e3a54;
+    --split-grip-color: #5a5e65;
+    --split-grip-hover-color: #409eff;
+    --split-panel-bg: #1a1a1a;
 }
 
 .view-content {
     overflow: auto;
+    padding: 16px;
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    background: var(--split-panel-bg);
+    border-radius: 8px;
+    transition: box-shadow 0.2s ease;
+}
+
+.view-content.border {
+    border: 1px solid var(--split-border-color);
+    border-radius: 8px;
+    box-shadow: var(--border-shadow, 0 0 12px rgba(0, 0, 0, 0.06));
 }
 
 .split-view.row .view-content-first {
     width: 50%;
     height: 100%;
-}
-
-.split-view-separator {
-    box-shadow: var(--border-shadow);
-    display: flex;
-    align-items: center;
-    /*    border: 1px solid #ccc;*/
-}
-
-.split-view.column .split-view-separator:hover {
-    cursor: row-resize;
-}
-
-.split-view.row .split-view-separator:hover {
-    cursor: col-resize;
-}
-
-.view-content-second {
-    flex: 1;
-    height: 100%;
+    flex-shrink: 0;
 }
 
 .split-view.column .view-content-first {
     width: 100%;
     height: 50%;
+    flex-shrink: 0;
+}
+
+.view-content-second {
+    flex: 1;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+/* 拖拽分隔条：细条 + 淡背景，始终有存在感 */
+.split-view-separator {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: var(--split-separator-bg);
+    border-radius: 999px;
+    transition: background-color 0.15s ease;
+}
+
+.split-view-separator:hover {
+    background: var(--split-separator-hover-bg);
+}
+
+/* 拖拽把手（grip）：多条横线，贯穿整条分隔条 */
+.split-view-separator::before {
+    content: '';
+    display: block;
+    transition: opacity 0.15s ease;
+}
+
+/* 行向（左右分栏）：竖直排列的多条短横线 */
+.split-view.row .split-view-separator::before {
+    width: 100%;
+    height: 100%;
+    min-height: 28px;
+    background: repeating-linear-gradient(
+        to bottom,
+        var(--split-grip-color) 0px,
+        var(--split-grip-color) 2px,
+        transparent 2px,
+        transparent 7px
+    );
+}
+
+/* 列向（上下分栏）：水平排列的多条短横线 */
+.split-view.column .split-view-separator::before {
+    width: 100%;
+    min-width: 28px;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to right,
+        var(--split-grip-color) 0px,
+        var(--split-grip-color) 2px,
+        transparent 2px,
+        transparent 7px
+    );
+}
+
+/* 悬停时把手高亮 */
+.split-view.row .split-view-separator:hover::before {
+    background: repeating-linear-gradient(
+        to bottom,
+        var(--split-grip-hover-color) 0px,
+        var(--split-grip-hover-color) 2px,
+        transparent 2px,
+        transparent 7px
+    );
+}
+
+.split-view.column .split-view-separator:hover::before {
+    background: repeating-linear-gradient(
+        to right,
+        var(--split-grip-hover-color) 0px,
+        var(--split-grip-hover-color) 2px,
+        transparent 2px,
+        transparent 7px
+    );
+}
+
+/* 拖拽光标 */
+.split-view.column .split-view-separator {
+    cursor: row-resize;
+}
+
+.split-view.row .split-view-separator {
+    cursor: col-resize;
 }
