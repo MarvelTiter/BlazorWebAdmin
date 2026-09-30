@@ -1,17 +1,3 @@
-﻿/*:root {
-    --primary-color: #1890ff;
-    --primary-color-hover: #40a9ff;
-    --primary-color-active: #096dd9;
-    --primary-color-outline: rgba(24, 144, 255, 0.2);
-    --success-color: #52c41a;
-    --warning-color: #faad14;
-    --error-color: #ff4d4f;
-    --font-size-base: 14px;
-    --heading-color: rgba(0, 0, 0, 0.85);
-    --text-color: rgba(0, 0, 0, 0.65);
-    --text-color-secondary: rgba(0, 0, 0, 0.45);
-    --disabled-color: rgba(0, 0, 0, 0.25);
-    --border-radius-base: 2px;
-    --border-color-base: #d9d9d9;
-}
-*/
+﻿/* 历史遗留：框架主题变量已迁移到 theme/tokens.css。
+ * 此处保留文件仅为兼容旧引用，变量定义请勿再写在此处。 */
+@import "theme/tokens.css";

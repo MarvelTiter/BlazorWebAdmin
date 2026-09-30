@@ -57,6 +57,8 @@ public class UIService(
             b.AddAttribute(2, "data-compact");
             b.CloseElement();
             b.Component<VLink>().SetComponent(c => c.Href, "_content/BlazorTemplate.UI.AntBlazor/ant.css").Build();
+            // 桥接层：用 antd token 覆盖框架语义变量 --wb-*（html:not([data-theme='dark']) 保证暗色不被冲掉）
+            b.Component<VLink>().SetComponent(c => c.Href, "_content/BlazorTemplate.UI.AntBlazor/bridge.ant.css").Build();
         };
     }
     //_content/AntDesign/css/ant-design-blazor.compact.css

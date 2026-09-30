@@ -1,0 +1,107 @@
+/* ============================================================
+ * 框架语义变量（默认值 + 无组件库时的兜底暗色）
+ *
+ * --wb-* 桥接到 var(--ant-*)，使框架样式跟随组件库主题。
+ *
+ * 本文件的 :root 是默认值；html[data-theme='dark'] 块仅在
+ * 无组件库桥接（内联 style 缺失）时作为框架自身的暗色兜底。
+ * ============================================================ */
+
+:root {
+    /* 主色 */
+    --wb-primary: #1890ff;
+    --wb-primary-hover: #40a9ff;
+    --wb-primary-active: #096dd9;
+    --wb-primary-outline: rgba(24, 144, 255, 0.2);
+    --wb-primary-bg: #e6f7ff;
+
+    /* 功能色 */
+    --wb-success: #52c41a;
+    --wb-success-bg: #f6ffed;
+    --wb-success-border: #b7eb8f;
+    --wb-warning: #faad14;
+    --wb-error: #ff4d4f;
+    --wb-error-hover: #ff7875;
+    --wb-error-active: #d9363e;
+    --wb-error-bg: #fff1f0;
+    --wb-error-border: #ffa39e;
+    --wb-info: #1890ff;
+
+    /* 文字 */
+    --wb-text: rgba(0, 0, 0, 0.85);
+    --wb-text-secondary: rgba(0, 0, 0, 0.65);
+    --wb-text-tertiary: rgba(0, 0, 0, 0.45);
+    --wb-text-disabled: rgba(0, 0, 0, 0.25);
+    --wb-text-quaternary: #8a9099;
+
+    /* 背景 */
+    --wb-bg: #f5f5f5;
+    --wb-bg-container: #ffffff;
+    --wb-bg-hover: #f5f5f5;
+    --wb-fill-secondary: #f9fafb;
+    --wb-fill-tertiary: #fafbfc;
+
+    /* 边框 / 圆角 */
+    --wb-border: #d9d9d9;
+    --wb-border-split: #f0f0f0;
+    --wb-border-secondary: #e5e7eb;
+    --wb-radius: 2px;
+    --wb-radius-lg: 8px;
+
+    /* 阴影 / 水印 */
+    --wb-shadow: 0 0 12px rgba(0, 0, 0, 0.12);
+    --wb-shadow-sm: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    --wb-watermark: rgba(0, 0, 0, 0.15);
+
+    /* 字号 */
+    --wb-font-size: 14px;
+    --wb-font-size-lg: 16px;
+    --wb-font-size-sm: 12px;
+
+    /* 间距 */
+    --wb-space-xs: 4px;
+    --wb-space-sm: 8px;
+    --wb-space-md: 16px;
+    --wb-space-lg: 24px;
+}
+
+html[data-theme='dark'] {
+    --wb-primary: #177ddc;
+    --wb-primary-hover: #3c9be8;
+    --wb-primary-active: #095cb5;
+    --wb-primary-outline: rgba(23, 125, 220, 0.2);
+    --wb-primary-bg: #111d2c;
+
+    --wb-success: #49aa19;
+    --wb-success-bg: #162312;
+    --wb-success-border: #274916;
+    --wb-warning: #d89614;
+    --wb-error: #dc4446;
+    --wb-error-hover: #e84749;
+    --wb-error-active: #a61d24;
+    --wb-error-bg: #2a1215;
+    --wb-error-border: #58181c;
+    --wb-info: #177ddc;
+
+    --wb-text: rgba(255, 255, 255, 0.85);
+    --wb-text-secondary: rgba(255, 255, 255, 0.65);
+    --wb-text-tertiary: rgba(255, 255, 255, 0.45);
+    --wb-text-disabled: rgba(255, 255, 255, 0.25);
+    --wb-text-quaternary: #6b6b6b;
+
+    --wb-bg: #141414;
+    --wb-bg-container: #1f1f1f;
+    --wb-bg-hover: #2c2c2c;
+    --wb-fill-secondary: #1f1f1f;
+    --wb-fill-tertiary: #1a1a1a;
+
+    --wb-border: #424242;
+    --wb-border-split: #303030;
+    --wb-border-secondary: #303030;
+    --wb-radius: 2px;
+    --wb-radius-lg: 8px;
+
+    --wb-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+    --wb-shadow-sm: 0 2px 12px 0 rgba(0, 0, 0, 0.32);
+    --wb-watermark: rgba(200, 200, 200, 0.15);
+}

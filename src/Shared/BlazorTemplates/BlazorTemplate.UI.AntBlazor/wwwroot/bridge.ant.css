@@ -1,0 +1,53 @@
+/* ============================================================
+ * AntDesign 桥接层（组件库侧）
+ *
+ * 用 AntDesign token 覆盖框架语义变量 --wb-*，使框架自定义组件的
+ * 样式跟随 AntDesign 主题。方向：--wb-*: var(--ant-*)。
+ *
+ * 选择器用 html:not([data-theme='dark']) 而非 :root：
+ *   - 亮色：特异性 0,1,1 > 宿主 tokens.css :root 的 0,1,0 → 桥接生效；
+ *   - 暗色：此选择器不匹配，宿主 tokens.css 的 html[data-theme='dark']
+ *     块（0,1,1）生效，框架组件用暗色值。
+ * 不依赖加载顺序，暗色也不会被桥接冲掉。
+ *
+ * 仅桥接「有 antd token 对应」的变量；无对应的（如 --wb-success-bg、
+ * --wb-fill-secondary、--wb-shadow 等）交给宿主 tokens.css 的默认值。
+ * ============================================================ */
+
+html:not([data-theme='dark']) {
+    /* 主色 */
+    --wb-primary: var(--ant-primary-color, #1890ff);
+    --wb-primary-hover: var(--ant-primary-color-hover, #40a9ff);
+    --wb-primary-active: var(--ant-primary-color-active, #096dd9);
+    --wb-primary-outline: var(--ant-primary-color-outline, rgba(24, 144, 255, 0.2));
+    --wb-primary-bg: var(--ant-primary-1, #e6f7ff);
+
+    /* 功能色 */
+    --wb-success: var(--ant-success-color, #52c41a);
+    --wb-warning: var(--ant-warning-color, #faad14);
+    --wb-error: var(--ant-error-color, #ff4d4f);
+    --wb-error-hover: var(--ant-error-color-hover, #ff7875);
+    --wb-error-active: var(--ant-error-color-active, #d9363e);
+    --wb-info: var(--ant-info-color, #1890ff);
+
+    /* 文字 */
+    --wb-text: var(--ant-heading-color, rgba(0, 0, 0, 0.85));
+    --wb-text-secondary: var(--ant-text-color, rgba(0, 0, 0, 0.65));
+    --wb-text-tertiary: var(--ant-text-color-secondary, rgba(0, 0, 0, 0.45));
+    --wb-text-disabled: var(--ant-disabled-color, rgba(0, 0, 0, 0.25));
+
+    /* 背景 */
+    --wb-bg: var(--ant-body-background, #f5f5f5);
+    --wb-bg-container: var(--ant-component-background, #ffffff);
+    --wb-bg-hover: var(--ant-item-hover-bg, #f5f5f5);
+
+    /* 边框 / 圆角 */
+    --wb-border: var(--ant-border-color-base, #d9d9d9);
+    --wb-border-split: var(--ant-border-color-split, #f0f0f0);
+    --wb-radius: var(--ant-border-radius-base, 2px);
+
+    /* 字号 */
+    --wb-font-size: var(--ant-font-size-base, 14px);
+    --wb-font-size-lg: var(--ant-font-size-lg, 16px);
+    --wb-font-size-sm: var(--ant-font-size-sm, 12px);
+}
