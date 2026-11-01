@@ -168,11 +168,12 @@ public class PageRouteRegistryGenerator : IIncrementalGenerator
 
         string? groupId = null;
         GroupModel? groupModel = null;
-        if (groupAttr is not null && groupAttr.ConstructorArguments.Length >= 3)
+        if (groupAttr is not null)
         {
             groupId = groupAttr.ConstructorArguments[0].Value as string;
             var groupName = groupAttr.ConstructorArguments[1].Value as string ?? groupId ?? string.Empty;
-            var groupSort = groupAttr.ConstructorArguments[2].Value is int gs ? gs : 0;
+            var groupSort = (groupAttr.ConstructorArguments.Length > 2 && groupAttr.ConstructorArguments[2].Value is int gs) ? gs : 0;
+            var subGroupId = groupAttr.NamedArguments.FirstOrDefault(kv => kv.Key == "GroupId").Value.Value as string;
             string? groupIcon = null;
             foreach (var named in groupAttr.NamedArguments)
             {
@@ -184,7 +185,7 @@ public class PageRouteRegistryGenerator : IIncrementalGenerator
 
             if (!string.IsNullOrEmpty(groupId))
             {
-                groupModel = new GroupModel(groupId!, groupName, groupIcon, groupSort);
+                groupModel = new GroupModel(groupId!, groupName, groupIcon, groupSort, subGroupId);
             }
         }
 
@@ -308,7 +309,7 @@ public class PageRouteRegistryGenerator : IIncrementalGenerator
             }
 
             sb.AppendLine($"                Sort = {group.Sort.ToString(CultureInfo.InvariantCulture)},");
-            sb.AppendLine("                Group = \"ROOT\",");
+            sb.AppendLine($"                Group = {Literal(group.GroupId ?? "ROOT")},");
             sb.AppendLine("                HasPageInfo = true,");
             sb.AppendLine("                IsAllowAnonymous = true,");
             sb.AppendLine("                IsGroupHeader = true,");
@@ -403,7 +404,7 @@ public class PageRouteRegistryGenerator : IIncrementalGenerator
         {
             if (string.IsNullOrEmpty(existed.Icon) && group.Icon is not null)
             {
-                groups[group.Id] = new GroupModel(existed.Id, existed.Name, group.Icon, existed.Sort);
+                groups[group.Id] = new GroupModel(existed.Id, existed.Name, group.Icon, existed.Sort, existed.GroupId);
             }
 
             return;
@@ -495,13 +496,15 @@ public class PageRouteRegistryGenerator : IIncrementalGenerator
         public readonly string Name;
         public readonly string? Icon;
         public readonly int Sort;
+        public readonly string? GroupId;
 
-        public GroupModel(string id, string name, string? icon, int sort)
+        public GroupModel(string id, string name, string? icon, int sort, string? groupId)
         {
             Id = id;
             Name = name;
             Icon = icon;
             Sort = sort;
+            GroupId = groupId;
         }
     }
 

@@ -2,7 +2,7 @@
 @using BlazorTemplate.ClientCore.UI
 @using BlazorTemplate.ClientCore.Components
 @page "/testtabs"
-@attribute [PageInfo(Title = "Tab测试", Icon = "fa fa-question-circle-o", GroupId = "test")]
+@attribute [PageInfo(Title = "Tab测试", Icon = "fa fa-question-circle-o", GroupId = "LayoutTest")]
 @inject IUIService UI
 @(UI.BuildTabs()
     .AddTab<TestGrid>("测试1")

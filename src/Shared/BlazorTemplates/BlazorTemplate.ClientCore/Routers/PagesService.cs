@@ -76,7 +76,7 @@ public partial class PagesService
             if (groupInfo.Icon != null)
                 g.Icon = groupInfo.Icon;
             g.Sort = groupInfo.Sort;
-            g.Group = "ROOT";
+            g.Group = groupInfo.GroupId ?? "ROOT";
             g.HasPageInfo = true;
             g.IsAllowAnonymous = true;
             g.IsGroupHeader = true;

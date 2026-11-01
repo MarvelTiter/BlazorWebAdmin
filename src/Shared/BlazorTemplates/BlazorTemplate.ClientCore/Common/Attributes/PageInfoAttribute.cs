@@ -9,7 +9,7 @@ public class PageInfoAttribute : Attribute
     }
     public PageInfoAttribute()
     {
-            
+
     }
 
     public string? Id { get; set; }
@@ -44,8 +44,10 @@ public class TagTitleAttribute(string title) : Attribute
 [AttributeUsage(AttributeTargets.Class)]
 public class PageGroupAttribute(string id, string name, int sort) : Attribute
 {
+    public PageGroupAttribute(string id, string name) : this(id, name, 0) { }
     public string Id { get; } = id;
     public string Name { get; } = name;
     public string? Icon { get; set; }
     public int Sort { get; } = sort;
+    public string? GroupId { get; set; }
 }
